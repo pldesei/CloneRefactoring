@@ -1,0 +1,13 @@
+(startLine=156 endLine=167 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/gui/ServerPanel.java)
+    private JPanel getConnectTimeOutPanel() {
+        connectTimeOut = new JTextField(4);
+
+        JLabel label = new JLabel(JMeterUtils.getResString("web_server_timeout_connect")); // $NON-NLS-1$
+        label.setLabelFor(connectTimeOut);
+
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        panel.add(label, BorderLayout.WEST);
+        panel.add(connectTimeOut, BorderLayout.CENTER);
+
+        return panel;
+    }

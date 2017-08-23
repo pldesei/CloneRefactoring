@@ -1,0 +1,35 @@
+(startLine=101 endLine=134 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/control/TestInterleaveControl.java)
+        public void testProcessing2() throws Exception {
+            testLog.debug("Testing Interleave Controller 2");
+            GenericController controller = new GenericController();
+            InterleaveControl sub_1 = new InterleaveControl();
+            sub_1.setStyle(InterleaveControl.IGNORE_SUB_CONTROLLERS);
+            sub_1.addTestElement(new TestSampler("one"));
+            sub_1.addTestElement(new TestSampler("two"));
+            controller.addTestElement(sub_1);
+            controller.addTestElement(new TestSampler("three"));
+            LoopController sub_2 = new LoopController();
+            sub_2.setLoops(3);
+            GenericController sub_3 = new GenericController();
+            sub_2.addTestElement(new TestSampler("four"));
+            sub_3.addTestElement(new TestSampler("five"));
+            sub_3.addTestElement(new TestSampler("six"));
+            sub_2.addTestElement(sub_3);
+            sub_2.addTestElement(new TestSampler("seven"));
+            sub_1.addTestElement(sub_2);
+            String[] order = new String[] { "one", "three", "two", "three", "four", "three", "one", "three", "two",
+                    "three", "five", "three", "one", "three", "two", "three", "six", "three", "one", "three" };
+            int counter = 0;
+            controller.setRunningVersion(true);
+            sub_1.setRunningVersion(true);
+            sub_2.setRunningVersion(true);
+            sub_3.setRunningVersion(true);
+            controller.initialize();
+            while (counter < order.length) {
+                TestElement sampler = null;
+                while ((sampler = controller.next()) != null) {
+                    assertEquals("failed on " + counter, order[counter], sampler.getName());
+                    counter++;
+                }
+            }
+        }

@@ -1,10 +1,8 @@
-(startLine=202 endLine=210 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava-tests/test/com/google/common/collect/HashBiMapTest.java)
-  public void testInverseInsertionOrderAfterInverse() {
-    BiMap<String, Integer> map = HashBiMap.create();
-    map.put("bar", 2);
-    map.put("quux", 1);
-
-    assertThat(map.inverse().entrySet())
-        .containsExactly(Maps.immutableEntry(2, "bar"), Maps.immutableEntry(1, "quux"))
-        .inOrder();
+(startLine=231 endLine=237 srcPath=/home/ubuntu/newestVersion/guava/1/guava/guava-tests/test/com/google/common/collect/ArrayTableTest.java)
+  public void testCreateCopyEmptyTable() {
+    Table<String, Integer, Character> original = HashBasedTable.create();
+    try {
+      ArrayTable.create(original);
+      fail();
+    } catch (IllegalArgumentException expected) {}
   }

@@ -1,0 +1,17 @@
+(startLine=84 endLine=99 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/samplers/TestSampleResult.java)
+        public void testPauseTrue() throws Exception {
+            SampleResult res = new SampleResult(true);
+            // Check sample increments OK
+            res.sampleStart();
+            long totalSampleTime = sleep(100); // accumulate the time spent 'sampling'
+            res.samplePause();
+
+            Thread.sleep(200); // this should be ignored
+
+            // Re-increment
+            res.sampleResume();
+            totalSampleTime += sleep(100);
+            res.sampleEnd();
+            long sampleTime = res.getTime();
+            assertEquals("Accumulated sample time", totalSampleTime, sampleTime, 50);
+        }

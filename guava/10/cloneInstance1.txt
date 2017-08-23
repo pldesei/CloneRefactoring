@@ -1,7 +1,29 @@
-(startLine=167 endLine=172 srcPath=/home/ubuntu/newestVersion/guava/1/guava/guava-tests/test/com/google/common/math/MathPreconditionsTest.java)
-  public void testCheckNonNegative_negativeBigInteger() {
-    try {
-      MathPreconditions.checkNonNegative("int", BigInteger.ONE.negate());
-      fail();
-    } catch (IllegalArgumentException expected) {}
-  }
+(startLine=623 endLine=650 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/collect/TreeRangeMap.java)
+      public Set<Entry<Range<K>, V>> entrySet() {
+        return new Maps.EntrySet<Range<K>, V>() {
+          @Override
+          Map<Range<K>, V> map() {
+            return SubRangeMapAsMap.this;
+          }
+
+          @Override
+          public Iterator<Entry<Range<K>, V>> iterator() {
+            return entryIterator();
+          }
+
+          @Override
+          public boolean retainAll(Collection<?> c) {
+            return removeEntryIf(not(in(c)));
+          }
+
+          @Override
+          public int size() {
+            return Iterators.size(iterator());
+          }
+
+          @Override
+          public boolean isEmpty() {
+            return !iterator().hasNext();
+          }
+        };
+      }

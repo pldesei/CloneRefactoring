@@ -1,0 +1,10 @@
+(startLine=246 endLine=254 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/test/org/apache/lucene/search/TestComplexExplanations.java)
+  public void testBQ18() throws Exception {
+    // NOTE: using qtest not bqtest
+    BooleanQuery.Builder query = new BooleanQuery.Builder();;
+    TermQuery boostedQuery = new TermQuery(new Term(FIELD, "w1"));
+    query.add(new BoostQuery(boostedQuery, 0), Occur.MUST);
+    query.add(new TermQuery(new Term(FIELD, "w2")), Occur.SHOULD);
+    
+    qtest(query.build(), new int[] { 0,1,2,3 });
+  }

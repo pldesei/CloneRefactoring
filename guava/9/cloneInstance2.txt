@@ -1,23 +1,7 @@
-(startLine=294 endLine=315 srcPath=/home/ubuntu/newestVersion/guava/1/guava/guava-testlib/src/com/google/common/collect/testing/Helpers.java)
-  public static <T> void testComparator(
-      Comparator<? super T> comparator, List<T> valuesInExpectedOrder) {
-    // This does an O(n^2) test of all pairs of values in both orders
-    for (int i = 0; i < valuesInExpectedOrder.size(); i++) {
-      T t = valuesInExpectedOrder.get(i);
-
-      for (int j = 0; j < i; j++) {
-        T lesser = valuesInExpectedOrder.get(j);
-        assertTrue(
-            comparator + ".compare(" + lesser + ", " + t + ")", comparator.compare(lesser, t) < 0);
-      }
-
-      assertEquals(comparator + ".compare(" + t + ", " + t + ")", 0, comparator.compare(t, t));
-
-      for (int j = i + 1; j < valuesInExpectedOrder.size(); j++) {
-        T greater = valuesInExpectedOrder.get(j);
-        assertTrue(
-            comparator + ".compare(" + greater + ", " + t + ")",
-            comparator.compare(greater, t) > 0);
-      }
+(startLine=126 endLine=131 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava-tests/test/com/google/common/util/concurrent/WrappingScheduledExecutorServiceTest.java)
+    void assertLastMethodCalled(String method, long initialDelay, long delay, TimeUnit unit) {
+      assertEquals(method, lastMethodCalled);
+      assertEquals(initialDelay, lastInitialDelay);
+      assertEquals(delay, lastDelay);
+      assertEquals(unit, lastUnit);
     }
-  }

@@ -1,0 +1,13 @@
+(startLine=92 endLine=103 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/components/org/apache/jmeter/control/gui/InterleaveControlGui.java)
+    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
+        setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
+        setBorder(makeBorder());
+
+        add(makeTitlePanel());
+
+        style = new JCheckBox(JMeterUtils.getResString("ignore_subcontrollers")); // $NON-NLS-1$
+        add(CheckBoxPanel.wrap(style));
+        
+        accrossThreads = new JCheckBox(JMeterUtils.getResString("interleave_accross_threads")); // $NON-NLS-1$
+        add(CheckBoxPanel.wrap(accrossThreads));
+    }

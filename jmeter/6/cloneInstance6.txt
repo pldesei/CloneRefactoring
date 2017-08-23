@@ -1,0 +1,13 @@
+(startLine=169 endLine=180 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/gui/ServerPanel.java)
+    private JPanel getResponseTimeOutPanel() {
+        responseTimeOut = new JTextField(4);
+
+        JLabel label = new JLabel(JMeterUtils.getResString("web_server_timeout_response")); // $NON-NLS-1$
+        label.setLabelFor(responseTimeOut);
+
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        panel.add(label, BorderLayout.WEST);
+        panel.add(responseTimeOut, BorderLayout.CENTER);
+
+        return panel;
+    }

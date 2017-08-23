@@ -1,0 +1,11 @@
+(startLine=134 endLine=143 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/assertions/XMLSchemaAssertionTest.java)
+    public void testAssertionEmptyResult() throws Exception {
+        result.setResponseData("", null);
+        assertion.setXsdFileName("testfiles/XMLSchema-fail.xsd");
+        AssertionResult res = assertion.getResult(jmctx.getPreviousResult());
+        testLog.debug("isError() " + res.isError() + " isFailure() " + res.isFailure());
+        testLog.debug("failure " + res.getFailureMessage());
+        assertEquals(AssertionResult.RESPONSE_WAS_NULL, res.getFailureMessage());
+        assertFalse(res.isError());
+        assertTrue(res.isFailure());
+    }

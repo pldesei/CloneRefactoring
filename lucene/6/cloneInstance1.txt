@@ -1,6 +1,40 @@
-(startLine=32 endLine=36 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/analysis/morfologik/src/test/org/apache/lucene/analysis/uk/TestUkrainianAnalyzer.java)
-  public void testDigitsInUkrainianCharset() throws IOException {
-    UkrainianMorfologikAnalyzer ra = new UkrainianMorfologikAnalyzer();
-    assertAnalyzesTo(ra, "text 1000", new String[] { "text", "1000" });
-    ra.close();
+(startLine=31 endLine=69 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/java/org/apache/lucene/util/packed/BulkOperationPacked6.java)
+  public void decode(long[] blocks, int blocksOffset, int[] values, int valuesOffset, int iterations) {
+    for (int i = 0; i < iterations; ++i) {
+      final long block0 = blocks[blocksOffset++];
+      values[valuesOffset++] = (int) (block0 >>> 58);
+      values[valuesOffset++] = (int) ((block0 >>> 52) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 46) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 40) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 34) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 28) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 22) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 16) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 10) & 63L);
+      values[valuesOffset++] = (int) ((block0 >>> 4) & 63L);
+      final long block1 = blocks[blocksOffset++];
+      values[valuesOffset++] = (int) (((block0 & 15L) << 2) | (block1 >>> 62));
+      values[valuesOffset++] = (int) ((block1 >>> 56) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 50) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 44) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 38) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 32) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 26) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 20) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 14) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 8) & 63L);
+      values[valuesOffset++] = (int) ((block1 >>> 2) & 63L);
+      final long block2 = blocks[blocksOffset++];
+      values[valuesOffset++] = (int) (((block1 & 3L) << 4) | (block2 >>> 60));
+      values[valuesOffset++] = (int) ((block2 >>> 54) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 48) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 42) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 36) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 30) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 24) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 18) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 12) & 63L);
+      values[valuesOffset++] = (int) ((block2 >>> 6) & 63L);
+      values[valuesOffset++] = (int) (block2 & 63L);
+    }
   }

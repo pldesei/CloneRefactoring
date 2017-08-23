@@ -1,0 +1,13 @@
+(startLine=143 endLine=154 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/gui/ServerPanel.java)
+    private JPanel getPortPanel() {
+        port = new JTextField(4);
+
+        JLabel label = new JLabel(JMeterUtils.getResString("web_server_port")); // $NON-NLS-1$
+        label.setLabelFor(port);
+
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        panel.add(label, BorderLayout.WEST);
+        panel.add(port, BorderLayout.CENTER);
+
+        return panel;
+    }

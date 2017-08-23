@@ -1,10 +1,7 @@
-(startLine=45 endLine=53 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/facet/src/java/org/apache/lucene/facet/TopOrdAndFloatQueue.java)
-  protected boolean lessThan(OrdAndValue a, OrdAndValue b) {
-    if (a.value < b.value) {
-      return true;
-    } else if (a.value > b.value) {
-      return false;
-    } else {
-      return a.ord > b.ord;
-    }
+(startLine=45 endLine=50 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/spatial-extras/src/test/org/apache/lucene/spatial/serialized/SerializedStrategyTest.java)
+  public void testStatesBBox() throws IOException {
+    getAddAndVerifyIndexedDocuments(DATA_STATES_BBOX);
+
+    executeQueries(SpatialMatchConcern.FILTER, QTEST_States_IsWithin_BBox);
+    executeQueries(SpatialMatchConcern.FILTER, QTEST_States_Intersects_BBox);
   }

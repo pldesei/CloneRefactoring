@@ -1,6 +1,7 @@
-(startLine=274 endLine=278 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/solrj/src/java/org/apache/solr/client/solrj/response/schema/SchemaResponse.java)
-    public void setResponse(NamedList<Object> response) {
-      super.setResponse(response);
-
-      schemaVersion = SchemaResponse.getSchemaVersion(response.asShallowMap());
-    }
+(startLine=183 endLine=188 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/spatial3d/src/java/org/apache/lucene/spatial3d/geom/GeoLongitudeSlice.java)
+  public boolean equals(Object o) {
+    if (!(o instanceof GeoLongitudeSlice))
+      return false;
+    GeoLongitudeSlice other = (GeoLongitudeSlice) o;
+    return super.equals(other) && other.leftLon == leftLon && other.rightLon == rightLon;
+  }

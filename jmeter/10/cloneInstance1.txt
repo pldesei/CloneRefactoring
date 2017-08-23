@@ -1,0 +1,10 @@
+(startLine=81 endLine=89 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/control/gui/TransactionControllerGui.java)
+    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
+        setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
+        setBorder(makeBorder());
+        add(makeTitlePanel());
+        generateParentSample = new JCheckBox(JMeterUtils.getResString("transaction_controller_parent")); // $NON-NLS-1$
+        add(CheckBoxPanel.wrap(generateParentSample));
+        includeTimers = new JCheckBox(JMeterUtils.getResString("transaction_controller_include_timers"), true); // $NON-NLS-1$
+        add(CheckBoxPanel.wrap(includeTimers));
+    }

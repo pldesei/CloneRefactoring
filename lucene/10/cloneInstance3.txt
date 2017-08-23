@@ -1,0 +1,7 @@
+(startLine=256 endLine=261 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java)
+  public void testBQ3() throws Exception {
+    BooleanQuery.Builder query = new BooleanQuery.Builder();
+    query.add(new TermQuery(new Term(FIELD, "yy")), BooleanClause.Occur.SHOULD);
+    query.add(new TermQuery(new Term(FIELD, "w3")), BooleanClause.Occur.MUST);
+    qtest(query.build(), new int[] { 0,1,2,3 });
+  }

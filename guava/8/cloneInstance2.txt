@@ -1,19 +1,8 @@
-(startLine=494 endLine=511 srcPath=/home/ubuntu/newestVersion/guava/1/guava/guava-tests/test/com/google/common/collect/ImmutableListTest.java)
-    private static void runConcurrentlyMutatedTest(
-        Collection<Integer> initialContents,
-        Iterable<ListFrobber> actionsToPerformConcurrently,
-        WrapWithIterable wrap) {
-      ConcurrentlyMutatedList<Integer> concurrentlyMutatedList =
-          newConcurrentlyMutatedList(
-              initialContents, actionsToPerformConcurrently);
-
-      Iterable<Integer> iterableToCopy = wrap == WrapWithIterable.WRAP
-          ? unmodifiableIterable(concurrentlyMutatedList)
-          : concurrentlyMutatedList;
-
-      ImmutableList<Integer> copyOfIterable =
-          ImmutableList.copyOf(iterableToCopy);
-
-      assertTrue(concurrentlyMutatedList.getAllStates()
-          .contains(copyOfIterable));
-    }
+(startLine=439 endLine=445 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava-tests/test/com/google/common/base/SuppliersTest.java)
+  public void testOfInstance_equals() {
+    new EqualsTester()
+        .addEqualityGroup(
+            Suppliers.ofInstance("foo"), Suppliers.ofInstance("foo"))
+        .addEqualityGroup(Suppliers.ofInstance("bar"))
+        .testEquals();
+  }

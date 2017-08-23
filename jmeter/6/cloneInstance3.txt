@@ -1,0 +1,12 @@
+(startLine=131 endLine=141 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/gui/ServerPanel.java)
+    private JPanel getDomainPanel() {
+        domain = new JTextField(20);
+
+        JLabel label = new JLabel(JMeterUtils.getResString("web_server_domain")); // $NON-NLS-1$
+        label.setLabelFor(domain);
+
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        panel.add(label, BorderLayout.WEST);
+        panel.add(domain, BorderLayout.CENTER);
+        return panel;
+    }

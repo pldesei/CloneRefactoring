@@ -1,4 +1,7 @@
-(startLine=240 endLine=242 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/analysis/common/src/java/org/apache/lucene/analysis/miscellaneous/WordDelimiterGraphFilter.java)
-  public WordDelimiterGraphFilter(TokenStream in, int configurationFlags, CharArraySet protWords) {
-    this(in, WordDelimiterIterator.DEFAULT_WORD_DELIM_TABLE, configurationFlags, protWords);
+(startLine=113 endLine=118 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/CharArrayIterator.java)
+  public char setIndex(int position) {
+    if (position < getBeginIndex() || position > getEndIndex())
+      throw new IllegalArgumentException("Illegal Position: " + position);
+    index = start + position;
+    return current();
   }

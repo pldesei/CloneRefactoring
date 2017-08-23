@@ -1,0 +1,23 @@
+(startLine=305 endLine=326 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/protocol/http/modifier/TestURLRewritingModifier.java)
+        public void testCache() throws Exception {
+            String[] html = new String[] { 
+                    "<input name=\"sid\" value=\"myId\">", 
+                    "<html></html>", // No entry; check it is still present
+                    };
+            URLRewritingModifier newMod = new URLRewritingModifier();
+            newMod.setShouldCache(true);
+            newMod.setThreadContext(context);
+            newMod.setArgumentName("sid");
+            newMod.setPathExtension(false);
+            for (int i = 0; i < html.length; i++) {
+                response = new SampleResult();
+                response.setResponseData(html[i], null);
+                HTTPSamplerBase sampler = createSampler();
+                context.setCurrentSampler(sampler);
+                context.setPreviousResult(response);
+                newMod.process();
+                Arguments args = sampler.getArguments();
+                assertEquals("For case i=" + i, "myId", 
+                        ((Argument) args.getArguments().get(0).getObjectValue()).getValue());
+            }
+        }

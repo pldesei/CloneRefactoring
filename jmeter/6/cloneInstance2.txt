@@ -1,0 +1,9 @@
+(startLine=484 endLine=491 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/protocol/ldap/org/apache/jmeter/protocol/ldap/config/gui/LdapExtConfigGui.java)
+    private JPanel createLabelPanel(String key, JTextField field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        JLabel label = new JLabel(JMeterUtils.getResString(key)); // $NON-NLS-1$
+        label.setLabelFor(field);
+        panel.add(label, BorderLayout.WEST);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
+    }
