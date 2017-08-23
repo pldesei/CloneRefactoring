@@ -1,0 +1,7 @@
+(startLine=167 endLine=172 srcPath=/home/ubuntu/newestVersion/guava/1/guava/guava-tests/test/com/google/common/math/MathPreconditionsTest.java)
+  public void testCheckNonNegative_negativeBigInteger() {
+    try {
+      MathPreconditions.checkNonNegative("int", BigInteger.ONE.negate());
+      fail();
+    } catch (IllegalArgumentException expected) {}
+  }

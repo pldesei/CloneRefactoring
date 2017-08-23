@@ -1,0 +1,17 @@
+(startLine=256 endLine=271 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/java/org/apache/lucene/codecs/perfield/PerFieldDocValuesFormat.java)
+    FieldsReader(FieldsReader other) throws IOException {
+      Map<DocValuesProducer,DocValuesProducer> oldToNew = new IdentityHashMap<>();
+      // First clone all formats
+      for(Map.Entry<String,DocValuesProducer> ent : other.formats.entrySet()) {
+        DocValuesProducer values = ent.getValue().getMergeInstance();
+        formats.put(ent.getKey(), values);
+        oldToNew.put(ent.getValue(), values);
+      }
+
+      // Then rebuild fields:
+      for(Map.Entry<String,DocValuesProducer> ent : other.fields.entrySet()) {
+        DocValuesProducer producer = oldToNew.get(ent.getValue());
+        assert producer != null;
+        fields.put(ent.getKey(), producer);
+      }
+    }

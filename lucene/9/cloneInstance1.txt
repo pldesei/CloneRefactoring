@@ -1,0 +1,10 @@
+(startLine=45 endLine=53 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/facet/src/java/org/apache/lucene/facet/TopOrdAndIntQueue.java)
+  protected boolean lessThan(OrdAndValue a, OrdAndValue b) {
+    if (a.value < b.value) {
+      return true;
+    } else if (a.value > b.value) {
+      return false;
+    } else {
+      return a.ord > b.ord;
+    }
+  }

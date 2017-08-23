@@ -1,0 +1,9 @@
+(startLine=168 endLine=175 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/components/org/apache/jmeter/assertions/XMLSchemaAssertion.java)
+        public void error(SAXParseException exception) throws SAXParseException {
+
+            String msg = "error: " + errorDetails(exception);
+            log.debug(msg);
+            result.setFailureMessage(msg);
+            result.setError(true);
+            throw exception;
+        }

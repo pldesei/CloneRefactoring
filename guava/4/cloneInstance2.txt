@@ -1,0 +1,7 @@
+(startLine=390 endLine=395 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableLongArray.java)
+  public ImmutableLongArray subArray(int startIndex, int endIndex) {
+    Preconditions.checkPositionIndexes(startIndex, endIndex, length());
+    return startIndex == endIndex
+        ? EMPTY
+        : new ImmutableLongArray(array, start + startIndex, start + endIndex);
+  }

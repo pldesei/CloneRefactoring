@@ -1,0 +1,19 @@
+(startLine=494 endLine=511 srcPath=/home/ubuntu/newestVersion/guava/1/guava/guava-tests/test/com/google/common/collect/ImmutableListTest.java)
+    private static void runConcurrentlyMutatedTest(
+        Collection<Integer> initialContents,
+        Iterable<ListFrobber> actionsToPerformConcurrently,
+        WrapWithIterable wrap) {
+      ConcurrentlyMutatedList<Integer> concurrentlyMutatedList =
+          newConcurrentlyMutatedList(
+              initialContents, actionsToPerformConcurrently);
+
+      Iterable<Integer> iterableToCopy = wrap == WrapWithIterable.WRAP
+          ? unmodifiableIterable(concurrentlyMutatedList)
+          : concurrentlyMutatedList;
+
+      ImmutableList<Integer> copyOfIterable =
+          ImmutableList.copyOf(iterableToCopy);
+
+      assertTrue(concurrentlyMutatedList.getAllStates()
+          .contains(copyOfIterable));
+    }

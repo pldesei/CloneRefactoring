@@ -1,0 +1,10 @@
+(startLine=44 endLine=52 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/solrj/src/java/org/apache/solr/client/solrj/io/eval/PredictEvaluator.java)
+  public Number evaluate(Tuple tuple) throws IOException {
+
+    StreamEvaluator r = subEvaluators.get(0);
+    StreamEvaluator d = subEvaluators.get(1);
+
+    RegressionEvaluator.RegressionTuple rt= (RegressionEvaluator.RegressionTuple)r.evaluate(tuple);
+    Number n = (Number)d.evaluate(tuple);
+    return rt.predict(n.doubleValue());
+  }

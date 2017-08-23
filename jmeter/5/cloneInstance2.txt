@@ -1,0 +1,8 @@
+(startLine=182 endLine=188 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/components/org/apache/jmeter/assertions/XMLSchemaAssertion.java)
+        public void fatalError(SAXParseException exception) throws SAXParseException {
+            String msg = "fatal: " + errorDetails(exception);
+            log.debug(msg);
+            result.setFailureMessage(msg);
+            result.setError(true);
+            throw exception;
+        }

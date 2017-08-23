@@ -1,0 +1,9 @@
+(startLine=364 endLine=371 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableDoubleArray.java)
+  public int lastIndexOf(double target) {
+    for (int i = end - 1; i >= start; i--) {
+      if (areEqual(array[i], target)) {
+        return i - start;
+      }
+    }
+    return -1;
+  }

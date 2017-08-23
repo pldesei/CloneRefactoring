@@ -1,0 +1,6 @@
+(startLine=32 endLine=36 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/analysis/morfologik/src/test/org/apache/lucene/analysis/uk/TestUkrainianAnalyzer.java)
+  public void testDigitsInUkrainianCharset() throws IOException {
+    UkrainianMorfologikAnalyzer ra = new UkrainianMorfologikAnalyzer();
+    assertAnalyzesTo(ra, "text 1000", new String[] { "text", "1000" });
+    ra.close();
+  }
