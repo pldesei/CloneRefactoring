@@ -1,0 +1,17 @@
+(startLine=190 endLine=205 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/pipeline/movavg/models/MovAvgModel.java)
+        protected int parseIntegerParam(@Nullable Map<String, Object> settings, String name, int defaultValue) throws ParseException {
+            if (settings == null) {
+                return defaultValue;
+            }
+
+            Object value = settings.get(name);
+            if (value == null) {
+                return defaultValue;
+            } else if (value instanceof Number) {
+                settings.remove(name);
+                return ((Number) value).intValue();
+            }
+
+            throw new ParseException("Parameter [" + name + "] must be an integer, type `"
+                    + value.getClass().getSimpleName() + "` provided instead", 0);
+        }

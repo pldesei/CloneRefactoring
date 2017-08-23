@@ -1,0 +1,11 @@
+(startLine=532 endLine=541 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/index/fielddata/ScriptDocValues.java)
+        protected void resize(int newSize) {
+            count = newSize;
+            if (newSize > values.length) {
+                final int oldLength = values.length;
+                values = ArrayUtil.grow(values, count);
+                for (int i = oldLength; i < values.length; ++i) {
+                    values[i] = new BytesRefBuilder();
+                }
+            }
+        }

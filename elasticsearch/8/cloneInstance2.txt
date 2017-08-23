@@ -1,0 +1,17 @@
+(startLine=215 endLine=230 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/pipeline/movavg/models/MovAvgModel.java)
+        protected boolean parseBoolParam(@Nullable Map<String, Object> settings, String name, boolean defaultValue) throws ParseException {
+            if (settings == null) {
+                return defaultValue;
+            }
+
+            Object value = settings.get(name);
+            if (value == null) {
+                return defaultValue;
+            } else if (value instanceof Boolean) {
+                settings.remove(name);
+                return (Boolean)value;
+            }
+
+            throw new ParseException("Parameter [" + name + "] must be a boolean, type `"
+                    + value.getClass().getSimpleName() + "` provided instead", 0);
+        }

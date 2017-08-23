@@ -1,0 +1,12 @@
+(startLine=87 endLine=97 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedAggregatorFactory.java)
+    protected Aggregator createUnmapped(Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData)
+            throws IOException {
+        final UnmappedSampler aggregation = new UnmappedSampler(name, pipelineAggregators, metaData);
+
+        return new NonCollectingAggregator(name, context, parent, factories, pipelineAggregators, metaData) {
+            @Override
+            public InternalAggregation buildEmptyAggregation() {
+                return aggregation;
+            }
+        };
+    }

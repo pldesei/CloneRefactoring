@@ -1,0 +1,12 @@
+(startLine=56 endLine=66 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/geogrid/GeoHashGridAggregatorFactory.java)
+    protected Aggregator createUnmapped(Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData)
+            throws IOException {
+        final InternalAggregation aggregation = new InternalGeoHashGrid(name, requiredSize,
+                Collections.<InternalGeoHashGrid.Bucket> emptyList(), pipelineAggregators, metaData);
+        return new NonCollectingAggregator(name, context, parent, pipelineAggregators, metaData) {
+            @Override
+            public InternalAggregation buildEmptyAggregation() {
+                return aggregation;
+            }
+        };
+    }
