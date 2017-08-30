@@ -1,51 +1,7 @@
-(startLine=763 endLine=812 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/collect/Sets.java)
-  public static <E> SetView<E> intersection(final Set<E> set1, final Set<?> set2) {
-    checkNotNull(set1, "set1");
-    checkNotNull(set2, "set2");
-
-    return new SetView<E>() {
-      @Override
-      public UnmodifiableIterator<E> iterator() {
-        return new AbstractIterator<E>() {
-          final Iterator<E> itr = set1.iterator();
-
-          @Override
-          protected E computeNext() {
-            while (itr.hasNext()) {
-              E e = itr.next();
-              if (set2.contains(e)) {
-                return e;
-              }
-            }
-            return endOfData();
-          }
-        };
-      }
-
-      @Override
-      public int size() {
-        int size = 0;
-        for (E e : set1) {
-          if (set2.contains(e)) {
-            size++;
-          }
-        }
-        return size;
-      }
-
-      @Override
-      public boolean isEmpty() {
-        return Collections.disjoint(set1, set2);
-      }
-
-      @Override
-      public boolean contains(Object object) {
-        return set1.contains(object) && set2.contains(object);
-      }
-
-      @Override
-      public boolean containsAll(Collection<?> collection) {
-        return set1.containsAll(collection) && set2.containsAll(collection);
-      }
-    };
-  }
+(startLine=212 endLine=217 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableIntArray.java)
+    public Builder addAll(int[] values) {
+      ensureRoomFor(values.length);
+      System.arraycopy(values, 0, array, count, values.length);
+      count += values.length;
+      return this;
+    }

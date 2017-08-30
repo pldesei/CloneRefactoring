@@ -1,4 +1,4 @@
-(startLine=46 endLine=66 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/solrj/src/java/org/apache/solr/client/solrj/io/eval/DistanceEvaluator.java)
+(startLine=44 endLine=65 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/solrj/src/java/org/apache/solr/client/solrj/io/eval/CovarianceEvaluator.java)
   public Number evaluate(Tuple tuple) throws IOException {
 
     StreamEvaluator colEval1 = subEvaluators.get(0);
@@ -17,6 +17,7 @@
       column2[i] = numbers2.get(i).doubleValue();
     }
 
-    EuclideanDistance distance = new EuclideanDistance();
-    return distance.compute(column1, column2);
+    Covariance covariance = new Covariance();
+
+    return covariance.covariance(column1, column2);
   }

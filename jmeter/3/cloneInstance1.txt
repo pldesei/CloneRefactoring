@@ -1,18 +1,9 @@
-(startLine=302 endLine=318 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/protocol/http/org/apache/jmeter/protocol/http/gui/HeaderPanel.java)
-    private JPanel createButtonPanel() {
-        boolean tableEmpty = tableModel.getRowCount() == 0;
-
-        JButton addButton = createButton("add", 'A', ADD_COMMAND, true); // $NON-NLS-1$
-        deleteButton = createButton("delete", 'D', DELETE_COMMAND, !tableEmpty); // $NON-NLS-1$
-        JButton loadButton = createButton("load", 'L', LOAD_COMMAND, true); // $NON-NLS-1$
-        saveButton = createButton("save", 'S', SAVE_COMMAND, !tableEmpty); // $NON-NLS-1$
-        JButton addFromClipboard = createButton("add_from_clipboard", 'C', ADD_FROM_CLIPBOARD, true); // $NON-NLS-1$
-        
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(addButton);
-        buttonPanel.add(addFromClipboard);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(loadButton);
-        buttonPanel.add(saveButton);
-        return buttonPanel;
-    }
+(startLine=248 endLine=255 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/util/XPathUtil.java)
+        public void warning(SAXParseException ex) throws SAXException {
+            if (log.isInfoEnabled()) {
+                log.info("Type={}. {}", type, ex.toString());
+            }
+            if (val && !tol){
+                throw new SAXException(ex);
+            }
+        }

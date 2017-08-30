@@ -1,8 +1,7 @@
-(startLine=182 endLine=188 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/components/org/apache/jmeter/assertions/XMLSchemaAssertion.java)
-        public void fatalError(SAXParseException exception) throws SAXParseException {
-            String msg = "fatal: " + errorDetails(exception);
-            log.debug(msg);
-            result.setFailureMessage(msg);
-            result.setError(true);
-            throw exception;
-        }
+(startLine=515 endLine=520 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/protocol/ldap/org/apache/jmeter/protocol/ldap/config/gui/LdapExtConfigGui.java)
+    private JPanel createModifyPanel() {
+        JPanel modifyPanel = new JPanel(new BorderLayout(5, 0));
+        modifyPanel.add(createLabelPanel("entrydn", modify), BorderLayout.NORTH);
+        modifyPanel.add(tableModifyPanel, BorderLayout.CENTER);
+        return modifyPanel;
+    }

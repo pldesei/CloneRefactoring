@@ -1,20 +1,11 @@
-(startLine=304 endLine=322 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/misc/src/java/org/apache/lucene/search/DocValuesStats.java)
-    protected void doAccumulate(int count) throws IOException {
-      int numValues = sndv.docValueCount();
-      while (numValues-- > 0) {
-        double val = Double.longBitsToDouble(sndv.nextValue());
-        if (Double.compare(val, max) > 0) {
-          max = val;
+(startLine=7538 endLine=7547 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/StreamExpressionTest.java)
+  protected boolean assertNotFields(List<Tuple> tuples, String ... fields) throws Exception{
+    for(Tuple tuple : tuples){
+      for(String field : fields){
+        if(tuple.fields.containsKey(field)){
+          throw new Exception(String.format(Locale.ROOT, "Unexpected field '%s' found", field));
         }
-        if (Double.compare(val, min) < 0) {
-          min = val;
-        }
-        sum += val;
-        double oldMean = mean;
-        // for correct "running average computation", increase valuesCount with each value, rather than once before the
-        // loop stats.
-        ++valuesCount;
-        mean += (val - mean) / valuesCount;
-        variance += (val - mean) * (val - oldMean);
       }
     }
+    return true;
+  }  
