@@ -1,0 +1,18 @@
+(startLine=851 endLine=867 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TypeAnnotationSyntaxTest.java)
+public void test0037() throws IOException {
+	String source = "public class A {\n" +
+					"    int[] f[];\n" +
+					"    @Marker HashMap<@Positive Integer, @Negative Integer>.Iterator k;\n" +
+					"    float[] p[];\n" +
+					"}\n";
+	String expectedUnitToString = 
+		"public class A {\n" + 
+		"  int[][] f;\n" + 
+		"  @Marker HashMap<@Positive Integer, @Negative Integer>.Iterator k;\n" + 
+		"  float[][] p;\n" + 
+		"  public A() {\n" + 
+		"    super();\n" + 
+		"  }\n" + 
+		"}\n";
+	checkParse(CHECK_ALL & ~CHECK_JAVAC_PARSER, source.toCharArray(), null, "test0037", expectedUnitToString);
+}

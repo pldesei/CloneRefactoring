@@ -1,0 +1,10 @@
+(startLine=32 endLine=40 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldPointer.java)
+	public void put(Nd nd, long address, long newValue) {
+		Database db = nd.getDB();
+		db.getLog().start(this.putTag);
+		try {
+			nd.getDB().putRecPtr(address + this.offset, newValue);
+		} finally {
+			db.getLog().end(this.putTag);
+		}
+	}

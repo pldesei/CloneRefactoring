@@ -1,0 +1,20 @@
+(startLine=296 endLine=314 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.gwt.ecore/src/org/eclipse/emf/ecore/impl/EEnumImpl.java)
+  public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException
+  {
+    switch (operationID)
+    {
+      case EcorePackage.EENUM___GET_EANNOTATION__STRING:
+        return getEAnnotation((String)arguments.get(0));
+      case EcorePackage.EENUM___IS_INSTANCE__OBJECT:
+        return isInstance(arguments.get(0));
+      case EcorePackage.EENUM___GET_CLASSIFIER_ID:
+        return getClassifierID();
+      case EcorePackage.EENUM___GET_EENUM_LITERAL__STRING:
+        return getEEnumLiteral((String)arguments.get(0));
+      case EcorePackage.EENUM___GET_EENUM_LITERAL__INT:
+        return getEEnumLiteral((Integer)arguments.get(0));
+      case EcorePackage.EENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING:
+        return getEEnumLiteralByLiteral((String)arguments.get(0));
+    }
+    return eDynamicInvoke(operationID, arguments);
+  }

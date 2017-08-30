@@ -1,0 +1,10 @@
+(startLine=49 endLine=57 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldSearchKey.java)
+	public static <T, B extends NdNode> FieldSearchKey<T> create(StructDef<B> builder,
+			FieldSearchIndex<B> searchIndex) {
+		FieldSearchKey<T> result = new FieldSearchKey<T>(searchIndex, builder.getStructName(), builder.getNumFields());
+
+		builder.add(result);
+		builder.addDestructableField(result);
+
+		return result;
+	}

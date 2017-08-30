@@ -1,0 +1,17 @@
+(startLine=901 endLine=916 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.gwt.ecore/src/org/eclipse/emf/ecore/impl/BasicEObjectImpl.java)
+  public EStructuralFeature eContainingFeature()
+  {
+    EObject eContainer = eInternalContainer();
+    if (eContainer == null)
+    {
+      return null;
+    }
+    else
+    {
+      int eContainerFeatureID = eContainerFeatureID();
+      return
+        eContainerFeatureID <= EOPPOSITE_FEATURE_BASE ?
+          eContainer.eClass().getEStructuralFeature(EOPPOSITE_FEATURE_BASE - eContainerFeatureID) :
+          ((EReference)eClass().getEStructuralFeature(eContainerFeatureID)).getEOpposite();
+    }
+  }

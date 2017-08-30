@@ -1,0 +1,55 @@
+(startLine=166 endLine=219 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.gwt.ecore/src/org/eclipse/emf/ecore/impl/EcoreFactoryImpl.java)
+  public String convertToString(EDataType eDataType, Object instanceValue)
+  {
+    switch (eDataType.getClassifierID())
+    {
+      case EcorePackage.EBIG_DECIMAL:
+        return convertEBigDecimalToString(eDataType, instanceValue);
+      case EcorePackage.EBIG_INTEGER:
+        return convertEBigIntegerToString(eDataType, instanceValue);
+      case EcorePackage.EBOOLEAN:
+        return convertEBooleanToString(eDataType, instanceValue);
+      case EcorePackage.EBOOLEAN_OBJECT:
+        return convertEBooleanObjectToString(eDataType, instanceValue);
+      case EcorePackage.EBYTE:
+        return convertEByteToString(eDataType, instanceValue);
+      case EcorePackage.EBYTE_ARRAY:
+        return convertEByteArrayToString(eDataType, instanceValue);
+      case EcorePackage.EBYTE_OBJECT:
+        return convertEByteObjectToString(eDataType, instanceValue);
+      case EcorePackage.ECHAR:
+        return convertECharToString(eDataType, instanceValue);
+      case EcorePackage.ECHARACTER_OBJECT:
+        return convertECharacterObjectToString(eDataType, instanceValue);
+      case EcorePackage.EDATE:
+        return convertEDateToString(eDataType, instanceValue);
+      case EcorePackage.EDOUBLE:
+        return convertEDoubleToString(eDataType, instanceValue);
+      case EcorePackage.EDOUBLE_OBJECT:
+        return convertEDoubleObjectToString(eDataType, instanceValue);
+      case EcorePackage.EFLOAT:
+        return convertEFloatToString(eDataType, instanceValue);
+      case EcorePackage.EFLOAT_OBJECT:
+        return convertEFloatObjectToString(eDataType, instanceValue);
+      case EcorePackage.EINT:
+        return convertEIntToString(eDataType, instanceValue);
+      case EcorePackage.EINTEGER_OBJECT:
+        return convertEIntegerObjectToString(eDataType, instanceValue);
+      case EcorePackage.EJAVA_CLASS:
+        return convertEJavaClassToString(eDataType, instanceValue);
+      case EcorePackage.EJAVA_OBJECT:
+        return convertEJavaObjectToString(eDataType, instanceValue);
+      case EcorePackage.ELONG:
+        return convertELongToString(eDataType, instanceValue);
+      case EcorePackage.ELONG_OBJECT:
+        return convertELongObjectToString(eDataType, instanceValue);
+      case EcorePackage.ESHORT:
+        return convertEShortToString(eDataType, instanceValue);
+      case EcorePackage.ESHORT_OBJECT:
+        return convertEShortObjectToString(eDataType, instanceValue);
+      case EcorePackage.ESTRING:
+        return convertEStringToString(eDataType, instanceValue);
+      default:
+        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+    }
+  }

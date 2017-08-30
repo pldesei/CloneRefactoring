@@ -1,0 +1,10 @@
+(startLine=35 endLine=43 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldChar.java)
+	public void put(Nd nd, long address, char newValue) {
+		Database db = nd.getDB();
+		db.getLog().start(this.tag);
+		try {
+			nd.getDB().putChar(address + this.offset, newValue);
+		} finally {
+			db.getLog().end(this.tag);
+		}
+	}

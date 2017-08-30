@@ -1,7 +1,11 @@
-(startLine=408 endLine=413 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/action/fieldstats/FieldStats.java)
-        public Long(long maxDoc, long docCount, long sumDocFreq, long sumTotalTermFreq,
-                    boolean isSearchable, boolean isAggregatable,
-                    long minValue, long maxValue) {
-            super((byte) 0, maxDoc, docCount, sumDocFreq, sumTotalTermFreq,
-                isSearchable, isAggregatable, minValue, maxValue);
+(startLine=354 endLine=363 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/index/fielddata/ScriptDocValues.java)
+        protected void resize(int newSize) {
+            count = newSize;
+            if (newSize > values.length) {
+                int oldLength = values.length;
+                values = ArrayUtil.grow(values, count);
+                for (int i = oldLength; i < values.length; ++i) {
+                values[i] = new GeoPoint();
+                }
+            }
         }

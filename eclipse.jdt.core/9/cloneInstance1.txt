@@ -1,0 +1,33 @@
+(startLine=11213 endLine=11244 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
+	public void test0372() {
+		this.runConformTest(
+			new String[] {
+				"X.java",
+				"import java.util.Iterator;\n" +
+				"import java.util.Map;\n" +
+				"import java.util.Map.Entry;\n" +
+				"\n" +
+				"public class X <K, V> {\n" +
+				"\n" +
+				"	void foo(Iterator<Map.Entry<K,V>> iter) {\n" +
+				"		new XA.MXA<K,V>(iter.next());\n" +
+				"	}\n" +
+				"}\n" +
+				"class XA <K, V> {\n" +
+				"	static class MXA <K, V>  implements Entry<K,V> {\n" +
+				"		MXA(Entry<K,V> e) {\n" +
+				"		}\n" +
+				"		public K getKey() {\n" +
+				"			return null;\n" +
+				"		}\n" +
+				"		public V getValue() {\n" +
+				"			return null;\n" +
+				"		}\n" +
+				"		public V setValue(V value) {\n" +
+				"			return null;\n" +
+				"		}\n" +
+				"	}\n" +
+				"}\n"	,
+			},
+			"");
+	}

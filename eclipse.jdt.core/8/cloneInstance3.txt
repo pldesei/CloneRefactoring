@@ -1,0 +1,31 @@
+(startLine=2669 endLine=2698 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NegativeLambdaExpressionsTest.java)
+public void test081() {
+	// Nested Lambda argument redeclares outer lambda's argument.
+	this.runNegativeTest(
+			new String[] {
+					"X.java",
+					"interface I {\n" +
+					"	void foo(int p, int q);\n" +
+					"}\n" +
+					"public class X {\n" +
+					"   int f;\n" +
+					"	void foo(int outerp) {\n" +
+					"       int locouter;\n" +
+					"		I i = (int p, int q)  -> {\n" +
+					"           I i2 = (int p, int q) -> {};\n" +
+					"		};\n" +
+					"	}	\n" +
+					"}\n",
+				},
+				"----------\n" + 
+				"1. ERROR in X.java (at line 9)\n" + 
+				"	I i2 = (int p, int q) -> {};\n" + 
+				"	            ^\n" + 
+				"Lambda expression\'s parameter p cannot redeclare another local variable defined in an enclosing scope. \n" + 
+				"----------\n" + 
+				"2. ERROR in X.java (at line 9)\n" + 
+				"	I i2 = (int p, int q) -> {};\n" + 
+				"	                   ^\n" + 
+				"Lambda expression\'s parameter q cannot redeclare another local variable defined in an enclosing scope. \n" + 
+				"----------\n");
+}

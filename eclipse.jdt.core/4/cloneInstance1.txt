@@ -1,0 +1,9 @@
+(startLine=53 endLine=60 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldOneToOne.java)
+	public static <T extends INdStruct, B extends INdStruct> FieldOneToOne<T> create(StructDef<B> builder,
+			StructDef<T> nodeType, FieldOneToOne<B> forwardPointer) {
+
+		FieldOneToOne<T> result = new FieldOneToOne<T>(nodeType, forwardPointer, false);
+		builder.add(result);
+		builder.addDestructableField(result);
+		return result;
+	}
