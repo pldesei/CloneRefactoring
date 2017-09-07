@@ -1,14 +1,25 @@
-This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/db/Chunk.java
-The line range of this clone instance is: 301-311
+This clone instance is located in File: org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java
+The line range of this clone instance is: 51-72
 The content of this clone instance is as follows:
-	public void putChars(final long offset, char[] chars, int start, int len) {
-		makeDirty();
-		int idx= recPtrToIndex(offset)-1;
-		final int end= start + len;
-		for (int i = start; i < end; i++) {
-			char value= chars[i];
-			this.fBuffer[++idx]= (byte) (value >> 8);
-			this.fBuffer[++idx]= (byte) (value);
-		}
-		recordWrite(offset, len * 2);
-	}
+public void abstractMethodCannotBeOverridden(SourceTypeBinding type, MethodBinding concreteMethod) {
+
+	this.handle(
+		// %1 must be abstract since it cannot override the inherited package-private abstract method %2
+		IProblem.AbstractMethodCannotBeOverridden,
+		new String[] {
+			new String(type.sourceName()), 
+			new String(
+					CharOperation.concat(
+						concreteMethod.declaringClass.readableName(),
+						concreteMethod.readableName(),
+						'.'))},
+		new String[] {
+			new String(type.sourceName()), 
+			new String(
+					CharOperation.concat(
+						concreteMethod.declaringClass.shortReadableName(),
+						concreteMethod.shortReadableName(),
+						'.'))},
+		type.sourceStart(),
+		type.sourceEnd());
+}

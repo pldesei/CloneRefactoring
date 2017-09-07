@@ -1,13 +1,14 @@
-This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldSearchIndex.java
-The line range of this clone instance is: 199-208
+This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/db/Chunk.java
+The line range of this clone instance is: 301-311
 The content of this clone instance is as follows:
-	public static <T extends NdNode, B> FieldSearchIndex<T> create(StructDef<B> builder,
-			final FieldSearchKey<B> searchKey) {
-
-		FieldSearchIndex<T> result = new FieldSearchIndex<T>(searchKey, builder.getStructName(), builder.getNumFields());
-
-		builder.add(result);
-		builder.addDestructableField(result);
-
-		return result;
+	public void putChars(final long offset, char[] chars, int start, int len) {
+		makeDirty();
+		int idx= recPtrToIndex(offset)-1;
+		final int end= start + len;
+		for (int i = start; i < end; i++) {
+			char value= chars[i];
+			this.fBuffer[++idx]= (byte) (value >> 8);
+			this.fBuffer[++idx]= (byte) (value);
+		}
+		recordWrite(offset, len * 2);
 	}

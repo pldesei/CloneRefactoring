@@ -1,19 +1,11 @@
-This clone instance is located in File: core/src/main/java/org/elasticsearch/search/aggregations/pipeline/movavg/models/MovAvgModel.java
-The line range of this clone instance is: 215-230
+This clone instance is located in File: core/src/main/java/org/elasticsearch/index/warmer/WarmerStats.java
+The line range of this clone instance is: 90-97
 The content of this clone instance is as follows:
-        protected boolean parseBoolParam(@Nullable Map<String, Object> settings, String name, boolean defaultValue) throws ParseException {
-            if (settings == null) {
-                return defaultValue;
-            }
-
-            Object value = settings.get(name);
-            if (value == null) {
-                return defaultValue;
-            } else if (value instanceof Boolean) {
-                settings.remove(name);
-                return (Boolean)value;
-            }
-
-            throw new ParseException("Parameter [" + name + "] must be a boolean, type `"
-                    + value.getClass().getSimpleName() + "` provided instead", 0);
-        }
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.startObject(Fields.WARMER);
+        builder.field(Fields.CURRENT, current);
+        builder.field(Fields.TOTAL, total);
+        builder.timeValueField(Fields.TOTAL_TIME_IN_MILLIS, Fields.TOTAL_TIME, totalTimeInMillis);
+        builder.endObject();
+        return builder;
+    }

@@ -1,9 +1,9 @@
-This clone instance is located in File: lucene/spatial-extras/src/test/org/apache/lucene/spatial/serialized/SerializedStrategyTest.java
-The line range of this clone instance is: 45-50
+This clone instance is located in File: lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/CharArrayIterator.java
+The line range of this clone instance is: 113-118
 The content of this clone instance is as follows:
-  public void testStatesBBox() throws IOException {
-    getAddAndVerifyIndexedDocuments(DATA_STATES_BBOX);
-
-    executeQueries(SpatialMatchConcern.FILTER, QTEST_States_IsWithin_BBox);
-    executeQueries(SpatialMatchConcern.FILTER, QTEST_States_Intersects_BBox);
+  public char setIndex(int position) {
+    if (position < getBeginIndex() || position > getEndIndex())
+      throw new IllegalArgumentException("Illegal Position: " + position);
+    index = start + position;
+    return current();
   }

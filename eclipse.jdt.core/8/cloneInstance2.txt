@@ -1,33 +1,12 @@
-This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NegativeLambdaExpressionsTest.java
-The line range of this clone instance is: 2638-2667
+This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldSearchKey.java
+The line range of this clone instance is: 49-57
 The content of this clone instance is as follows:
-public void test080() {
-	// Nested Lambda argument redeclares outer method's local.
-	this.runNegativeTest(
-			new String[] {
-					"X.java",
-					"interface I {\n" +
-					"	void foo(int p, int q);\n" +
-					"}\n" +
-					"public class X {\n" +
-					"   int f;\n" +
-					"	void foo(int outerp) {\n" +
-					"       int locouter;\n" +
-					"		I i = (int p, int q)  -> {\n" +
-					"           I i2 = (int locouter, int outerp) -> {};\n" +
-					"		};\n" +
-					"	}	\n" +
-					"}\n",
-				},
-				"----------\n" + 
-				"1. ERROR in X.java (at line 9)\n" + 
-				"	I i2 = (int locouter, int outerp) -> {};\n" + 
-				"	            ^^^^^^^^\n" + 
-				"Lambda expression\'s parameter locouter cannot redeclare another local variable defined in an enclosing scope. \n" + 
-				"----------\n" + 
-				"2. ERROR in X.java (at line 9)\n" + 
-				"	I i2 = (int locouter, int outerp) -> {};\n" + 
-				"	                          ^^^^^^\n" + 
-				"Lambda expression\'s parameter outerp cannot redeclare another local variable defined in an enclosing scope. \n" + 
-				"----------\n");
-}
+	public static <T, B extends NdNode> FieldSearchKey<T> create(StructDef<B> builder,
+			FieldSearchIndex<B> searchIndex) {
+		FieldSearchKey<T> result = new FieldSearchKey<T>(searchIndex, builder.getStructName(), builder.getNumFields());
+
+		builder.add(result);
+		builder.addDestructableField(result);
+
+		return result;
+	}

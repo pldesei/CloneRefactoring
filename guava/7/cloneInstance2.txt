@@ -1,10 +1,9 @@
-This clone instance is located in File: guava-tests/test/com/google/common/collect/ArrayTableTest.java
-The line range of this clone instance is: 231-237
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableIntArray.java
+The line range of this clone instance is: 249-254
 The content of this clone instance is as follows:
-  public void testCreateCopyEmptyTable() {
-    Table<String, Integer, Character> original = HashBasedTable.create();
-    try {
-      ArrayTable.create(original);
-      fail();
-    } catch (IllegalArgumentException expected) {}
-  }
+    public Builder addAll(ImmutableIntArray values) {
+      ensureRoomFor(values.length());
+      System.arraycopy(values.array, values.start, array, count, values.length());
+      count += values.length();
+      return this;
+    }

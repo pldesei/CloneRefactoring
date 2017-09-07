@@ -1,15 +1,25 @@
-This clone instance is located in File: src/components/org/apache/jmeter/control/gui/InterleaveControlGui.java
-The line range of this clone instance is: 92-103
+This clone instance is located in File: test/src/org/apache/jmeter/protocol/http/modifier/TestURLRewritingModifier.java
+The line range of this clone instance is: 328-349
 The content of this clone instance is as follows:
-    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
-        setBorder(makeBorder());
-
-        add(makeTitlePanel());
-
-        style = new JCheckBox(JMeterUtils.getResString("ignore_subcontrollers")); // $NON-NLS-1$
-        add(CheckBoxPanel.wrap(style));
-        
-        accrossThreads = new JCheckBox(JMeterUtils.getResString("interleave_accross_threads")); // $NON-NLS-1$
-        add(CheckBoxPanel.wrap(accrossThreads));
-    }
+        public void testNoCache() throws Exception {
+            String[] html = new String[] { 
+                    "<input name=\"sid\" value=\"myId\">",  "myId",
+                    "<html></html>", "",
+                    };
+            URLRewritingModifier newMod = new URLRewritingModifier();
+            newMod.setThreadContext(context);
+            newMod.setArgumentName("sid");
+            newMod.setPathExtension(false);
+            newMod.setShouldCache(false);
+            for (int i = 0; i < html.length/2; i++) {
+                response = new SampleResult();
+                response.setResponseData(html[i*2], null);
+                HTTPSamplerBase sampler = createSampler();
+                context.setCurrentSampler(sampler);
+                context.setPreviousResult(response);
+                newMod.process();
+                Arguments args = sampler.getArguments();
+                assertEquals("For case i=" + i, html[i*2+1], 
+                        ((Argument) args.getArguments().get(0).getObjectValue()).getValue());
+            }
+        }

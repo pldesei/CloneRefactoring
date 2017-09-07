@@ -1,37 +1,14 @@
-This clone instance is located in File: modules/lang-painless/src/main/java/org/elasticsearch/painless/node/EUnary.java
-The line range of this clone instance is: 122-155
+This clone instance is located in File: core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedAggregatorFactory.java
+The line range of this clone instance is: 87-97
 The content of this clone instance is as follows:
-    void analyzerAdd(Locals variables) {
-        child.analyze(variables);
+    protected Aggregator createUnmapped(Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData)
+            throws IOException {
+        final UnmappedSampler aggregation = new UnmappedSampler(name, pipelineAggregators, metaData);
 
-        promote = AnalyzerCaster.promoteNumeric(child.actual, true);
-
-        if (promote == null) {
-            throw createError(new ClassCastException("Cannot apply positive [+] to type [" + child.actual.name + "]."));
-        }
-
-        child.expected = promote;
-        child = child.cast(variables);
-
-        if (child.constant != null) {
-            Sort sort = promote.sort;
-
-            if (sort == Sort.INT) {
-                constant = +(int)child.constant;
-            } else if (sort == Sort.LONG) {
-                constant = +(long)child.constant;
-            } else if (sort == Sort.FLOAT) {
-                constant = +(float)child.constant;
-            } else if (sort == Sort.DOUBLE) {
-                constant = +(double)child.constant;
-            } else {
-                throw createError(new IllegalStateException("Illegal tree structure."));
+        return new NonCollectingAggregator(name, context, parent, factories, pipelineAggregators, metaData) {
+            @Override
+            public InternalAggregation buildEmptyAggregation() {
+                return aggregation;
             }
-        }
-
-        if (promote.sort == Sort.DEF && expected != null) {
-            actual = expected;
-        } else {
-            actual = promote;
-        }
+        };
     }

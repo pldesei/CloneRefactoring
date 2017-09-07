@@ -1,12 +1,52 @@
-This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldFloat.java
-The line range of this clone instance is: 35-43
+This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTest_1_3.java
+The line range of this clone instance is: 1469-1517
 The content of this clone instance is as follows:
-	public void put(Nd nd, long address, float newValue) {
-		Database db = nd.getDB();
-		db.getLog().start(this.tag);
-		try {
-			nd.getDB().putFloat(address + this.offset, newValue);
-		} finally {
-			db.getLog().end(this.tag);
-		}
+	public void testBug82514() {
+		this.runNegativeTest(
+			new String[] {
+				"X.java",
+				"class ComparableUtils {\n" +
+				"   public static <T extends Comparable< ? super T>> int compareTo(final Object first, final Object firstPrime,  final Class<T> type) throws ClassCastException\n" +
+				"    {\n" +
+				"        return 0;\n" +
+				"    }\n" +
+				"    public static <X extends Comparable< ? super X>> int compareTo(final X first, final X firstPrime)\n" +
+				"        throws ClassCastException\n" +
+				"    {\n" +
+				"        return 0;\n" +
+				"    }\n" +
+				"}\n" +
+				"public final class X {  \n" +
+				"	/** Tests the method{@link ComparableUtils#compareTo(Object, Object, Class)} and\n" +
+				"	 *  {@link ComparableUtils#compareTo(Object, Object)}.\n" +
+				"	 */\n" +
+				"    public void testCompareTo() {}\n" +
+				"}"
+			},
+			"----------\n" + 
+			"1. ERROR in X.java (at line 2)\n" + 
+			"	public static <T extends Comparable< ? super T>> int compareTo(final Object first, final Object firstPrime,  final Class<T> type) throws ClassCastException\n" + 
+			"	               ^^^^^^^^^^^^^^^^^^^^\n" + 
+			"Syntax error, type parameters are only available if source level is 1.5 or greater\n" + 
+			"----------\n" + 
+			"2. ERROR in X.java (at line 2)\n" + 
+			"	public static <T extends Comparable< ? super T>> int compareTo(final Object first, final Object firstPrime,  final Class<T> type) throws ClassCastException\n" + 
+			"	                                                                                                                         ^\n" + 
+			"Syntax error, parameterized types are only available if source level is 1.5 or greater\n" + 
+			"----------\n" + 
+			"3. ERROR in X.java (at line 6)\n" + 
+			"	public static <X extends Comparable< ? super X>> int compareTo(final X first, final X firstPrime)\n" + 
+			"	               ^^^^^^^^^^^^^^^^^^^^\n" + 
+			"Syntax error, type parameters are only available if source level is 1.5 or greater\n" + 
+			"----------\n" + 
+			"4. WARNING in X.java (at line 6)\n" + 
+			"	public static <X extends Comparable< ? super X>> int compareTo(final X first, final X firstPrime)\n" + 
+			"	               ^\n" + 
+			"The type parameter X is hiding the type X\n" + 
+			"----------\n" + 
+			"5. ERROR in X.java (at line 14)\n" + 
+			"	*  {@link ComparableUtils#compareTo(Object, Object)}.\n" + 
+			"	                          ^^^^^^^^^\n" + 
+			"Javadoc: The method compareTo(Object, Object, Class<T>) in the type ComparableUtils is not applicable for the arguments (Object, Object)\n" + 
+		    "----------\n");
 	}

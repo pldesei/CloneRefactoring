@@ -1,20 +1,12 @@
-This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TypeAnnotationSyntaxTest.java
-The line range of this clone instance is: 905-921
+This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldShort.java
+The line range of this clone instance is: 36-44
 The content of this clone instance is as follows:
-public void test0040() throws IOException {
-	String source = "public class A {\n" +
-					"    int[] f[];\n" +
-					"    @Marker HashMap<@Positive Integer, @Negative Integer>[] @NonEmpty[][] k;\n" +
-					"    float[] p[];\n" +
-					"}\n";
-	String expectedUnitToString = 
-		"public class A {\n" + 
-		"  int[][] f;\n" + 
-		"  @Marker HashMap<@Positive Integer, @Negative Integer>[] @NonEmpty [][] k;\n" + 
-		"  float[][] p;\n" + 
-		"  public A() {\n" + 
-		"    super();\n" + 
-		"  }\n" + 
-		"}\n";
-	checkParse(CHECK_ALL & ~CHECK_JAVAC_PARSER, source.toCharArray(), null, "test0040", expectedUnitToString);
-}
+	public void put(Nd nd, long address, short newValue) {
+		Database db = nd.getDB();
+		db.getLog().start(this.putTag);
+		try {
+			nd.getDB().putShort(address + this.offset, newValue);
+		} finally {
+			db.getLog().end(this.putTag);
+		}
+	}

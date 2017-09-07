@@ -1,9 +1,9 @@
-This clone instance is located in File: solr/solrj/src/java/org/apache/solr/client/solrj/request/CollectionAdminRequest.java
-The line range of this clone instance is: 217-222
+This clone instance is located in File: lucene/spatial3d/src/java/org/apache/lucene/spatial3d/geom/GeoWideLongitudeSlice.java
+The line range of this clone instance is: 193-198
 The content of this clone instance is as follows:
-    public SolrParams getParams() {
-      ModifiableSolrParams params = new ModifiableSolrParams(super.getParams());
-      params.set(CoreAdminParams.COLLECTION, collection);
-      params.set(CoreAdminParams.SHARD, shard);
-      return params;
-    }
+  public boolean equals(Object o) {
+    if (!(o instanceof GeoWideLongitudeSlice))
+      return false;
+    GeoWideLongitudeSlice other = (GeoWideLongitudeSlice) o;
+    return super.equals(other) && other.leftLon == leftLon && other.rightLon == rightLon;
+  }

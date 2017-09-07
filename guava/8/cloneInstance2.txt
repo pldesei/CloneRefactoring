@@ -1,10 +1,11 @@
-This clone instance is located in File: android/guava-tests/test/com/google/common/base/SuppliersTest.java
-The line range of this clone instance is: 439-445
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableLongArray.java
+The line range of this clone instance is: 258-265
 The content of this clone instance is as follows:
-  public void testOfInstance_equals() {
-    new EqualsTester()
-        .addEqualityGroup(
-            Suppliers.ofInstance("foo"), Suppliers.ofInstance("foo"))
-        .addEqualityGroup(Suppliers.ofInstance("bar"))
-        .testEquals();
-  }
+    private void ensureRoomFor(int numberToAdd) {
+      int newCount = count + numberToAdd; // TODO(kevinb): check overflow now?
+      if (newCount > array.length) {
+        long[] newArray = new long[expandedCapacity(array.length, newCount)];
+        System.arraycopy(array, 0, newArray, 0, count);
+        this.array = newArray;
+      }
+    }

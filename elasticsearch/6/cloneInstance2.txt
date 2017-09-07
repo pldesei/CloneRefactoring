@@ -1,37 +1,14 @@
-This clone instance is located in File: modules/lang-painless/src/main/java/org/elasticsearch/painless/node/EUnary.java
-The line range of this clone instance is: 157-190
+This clone instance is located in File: core/src/main/java/org/elasticsearch/search/aggregations/bucket/geogrid/GeoHashGridAggregatorFactory.java
+The line range of this clone instance is: 56-66
 The content of this clone instance is as follows:
-    void analyzerSub(Locals variables) {
-        child.analyze(variables);
-
-        promote = AnalyzerCaster.promoteNumeric(child.actual, true);
-
-        if (promote == null) {
-            throw createError(new ClassCastException("Cannot apply negative [-] to type [" + child.actual.name + "]."));
-        }
-
-        child.expected = promote;
-        child = child.cast(variables);
-
-        if (child.constant != null) {
-            Sort sort = promote.sort;
-
-            if (sort == Sort.INT) {
-                constant = -(int)child.constant;
-            } else if (sort == Sort.LONG) {
-                constant = -(long)child.constant;
-            } else if (sort == Sort.FLOAT) {
-                constant = -(float)child.constant;
-            } else if (sort == Sort.DOUBLE) {
-                constant = -(double)child.constant;
-            } else {
-                throw createError(new IllegalStateException("Illegal tree structure."));
+    protected Aggregator createUnmapped(Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData)
+            throws IOException {
+        final InternalAggregation aggregation = new InternalGeoHashGrid(name, requiredSize,
+                Collections.<InternalGeoHashGrid.Bucket> emptyList(), pipelineAggregators, metaData);
+        return new NonCollectingAggregator(name, context, parent, pipelineAggregators, metaData) {
+            @Override
+            public InternalAggregation buildEmptyAggregation() {
+                return aggregation;
             }
-        }
-
-        if (promote.sort == Sort.DEF && expected != null) {
-            actual = expected;
-        } else {
-            actual = promote;
-        }
+        };
     }

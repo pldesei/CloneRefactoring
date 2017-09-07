@@ -1,20 +1,12 @@
-This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TypeAnnotationSyntaxTest.java
-The line range of this clone instance is: 887-903
+This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldByte.java
+The line range of this clone instance is: 35-43
 The content of this clone instance is as follows:
-public void test0039() throws IOException {
-	String source = "public class A {\n" +
-					"    int[] f[];\n" +
-					"    @Marker String[] @NonEmpty[][]k;\n" +
-					"    float[] p[];\n" +
-					"}\n";
-	String expectedUnitToString = 
-		"public class A {\n" + 
-		"  int[][] f;\n" + 
-		"  @Marker String[] @NonEmpty [][] k;\n" + 
-		"  float[][] p;\n" + 
-		"  public A() {\n" + 
-		"    super();\n" + 
-		"  }\n" + 
-		"}\n";
-	checkParse(CHECK_ALL & ~CHECK_JAVAC_PARSER, source.toCharArray(), null, "test0039", expectedUnitToString);
-}
+	public void put(Nd nd, long address, byte newValue) {
+		Database db = nd.getDB();
+		db.getLog().start(this.tag);
+		try {
+			db.putByte(address + this.offset, newValue);
+		} finally {
+			db.getLog().end(this.tag);
+		}
+	}

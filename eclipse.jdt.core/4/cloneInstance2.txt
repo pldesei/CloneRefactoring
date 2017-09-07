@@ -1,12 +1,19 @@
-This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldOneToOne.java
-The line range of this clone instance is: 62-70
+This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldSearchIndex.java
+The line range of this clone instance is: 284-299
 The content of this clone instance is as follows:
-	public static <T extends INdStruct, B extends INdStruct> FieldOneToOne<T> createOwner(StructDef<B> builder,
-			StructDef<T> nodeType, FieldOneToOne<B> forwardPointer) {
+	public List<T> findAll(final Nd nd, long address, final SearchCriteria searchCriteria, final int count) {
+		final List<T> result = new ArrayList<T>();
+		get(nd, address).accept(new SearchCriteriaToBtreeVisitorAdapter(searchCriteria, nd) {
 
-		FieldOneToOne<T> result = new FieldOneToOne<T>(nodeType, forwardPointer, true);
-		builder.add(result);
-		builder.addDestructableField(result);
-		builder.addOwnerField(result);
+			int remainingCount = count;
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected boolean acceptResult(long resultAddress) {
+				result.add((T) NdNode.load(nd, resultAddress));
+				this.remainingCount--;
+				return this.remainingCount > 0;
+			}
+		});
 		return result;
 	}

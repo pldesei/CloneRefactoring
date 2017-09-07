@@ -1,19 +1,10 @@
-This clone instance is located in File: core/src/main/java/org/elasticsearch/search/aggregations/pipeline/movavg/models/MovAvgModel.java
-The line range of this clone instance is: 190-205
+This clone instance is located in File: core/src/main/java/org/elasticsearch/index/flush/FlushStats.java
+The line range of this clone instance is: 85-91
 The content of this clone instance is as follows:
-        protected int parseIntegerParam(@Nullable Map<String, Object> settings, String name, int defaultValue) throws ParseException {
-            if (settings == null) {
-                return defaultValue;
-            }
-
-            Object value = settings.get(name);
-            if (value == null) {
-                return defaultValue;
-            } else if (value instanceof Number) {
-                settings.remove(name);
-                return ((Number) value).intValue();
-            }
-
-            throw new ParseException("Parameter [" + name + "] must be an integer, type `"
-                    + value.getClass().getSimpleName() + "` provided instead", 0);
-        }
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.startObject(Fields.FLUSH);
+        builder.field(Fields.TOTAL, total);
+        builder.timeValueField(Fields.TOTAL_TIME_IN_MILLIS, Fields.TOTAL_TIME, totalTimeInMillis);
+        builder.endObject();
+        return builder;
+    }

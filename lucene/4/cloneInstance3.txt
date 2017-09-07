@@ -1,13 +1,9 @@
-This clone instance is located in File: solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/SelectWithEvaluatorsTest.java
-The line range of this clone instance is: 167-176
+This clone instance is located in File: lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java
+The line range of this clone instance is: 256-261
 The content of this clone instance is as follows:
-  protected boolean assertFields(List<Tuple> tuples, String ... fields) throws Exception{
-    for(Tuple tuple : tuples){
-      for(String field : fields){
-        if(!tuple.fields.containsKey(field)){
-          throw new Exception(String.format(Locale.ROOT, "Expected field '%s' not found", field));
-        }
-      }
-    }
-    return true;
+  public void testBQ3() throws Exception {
+    BooleanQuery.Builder query = new BooleanQuery.Builder();
+    query.add(new TermQuery(new Term(FIELD, "yy")), BooleanClause.Occur.SHOULD);
+    query.add(new TermQuery(new Term(FIELD, "w3")), BooleanClause.Occur.MUST);
+    qtest(query.build(), new int[] { 0,1,2,3 });
   }

@@ -1,47 +1,33 @@
-This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java
-The line range of this clone instance is: 11323-11366
+This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NegativeLambdaExpressionsTest.java
+The line range of this clone instance is: 2669-2698
 The content of this clone instance is as follows:
-	public void test0376() {
-		this.runConformTest(
+public void test081() {
+	// Nested Lambda argument redeclares outer lambda's argument.
+	this.runNegativeTest(
 			new String[] {
-				"XA.java",
-				"import java.util.Map.Entry;\n" +
-				"\n" +
-				"public class XA <K, V> {\n" +
-				"   XA<K,V> self() { return this; } \n" +
-				"	static class MXA <K, V>  implements Entry<K,V> {\n" +
-				"		MXA(Entry<K,V> e) {\n" +
-				"		}\n" +
-				"		public K getKey() {\n" +
-				"			return null;\n" +
-				"		}\n" +
-				"		public V getValue() {\n" +
-				"			return null;\n" +
-				"		}\n" +
-				"		public V setValue(V value) {\n" +
-				"			return null;\n" +
-				"		}\n" +
-				"	}\n" +
-				"}\n"	,
-			},
-			"");
-		// compile against binaries
-		this.runConformTest(
-			new String[] {
-				"X.java",
-				"import java.util.Iterator;\n" +
-				"import java.util.Map;\n" +
-				"import java.util.Map.Entry;\n" +
-				"\n" +
-				"public class X <K, V> {\n" +
-				"\n" +
-				"	void foo(Iterator<Map.Entry<K,V>> iter) {\n" +
-				"		new XA.MXA<K,V>(iter.next());\n" +
-				"	}\n" +
-				"}\n"	,
-			},
-			"",
-			null,
-			false,
-			null);
-	}
+					"X.java",
+					"interface I {\n" +
+					"	void foo(int p, int q);\n" +
+					"}\n" +
+					"public class X {\n" +
+					"   int f;\n" +
+					"	void foo(int outerp) {\n" +
+					"       int locouter;\n" +
+					"		I i = (int p, int q)  -> {\n" +
+					"           I i2 = (int p, int q) -> {};\n" +
+					"		};\n" +
+					"	}	\n" +
+					"}\n",
+				},
+				"----------\n" + 
+				"1. ERROR in X.java (at line 9)\n" + 
+				"	I i2 = (int p, int q) -> {};\n" + 
+				"	            ^\n" + 
+				"Lambda expression\'s parameter p cannot redeclare another local variable defined in an enclosing scope. \n" + 
+				"----------\n" + 
+				"2. ERROR in X.java (at line 9)\n" + 
+				"	I i2 = (int p, int q) -> {};\n" + 
+				"	                   ^\n" + 
+				"Lambda expression\'s parameter q cannot redeclare another local variable defined in an enclosing scope. \n" + 
+				"----------\n");
+}

@@ -1,25 +1,20 @@
-This clone instance is located in File: org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java
-The line range of this clone instance is: 773-794
+This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TypeAnnotationSyntaxTest.java
+The line range of this clone instance is: 815-831
 The content of this clone instance is as follows:
-public void abstractMethodCannotBeOverridden(SourceTypeBinding type, MethodBinding concreteMethod) {
-
-	this.handle(
-		// %1 must be abstract since it cannot override the inherited package-private abstract method %2
-		IProblem.AbstractMethodCannotBeOverridden,
-		new String[] {
-			new String(type.sourceName()),
-			new String(
-					CharOperation.concat(
-						concreteMethod.declaringClass.readableName(),
-						concreteMethod.readableName(),
-						'.'))},
-		new String[] {
-			new String(type.sourceName()),
-			new String(
-					CharOperation.concat(
-						concreteMethod.declaringClass.shortReadableName(),
-						concreteMethod.shortReadableName(),
-						'.'))},
-		type.sourceStart(),
-		type.sourceEnd());
+public void test0035() throws IOException {
+	String source = "public class A {\n" +
+					"    int[] f[];\n" +
+					"    @Marker String k;\n" +
+					"    float[] p[];\n" +
+					"}\n";
+	String expectedUnitToString = 
+		"public class A {\n" + 
+		"  int[][] f;\n" + 
+		"  @Marker String k;\n" + 
+		"  float[][] p;\n" + 
+		"  public A() {\n" + 
+		"    super();\n" + 
+		"  }\n" + 
+		"}\n";
+	checkParse(CHECK_ALL & ~CHECK_JAVAC_PARSER, source.toCharArray(), null, "test0035", expectedUnitToString);
 }

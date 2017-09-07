@@ -1,11 +1,11 @@
-This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableLongArray.java
-The line range of this clone instance is: 258-265
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableIntArray.java
+The line range of this clone instance is: 359-366
 The content of this clone instance is as follows:
-    private void ensureRoomFor(int numberToAdd) {
-      int newCount = count + numberToAdd; // TODO(kevinb): check overflow now?
-      if (newCount > array.length) {
-        long[] newArray = new long[expandedCapacity(array.length, newCount)];
-        System.arraycopy(array, 0, newArray, 0, count);
-        this.array = newArray;
+  public int lastIndexOf(int target) {
+    for (int i = end - 1; i >= start; i--) {
+      if (array[i] == target) {
+        return i - start;
       }
     }
+    return -1;
+  }

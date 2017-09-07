@@ -1,25 +1,45 @@
-This clone instance is located in File: test/src/org/apache/jmeter/protocol/http/modifier/TestURLRewritingModifier.java
-The line range of this clone instance is: 328-349
+This clone instance is located in File: test/src/org/apache/jmeter/control/TestOnceOnlyController.java
+The line range of this clone instance is: 31-72
 The content of this clone instance is as follows:
-        public void testNoCache() throws Exception {
-            String[] html = new String[] { 
-                    "<input name=\"sid\" value=\"myId\">",  "myId",
-                    "<html></html>", "",
-                    };
-            URLRewritingModifier newMod = new URLRewritingModifier();
-            newMod.setThreadContext(context);
-            newMod.setArgumentName("sid");
-            newMod.setPathExtension(false);
-            newMod.setShouldCache(false);
-            for (int i = 0; i < html.length/2; i++) {
-                response = new SampleResult();
-                response.setResponseData(html[i*2], null);
-                HTTPSamplerBase sampler = createSampler();
-                context.setCurrentSampler(sampler);
-                context.setPreviousResult(response);
-                newMod.process();
-                Arguments args = sampler.getArguments();
-                assertEquals("For case i=" + i, html[i*2+1], 
-                        ((Argument) args.getArguments().get(0).getObjectValue()).getValue());
-            }
+    public void testProcessing() throws Exception {
+        GenericController controller = new GenericController();
+        GenericController sub_1 = new OnceOnlyController();
+        sub_1.addTestElement(new TestSampler("one"));
+        sub_1.addTestElement(new TestSampler("two"));
+        controller.addTestElement(sub_1);
+        controller.addTestElement(new TestSampler("three"));
+        LoopController sub_2 = new LoopController();
+        sub_2.setLoops(3);
+        GenericController sub_3 = new GenericController();
+        sub_2.addTestElement(new TestSampler("four"));
+        sub_3.addTestElement(new TestSampler("five"));
+        sub_3.addTestElement(new TestSampler("six"));
+        sub_2.addTestElement(sub_3);
+        sub_2.addTestElement(new TestSampler("seven"));
+        controller.addTestElement(sub_2);
+        String[] interleaveOrder = new String[] { "one", "two" };
+        String[] order = new String[] { "", "", "three", "four", "five", "six", "seven", "four", "five", "six",
+            "seven", "four", "five", "six", "seven" };
+        int counter = 15;
+        controller.setRunningVersion(true);
+        sub_1.setRunningVersion(true);
+        sub_2.setRunningVersion(true);
+        sub_3.setRunningVersion(true);
+        controller.initialize();
+        for (int i = 0; i < 4; i++) {
+        assertEquals(15, counter);
+        counter = 0;
+        if (i > 0) {
+            counter = 2;
         }
+        TestElement sampler = null;
+        while ((sampler = controller.next()) != null) {
+            if (i == 0 && counter < 2) {
+            assertEquals(interleaveOrder[counter], sampler.getName());
+            } else {
+            assertEquals(order[counter], sampler.getName());
+            }
+            counter++;
+        }
+        }
+    }

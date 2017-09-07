@@ -1,14 +1,19 @@
-This clone instance is located in File: core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedAggregatorFactory.java
-The line range of this clone instance is: 87-97
+This clone instance is located in File: core/src/main/java/org/elasticsearch/search/aggregations/pipeline/movavg/models/MovAvgModel.java
+The line range of this clone instance is: 190-205
 The content of this clone instance is as follows:
-    protected Aggregator createUnmapped(Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData)
-            throws IOException {
-        final UnmappedSampler aggregation = new UnmappedSampler(name, pipelineAggregators, metaData);
-
-        return new NonCollectingAggregator(name, context, parent, factories, pipelineAggregators, metaData) {
-            @Override
-            public InternalAggregation buildEmptyAggregation() {
-                return aggregation;
+        protected int parseIntegerParam(@Nullable Map<String, Object> settings, String name, int defaultValue) throws ParseException {
+            if (settings == null) {
+                return defaultValue;
             }
-        };
-    }
+
+            Object value = settings.get(name);
+            if (value == null) {
+                return defaultValue;
+            } else if (value instanceof Number) {
+                settings.remove(name);
+                return ((Number) value).intValue();
+            }
+
+            throw new ParseException("Parameter [" + name + "] must be an integer, type `"
+                    + value.getClass().getSimpleName() + "` provided instead", 0);
+        }
