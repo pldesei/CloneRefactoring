@@ -1,55 +1,158 @@
-(startLine=170 endLine=223 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EcoreFactoryImpl.java)
-  public String convertToString(EDataType eDataType, Object instanceValue)
-  {
-    switch (eDataType.getClassifierID())
+This clone instance is located in File: plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenBaseImpl.java
+The line range of this clone instance is: 2847-3001
+The content of this clone instance is as follows:
+    protected static boolean findOrCreateContainer
+      (GenModel genModel, Monitor progressMonitor, int style, List pluginVariables, String output, boolean forceStyle)
     {
-      case EcorePackage.EBIG_DECIMAL:
-        return convertEBigDecimalToString(eDataType, instanceValue);
-      case EcorePackage.EBIG_INTEGER:
-        return convertEBigIntegerToString(eDataType, instanceValue);
-      case EcorePackage.EBOOLEAN:
-        return convertEBooleanToString(eDataType, instanceValue);
-      case EcorePackage.EBOOLEAN_OBJECT:
-        return convertEBooleanObjectToString(eDataType, instanceValue);
-      case EcorePackage.EBYTE:
-        return convertEByteToString(eDataType, instanceValue);
-      case EcorePackage.EBYTE_ARRAY:
-        return convertEByteArrayToString(eDataType, instanceValue);
-      case EcorePackage.EBYTE_OBJECT:
-        return convertEByteObjectToString(eDataType, instanceValue);
-      case EcorePackage.ECHAR:
-        return convertECharToString(eDataType, instanceValue);
-      case EcorePackage.ECHARACTER_OBJECT:
-        return convertECharacterObjectToString(eDataType, instanceValue);
-      case EcorePackage.EDATE:
-        return convertEDateToString(eDataType, instanceValue);
-      case EcorePackage.EDOUBLE:
-        return convertEDoubleToString(eDataType, instanceValue);
-      case EcorePackage.EDOUBLE_OBJECT:
-        return convertEDoubleObjectToString(eDataType, instanceValue);
-      case EcorePackage.EFLOAT:
-        return convertEFloatToString(eDataType, instanceValue);
-      case EcorePackage.EFLOAT_OBJECT:
-        return convertEFloatObjectToString(eDataType, instanceValue);
-      case EcorePackage.EINT:
-        return convertEIntToString(eDataType, instanceValue);
-      case EcorePackage.EINTEGER_OBJECT:
-        return convertEIntegerObjectToString(eDataType, instanceValue);
-      case EcorePackage.EJAVA_CLASS:
-        return convertEJavaClassToString(eDataType, instanceValue);
-      case EcorePackage.EJAVA_OBJECT:
-        return convertEJavaObjectToString(eDataType, instanceValue);
-      case EcorePackage.ELONG:
-        return convertELongToString(eDataType, instanceValue);
-      case EcorePackage.ELONG_OBJECT:
-        return convertELongObjectToString(eDataType, instanceValue);
-      case EcorePackage.ESHORT:
-        return convertEShortToString(eDataType, instanceValue);
-      case EcorePackage.ESHORT_OBJECT:
-        return convertEShortObjectToString(eDataType, instanceValue);
-      case EcorePackage.ESTRING:
-        return convertEStringToString(eDataType, instanceValue);
-      default:
-        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+      IPath outputPath = new Path(output);
+      IContainer container = null;
+      try
+      {
+        progressMonitor.beginTask("", outputPath.segmentCount() + 1);
+        progressMonitor.subTask(CodeGenEcorePlugin.INSTANCE.getString("_UI_OpeningFolder_message", new Object [] { outputPath }));
+        if (outputPath.isAbsolute())
+        {
+          IWorkspace workspace = ResourcesPlugin.getWorkspace();
+          IProject project = workspace.getRoot().getProject(outputPath.segment(0));
+          if (forceStyle || !project.exists())
+          {
+            IPath projectLocation = null;
+
+            List referencedProjects = new UniqueEList();
+            if (project.exists())
+            {
+              referencedProjects.addAll(Arrays.asList(project.getDescription().getReferencedProjects()));
+              projectLocation = project.getDescription().getLocation();
+            }
+            else
+            {
+              URI genModelURI = genModel.eResource().getURI();
+              if (genModelURI.isPlatformResource())
+              {
+                IProject genModelProject = workspace.getRoot().getProject(genModelURI.segments()[1]);
+                projectLocation = genModelProject.getDescription().getLocation();
+              }
+            }
+
+            IProject modelProject = workspace.getRoot().getProject(genModel.getModelProjectDirectory());
+            IPath javaSource = new Path(genModel.getModelDirectory());
+
+            if ((style & Generator.EMF_TESTS_PROJECT_STYLE) != 0)
+            {
+              IProject testsProject = workspace.getRoot().getProject(genModel.getTestsProjectDirectory());
+
+              if (!genModel.sameModelTestsProject())
+              {
+                javaSource = new Path(genModel.getTestsDirectory());
+
+                if (testsProject.exists())
+                {
+                  projectLocation = testsProject.getDescription().getLocation();
+                }
+
+                referencedProjects.add(modelProject);
+                referencedProjects.addAll(Arrays.asList(modelProject.getDescription().getReferencedProjects()));
+              }
+            }
+            else if ((style & Generator.EMF_MODEL_PROJECT_STYLE) == 0 && genModel.hasEditSupport())
+            {
+              IProject editProject = workspace.getRoot().getProject(genModel.getEditProjectDirectory());
+
+              if (!genModel.sameModelEditProject())
+              {
+                javaSource = new Path(genModel.getEditDirectory());
+                if (editProject.exists())
+                {
+                  projectLocation = editProject.getDescription().getLocation();
+                }
+
+                referencedProjects.add(modelProject);
+              }
+
+              for (Iterator i = genModel.getUsedGenPackages().iterator(); i.hasNext(); )
+              {
+                GenModel otherGenModel = ((GenPackage)i.next()).getGenModel();
+                if (otherGenModel.hasEditSupport())
+                {
+                  IProject otherEditProject = workspace.getRoot().getProject(otherGenModel.getEditProjectDirectory());
+                  if (otherEditProject.exists())
+                  {
+                    referencedProjects.add(otherEditProject);
+                    referencedProjects.addAll(Arrays.asList(otherEditProject.getDescription().getReferencedProjects()));
+                  }
+                }
+              }
+
+              if ((style & Generator.EMF_EDIT_PROJECT_STYLE) == 0 && genModel.hasEditorSupport())
+              {
+                javaSource = new Path(genModel.getEditorDirectory());
+                if (!genModel.sameEditEditorProject())
+                {
+                  referencedProjects.add(editProject);
+                  referencedProjects.addAll(Arrays.asList(editProject.getDescription().getReferencedProjects()));
+                }
+              }
+            }
+
+            //  Remove any non-Java dependencies from being added.
+            //
+            for (Iterator i = referencedProjects.iterator(); i.hasNext(); )
+            {
+              IProject referencedProject = (IProject)i.next();
+              IJavaProject referencedJavaProject = JavaCore.create(referencedProject);
+              if (!referencedJavaProject.exists())
+              {
+                i.remove();
+              }
+            }
+
+            if (projectLocation != null)
+            {
+              projectLocation = projectLocation.removeLastSegments(1).append(javaSource.segment(0));
+            }
+
+            if (genModel.hasXMLDependency())
+            {
+              style |= Generator.EMF_XML_PROJECT_STYLE;
+            }
+
+            if ((style & Generator.EMF_MODEL_PROJECT_STYLE) == 0 || genModel.hasPluginSupport())
+            {
+              style |= Generator.EMF_PLUGIN_PROJECT_STYLE;
+            }
+
+            Generator.createEMFProject
+              (javaSource,
+               projectLocation,
+               referencedProjects,
+               progressMonitor,
+               style,
+               pluginVariables);
+          }
+          else
+          {
+            if (!project.isOpen())
+            {
+              project.open(BasicMonitor.toIProgressMonitor(CodeGenUtil.createMonitor(progressMonitor, 1)));
+            }
+          }
+
+          container = project;
+          for (int i = 1, length = outputPath.segmentCount(); i < length; ++ i)
+          {
+            IFolder folder = container.getFolder(new Path(outputPath.segment(i)));
+            if (!folder.exists())
+            {
+              folder.create(false, true, BasicMonitor.toIProgressMonitor(CodeGenUtil.createMonitor(progressMonitor, 1)));
+            }
+            container = folder;
+          }
+        }
+      }
+      catch (Exception exception)
+      {
+        CodeGenEcorePlugin.INSTANCE.log(exception);
+      }
+      progressMonitor.done();
+      return container != null;
     }
-  }

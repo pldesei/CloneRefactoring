@@ -1,0 +1,10 @@
+This clone instance is located in File: lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java
+The line range of this clone instance is: 488-494
+The content of this clone instance is as follows:
+  public void testMultiFieldBQ2() throws Exception {
+    BooleanQuery.Builder query = new BooleanQuery.Builder();
+    query.add(new TermQuery(new Term(FIELD, "yy")), BooleanClause.Occur.MUST);
+    query.add(new TermQuery(new Term(ALTFIELD, "w3")), BooleanClause.Occur.MUST);
+
+    qtest(query.build(), new int[] { 2,3 });
+  }

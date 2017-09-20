@@ -1,9 +1,0 @@
-(startLine=442 endLine=449 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java)
-  public void testBQ21() throws Exception {
-    BooleanQuery.Builder q = new BooleanQuery.Builder();
-    q.add(new TermQuery(new Term(FIELD, "yy")), BooleanClause.Occur.SHOULD);
-    q.add(new TermQuery(new Term(FIELD, "zz")), BooleanClause.Occur.SHOULD);
-    
-    qtest(q.build(), new int[] { 1,2,3 });
-    
-  }

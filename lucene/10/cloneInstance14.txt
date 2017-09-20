@@ -1,8 +1,0 @@
-(startLine=488 endLine=494 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java)
-  public void testMultiFieldBQ2() throws Exception {
-    BooleanQuery.Builder query = new BooleanQuery.Builder();
-    query.add(new TermQuery(new Term(FIELD, "yy")), BooleanClause.Occur.MUST);
-    query.add(new TermQuery(new Term(ALTFIELD, "w3")), BooleanClause.Occur.MUST);
-
-    qtest(query.build(), new int[] { 2,3 });
-  }

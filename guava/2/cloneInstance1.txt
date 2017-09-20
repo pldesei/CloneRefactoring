@@ -1,7 +1,10 @@
-(startLine=212 endLine=217 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableIntArray.java)
-    public Builder addAll(int[] values) {
-      ensureRoomFor(values.length);
-      System.arraycopy(values, 0, array, count, values.length);
-      count += values.length;
-      return this;
-    }
+This clone instance is located in File: guava-tests/test/com/google/common/base/SuppliersTest.java
+The line range of this clone instance is: 439-445
+The content of this clone instance is as follows:
+  public void testOfInstance_equals() {
+    new EqualsTester()
+        .addEqualityGroup(
+            Suppliers.ofInstance("foo"), Suppliers.ofInstance("foo"))
+        .addEqualityGroup(Suppliers.ofInstance("bar"))
+        .testEquals();
+  }

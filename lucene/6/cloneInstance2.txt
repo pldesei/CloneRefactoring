@@ -1,40 +1,9 @@
-(startLine=85 endLine=123 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/java/org/apache/lucene/util/packed/BulkOperationPacked6.java)
-  public void decode(long[] blocks, int blocksOffset, long[] values, int valuesOffset, int iterations) {
-    for (int i = 0; i < iterations; ++i) {
-      final long block0 = blocks[blocksOffset++];
-      values[valuesOffset++] = block0 >>> 58;
-      values[valuesOffset++] = (block0 >>> 52) & 63L;
-      values[valuesOffset++] = (block0 >>> 46) & 63L;
-      values[valuesOffset++] = (block0 >>> 40) & 63L;
-      values[valuesOffset++] = (block0 >>> 34) & 63L;
-      values[valuesOffset++] = (block0 >>> 28) & 63L;
-      values[valuesOffset++] = (block0 >>> 22) & 63L;
-      values[valuesOffset++] = (block0 >>> 16) & 63L;
-      values[valuesOffset++] = (block0 >>> 10) & 63L;
-      values[valuesOffset++] = (block0 >>> 4) & 63L;
-      final long block1 = blocks[blocksOffset++];
-      values[valuesOffset++] = ((block0 & 15L) << 2) | (block1 >>> 62);
-      values[valuesOffset++] = (block1 >>> 56) & 63L;
-      values[valuesOffset++] = (block1 >>> 50) & 63L;
-      values[valuesOffset++] = (block1 >>> 44) & 63L;
-      values[valuesOffset++] = (block1 >>> 38) & 63L;
-      values[valuesOffset++] = (block1 >>> 32) & 63L;
-      values[valuesOffset++] = (block1 >>> 26) & 63L;
-      values[valuesOffset++] = (block1 >>> 20) & 63L;
-      values[valuesOffset++] = (block1 >>> 14) & 63L;
-      values[valuesOffset++] = (block1 >>> 8) & 63L;
-      values[valuesOffset++] = (block1 >>> 2) & 63L;
-      final long block2 = blocks[blocksOffset++];
-      values[valuesOffset++] = ((block1 & 3L) << 4) | (block2 >>> 60);
-      values[valuesOffset++] = (block2 >>> 54) & 63L;
-      values[valuesOffset++] = (block2 >>> 48) & 63L;
-      values[valuesOffset++] = (block2 >>> 42) & 63L;
-      values[valuesOffset++] = (block2 >>> 36) & 63L;
-      values[valuesOffset++] = (block2 >>> 30) & 63L;
-      values[valuesOffset++] = (block2 >>> 24) & 63L;
-      values[valuesOffset++] = (block2 >>> 18) & 63L;
-      values[valuesOffset++] = (block2 >>> 12) & 63L;
-      values[valuesOffset++] = (block2 >>> 6) & 63L;
-      values[valuesOffset++] = block2 & 63L;
+This clone instance is located in File: solr/solrj/src/java/org/apache/solr/client/solrj/request/CollectionAdminRequest.java
+The line range of this clone instance is: 238-243
+The content of this clone instance is as follows:
+    public SolrParams getParams() {
+      ModifiableSolrParams params = new ModifiableSolrParams(super.getParams());
+      params.set(CoreAdminParams.COLLECTION, collection);
+      params.set(CoreAdminParams.SHARD, shard);
+      return params;
     }
-  }

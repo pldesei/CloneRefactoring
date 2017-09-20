@@ -1,38 +1,28 @@
-(startLine=8625 endLine=8661 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
-  public List<String> getEditQualifiedPackageNames()
-  {
-    EList<String> packageNames = sameModelEditProject() ?
-      (EList<String>)getModelQualifiedPackageNames() :
-        sameEditTestsProject() ?
-          (EList<String>)getTestsQualifiedPackageNames() :
-          new UniqueEList<String>();
+This clone instance is located in File: plugins/org.eclipse.emf.ecore.xcore/src/org/eclipse/emf/ecore/xcore/util/XcoreJvmInferrer.java
+The line range of this clone instance is: 682-706
+The content of this clone instance is as follows:
+                    protected JvmOperation inferStructure()
+                    {
+                      JvmOperation validateConstraintOperation = createJvmOperation(genPackage, JvmVisibility.PUBLIC, false, getJvmTypeReference("boolean", genPackage));
+                      EList<JvmFormalParameter> parameters = validateConstraintOperation.getParameters();
+                      JvmElementInferrer<JvmFormalParameter> classifierParameterInferrer =
+                        new JvmElementInferrer<JvmFormalParameter>(X_VERY_LOW)
+                        {
+                           @Override
+                           protected JvmFormalParameter inferStructure()
+                           {
+                             return createJvmFormalParameter(genPackage, getJvmTypeReference(genClassifier.getImportedWildcardInstanceClassName(), genPackage));
+                           }
 
-    TreeIterator<GenPackage> genPackagesIterator =
-      new AbstractTreeIterator<GenPackage>(getGenPackages(), false)
-      {
-        private static final long serialVersionUID = 1L;
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected Iterator<GenPackage> getChildren(Object object)
-        {
-          return object instanceof Collection<?> ?
-            ((Collection<GenPackage>)object).iterator() :
-            ((GenPackage)object).getNestedGenPackages().iterator();
-        }
-      };
-    while(genPackagesIterator.hasNext())
-    {
-      GenPackage genPackage = genPackagesIterator.next();
-      addQualifiedEditPackageNames(packageNames, genPackage);
-    }
-
-    String pluginClassPackage = CodeGenUtil.getPackageName(getEditPluginClassToUse());
-    if (!isBlank(pluginClassPackage))
-    {
-      packageNames.add(pluginClassPackage);
-    }
-
-    ECollections.sort(packageNames);
-    return packageNames;
-  }
+                           @Override
+                           public void inferName()
+                           {
+                             inferredElement.setName(genClassifier.getSafeUncapName());
+                           }
+                        };
+                      associate(genClassifier, classifierParameterInferrer);
+                      parameters.add(classifierParameterInferrer.getInferredElement());
+                      parameters.add(createJvmFormalParameter(genPackage, diagnostics, getJvmTypeReference("org.eclipse.emf.common.util.DiagnosticChain", genPackage)));
+                      parameters.add(createJvmFormalParameter(genPackage, context, getJvmTypeReference(map, genPackage)));
+                      return validateConstraintOperation;
+                    }

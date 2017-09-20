@@ -1,29 +1,9 @@
-(startLine=623 endLine=650 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/collect/TreeRangeMap.java)
-      public Set<Entry<Range<K>, V>> entrySet() {
-        return new Maps.EntrySet<Range<K>, V>() {
-          @Override
-          Map<Range<K>, V> map() {
-            return SubRangeMapAsMap.this;
-          }
-
-          @Override
-          public Iterator<Entry<Range<K>, V>> iterator() {
-            return entryIterator();
-          }
-
-          @Override
-          public boolean retainAll(Collection<?> c) {
-            return removeEntryIf(not(in(c)));
-          }
-
-          @Override
-          public int size() {
-            return Iterators.size(iterator());
-          }
-
-          @Override
-          public boolean isEmpty() {
-            return !iterator().hasNext();
-          }
-        };
-      }
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableIntArray.java
+The line range of this clone instance is: 388-393
+The content of this clone instance is as follows:
+  public ImmutableIntArray subArray(int startIndex, int endIndex) {
+    Preconditions.checkPositionIndexes(startIndex, endIndex, length());
+    return startIndex == endIndex
+        ? EMPTY
+        : new ImmutableIntArray(array, start + startIndex, start + endIndex);
+  }

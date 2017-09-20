@@ -1,7 +1,12 @@
-(startLine=244 endLine=249 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java)
-  public void testBQ1() throws Exception {
-    BooleanQuery.Builder query = new BooleanQuery.Builder();
-    query.add(new TermQuery(new Term(FIELD, "w1")), BooleanClause.Occur.MUST);
-    query.add(new TermQuery(new Term(FIELD, "w2")), BooleanClause.Occur.MUST);
-    qtest(query.build(), new int[] { 0,1,2,3 });
+This clone instance is located in File: solr/solrj/src/java/org/apache/solr/client/solrj/io/eval/PredictEvaluator.java
+The line range of this clone instance is: 44-52
+The content of this clone instance is as follows:
+  public Number evaluate(Tuple tuple) throws IOException {
+
+    StreamEvaluator r = subEvaluators.get(0);
+    StreamEvaluator d = subEvaluators.get(1);
+
+    RegressionEvaluator.RegressionTuple rt= (RegressionEvaluator.RegressionTuple)r.evaluate(tuple);
+    Number n = (Number)d.evaluate(tuple);
+    return rt.predict(n.doubleValue());
   }

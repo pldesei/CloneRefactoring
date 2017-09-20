@@ -1,9 +1,19 @@
-(startLine=258 endLine=265 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/util/XPathUtil.java)
-        public void error(SAXParseException ex) throws SAXException {
-            if (log.isWarnEnabled()) {
-                log.warn("Type={}. {}", type, ex.toString());
-            }
-            if (val && !tol) {
-                throw new SAXException(ex);
-            }
+This clone instance is located in File: test/src/org/apache/jmeter/samplers/TestSampleResult.java
+The line range of this clone instance is: 84-99
+The content of this clone instance is as follows:
+        public void testPauseTrue() throws Exception {
+            SampleResult res = new SampleResult(true);
+            // Check sample increments OK
+            res.sampleStart();
+            long totalSampleTime = sleep(100); // accumulate the time spent 'sampling'
+            res.samplePause();
+
+            Thread.sleep(200); // this should be ignored
+
+            // Re-increment
+            res.sampleResume();
+            totalSampleTime += sleep(100);
+            res.sampleEnd();
+            long sampleTime = res.getTime();
+            assertEquals("Accumulated sample time", totalSampleTime, sampleTime, 50);
         }

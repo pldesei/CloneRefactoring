@@ -1,43 +1,15 @@
-(startLine=31 endLine=72 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/control/TestOnceOnlyController.java)
-    public void testProcessing() throws Exception {
-        GenericController controller = new GenericController();
-        GenericController sub_1 = new OnceOnlyController();
-        sub_1.addTestElement(new TestSampler("one"));
-        sub_1.addTestElement(new TestSampler("two"));
-        controller.addTestElement(sub_1);
-        controller.addTestElement(new TestSampler("three"));
-        LoopController sub_2 = new LoopController();
-        sub_2.setLoops(3);
-        GenericController sub_3 = new GenericController();
-        sub_2.addTestElement(new TestSampler("four"));
-        sub_3.addTestElement(new TestSampler("five"));
-        sub_3.addTestElement(new TestSampler("six"));
-        sub_2.addTestElement(sub_3);
-        sub_2.addTestElement(new TestSampler("seven"));
-        controller.addTestElement(sub_2);
-        String[] interleaveOrder = new String[] { "one", "two" };
-        String[] order = new String[] { "", "", "three", "four", "five", "six", "seven", "four", "five", "six",
-            "seven", "four", "five", "six", "seven" };
-        int counter = 15;
-        controller.setRunningVersion(true);
-        sub_1.setRunningVersion(true);
-        sub_2.setRunningVersion(true);
-        sub_3.setRunningVersion(true);
-        controller.initialize();
-        for (int i = 0; i < 4; i++) {
-        assertEquals(15, counter);
-        counter = 0;
-        if (i > 0) {
-            counter = 2;
-        }
-        TestElement sampler = null;
-        while ((sampler = controller.next()) != null) {
-            if (i == 0 && counter < 2) {
-            assertEquals(interleaveOrder[counter], sampler.getName());
-            } else {
-            assertEquals(order[counter], sampler.getName());
-            }
-            counter++;
-        }
-        }
+This clone instance is located in File: src/components/org/apache/jmeter/control/gui/InterleaveControlGui.java
+The line range of this clone instance is: 92-103
+The content of this clone instance is as follows:
+    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
+        setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
+        setBorder(makeBorder());
+
+        add(makeTitlePanel());
+
+        style = new JCheckBox(JMeterUtils.getResString("ignore_subcontrollers")); // $NON-NLS-1$
+        add(CheckBoxPanel.wrap(style));
+        
+        accrossThreads = new JCheckBox(JMeterUtils.getResString("interleave_accross_threads")); // $NON-NLS-1$
+        add(CheckBoxPanel.wrap(accrossThreads));
     }

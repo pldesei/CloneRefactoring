@@ -1,0 +1,12 @@
+This clone instance is located in File: lucene/core/src/test/org/apache/lucene/search/TestComplexExplanations.java
+The line range of this clone instance is: 228-236
+The content of this clone instance is as follows:
+  public void testBQ12() throws Exception {
+    // NOTE: using qtest not bqtest
+    BooleanQuery.Builder query = new BooleanQuery.Builder();;
+    query.add(new TermQuery(new Term(FIELD, "w1")), Occur.SHOULD);
+    TermQuery boostedQuery = new TermQuery(new Term(FIELD, "w2"));
+    query.add(new BoostQuery(boostedQuery, 0), Occur.SHOULD);
+    
+    qtest(query.build(), new int[] { 0,1,2,3 });
+  }

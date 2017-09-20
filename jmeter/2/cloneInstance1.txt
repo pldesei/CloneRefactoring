@@ -1,7 +1,17 @@
-(startLine=67 endLine=72 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/functions/TestTimeShiftFunction.java)
-    public void testDatePlusOneDay() throws Exception {
-        Collection<CompoundVariable> params = makeParams("yyyy-dd-MM", "2017-01-01", "P1D", "");
-        function.setParameters(params);
-        value = function.execute(result, null);
-        assertThat(value, is(equalTo("2017-02-01")));
+This clone instance is located in File: test/src/org/apache/jmeter/reporters/TestResultSaver.java
+The line range of this clone instance is: 69-82
+The content of this clone instance is as follows:
+    public void testSuccessWithVariable() {
+        sampleResult.setSuccessful(true);
+        resultSaver.setProperty(ResultSaver.NUMBER_PAD_LENGTH, "5");
+        resultSaver.setProperty(ResultSaver.VARIABLE_NAME,"myVar");
+        resultSaver.testStarted();
+        resultSaver.sampleOccurred(new SampleEvent(sampleResult, "JUnit-TG"));
+        String fileName = sampleResult.getResultFileName();
+        Assert.assertNotNull(fileName);
+        Assert.assertEquals("00001.unknown", fileName);
+        File file = new File(FileServer.getDefaultBase(), fileName);
+        Assert.assertTrue(file.exists());
+        Assert.assertTrue(file.delete());
+        Assert.assertEquals("00001.unknown", vars.get("myVar"));
     }

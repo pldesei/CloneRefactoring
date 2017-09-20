@@ -1,7 +1,13 @@
-(startLine=268 endLine=273 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/util/XPathUtil.java)
-        public void fatalError(SAXParseException ex) throws SAXException {
-            log.error("Type={}. {}", type, ex.toString());
-            if (val && !tol) {
-                throw new SAXException(ex);
-            }
-        }
+This clone instance is located in File: test/src/org/apache/jmeter/assertions/XMLSchemaAssertionTest.java
+The line range of this clone instance is: 110-119
+The content of this clone instance is as follows:
+    public void testAssertionNoFile() throws Exception {
+        result.setResponseData(readFile("testfiles/XMLSchematest.xml"));
+        assertion.setXsdFileName("");
+        AssertionResult res = assertion.getResult(jmctx.getPreviousResult());
+        testLog.debug("isError() " + res.isError() + " isFailure() " + res.isFailure());
+        testLog.debug("failure " + res.getFailureMessage());
+        assertEquals(XMLSchemaAssertion.FILE_NAME_IS_REQUIRED, res.getFailureMessage());
+        assertFalse(res.isError());
+        assertTrue(res.isFailure());
+    }

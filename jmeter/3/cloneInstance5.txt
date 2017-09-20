@@ -1,0 +1,13 @@
+This clone instance is located in File: test/src/org/apache/jmeter/assertions/XMLSchemaAssertionTest.java
+The line range of this clone instance is: 134-143
+The content of this clone instance is as follows:
+    public void testAssertionEmptyResult() throws Exception {
+        result.setResponseData("", null);
+        assertion.setXsdFileName("testfiles/XMLSchema-fail.xsd");
+        AssertionResult res = assertion.getResult(jmctx.getPreviousResult());
+        testLog.debug("isError() " + res.isError() + " isFailure() " + res.isFailure());
+        testLog.debug("failure " + res.getFailureMessage());
+        assertEquals(AssertionResult.RESPONSE_WAS_NULL, res.getFailureMessage());
+        assertFalse(res.isError());
+        assertTrue(res.isFailure());
+    }

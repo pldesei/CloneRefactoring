@@ -1,9 +1,11 @@
-(startLine=259 endLine=266 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableDoubleArray.java)
-    private void ensureRoomFor(int numberToAdd) {
-      int newCount = count + numberToAdd; // TODO(kevinb): check overflow now?
-      if (newCount > array.length) {
-        double[] newArray = new double[expandedCapacity(array.length, newCount)];
-        System.arraycopy(array, 0, newArray, 0, count);
-        this.array = newArray;
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableLongArray.java
+The line range of this clone instance is: 348-355
+The content of this clone instance is as follows:
+  public int indexOf(long target) {
+    for (int i = start; i < end; i++) {
+      if (array[i] == target) {
+        return i - start;
       }
     }
+    return -1;
+  }

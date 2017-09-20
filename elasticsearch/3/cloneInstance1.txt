@@ -1,12 +1,25 @@
-(startLine=338 endLine=348 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/index/fielddata/ScriptDocValues.java)
-        public void setNextDocId(int docId) throws IOException {
-            if (in.advanceExact(docId)) {
-                resize(in.docValueCount());
-                for (int i = 0; i < count; i++) {
-                    GeoPoint point = in.nextValue();
-                    values[i].reset(point.lat(), point.lon());
+This clone instance is located in File: core/src/test/java/org/elasticsearch/common/compress/DeflateCompressTests.java
+The line range of this clone instance is: 136-157
+The content of this clone instance is as follows:
+    public void testRepetitionsL() throws IOException {
+        Random r = random();
+        for (int i = 0; i < 10; i++) {
+            int numLongs = TestUtil.nextInt(r, 1, 10000);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            long theValue = r.nextLong();
+            for (int j = 0; j < numLongs; j++) {
+                if (r.nextInt(10) == 0) {
+                    theValue = r.nextLong();
                 }
-            } else {
-                resize(0);
+                bos.write((byte) (theValue >>> 56));
+                bos.write((byte) (theValue >>> 48));
+                bos.write((byte) (theValue >>> 40));
+                bos.write((byte) (theValue >>> 32));
+                bos.write((byte) (theValue >>> 24));
+                bos.write((byte) (theValue >>> 16));
+                bos.write((byte) (theValue >>> 8));
+                bos.write((byte) theValue);
             }
+            doTest(bos.toByteArray());
         }
+    }

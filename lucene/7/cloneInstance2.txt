@@ -1,7 +1,23 @@
-(startLine=113 endLine=118 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/analysis/icu/src/java/org/apache/lucene/analysis/icu/segmentation/CharArrayIterator.java)
-  public char setIndex(int position) {
-    if (position < getBeginIndex() || position > getEndIndex())
-      throw new IllegalArgumentException("Illegal Position: " + position);
-    index = start + position;
-    return current();
+This clone instance is located in File: solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/SelectWithEvaluatorsTest.java
+The line range of this clone instance is: 58-77
+The content of this clone instance is as follows:
+  public static void setupCluster() throws Exception {
+    configureCluster(4)
+        .addConfig("conf", getFile("solrj").toPath().resolve("solr").resolve("configsets").resolve("streaming").resolve("conf"))
+        .addConfig("ml", getFile("solrj").toPath().resolve("solr").resolve("configsets").resolve("ml").resolve("conf"))
+        .configure();
+
+    String collection;
+    useAlias = random().nextBoolean();
+    if (useAlias) {
+      collection = COLLECTIONORALIAS + "_collection";
+    } else {
+      collection = COLLECTIONORALIAS;
+    }
+    CollectionAdminRequest.createCollection(collection, "conf", 2, 1).process(cluster.getSolrClient());
+    AbstractDistribZkTestBase.waitForRecoveriesToFinish(collection, cluster.getSolrClient().getZkStateReader(),
+        false, true, TIMEOUT);
+    if (useAlias) {
+      CollectionAdminRequest.createAlias(COLLECTIONORALIAS, collection).process(cluster.getSolrClient());
+    }
   }

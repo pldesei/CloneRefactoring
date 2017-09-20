@@ -1,7 +1,10 @@
-(startLine=388 endLine=393 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableIntArray.java)
-  public ImmutableIntArray subArray(int startIndex, int endIndex) {
-    Preconditions.checkPositionIndexes(startIndex, endIndex, length());
-    return startIndex == endIndex
-        ? EMPTY
-        : new ImmutableIntArray(array, start + startIndex, start + endIndex);
+This clone instance is located in File: android/guava-tests/test/com/google/common/collect/ArrayTableTest.java
+The line range of this clone instance is: 231-237
+The content of this clone instance is as follows:
+  public void testCreateCopyEmptyTable() {
+    Table<String, Integer, Character> original = HashBasedTable.create();
+    try {
+      ArrayTable.create(original);
+      fail();
+    } catch (IllegalArgumentException expected) {}
   }

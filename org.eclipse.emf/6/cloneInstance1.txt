@@ -1,62 +1,22 @@
-(startLine=2719 endLine=2779 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.gwt.edit/src/org/eclipse/emf/edit/provider/ItemProviderAdapter.java)
-  protected CommandParameter unwrapCommandValues(CommandParameter commandParameter, Class<? extends Command> commandClass)
+This clone instance is located in File: plugins/org.eclipse.emf.gwt.ecore/src/org/eclipse/emf/ecore/impl/EEnumImpl.java
+The line range of this clone instance is: 296-314
+The content of this clone instance is as follows:
+  public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException
   {
-    // We need the wrapper, not the item provider, to handle a DragAndDropCommand; the move, add, remove, etc. commands
-    // that implement it will have their values unwrapped as usual.
-    //
-    if (commandClass == DragAndDropCommand.class)
+    switch (operationID)
     {
-      return commandParameter;
+      case EcorePackage.EENUM___GET_EANNOTATION__STRING:
+        return getEAnnotation((String)arguments.get(0));
+      case EcorePackage.EENUM___IS_INSTANCE__OBJECT:
+        return isInstance(arguments.get(0));
+      case EcorePackage.EENUM___GET_CLASSIFIER_ID:
+        return getClassifierID();
+      case EcorePackage.EENUM___GET_EENUM_LITERAL__STRING:
+        return getEEnumLiteral((String)arguments.get(0));
+      case EcorePackage.EENUM___GET_EENUM_LITERAL__INT:
+        return getEEnumLiteral((Integer)arguments.get(0));
+      case EcorePackage.EENUM___GET_EENUM_LITERAL_BY_LITERAL__STRING:
+        return getEEnumLiteralByLiteral((String)arguments.get(0));
     }
-    
-    ArrayList<Object> newCollection = null;
-    Collection<?> oldCollection = commandParameter.getCollection();
-    
-    // Unwrap collection.
-    //
-    if (oldCollection != null)
-    {
-      for (Object oldValue : oldCollection)
-      {
-        Object newValue = unwrap(oldValue);
-
-        // If the first wrapped value is found...
-        //
-        if (newValue != oldValue && newCollection == null)
-        {
-          // Allocate the new collection, and populate it up to this point.
-          //
-          newCollection = new ArrayList<Object>(oldCollection.size());
-          for (Object o  : oldCollection)
-          {
-            if (o == oldValue) break;
-            newCollection.add(o);
-          }
-        }
-
-        // If a new collection was allocated, continue to populate it.
-        //
-        if (newCollection != null)
-        {
-          newCollection.add(newValue);
-        }
-      }
-    }
-
-    // Unwrap value.
-    //
-    Object oldValue = commandParameter.getValue();
-    Object newValue = unwrap(oldValue);
-
-    if (newCollection != null || newValue != oldValue)
-    {
-      commandParameter = new CommandParameter(
-        commandParameter.owner,
-        commandParameter.feature,
-        newValue,
-        newCollection,
-        commandParameter.index);
-    }
-
-    return commandParameter;
+    return eDynamicInvoke(operationID, arguments);
   }

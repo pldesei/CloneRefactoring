@@ -1,0 +1,20 @@
+This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TypeAnnotationSyntaxTest.java
+The line range of this clone instance is: 851-867
+The content of this clone instance is as follows:
+public void test0037() throws IOException {
+	String source = "public class A {\n" +
+					"    int[] f[];\n" +
+					"    @Marker HashMap<@Positive Integer, @Negative Integer>.Iterator k;\n" +
+					"    float[] p[];\n" +
+					"}\n";
+	String expectedUnitToString = 
+		"public class A {\n" + 
+		"  int[][] f;\n" + 
+		"  @Marker HashMap<@Positive Integer, @Negative Integer>.Iterator k;\n" + 
+		"  float[][] p;\n" + 
+		"  public A() {\n" + 
+		"    super();\n" + 
+		"  }\n" + 
+		"}\n";
+	checkParse(CHECK_ALL & ~CHECK_JAVAC_PARSER, source.toCharArray(), null, "test0037", expectedUnitToString);
+}

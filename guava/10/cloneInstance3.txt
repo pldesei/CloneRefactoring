@@ -1,0 +1,9 @@
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableDoubleArray.java
+The line range of this clone instance is: 393-398
+The content of this clone instance is as follows:
+  public ImmutableDoubleArray subArray(int startIndex, int endIndex) {
+    Preconditions.checkPositionIndexes(startIndex, endIndex, length());
+    return startIndex == endIndex
+        ? EMPTY
+        : new ImmutableDoubleArray(array, start + startIndex, start + endIndex);
+  }

@@ -1,11 +1,9 @@
-(startLine=7528 endLine=7537 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/StreamExpressionTest.java)
-  protected boolean assertFields(List<Tuple> tuples, String ... fields) throws Exception{
-    for(Tuple tuple : tuples){
-      for(String field : fields){
-        if(!tuple.fields.containsKey(field)){
-          throw new Exception(String.format(Locale.ROOT, "Expected field '%s' not found", field));
-        }
-      }
-    }
-    return true;
+This clone instance is located in File: lucene/core/src/test/org/apache/lucene/search/TestSimpleExplanations.java
+The line range of this clone instance is: 244-249
+The content of this clone instance is as follows:
+  public void testBQ1() throws Exception {
+    BooleanQuery.Builder query = new BooleanQuery.Builder();
+    query.add(new TermQuery(new Term(FIELD, "w1")), BooleanClause.Occur.MUST);
+    query.add(new TermQuery(new Term(FIELD, "w2")), BooleanClause.Occur.MUST);
+    qtest(query.build(), new int[] { 0,1,2,3 });
   }

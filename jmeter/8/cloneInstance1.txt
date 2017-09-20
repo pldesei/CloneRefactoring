@@ -1,23 +1,36 @@
-(startLine=305 endLine=326 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/test/src/org/apache/jmeter/protocol/http/modifier/TestURLRewritingModifier.java)
-        public void testCache() throws Exception {
-            String[] html = new String[] { 
-                    "<input name=\"sid\" value=\"myId\">", 
-                    "<html></html>", // No entry; check it is still present
-                    };
-            URLRewritingModifier newMod = new URLRewritingModifier();
-            newMod.setShouldCache(true);
-            newMod.setThreadContext(context);
-            newMod.setArgumentName("sid");
-            newMod.setPathExtension(false);
-            for (int i = 0; i < html.length; i++) {
-                response = new SampleResult();
-                response.setResponseData(html[i], null);
-                HTTPSamplerBase sampler = createSampler();
-                context.setCurrentSampler(sampler);
-                context.setPreviousResult(response);
-                newMod.process();
-                Arguments args = sampler.getArguments();
-                assertEquals("For case i=" + i, "myId", 
-                        ((Argument) args.getArguments().get(0).getObjectValue()).getValue());
+This clone instance is located in File: test/src/org/apache/jmeter/control/TestLoopController.java
+The line range of this clone instance is: 44-76
+The content of this clone instance is as follows:
+        public void testProcessing() throws Exception {
+            GenericController controller = new GenericController();
+            GenericController sub_1 = new GenericController();
+            sub_1.addTestElement(new TestSampler("one"));
+            sub_1.addTestElement(new TestSampler("two"));
+            controller.addTestElement(sub_1);
+            controller.addTestElement(new TestSampler("three"));
+            LoopController sub_2 = new LoopController();
+            sub_2.setLoops(3);
+            GenericController sub_3 = new GenericController();
+            sub_2.addTestElement(new TestSampler("four"));
+            sub_3.addTestElement(new TestSampler("five"));
+            sub_3.addTestElement(new TestSampler("six"));
+            sub_2.addTestElement(sub_3);
+            sub_2.addTestElement(new TestSampler("seven"));
+            controller.addTestElement(sub_2);
+            String[] order = new String[] { "one", "two", "three", "four", "five", "six", "seven", "four", "five",
+                    "six", "seven", "four", "five", "six", "seven" };
+            int counter = 15;
+            controller.setRunningVersion(true);
+            sub_1.setRunningVersion(true);
+            sub_2.setRunningVersion(true);
+            sub_3.setRunningVersion(true);
+            controller.initialize();
+            for (int i = 0; i < 2; i++) {
+                assertEquals(15, counter);
+                counter = 0;
+                TestElement sampler = null;
+                while ((sampler = controller.next()) != null) {
+                    assertEquals(order[counter++], sampler.getName());
+                }
             }
         }

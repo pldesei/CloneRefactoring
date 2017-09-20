@@ -1,17 +1,40 @@
-(startLine=1086 endLine=1101 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.edit.ui/src/org/eclipse/emf/edit/ui/provider/DiagnosticDecorator.java)
-    protected void refreshResourceDiagnostics(List<Resource> resources)
-    {
-      final BasicDiagnostic diagnostic =
-        new BasicDiagnostic
-          (EObjectValidator.DIAGNOSTIC_SOURCE,
-           0,
-           EMFEditUIPlugin.INSTANCE.getString("_UI_DiagnosisOfNObjects_message", new String[] { "" + resources.size() }),
-           new Object [] { resourceSet } );
-      for (Resource resource : resources)
+This clone instance is located in File: plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java
+The line range of this clone instance is: 8625-8661
+The content of this clone instance is as follows:
+  public List<String> getEditQualifiedPackageNames()
+  {
+    EList<String> packageNames = sameModelEditProject() ?
+      (EList<String>)getModelQualifiedPackageNames() :
+        sameEditTestsProject() ?
+          (EList<String>)getTestsQualifiedPackageNames() :
+          new UniqueEList<String>();
+
+    TreeIterator<GenPackage> genPackagesIterator =
+      new AbstractTreeIterator<GenPackage>(getGenPackages(), false)
       {
-        diagnostic.add(markerHelper.getMarkerDiagnostics(resource, null, false));
-        liveValidator.scheduleValidation(resource);
-      }
-      diagnostics.clear();
-      updateDiagnostic(diagnostic);
+        private static final long serialVersionUID = 1L;
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected Iterator<GenPackage> getChildren(Object object)
+        {
+          return object instanceof Collection<?> ?
+            ((Collection<GenPackage>)object).iterator() :
+            ((GenPackage)object).getNestedGenPackages().iterator();
+        }
+      };
+    while(genPackagesIterator.hasNext())
+    {
+      GenPackage genPackage = genPackagesIterator.next();
+      addQualifiedEditPackageNames(packageNames, genPackage);
     }
+
+    String pluginClassPackage = CodeGenUtil.getPackageName(getEditPluginClassToUse());
+    if (!isBlank(pluginClassPackage))
+    {
+      packageNames.add(pluginClassPackage);
+    }
+
+    ECollections.sort(packageNames);
+    return packageNames;
+  }

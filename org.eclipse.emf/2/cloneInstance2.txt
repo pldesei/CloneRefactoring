@@ -1,9 +1,64 @@
-(startLine=1155 endLine=1162 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore.xcore/src/org/eclipse/emf/ecore/xcore/util/XcoreJvmInferrer.java)
-                        protected JvmOperation inferStructure()
-                        {
-                          JvmOperation jvmOperation = createJvmOperation(genPackage,JvmVisibility.PUBLIC, false, getJvmTypeReference("java.lang.String", genPackage));
-                          EList<JvmFormalParameter> parameters = jvmOperation.getParameters();
-                          parameters.add(createJvmFormalParameter(genPackage, "eDataType", getJvmTypeReference("org.eclipse.emf.ecore.EDataType", genPackage)));
-                          parameters.add(createJvmFormalParameter(genPackage, "instanceValue", getJvmTypeReference("java.lang.Object", genPackage)));
-                          return jvmOperation;
-                        }
+This clone instance is located in File: plugins/org.eclipse.emf.edit/src/org/eclipse/emf/edit/provider/ItemProviderAdapter.java
+The line range of this clone instance is: 2814-2874
+The content of this clone instance is as follows:
+  protected CommandParameter unwrapCommandValues(CommandParameter commandParameter, Class<? extends Command> commandClass)
+  {
+    // We need the wrapper, not the item provider, to handle a DragAndDropCommand; the move, add, remove, etc. commands
+    // that implement it will have their values unwrapped as usual.
+    //
+    if (commandClass == DragAndDropCommand.class)
+    {
+      return commandParameter;
+    }
+    
+    ArrayList<Object> newCollection = null;
+    Collection<?> oldCollection = commandParameter.getCollection();
+    
+    // Unwrap collection.
+    //
+    if (oldCollection != null)
+    {
+      for (Object oldValue : oldCollection)
+      {
+        Object newValue = unwrap(oldValue);
+
+        // If the first wrapped value is found...
+        //
+        if (newValue != oldValue && newCollection == null)
+        {
+          // Allocate the new collection, and populate it up to this point.
+          //
+          newCollection = new ArrayList<Object>(oldCollection.size());
+          for (Object o  : oldCollection)
+          {
+            if (o == oldValue) break;
+            newCollection.add(o);
+          }
+        }
+
+        // If a new collection was allocated, continue to populate it.
+        //
+        if (newCollection != null)
+        {
+          newCollection.add(newValue);
+        }
+      }
+    }
+
+    // Unwrap value.
+    //
+    Object oldValue = commandParameter.getValue();
+    Object newValue = unwrap(oldValue);
+
+    if (newCollection != null || newValue != oldValue)
+    {
+      commandParameter = new CommandParameter(
+        commandParameter.owner,
+        commandParameter.feature,
+        newValue,
+        newCollection,
+        commandParameter.index);
+    }
+
+    return commandParameter;
+  }

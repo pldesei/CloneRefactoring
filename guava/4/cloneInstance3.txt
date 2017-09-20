@@ -1,7 +1,0 @@
-(startLine=393 endLine=398 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableDoubleArray.java)
-  public ImmutableDoubleArray subArray(int startIndex, int endIndex) {
-    Preconditions.checkPositionIndexes(startIndex, endIndex, length());
-    return startIndex == endIndex
-        ? EMPTY
-        : new ImmutableDoubleArray(array, start + startIndex, start + endIndex);
-  }

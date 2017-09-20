@@ -1,0 +1,9 @@
+This clone instance is located in File: android/guava/src/com/google/common/primitives/ImmutableLongArray.java
+The line range of this clone instance is: 251-256
+The content of this clone instance is as follows:
+    public Builder addAll(ImmutableLongArray values) {
+      ensureRoomFor(values.length());
+      System.arraycopy(values.array, values.start, array, count, values.length());
+      count += values.length();
+      return this;
+    }

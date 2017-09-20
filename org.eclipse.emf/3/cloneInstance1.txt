@@ -1,26 +1,22 @@
-(startLine=517 endLine=541 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore.xcore/src/org/eclipse/emf/ecore/xcore/util/XcoreJvmInferrer.java)
-                  protected JvmOperation inferStructure()
-                  {
-                    JvmOperation validateClassifierOperation = createJvmOperation(genPackage, JvmVisibility.PUBLIC, false, getJvmTypeReference("boolean", genPackage));
-                    EList<JvmFormalParameter> parameters = validateClassifierOperation.getParameters();
-                    JvmElementInferrer<JvmFormalParameter> classifierParameterInferrer =
-                        new JvmElementInferrer<JvmFormalParameter>(X_LOW)
-                        {
-                           @Override
-                           protected JvmFormalParameter inferStructure()
-                           {
-                             return createJvmFormalParameter(genPackage, getJvmTypeReference(genClassifier.getImportedWildcardInstanceClassName(), genPackage));
-                           }
-
-                           @Override
-                           public void inferName()
-                           {
-                             inferredElement.setName(genClassifier.getSafeUncapName());
-                           }
-                        };
-                    associate(genClassifier, classifierParameterInferrer);
-                    parameters.add(classifierParameterInferrer.getInferredElement());
-                    parameters.add(createJvmFormalParameter(genPackage, diagnostics, getJvmTypeReference("org.eclipse.emf.common.util.DiagnosticChain", genPackage)));
-                    parameters.add(createJvmFormalParameter(genPackage, context, getJvmTypeReference(map, genPackage)));
-                    return validateClassifierOperation;
-                  }
+This clone instance is located in File: plugins/org.eclipse.emf.edit.ui/src/org/eclipse/emf/edit/ui/provider/DiagnosticDecorator.java
+The line range of this clone instance is: 1066-1084
+The content of this clone instance is as follows:
+    protected void handleResourceDiagnostics(List<Resource> resources)
+    {
+      final BasicDiagnostic diagnostic =
+        new BasicDiagnostic
+          (EObjectValidator.DIAGNOSTIC_SOURCE,
+           0,
+           EMFEditUIPlugin.INSTANCE.getString("_UI_DiagnosisOfNObjects_message", new String[] { "" + resources.size() }),
+           new Object [] { resourceSet } );
+      LiveValidator liveValidator = getLiveValidator();
+      if (liveValidator != null)
+      {
+        for (Resource resource : resources)
+        {
+          diagnostic.add(markerHelper.getMarkerDiagnostics(resource, null, false));
+          liveValidator.scheduleValidation(resource);
+        }
+      }
+      updateDiagnostic(diagnostic);
+    }

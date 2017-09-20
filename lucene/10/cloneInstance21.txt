@@ -1,7 +1,0 @@
-(startLine=138 endLine=143 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/lucene/core/src/test/org/apache/lucene/search/spans/TestBasics.java)
-  public void testBoolean2() throws Exception {
-    BooleanQuery.Builder query = new BooleanQuery.Builder();
-    query.add(new TermQuery(new Term("field", "sevento")), BooleanClause.Occur.MUST);
-    query.add(new TermQuery(new Term("field", "sevenly")), BooleanClause.Occur.MUST);
-    checkHits(query.build(), new int[] {});
-  }

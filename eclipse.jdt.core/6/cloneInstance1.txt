@@ -1,18 +1,12 @@
-(startLine=797 endLine=813 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TypeAnnotationSyntaxTest.java)
-public void test0034() throws IOException {
-	String source = "public class A {\n" +
-					"    int[] f[];\n" +
-					"    @Marker int k;\n" +
-					"    float[] p[];\n" +
-					"}\n";
-	String expectedUnitToString = 
-		"public class A {\n" + 
-		"  int[][] f;\n" + 
-		"  @Marker int k;\n" + 
-		"  float[][] p;\n" + 
-		"  public A() {\n" + 
-		"    super();\n" + 
-		"  }\n" + 
-		"}\n";
-	checkParse(CHECK_ALL & ~CHECK_JAVAC_PARSER, source.toCharArray(), null, "test0034", expectedUnitToString);
-}
+This clone instance is located in File: org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldFloat.java
+The line range of this clone instance is: 35-43
+The content of this clone instance is as follows:
+	public void put(Nd nd, long address, float newValue) {
+		Database db = nd.getDB();
+		db.getLog().start(this.tag);
+		try {
+			nd.getDB().putFloat(address + this.offset, newValue);
+		} finally {
+			db.getLog().end(this.tag);
+		}
+	}

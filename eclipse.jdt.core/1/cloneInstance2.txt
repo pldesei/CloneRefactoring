@@ -1,17 +1,46 @@
-(startLine=284 endLine=299 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/nd/field/FieldSearchIndex.java)
-	public List<T> findAll(final Nd nd, long address, final SearchCriteria searchCriteria, final int count) {
-		final List<T> result = new ArrayList<T>();
-		get(nd, address).accept(new SearchCriteriaToBtreeVisitorAdapter(searchCriteria, nd) {
-
-			int remainingCount = count;
-
-			@SuppressWarnings("unchecked")
-			@Override
-			protected boolean acceptResult(long resultAddress) {
-				result.add((T) NdNode.load(nd, resultAddress));
-				this.remainingCount--;
-				return this.remainingCount > 0;
-			}
-		});
-		return result;
+This clone instance is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java
+The line range of this clone instance is: 11245-11287
+The content of this clone instance is as follows:
+	public void test0373() {
+		this.runConformTest(
+			new String[] {
+				"XA.java",
+				"import java.util.Map.Entry;\n" +
+				"\n" +
+				"public class XA <K, V> {\n" +
+				"	static class MXA <K, V>  implements Entry<K,V> {\n" +
+				"		MXA(Entry<K,V> e) {\n" +
+				"		}\n" +
+				"		public K getKey() {\n" +
+				"			return null;\n" +
+				"		}\n" +
+				"		public V getValue() {\n" +
+				"			return null;\n" +
+				"		}\n" +
+				"		public V setValue(V value) {\n" +
+				"			return null;\n" +
+				"		}\n" +
+				"	}\n" +
+				"}\n"	,
+			},
+			"");
+		// compile against binaries
+		this.runConformTest(
+			new String[] {
+				"X.java",
+				"import java.util.Iterator;\n" +
+				"import java.util.Map;\n" +
+				"import java.util.Map.Entry;\n" +
+				"\n" +
+				"public class X <K, V> {\n" +
+				"\n" +
+				"	void foo(Iterator<Map.Entry<K,V>> iter) {\n" +
+				"		new XA.MXA<K,V>(iter.next());\n" +
+				"	}\n" +
+				"}\n"	,
+			},
+			"",
+			null,
+			false,
+			null);
 	}
