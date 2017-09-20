@@ -1,0 +1,7 @@
+(startLine=50 endLine=55 srcPath=/home/ubuntu/newestVersion/lucene/1/lucene/solr/core/src/java/org/apache/solr/schema/FloatPointField.java)
+  public Object toNativeType(Object val) {
+    if (val == null) return null;
+    if (val instanceof Number) return ((Number) val).floatValue();
+    if (val instanceof String) return Float.parseFloat((String) val);
+    return super.toNativeType(val);
+  }

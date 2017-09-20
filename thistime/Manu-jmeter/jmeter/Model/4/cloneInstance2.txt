@@ -1,0 +1,14 @@
+(startLine=211 endLine=223 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/protocol/http/org/apache/jmeter/protocol/http/parser/JTidyHTMLParser.java)
+    private static Tidy getTidyParser(String encoding) {
+        log.debug("Start : getParser");
+        Tidy tidy = new Tidy();
+        tidy.setInputEncoding(encoding);
+        tidy.setOutputEncoding(StandardCharsets.UTF_8.name());
+        tidy.setQuiet(true);
+        tidy.setShowWarnings(false);
+        if (log.isDebugEnabled()) {
+            log.debug("getParser : tidy parser created - " + tidy);
+        }
+        log.debug("End   : getParser");
+        return tidy;
+    }

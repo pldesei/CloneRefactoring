@@ -1,0 +1,9 @@
+(startLine=248 endLine=255 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/core/org/apache/jmeter/util/XPathUtil.java)
+        public void warning(SAXParseException ex) throws SAXException {
+            if (log.isInfoEnabled()) {
+                log.info("Type={}. {}", type, ex.toString());
+            }
+            if (val && !tol){
+                throw new SAXException(ex);
+            }
+        }

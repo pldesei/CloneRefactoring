@@ -1,0 +1,9 @@
+(startLine=361 endLine=368 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableLongArray.java)
+  public int lastIndexOf(long target) {
+    for (int i = end - 1; i >= start; i--) {
+      if (array[i] == target) {
+        return i - start;
+      }
+    }
+    return -1;
+  }

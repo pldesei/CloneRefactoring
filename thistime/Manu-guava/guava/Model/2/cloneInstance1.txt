@@ -1,0 +1,7 @@
+(startLine=212 endLine=217 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableIntArray.java)
+    public Builder addAll(int[] values) {
+      ensureRoomFor(values.length);
+      System.arraycopy(values, 0, array, count, values.length);
+      count += values.length;
+      return this;
+    }

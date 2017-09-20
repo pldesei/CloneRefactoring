@@ -1,0 +1,19 @@
+(startLine=492 endLine=509 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableDoubleArray.java)
+  public boolean equals(@Nullable Object object) {
+    if (object == this) {
+      return true;
+    }
+    if (!(object instanceof ImmutableDoubleArray)) {
+      return false;
+    }
+    ImmutableDoubleArray that = (ImmutableDoubleArray) object;
+    if (this.length() != that.length()) {
+      return false;
+    }
+    for (int i = 0; i < length(); i++) {
+      if (!areEqual(this.get(i), that.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }

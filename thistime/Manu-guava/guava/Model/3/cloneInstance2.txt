@@ -1,0 +1,19 @@
+(startLine=489 endLine=506 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableLongArray.java)
+  public boolean equals(@Nullable Object object) {
+    if (object == this) {
+      return true;
+    }
+    if (!(object instanceof ImmutableLongArray)) {
+      return false;
+    }
+    ImmutableLongArray that = (ImmutableLongArray) object;
+    if (this.length() != that.length()) {
+      return false;
+    }
+    for (int i = 0; i < length(); i++) {
+      if (this.get(i) != that.get(i)) {
+        return false;
+      }
+    }
+    return true;
+  }

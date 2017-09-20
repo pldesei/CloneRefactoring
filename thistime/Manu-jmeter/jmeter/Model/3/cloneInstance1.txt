@@ -1,0 +1,8 @@
+(startLine=80 endLine=86 srcPath=/home/ubuntu/OurTask/jmeter/1/jmeter/src/protocol/http/org/apache/jmeter/protocol/http/parser/LagartoBasedHtmlParser.java)
+        private void extractAttribute(Tag tag, String attributeName) {
+            CharSequence url = tag.getAttributeValue(attributeName);
+            String normalizedUrl = normalizeUrlValue(url);
+            if(normalizedUrl != null) {
+                urls.addURL(normalizedUrl, baseUrl.url);
+            }
+        }

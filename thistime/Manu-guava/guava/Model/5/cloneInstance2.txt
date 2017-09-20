@@ -1,0 +1,9 @@
+(startLine=258 endLine=265 srcPath=/home/ubuntu/newestVersion/guava/1/guava/android/guava/src/com/google/common/primitives/ImmutableLongArray.java)
+    private void ensureRoomFor(int numberToAdd) {
+      int newCount = count + numberToAdd; // TODO(kevinb): check overflow now?
+      if (newCount > array.length) {
+        long[] newArray = new long[expandedCapacity(array.length, newCount)];
+        System.arraycopy(array, 0, newArray, 0, count);
+        this.array = newArray;
+      }
+    }
