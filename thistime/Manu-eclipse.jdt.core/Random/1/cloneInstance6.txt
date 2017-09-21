@@ -1,0 +1,43 @@
+(startLine=4486 endLine=4527 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testP_1FG1YU0() {
+	String str =
+		"package p; \n" +
+		"/**\n" +
+		" * 1FG1YU0\n" +
+		" */\n" +
+		"public class P {\n" +
+		"	{\n" +
+		"		void bar() {\n" +
+		"			f }\n" +
+		"		void foo() {\n" +
+		"		}\n" +
+		"	}\n";
+
+	String testName = "<complete on method/field>";
+	String completeBehind = "f";
+	String expectedCompletionNodeToString = "<CompleteOnName:f>";
+	String completionIdentifier = "f";
+	String expectedReplacedSource = "f";
+	int cursorLocation = str.indexOf("f }") + completeBehind.length() - 1;
+	String expectedUnitDisplayString =
+		"package p;\n" +
+		"public class P {\n" +
+		"  {\n" +
+		"  }\n" +
+		"  public P() {\n" +
+		"  }\n" +
+		"  void bar() {\n" +
+		"    <CompleteOnName:f>;\n" +
+		"  }\n" +
+		"  void foo() {\n" +
+		"  }\n" +
+		"}\n";
+
+	checkMethodParse(
+		str.toCharArray(),
+		cursorLocation,
+		expectedCompletionNodeToString,
+		expectedUnitDisplayString,
+		completionIdentifier,
+		expectedReplacedSource,
+		testName); }

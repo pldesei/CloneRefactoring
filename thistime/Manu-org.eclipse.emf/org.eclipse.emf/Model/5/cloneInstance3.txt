@@ -1,0 +1,18 @@
+(startLine=5724 endLine=5740 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  public String getTestSuiteClass()
+  {
+    if (!isSetTestSuiteClass())
+    {
+      String modelName = getModelName();
+      if (!isBlank(modelName))
+      {
+        GenPackage mainGenPackage = getMainGenPackage();
+        String packageName = mainGenPackage != null ?
+          mainGenPackage.getTestsPackageName() :
+          addPackageSuffix(getModelProject(), GenPackageImpl.TESTS_PACKAGE_SUFFIX_EDEFAULT);
+        StringBuilder result = new StringBuilder(packageName);
+        return result.append(".").append(CodeGenUtil.validJavaIdentifier(modelName)).append("AllTests").toString();
+      }
+    }
+    return getTestSuiteClassGen();
+  }

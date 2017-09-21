@@ -1,0 +1,40 @@
+(startLine=1875 endLine=1913 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testFC_1FSBZ9B() {
+	String str =
+			"package p; \n" +
+			"/**\n" +
+			" * 1FSBZ9B\n" +
+			" */\n" +
+			"class FC {\n" +
+			"	UNKOWNTYPE field;\n" +
+			"	void foo() {\n" +
+			"		f\n" +
+			"	}\n" +
+			"}\n";
+
+	String testName = "<complete on method/field implicit access>";
+	String completeBehind = "f";
+	String expectedCompletionNodeToString = "<CompleteOnName:f>";
+	String completionIdentifier = "f";
+	String expectedReplacedSource = "f";
+	int cursorLocation = str.indexOf("f\n") + completeBehind.length() - 1;
+	String expectedUnitDisplayString =
+		"package p;\n" +
+		"class FC {\n" +
+		"  UNKOWNTYPE field;\n" +
+		"  FC() {\n" +
+		"  }\n" +
+		"  void foo() {\n" +
+		"    <CompleteOnName:f>;\n" +
+		"  }\n" +
+		"}\n";
+
+	checkMethodParse(
+		str.toCharArray(),
+		cursorLocation,
+		expectedCompletionNodeToString,
+		expectedUnitDisplayString,
+		completionIdentifier,
+		expectedReplacedSource,
+		testName);
+}

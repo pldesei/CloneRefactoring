@@ -1,0 +1,15 @@
+(startLine=169 endLine=182 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore.change.edit/src/org/eclipse/emf/ecore/change/provider/ChangeDescriptionItemProvider.java)
+  public void notifyChanged(Notification notification)
+  {
+    updateChildren(notification);
+
+    switch (notification.getFeatureID(ChangeDescription.class))
+    {
+      case ChangePackage.CHANGE_DESCRIPTION__OBJECT_CHANGES:
+      case ChangePackage.CHANGE_DESCRIPTION__OBJECTS_TO_ATTACH:
+      case ChangePackage.CHANGE_DESCRIPTION__RESOURCE_CHANGES:
+        fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+        return;
+    }
+    super.notifyChanged(notification);
+  }

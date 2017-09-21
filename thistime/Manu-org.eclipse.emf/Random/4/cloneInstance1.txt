@@ -1,0 +1,23 @@
+(startLine=229 endLine=250 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/internal/XMLCalendar.java)
+  public static int compare(XMLCalendar value1, XMLCalendar value2)
+  {
+    switch (value1.xmlGregorianCalendar.compare(value2.xmlGregorianCalendar))
+    {
+      case DatatypeConstants.EQUAL:
+      {
+        return XMLCalendar.EQUALS;
+      }
+      case DatatypeConstants.LESSER:
+      {
+        return XMLCalendar.LESS_THAN;
+      }
+      case DatatypeConstants.GREATER:
+      {
+        return XMLCalendar.GREATER_THAN;
+      }
+      default:
+      {
+        return XMLCalendar.INDETERMINATE;
+      }
+    }
+  }

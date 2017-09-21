@@ -1,0 +1,32 @@
+(startLine=4683 endLine=4713 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/core/JavaCore.java)
+	public static IClasspathEntry newContainerEntry(
+			IPath containerPath,
+			IAccessRule[] accessRules,
+			IClasspathAttribute[] extraAttributes,
+			boolean isExported) {
+
+		if (containerPath == null) {
+			throw new ClasspathEntry.AssertionFailedException("Container path cannot be null"); //$NON-NLS-1$
+		} else if (containerPath.segmentCount() < 1) {
+			throw new ClasspathEntry.AssertionFailedException("Illegal classpath container path: \'" + containerPath.makeRelative().toString() + "\', must have at least one segment (containerID+hints)"); //$NON-NLS-1$//$NON-NLS-2$
+		}
+		if (accessRules == null || accessRules.length == 0) {
+			accessRules = ClasspathEntry.NO_ACCESS_RULES;
+		}
+		if (extraAttributes == null || extraAttributes.length == 0) {
+			extraAttributes = ClasspathEntry.NO_EXTRA_ATTRIBUTES;
+		}
+		return new ClasspathEntry(
+			IPackageFragmentRoot.K_SOURCE,
+			IClasspathEntry.CPE_CONTAINER,
+			containerPath,
+			ClasspathEntry.INCLUDE_ALL, // inclusion patterns
+			ClasspathEntry.EXCLUDE_NONE, // exclusion patterns
+			null, // source attachment
+			null, // source attachment root
+			null, // specific output folder
+			isExported,
+			accessRules,
+			true, // combine access rules
+			extraAttributes);
+	}

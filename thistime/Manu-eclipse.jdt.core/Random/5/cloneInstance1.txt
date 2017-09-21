@@ -1,0 +1,32 @@
+(startLine=1930 endLine=1960 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NegativeLambdaExpressionsTest.java)
+public void test054() {
+	// This test checks that common semantic checks are indeed run
+	this.runNegativeTest(
+			new String[] {
+					"X.java",
+					"interface I {\n" + 
+					"	void doit();\n" + 
+					"}\n" + 
+					"public class X {\n" + 
+					"  void foo2(String[] args) {\n" + 
+					"   int var;\n" + 
+					"   if (args != null)\n" + 
+					"      var = args.length;\n" + 
+					"   else\n" + 
+					"      var = 2;\n" + 
+					"   I x = new I() {\n" + 
+					"     public void doit() {\n" + 
+					"       System.out.println(var);\n" +  // no error here.
+					"       args = null;\n" + // error here.
+					"     }\n" + 
+					"   };\n" + 
+					"  }\n" +
+					"}\n" ,
+				}, 		
+				"----------\n" + 
+				"1. ERROR in X.java (at line 14)\n" + 
+				"	args = null;\n" + 
+				"	^^^^\n" + 
+				"Local variable args defined in an enclosing scope must be final or effectively final\n" + 
+				"----------\n");
+}

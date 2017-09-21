@@ -1,0 +1,37 @@
+(startLine=4238 endLine=4273 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testO_1FG1YU0() {
+	String str =
+		"package p; \n" +
+		"/**\n" +
+		" * 1FG1YU0\n" +
+		" */\n" +
+		"public class O\n" +
+		"	extends java.util.Vector {\n" +
+		"	void bar(boolean bbbb) {\n" +
+		"		this.}\n" +
+		"}\n";
+
+	String testName = "<complete on method/field of explicit this>";
+	String completeBehind = "this.";
+	String expectedCompletionNodeToString = "<CompleteOnMemberAccess:this.>";
+	String completionIdentifier = "";
+	String expectedReplacedSource = "this.";
+	int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
+	String expectedUnitDisplayString =
+		"package p;\n" +
+		"public class O extends java.util.Vector {\n" +
+		"  public O() {\n" +
+		"  }\n" +
+		"  void bar(boolean bbbb) {\n" +
+		"    <CompleteOnMemberAccess:this.>;\n" +
+		"  }\n" +
+		"}\n";
+
+	checkMethodParse(
+		str.toCharArray(),
+		cursorLocation,
+		expectedCompletionNodeToString,
+		expectedUnitDisplayString,
+		completionIdentifier,
+		expectedReplacedSource,
+		testName); }

@@ -1,0 +1,33 @@
+(startLine=55 endLine=86 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/plugin/ValidationDelegateRegistryReader.java)
+  protected boolean readElement(IConfigurationElement element, boolean add)
+  {
+    if (element.getName().equals(TAG_DELEGATE))
+    {
+      String uri = element.getAttribute(ATT_URI);
+      if (uri == null)
+      {
+        logMissingAttribute(element, ATT_URI);
+      }
+      else if (element.getAttribute(ATT_CLASS) == null)
+      {
+        logMissingAttribute(element, ATT_CLASS);
+      }
+      else if (add)
+      {
+        Object previous = EValidator.ValidationDelegate.Registry.INSTANCE.put(uri, new ValidationDelegateDescriptor(element, ATT_CLASS));
+        if (previous instanceof ValidationDelegateDescriptor)
+        {
+          ValidationDelegateDescriptor descriptor = (ValidationDelegateDescriptor)previous;
+          EcorePlugin.INSTANCE.log("Both '" + descriptor.element.getContributor().getName() + "' and '" + element.getContributor().getName() + "' register a validation delegate for '" + uri + "'");
+        }
+        return true;
+      }
+      else
+      {
+        EValidator.ValidationDelegate.Registry.INSTANCE.remove(uri);
+        return true;
+      }
+    }
+
+    return false;
+  }

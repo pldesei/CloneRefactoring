@@ -1,0 +1,28 @@
+(startLine=2161 endLine=2187 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AmbiguousMethodTest.java)
+public void test025() {
+	this.runConformTest(
+		new String[] {
+			"X.java",
+			"public class X {\n" +
+			"  J m = new Y();\n" +
+			"  void foo() {\n" +
+			"    m.foo(1.0f);\n" +
+			"  }\n" +
+			"}",
+			"I.java",
+			"public interface I {\n" +
+			"  <T extends Number> T foo(final Number p);\n" +
+			"}",
+			"J.java",
+			"public interface J extends I {\n" +
+			"  Float foo(final Number p);\n" +
+			"}",
+			"Y.java",
+			"public class Y implements J {\n" +
+			"  public Float foo(final Number p){\n" +
+			"    return null;\n" +
+			"  }\n" +
+			"}",
+		},
+		"");
+}

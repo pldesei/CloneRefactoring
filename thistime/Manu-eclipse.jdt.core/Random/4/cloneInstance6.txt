@@ -1,0 +1,16 @@
+(startLine=338 endLine=352 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/ScannerTest.java)
+	public void test017() {
+		IScanner scanner = ToolFactory.createScanner(false, false, false, JavaCore.VERSION_1_5);
+		char[] source = "0xaa.p1D".toCharArray(); //$NON-NLS-1$
+		scanner.setSource(source);
+		scanner.resetTo(0, source.length - 1);
+		int counter = 0;
+		try {
+			while (scanner.getNextToken() != ITerminalSymbols.TokenNameEOF) {
+				counter++;
+			}
+		} catch (InvalidInputException e) {
+			assertTrue(false);
+		}
+		assertEquals("Wrong number of tokens", 1, counter);
+	}

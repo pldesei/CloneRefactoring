@@ -1,0 +1,12 @@
+(startLine=43 endLine=53 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/test/java/org/elasticsearch/index/query/MatchAllQueryBuilderTests.java)
+    public void testFromJson() throws IOException {
+        String json =
+                "{\n" +
+                "  \"match_all\" : {\n" +
+                "    \"boost\" : 1.2\n" +
+                "  }\n" +
+                "}";
+        MatchAllQueryBuilder parsed = (MatchAllQueryBuilder) parseQuery(json);
+        checkGeneratedJson(json, parsed);
+        assertEquals(json, 1.2, parsed.boost(), 0.0001);
+    }

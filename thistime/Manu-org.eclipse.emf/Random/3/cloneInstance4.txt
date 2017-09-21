@@ -1,0 +1,33 @@
+(startLine=55 endLine=86 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/plugin/InvocationDelegateFactoryRegistryReader.java)
+  protected boolean readElement(IConfigurationElement element, boolean add)
+  {
+    if (element.getName().equals(TAG_FACTORY))
+    {
+      String uri = element.getAttribute(ATT_URI);
+      if (uri == null)
+      {
+        logMissingAttribute(element, ATT_URI);
+      }
+      else if (element.getAttribute(ATT_CLASS) == null)
+      {
+        logMissingAttribute(element, ATT_CLASS);
+      }
+      else if (add)
+      {
+        Object previous = EOperation.Internal.InvocationDelegate.Factory.Registry.INSTANCE.put(uri, new InvocationDelegateFactoryDescriptor(element, ATT_CLASS));
+        if (previous instanceof InvocationDelegateFactoryDescriptor)
+        {
+          InvocationDelegateFactoryDescriptor descriptor = (InvocationDelegateFactoryDescriptor)previous;
+          EcorePlugin.INSTANCE.log("Both '" + descriptor.element.getContributor().getName() + "' and '" + element.getContributor().getName() + "' register an invocation delegate factory for '" + uri + "'");
+        }
+        return true;
+      }
+      else
+      {
+        EOperation.Internal.InvocationDelegate.Factory.Registry.INSTANCE.remove(uri);
+        return true;
+      }
+    }
+
+    return false;
+  }

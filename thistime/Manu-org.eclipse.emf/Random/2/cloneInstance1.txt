@@ -1,0 +1,18 @@
+(startLine=471 endLine=487 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/examples/org.eclipse.emf.java/src/org/eclipse/emf/java/impl/JClassImpl.java)
+  public void setComponentType(JClass newComponentType)
+  {
+    if (newComponentType != eInternalContainer() || (eContainerFeatureID() != JavaPackage.JCLASS__COMPONENT_TYPE && newComponentType != null))
+    {
+      if (EcoreUtil.isAncestor(this, newComponentType))
+        throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+      NotificationChain msgs = null;
+      if (eInternalContainer() != null)
+        msgs = eBasicRemoveFromContainer(msgs);
+      if (newComponentType != null)
+        msgs = ((InternalEObject)newComponentType).eInverseAdd(this, JavaPackage.JCLASS__ARRAY_TYPE, JClass.class, msgs);
+      msgs = basicSetComponentType(newComponentType, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JCLASS__COMPONENT_TYPE, newComponentType, newComponentType));
+  }

@@ -1,0 +1,34 @@
+(startLine=4497 endLine=4529 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/core/JavaCore.java)
+	public static boolean isReferencedBy(IJavaElement element, IMarkerDelta markerDelta) throws CoreException {
+
+		// only match units or classfiles
+		if (element instanceof IMember){
+			IMember member = (IMember) element;
+			if (member.isBinary()){
+				element = member.getClassFile();
+			} else {
+				element = member.getCompilationUnit();
+			}
+		}
+		if (element == null) return false;
+		if (markerDelta == null) return false;
+
+		String markerDeltarHandleId = (String)markerDelta.getAttribute(ATT_HANDLE_ID);
+		if (markerDeltarHandleId == null) return false;
+
+		IJavaElement markerElement = JavaCore.create(markerDeltarHandleId);
+		while (true){
+			if (element.equals(markerElement)) return true; // external elements may still be equal with different handleIDs.
+
+			// cycle through enclosing types in case marker is associated with a classfile (15568)
+			if (markerElement instanceof IClassFile){
+				IType enclosingType = ((IClassFile)markerElement).getType().getDeclaringType();
+				if (enclosingType != null){
+					markerElement = enclosingType.getClassFile(); // retry with immediate enclosing classfile
+					continue;
+				}
+			}
+			break;
+		}
+		return false;
+	}
