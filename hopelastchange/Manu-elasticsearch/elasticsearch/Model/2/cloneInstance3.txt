@@ -1,0 +1,12 @@
+(startLine=95 endLine=105 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedNumericSamplerAggregator.java)
+                    public boolean advanceExact(int target) throws IOException {
+                        if (values.advanceExact(target)) {
+                            if (values.docValueCount() > 1) {
+                                throw new IllegalArgumentException(
+                                        "Sample diversifying key must be a single valued-field");
+                            }
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
