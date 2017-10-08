@@ -25,8 +25,8 @@ public class Test {
 	}
 
 	public static void changeFileHeader() throws Exception {
-		String path = "/Users/Sonia/CloneRefactoring/org.eclipse.emf/";
-		String tmpPath = "/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/";
+		String path = "/root/CloneRefactoring/hopelastchange/lucene/";
+		String tmpPath = "/root/Projects/newestVersion/lucene/00001/lucene/";
 		for (int i = 1; i <= 10; i++) {
 			File file = new File(path + i);
 			File[] files = file.listFiles();
@@ -42,7 +42,7 @@ public class Test {
 					src = src.substring(tmpPath.length());
 					//System.out.println(start + " " + end + " " + src);
 					
-					ret += "This clone instance is located in File: " + src + "\n";
+					ret += "This clone instance is located in File: \n" + src + "\n";
 					ret += "The line range of this clone instance is: " + start + "-" + end + "\n";
 					ret += "The content of this clone instance is as follows:\n";
 					while ((tmp = r.readLine()) != null) {
@@ -59,9 +59,9 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String path = "/Users/Sonia/CloneRefactoring";
-		removeArffFiles(path);
-		//changeFileHeader();
+		String path = "/root/CloneRefactoring";
+		//removeArffFiles(path);
+		changeFileHeader();
 	}
 
 
