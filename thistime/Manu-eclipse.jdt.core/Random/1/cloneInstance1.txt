@@ -1,0 +1,37 @@
+(startLine=574 endLine=609 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testBB_1FHJ8H9() {
+	String str =
+			"package p; \n" +
+			"/**\n" +
+			" * 1FHJ8H9\n" +
+			" */\n" +
+			"public class BB {\n" +
+			"	void bar() {\n" +
+			"		f }\n" +
+			"}\n";
+
+	String testName = "<complete on method/field from implicit method call>";
+	String completeBehind = "f";
+	String expectedCompletionNodeToString = "<CompleteOnName:f>";
+	String completionIdentifier = "f";
+	String expectedReplacedSource = "f";
+	int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
+	String expectedUnitDisplayString =
+		"package p;\n" +
+		"public class BB {\n" +
+		"  public BB() {\n" +
+		"  }\n" +
+		"  void bar() {\n" +
+		"    <CompleteOnName:f>;\n" +
+		"  }\n" +
+		"}\n";
+
+	checkMethodParse(
+		str.toCharArray(),
+		cursorLocation,
+		expectedCompletionNodeToString,
+		expectedUnitDisplayString,
+		completionIdentifier,
+		expectedReplacedSource,
+		testName);
+}

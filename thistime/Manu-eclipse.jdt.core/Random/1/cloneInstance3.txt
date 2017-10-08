@@ -1,0 +1,37 @@
+(startLine=2682 endLine=2717 srcPath=/root/Projects/newestVersion/eclipse.jdt.core/00001/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testJ() {
+	String str =
+		"package p; \n" +
+		"public class J {\n" +
+		"	int foo1()[void foo2() int i;\n" +
+		"	void foo3() {\n" +
+		"		f }\n";
+
+	String testName = "<complete on method/field access into corrupted method declaration>";
+	String completeBehind = "f";
+	String expectedCompletionNodeToString = "<CompleteOnName:f>";
+	String completionIdentifier = "f";
+	String expectedReplacedSource = "f";
+	int cursorLocation = str.indexOf("f }") + completeBehind.length() - 1;
+	String expectedUnitDisplayString =
+		"package p;\n" +
+		"public class J {\n" +
+		"  public J() {\n" +
+		"  }\n" +
+		"  int foo1() {\n" +
+		"  }\n" +
+		"  void foo2() {\n" +
+		"  }\n" +
+		"  void foo3() {\n" +
+		"    <CompleteOnName:f>;\n" +
+		"  }\n" +
+		"}\n";
+
+	checkMethodParse(
+		str.toCharArray(),
+		cursorLocation,
+		expectedCompletionNodeToString,
+		expectedUnitDisplayString,
+		completionIdentifier,
+		expectedReplacedSource,
+		testName); }

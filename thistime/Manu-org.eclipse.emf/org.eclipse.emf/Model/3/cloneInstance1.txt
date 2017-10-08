@@ -1,0 +1,155 @@
+(startLine=2692 endLine=2845 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenBaseImpl.java)
+    protected static IContainer findOrCreateContainer
+      (GenBaseImpl genBase, Monitor progressMonitor, int style, List pluginVariables, IPath outputPath, boolean forceStyle)
+    {
+      IContainer container = null;
+      try
+      {
+        progressMonitor.beginTask("", outputPath.segmentCount() + 1);
+        progressMonitor.subTask(CodeGenEcorePlugin.INSTANCE.getString("_UI_OpeningFolder_message", new Object [] { outputPath }));
+        if (outputPath.isAbsolute())
+        {
+          IWorkspace workspace = ResourcesPlugin.getWorkspace();
+          IProject project = workspace.getRoot().getProject(outputPath.segment(0));
+          if (forceStyle || !project.exists())
+          {
+            IPath projectLocation = null;
+
+            List referencedProjects = new UniqueEList();
+            if (project.exists())
+            {
+              referencedProjects.addAll(Arrays.asList(project.getDescription().getReferencedProjects()));
+              projectLocation = project.getDescription().getLocation();
+            }
+            else
+            {
+              URI genModelURI = genBase.getGenModel().eResource().getURI();
+              if (genModelURI.isPlatformResource())
+              {
+                IProject genModelProject = workspace.getRoot().getProject(genModelURI.segments()[1]);
+                projectLocation = genModelProject.getDescription().getLocation();
+              }
+            }
+
+            IProject modelProject = workspace.getRoot().getProject(genBase.getGenModel().getModelProjectDirectory());
+            IPath javaSource = new Path(genBase.getGenModel().getModelDirectory());
+
+            if ((style & Generator.EMF_TESTS_PROJECT_STYLE) != 0)
+            {
+              IProject testsProject = workspace.getRoot().getProject(genBase.getGenModel().getTestsProjectDirectory());
+
+              if (!genBase.getGenModel().sameModelTestsProject())
+              {
+                javaSource = new Path(genBase.getGenModel().getTestsDirectory());
+
+                if (testsProject.exists())
+                {
+                  projectLocation = testsProject.getDescription().getLocation();
+                }
+
+                referencedProjects.add(modelProject);
+                referencedProjects.addAll(Arrays.asList(modelProject.getDescription().getReferencedProjects()));
+              }
+            }
+            else if ((style & Generator.EMF_MODEL_PROJECT_STYLE) == 0 && genBase.getGenModel().hasEditSupport())
+            {
+              IProject editProject = workspace.getRoot().getProject(genBase.getGenModel().getEditProjectDirectory());
+
+              if (!genBase.getGenModel().sameModelEditProject())
+              {
+                javaSource = new Path(genBase.getGenModel().getEditDirectory());
+                if (editProject.exists())
+                {
+                  projectLocation = editProject.getDescription().getLocation();
+                }
+
+                referencedProjects.add(modelProject);
+              }
+
+              for (Iterator i = genBase.getGenModel().getUsedGenPackages().iterator(); i.hasNext(); )
+              {
+                GenModel otherGenModel = ((GenPackage)i.next()).getGenModel();
+                if (otherGenModel.hasEditSupport())
+                {
+                  IProject otherEditProject = workspace.getRoot().getProject(otherGenModel.getEditProjectDirectory());
+                  if (otherEditProject.exists())
+                  {
+                    referencedProjects.add(otherEditProject);
+                    referencedProjects.addAll(Arrays.asList(otherEditProject.getDescription().getReferencedProjects()));
+                  }
+                }
+              }
+
+              if ((style & Generator.EMF_EDIT_PROJECT_STYLE) == 0 && genBase.getGenModel().hasEditorSupport())
+              {
+                javaSource = new Path(genBase.getGenModel().getEditorDirectory());
+                if (!genBase.getGenModel().sameEditEditorProject())
+                {
+                  referencedProjects.add(editProject);
+                  referencedProjects.addAll(Arrays.asList(editProject.getDescription().getReferencedProjects()));
+                }
+              }
+            }
+
+            //  Remove any non-Java dependencies from being added.
+            //
+            for (Iterator i = referencedProjects.iterator(); i.hasNext(); )
+            {
+              IProject referencedProject = (IProject)i.next();
+              IJavaProject referencedJavaProject = JavaCore.create(referencedProject);
+              if (!referencedJavaProject.exists())
+              {
+                i.remove();
+              }
+            }
+
+            if (projectLocation != null)
+            {
+              projectLocation = projectLocation.removeLastSegments(1).append(javaSource.segment(0));
+            }
+
+            if (genBase.getGenModel().hasXMLDependency())
+            {
+              style |= Generator.EMF_XML_PROJECT_STYLE;
+            }
+
+            if ((style & Generator.EMF_MODEL_PROJECT_STYLE) == 0 || genBase.getGenModel().hasPluginSupport())
+            {
+              style |= Generator.EMF_PLUGIN_PROJECT_STYLE;
+            }
+
+            Generator.createEMFProject
+              (javaSource,
+               projectLocation,
+               referencedProjects,
+               progressMonitor,
+               style,
+               pluginVariables);
+          }
+          else
+          {
+            if (!project.isOpen())
+            {
+              project.open(BasicMonitor.toIProgressMonitor(genBase.createMonitor(progressMonitor, 1)));
+            }
+          }
+
+          container = project;
+          for (int i = 1, length = outputPath.segmentCount(); i < length; ++ i)
+          {
+            IFolder folder = container.getFolder(new Path(outputPath.segment(i)));
+            if (!folder.exists())
+            {
+              folder.create(false, true, BasicMonitor.toIProgressMonitor(genBase.createMonitor(progressMonitor, 1)));
+            }
+            container = folder;
+          }
+        }
+      }
+      catch (Exception exception)
+      {
+        CodeGenEcorePlugin.INSTANCE.log(exception);
+      }
+      progressMonitor.done();
+      return container;
+    }

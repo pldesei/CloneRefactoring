@@ -1,0 +1,18 @@
+(startLine=4952 endLine=4968 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  public String getEditPluginClass()
+  {
+    if (!isSetEditPluginClass())
+    {
+      String modelName = getModelName();
+      if (!isBlank(modelName))
+      {
+        GenPackage mainGenPackage = getMainGenPackage();
+        String packageName = mainGenPackage != null ?
+          mainGenPackage.getProviderPackageName() :
+          addPackageSuffix(getModelProject(), GenPackageImpl.PROVIDER_PACKAGE_SUFFIX_EDEFAULT);
+        StringBuilder result = new StringBuilder(packageName);
+        return result.append(".").append(CodeGenUtil.validJavaIdentifier(modelName)).append("EditPlugin").toString();
+      }
+    }
+    return getEditPluginClassGen();
+  }

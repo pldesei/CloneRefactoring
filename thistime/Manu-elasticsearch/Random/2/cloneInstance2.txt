@@ -1,0 +1,19 @@
+(startLine=36 endLine=53 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/index/fielddata/SortingNumericDoubleValues.java)
+    protected SortingNumericDoubleValues() {
+        values = new double[1];
+        valuesCursor = 0;
+        sorter = new InPlaceMergeSorter() {
+
+            @Override
+            protected void swap(int i, int j) {
+                final double tmp = values[i];
+                values[i] = values[j];
+                values[j] = tmp;
+            }
+
+            @Override
+            protected int compare(int i, int j) {
+                return Double.compare(values[i], values[j]);
+            }
+        };
+    }

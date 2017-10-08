@@ -1,0 +1,19 @@
+(startLine=42 endLine=59 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/plugins/discovery-azure-classic/src/test/java/org/elasticsearch/discovery/azure/classic/AzureTwoStartedNodesTests.java)
+    public void testTwoNodesShouldRunUsingPrivateIp() {
+        Settings.Builder settings = Settings.builder()
+                .put(Management.SERVICE_NAME_SETTING.getKey(), "dummy")
+                .put(Discovery.HOST_TYPE_SETTING.getKey(), "private_ip");
+
+        logger.info("--> start first node");
+        internalCluster().startNode(settings);
+        assertThat(client().admin().cluster().prepareState().setMasterNodeTimeout("1s").get().getState().nodes().getMasterNodeId(),
+            notNullValue());
+
+        logger.info("--> start another node");
+        internalCluster().startNode(settings);
+        assertThat(client().admin().cluster().prepareState().setMasterNodeTimeout("1s").get().getState().nodes().getMasterNodeId(),
+            notNullValue());
+
+        // We expect having 2 nodes as part of the cluster, let's test that
+        checkNumberOfNodes(2);
+    }

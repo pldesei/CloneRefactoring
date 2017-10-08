@@ -1,0 +1,148 @@
+(startLine=3293 endLine=3439 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.ecore.xmi/src/org/eclipse/emf/ecore/xmi/impl/XMLSaveImpl.java)
+    public String convert(String input)
+    {
+      boolean changed = false;
+      int inputLength = input.length();
+      grow(inputLength);
+      int outputPos = 0;
+      int inputPos = 0;
+      char ch = 0;
+      while (inputLength-- > 0)
+      {
+        ch = input.charAt(inputPos++); // value[outputPos];
+        switch (ch)
+        {
+          case 0x1:
+          case 0x2:
+          case 0x3:
+          case 0x4:
+          case 0x5:
+          case 0x6:
+          case 0x7:
+          case 0x8:
+          case 0xB:
+          case 0xC:
+          case 0xE:
+          case 0xF:
+          case 0x10:
+          case 0x11:
+          case 0x12:
+          case 0x13:
+          case 0x14:
+          case 0x15:
+          case 0x16:
+          case 0x17:
+          case 0x18:
+          case 0x19:
+          case 0x1A:
+          case 0x1B:
+          case 0x1C:
+          case 0x1D:
+          case 0x1E:
+          case 0x1F:
+          {
+            if (allowControlCharacters)
+            {
+            outputPos = replaceChars(outputPos, CONTROL_CHARACTERS[ch], inputLength);
+            changed = true;
+            }
+            else
+            {
+              throw new RuntimeException("An invalid XML character (Unicode: 0x" + Integer.toHexString(ch) + ") was found in the element content:" + input);
+            }
+            break;
+          }
+          case '&':
+          {
+            outputPos = replaceChars(outputPos, AMP, inputLength);
+            changed = true;
+            break;
+          }
+          case '<':
+          {
+            outputPos = replaceChars(outputPos, LESS, inputLength);
+            changed = true;
+            break;
+          }
+          case '"':
+          {
+            outputPos = replaceChars(outputPos, QUOTE, inputLength);
+            changed = true;
+            break;
+          }
+          case '\n':
+          {
+            outputPos = replaceChars(outputPos, LF, inputLength);
+            changed = true;
+            break;
+          }
+          case '\r':
+          {
+            outputPos = replaceChars(outputPos, CR, inputLength);
+            changed = true;
+            break;
+          }
+          case '\t':
+          {
+            outputPos = replaceChars(outputPos, TAB, inputLength);
+            changed = true;
+            break;
+          }
+          default:
+          {
+            if (!XMLChar.isValid(ch))
+            {
+              if (XMLChar.isHighSurrogate(ch))
+              {
+                char high = ch;
+                if (inputLength-- > 0)
+                {
+                  ch = input.charAt(inputPos++); 
+                  if (XMLChar.isLowSurrogate(ch))
+                  {
+                    if (mappableLimit == MAX_UTF_MAPPABLE_CODEPOINT)
+                    {
+                      // Every codepoint is supported! 
+                      value[outputPos++] = high;
+                      value[outputPos++] = ch;
+                    }
+                    else
+                    {
+                      // Produce the supplemental character as an entity
+                      outputPos = replaceChars(outputPos, ("&#x" + Integer.toHexString(XMLChar.supplemental(high, ch)) + ";").toCharArray(), inputLength);
+                      changed = true;
+                    }
+                    break;
+                  }
+                  throw new RuntimeException("An invalid low surrogate character (Unicode: 0x" + Integer.toHexString(ch) + ") was found in the element content:" + input);
+                }
+                else
+                {
+                  throw new RuntimeException("An unpaired high surrogate character (Unicode: 0x" + Integer.toHexString(ch) + ") was found in the element content:" + input);
+                }
+              }
+              else
+              {
+                throw new RuntimeException("An invalid XML character (Unicode: 0x" + Integer.toHexString(ch) + ") was found in the element content:" + input);
+              }
+            }
+            else
+            {
+              // Normal (BMP) unicode code point. See if we know for a fact that the encoding supports it:
+              if (ch <= mappableLimit)
+              {
+                value[outputPos++] = ch;
+              }
+              else
+              {
+                // We not sure the encoding supports this code point, so we write it as a character entity reference.
+                outputPos = replaceChars(outputPos, ("&#x" + Integer.toHexString(ch) + ";").toCharArray(), inputLength);
+                changed = true;
+              }
+            }
+            break;
+          }
+        }
+      }
+      return changed ? new String(value, 0, outputPos) : input;
+    }

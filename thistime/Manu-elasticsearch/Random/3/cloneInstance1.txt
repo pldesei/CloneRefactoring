@@ -1,0 +1,36 @@
+(startLine=178 endLine=212 srcPath=/root/Projects/newestVersion/elasticsearch/00001/elasticsearch/core/src/main/java/org/elasticsearch/index/query/ScriptQueryBuilder.java)
+        public Weight createWeight(IndexSearcher searcher, boolean needsScores, float boost) throws IOException {
+            return new ConstantScoreWeight(this, boost) {
+
+                @Override
+                public Scorer scorer(LeafReaderContext context) throws IOException {
+                    DocIdSetIterator approximation = DocIdSetIterator.all(context.reader().maxDoc());
+                    final SearchScript leafScript = searchScript.newInstance(context);
+                    TwoPhaseIterator twoPhase = new TwoPhaseIterator(approximation) {
+
+                        @Override
+                        public boolean matches() throws IOException {
+                            leafScript.setDocument(approximation.docID());
+                            Object val = leafScript.run();
+                            if (val == null) {
+                                return false;
+                            }
+                            if (val instanceof Boolean) {
+                                return (Boolean) val;
+                            }
+                            if (val instanceof Number) {
+                                return ((Number) val).longValue() != 0;
+                            }
+                            throw new IllegalArgumentException("Can't handle type [" + val + "] in script filter");
+                        }
+
+                        @Override
+                        public float matchCost() {
+                            // TODO: how can we compute this?
+                            return 1000f;
+                        }
+                    };
+                    return new ConstantScoreScorer(this, score(), twoPhase);
+                }
+            };
+        }

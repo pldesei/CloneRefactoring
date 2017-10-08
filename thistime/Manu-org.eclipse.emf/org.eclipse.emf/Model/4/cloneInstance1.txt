@@ -1,0 +1,36 @@
+(startLine=8519 endLine=8553 srcPath=/root/Projects/newestVersion/org.eclipse.emf/00001/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  public List<String> getModelQualifiedPackageNames()
+  {
+    EList<String> packageNames = sameModelTestsProject() ?
+      (EList<String>)getTestsQualifiedPackageNames() :
+      new UniqueEList<String>();
+
+    TreeIterator<GenPackage> genPackagesIterator =
+      new AbstractTreeIterator<GenPackage>(getGenPackages(), false)
+      {
+        private static final long serialVersionUID = 1L;
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected Iterator<GenPackage> getChildren(Object object)
+        {
+          return object instanceof Collection<?> ?
+            ((Collection<GenPackage>)object).iterator() :
+            ((GenPackage)object).getNestedGenPackages().iterator();
+        }
+      };
+    while(genPackagesIterator.hasNext())
+    {
+      GenPackage genPackage = genPackagesIterator.next();
+      addQualifiedModelPackageNames(packageNames, genPackage);
+    }
+
+    String pluginClassPackage = CodeGenUtil.getPackageName(getModelPluginClassToUse());
+    if (!isBlank(pluginClassPackage))
+    {
+      packageNames.add(pluginClassPackage);
+    }
+
+    ECollections.sort(packageNames);
+    return packageNames;
+  }
