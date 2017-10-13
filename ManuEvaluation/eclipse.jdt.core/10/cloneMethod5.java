@@ -1,4 +1,5 @@
-This clone method is located in File: org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterAST3Test.java
+This clone method is located in File: 
+org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterAST3Test.java
 The line range of this clone method is: 1813-1840
 The content of this clone method is as follows:
 	public void test0084() throws JavaModelException {

@@ -1,4 +1,5 @@
-This clone method is located in File: org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/TypeAnnotationTest.java
+This clone method is located in File: 
+org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/TypeAnnotationTest.java
 The line range of this clone method is: 697-722
 The content of this clone method is as follows:
 	public void test018_classExtends() throws Exception {
