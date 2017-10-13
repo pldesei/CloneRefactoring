@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class repalceCloneInstance {
+public class replaceCloneInstance {
 	public static void replace(String path) {
 		File file = new File(path);
 		if (file.isDirectory()) {
@@ -18,8 +18,8 @@ public class repalceCloneInstance {
 			String oldFilePath = file.getAbsolutePath();
 			System.out.println("OldFilePath:" + oldFilePath);
 			String newFilePath = oldFilePath;
-			if (oldFilePath.contains("cloneInstance")) {
-				newFilePath = oldFilePath.replaceAll("cloneInstance", "cloneFragment");
+			if (oldFilePath.contains("cloneFragment")) {
+				newFilePath = oldFilePath.replaceAll("cloneFragment", "cloneMethod");
 			}
 			System.out.println("NewFilePath:" + newFilePath);
 			File newFile = new File(newFilePath);
@@ -28,10 +28,10 @@ public class repalceCloneInstance {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(newFile));
 				String str = null;
 				while ((str = br.readLine()) != null) {
-					if (str.startsWith("This clone instance is located in File")
-							|| str.startsWith("The line range of this clone instance is")
-							|| str.startsWith("The content of this clone instance is as follows")) {
-						bw.write(str.replaceAll("clone instance", "clone fragment"));
+					if (str.startsWith("This clone fragment is located in File")
+							|| str.startsWith("The line range of this clone fragment is")
+							|| str.startsWith("The content of this clone fragment is as follows")) {
+						bw.write(str.replaceAll("clone fragment", "clone method"));
 					} else
 						bw.write(str);
 					bw.write(System.getProperty("line.separator"));
@@ -51,7 +51,7 @@ public class repalceCloneInstance {
 		// Copy C:\CloneRefactoring\hopelastchange\elasticsearch, guava, jmeter,
 		// lucene and org.eclipse.emf(five projects) to
 		// C:\CloneRefactoring\CloneComparison\ManuEvaluation
-		String path = "C:\\CloneRefactoring\\CloneComparison\\";
+		String path = "C:\\CloneRefactoring\\ManuEvaluation\\";
 		replace(path);
 	}
 }
