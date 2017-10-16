@@ -1,4 +1,5 @@
-This clone method is located in File: plugins/org.eclipse.emf.ecore.xcore.ui/src-gen/org/eclipse/emf/ecore/xcore/ui/contentassist/antlr/internal/InternalXcoreParser.java
+This clone method is located in File: 
+plugins/org.eclipse.emf.ecore.xcore.ui/src-gen/org/eclipse/emf/ecore/xcore/ui/contentassist/antlr/internal/InternalXcoreParser.java
 The line range of this clone method is: 74429-74669
 The content of this clone method is as follows:
     public final void rule__XReference__UnorderedGroup_9__Impl() throws RecognitionException {

@@ -1,4 +1,5 @@
-This clone method is located in File: plugins/org.eclipse.emf.edit.ui/src/org/eclipse/emf/edit/ui/provider/DiagnosticDecorator.java
+This clone method is located in File: 
+plugins/org.eclipse.emf.edit.ui/src/org/eclipse/emf/edit/ui/provider/DiagnosticDecorator.java
 The line range of this clone method is: 1086-1101
 The content of this clone method is as follows:
     protected void refreshResourceDiagnostics(List<Resource> resources)

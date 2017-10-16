@@ -1,4 +1,5 @@
-This clone method is located in File: tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/switch3/impl/EClass4Impl.java
+This clone method is located in File: 
+tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/switch3/impl/EClass4Impl.java
 The line range of this clone method is: 167-179
 The content of this clone method is as follows:
   public void eSet(int featureID, Object newValue)

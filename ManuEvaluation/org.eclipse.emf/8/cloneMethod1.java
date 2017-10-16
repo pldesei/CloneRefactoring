@@ -1,4 +1,5 @@
-This clone method is located in File: plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/generator/GenPackageGeneratorAdapter.java
+This clone method is located in File: 
+plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/generator/GenPackageGeneratorAdapter.java
 The line range of this clone method is: 1002-1021
 The content of this clone method is as follows:
   protected void generateModelIcon(GenPackage genPackage, Monitor monitor)

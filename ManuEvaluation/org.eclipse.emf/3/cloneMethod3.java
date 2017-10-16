@@ -1,4 +1,5 @@
-This clone method is located in File: plugins/org.eclipse.emf.common/src/org/eclipse/emf/common/util/WeakInterningHashSet.java
+This clone method is located in File: 
+plugins/org.eclipse.emf.common/src/org/eclipse/emf/common/util/WeakInterningHashSet.java
 The line range of this clone method is: 596-635
 The content of this clone method is as follows:
   public E get(E object)

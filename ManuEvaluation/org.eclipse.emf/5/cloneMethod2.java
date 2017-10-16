@@ -1,4 +1,5 @@
-This clone method is located in File: plugins/org.eclipse.emf.ecore.xcore/src/org/eclipse/emf/ecore/xcore/util/XcoreEcoreBuilder.java
+This clone method is located in File: 
+plugins/org.eclipse.emf.ecore.xcore/src/org/eclipse/emf/ecore/xcore/util/XcoreEcoreBuilder.java
 The line range of this clone method is: 824-851
 The content of this clone method is as follows:
     public void initialize()
