@@ -5,7 +5,7 @@ The content of this clone method is as follows:
     public void testRecoverAfterMasterNodes() throws Exception {
         logger.info("--> start master_node (1)");
         Client master1 = startNode(Settings.builder()
-            .put("gateway.recover_after_master_nodes", 2).put(Node.NODE_DATA_SETTING.getKey(), false)
+            .put("gateway.recover_after_master_nodes", 2).put	(Node.NODE_DATA_SETTING.getKey(), false)
             .put(Node.NODE_MASTER_SETTING.getKey(), true), 1);
         assertThat(master1.admin().cluster().prepareState().setLocal(true).execute().actionGet()
                 .getState().blocks().global(ClusterBlockLevel.METADATA_WRITE),

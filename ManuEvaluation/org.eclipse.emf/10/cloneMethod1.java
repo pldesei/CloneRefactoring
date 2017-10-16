@@ -1,4 +1,5 @@
-This clone method is located in File: plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/resource/impl/PlatformContentHandlerImpl.java
+This clone method is located in File: 
+plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/resource/impl/PlatformContentHandlerImpl.java
 The line range of this clone method is: 176-186
 The content of this clone method is as follows:
   protected String getCharset(URI uri, InputStream inputStream, Map<?, ?> options, Map<Object, Object> context) throws IOException
