@@ -1,0 +1,13 @@
+(startLine=696 endLine=706 srcPath=/home/ubuntu/guavaFilter/384/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testWithFallback_resultCancelledBeforeFallback() throws Exception {
+    SettableFuture<Integer> primary = SettableFuture.create();
+    FutureFallback<Integer> fallback = mocksControl.createMock(FutureFallback.class);
+
+    mocksControl.replay();
+    ListenableFuture<Integer> derived = Futures.withFallback(primary, fallback);
+    derived.cancel(false);
+    assertTrue(primary.isCancelled());
+    assertFalse(primary.wasInterrupted());
+    mocksControl.verify();
+  }
+

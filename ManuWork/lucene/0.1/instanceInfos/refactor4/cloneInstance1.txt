@@ -1,0 +1,33 @@
+(startLine=1702 endLine=1732 srcPath=/home/ubuntu/luceneFilter/1454/lucene/src/test/org/apache/lucene/index/TestIndexReader.java)
+  public void testFieldCacheReuseAfterReopen() throws Exception {
+    Directory dir = new MockRAMDirectory();
+    IndexWriter writer = new IndexWriter(dir, new WhitespaceAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+    Document doc = new Document();
+    doc.add(new Field("number", "17", Field.Store.NO, Field.Index.NOT_ANALYZED));
+    writer.addDocument(doc);
+    writer.commit();
+
+    // Open reader1
+    IndexReader r = IndexReader.open(dir);
+    assertTrue(r instanceof SegmentReader);
+    final int[] ints = FieldCache.DEFAULT.getInts(r, "number");
+    assertEquals(1, ints.length);
+    assertEquals(17, ints[0]);
+
+    // Add new segment
+    writer.addDocument(doc);
+    writer.commit();
+
+    // Reopen reader1 --> reader2
+    IndexReader r2 = (IndexReader) r.reopen();
+    r.close();
+    assertTrue(r2 instanceof MultiSegmentReader);
+    IndexReader sub0 = r2.getSequentialSubReaders()[0];
+    assertTrue(sub0 instanceof SegmentReader);
+    final int[] ints2 = FieldCache.DEFAULT.getInts(sub0, "number");
+    r2.close();
+    assertTrue(ints == ints2);
+
+    dir.close();
+  }
+

@@ -1,0 +1,35 @@
+(startLine=41 endLine=73 srcPath=/home/ubuntu/luceneFilter/177/lucene/lucene/core/src/java/org/apache/lucene/util/packed/MonotonicBlockPackedReader.java)
+  public MonotonicBlockPackedReader(IndexInput in, int packedIntsVersion, int blockSize, long valueCount, boolean direct) throws IOException {
+    checkBlockSize(blockSize);
+    this.valueCount = valueCount;
+    blockShift = Integer.numberOfTrailingZeros(blockSize);
+    blockMask = blockSize - 1;
+    final int numBlocks = (int) (valueCount / blockSize) + (valueCount % blockSize == 0 ? 0 : 1);
+    if ((long) numBlocks * blockSize < valueCount) {
+      throw new IllegalArgumentException("valueCount is too large for this block size");
+    }
+    minValues = new long[numBlocks];
+    averages = new float[numBlocks];
+    subReaders = new PackedInts.Reader[numBlocks];
+    for (int i = 0; i < numBlocks; ++i) {
+      minValues[i] = in.readVLong();
+      averages[i] = Float.intBitsToFloat(in.readInt());
+      final int bitsPerValue = in.readVInt();
+      if (bitsPerValue > 64) {
+        throw new IOException("Corrupted");
+      }
+      if (bitsPerValue == 0) {
+        subReaders[i] = new PackedInts.NullReader(blockSize);
+      } else {
+        final int size = (int) Math.min(blockSize, valueCount - (long) i * blockSize);
+        if (direct) {
+          final long pointer = in.getFilePointer();
+          subReaders[i] = PackedInts.getDirectReaderNoHeader(in, PackedInts.Format.PACKED, packedIntsVersion, size, bitsPerValue);
+          in.seek(pointer + PackedInts.Format.PACKED.byteCount(packedIntsVersion, size, bitsPerValue));
+        } else {
+          subReaders[i] = PackedInts.getReaderNoHeader(in, PackedInts.Format.PACKED, packedIntsVersion, size, bitsPerValue);
+        }
+      }
+    }
+  }
+

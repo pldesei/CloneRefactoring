@@ -1,0 +1,78 @@
+(startLine=492 endLine=567 srcPath=/home/ubuntu/guavaFilter/1061/guava/guava-tests/test/com/google/common/cache/CacheLoadingTest.java)
+  public void testLoadError() throws ExecutionException {
+    Error e = new Error();
+    CacheLoader<Object, Object> loader = errorLoader(e);
+    LoadingCache<Object, Object> cache = CacheBuilder.newBuilder().build(loader);
+    CacheStats stats = cache.stats();
+    assertEquals(0, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(0, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.get(new Object());
+      fail();
+    } catch (ExecutionError expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(1, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(1, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.getUnchecked(new Object());
+      fail();
+    } catch (ExecutionError expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(2, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(2, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.refresh(new Object());
+      fail();
+    } catch (ExecutionError expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(2, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(3, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    final Error callableError = new Error();
+    try {
+      cache.get(new Object(), new Callable<Object>() {
+        @Override
+        public Object call() {
+          throw callableError;
+        }
+      });
+      fail();
+    } catch (ExecutionError expected) {
+      assertSame(callableError, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(3, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(4, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.getAll(asList(new Object()));
+      fail();
+    } catch (ExecutionError expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(4, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(5, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+  }
+

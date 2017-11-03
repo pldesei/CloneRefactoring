@@ -1,0 +1,17 @@
+(startLine=64 endLine=78 srcPath=/home/ubuntu/luceneFilter/997/lucene/solr/src/test/org/apache/solr/spelling/suggest/PersistenceTest.java)
+  public void testJaspellPersistence() throws Exception {
+    JaspellLookup lookup = new JaspellLookup();
+    for (String k : keys) {
+      lookup.add(k, new Float(k.length()));
+    }
+    File storeDir = new File(TEST_HOME());
+    lookup.store(storeDir);
+    lookup = new JaspellLookup();
+    lookup.load(storeDir);
+    for (String k : keys) {
+      Float val = (Float)lookup.get(k);
+      assertNotNull(k, val);
+      assertEquals(k, k.length(), val.intValue());
+    }
+  }
+

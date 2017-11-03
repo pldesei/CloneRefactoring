@@ -1,0 +1,22 @@
+(startLine=568 endLine=587 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  public void mergeNodesFrom_filtered_undirected() {
+    Graph<Integer, String> undirectedGraph = buildUndirectedTestGraph();
+    undirectedGraph.addNode(N3);
+    Predicate<Integer> nodePredicate = connectedNodePredicate(undirectedGraph);
+
+    Graph<Integer, String> actualGraph = GraphBuilder.undirected().build();
+    // prepopulate actualGraph to make sure that existing elements don't interfere with the merging
+    actualGraph.addNode(N4); // ensure that we don't remove nodes that don't pass the predicate
+    actualGraph.addNode(N2); // ensure that a pre-existing node is not affected by the merging
+
+    mergeNodesFrom(undirectedGraph, actualGraph, nodePredicate);
+
+    Graph<Integer, String> expectedGraph = GraphBuilder.undirected().build();
+    expectedGraph.addNode(N1);
+    expectedGraph.addNode(N2);
+    // N3 is not expected because it's not connected
+    expectedGraph.addNode(N4);
+
+    assertThat(actualGraph).isEqualTo(expectedGraph);
+  }
+

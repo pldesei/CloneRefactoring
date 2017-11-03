@@ -1,0 +1,11 @@
+(startLine=552 endLine=560 srcPath=/home/ubuntu/guavaFilter/679/guava/guava/src/com/google/common/collect/HashBiMap.java)
+      public boolean remove(@Nullable Object o) {
+        BiEntry<K, V> entry = seekByValue(o, hash(o));
+        if (entry == null) {
+          return false;
+        } else {
+          delete(entry);
+          return true;
+        }
+      }
+

@@ -1,0 +1,12 @@
+(startLine=297 endLine=306 srcPath=/home/ubuntu/luceneFilter/935/lucene/lucene/src/java/org/apache/lucene/index/values/IndexDocValuesArray.java)
+    void write(IndexOutput output, int numDocs) throws IOException {
+      assert maxDocID + 1 <= numDocs;
+      output.writeInt(numDocs);
+      for (int i = 0; i < maxDocID + 1; i++) {
+        output.writeInt(values[i]);
+      }
+      for (int i = maxDocID + 1; i < numDocs; i++) {
+        output.writeInt(0);
+      }
+    }
+

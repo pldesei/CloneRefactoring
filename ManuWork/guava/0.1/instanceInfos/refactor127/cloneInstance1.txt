@@ -1,0 +1,13 @@
+(startLine=919 endLine=929 srcPath=/home/ubuntu/guavaFilter/649/guava/guava/src/com/google/common/collect/Sets.java)
+    public E pollFirst() {
+      Iterator<E> unfilteredIterator = unfiltered().iterator();
+      while (unfilteredIterator.hasNext()) {
+        E e = unfilteredIterator.next();
+        if (predicate.apply(e)) {
+          unfilteredIterator.remove();
+          return e;
+        }
+      }
+      return null;
+    }
+

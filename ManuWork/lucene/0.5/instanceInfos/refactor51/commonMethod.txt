@@ -1,0 +1,9 @@
+(startLine=1284 endLine=1290 srcPath=/home/ubuntu/luceneFilter/176/lucene/lucene/core/src/java/org/apache/lucene/util/packed/PackedInts.java)
+  static int numBlocks(long size, int blockSize) {
+    final int numBlocks = (int) (size / blockSize) + (size % blockSize == 0 ? 0 : 1);
+    if ((long) numBlocks * blockSize < size) {
+      throw new IllegalArgumentException("size is too large for this block size");
+    }
+    return numBlocks;
+  }
+

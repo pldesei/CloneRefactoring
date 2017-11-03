@@ -1,0 +1,33 @@
+(startLine=191 endLine=221 srcPath=/home/ubuntu/luceneFilter/786/lucene/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testEndOffsetPositionStandard() throws Exception {
+    Directory dir = newDirectory();
+    IndexWriter w = new IndexWriter(dir, newIndexWriterConfig( 
+        TEST_VERSION_CURRENT, new MockAnalyzer(random)));
+    Document doc = new Document();
+    FieldType customType = new FieldType(TextField.TYPE_UNSTORED);
+    customType.setStoreTermVectors(true);
+    customType.setStoreTermVectorPositions(true);
+    customType.setStoreTermVectorOffsets(true);
+    Field f = newField("field", "abcd the  ", customType);
+    Field f2 = newField("field", "crunch man", customType);
+    doc.add(f);
+    doc.add(f2);
+    w.addDocument(doc);
+    w.close();
+
+    IndexReader r = IndexReader.open(dir, true);
+    TermPositionVector tpv = ((TermPositionVector) r.getTermFreqVector(0, "field"));
+    TermVectorOffsetInfo[] termOffsets = tpv.getOffsets(0);
+    assertEquals(1, termOffsets.length);
+    assertEquals(0, termOffsets[0].getStartOffset());
+    assertEquals(4, termOffsets[0].getEndOffset());
+    termOffsets = tpv.getOffsets(1);
+    assertEquals(11, termOffsets[0].getStartOffset());
+    assertEquals(17, termOffsets[0].getEndOffset());
+    termOffsets = tpv.getOffsets(2);
+    assertEquals(18, termOffsets[0].getStartOffset());
+    assertEquals(21, termOffsets[0].getEndOffset());
+    r.close();
+    dir.close();
+  }
+

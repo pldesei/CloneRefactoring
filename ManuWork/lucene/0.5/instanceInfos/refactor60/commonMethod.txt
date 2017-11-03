@@ -1,0 +1,16 @@
+(startLine=338 endLine=351 srcPath=/home/ubuntu/luceneFilter/85/lucene/lucene/core/src/java/org/apache/lucene/util/IOUtils.java)
+  public static void reThrow(Throwable th) throws IOException {
+    if (th != null) {
+      if (th instanceof IOException) {
+        throw (IOException) th;
+      }
+      if (th instanceof RuntimeException) {
+        throw (RuntimeException) th;
+      }
+      if (th instanceof Error) {
+        throw (Error) th;
+      }
+      throw new RuntimeException(th);
+    }
+  }
+

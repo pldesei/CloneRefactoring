@@ -1,0 +1,12 @@
+(startLine=160 endLine=169 srcPath=/home/ubuntu/antFilter/706/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/depend/DependTest.java)
+    private Hashtable getResultFiles() {
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
+        }
+        return files;
+    }
+

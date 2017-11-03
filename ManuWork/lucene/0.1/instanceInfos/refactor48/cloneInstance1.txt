@@ -1,0 +1,17 @@
+(startLine=57 endLine=71 srcPath=/home/ubuntu/luceneFilter/219/lucene/lucene/core/src/java/org/apache/lucene/search/DisjunctionMaxScorer.java)
+  public int nextDoc() throws IOException {
+    if (numScorers == 0) return doc = NO_MORE_DOCS;
+    while (subScorers[0].docID() == doc) {
+      if (subScorers[0].nextDoc() != NO_MORE_DOCS) {
+        heapAdjust(0);
+      } else {
+        heapRemoveRoot();
+        if (numScorers == 0) {
+          return doc = NO_MORE_DOCS;
+        }
+      }
+    }
+    
+    return doc = subScorers[0].docID();
+  }
+

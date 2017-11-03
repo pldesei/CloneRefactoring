@@ -1,0 +1,8 @@
+(startLine=141 endLine=146 srcPath=/home/ubuntu/guavaFilter/431/guava/guava/src/com/google/common/collect/RegularImmutableBiMap.java)
+  private static void checkNoConflictInValueBucket(Object value, Entry<?, ?> entry,
+      @Nullable ImmutableMapEntry<?, ?> valueBucketHead) {
+    for (; valueBucketHead != null; valueBucketHead = valueBucketHead.getNextInValueBucket()) {
+      checkNoConflict(!value.equals(valueBucketHead.getValue()), "value", entry, valueBucketHead);
+    }
+  }
+

@@ -1,0 +1,23 @@
+(startLine=242 endLine=262 srcPath=/home/ubuntu/guavaFilter/881/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
+  public void testThreadedServiceStartAndWaitStopAndWait() throws Throwable {
+    ThreadedService service = new ThreadedService();
+    RecordingListener listener = new RecordingListener();
+    service.addListener(listener, MoreExecutors.sameThreadExecutor());
+    service.start().get();
+    assertEquals(State.RUNNING, service.state());
+
+    service.awaitRunChecks();
+
+    service.stop().get();
+    assertEquals(State.TERMINATED, service.state());
+
+    throwIfSet(thrownByExecutionThread);
+    assertEquals(
+        Arrays.asList(
+            State.STARTING,
+            State.RUNNING,
+            State.STOPPING,
+            State.TERMINATED),
+            listener.getStateHistory());
+  }
+

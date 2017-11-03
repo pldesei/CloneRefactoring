@@ -1,0 +1,8 @@
+(startLine=102 endLine=107 srcPath=/home/ubuntu/guavaFilter/431/guava/guava/src/com/google/common/collect/RegularImmutableMap.java)
+  static void checkNoConflictInKeyBucket(
+      Object key, Entry<?, ?> entry, @Nullable ImmutableMapEntry<?, ?> keyBucketHead) {
+    for (; keyBucketHead != null; keyBucketHead = keyBucketHead.getNextInKeyBucket()) {
+      checkNoConflict(!key.equals(keyBucketHead.getKey()), "key", entry, keyBucketHead);
+    }
+  }
+

@@ -1,0 +1,8 @@
+(startLine=341 endLine=346 srcPath=/home/ubuntu/guavaFilter/242/guava/guava/src/com/google/common/graph/IncidenceSetUndirectedGraph.java)
+  private IncidentNodes<N> checkedIncidentNodes(Object edge) {
+    checkNotNull(edge, "edge");
+    IncidentNodes<N> incidentNodes = edgeToIncidentNodes.get(edge);
+    checkArgument(incidentNodes != null, EDGE_NOT_IN_GRAPH, edge);
+    return incidentNodes;
+  }
+

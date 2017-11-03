@@ -1,0 +1,12 @@
+(startLine=692 endLine=701 srcPath=/home/ubuntu/guavaFilter/651/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public boolean removeAll(final Collection<?> c) {
+        checkNotNull(c);
+        Predicate<Entry<R, V>> predicate = new Predicate<Entry<R, V>>() {
+          @Override
+          public boolean apply(Entry<R, V> entry) {
+            return c.contains(entry.getValue());
+          }
+        };
+        return removePredicate(predicate);
+      }
+

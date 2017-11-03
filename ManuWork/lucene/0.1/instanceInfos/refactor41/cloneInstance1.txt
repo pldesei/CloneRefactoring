@@ -1,0 +1,17 @@
+(startLine=374 endLine=388 srcPath=/home/ubuntu/luceneFilter/535/lucene/lucene/core/src/java/org/apache/lucene/util/packed/PackedInts.java)
+  public static ReaderIterator getReaderIterator(IndexInput in) throws IOException {
+    CodecUtil.checkHeader(in, CODEC_NAME, VERSION_START, VERSION_START);
+    final int bitsPerValue = in.readVInt();
+    assert bitsPerValue > 0 && bitsPerValue <= 64: "bitsPerValue=" + bitsPerValue;
+    final int valueCount = in.readVInt();
+    final int format = in.readVInt();
+    switch (format) {
+      case PACKED:
+        return new PackedReaderIterator(valueCount, bitsPerValue, in);
+      case PACKED_SINGLE_BLOCK:
+        return new Packed64SingleBlockReaderIterator(valueCount, bitsPerValue, in);
+      default:
+        throw new AssertionError("Unknwown Writer format: " + format);
+    }
+  }
+

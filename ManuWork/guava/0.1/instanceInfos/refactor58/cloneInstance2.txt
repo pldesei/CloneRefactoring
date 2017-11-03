@@ -1,0 +1,13 @@
+(startLine=220 endLine=230 srcPath=/home/ubuntu/guavaFilter/919/guava/guava/src/com/google/common/collect/RegularImmutableSortedSet.java)
+  ImmutableSortedSet<E> tailSetImpl(E fromElement, boolean inclusive) {
+    int index;
+    if (inclusive) {
+      index = SortedLists.binarySearch(
+          elements, checkNotNull(fromElement), comparator(), FIRST_PRESENT, NEXT_HIGHER);
+    } else {
+      index = SortedLists.binarySearch(
+          elements, checkNotNull(fromElement), comparator(), FIRST_AFTER, NEXT_HIGHER);
+    }
+    return createSubset(index, size());
+  }
+

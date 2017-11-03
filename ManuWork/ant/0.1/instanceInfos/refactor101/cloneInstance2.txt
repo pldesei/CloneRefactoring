@@ -1,0 +1,16 @@
+(startLine=132 endLine=145 srcPath=/home/ubuntu/antFilter/41/ant/src/main/org/apache/tools/ant/taskdefs/launcher/CommandLauncher.java)
+    public static CommandLauncher getVMLauncher(Project project) {
+        CommandLauncher launcher = null;
+        if (project != null) {
+            launcher = (CommandLauncher)project.getReference(ANT_VM_LAUNCHER_REF_ID);
+        }
+
+        if (launcher == null) {
+            launcher = getSystemLauncher(ANT_VM_LAUNCHER_REF_ID);
+        }
+        if (launcher == null) {
+            launcher = vmLauncher;
+        }
+        return launcher;
+    }
+

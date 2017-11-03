@@ -1,0 +1,14 @@
+(startLine=168 endLine=179 srcPath=/home/ubuntu/antFilter/847/ant/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/BaseFilterReader.java)
+    protected final String readLine() throws IOException {
+        int ch = in.read();
+        String line = (ch == -1) ? null : "";
+        while (ch != -1) {
+            line += (char) ch;
+            if (ch == '\n') {
+                break;
+            }
+            ch = in.read();
+        }
+        return line;
+    }
+

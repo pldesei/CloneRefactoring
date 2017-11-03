@@ -1,0 +1,16 @@
+(startLine=80 endLine=93 srcPath=/home/ubuntu/luceneFilter/1419/lucene/src/test/org/apache/lucene/analysis/TestTokenStreamBWComp.java)
+    public Token next() throws IOException {
+      Token t = input.next();
+      if (t == null) return null;
+      
+      if (t instanceof POSToken) {
+        POSToken pt = (POSToken) t;
+        if (pt.getPartOfSpeech() == POSToken.PROPERNOUN) {
+          pt.setPayload(new Payload(new byte[] {PROPER_NOUN_ANNOTATION}));
+        }
+        return pt;
+      } else {
+        return t;
+      }
+    }
+

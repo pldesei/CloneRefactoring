@@ -1,0 +1,14 @@
+(startLine=199 endLine=210 srcPath=/home/ubuntu/luceneFilter/215/lucene/solr/core/src/test/org/apache/solr/cloud/ShardSplitTest.java)
+  protected void indexAndUpdateCount(List<DocRouter.Range> ranges, int[] docCounts, int id) throws Exception {
+    indexr("id", id);
+
+    // todo - hook in custom hashing
+    byte[] bytes = String.valueOf(id).getBytes("UTF-8");
+    int hash = Hash.murmurhash3_x86_32(bytes, 0, bytes.length, 0);
+    for (int i = 0; i < ranges.size(); i++) {
+      DocRouter.Range range = ranges.get(i);
+      if (range.includes(hash))
+        docCounts[i]++;
+    }
+  }
+

@@ -1,0 +1,8 @@
+(startLine=212 endLine=217 srcPath=/home/ubuntu/guavaFilter/250/guava/guava/src/com/google/common/graph/IncidenceSetDirectedGraph.java)
+  public Set<E> outEdges(Object node) {
+    checkNotNull(node, "node");
+    DirectedIncidentEdges<E> incidentEdges = nodeToIncidentEdges.get(node);
+    checkArgument(incidentEdges != null, NODE_NOT_IN_GRAPH, node);
+    return Collections.unmodifiableSet(incidentEdges.outEdges());
+  }
+

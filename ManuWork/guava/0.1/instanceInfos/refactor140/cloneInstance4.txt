@@ -1,0 +1,11 @@
+(startLine=681 endLine=689 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/ServiceManager.java)
+    void fireHealthyListeners() {
+      for (final ListenerExecutorPair pair : listeners) {
+        queuedListeners.add(new Runnable() {
+          @Override public void run() {
+            pair.listener.healthy();
+          }
+        }, pair.executor);
+      }
+    }
+

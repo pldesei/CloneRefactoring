@@ -1,0 +1,14 @@
+(startLine=54 endLine=65 srcPath=/home/ubuntu/luceneFilter/1414/lucene/contrib/analyzers/common/src/java/org/apache/lucene/analysis/ru/RussianStemFilter.java)
+    public final boolean incrementToken() throws IOException
+    {
+      if (input.incrementToken()) {
+        String term = termAtt.term();
+        String s = stemmer.stem(term);
+        if (s != null && !s.equals(term))
+          termAtt.setTermBuffer(s);
+        return true;
+      } else {
+        return false;
+      }
+    }
+

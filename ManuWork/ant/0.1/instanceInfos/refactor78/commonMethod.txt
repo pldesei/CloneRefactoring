@@ -1,0 +1,18 @@
+(startLine=554 endLine=569 srcPath=/home/ubuntu/antFilter/368/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java)
+    private String getFileString(String filename) throws IOException {
+        String result = null;
+        FileReader reader = null;
+        try {
+            reader = new FileReader(getProject().resolveFile(filename));
+            result = FileUtils.newFileUtils().readFully(reader);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Throwable ignore) {
+                }
+            }
+        }
+        return result;
+    }
+

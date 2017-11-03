@@ -1,0 +1,11 @@
+(startLine=401 endLine=409 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/AbstractService.java)
+  private void starting() {
+    for (final ListenerExecutorPair pair : listeners) {
+      queuedListeners.add(new Runnable() {
+        @Override public void run() {
+          pair.listener.starting();
+        }
+      }, pair.executor);
+    }
+  }
+

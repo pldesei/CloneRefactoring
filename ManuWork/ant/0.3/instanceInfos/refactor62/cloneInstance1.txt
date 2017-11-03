@@ -1,0 +1,45 @@
+(startLine=131 endLine=173 srcPath=/home/ubuntu/antFilter/848/ant/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/StripLineComments.java)
+    public final int read() throws IOException {
+        if (!getInitialized()) {
+            initialize();
+            setInitialized(true);
+        }
+
+        int ch = -1;
+
+        if (line != null) {
+            ch = line.charAt(0);
+            if (line.length() == 1) {
+                line = null;
+            } else {
+                line = line.substring(1);
+            }
+        } else {
+            ch = in.read();
+            while (ch != -1) {
+                if (line == null) {
+                    line = "";
+                }
+                line = line + (char) ch;
+                if (ch == '\n') {
+                    break;
+                }
+                ch = in.read();
+            }
+
+            if (line != null) {
+                int commentsSize = comments.size();
+                for (int i = 0; i < commentsSize; i++) {
+                    String comment = (String) comments.elementAt(i);
+                    if (line.startsWith(comment)) {
+                        line = null;
+                        break;
+                    }
+                }
+                return read();
+            }
+        }
+
+        return ch;
+    }
+

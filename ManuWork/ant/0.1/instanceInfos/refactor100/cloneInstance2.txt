@@ -1,0 +1,11 @@
+(startLine=600 endLine=608 srcPath=/home/ubuntu/antFilter/46/ant/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
+    protected boolean assumeJava15() {
+        return "javac1.5".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5));
+    }
+

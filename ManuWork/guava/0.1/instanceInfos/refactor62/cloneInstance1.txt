@@ -1,0 +1,21 @@
+(startLine=84 endLine=102 srcPath=/home/ubuntu/guavaFilter/881/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
+  public void testNoOpServiceStartStopIdempotence() throws Exception {
+    NoOpService service = new NoOpService();
+    RecordingListener listener = new RecordingListener();
+    service.addListener(listener, MoreExecutors.sameThreadExecutor());
+    service.start();
+    service.start();
+    assertEquals(State.RUNNING, service.state());
+
+    service.stop();
+    service.stop();
+    assertEquals(State.TERMINATED, service.state());
+    assertEquals(
+        Arrays.asList(
+            State.STARTING,
+            State.RUNNING,
+            State.STOPPING,
+            State.TERMINATED),
+        listener.getStateHistory());
+  }
+

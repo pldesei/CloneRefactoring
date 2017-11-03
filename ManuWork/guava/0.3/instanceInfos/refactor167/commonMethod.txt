@@ -1,0 +1,8 @@
+(startLine=219 endLine=224 srcPath=/home/ubuntu/guavaFilter/249/guava/guava/src/com/google/common/graph/ImmutableUndirectedGraph.java)
+  private NodeConnections<N, E> checkedConnections(Object node) {
+    checkNotNull(node, "node");
+    NodeConnections<N, E> connections = nodeConnections.get(node);
+    checkArgument(connections != null, NODE_NOT_IN_GRAPH, node);
+    return connections;
+  }
+

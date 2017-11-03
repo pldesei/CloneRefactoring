@@ -1,0 +1,11 @@
+(startLine=182 endLine=190 srcPath=/home/ubuntu/luceneFilter/336/lucene/lucene/facet/src/test/org/apache/lucene/facet/search/TestMultipleCategoryLists.java)
+  private void assertOrdinalsExist(String field, IndexReader ir) throws IOException {
+    for (AtomicReaderContext context : ir.leaves()) {
+      AtomicReader r = context.reader();
+      if (r.docValues(field) != null) {
+        return; // not all segments must have this DocValues
+      }
+    }
+    fail("no ordinals found for " + field);
+  }
+

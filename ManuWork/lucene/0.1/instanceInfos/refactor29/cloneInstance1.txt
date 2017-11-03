@@ -1,0 +1,10 @@
+(startLine=74 endLine=81 srcPath=/home/ubuntu/luceneFilter/938/lucene/lucene/src/java/org/apache/lucene/index/Terms.java)
+  public DocsEnum docs(Bits skipDocs, BytesRef text, DocsEnum reuse) throws IOException {
+    final TermsEnum termsEnum = getThreadTermsEnum();
+    if (termsEnum.seek(text) == TermsEnum.SeekStatus.FOUND) {
+      return termsEnum.docs(skipDocs, reuse);
+    } else {
+      return null;
+    }
+  }
+

@@ -1,0 +1,8 @@
+(startLine=84 endLine=89 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphPropertiesTest.java)
+  public void isCyclic_twoAcyclicEdges() {
+    DirectedGraph<Integer, String> directedGraph = Graphs.createDirected();
+    directedGraph.addEdge(E12, N1, N2);
+    directedGraph.addEdge(E13, N1, N3);
+    assertThat(isCyclic(directedGraph)).isFalse();
+  }
+

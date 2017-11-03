@@ -1,0 +1,25 @@
+(startLine=1087 endLine=1109 srcPath=/home/ubuntu/guavaFilter/1133/guava/guava/src/com/google/common/util/concurrent/Futures.java)
+  public static <V, X extends Exception> V get(
+      Future<V> future, long timeout, TimeUnit unit, Class<X> exceptionClass)
+      throws X {
+    checkNotNull(future);
+    checkNotNull(unit);
+    checkArgument(!RuntimeException.class.isAssignableFrom(exceptionClass),
+        "Futures.get exception type (%s) must not be a RuntimeException",
+        exceptionClass);
+    try {
+      return future.get(timeout, unit);
+    } catch (InterruptedException e) {
+      currentThread().interrupt();
+      throw newWithCause(exceptionClass, e);
+    } catch (CancellationException e) {
+      throw e;
+    } catch (TimeoutException e) {
+      throw newWithCause(exceptionClass, e);
+    } catch (ExecutionException e) {
+      throw newWithCause(exceptionClass, e.getCause());
+    } catch (RuntimeException e) {
+      throw newWithCause(exceptionClass, e);
+    }
+  }
+

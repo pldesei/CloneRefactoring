@@ -1,0 +1,8 @@
+(startLine=234 endLine=239 srcPath=/home/ubuntu/guavaFilter/242/guava/guava/src/com/google/common/graph/ImmutableDirectedGraph.java)
+  private IncidentNodes<N> checkedIncidentNodes(Object edge) {
+    checkNotNull(edge, "edge");
+    IncidentNodes<N> incidentNodes = edgeToIncidentNodes.get(edge);
+    checkArgument(incidentNodes != null, EDGE_NOT_IN_GRAPH, edge);
+    return incidentNodes;
+  }
+

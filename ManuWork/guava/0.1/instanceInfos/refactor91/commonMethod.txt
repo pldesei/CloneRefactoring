@@ -1,0 +1,12 @@
+(startLine=3431 endLine=3440 srcPath=/home/ubuntu/guavaFilter/692/guava/guava/src/com/google/common/collect/Maps.java)
+  static <V> V safeRemove(Map<?, V> map, Object key) {
+    checkNotNull(map);
+    try {
+      return map.remove(key);
+    } catch (ClassCastException e) {
+      return null;
+    } catch (NullPointerException e) {
+      return null;
+    }
+  }
+

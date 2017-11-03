@@ -1,0 +1,19 @@
+(startLine=92 endLine=108 srcPath=/home/ubuntu/antFilter/707/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/depend/DependTest.java)
+    public void testDirect() {
+        Project project = getProject();
+        executeTarget("testdirect");
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
+        }
+        assertEquals("Depend did not leave correct number of files", 2, 
+            files.size());
+        assertTrue("Result did not contain A.class", 
+            files.containsKey("A.class"));
+        assertTrue("Result did not contain D.class", 
+            files.containsKey("D.class"));
+    }
+

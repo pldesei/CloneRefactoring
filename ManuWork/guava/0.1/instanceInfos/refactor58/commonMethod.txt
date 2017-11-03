@@ -1,0 +1,12 @@
+(startLine=238 endLine=247 srcPath=/home/ubuntu/guavaFilter/918/guava/guava/src/com/google/common/collect/RegularImmutableSortedSet.java)
+  ImmutableSortedSet<E> getSubSet(int newFromIndex, int newToIndex) {
+    if (newFromIndex == 0 && newToIndex == size()) {
+      return this;
+    } else if (newFromIndex < newToIndex) {
+      return new RegularImmutableSortedSet<E>(
+          elements.subList(newFromIndex, newToIndex), comparator);
+    } else {
+      return emptySet(comparator);
+    }
+  }
+
