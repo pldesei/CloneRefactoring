@@ -1,0 +1,18 @@
+(startLine=241 endLine=256 srcPath=/root/Projects/org.eclipse.emfFilter/724/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/AudioVisualItemImpl.java)
+  public void eUnset(int featureID)
+  {
+    switch (featureID)
+    {
+      case EXTLibraryPackage.AUDIO_VISUAL_ITEM__TITLE:
+        setTitle(TITLE_EDEFAULT);
+        return;
+      case EXTLibraryPackage.AUDIO_VISUAL_ITEM__MINUTES_LENGTH:
+        setMinutesLength(MINUTES_LENGTH_EDEFAULT);
+        return;
+      case EXTLibraryPackage.AUDIO_VISUAL_ITEM__DAMAGED:
+        setDamaged(DAMAGED_EDEFAULT);
+        return;
+    }
+    super.eUnset(featureID);
+  }
+

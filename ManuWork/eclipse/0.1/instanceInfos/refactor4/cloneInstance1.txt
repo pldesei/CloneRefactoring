@@ -1,0 +1,20 @@
+(startLine=292 endLine=309 srcPath=/root/Projects/eclipse.jdt.coreFilter/2045/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/TypeHierarchyTests.java)
+public void testSupertypeHierarchyGetSubclasses() throws JavaModelException {
+    IType type = getClassFile("TypeHierarchy", getExternalJCLPath(), "java.lang", "Object.class").getType();
+    ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(null);
+    IType[] types = typeHierarchy.getSubclasses(type);
+    assertTypesEqual(
+        "Unexpected subclasses of Object", 
+        "", 
+        types);
+    
+    ICompilationUnit cu = getCompilationUnit("TypeHierarchy", "src", "p1", "Y.java");
+    type = cu.getType("Y");
+    typeHierarchy = type.newSupertypeHierarchy(null);
+    types = typeHierarchy.getSubclasses(type);
+    assertTypesEqual(
+        "Unexpected subclasses of Y", 
+        "", 
+        types);
+}
+

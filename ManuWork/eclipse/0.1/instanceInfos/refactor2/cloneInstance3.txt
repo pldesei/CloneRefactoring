@@ -1,0 +1,40 @@
+(startLine=294 endLine=331 srcPath=/root/Projects/eclipse.jdt.coreFilter/2219/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+    public void acceptType(char[] packageName, char[] typeName) {
+
+        char[] fullyQualifiedName = CharOperation.concat(packageName, typeName, '.');
+        char[] completionName = fullyQualifiedName;
+        
+        if (this.knownTypes.containsKey(completionName)) return;
+
+        this.knownTypes.put(completionName, this);
+
+        int relevance = DEFAULTRELEVANCE;
+        if (resolvingImports) {
+            completionName = CharOperation.concat(completionName, new char[] { ';' });
+            if(CharOperation.prefixEquals(token, fullyQualifiedName, true)){
+                relevance += CASEMATCHRELEVANCE;
+            }
+        } else {
+            if (!insideQualifiedReference) {
+                if (mustQualifyType(packageName, typeName)) {
+                    if (packageName == null || packageName.length == 0)
+                        if (unitScope != null && unitScope.fPackage.compoundName != NoCharChar)
+                            return; // ignore types from the default package from outside it
+                } else {
+                    completionName = typeName;
+                }
+            }
+            if(CharOperation.prefixEquals(token, typeName, true)){
+                relevance += CASEMATCHRELEVANCE;
+            }
+        }
+        
+        requestor.acceptType(
+            packageName,
+            typeName,
+            completionName,
+            startPosition - offset,
+            endPosition - offset,
+            relevance);
+    }
+

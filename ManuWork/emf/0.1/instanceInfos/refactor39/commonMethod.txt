@@ -1,0 +1,12 @@
+(startLine=271 endLine=280 srcPath=/root/Projects/org.eclipse.emfFilter/507/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/impl/BImpl.java)
+  @Override
+  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
+  {
+    switch (eContainerFeatureID)
+    {
+      case RefPackage.B__C2:
+        return eInternalContainer().eInverseRemove(this, RefPackage.C2__B, C2.class, msgs);
+    }
+    return super.eBasicRemoveFromContainerFeature(msgs);
+  }
+

@@ -1,0 +1,10 @@
+(startLine=134 endLine=141 srcPath=/root/Projects/elasticsearchFilter/1300/elasticsearch/src/main/java/org/elasticsearch/action/update/UpdateRequest.java)
+    public UpdateRequest setRouting(String routing) {
+        if (routing != null && routing.length() == 0) {
+            this.routing = null;
+        } else {
+            this.routing = routing;
+        }
+        return this;
+    }
+

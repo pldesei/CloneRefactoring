@@ -1,0 +1,12 @@
+(startLine=78 endLine=87 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryAndFetchAction.java)
+        @Override protected void moveToSecondPhase() throws Exception {
+            sortedShardList = searchPhaseController.sortDocs(queryFetchResults.values());
+            final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryFetchResults, queryFetchResults);
+            String scrollId = null;
+            if (request.scroll() != null) {
+                scrollId = buildScrollId(request.searchType(), queryFetchResults.values(), null);
+            }
+            listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get(), buildTookInMillis(), buildShardFailures()));
+            searchCache.releaseQueryFetchResults(queryFetchResults);
+        }
+

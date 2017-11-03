@@ -1,0 +1,11 @@
+(startLine=156 endLine=164 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/ByteFieldMapper.java)
+    private byte parseValue(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).byteValue();
+        }
+        if (value instanceof BytesRef) {
+            return Byte.parseByte(((BytesRef) value).utf8ToString());
+        }
+        return Byte.parseByte(value.toString());
+    }
+

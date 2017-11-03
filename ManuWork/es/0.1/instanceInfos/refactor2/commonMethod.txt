@@ -1,0 +1,13 @@
+(startLine=227 endLine=237 srcPath=/root/Projects/elasticsearchFilter/1952/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollQueryAndFetchAction.java)
+        protected void invokeListener(final Throwable t) {
+            if (request.listenerThreaded()) {
+                threadPool.execute(new Runnable() {
+                    @Override public void run() {
+                        listener.onFailure(t);
+                    }
+                });
+            } else {
+                listener.onFailure(t);
+            }
+        }
+

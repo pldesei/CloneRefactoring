@@ -1,0 +1,31 @@
+(startLine=129 endLine=157 srcPath=/root/Projects/eclipse.jdt.coreFilter/2024/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/MovePackageFragmentRootOperation.java)
+    protected void updateProjectClasspath(IPath rootPath, IJavaProject project)
+        throws JavaModelException {
+        IClasspathEntry[] classpath = project.getRawClasspath();
+        IClasspathEntry[] newClasspath = null;
+        int cpLength = classpath.length;
+        int newCPIndex = -1;
+        for (int j = 0; j < cpLength; j++) {
+            IClasspathEntry entry = classpath[j];
+            if (rootPath.equals(entry.getPath())) {
+                if (newClasspath == null) {
+                    newClasspath = new IClasspathEntry[cpLength];
+                    System.arraycopy(classpath, 0, newClasspath, 0, j);
+                    newCPIndex = j;
+                }
+                if (this.destination.segment(0).equals(project.getElementName())) continue;
+                if (entry.getEntryKind() != IClasspathEntry.CPE_SOURCE) { // library entry
+                    newClasspath[newCPIndex++] = copy(entry);
+                } // else source folder is moved to another project: deletes its classpath entry
+            } else if (newClasspath != null) {
+                newClasspath[newCPIndex++] = entry;
+            }
+        }
+        if (newClasspath != null) {
+            if (newCPIndex < newClasspath.length) {
+                System.arraycopy(newClasspath, 0, newClasspath = new IClasspathEntry[newCPIndex], 0, newCPIndex);
+            }
+            project.setRawClasspath(newClasspath, fMonitor);
+        }
+    }
+

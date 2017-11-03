@@ -1,0 +1,10 @@
+(startLine=183 endLine=190 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryThenFetchAction.java)
+        void innerFinishHim() throws Exception {
+            InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryResults, fetchResults);
+            String scrollId = null;
+            if (request.scroll() != null) {
+                scrollId = TransportSearchHelper.buildScrollId(request.searchType(), queryResults.values(), null);
+            }
+            listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get(), buildTookInMillis(), buildShardFailures()));
+        }
+

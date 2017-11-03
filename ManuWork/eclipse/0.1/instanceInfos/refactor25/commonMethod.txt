@@ -1,0 +1,13 @@
+(startLine=674 endLine=684 srcPath=/root/Projects/eclipse.jdt.coreFilter/1482/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+private int putInNameAndTypeCache(final char[] key1, final char[] key2, int index) {
+    CharArrayCache value = (CharArrayCache) this.nameAndTypeCacheForFieldsAndMethods.get(key1);
+    if (value == null) {
+        CharArrayCache charArrayCache = new CharArrayCache();
+        charArrayCache.put(key2, index);
+        this.nameAndTypeCacheForFieldsAndMethods.put(key1, charArrayCache);
+    } else {
+        value.put(key2, index);
+    }
+    return index;
+}
+

@@ -1,0 +1,19 @@
+(startLine=123 endLine=139 srcPath=/root/Projects/eclipse.jdt.coreFilter/1690/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ReconcilerTests.java)
+public void testAddDuplicateMember() throws JavaModelException {
+    this.workingCopy.getBuffer().setContents(
+        "package p1;\n" +
+        "import p2.*;\n" +
+        "public class X {\n" +
+        "  public void foo() {\n" +
+        "  }\n" +
+        "  public void foo() {\n" +
+        "  }\n" +
+        "}");
+    this.workingCopy.reconcile(false, null);
+    assertDeltas(
+        "Unexpected delta", 
+        "X[*]: {CHILDREN | FINE GRAINED}\n" +
+        "    foo()[+]: {}"
+    );
+}
+

@@ -1,0 +1,6 @@
+(startLine=62 endLine=65 srcPath=/root/Projects/elasticsearchFilter/853/elasticsearch/src/test/java/org/elasticsearch/search/aggregations/bucket/ShardSizeTests.java)
+    protected void createIdx(String keyFieldMapping) {
+        assertAcked(prepareCreate("idx")
+                .addMapping("type", "key", keyFieldMapping));
+    }
+

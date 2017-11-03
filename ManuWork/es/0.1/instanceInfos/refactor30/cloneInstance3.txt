@@ -1,0 +1,12 @@
+(startLine=592 endLine=601 srcPath=/root/Projects/elasticsearchFilter/1349/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
+    public void testVersioningNewIndex() {
+        ParsedDocument doc = new ParsedDocument("1", "1", "test", null, -1, -1, doc().add(uidField("1")).build(), Lucene.STANDARD_ANALYZER, B_1, false);
+        Engine.Index index = new Engine.Index(null, newUid("1"), doc);
+        engine.index(index);
+        assertThat(index.version(), equalTo(1l));
+
+        index = new Engine.Index(null, newUid("1"), doc).version(index.version()).origin(REPLICA);
+        replicaEngine.index(index);
+        assertThat(index.version(), equalTo(1l));
+    }
+

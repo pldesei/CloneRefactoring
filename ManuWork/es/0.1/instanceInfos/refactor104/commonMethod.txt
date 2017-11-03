@@ -1,0 +1,14 @@
+(startLine=50 endLine=61 srcPath=/root/Projects/elasticsearchFilter/263/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SIfElse.java)
+    @Override
+    void extractVariables(Set<String> variables) {
+        condition.extractVariables(variables);
+
+        if (ifblock != null) {
+            ifblock.extractVariables(variables);
+        }
+
+        if (elseblock != null) {
+            elseblock.extractVariables(variables);
+        }
+    }
+

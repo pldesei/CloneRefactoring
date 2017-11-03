@@ -1,0 +1,10 @@
+(startLine=68 endLine=75 srcPath=/root/Projects/eclipse.jdt.coreFilter/1350/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+    private IBinding[] createBindings(String contents, IJavaElement element) throws JavaModelException {
+        this.workingCopy.getBuffer().setContents(contents);
+        this.workingCopy.makeConsistent(null);
+        ASTParser parser = ASTParser.newParser(AST.JLS3);
+        parser.setProject(getJavaProject("P"));
+        IJavaElement[] elements = new IJavaElement[] {element};
+        return parser.createBindings(elements, null);
+    }
+

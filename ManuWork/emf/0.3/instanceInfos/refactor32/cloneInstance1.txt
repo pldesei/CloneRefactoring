@@ -1,0 +1,25 @@
+(startLine=290 endLine=312 srcPath=/root/Projects/org.eclipse.emfFilter/725/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/BookOnTapeImpl.java)
+  public boolean eIsSet(EStructuralFeature eFeature)
+  {
+    switch (eDerivedStructuralFeatureID(eFeature))
+    {
+      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+        return PUBLICATION_DATE_EDEFAULT == null ? publicationDate != null : !PUBLICATION_DATE_EDEFAULT.equals(publicationDate);
+      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+        return copies != COPIES_EDEFAULT;
+      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+        return borrowers != null && !borrowers.isEmpty();
+      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
+        return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
+        return minutesLength != MINUTES_LENGTH_EDEFAULT;
+      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
+        return ((eFlags & DAMAGED_EFLAG) != 0) != DAMAGED_EDEFAULT;
+      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
+        return reader != null;
+      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
+        return author != null;
+    }
+    return eDynamicIsSet(eFeature);
+  }
+

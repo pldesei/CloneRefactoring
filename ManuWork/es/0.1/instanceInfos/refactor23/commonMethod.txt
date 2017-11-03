@@ -1,0 +1,14 @@
+(startLine=83 endLine=94 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexShardStatus.java)
+    public SizeValue estimatedFlushableMemorySize() {
+        long bytes = -1;
+        for (ShardStatus shard : shards()) {
+            if (shard.estimatedFlushableMemorySize().bytes() != SizeValue.UNKNOWN.bytes()) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.estimatedFlushableMemorySize().bytes();
+            }
+        }
+        return new SizeValue(bytes);
+    }
+

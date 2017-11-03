@@ -1,0 +1,23 @@
+(startLine=774 endLine=794 srcPath=/root/Projects/eclipse.jdt.coreFilter/1076/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+private int putInCacheIfAbsent(final char[] key1, final char[] key2, final char[] key3, int value) {
+    int index;
+    HashtableOfObject key1Value = (HashtableOfObject) this.methodsAndFieldsCache.get(key1);
+    if (key1Value == null) {
+        key1Value = new HashtableOfObject();
+        this.methodsAndFieldsCache.put(key1, key1Value);
+        CharArrayCache charArrayCache = new CharArrayCache();
+        index = charArrayCache.putIfAbsent(key3, value);
+        key1Value.put(key2, charArrayCache);
+    } else {
+        CharArrayCache charArrayCache = (CharArrayCache) key1Value.get(key2);
+        if (charArrayCache == null) {
+            charArrayCache = new CharArrayCache();
+            index = charArrayCache.putIfAbsent(key3, value);
+            key1Value.put(key2, charArrayCache);
+        } else {
+            index = charArrayCache.putIfAbsent(key3, value);            
+        }
+    }
+    return index;
+}
+

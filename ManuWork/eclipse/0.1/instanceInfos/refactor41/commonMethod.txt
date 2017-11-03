@@ -1,0 +1,70 @@
+(startLine=511 endLine=578 srcPath=/root/Projects/eclipse.jdt.coreFilter/1347/eclipse.jdt.core/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+        public int logProblems(IProblem[] problems, char[] unitSource, Main currentMain) {
+            final int count = problems.length;
+            int localErrorCount = 0;
+            if (count != 0) {
+                if (this.isXml) {
+                    int errors = 0;
+                    int warnings = 0;
+                    int tasks = 0;
+                    for (int i = 0; i < count; i++) {
+                        IProblem problem = problems[i];
+                        if (problem != null) {
+                            currentMain.globalProblemsCount++;
+                            this.logProblem(problem, localErrorCount, currentMain.globalProblemsCount, unitSource);
+                            if (problem.isError()) {
+                                errors++;
+                                currentMain.globalErrorsCount++;
+                                localErrorCount++;
+                            } else {
+                                if (problem.getID() == IProblem.Task) {
+                                    tasks++;
+                                } else {
+                                    warnings++;
+                                }
+                                currentMain.globalWarningsCount++;
+                            }
+                        }
+                    }
+                    if ((errors + warnings) != 0) {
+                        this.startLoggingProblems(errors, warnings);
+                        for (int i = 0; i < count; i++) {
+                            IProblem problem = problems[i];
+                            if (problem!= null) {
+                                if (problem.getID() != IProblem.Task) {
+                                    this.logXmlProblem(problem, unitSource);
+                                }
+                            }
+                        }
+                        this.endLoggingProblems();
+                    }
+                    if (tasks != 0) {
+                        this.startLoggingTasks(tasks);
+                        for (int i = 0; i < count; i++) {
+                            IProblem problem = problems[i];
+                            if (problem!= null) {
+                                if (problem.getID() == IProblem.Task) {
+                                    this.logXmlTask(problem, unitSource);
+                                }
+                            }
+                        }
+                        this.endLoggingTasks();
+                    }
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        if (problems[i] != null) {
+                            currentMain.globalProblemsCount++;
+                            this.logProblem(problems[i], localErrorCount, currentMain.globalProblemsCount, unitSource);
+                            if (problems[i].isError()) {
+                                currentMain.globalErrorsCount++;
+                                localErrorCount++;
+                            } else {
+                                currentMain.globalWarningsCount++;
+                            }
+                        }
+                    }
+                }
+            }
+            return localErrorCount;
+        }
+

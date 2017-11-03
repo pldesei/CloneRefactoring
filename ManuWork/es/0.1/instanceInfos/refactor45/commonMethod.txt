@@ -1,0 +1,11 @@
+(startLine=159 endLine=167 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/LongFieldMapper.java)
+    private long parseValue(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        if (value instanceof BytesRef) {
+            return Long.parseLong(((BytesRef) value).utf8ToString());
+        }
+        return Long.parseLong(value.toString());
+    }
+

@@ -1,0 +1,7 @@
+(startLine=384 endLine=388 srcPath=/root/Projects/elasticsearchFilter/1301/elasticsearch/src/main/java/org/elasticsearch/action/update/TransportUpdateAction.java)
+                public void onResponse(DeleteResponse response) {
+                    UpdateResponse update = new UpdateResponse(response.index(), response.type(), response.id(), response.version());
+                    update.getResult(extractGetResult(request, response.version(), updatedSourceAsMap, updateSourceContentType, null));
+                    listener.onResponse(update);
+                }
+

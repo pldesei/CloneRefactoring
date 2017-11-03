@@ -1,0 +1,26 @@
+(startLine=231 endLine=254 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/search/SearchService.java)
+    public QuerySearchResult executeQueryPhase(InternalSearchRequest request) throws ElasticSearchException {
+        SearchContext context = createContext(request);
+        activeContexts.put(context.id(), context);
+        try {
+            context.indexShard().searchService().onPreQueryPhase(context);
+            long time = System.nanoTime();
+            contextProcessing(context);
+            queryPhase.execute(context);
+            if (context.searchType() == SearchType.COUNT) {
+                freeContext(context.id());
+            } else {
+                contextProcessedSuccessfully(context);
+            }
+            context.indexShard().searchService().onQueryPhase(context, System.nanoTime() - time);
+            return context.queryResult();
+        } catch (RuntimeException e) {
+            context.indexShard().searchService().onFailedQueryPhase(context);
+            logger.trace("Query phase failed", e);
+            freeContext(context);
+            throw e;
+        } finally {
+            cleanContext(context);
+        }
+    }
+

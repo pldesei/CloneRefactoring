@@ -1,0 +1,14 @@
+(startLine=3654 endLine=3665 srcPath=/root/Projects/elasticsearchFilter/1190/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+    @SuppressWarnings("unchecked") public long reduceKeysToLongSequentially
+        (ObjectToLong<? super K> transformer,
+         long basis,
+         LongByLongToLong reducer) {
+        if (transformer == null || reducer == null)
+            throw new NullPointerException();
+        Traverser<K,V,Object> it = new Traverser<K,V,Object>(this);
+        long r = basis;
+        while (it.advance() != null)
+            r = reducer.apply(r, transformer.apply((K)it.nextKey));
+        return r;
+    }
+

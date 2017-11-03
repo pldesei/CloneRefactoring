@@ -1,0 +1,9 @@
+(startLine=69 endLine=75 srcPath=/root/Projects/elasticsearchFilter/324/elasticsearch/src/test/java/org/elasticsearch/index/IndexWithShadowReplicasTests.java)
+    private Settings nodeSettings() {
+        return ImmutableSettings.builder()
+                .put("node.add_id_to_custom_path", false)
+                .put("node.enable_custom_paths", true)
+                .put("index.store.fs.fs_lock", randomFrom("native", "simple"))
+                .build();
+    }
+

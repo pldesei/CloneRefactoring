@@ -1,0 +1,26 @@
+(startLine=50 endLine=73 srcPath=/root/Projects/elasticsearchFilter/1844/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/store/fs/SimpleFsStore.java)
+    @Inject public SimpleFsStore(ShardId shardId, @IndexSettings Settings indexSettings, Environment environment, @LocalNodeId String localNodeId) throws IOException {
+        super(shardId, indexSettings);
+        // by default, we don't need to sync to disk, since we use the gateway
+        this.syncToDisk = componentSettings.getAsBoolean("sync_to_disk", false);
+        String fsLock = componentSettings.get("use_fs_lock", "none");
+        LockFactory lockFactory = new NoLockFactory();
+        if (fsLock.equals("native")) {
+            lockFactory = new NativeFSLockFactory();
+        } else if (fsLock.equals("simple")) {
+            lockFactory = new SimpleFSLockFactory();
+        }
+        this.fsDirectory = new CustomSimpleFSDirectory(createStoreFilePath(environment.workWithClusterFile(), localNodeId, shardId, MAIN_INDEX_SUFFIX), lockFactory, syncToDisk);
+
+        SwitchDirectory switchDirectory = buildSwitchDirectoryIfNeeded(fsDirectory);
+        if (switchDirectory != null) {
+            suggestUseCompoundFile = false;
+            logger.debug("Using [simple_fs] Store with path [{}], cache [true] with extensions [{}]", fsDirectory.getFile(), switchDirectory.primaryExtensions());
+            directory = switchDirectory;
+        } else {
+            suggestUseCompoundFile = true;
+            directory = fsDirectory;
+            logger.debug("Using [simple_fs] Store with path [{}]", fsDirectory.getFile());
+        }
+    }
+

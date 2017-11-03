@@ -1,0 +1,7 @@
+(startLine=341 endLine=345 srcPath=/root/Projects/elasticsearchFilter/692/elasticsearch/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java)
+    private String getPluginUrlForResource(String resourceName) {
+        URI uri = URI.create(PluginManagerTests.class.getResource(resourceName).toString());
+
+        return "file://" + uri.getPath();
+    }
+

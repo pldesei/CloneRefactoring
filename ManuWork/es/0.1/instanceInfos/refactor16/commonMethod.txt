@@ -1,0 +1,5 @@
+(startLine=76 endLine=78 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
+    public void execute(SearchScrollRequest request, ParsedScrollId scrollId, ActionListener<SearchResponse> listener) {
+        new AsyncAction(request, scrollId, listener).start();
+    }
+

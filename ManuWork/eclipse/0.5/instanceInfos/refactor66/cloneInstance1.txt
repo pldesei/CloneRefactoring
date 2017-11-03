@@ -1,0 +1,13 @@
+(startLine=209 endLine=219 srcPath=/root/Projects/eclipse.jdt.coreFilter/417/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/StackMapFrameCodeStream.java)
+public void recordExpressionType(TypeBinding typeBinding) {
+    if (this.stackMarkers == null) {
+        this.stackMarkers = new ArrayList();
+        this.stackMarkers.add(new StackMarker(this.position, 0, typeBinding));
+    } else {
+        int size = this.stackMarkers.size();
+        if (size == 0 || ((StackMarker) this.stackMarkers.get(size - 1)).pc != this.position) {
+            this.stackMarkers.add(new StackMarker(this.position, 0, typeBinding));
+        }
+    }
+}
+

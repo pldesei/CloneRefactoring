@@ -1,0 +1,11 @@
+(startLine=6500 endLine=6508 srcPath=/root/Projects/eclipse.jdt.coreFilter/410/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+private void setupBug124624() throws JavaModelException {
+    workingCopies = new ICompilationUnit[1];
+    workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/Test.java",
+        "class HashMap {}\n" + 
+        "class HtmlMapper {}\n" + 
+        "class HashMapEntry {}\n" + 
+        "class HaxMapxxxx {}\n"
+    );
+}
+

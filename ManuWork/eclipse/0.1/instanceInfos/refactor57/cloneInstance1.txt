@@ -1,0 +1,56 @@
+(startLine=52 endLine=105 srcPath=/root/Projects/eclipse.jdt.coreFilter/896/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/flow/LoopingFlowContext.java)
+    public void complainOnDeferredChecks(BlockScope scope, FlowInfo flowInfo) {
+        
+        // complain on final assignments in loops
+        for (int i = 0; i < assignCount; i++) {
+            VariableBinding variable = finalVariables[i];
+            if (variable == null) continue;
+            boolean complained = false; // remember if have complained on this final assignment
+            if (variable instanceof FieldBinding) {
+                if (flowInfo.isPotentiallyAssigned((FieldBinding) variable)) {
+                    complained = true;
+                    scope.problemReporter().duplicateInitializationOfBlankFinalField(
+                        (FieldBinding) variable,
+                        finalAssignments[i]);
+                }
+            } else {
+                if (flowInfo.isPotentiallyAssigned((LocalVariableBinding) variable)) {
+                    complained = true;
+                    scope.problemReporter().duplicateInitializationOfFinalLocal(
+                        (LocalVariableBinding) variable,
+                        finalAssignments[i]);
+                }
+            }
+            // any reference reported at this level is removed from the parent context where it 
+            // could also be reported again
+            if (complained) {
+                FlowContext context = parent;
+                while (context != null) {
+                    context.removeFinalAssignmentIfAny(finalAssignments[i]);
+                    context = context.parent;
+                }
+            }
+        }
+        // check inconsistent null checks
+        for (int i = 0; i < nullCount; i++) {
+            Expression expression = nullReferences[i];
+            if (expression == null) continue;
+            // final local variable
+            LocalVariableBinding local = expression.localVariableBinding();
+            switch (nullStatus[i]) {
+                case FlowInfo.NULL :
+                    if (flowInfo.isDefinitelyNull(local)) {
+                        nullReferences[i] = null;
+                        this.parent.recordUsingNullReference(scope, local, expression, nullStatus[i], flowInfo);
+                    }
+                    break;
+                case FlowInfo.NON_NULL :
+                    if (flowInfo.isDefinitelyNonNull(local)) {
+                        nullReferences[i] = null;
+                        this.parent.recordUsingNullReference(scope, local, expression, nullStatus[i], flowInfo);
+                    }
+                    break;
+            }
+        }        
+    }
+

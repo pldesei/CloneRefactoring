@@ -1,0 +1,10 @@
+(startLine=165 endLine=172 srcPath=/root/Projects/elasticsearchFilter/1012/elasticsearch/src/main/java/org/elasticsearch/index/query/IndicesFilterParser.java)
+    protected String[] getConcreteIndices(Collection<String> indices) {
+        String[] concreteIndices = indices.toArray(new String[indices.size()]);
+        if (clusterService != null) {
+            MetaData metaData = clusterService.state().metaData();
+            concreteIndices = metaData.concreteIndices(indices.toArray(new String[indices.size()]), IgnoreIndices.MISSING, true);
+        }
+        return concreteIndices;
+    }
+

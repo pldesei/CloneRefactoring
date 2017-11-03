@@ -1,0 +1,14 @@
+(startLine=3713 endLine=3724 srcPath=/root/Projects/elasticsearchFilter/1190/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+    public <U> void forEachValueSequentially
+        (Fun<? super V, ? extends U> transformer,
+         Action<U> action) {
+        if (transformer == null || action == null)
+            throw new NullPointerException();
+        Traverser<K,V,Object> it = new Traverser<K,V,Object>(this);
+        V v; U u;
+        while ((v = it.advance()) != null) {
+            if ((u = transformer.apply(v)) != null)
+                action.apply(u);
+        }
+    }
+

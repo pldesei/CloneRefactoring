@@ -1,0 +1,16 @@
+(startLine=798 endLine=811 srcPath=/root/Projects/org.eclipse.emfFilter/279/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenDataTypeImpl.java)
+  public boolean isXMLDuration()
+  {
+    ExtendedMetaData extendedMetaData = getExtendedMetaData();
+    for (EDataType eDataType = getEcoreDataType(); eDataType != null; eDataType = extendedMetaData.getBaseType(eDataType))
+    {
+      String namespace = extendedMetaData.getNamespace(eDataType);
+      String name = extendedMetaData.getName(eDataType);
+      if (XMLTypePackage.eNS_URI.equals(namespace) && "duration".equals(name))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+

@@ -1,0 +1,12 @@
+(startLine=216 endLine=225 srcPath=/root/Projects/elasticsearchFilter/1127/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
+                public void onFailure(Throwable t) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("[{}] Failed to execute query phase", t, searchId);
+                    }
+                    addShardFailure(shardIndex, new ShardSearchFailure(t));
+                    successfulOps.decrementAndGet();
+                    if (counter.decrementAndGet() == 0) {
+                        finishHim();
+                    }
+                }
+

@@ -1,0 +1,17 @@
+(startLine=97 endLine=111 srcPath=/root/Projects/eclipse.jdt.coreFilter/1076/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CharArrayCache.java)
+public int putIfAbsent(char[] key, int value) {
+    int index = hashCodeChar(key);
+    while (keyTable[index] != null) {
+        if (CharOperation.equals(keyTable[index], key))
+            return valueTable[index];
+        index = (index + 1) % keyTable.length;
+    }
+    keyTable[index] = key;
+    valueTable[index] = value;
+
+    // assumes the threshold is never equal to the size of the table
+    if (++elementSize > threshold)
+        rehash();
+    return -value; // negative when added (value is assumed to be > 0)
+}
+

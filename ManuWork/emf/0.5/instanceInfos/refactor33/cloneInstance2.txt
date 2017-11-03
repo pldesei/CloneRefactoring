@@ -1,0 +1,21 @@
+(startLine=191 endLine=209 srcPath=/root/Projects/org.eclipse.emfFilter/725/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/BorrowerImpl.java)
+  public void eUnset(EStructuralFeature eFeature)
+  {
+    switch (eDerivedStructuralFeatureID(eFeature))
+    {
+      case EXTLibraryPackage.BORROWER__ADDRESS:
+        setAddress(ADDRESS_EDEFAULT);
+        return;
+      case EXTLibraryPackage.BORROWER__FIRST_NAME:
+        setFirstName(FIRST_NAME_EDEFAULT);
+        return;
+      case EXTLibraryPackage.BORROWER__LAST_NAME:
+        setLastName(LAST_NAME_EDEFAULT);
+        return;
+      case EXTLibraryPackage.BORROWER__BORROWED:
+        getBorrowed().clear();
+        return;
+    }
+    eDynamicUnset(eFeature);
+  }
+

@@ -1,0 +1,16 @@
+(startLine=250 endLine=263 srcPath=/root/Projects/org.eclipse.emfFilter/733/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenOperationImpl.java)
+  public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs)
+  {
+    if (eContainerFeatureID >= 0)
+    {
+      switch (eContainerFeatureID)
+      {
+        case GenModelPackage.GEN_OPERATION__GEN_CLASS:
+          return eInternalContainer().eInverseRemove(this, GenModelPackage.GEN_CLASS__GEN_OPERATIONS, GenClass.class, msgs);
+        default:
+          return eDynamicBasicRemoveFromContainer(msgs);
+      }
+    }
+    return eInternalContainer().eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+  }
+

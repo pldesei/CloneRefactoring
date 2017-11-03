@@ -1,0 +1,15 @@
+(startLine=102 endLine=114 srcPath=/root/Projects/elasticsearchFilter/15/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedBytesHashSamplerAggregator.java)
+                    public long get(int doc) {
+
+                        values.setDocument(doc);
+                        final int valuesCount = values.count();
+                        if (valuesCount > 1) {
+                            throw new IllegalArgumentException("Sample diversifying key must be a single valued-field");
+                        }
+                        if (valuesCount == 1) {
+                            final BytesRef bytes = values.valueAt(0);
+                            return bytes.hashCode();
+                        }
+                        return 0;
+                    }
+

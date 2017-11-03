@@ -1,0 +1,7 @@
+(startLine=342 endLine=346 srcPath=/root/Projects/elasticsearchFilter/824/elasticsearch/src/main/java/org/elasticsearch/tribe/TribeService.java)
+                private void removeIndex(ClusterBlocks.Builder blocks, MetaData.Builder metaData, RoutingTable.Builder routingTable, IndexMetaData index) {
+                    metaData.remove(index.index());
+                    routingTable.remove(index.index());
+                    blocks.removeIndexBlocks(index.index());
+                }
+

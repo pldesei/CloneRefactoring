@@ -1,0 +1,14 @@
+(startLine=338 endLine=349 srcPath=/root/Projects/eclipse.jdt.coreFilter/1964/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/WorkingCopy.java)
+public void makeConsistent(IProgressMonitor monitor) throws JavaModelException {
+    if (!isConsistent()) { // TODO: (jerome) this code isn't synchronized with regular opening of a working copy (should use getElementInfo)
+        super.makeConsistent(monitor);
+
+        if (monitor != null && monitor.isCanceled()) return;
+        if (this.problemRequestor != null && this.problemRequestor.isActive()){
+            this.problemRequestor.beginReporting();
+            CompilationUnitProblemFinder.process(this, this.problemRequestor, monitor); 
+            this.problemRequestor.endReporting();
+        }        
+    }
+}
+

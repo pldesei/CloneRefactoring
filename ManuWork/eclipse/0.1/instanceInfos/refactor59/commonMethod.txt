@@ -1,0 +1,23 @@
+(startLine=378 endLine=398 srcPath=/root/Projects/eclipse.jdt.coreFilter/676/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/UnresolvedReferenceNameFinder.java)
+    private int indexOfNextName(int index) {
+        int nextIndex = index + 1;
+        while (nextIndex <= this.potentialVariableNamesPtr &&
+                this.potentialVariableNames[nextIndex] == null) {
+            int jumpIndex = -this.potentialVariableNameStarts[nextIndex];
+            if (jumpIndex > 0) {
+                nextIndex = jumpIndex;
+            } else {
+                nextIndex++;
+            }
+        }
+        
+        if (this.potentialVariableNamesPtr < nextIndex) {
+            this.potentialVariableNamesPtr = index;
+            return -1;
+        }
+        if (index + 1 < nextIndex) {
+            this.potentialVariableNameStarts[index + 1] = -nextIndex;
+        }
+        return nextIndex;
+    }
+

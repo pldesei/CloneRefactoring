@@ -1,0 +1,44 @@
+(startLine=54 endLine=95 srcPath=/root/Projects/eclipse.jdt.coreFilter/1750/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AbstractRegressionTest.java)
+    protected String findReferences(String classFilePath) {
+        // check that "new Z().init()" is bound to "AbstractB.init()"
+        final StringBuffer references = new StringBuffer(10);
+        final SearchParticipant participant = new JavaSearchParticipant(null) {
+            final SearchParticipant searchParticipant = this;
+            public SearchDocument getDocument(final String documentPath) {
+                return new SearchDocument() {
+                    public byte[] getByteContents() {
+                        try {
+                            return  org.eclipse.jdt.internal.compiler.util.Util.getFileByteContent(new File(documentPath));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+                    public char[] getCharContents() {
+                        return null;
+                    }
+                    public String getEncoding() {
+                        return null;
+                    }
+                    public SearchParticipant getParticipant() {
+                        return searchParticipant;
+                    }
+                    public String getPath() {
+                        return documentPath;
+                    }
+                };
+            }
+        };
+        SearchDocument document = participant.getDocument(new File(classFilePath).getPath());
+        BinaryIndexer indexer = new BinaryIndexer(document, null) {
+            protected void addIndexEntry(char[] category, char[] key) {
+                references.append(category);
+                references.append(key);
+                references.append('\n');
+            }
+        };
+        indexer.indexDocument();
+        String computedReferences = references.toString();
+        return computedReferences;
+    }
+

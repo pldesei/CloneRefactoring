@@ -1,0 +1,8 @@
+(startLine=50 endLine=55 srcPath=/root/Projects/elasticsearchFilter/657/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/FloatValuesComparatorSource.java)
+    public FieldComparator<?> newComparator(String fieldname, int numHits, int sortPos, boolean reversed) throws IOException {
+        assert fieldname.equals(indexFieldData.getFieldNames().indexName());
+
+        final float dMissingValue = (Float) missingObject(missingValue, reversed);
+        return new FloatValuesComparator(indexFieldData, dMissingValue, numHits, sortMode);
+    }
+

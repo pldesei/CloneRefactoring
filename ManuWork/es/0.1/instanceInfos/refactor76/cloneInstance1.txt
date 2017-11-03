@@ -1,0 +1,40 @@
+(startLine=83 endLine=120 srcPath=/root/Projects/elasticsearchFilter/1051/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/DoubleValuesComparatorBase.java)
+        public double getValueMissing(int docId, double missing) {
+            DoubleValues.Iter iter = delegate.getIter(docId);
+            if (!iter.hasNext()) {
+                return missing;
+            }
+
+            double currentVal = iter.next();
+            double relevantVal = currentVal;
+            int counter = 1;
+            while (iter.hasNext()) {
+                currentVal = iter.next();
+                int cmp = Double.compare(currentVal, relevantVal);
+                switch (sortMode) {
+                    case SUM:
+                        relevantVal += currentVal;
+                        break;
+                    case AVG:
+                        relevantVal += currentVal;
+                        counter++;
+                        break;
+                    case MIN:
+                        if (cmp < 0) {
+                            relevantVal = currentVal;
+                        }
+                        break;
+                    case MAX:
+                        if (cmp > 0) {
+                            relevantVal = currentVal;
+                        }
+                        break;
+                }
+            }
+            if (sortMode == SortMode.AVG) {
+                return relevantVal / counter;
+            } else {
+                return relevantVal;
+            }
+        }
+

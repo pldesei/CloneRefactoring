@@ -1,0 +1,8 @@
+(startLine=47 endLine=52 srcPath=/root/Projects/eclipse.jdt.coreFilter/482/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/MethodVerifyTest.java)
+    String mustOverrideMessage(String method, String type) {
+        return "The method " + method + " of type " + type +
+            (new CompilerOptions(getCompilerOptions()).sourceLevel < ClassFileConstants.JDK1_6
+                ? " must override a superclass method\n"
+                : " must override or implement a supertype method\n");
+    }
+

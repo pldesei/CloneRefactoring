@@ -1,0 +1,8 @@
+(startLine=197 endLine=202 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/internal/BoostFieldMapper.java)
+    public Filter rangeFilter(FieldDataCache fieldDataCache, String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeFieldDataFilter.newFloatRange(fieldDataCache, names.indexName(),
+                lowerTerm == null ? null : Float.parseFloat(lowerTerm),
+                upperTerm == null ? null : Float.parseFloat(upperTerm),
+                includeLower, includeUpper);
+    }
+

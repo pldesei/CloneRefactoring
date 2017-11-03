@@ -1,0 +1,11 @@
+(startLine=325 endLine=333 srcPath=/root/Projects/eclipse.jdt.coreFilter/1846/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/Scribe.java)
+    public void initializeScanner(char[] compilationUnitSource) {
+        this.scanner.setSource(compilationUnitSource);
+        this.scannerEndPosition = compilationUnitSource.length;
+        this.scanner.resetTo(0, this.scannerEndPosition);
+        if (this.textRegionEnd == -1) {
+            this.textRegionEnd = this.scannerEndPosition;
+        }
+        this.edits = new OptimizedReplaceEdit[INITIAL_SIZE];
+    }    
+

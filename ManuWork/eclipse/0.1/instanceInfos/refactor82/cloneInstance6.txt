@@ -1,0 +1,22 @@
+(startLine=3129 endLine=3148 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug92944_ENUM() throws CoreException {
+    this.resultCollector.showRule = true;
+    setUpBug92944();
+    TypeNameRequestor requestor =  new SearchTests.SearchTypeNameRequestor();
+    new SearchEngine(this.workingCopies).searchAllTypeNames(
+        null,
+        SearchPattern.R_EXACT_MATCH,
+        null,
+        SearchPattern.R_PATTERN_MATCH, // case insensitive
+        ENUM,
+        getJavaSearchWorkingCopiesScope(),
+        requestor,
+        IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
+        null
+    );
+    assertSearchResults(
+        "Unexpected all type names",
+        "b92944.B92944_E",
+        requestor);
+}
+

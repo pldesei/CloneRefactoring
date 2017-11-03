@@ -1,0 +1,8 @@
+(startLine=227 endLine=232 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/ip/IpFieldMapper.java)
+    public Query rangeQuery(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeQuery.newLongRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : ipToLong(lowerTerm),
+                upperTerm == null ? null : ipToLong(upperTerm),
+                includeLower, includeUpper);
+    }
+

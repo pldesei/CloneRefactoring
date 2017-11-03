@@ -1,0 +1,19 @@
+(startLine=252 endLine=268 srcPath=/root/Projects/eclipse.jdt.coreFilter/605/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SortElementsOperation.java)
+            public boolean visit(TypeDeclaration typeDeclaration) {
+                if (checkMalformedNodes(typeDeclaration)) {
+                    return true; // abort sorting of current element
+                }
+                ListRewrite listRewrite = rewriter.getListRewrite(typeDeclaration, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
+                List bodyDeclarations = typeDeclaration.bodyDeclarations();
+                final int length = bodyDeclarations.size();
+                if (length > 1) {
+                    final List myCopy = new ArrayList();
+                    myCopy.addAll(bodyDeclarations);
+                    Collections.sort(myCopy, SortElementsOperation.this.comparator);
+                    for (int i = 0; i < length; i++) {
+                        listRewrite.replace((ASTNode) bodyDeclarations.get(i), rewriter.createMoveTarget((ASTNode) myCopy.get(i)), null);
+                    }
+                }
+                return true;
+            }
+

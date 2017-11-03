@@ -1,0 +1,47 @@
+(startLine=269 endLine=313 srcPath=/root/Projects/org.eclipse.emfFilter/92/org.eclipse.emf/plugins/org.eclipse.emf.common.ui/src/org/eclipse/emf/common/ui/dialogs/ResourceDialog.java)
+  protected void prepareBrowseWorkspaceButton(Button browseWorkspaceButton)
+  {
+    browseWorkspaceButton.addSelectionListener
+      (new SelectionAdapter()
+       {
+         @Override
+        public void widgetSelected(SelectionEvent event)
+         {
+           if (isMulti())
+           {
+             StringBuffer uris = new StringBuffer();
+
+             IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, true, null, null);
+             for (int i = 0, len = files.length; i < len; i++)
+             {
+               uris.append(URI.createPlatformResourceURI(files[i].getFullPath().toString(), true));
+               uris.append("  ");
+             }
+             uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
+           }
+           else
+           {
+             IFile file = null;
+
+             if (isSave())
+             {
+               file = WorkspaceResourceDialog.openNewFile(getShell(), null, null, null, null);
+             }
+             else
+             {
+               IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, false, null, null);
+               if (files.length != 0)
+               {
+                 file = files[0];
+               }
+             }
+             
+             if (file != null)
+             {
+               uriField.setText(URI.createPlatformResourceURI(file.getFullPath().toString(), true).toString());
+             }
+           }
+         }
+       });      
+  }
+

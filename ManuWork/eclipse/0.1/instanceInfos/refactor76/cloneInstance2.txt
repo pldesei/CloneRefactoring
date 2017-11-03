@@ -1,0 +1,12 @@
+(startLine=1905 endLine=1914 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug83304_MethodStringPattern() throws CoreException {
+    this.resultCollector.showRule = true;
+    setUpBug83304_MethodParameterizedElementPattern();
+    search("<Exception>generic", METHOD, REFERENCES, ERASURE_RULE);
+    assertSearchResults(
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(exc)] ERASURE_MATCH\n" +
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(exc)] EXACT_MATCH\n" +
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(\"\")] ERASURE_MATCH"
+    );
+}
+

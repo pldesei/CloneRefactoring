@@ -1,0 +1,12 @@
+(startLine=39 endLine=48 srcPath=/root/Projects/elasticsearchFilter/1410/elasticsearch/src/main/java/org/elasticsearch/common/settings/loader/SettingsLoader.java)
+        public static Map<String, String> loadNestedFromMap(@Nullable Map map) {
+            Map<String, String> settings = newHashMap();
+            if (map == null) {
+                return settings;
+            }
+            StringBuilder sb = new StringBuilder();
+            List<String> path = newArrayList();
+            serializeMap(settings, sb, path, map);
+            return settings;
+        }
+

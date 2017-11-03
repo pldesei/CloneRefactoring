@@ -1,0 +1,9 @@
+(startLine=329 endLine=335 srcPath=/root/Projects/elasticsearchFilter/1058/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/DateFieldMapper.java)
+    public Filter rangeFilter(IndexFieldDataService fieldData, Object lowerTerm, Object upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        long now = context == null ? System.currentTimeMillis() : context.nowInMillis();
+        return NumericRangeFieldDataFilter.newLongRange((IndexNumericFieldData<?>) fieldData.getForField(this),
+                lowerTerm == null ? null : dateMathParser.parse(convertToString(lowerTerm), now),
+                upperTerm == null ? null : (includeUpper && parseUpperInclusive) ? dateMathParser.parseUpperInclusive(convertToString(upperTerm), now) : dateMathParser.parse(convertToString(upperTerm), now),
+                includeLower, includeUpper);
+    }
+

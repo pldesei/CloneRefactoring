@@ -1,0 +1,30 @@
+(startLine=568 endLine=595 srcPath=/root/Projects/elasticsearchFilter/1548/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/discovery/zen/ZenDiscovery.java)
+    private ClusterState disconnectFromCluster(ClusterState clusterState, String reason) {
+        logger.warn(reason + ", current nodes: {}", clusterState.nodes());
+        nodesFD.stop();
+        masterFD.stop(reason);
+        master = false;
+
+        ClusterBlocks clusterBlocks = ClusterBlocks.builder().blocks(clusterState.blocks())
+                .addGlobalBlock(NO_MASTER_BLOCK)
+                .addGlobalBlock(GatewayService.STATE_NOT_RECOVERED_BLOCK)
+                .build();
+
+        // clear the routing table, we have no master, so we need to recreate the routing when we reform the cluster
+        RoutingTable routingTable = RoutingTable.builder().version(clusterState.routingTable().version()).build();
+        // we also clean the metadata, since we are going to recover it if we become master
+        MetaData metaData = MetaData.builder().build();
+
+        // clean the nodes, we are now not connected to anybody, since we try and reform the cluster
+        latestDiscoNodes = new DiscoveryNodes.Builder().put(localNode).localNodeId(localNode.id()).build();
+
+        asyncJoinCluster();
+
+        return newClusterStateBuilder().state(clusterState)
+                .blocks(clusterBlocks)
+                .nodes(latestDiscoNodes)
+                .routingTable(routingTable)
+                .metaData(metaData)
+                .build();
+    }
+
