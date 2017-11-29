@@ -1,0 +1,16 @@
+(startLine=310 endLine=323 srcPath=/root/Projects/elasticsearchFilter/291/elasticsearch/plugins/repository-s3/src/test/java/org/elasticsearch/repositories/s3/AbstractS3SnapshotRestoreTest.java)
+    public void assertRepositoryInRemoteRegionIsRemote() {
+        Client client = client();
+        Settings bucketSettings = internalCluster().getInstance(Settings.class).getByPrefix("repositories.s3.remote-bucket.");
+        logger.info("-->  creating s3 repository with bucket[{}] and path [{}]", bucketSettings.get("bucket"), basePath);
+        client.admin().cluster().preparePutRepository("test-repo")
+        .setType("s3").setSettings(Settings.settingsBuilder()
+                .put("base_path", basePath)
+                .put("bucket", bucketSettings.get("bucket"))
+                // Below setting intentionally omitted to assert bucket is not available in default region.
+                //                        .put("region", privateBucketSettings.get("region"))
+                ).get();
+
+        fail("repository verification should have raise an exception!");
+    }
+

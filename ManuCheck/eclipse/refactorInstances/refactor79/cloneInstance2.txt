@@ -1,0 +1,12 @@
+(startLine=2365 endLine=2374 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug84727b() throws CoreException {
+    this.resultCollector.showRule = true;
+    setUpBug84727();
+    IMethod[] methods = this.workingCopies[0].getType("A").getMethods();
+    assertEquals("Invalid number of methods", 2, methods.length);
+    search(methods[1], REFERENCES);
+    assertSearchResults(
+        "src/b84727/X.java void b84727.X.foo() [getXYZ(\"\")] EXACT_MATCH"
+    );
+}
+

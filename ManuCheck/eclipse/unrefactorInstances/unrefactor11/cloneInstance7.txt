@@ -1,0 +1,17 @@
+(startLine=2744 endLine=2758 srcPath=/root/Projects/eclipse.jdt.coreFilter/272/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
+    public void test0121() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0121", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        char[] source = sourceUnit.getSource().toCharArray();
+        ASTNode result = runConversion(sourceUnit, false);
+        ASTNode node = getASTNode((CompilationUnit) result, 0, 0, 0);
+        assertNotNull("Expression should not be null", node); //$NON-NLS-1$
+        IfStatement ifStatement = this.ast.newIfStatement();
+        ifStatement.setExpression(this.ast.newBooleanLiteral(true));
+        ifStatement.setThenStatement(this.ast.newBlock());
+        ifStatement.setElseStatement(this.ast.newEmptyStatement());
+        assertTrue("Both AST trees should be identical", ifStatement.subtreeMatch(new ASTMatcher(), node));        //$NON-NLS-1$
+        String expectedSource = "if (true) {}\n" +//$NON-NLS-1$
+             "        else ;"; //$NON-NLS-1$
+        checkSourceRange(node, expectedSource, source);
+    }
+

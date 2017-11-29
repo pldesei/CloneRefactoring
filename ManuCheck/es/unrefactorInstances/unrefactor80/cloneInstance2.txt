@@ -1,0 +1,17 @@
+(startLine=63 endLine=77 srcPath=/root/Projects/elasticsearchFilter/609/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/plain/AbstractIndexOrdinalsFieldData.java)
+    public IndexOrdinalsFieldData loadGlobal(IndexReader indexReader) {
+        if (indexReader.leaves().size() <= 1) {
+            // ordinals are already global
+            return this;
+        }
+        try {
+            return cache.load(indexReader, this);
+        } catch (Throwable e) {
+            if (e instanceof ElasticsearchException) {
+                throw (ElasticsearchException) e;
+            } else {
+                throw new ElasticsearchException(e.getMessage(), e);
+            }
+        }
+    }
+

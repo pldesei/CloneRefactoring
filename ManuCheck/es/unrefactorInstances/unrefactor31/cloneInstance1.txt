@@ -1,0 +1,19 @@
+(startLine=197 endLine=213 srcPath=/root/Projects/elasticsearchFilter/1374/elasticsearch/src/main/java/org/elasticsearch/index/mapper/multifield/MultiFieldMapper.java)
+    public void parse(ParseContext context) throws IOException {
+        ContentPath.Type origPathType = context.path().pathType();
+        context.path().pathType(pathType);
+
+        // do the default mapper without adding the path
+        if (defaultMapper != null) {
+            defaultMapper.parse(context);
+        }
+
+        context.path().add(name);
+        for (Mapper mapper : mappers.values()) {
+            mapper.parse(context);
+        }
+        context.path().remove();
+
+        context.path().pathType(origPathType);
+    }
+

@@ -1,0 +1,16 @@
+(startLine=349 endLine=362 srcPath=/root/Projects/org.eclipse.emfFilter/508/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/unsettable/impl/BUImpl.java)
+  public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs)
+  {
+    if (eContainerFeatureID >= 0)
+    {
+      switch (eContainerFeatureID)
+      {
+        case URefPackage.BU__C2U:
+          return eContainer.eInverseRemove(this, URefPackage.C2U__BU, C2U.class, msgs);
+        default:
+          return eDynamicBasicRemoveFromContainer(msgs);
+      }
+    }
+    return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+  }
+

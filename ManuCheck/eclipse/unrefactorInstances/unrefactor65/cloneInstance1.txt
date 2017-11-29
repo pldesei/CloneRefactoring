@@ -1,0 +1,16 @@
+(startLine=533 endLine=546 srcPath=/root/Projects/eclipse.jdt.coreFilter/1755/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+public void testConstructorDeclarationInJar() throws CoreException {
+    IType type = getClassFile("JavaSearch", "MyJar.jar", "p1", "A.class").getType();
+    IMethod method = type.getMethod("A", new String[] {"Ljava.lang.String;"});
+    JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
+    new SearchEngine().search(
+        getWorkspace(), 
+        method, 
+        DECLARATIONS, 
+        getJavaSearchScope(), 
+        resultCollector);
+    assertSearchResults(
+        "MyJar.jar p1.A(java.lang.String) [No source]", 
+        resultCollector);
+}
+

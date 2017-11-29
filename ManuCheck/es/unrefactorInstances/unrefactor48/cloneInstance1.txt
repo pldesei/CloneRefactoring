@@ -1,0 +1,23 @@
+(startLine=78 endLine=98 srcPath=/root/Projects/elasticsearchFilter/1593/elasticsearch/modules/elasticsearch/src/test/java/org/elasticsearch/index/mapper/xcontent/dynamic/DynamicMappingTests.java)
+    @Test public void testDynamicStrict() throws IOException {
+        String mapping = XContentFactory.jsonBuilder().startObject().startObject("type")
+                .field("dynamic", "strict")
+                .startObject("properties")
+                .startObject("field1").field("type", "string").endObject()
+                .endObject()
+                .endObject().endObject().string();
+
+        XContentDocumentMapper defaultMapper = MapperTests.newParser().parse(mapping);
+
+        try {
+            defaultMapper.parse("type", "1", XContentFactory.jsonBuilder()
+                    .startObject()
+                    .field("field1", "value1")
+                    .field("field2", "value2")
+                    .copiedBytes());
+            assert false;
+        } catch (StrictDynamicMappingException e) {
+            // all is well
+        }
+    }
+

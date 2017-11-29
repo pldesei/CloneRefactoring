@@ -1,0 +1,47 @@
+(startLine=78 endLine=122 srcPath=/root/Projects/eclipse.jdt.coreFilter/885/eclipse.jdt.core/org.eclipse.jdt.apt.tests/src/org/eclipse/jdt/apt/tests/ReadAnnotationTests.java)
+    private void addQuestionSources()
+    {
+        IPath srcRoot = getSourcePath();
+        // SimpleAnnotation.java
+        env.addClass( 
+                srcRoot, 
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.SIMPLE_ANNOTATION_CLASS,
+                CodeExample.SIMPLE_ANNOTATION_CODE );
+        
+        // RTVisibleAnnotation.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.RTVISIBLE_CLASS,
+                CodeExample.RTVISIBLE_ANNOTATION_CODE);
+        
+        // RTInvisibleAnnotation.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.RTINVISIBLE_CLASS,
+                CodeExample.RTINVISIBLE_ANNOTATION_CODE);
+        
+        // package-info.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.PACKAGE_INFO_CLASS,
+                CodeExample.PACKAGE_INFO_CODE);
+        
+        // Color.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.COLOR_CLASS,
+                CodeExample.COLOR_CODE);
+        
+        // AnnotationTest.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.ANNOTATION_TEST_CLASS,
+                CodeExample.ANNOTATION_TEST_CODE);
+    }
+

@@ -1,0 +1,21 @@
+(startLine=2058 endLine=2076 srcPath=/root/Projects/org.eclipse.emfFilter/782/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/DelegatingFeatureMap.java)
+    protected boolean scanNext()
+    {
+      int size = featureMap.size();
+      while (entryCursor < size)
+      {
+        Entry entry = (Entry)featureMap.get(entryCursor);
+        if (validator.isValid(entry.getEStructuralFeature()))
+        {
+          preparedResult = extractValue(entry);
+          prepared = 2;
+          return true;
+        }
+        ++entryCursor;
+      }
+
+      prepared = 1;
+      lastCursor = -1;
+      return false;
+    }
+

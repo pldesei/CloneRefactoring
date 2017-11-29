@@ -1,0 +1,11 @@
+(startLine=134 endLine=142 srcPath=/root/Projects/elasticsearchFilter/967/elasticsearch/src/main/java/org/elasticsearch/indices/InternalIndicesLifecycle.java)
+    public void afterIndexClosed(Index index) {
+        for (Listener listener : listeners) {
+            try {
+                listener.afterIndexClosed(index);
+            } catch (Throwable t) {
+                logger.warn("[{}] failed to invoke after index closed callback", t, index.name());
+            }
+        }
+    }
+

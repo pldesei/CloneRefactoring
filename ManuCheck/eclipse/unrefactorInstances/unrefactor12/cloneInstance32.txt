@@ -1,0 +1,47 @@
+(startLine=2923 endLine=2967 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void test050() {
+    try {
+        String sourceA50 =
+            "public class A50 {\n"
+                + "\tstatic private A50 instance = new A50();\n"
+                + "\tstatic private int Counter = 2;\n"             
+                + "\tpublic void bar() {\n"
+                + "\t}\n"
+                + "}";
+        compileAndDeploy(sourceA50, "A50");
+
+        String userCode = "new A50().bar();";
+        JDIStackFrame stackFrame =
+            new JDIStackFrame(this.jdiVM, this, userCode, "A50", "bar", -1);
+
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "A50 a = new A50(); a.Counter = 5; return a.Counter;".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                stackFrame.declaringTypeName(),
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(),
+                getCompilerOptions(),
+                requestor,
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue(
+            "Should get one result but got " + (requestor.resultIndex + 1),
+            requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should not have problems", !result.hasProblems());
+        assertTrue("Result should have a value", result.hasValue());
+        assertEquals("Value", "5".toCharArray(), result.getValueDisplayString());
+        assertEquals("Type", "int".toCharArray(), result.getValueTypeName());
+    } finally {
+        removeTempClass("A50");
+    }
+}
+

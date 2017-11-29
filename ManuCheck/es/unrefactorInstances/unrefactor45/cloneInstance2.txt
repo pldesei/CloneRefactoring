@@ -1,0 +1,14 @@
+(startLine=56 endLine=67 srcPath=/root/Projects/elasticsearchFilter/214/elasticsearch/core/src/test/java/org/elasticsearch/index/store/FsDirectoryServiceTests.java)
+    public void testHasNoSleepWrapperOnNormalFS() throws IOException {
+        Settings build = Settings.builder().put(IndexModule.INDEX_STORE_TYPE_SETTING.getKey(), "simplefs").build();
+        IndexSettings settings = IndexSettingsModule.newIndexSettings("foo", build);
+        IndexStore store = new IndexStore(settings);
+        Path tempDir = createTempDir().resolve(settings.getUUID()).resolve("0");
+        Files.createDirectories(tempDir);
+        ShardPath path = new ShardPath(false, tempDir, tempDir, new ShardId(settings.getIndex(), 0));
+        FsDirectoryService fsDirectoryService = new FsDirectoryService(settings, store, path);
+        Directory directory = fsDirectoryService.newDirectory();
+        assertFalse(directory instanceof SleepingLockWrapper);
+        assertTrue(directory instanceof SimpleFSDirectory);
+    }
+

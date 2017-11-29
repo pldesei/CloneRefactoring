@@ -1,0 +1,47 @@
+(startLine=3119 endLine=3163 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void test054() {
+    try {
+        String sourceA54 =
+            "public class A54 {\n"
+                + "\tstatic private A54 instance = new A54();\n"
+                + "\tstatic private long Counter = 2L;\n"               
+                + "\tpublic void bar() {\n"
+                + "\t}\n"
+                + "}";
+        compileAndDeploy(sourceA54, "A54");
+
+        String userCode = "new A54().bar();";
+        JDIStackFrame stackFrame =
+            new JDIStackFrame(this.jdiVM, this, userCode, "A54", "bar", -1);
+
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "this.Counter++; return this.Counter;".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                stackFrame.declaringTypeName(),
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(),
+                getCompilerOptions(),
+                requestor,
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue(
+            "Should get one result but got " + (requestor.resultIndex + 1),
+            requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should not have problems", !result.hasProblems());
+        assertTrue("Result should have a value", result.hasValue());
+        assertEquals("Value", "3".toCharArray(), result.getValueDisplayString());
+        assertEquals("Type", "long".toCharArray(), result.getValueTypeName());
+    } finally {
+        removeTempClass("A54");
+    }
+}
+

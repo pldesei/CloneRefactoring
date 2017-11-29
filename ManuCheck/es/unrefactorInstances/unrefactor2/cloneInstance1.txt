@@ -1,0 +1,23 @@
+(startLine=497 endLine=517 srcPath=/root/Projects/elasticsearchFilter/373/elasticsearch/src/test/java/org/elasticsearch/search/query/SearchQueryTests.java)
+    public void queryStringAnalyzedWildcard() throws Exception {
+        createIndex("test");
+
+        client().prepareIndex("test", "type1", "1").setSource("field1", "value_1", "field2", "value_2").get();
+        refresh();
+
+        SearchResponse searchResponse = client().prepareSearch().setQuery(queryStringQuery("value*").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
+
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("*ue*").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
+
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("*ue_1").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
+
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("val*e_1").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
+
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("v?l*e?1").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
+    }
+

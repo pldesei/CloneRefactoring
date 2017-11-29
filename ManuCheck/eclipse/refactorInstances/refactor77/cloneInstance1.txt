@@ -1,0 +1,11 @@
+(startLine=2183 endLine=2191 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug84100() throws CoreException {
+    this.resultCollector.showRule = true;
+    setUpBug84100();
+    IMethod method = selectMethod(this.workingCopies[0], "foo", 1);
+    search(method, REFERENCES);
+    assertSearchResults(
+        "src/b84100/Z.java void b84100.Z.foo() [foo()] EXACT_MATCH"
+    );
+}
+

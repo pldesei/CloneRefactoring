@@ -1,0 +1,22 @@
+(startLine=117 endLine=136 srcPath=/root/Projects/elasticsearchFilter/1008/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/monitor/os/OsInfo.java)
+    @Override public void writeTo(StreamOutput out) throws IOException {
+        if (cpu == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            cpu.writeTo(out);
+        }
+        if (mem == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            mem.writeTo(out);
+        }
+        if (swap == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            swap.writeTo(out);
+        }
+    }
+

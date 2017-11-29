@@ -1,0 +1,12 @@
+(startLine=431 endLine=440 srcPath=/root/Projects/eclipse.jdt.coreFilter/1270/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AbstractRegressionTest.java)
+    public static Test buildTestSuite(Class evaluationTestClass, String complianceLevel) {
+        TestSuite suite = new TestSuite(complianceLevel);
+        List tests = buildTestsList(evaluationTestClass);
+        for (int index=0, size=tests.size(); index<size; index++) {
+            suite.addTest((Test)tests.get(index));
+        }
+        TestSuite test = new TestSuite(evaluationTestClass.getName());
+        test.addTest(new RegressionTestSetup(suite, complianceLevel));
+        return test;
+    }
+

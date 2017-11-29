@@ -1,0 +1,13 @@
+(startLine=1013 endLine=1023 srcPath=/root/Projects/elasticsearchFilter/1066/elasticsearch/src/main/java/jsr166y/ConcurrentLinkedDeque.java)
+    public boolean removeFirstOccurrence(Object o) {
+        checkNotNull(o);
+        for (Node<E> p = first(); p != null; p = succ(p)) {
+            E item = p.item;
+            if (item != null && o.equals(item) && p.casItem(item, null)) {
+                unlink(p);
+                return true;
+            }
+        }
+        return false;
+    }
+

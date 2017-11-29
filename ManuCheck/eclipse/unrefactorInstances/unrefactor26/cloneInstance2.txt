@@ -1,0 +1,103 @@
+(startLine=6772 endLine=6872 srcPath=/root/Projects/eclipse.jdt.coreFilter/1433/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testX_1FGGV8C_2() {
+    String str = 
+        "package p; \n" + 
+        "import p2.YZA; \n" + 
+        "/**\n" + 
+        " * 1FGGV8C and 1FGPE8E\n" + 
+        " */\n" + 
+        "public class X {\n" + 
+        "    public static final float Vars; \n" + 
+        "    public static final float Lines; \n" + 
+        "    public static final float Source; \n" + 
+        "    public static final float UnreachableCode; \n" + 
+        "    public static final float produceDebugAttributes; \n" + 
+        "    void foo() {\n" + 
+        "        int locale, \n" + 
+        "            errorThreshold, \n" + 
+        "            preserveAllLocalVariables; \n" + 
+        "        return new YZA[] {\n" + 
+        "            new YZA(\n" + 
+        "                \"debug.vars\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (produceDebugAttributes\n" + 
+        "                    & Vars)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new YZA(\n" + 
+        "                \"debug.lines\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (produceDebugAttributes\n" + 
+        "                    & Lines)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new YZA(\n" + 
+        "                \"debug.source\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (produceDebugAttributes\n" + 
+        "                    & Source)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new YZA(\n" + 
+        "                \"debug.preserveAllLocals\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                preserveAllLocalVariables\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new YZA(\n" + 
+        "                \"optionalError.unReachableCode\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (errorThreshold\n" + 
+        "                    & UnreachableCode)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1)\n" + 
+        "                 }\n" + 
+        "    }\n" + 
+        "}\n";
+
+    String testName = "<complete on anonymous type declaration into a return statement>";
+    String completeBehind = "Y";
+    String expectedCompletionNodeToString = "<CompleteOnType:Y>";
+    String completionIdentifier = "Y";
+    String expectedReplacedSource = "YZA";
+    int cursorLocation = str.indexOf("YZA[]") + completeBehind.length() - 1;
+    String expectedUnitDisplayString =
+        "package p;\n" + 
+        "import p2.YZA;\n" + 
+        "public class X {\n" + 
+        "  public static final float Vars;\n" + 
+        "  public static final float Lines;\n" + 
+        "  public static final float Source;\n" + 
+        "  public static final float UnreachableCode;\n" + 
+        "  public static final float produceDebugAttributes;\n" + 
+        "  <clinit>() {\n" + 
+        "  }\n" + 
+        "  public X() {\n" + 
+        "  }\n" + 
+        "  void foo() {\n" + 
+        "    int locale;\n" + 
+        "    int errorThreshold;\n" + 
+        "    int preserveAllLocalVariables;\n" + 
+        "    return new <CompleteOnType:Y>();\n" + 
+        "  }\n" + 
+        "}\n";
+
+    checkMethodParse(
+        str.toCharArray(), 
+        cursorLocation, 
+        expectedCompletionNodeToString,
+        expectedUnitDisplayString,
+        completionIdentifier,
+        expectedReplacedSource,
+        testName); 
+}
+

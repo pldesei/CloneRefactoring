@@ -1,0 +1,30 @@
+(startLine=132 endLine=159 srcPath=/root/Projects/eclipse.jdt.coreFilter/361/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/RootManipulationsTests.java)
+public void testCopySourceFolder1() throws CoreException {
+    try {
+        this.createJavaProject("P1", new String[] {"src"}, "bin");
+        this.createJavaProject("P2", new String[] {}, "bin");
+        this.createFolder("/P1/src/p");
+        this.createFile(
+            "/P1/src/p/X.java", 
+            "package p;\n" +
+            "public class X {\n" +
+            "}"
+        );
+        IPackageFragmentRoot root = this.getPackageFragmentRoot("/P1/src");
+        this.startDeltas();
+        this.copy(root, new Path("/P2/src"));
+        assertDeltas(
+            "Unexpected delta",
+            "P2[*]: {CHILDREN | CONTENT | RAW CLASSPATH CHANGED | RESOLVED CLASSPATH CHANGED}\n" + 
+            "    src[+]: {}\n" + 
+            "    ResourceDelta(/P2/.classpath)[*]"
+        );
+        ICompilationUnit cu = this.getCompilationUnit("/P2/src/p/X.java");
+        assertTrue("Destination cu should exist", cu.exists());
+    } finally {
+        this.stopDeltas();
+        this.deleteProject("P1");
+        this.deleteProject("P2");
+    }
+}
+

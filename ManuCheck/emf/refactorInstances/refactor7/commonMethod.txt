@@ -1,0 +1,11 @@
+(startLine=1072 endLine=1080 srcPath=/root/Projects/org.eclipse.emfFilter/732/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenPackageImpl.java)
+  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
+  {
+    switch (eContainerFeatureID)
+    {
+      case GenModelPackage.GEN_PACKAGE__GEN_MODEL:
+        return eInternalContainer().eInverseRemove(this, GenModelPackage.GEN_MODEL__GEN_PACKAGES, GenModel.class, msgs);
+    }
+    return super.eBasicRemoveFromContainerFeature(msgs);
+  }
+

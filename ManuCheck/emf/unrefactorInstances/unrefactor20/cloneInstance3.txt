@@ -1,0 +1,17 @@
+(startLine=119 endLine=133 srcPath=/root/Projects/org.eclipse.emfFilter/934/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/impl/C1Impl.java)
+  public void setA(A newA)
+  {
+    if (newA != a)
+    {
+      NotificationChain msgs = null;
+      if (a != null)
+        msgs = ((InternalEObject)a).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RefPackage.C1__A, null, msgs);
+      if (newA != null)
+        msgs = ((InternalEObject)newA).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RefPackage.C1__A, null, msgs);
+      msgs = basicSetA(newA, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C1__A, newA, newA));
+  }
+

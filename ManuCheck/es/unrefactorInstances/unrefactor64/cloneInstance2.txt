@@ -1,0 +1,10 @@
+(startLine=223 endLine=230 srcPath=/root/Projects/elasticsearchFilter/1355/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/block/ClusterBlocks.java)
+        public static void writeClusterBlocks(ClusterBlocks blocks, StreamOutput out) throws IOException {
+            writeBlockSet(blocks.global(), out);
+            out.writeVInt(blocks.indices().size());
+            for (Map.Entry<String, ImmutableSet<ClusterBlock>> entry : blocks.indices().entrySet()) {
+                out.writeUTF(entry.getKey());
+                writeBlockSet(entry.getValue(), out);
+            }
+        }
+

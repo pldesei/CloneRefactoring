@@ -1,0 +1,32 @@
+(startLine=122 endLine=151 srcPath=/root/Projects/eclipse.jdt.coreFilter/402/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/ProgrammingProblemsTest.java)
+public void test0002_unread_parameters() {
+    runTest(
+        new String[] {
+            "X.java",
+            "public class X {\n" + 
+            "  public void foo(boolean b) {\n" + 
+            "  }\n" + 
+            "}\n"
+            },
+        null /* errorOptions */,
+        new String[] {
+            CompilerOptions.OPTION_ReportUnusedParameter
+            } /* warningOptions */,
+        null /* ignoreOptions */,
+        false /* expectingCompilerErrors */,
+        "----------\n" + 
+        "1. WARNING in X.java (at line 2)\r\n" + 
+        "    public void foo(boolean b) {\r\n" + 
+        "                            ^\n" + 
+        "The parameter b is never read\n" + 
+        "----------\n" /* expectedCompilerLog */,
+        "" /* expectedOutputString */,
+        false /* forceExecution */,
+        null /* classLib */,
+        true /* shouldFlushOutputDirectory */, 
+        null /* vmArguments */, 
+        null /* customOptions */,
+        null /* clientRequestor */,
+        true /* skipJavac */);
+}
+

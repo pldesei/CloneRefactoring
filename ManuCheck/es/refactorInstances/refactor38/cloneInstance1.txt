@@ -1,0 +1,8 @@
+(startLine=195 endLine=200 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/IntegerFieldMapper.java)
+    public Query rangeQuery(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeQuery.newIntRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : Integer.parseInt(lowerTerm),
+                upperTerm == null ? null : Integer.parseInt(upperTerm),
+                includeLower, includeUpper);
+    }
+

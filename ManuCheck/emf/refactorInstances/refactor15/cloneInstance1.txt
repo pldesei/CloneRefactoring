@@ -1,0 +1,17 @@
+(startLine=197 endLine=211 srcPath=/root/Projects/org.eclipse.emfFilter/725/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/EmployeeImpl.java)
+  public boolean eIsSet(EStructuralFeature eFeature)
+  {
+    switch (eDerivedStructuralFeatureID(eFeature))
+    {
+      case EXTLibraryPackage.EMPLOYEE__ADDRESS:
+        return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
+      case EXTLibraryPackage.EMPLOYEE__FIRST_NAME:
+        return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
+      case EXTLibraryPackage.EMPLOYEE__LAST_NAME:
+        return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
+      case EXTLibraryPackage.EMPLOYEE__MANAGER:
+        return manager != null;
+    }
+    return eDynamicIsSet(eFeature);
+  }
+

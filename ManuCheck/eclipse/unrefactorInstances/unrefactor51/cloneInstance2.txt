@@ -1,0 +1,21 @@
+(startLine=422 endLine=440 srcPath=/root/Projects/eclipse.jdt.coreFilter/758/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/RootManipulationsTests.java)
+public void testFailCopySourceFolder2() throws CoreException {
+    try {
+        this.createJavaProject("P1", new String[] {"src"}, "bin");
+        this.createJavaProject("P2", new String[] {"src"}, "bin");
+        this.deleteFolder("/P2/src");
+
+        IPackageFragmentRoot root = this.getPackageFragmentRoot("/P1/src");
+        try {
+            root.copy(new Path("/P2/src"), IResource.NONE, IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH, null, null);
+        } catch (JavaModelException e) {
+            assertEquals("/P2/src already exists in target", e.getMessage());
+            return;
+        }
+        assertTrue("Should throw a JavaModelException", false);
+    } finally {
+        this.deleteProject("P1");
+        this.deleteProject("P2");
+    }
+}
+

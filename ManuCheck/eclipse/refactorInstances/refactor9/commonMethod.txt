@@ -1,0 +1,14 @@
+(startLine=220 endLine=231 srcPath=/root/Projects/eclipse.jdt.coreFilter/1963/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/WorkingCopy.java)
+    private void reportProblemsIfNeeded(WorkingCopyElementInfo info) {
+        if (info.problems != null) {
+            this.problemRequestor.beginReporting();
+            Iterator iterator = info.problems.iterator();
+            while (iterator.hasNext()) {
+                this.problemRequestor.acceptProblem((IProblem)iterator.next());
+            } 
+            this.problemRequestor.endReporting();
+            info.problems = null;
+            this.computeProblems = false;
+        }        
+    }
+

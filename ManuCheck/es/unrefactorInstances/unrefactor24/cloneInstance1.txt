@@ -1,0 +1,18 @@
+(startLine=401 endLine=416 srcPath=/root/Projects/elasticsearchFilter/1398/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/MoreTypes.java)
+    public static Type resolveTypeVariable(Type type, Class<?> rawType, TypeVariable unknown) {
+        Class<?> declaredByRaw = declaringClassOf(unknown);
+
+        // we can't reduce this further
+        if (declaredByRaw == null) {
+            return unknown;
+        }
+
+        Type declaredBy = getGenericSupertype(type, rawType, declaredByRaw);
+        if (declaredBy instanceof ParameterizedType) {
+            int index = indexOf(declaredByRaw.getTypeParameters(), unknown);
+            return ((ParameterizedType) declaredBy).getActualTypeArguments()[index];
+        }
+
+        return unknown;
+    }
+

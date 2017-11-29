@@ -1,0 +1,17 @@
+(startLine=147 endLine=161 srcPath=/root/Projects/elasticsearchFilter/1712/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/node/Nodes.java)
+    public String prettyPrint() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Nodes: \n");
+        for (Node node : this) {
+            sb.append("   ").append(node);
+            if (node == localNode()) {
+                sb.append(", local");
+            }
+            if (node == masterNode()) {
+                sb.append(", master");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+

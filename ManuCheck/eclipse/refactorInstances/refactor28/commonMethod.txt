@@ -1,0 +1,27 @@
+(startLine=105 endLine=129 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/FieldPattern.java)
+protected StringBuffer print(StringBuffer output) {
+    if (this.findDeclarations) {
+        output.append(this.findReferences
+            ? "FieldCombinedPattern: " //$NON-NLS-1$
+            : "FieldDeclarationPattern: "); //$NON-NLS-1$
+    } else {
+        output.append("FieldReferencePattern: "); //$NON-NLS-1$
+    }
+    if (declaringQualification != null) output.append(declaringQualification).append('.');
+    if (declaringSimpleName != null) 
+        output.append(declaringSimpleName).append('.');
+    else if (declaringQualification != null) output.append("*."); //$NON-NLS-1$
+    if (name == null) {
+        output.append("*"); //$NON-NLS-1$
+    } else {
+        output.append(name);
+    }
+    if (typeQualification != null) 
+        output.append(" --> ").append(typeQualification).append('.'); //$NON-NLS-1$
+    else if (typeSimpleName != null) output.append(" --> "); //$NON-NLS-1$
+    if (typeSimpleName != null) 
+        output.append(typeSimpleName);
+    else if (typeQualification != null) output.append("*"); //$NON-NLS-1$
+    return super.print(output);
+}
+

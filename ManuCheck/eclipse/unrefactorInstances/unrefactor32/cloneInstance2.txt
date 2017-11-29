@@ -1,0 +1,128 @@
+(startLine=4534 endLine=4659 srcPath=/root/Projects/eclipse.jdt.coreFilter/27/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTTest.java)
+    public void testVariableDeclarationExpression() {
+        VariableDeclarationFragment x1 = this.ast.newVariableDeclarationFragment();
+        long previousCount = this.ast.modificationCount();
+        final VariableDeclarationExpression x =
+            this.ast.newVariableDeclarationExpression(x1);
+        assertTrue(this.ast.modificationCount() > previousCount);
+        previousCount = this.ast.modificationCount();
+        assertTrue(x.getAST() == this.ast);
+        assertTrue(x.getParent() == null);
+        if (this.ast.apiLevel() == AST.JLS2) {
+            assertTrue(x.getModifiers() == Modifier.NONE);
+        } else {
+            assertTrue(x.modifiers().size() == 0);
+        }
+        assertTrue(x.getType() != null);
+        assertTrue(x.getType().getParent() == x);
+        assertTrue(x.fragments().size() == 1);
+        assertTrue(x.fragments().get(0) == x1);
+        assertTrue(x1.getParent() == x);
+        assertTrue(x.getNodeType() == ASTNode.VARIABLE_DECLARATION_EXPRESSION);
+        assertTrue(x.structuralPropertiesForType() ==
+            VariableDeclarationExpression.propertyDescriptors(this.ast.apiLevel()));
+        // make sure that reading did not change modification count
+        assertTrue(this.ast.modificationCount() == previousCount);
+
+        if (this.ast.apiLevel() == AST.JLS2) {
+            int legal = Modifier.FINAL;
+            previousCount = this.ast.modificationCount();
+            x.setModifiers(legal);
+            assertTrue(this.ast.modificationCount() > previousCount);
+            assertTrue(x.getModifiers() == legal);
+
+            previousCount = this.ast.modificationCount();
+            x.setModifiers(Modifier.NONE);
+            assertTrue(this.ast.modificationCount() > previousCount);
+            assertTrue(x.getModifiers() == Modifier.NONE);
+        }
+
+        if (this.ast.apiLevel() >= AST.JLS3) {
+            genericPropertyListTest(x, x.modifiers(), new Property("Modifiers", true, IExtendedModifier.class) { //$NON-NLS-1$
+                public ASTNode sample(AST targetAst, boolean parented) {
+                    Modifier result = targetAst.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD);
+                    if (parented) {
+                        TypeDeclaration pd = targetAst.newTypeDeclaration();
+                        pd.modifiers().add(result);
+                    }
+                    return result;
+                }
+                public ASTNode wrap() {
+                    SingleMemberAnnotation s1 = x.getAST().newSingleMemberAnnotation();
+                    s1.setValue(x);
+                    return s1;
+                }
+                public void unwrap() {
+                    SingleMemberAnnotation s1 = (SingleMemberAnnotation) x.getParent();
+                    s1.setValue(x.getAST().newNullLiteral());
+                }
+            });
+
+            // check that getModifiers() tracks changes to modifiers()
+            x.modifiers().clear();
+            assertTrue(x.getModifiers() == Modifier.NONE);
+            Modifier[] allMods = allModifiers();
+            // one at a time
+            for (int i = 0 ; i < allMods.length; i++) {
+                x.modifiers().add(allMods[i]);
+                assertTrue(x.getModifiers() == allMods[i].getKeyword().toFlagValue());
+                x.modifiers().remove(allMods[i]);
+                assertTrue(x.getModifiers() == Modifier.NONE);
+            }
+            // all at same time
+            for (int i = 0 ; i < allMods.length; i++) {
+                x.modifiers().add(allMods[i]);
+            }
+            int flags  = x.getModifiers();
+            for (int i = 0 ; i < allMods.length; i++) {
+                assertTrue((flags & allMods[i].getKeyword().toFlagValue()) != 0);
+            }
+        }
+
+        genericPropertyTest(x, new Property("Type", true, Type.class) { //$NON-NLS-1$
+            public ASTNode sample(AST targetAst, boolean parented) {
+                SimpleType result = targetAst.newSimpleType(
+                    targetAst.newSimpleName("foo")); //$NON-NLS-1$
+                if (parented) {
+                    targetAst.newArrayType(result);
+                }
+                return result;
+            }
+            public ASTNode get() {
+                return x.getType();
+            }
+            public void set(ASTNode value) {
+                x.setType((Type) value);
+            }
+        });
+
+        genericPropertyListTest(x, x.fragments(),
+          new Property("VariableSpecifiers", true, VariableDeclarationFragment.class) { //$NON-NLS-1$
+            public ASTNode sample(AST targetAst, boolean parented) {
+                VariableDeclarationFragment result = targetAst.newVariableDeclarationFragment();
+                if (parented) {
+                    targetAst.newVariableDeclarationExpression(result);
+                }
+                return result;
+            }
+            public ASTNode wrap() {
+                // return VariableDeclarationFragment that embeds x
+                VariableDeclarationFragment s1 = ASTTest.this.ast.newVariableDeclarationFragment();
+                ClassInstanceCreation s0 = ASTTest.this.ast.newClassInstanceCreation();
+                AnonymousClassDeclaration a1 = ASTTest.this.ast.newAnonymousClassDeclaration();
+                s0.setAnonymousClassDeclaration(a1);
+                s1.setInitializer(s0);
+                ForStatement s2 = ASTTest.this.ast.newForStatement();
+                s2.initializers().add(x);
+                Initializer s3 = ASTTest.this.ast.newInitializer();
+                a1.bodyDeclarations().add(s3);
+                s3.getBody().statements().add(s2);
+                return s1;
+            }
+            public void unwrap() {
+                ForStatement s2 = (ForStatement) x.getParent();
+                s2.initializers().remove(x);
+            }
+        });
+    }
+

@@ -1,0 +1,16 @@
+(startLine=79 endLine=92 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/common/util/concurrent/resource/NonBlockingAcquirableResource.java)
+    @Override public void markForClose() {
+        while (true) {
+            int stamp = counter.getStamp();
+            boolean result = counter.compareAndSet(false, true, stamp, stamp);
+            if (result) {
+                if (stamp <= 0) {
+                    close();
+                }
+                return;
+            } else if (counter.getReference()) {
+                return;
+            }
+        }
+    }
+

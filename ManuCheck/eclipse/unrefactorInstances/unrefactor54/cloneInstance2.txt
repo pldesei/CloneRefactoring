@@ -1,0 +1,19 @@
+(startLine=2359 endLine=2375 srcPath=/root/Projects/eclipse.jdt.coreFilter/480/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavadocMethodCompletionModelTest.java)
+public void test151() throws JavaModelException {
+    String source =
+        "package javadoc.methods.tags;\n" + 
+        "public class BasicTestMethods {\n" + 
+        "    void foo() {}\n" + 
+        "    /**\n" + 
+        "     * Completion after:\n" + 
+        "     *     @see #BasicTestMethods(int\n" + 
+        "     */\n" + 
+        "    BasicTestMethods(int xxx, float real, Class clazz) {}\n" + 
+        "}\n";
+    completeInJavadoc("/Completion/src/javadoc/methods/tags/BasicTestMethods.java", source, true, "int");
+    assertResults(
+        "int[KEYWORD]{int, null, null, int, null, "+this.positions+R_DRICENNR+"}\n" + 
+        "InterruptedException[TYPE_REF]{InterruptedException, java.lang, Ljava.lang.InterruptedException;, null, null, "+this.positions+R_DRIUNR+"}"
+    );
+}
+

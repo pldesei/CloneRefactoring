@@ -1,0 +1,11 @@
+(startLine=86 endLine=94 srcPath=/root/Projects/eclipse.jdt.coreFilter/482/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/ast/LongLiteral.java)
+public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+    int pc = codeStream.position;
+    if (valueRequired)
+        if ((implicitConversion >> 4) == T_long)
+            codeStream.generateInlinedValue(value);
+        else
+            codeStream.generateConstant(constant, implicitConversion);
+    codeStream.recordPositionsFrom(pc, this.sourceStart);
+}
+

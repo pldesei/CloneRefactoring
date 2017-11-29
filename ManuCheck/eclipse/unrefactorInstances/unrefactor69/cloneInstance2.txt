@@ -1,0 +1,16 @@
+(startLine=329 endLine=342 srcPath=/root/Projects/eclipse.jdt.coreFilter/1716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ExclusionPatternsTests.java)
+public void testIsOnClasspath2() throws CoreException {
+    this.setClasspath(new String[] {"/P/src", "**/A.java"});
+    this.createFolder("/P/src/p");
+    IFile file = this.createFile(
+        "/P/src/p/A.java",
+        "package p;\n" +
+        "public class A {\n" +
+        "}"
+    );
+    assertTrue("Resource should not be on classpath", !project.isOnClasspath(file));
+    
+    ICompilationUnit cu = getCompilationUnit("/P/src/p/A.java");
+    assertTrue("CU should not be on classpath", !project.isOnClasspath(cu));
+}
+

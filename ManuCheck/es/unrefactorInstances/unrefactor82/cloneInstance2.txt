@@ -1,0 +1,11 @@
+(startLine=76 endLine=84 srcPath=/root/Projects/elasticsearchFilter/949/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/indices/ttl/IndicesTTLService.java)
+    @Inject public IndicesTTLService(Settings settings, IndicesService indicesService, NodeSettingsService nodeSettingsService, Client client) {
+        super(settings);
+        this.indicesService = indicesService;
+        this.client = client;
+        this.interval = componentSettings.getAsTime("interval", TimeValue.timeValueSeconds(60));
+        this.bulkSize = componentSettings.getAsInt("bulk_size", 10000);
+
+        nodeSettingsService.addListener(new ApplySettings());
+    }
+

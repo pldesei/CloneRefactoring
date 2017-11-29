@@ -1,0 +1,11 @@
+(startLine=42 endLine=50 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/CJKFilterFactoryTests.java)
+    public void testNoFlags() throws IOException {
+        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("cjk_no_flags");
+        String source = "多くの学生が試験に落ちた。";
+        String[] expected = new String[]{"多く", "くの", "の学", "学生", "生が", "が試", "試験", "験に", "に落", "落ち", "ちた" };
+        Tokenizer tokenizer = new StandardTokenizer();
+        tokenizer.setReader(new StringReader(source));
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected);
+    }
+

@@ -1,0 +1,33 @@
+(startLine=3667 endLine=3697 srcPath=/root/Projects/eclipse.jdt.coreFilter/2112/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
+    public void test0163() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "", "test0163", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        ASTNode result = runConversion(sourceUnit, true);
+        ASTNode expression = getASTNodeToCompare((CompilationUnit) result);
+        assertNotNull("Expression should not be null", expression); //$NON-NLS-1$
+        assertTrue("Not an anonymous type declaration", expression instanceof ClassInstanceCreation); //$NON-NLS-1$
+        ClassInstanceCreation anonymousClass = (ClassInstanceCreation) expression;
+        ITypeBinding typeBinding = anonymousClass.resolveTypeBinding();
+        assertNotNull("No binding", typeBinding); //$NON-NLS-1$
+        assertTrue("Not an anonymous class", typeBinding.isAnonymous()); //$NON-NLS-1$
+        assertEquals("The modifier is not default", Modifier.NONE, typeBinding.getModifiers()); //$NON-NLS-1$
+        assertNull("There is no element type", typeBinding.getElementType()); //$NON-NLS-1$
+        assertEquals("There is no dimension", 0, typeBinding.getDimensions()); //$NON-NLS-1$
+        assertNotNull("This is a member type", typeBinding.getDeclaringClass()); //$NON-NLS-1$
+        assertEquals("The name is not empty", "", typeBinding.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+        IMethodBinding[] methods = typeBinding.getDeclaredMethods();
+        assertEquals("Contains the default constructor", 1, methods.length); //$NON-NLS-1$
+        assertTrue("Not a local class", typeBinding.isLocal()); //$NON-NLS-1$
+        assertTrue("Not a nested class", typeBinding.isNested()); //$NON-NLS-1$
+        assertTrue("A member class", !typeBinding.isMember()); //$NON-NLS-1$
+        assertTrue("An array", !typeBinding.isArray()); //$NON-NLS-1$
+        assertTrue("Not a class", typeBinding.isClass()); //$NON-NLS-1$
+        assertTrue("An interface", !typeBinding.isInterface()); //$NON-NLS-1$
+        assertTrue("Not from source", typeBinding.isFromSource()); //$NON-NLS-1$
+        assertTrue("Is a top level", !typeBinding.isTopLevel()); //$NON-NLS-1$
+        assertTrue("A primitive type", !typeBinding.isPrimitive()); //$NON-NLS-1$
+        assertEquals("wrong qualified name", "", typeBinding.getQualifiedName()); //$NON-NLS-1$ //$NON-NLS-2$
+        ITypeBinding superclass = typeBinding.getSuperclass();
+        assertNotNull("No superclass", superclass); //$NON-NLS-1$
+        assertEquals("Has fields", 0, typeBinding.getDeclaredFields().length); //$NON-NLS-1$
+    }
+

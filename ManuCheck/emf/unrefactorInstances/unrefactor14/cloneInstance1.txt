@@ -1,0 +1,20 @@
+(startLine=685 endLine=702 srcPath=/root/Projects/org.eclipse.emfFilter/207/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/generator/GenPackageGeneratorAdapter.java)
+  protected Diagnostic generateEdit(Object object, Monitor monitor)
+  {
+    GenPackage genPackage = (GenPackage)object;
+    monitor.beginTask("", 2 + countCreateChildIcons(genPackage));
+
+    message = CodeGenEcorePlugin.INSTANCE.getString
+      ("_UI_GeneratingItemProvidersForPackage_message", new Object[] { genPackage.getBasicPackageName() });
+    monitor.subTask(message);
+
+    GenModel genModel = genPackage.getGenModel();
+    ensureProjectExists
+      (genModel.getEditDirectory(), genPackage, EDIT_PROJECT_TYPE, genModel.isUpdateClasspath(), createMonitor(monitor, 1));
+
+    generateItemProviderAdapterFactory(genPackage, monitor);
+    generateCreateChildIcons(genPackage, monitor);
+
+    return Diagnostic.OK_INSTANCE;
+  }
+

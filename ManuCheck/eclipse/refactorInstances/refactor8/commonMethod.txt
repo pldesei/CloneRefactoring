@@ -1,0 +1,15 @@
+(startLine=463 endLine=475 srcPath=/root/Projects/eclipse.jdt.coreFilter/1965/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+protected void deleteProjects(final String[] projectNames) throws CoreException {
+    ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+        public void run(IProgressMonitor monitor) throws CoreException {
+            if (projectNames != null){
+                for (int i = 0, max = projectNames.length; i < max; i++){
+                    if (projectNames[i] != null)
+                        deleteProject(projectNames[i]);
+                }
+            }
+        }
+    },
+    null);
+}
+

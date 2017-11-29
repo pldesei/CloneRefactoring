@@ -1,0 +1,12 @@
+(startLine=254 endLine=263 srcPath=/root/Projects/elasticsearchFilter/1978/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/util/gnu/trove/TLongLongHashMap.java)
+    public void clear() {
+        super.clear();
+        long[] keys = _set;
+        long[] vals = _values;
+        byte[] states = _states;
+
+        Arrays.fill(_set, 0, _set.length, (long) 0);
+        Arrays.fill(_values, 0, _values.length, (long) 0);
+        Arrays.fill(_states, 0, _states.length, FREE);
+    }
+

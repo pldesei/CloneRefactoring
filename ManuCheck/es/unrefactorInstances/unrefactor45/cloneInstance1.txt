@@ -1,0 +1,15 @@
+(startLine=42 endLine=54 srcPath=/root/Projects/elasticsearchFilter/214/elasticsearch/core/src/test/java/org/elasticsearch/index/store/FsDirectoryServiceTests.java)
+    public void testHasSleepWrapperOnSharedFS() throws IOException {
+        Settings build = randomBoolean() ?
+            Settings.builder().put(IndexMetaData.SETTING_SHARED_FILESYSTEM, true).build() :
+            Settings.builder().put(IndexMetaData.SETTING_SHADOW_REPLICAS, true).build();;
+        IndexSettings settings = IndexSettingsModule.newIndexSettings("foo", build);
+        IndexStore store = new IndexStore(settings);
+        Path tempDir = createTempDir().resolve(settings.getUUID()).resolve("0");
+        Files.createDirectories(tempDir);
+        ShardPath path = new ShardPath(false, tempDir, tempDir, new ShardId(settings.getIndex(), 0));
+        FsDirectoryService fsDirectoryService = new FsDirectoryService(settings, store, path);
+        Directory directory = fsDirectoryService.newDirectory();
+        assertTrue(directory.getClass().toString(), directory instanceof SleepingLockWrapper);
+    }
+

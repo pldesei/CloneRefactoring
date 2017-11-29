@@ -1,0 +1,16 @@
+(startLine=376 endLine=389 srcPath=/root/Projects/elasticsearchFilter/1363/elasticsearch/src/test/java/org/elasticsearch/test/integration/search/basic/TransportTwoNodesSearchTests.java)
+    private XContentBuilder source(String id, String nameValue, int age) throws IOException {
+        StringBuilder multi = new StringBuilder().append(nameValue);
+        for (int i = 0; i < age; i++) {
+            multi.append(" ").append(nameValue);
+        }
+        return jsonBuilder().startObject()
+                .field("id", id)
+                .field("nid", Integer.parseInt(id))
+                .field("name", nameValue + id)
+                .field("age", age)
+                .field("multi", multi.toString())
+                .field("_boost", age * 10)
+                .endObject();
+    }
+

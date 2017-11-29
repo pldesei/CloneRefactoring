@@ -1,0 +1,10 @@
+(startLine=53 endLine=60 srcPath=/root/Projects/elasticsearchFilter/263/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/PCallInvoke.java)
+    @Override
+    void extractVariables(Set<String> variables) {
+        prefix.extractVariables(variables);
+
+        for (AExpression argument : arguments) {
+            argument.extractVariables(variables);
+        }
+    }
+

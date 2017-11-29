@@ -1,0 +1,22 @@
+(startLine=3477 endLine=3496 srcPath=/root/Projects/org.eclipse.emfFilter/522/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/internal/RegEx.java)
+      private static final boolean regionMatchesIgnoreCase(CharacterIterator  target, int offset, int limit,
+                                                           String part, int partlen) {
+          if (offset < 0)  return false;
+          if (limit-offset < partlen)
+              return false;
+          int i = 0;
+          while (partlen-- > 0) {
+              char ch1 =  target .setIndex(  offset++ ) ;
+              char ch2 = part.charAt(i++);
+              if (ch1 == ch2)
+                  continue;
+              char uch1 = Character.toUpperCase(ch1);
+              char uch2 = Character.toUpperCase(ch2);
+              if (uch1 == uch2)
+                  continue;
+              if (Character.toLowerCase(uch1) != Character.toLowerCase(uch2))
+                  return false;
+          }
+          return true;
+      }
+

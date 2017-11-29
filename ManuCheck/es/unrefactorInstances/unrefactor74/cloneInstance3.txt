@@ -1,0 +1,14 @@
+(startLine=57 endLine=68 srcPath=/root/Projects/elasticsearchFilter/1113/elasticsearch/src/main/java/org/elasticsearch/action/support/single/shard/TransportShardSingleOperationAction.java)
+    protected TransportShardSingleOperationAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, TransportService transportService) {
+        super(settings, threadPool);
+        this.clusterService = clusterService;
+        this.transportService = transportService;
+
+        this.transportAction = transportAction();
+        this.transportShardAction = transportAction() + "/s";
+        this.executor = executor();
+
+        transportService.registerHandler(transportAction, new TransportHandler());
+        transportService.registerHandler(transportShardAction, new ShardTransportHandler());
+    }
+

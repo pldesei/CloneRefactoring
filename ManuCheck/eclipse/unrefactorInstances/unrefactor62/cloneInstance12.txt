@@ -1,0 +1,23 @@
+(startLine=850 endLine=870 srcPath=/root/Projects/eclipse.jdt.coreFilter/716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CopyMoveResourcesTests.java)
+public void testMoveCUWithCollision() throws CoreException {
+    this.createFolder("/P/src/p1");
+    this.createFile(
+        "/P/src/p1/X.java",
+        "package p1;\n" +
+        "public class X {\n" +
+        "}"
+    );
+    ICompilationUnit cuSource = getCompilationUnit("/P/src/p1/X.java");
+
+    this.createFolder("/P/src/p2");
+    this.createFile(
+        "/P/src/p2/X.java",
+        "package p2;\n" +
+        "public class X {\n" +
+        "}"
+    );
+    IPackageFragment pkgDest = getPackage("/P/src/p2");
+
+    moveNegative(cuSource, pkgDest, null, null, false, IJavaModelStatusConstants.NAME_COLLISION);
+}
+

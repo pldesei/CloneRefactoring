@@ -1,0 +1,25 @@
+(startLine=83 endLine=105 srcPath=/root/Projects/elasticsearchFilter/951/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/xcontent/ParentFieldMapper.java)
+    @Override protected Field parseCreateField(ParseContext context) throws IOException {
+        if (context.parser().currentName() != null && context.parser().currentName().equals(Defaults.NAME)) {
+            // we are in the parsing of _parent phase
+            String parentId = context.parser().text();
+            return new Field(names.indexName(), Uid.createUid(context.stringBuilder(), type, parentId), store, index);
+        }
+        // otherwise, we are running it post processing of the xcontent
+        String parsedParentId = context.doc().get(Defaults.NAME);
+        if (context.externalValueSet()) {
+            String parentId = (String) context.externalValue();
+            if (parsedParentId == null) {
+                if (parentId == null) {
+                    throw new MapperParsingException("No parent id provided, not within the document, and not externally");
+                }
+                // we did not add it in the parsing phase, add it now
+                return new Field(names.indexName(), Uid.createUid(context.stringBuilder(), type, parentId), store, index);
+            } else if (parentId != null && !parsedParentId.equals(Uid.createUid(context.stringBuilder(), type, parentId))) {
+                throw new MapperParsingException("Parent id mismatch, document value is [" + Uid.createUid(parsedParentId).id() + "], while external value is [" + parentId + "]");
+            }
+        }
+        // we have parent mapping, yet no value was set, ignore it...
+        return null;
+    }
+

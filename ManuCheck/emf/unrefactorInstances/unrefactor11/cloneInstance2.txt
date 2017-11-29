@@ -1,0 +1,32 @@
+(startLine=101 endLine=130 srcPath=/root/Projects/org.eclipse.emfFilter/269/org.eclipse.emf/plugins/org.eclipse.emf.common.ui/src/org/eclipse/emf/common/ui/dialogs/WorkspaceResourceDialog.java)
+  public static IFile[] openFileSelection(
+    Shell parent,
+    String title,
+    String message,
+    boolean allowMultipleSelection,
+    Object[] initialSelection,
+    List<ViewerFilter> viewerFilters)
+  {
+    WorkspaceResourceDialog dialog = new WorkspaceResourceDialog(parent, new WorkbenchLabelProvider(), new WorkbenchContentProvider());
+    dialog.setAllowMultiple(allowMultipleSelection);
+    dialog.setTitle(title != null ? title : CommonUIPlugin.INSTANCE.getString("_UI_FileSelection_title"));
+    dialog.setMessage(message);
+
+    dialog.addFilter(dialog.createDefaultViewerFilter(true));
+    if (viewerFilters != null)
+    {
+      for (ViewerFilter viewerFilter : viewerFilters)
+      {
+        dialog.addFilter(viewerFilter);
+      }
+    }
+
+    if (initialSelection != null)
+    {
+      dialog.setInitialSelections(initialSelection);
+    }
+
+    dialog.loadContents();
+    return dialog.open() == Window.OK ? dialog.getSelectedFiles() : new IFile [0];
+  }
+

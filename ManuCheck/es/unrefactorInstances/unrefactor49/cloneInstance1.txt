@@ -1,0 +1,12 @@
+(startLine=43 endLine=52 srcPath=/root/Projects/elasticsearchFilter/942/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/StopAnalyzerProvider.java)
+    @Inject public StopAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords");
+        if (stopWords.length > 0) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = ImmutableSet.copyOf((Iterable<? extends String>) StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+        }
+        this.stopAnalyzer = new StopAnalyzer(Version.LUCENE_CURRENT, this.stopWords);
+    }
+

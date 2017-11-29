@@ -1,0 +1,11 @@
+(startLine=236 endLine=244 srcPath=/root/Projects/org.eclipse.emfFilter/732/org.eclipse.emf/examples/org.eclipse.emf.java/src/org/eclipse/emf/java/impl/JParameterImpl.java)
+  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
+  {
+    switch (eContainerFeatureID)
+    {
+      case JavaPackage.JPARAMETER__METHOD:
+        return eInternalContainer().eInverseRemove(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
+    }
+    return super.eBasicRemoveFromContainerFeature(msgs);
+  }
+

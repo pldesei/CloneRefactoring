@@ -1,0 +1,10 @@
+(startLine=177 endLine=184 srcPath=/root/Projects/elasticsearchFilter/558/elasticsearch/src/main/java/org/elasticsearch/common/breaker/ChildMemoryCircuitBreaker.java)
+    public long addWithoutBreaking(long bytes) {
+        long u = used.addAndGet(bytes);
+        if (logger.isTraceEnabled()) {
+            logger.trace("[{}] Adjusted breaker by [{}] bytes, now [{}]", this.name, bytes, u);
+        }
+        assert u >= 0 : "Used bytes: [" + u + "] must be >= 0";
+        return u;
+    }
+

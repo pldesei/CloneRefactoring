@@ -1,0 +1,12 @@
+(startLine=872 endLine=881 srcPath=/root/Projects/eclipse.jdt.coreFilter/513/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchTests.java)
+public void testSearchPatternCreation28() {
+    IImportDeclaration importDecl = getCompilationUnit("/P/x/y/z/Foo.java").getImport("x.y.*");
+    SearchPattern searchPattern = createPattern(
+            importDecl, 
+            IJavaSearchConstants.DECLARATIONS);
+    
+    assertPattern(
+        "PackageDeclarationPattern: <x.y>, exact match, case sensitive, erasure only",
+        searchPattern);
+}
+

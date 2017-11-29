@@ -1,0 +1,60 @@
+(startLine=6358 endLine=6415 srcPath=/root/Projects/eclipse.jdt.coreFilter/314/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void _testVB_4() {
+    String str = 
+        "package p; \n" + 
+        "public class VB {\n" + 
+        "    void foo() {\n" + 
+        "        new java.io.File(\"error\") {\n" + 
+        "            protected void runTest() {\n" + 
+        "                Vector v11111 = new Vector();\n" + 
+        "                v }\n" + 
+        "        }\n" +
+        "        .;\n" + 
+        "    }\n" + 
+        "}\n";
+
+    String testName = "<complete on anonymous type declaration with dummy spaces>";
+    String completeBehind =
+        "new java.io.File(\"error\") {\n" + 
+        "            protected void runTest() {\n" + 
+        "                Vector v11111 = new Vector();\n" + 
+        "                v }\n" + 
+        "        }\n" +
+        "        .";
+    String expectedCompletionNodeToString = 
+        "<CompleteOnName:new java.io.File(\"error\") {\n" + 
+        "  protected void runTest() {\n" + 
+        "  }\n" + 
+        "}.>";
+    String completionIdentifier = "";
+    String expectedReplacedSource =
+        "new java.io.File(\"error\") {\n" + 
+        "            protected void runTest() {\n" + 
+        "                Vector v11111 = new Vector();\n" + 
+        "                v }\n" + 
+        "        }\n" +
+        "        .";
+    int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
+    String expectedUnitDisplayString =
+        "package p;\n" + 
+        "public class VB {\n" + 
+        "  public VB() {\n" + 
+        "  }\n" + 
+        "  void foo() {\n" + 
+        "    <CompleteOnMemberAccess:new java.io.File(\"error\") {\n" + 
+        "  protected void runTest() {\n" + 
+        "  }\n" +
+        "}.>;\n" + 
+        "  }\n" + 
+        "}\n";
+
+    checkMethodParse(
+        str.toCharArray(), 
+        cursorLocation, 
+        expectedCompletionNodeToString,
+        expectedUnitDisplayString,
+        completionIdentifier,
+        expectedReplacedSource,
+        testName); 
+}
+

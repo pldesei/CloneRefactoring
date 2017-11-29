@@ -1,0 +1,15 @@
+(startLine=37 endLine=49 srcPath=/root/Projects/elasticsearchFilter/933/elasticsearch/src/test/java/org/elasticsearch/index/mapper/typelevels/ParseMappingTypeLevelTests.java)
+    public void testTypeLevel() throws Exception {
+        String mapping = XContentFactory.jsonBuilder().startObject().startObject("type")
+                .startObject("_source").field("enabled", false).endObject()
+                .endObject().endObject().string();
+
+        DocumentMapper mapper = MapperTestUtils.newParser().parse("type", mapping);
+        assertThat(mapper.type(), equalTo("type"));
+        assertThat(mapper.sourceMapper().enabled(), equalTo(false));
+
+        mapper = MapperTestUtils.newParser().parse(mapping);
+        assertThat(mapper.type(), equalTo("type"));
+        assertThat(mapper.sourceMapper().enabled(), equalTo(false));
+    }
+

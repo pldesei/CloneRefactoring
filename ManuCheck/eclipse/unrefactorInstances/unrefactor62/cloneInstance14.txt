@@ -1,0 +1,24 @@
+(startLine=1007 endLine=1028 srcPath=/root/Projects/eclipse.jdt.coreFilter/716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CopyMoveResourcesTests.java)
+public void testMoveWorkingCopy2() throws CoreException {
+    ICompilationUnit copy = null;
+    try {
+        this.createFolder("/P/src/p1");
+        this.createFile(
+            "/P/src/p1/X.java",
+            "package p1;\n" +
+            "public class X {\n" +
+            "}"
+        );
+        copy = getCompilationUnit("/P/src/p1/X.java");
+        copy.becomeWorkingCopy(null, null);
+    
+        this.createFolder("/P/src/p2");
+        IPackageFragment pkgDest = getPackage("/P/src/p2");
+    
+        movePositive(copy, pkgDest, null, null, false);
+        assertTrue("Should not have unsaved changes", !copy.getBuffer().hasUnsavedChanges());
+    } finally {
+        if (copy != null) copy.discardWorkingCopy();
+    }
+}
+

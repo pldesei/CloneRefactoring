@@ -1,0 +1,36 @@
+(startLine=823 endLine=856 srcPath=/root/Projects/eclipse.jdt.coreFilter/895/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/flow/UnconditionalFlowInfo.java)
+final public boolean isPotentiallyNull(LocalVariableBinding local) {
+    if ((this.tagBits & NULL_FLAG_MASK) == 0 || 
+            (local.type.tagBits & TagBits.IsBaseType) != 0) {
+        return false;
+    }
+    int position;
+    long mask;
+    if ((position = local.id + this.maxFieldCount) < BitCacheSize) {
+        // use bits
+        return
+            (this.nullAssignmentStatusBit2 & (mask = 1L << position)) != 0 ?
+            (this.nullAssignmentStatusBit1 & mask) == 0 : // protected null
+            (this.nullAssignmentValueBit1 & mask) != 0 && // null bit set and
+                ((this.nullAssignmentStatusBit1 & mask) == 0 || // (potential or
+                 (this.nullAssignmentValueBit2 & mask) == 0); 
+                                            // assigned, but not unknown)
+    }
+    // use extra vector
+    if (this.extra == null) {
+        return false; // if vector not yet allocated, then not initialized
+    }
+    int vectorIndex;
+    if ((vectorIndex = (position / BitCacheSize) - 1) >= 
+            this.extra[0].length) {
+        return false; // if not enough room in vector, then not initialized
+    }
+    return 
+        (this.extra[3][vectorIndex] & 
+            (mask = 1L << (position % BitCacheSize))) != 0 ?
+        (this.extra[2][vectorIndex] & mask) == 0 :
+        (this.extra[4][vectorIndex] & mask) != 0 && 
+            ((this.extra[2][vectorIndex] & mask) == 0 || 
+             (this.extra[5][vectorIndex] & mask) == 0); 
+}
+

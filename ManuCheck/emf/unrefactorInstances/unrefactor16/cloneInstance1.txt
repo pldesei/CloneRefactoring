@@ -1,0 +1,21 @@
+(startLine=1306 endLine=1324 srcPath=/root/Projects/org.eclipse.emfFilter/881/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicExtendedMetaData.java)
+  protected List basicGetEnumerationFacet(EDataType eDataType)
+  {
+    EAnnotation eAnnotation = getAnnotation(eDataType, false);
+    if (eAnnotation != null)
+    {
+      String enumerationLiteral = (String)eAnnotation.getDetails().get("enumeration");
+      if (enumerationLiteral != null)
+      {
+        List result = new ArrayList();
+        for (StringTokenizer stringTokenizer = new StringTokenizer(enumerationLiteral, " "); stringTokenizer.hasMoreTokens(); )
+        {
+          String enumeration = replace(replace(stringTokenizer.nextToken(), "%20", " "), "%25", "%");
+          result.add(enumeration);
+        }
+        return result;
+      }
+    }
+    return Collections.EMPTY_LIST;
+  }
+

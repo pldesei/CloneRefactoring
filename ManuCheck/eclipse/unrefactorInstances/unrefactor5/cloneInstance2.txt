@@ -1,0 +1,12 @@
+(startLine=625 endLine=634 srcPath=/root/Projects/eclipse.jdt.coreFilter/905/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/BinaryType.java)
+public String[] getTypeParameterSignatures() throws JavaModelException {
+    IBinaryType info = (IBinaryType) getElementInfo();
+    char[] genericSignature = info.getGenericSignature();
+    if (genericSignature == null) 
+        return CharOperation.NO_STRINGS;
+    
+    char[] dotBaseSignature = CharOperation.replaceOnCopy(genericSignature, '/', '.');
+    char[][] typeParams = Signature.getTypeParameters(dotBaseSignature);
+    return CharOperation.toStrings(typeParams);
+}
+

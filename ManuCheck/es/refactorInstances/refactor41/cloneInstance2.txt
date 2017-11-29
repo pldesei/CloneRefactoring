@@ -1,0 +1,8 @@
+(startLine=218 endLine=223 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/ShortFieldMapper.java)
+    public Filter rangeFilter(FieldDataCache fieldDataCache, String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeFieldDataFilter.newShortRange(fieldDataCache, names.indexName(),
+                lowerTerm == null ? null : Short.parseShort(lowerTerm),
+                upperTerm == null ? null : Short.parseShort(upperTerm),
+                includeLower, includeUpper);
+    }
+

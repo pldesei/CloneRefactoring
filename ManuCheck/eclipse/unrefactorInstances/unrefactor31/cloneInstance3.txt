@@ -1,0 +1,12 @@
+(startLine=330 endLine=339 srcPath=/root/Projects/eclipse.jdt.coreFilter/2093/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/FieldReferencePattern.java)
+public int matchLevel(AstNode node, boolean resolve) {
+    if (node instanceof FieldReference) {
+        return this.matchLevel((FieldReference)node, resolve);
+    } else if (node instanceof NameReference) {
+        return this.matchLevel((NameReference)node, resolve);
+    } else if (node instanceof FieldDeclaration) {
+        return this.matchLevel((FieldDeclaration)node, resolve);
+    } 
+    return IMPOSSIBLE_MATCH;
+}
+

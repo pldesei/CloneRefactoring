@@ -1,0 +1,19 @@
+(startLine=5355 endLine=5371 srcPath=/root/Projects/eclipse.jdt.coreFilter/106/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+public void testRemoveExternalLibFolder4() throws CoreException {
+    try {
+        simulateExitRestart();
+        createExternalFolder("externalLib");
+        IJavaProject p = createJavaProject("P", new String[0], new String[] {getExternalResourcePath("externalLib")}, "");
+        waitForAutoBuild();
+        deleteExternalResource("externalLib");
+        refresh(p);
+        assertMarkers(
+            "Unexpected markers",
+            "Project \'P\' is missing required library: \'"+ getExternalPath() + "externalLib\'",
+            p);
+    } finally {
+        deleteExternalResource("externalLib");
+        deleteProject("P");
+    }
+}
+

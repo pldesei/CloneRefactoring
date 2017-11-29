@@ -1,0 +1,28 @@
+(startLine=186 endLine=211 srcPath=/root/Projects/elasticsearchFilter/717/elasticsearch/src/main/java/org/elasticsearch/index/search/nested/NestedFieldComparatorSource.java)
+        public void copy(int slot, int rootDoc) throws IOException {
+            if (rootDoc == 0 || rootDocuments == null || innerDocuments == null) {
+                copyMissing(wrappedComparator, slot);
+                return;
+            }
+
+            // We need to copy the lowest value from all nested docs into slot.
+            int prevRootDoc = rootDocuments.prevSetBit(rootDoc - 1);
+            int nestedDoc = innerDocuments.nextSetBit(prevRootDoc + 1);
+            if (nestedDoc >= rootDoc || nestedDoc == -1) {
+                copyMissing(wrappedComparator, slot);
+                return;
+            }
+            wrappedComparator.copy(slot, nestedDoc);
+
+            while (true) {
+                nestedDoc = innerDocuments.nextSetBit(nestedDoc + 1);
+                if (nestedDoc >= rootDoc || nestedDoc == -1) {
+                    return;
+                }
+                wrappedComparator.copy(spareSlot, nestedDoc);
+                if (wrappedComparator.compare(spareSlot, slot) < 0) {
+                    wrappedComparator.copy(slot, nestedDoc);
+                }
+            }
+        }
+

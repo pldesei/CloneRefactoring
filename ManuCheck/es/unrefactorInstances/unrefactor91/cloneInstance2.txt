@@ -1,0 +1,24 @@
+(startLine=103 endLine=124 srcPath=/root/Projects/elasticsearchFilter/1205/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/segments/TransportIndicesSegmentsAction.java)
+    protected IndicesSegmentResponse newResponse(IndicesSegmentsRequest request, AtomicReferenceArray shardsResponses, ClusterState clusterState) {
+        int successfulShards = 0;
+        int failedShards = 0;
+        List<ShardOperationFailedException> shardFailures = null;
+        final List<ShardSegments> shards = newArrayList();
+        for (int i = 0; i < shardsResponses.length(); i++) {
+            Object shardResponse = shardsResponses.get(i);
+            if (shardResponse == null) {
+                // simply ignore non active shards
+            } else if (shardResponse instanceof BroadcastShardOperationFailedException) {
+                failedShards++;
+                if (shardFailures == null) {
+                    shardFailures = newArrayList();
+                }
+                shardFailures.add(new DefaultShardOperationFailedException((BroadcastShardOperationFailedException) shardResponse));
+            } else {
+                shards.add((ShardSegments) shardResponse);
+                successfulShards++;
+            }
+        }
+        return new IndicesSegmentResponse(shards.toArray(new ShardSegments[shards.size()]), clusterState, shardsResponses.length(), successfulShards, failedShards, shardFailures);
+    }
+

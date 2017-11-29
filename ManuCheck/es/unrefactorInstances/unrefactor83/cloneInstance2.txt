@@ -1,0 +1,66 @@
+(startLine=84 endLine=147 srcPath=/root/Projects/elasticsearchFilter/875/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryThenFetchAction.java)
+        protected void moveToSecondPhase() {
+            sortedShardList = searchPhaseController.sortDocs(firstResults);
+            searchPhaseController.fillDocIdsToLoad(docIdsToLoad, sortedShardList);
+
+            if (docIdsToLoad.asList().isEmpty()) {
+                finishHim();
+                return;
+            }
+
+            final AtomicInteger counter = new AtomicInteger(docIdsToLoad.asList().size());
+
+            int localOperations = 0;
+            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                QuerySearchResult queryResult = firstResults.get(entry.index);
+                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                if (node.id().equals(nodes.localNodeId())) {
+                    localOperations++;
+                } else {
+                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                }
+            }
+
+            if (localOperations > 0) {
+                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
+                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                                QuerySearchResult queryResult = firstResults.get(entry.index);
+                                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                                if (node.id().equals(nodes.localNodeId())) {
+                                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
+                    for (final AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                        final QuerySearchResult queryResult = firstResults.get(entry.index);
+                        final DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                        if (node.id().equals(nodes.localNodeId())) {
+                            final FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                            try {
+                                if (localAsync) {
+                                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                        }
+                                    });
+                                } else {
+                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                }
+                            } catch (Throwable t) {
+                                onFetchFailure(t, fetchSearchRequest, entry.index, queryResult.shardTarget(), counter);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+

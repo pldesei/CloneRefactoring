@@ -1,0 +1,20 @@
+(startLine=984 endLine=1001 srcPath=/root/Projects/eclipse.jdt.coreFilter/1552/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest2.java)
+    public void test0432() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0432", "A.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        ASTNode result = runConversion(sourceUnit, true);
+        assertTrue("not a compilation unit", result.getNodeType() == ASTNode.COMPILATION_UNIT); //$NON-NLS-1$
+        CompilationUnit unit = (CompilationUnit) result;
+        assertEquals("Wrong number of problems", 1, unit.getProblems().length); //$NON-NLS-1$<
+        ASTNode node = getASTNode(unit, 1, 0, 0);
+        assertEquals("Not an expression statement", ASTNode.EXPRESSION_STATEMENT, node.getNodeType());
+        ExpressionStatement expressionStatement = (ExpressionStatement) node;
+        Expression expression = expressionStatement.getExpression();
+        assertEquals("Not an assignment", ASTNode.ASSIGNMENT, expression.getNodeType());
+        Assignment assignment = (Assignment) expression;
+        Expression expression2 = assignment.getLeftHandSide();
+        assertEquals("Not a simple name", ASTNode.SIMPLE_NAME, expression2.getNodeType());
+        SimpleName simpleName = (SimpleName) expression2;
+        IBinding binding = simpleName.resolveBinding();
+        assertNotNull("No binding", binding);
+    }    
+

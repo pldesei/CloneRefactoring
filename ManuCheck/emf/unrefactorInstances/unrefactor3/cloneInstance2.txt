@@ -1,0 +1,23 @@
+(startLine=3704 endLine=3724 srcPath=/root/Projects/org.eclipse.emfFilter/960/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  public String getEditorPluginPackageName()
+  {
+    String result = getEditorPluginClassToUse();
+    if (result == null)
+    {
+      result = getEditorPluginID();
+    }
+    else
+    {
+      int index = result.lastIndexOf(".");
+      if (index == -1)
+      {
+        result = getEditorPluginID();
+      }
+      else
+      {
+        result = result.substring(0, index);
+      }
+    }
+    return result;
+  }
+

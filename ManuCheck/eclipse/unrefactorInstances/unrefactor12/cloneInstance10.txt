@@ -1,0 +1,55 @@
+(startLine=566 endLine=618 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void test010() {
+    try {
+        String sourceA010 =
+            "public class A010 {\n" +
+            "  public int foo() {\n" +
+            "    new Object().toString();\n" + // workaround pb with JDK 1.4.1 that doesn't stop if only return
+            "    return -1;\n" +
+            "  }\n" +
+            "}";
+        compileAndDeploy(sourceA010, "A010");
+        String userCode =
+            "A010 a = new A010() {\n" +
+            "  public String toString() {\n" +
+            "    return \"my object\";\n" +
+            "  }\n" +
+            "};\n" +
+            "a.foo();";
+        JDIStackFrame stackFrame = new JDIStackFrame(
+            this.jdiVM, 
+            this,
+            userCode,
+            "A010",
+            "foo",
+            -1);
+
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "return this;".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                stackFrame.declaringTypeName(),
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(), 
+                getCompilerOptions(), 
+                requestor, 
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue("Should get one result but got " + requestor.resultIndex+1, requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should not have problems", !result.hasProblems());
+        assertTrue("Result should have a value", result.hasValue());
+        assertEquals("Value", "my object".toCharArray(), result.getValueDisplayString());
+        assertEquals("Type", "A010".toCharArray(), result.getValueTypeName());
+    } finally {
+        removeTempClass("A010");
+    }
+}
+

@@ -1,0 +1,9 @@
+(startLine=688 endLine=694 srcPath=/root/Projects/eclipse.jdt.coreFilter/1606/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaElement.java)
+    protected void toStringName(StringBuffer buffer) {
+        buffer.append(getElementName());
+        if (this.occurrenceCount > 1) {
+            buffer.append("#"); //$NON-NLS-1$
+            buffer.append(this.occurrenceCount);
+        }
+    }
+

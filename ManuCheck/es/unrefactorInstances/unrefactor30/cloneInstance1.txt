@@ -1,0 +1,11 @@
+(startLine=181 endLine=189 srcPath=/root/Projects/elasticsearchFilter/1991/elasticsearch/modules/elasticsearch/src/test/java/org/elasticsearch/index/query/json/SimpleJsonIndexQueryParserTests.java)
+    @Test public void testPrefixQuery() throws IOException {
+        IndexQueryParser queryParser = newQueryParser();
+        String query = copyToStringFromClasspath("/org/elasticsearch/index/query/json/prefix.json");
+        Query parsedQuery = queryParser.parse(query);
+        assertThat(parsedQuery, instanceOf(PrefixQuery.class));
+        PrefixQuery prefixQuery = (PrefixQuery) parsedQuery;
+        // since age is automatically registered in data, we encode it as numeric
+        assertThat(prefixQuery.getPrefix(), equalTo(new Term("name.first", "sh")));
+    }
+

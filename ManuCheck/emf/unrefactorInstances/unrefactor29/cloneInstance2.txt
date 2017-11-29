@@ -1,0 +1,19 @@
+(startLine=198 endLine=214 srcPath=/root/Projects/org.eclipse.emfFilter/478/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/unsettable/impl/DUImpl.java)
+  public void unsetCu()
+  {
+    if (cu != null)
+    {
+      NotificationChain msgs = null;
+      msgs = ((InternalEObject)cu).eInverseRemove(this, URefPackage.CU__DU, CU.class, msgs);
+      msgs = basicUnsetCu(msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else
+    {
+      boolean oldCuESet = cuESet;
+      cuESet = false;
+      if (eNotificationRequired())
+        eNotify(new ENotificationImpl(this, Notification.UNSET, URefPackage.DU__CU, null, null, oldCuESet));
+    }
+  }
+

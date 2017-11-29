@@ -1,0 +1,32 @@
+(startLine=567 endLine=596 srcPath=/root/Projects/eclipse.jdt.coreFilter/716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CopyMoveResourcesTests.java)
+public void testCopyWorkingCopyDestination() throws CoreException {
+    ICompilationUnit copy = null;
+    try {
+        createFolder("/P/src/p1");
+        createFile(
+            "/P/src/p1/X.java",
+            "package p1;\n" +
+            "public class X {\n" +
+            "  void foo() {}\n" +
+            "}"
+        );
+        ICompilationUnit cuSource = getCompilationUnit("/P/src/p1/X.java");
+    
+        createFolder("/P/src/p2");
+        IPackageFragment pkgDest = getPackage("/P/src/p2");
+        createFile(
+            "/P/src/p2/X.java",
+            "\n" +
+            "package p1;\n" +
+            "public class X {\n" +
+            "}"
+        );
+        copy = getCompilationUnit("/P/src/p2/X.java");
+        copy.becomeWorkingCopy(null, null);
+    
+        copyPositive(cuSource, pkgDest, null, null, true/*force*/);
+    } finally {
+        if (copy != null) copy.discardWorkingCopy();
+    }
+}
+

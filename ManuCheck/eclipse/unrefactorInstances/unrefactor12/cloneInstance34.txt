@@ -1,0 +1,47 @@
+(startLine=3021 endLine=3065 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void test052() {
+    try {
+        String sourceA52 =
+            "public class A52 {\n"
+                + "\tstatic private A52 instance = new A52();\n"
+                + "\tstatic private int Counter = 2;\n"             
+                + "\tpublic void bar() {\n"
+                + "\t}\n"
+                + "}";
+        compileAndDeploy(sourceA52, "A52");
+
+        String userCode = "new A52().bar();";
+        JDIStackFrame stackFrame =
+            new JDIStackFrame(this.jdiVM, this, userCode, "A52", "bar", -1);
+
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "this.Counter = 5; return this.Counter;".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                stackFrame.declaringTypeName(),
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(),
+                getCompilerOptions(),
+                requestor,
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue(
+            "Should get one result but got " + (requestor.resultIndex + 1),
+            requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should not have problems", !result.hasProblems());
+        assertTrue("Result should have a value", result.hasValue());
+        assertEquals("Value", "5".toCharArray(), result.getValueDisplayString());
+        assertEquals("Type", "int".toCharArray(), result.getValueTypeName());
+    } finally {
+        removeTempClass("A52");
+    }
+}
+

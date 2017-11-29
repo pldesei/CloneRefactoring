@@ -1,0 +1,28 @@
+(startLine=421 endLine=446 srcPath=/root/Projects/eclipse.jdt.coreFilter/506/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Formatter/test492/Main_out.java)
+    private URL[] getBootPath(String base) throws IOException {
+        URL url = null;
+        if (base != null) {
+            url = new URL(base);
+        } else {
+            // search in the root location
+            url = new URL(getInstallLocation());
+            String path = url.getFile() + "plugins"; //$NON-NLS-1$
+            path = searchFor(framework, path);
+            if (path == null)
+                throw new RuntimeException("Could not find framework"); //$NON-NLS-1$
+            // add on any dev path elements
+            url = new URL(url.getProtocol(), url.getHost(), url.getPort(), path);
+        }
+        if (System.getProperty(PROP_FRAMEWORK) == null)
+            System.getProperties().put(PROP_FRAMEWORK, url.toExternalForm());
+        if (debug)
+            System.out.println("Framework located:\n    " + url.toExternalForm());
+        URL[] result = getDevPath(url);
+        if (debug) {
+            System.out.println("Framework classpath:"); //$NON-NLS-1$
+            for (int i = 0; i < result.length; i++)
+                System.out.println("    " + result[i].toExternalForm()); //$NON-NLS-1$
+        }
+        return result;
+    }
+

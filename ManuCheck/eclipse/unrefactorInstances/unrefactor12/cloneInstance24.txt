@@ -1,0 +1,46 @@
+(startLine=2541 endLine=2584 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void test042() {
+    try {
+        String sourceA42 =
+            "public class A42 {\n"
+                + "\tstatic private int Counter = 0;\n"
+                + "\tpublic void bar() {\n"
+                + "\t}\n"
+                + "}";
+        compileAndDeploy(sourceA42, "A42");
+
+        String userCode = "new A42().bar();";
+        JDIStackFrame stackFrame =
+            new JDIStackFrame(this.jdiVM, this, userCode, "A42", "bar", -1);
+
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "return ++A42.Counter;".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                stackFrame.declaringTypeName(),
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(),
+                getCompilerOptions(),
+                requestor,
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue(
+            "Should get one result but got " + (requestor.resultIndex + 1),
+            requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should not have problems", !result.hasProblems());
+        assertTrue("Result should have a value", result.hasValue());
+        assertEquals("Value", "1".toCharArray(), result.getValueDisplayString());
+        assertEquals("Type", "int".toCharArray(), result.getValueTypeName());
+    } finally {
+        removeTempClass("A42");
+    }
+}
+

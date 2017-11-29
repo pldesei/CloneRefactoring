@@ -1,0 +1,12 @@
+(startLine=250 endLine=259 srcPath=/root/Projects/eclipse.jdt.coreFilter/677/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/UnresolvedReferenceNameFinder.java)
+    private void endVisitRemoved(int start, int end) {
+        for (int i = 0; i <= this.potentialVariableNamesPtr; i++) {
+            if (this.potentialVariableNames[i] != null) {
+                int nameStart = this.potentialVariableNameStarts[i];
+                if (start < nameStart && nameStart < end) {
+                    this.potentialVariableNames[i] = null;
+                }
+            }
+        }
+    }
+

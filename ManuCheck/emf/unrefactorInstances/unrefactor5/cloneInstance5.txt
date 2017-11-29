@@ -1,0 +1,40 @@
+(startLine=1255 endLine=1292 srcPath=/root/Projects/org.eclipse.emfFilter/524/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EPackageImpl.java)
+  protected EReference initEReference
+    (EReference r, 
+     EClassifier type, 
+     EReference otherEnd,
+     String name, 
+     String defaultValue,
+     int lowerBound, 
+     int upperBound, 
+     boolean isTransient, 
+     boolean isVolatile, 
+     boolean isChangeable, 
+     boolean isContainment, 
+     boolean isResolveProxies,
+     boolean isUnsettable,
+     boolean isUnique,
+     boolean isDerived,
+     boolean isOrdered)
+  {
+    initEReference
+      (r, 
+       type, 
+       otherEnd,
+       name, 
+       defaultValue, 
+       lowerBound, 
+       upperBound, 
+       ((EClassifier)r.eContainer()).getInstanceClass(),
+       isTransient, 
+       isVolatile, 
+       isChangeable, 
+       isContainment,
+       isResolveProxies,
+       isUnsettable, 
+       isUnique, 
+       isDerived, 
+       isOrdered);
+    return r;
+  }
+

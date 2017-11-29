@@ -1,0 +1,14 @@
+(startLine=1535 endLine=1546 srcPath=/root/Projects/eclipse.jdt.coreFilter/958/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Formatter/test492/Main_out.java)
+    private void mergeProperties(Properties destination, Properties source) {
+        if (destination == null || source == null)
+            return;
+        for (Enumeration e = source.keys(); e.hasMoreElements();) {
+            String key = (String) e.nextElement();
+            if (!key.equals(PROP_EOF)) {
+                String value = source.getProperty(key);
+                if (destination.getProperty(key) == null)
+                    destination.put(key, value);
+            }
+        }
+    }
+

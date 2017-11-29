@@ -1,0 +1,24 @@
+(startLine=358 endLine=379 srcPath=/root/Projects/elasticsearchFilter/717/elasticsearch/src/main/java/org/elasticsearch/index/search/nested/NestedFieldComparatorSource.java)
+        public final int compareBottom(int rootDoc) throws IOException {
+            if (rootDoc == 0 || rootDocuments == null || innerDocuments == null) {
+                return compareBottomMissing(wrappedComparator);
+            }
+
+            final int prevRootDoc = rootDocuments.prevSetBit(rootDoc - 1);
+            int nestedDoc = innerDocuments.nextSetBit(prevRootDoc + 1);
+            if (nestedDoc >= rootDoc || nestedDoc == -1) {
+                return compareBottomMissing(wrappedComparator);
+            }
+
+            int counter = 1;
+            wrappedComparator.copy(spareSlot, nestedDoc);
+            nestedDoc = innerDocuments.nextSetBit(nestedDoc + 1);
+            while (nestedDoc > prevRootDoc && nestedDoc < rootDoc) {
+                onNested(spareSlot, nestedDoc);
+                nestedDoc = innerDocuments.nextSetBit(nestedDoc + 1);
+                counter++;
+            }
+            afterNested(spareSlot, counter);
+            return compare(bottomSlot, spareSlot);
+        }
+

@@ -1,0 +1,9 @@
+(startLine=1483 endLine=1489 srcPath=/root/Projects/org.eclipse.emfFilter/276/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/util/XMLTypeValidator.java)
+  public boolean validateUnsignedShort_Max(int unsignedShort, DiagnosticChain diagnostics, Map<Object, Object> context)
+  {
+    boolean result = unsignedShort <= UNSIGNED_SHORT__MAX__VALUE;
+    if (!result && diagnostics != null)
+      reportMaxViolation(XMLTypePackage.Literals.UNSIGNED_SHORT, unsignedShort, UNSIGNED_SHORT__MAX__VALUE, true, diagnostics, context);
+    return result;
+  }
+

@@ -1,0 +1,22 @@
+(startLine=16480 endLine=16499 srcPath=/root/Projects/eclipse.jdt.coreFilter/260/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
+    public void test0535() {
+        this.runConformTest(
+            new String[] {
+                "X.java",
+                "import java.util.EnumSet;\n" + 
+                "\n" + 
+                "enum Foo {\n" + 
+                "    blargh, baz, boz;\n" + 
+                "}\n" + 
+                "\n" + 
+                "public class X {\n" + 
+                "    public static void main(String[] args) {\n" + 
+                "        Class c = Foo.class;\n" + 
+                "        EnumSet<? extends Enum> eSet = EnumSet.allOf(c);\n" + 
+                "    }\n" + 
+                "}\n",
+            },
+            ""
+        );
+    }
+

@@ -1,0 +1,12 @@
+(startLine=36 endLine=45 srcPath=/root/Projects/eclipse.jdt.coreFilter/1996/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/HashtableOfInt.java)
+public boolean containsKey(int key) {
+    int index = key % valueTable.length;
+    int currentKey;
+    while ((currentKey = keyTable[index]) != 0) {
+        if (currentKey == key)
+            return true;
+        index = (index + 1) % keyTable.length;
+    }
+    return false;
+}
+

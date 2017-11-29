@@ -1,0 +1,10 @@
+(startLine=140 endLine=147 srcPath=/root/Projects/elasticsearchFilter/1616/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
+                        @Override public void run() {
+                            for (Tuple<String, Long> target : scrollId.values()) {
+                                DiscoveryNode node = nodes.get(target.v1());
+                                if (node != null && nodes.localNodeId().equals(node.id())) {
+                                    executePhase(node, target.v2());
+                                }
+                            }
+                        }
+

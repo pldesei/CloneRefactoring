@@ -1,0 +1,29 @@
+(startLine=57 endLine=83 srcPath=/root/Projects/elasticsearchFilter/568/elasticsearch/src/main/java/org/elasticsearch/index/codec/postingsformat/PostingsFormatService.java)
+    public PostingsFormatService(Index index, @IndexSettings Settings indexSettings, Map<String, PostingsFormatProvider.Factory> postingFormatFactories) {
+        super(index, indexSettings);
+
+        MapBuilder<String, PostingsFormatProvider> providers = MapBuilder.newMapBuilder();
+
+        Map<String, Settings> postingsFormatSettings = indexSettings.getGroups(PostingsFormatProvider.POSTINGS_FORMAT_SETTINGS_PREFIX);
+        for (Map.Entry<String, PostingsFormatProvider.Factory> entry : postingFormatFactories.entrySet()) {
+            String name = entry.getKey();
+            PostingsFormatProvider.Factory factory = entry.getValue();
+
+            Settings settings = postingsFormatSettings.get(name);
+            if (settings == null) {
+                settings = ImmutableSettings.Builder.EMPTY_SETTINGS;
+            }
+            providers.put(name, factory.create(name, settings));
+        }
+
+        // This is only needed for tests when guice doesn't have the chance to populate the list of PF factories
+        for (PreBuiltPostingsFormatProvider.Factory factory : PostingFormats.listFactories()) {
+            if (providers.containsKey(factory.name())) {
+                continue;
+            }
+            providers.put(factory.name(), factory.get());
+        }
+
+        this.providers = providers.immutableMap();
+    }
+

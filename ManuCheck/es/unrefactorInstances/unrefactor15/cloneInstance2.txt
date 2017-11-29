@@ -1,0 +1,21 @@
+(startLine=143 endLine=161 srcPath=/root/Projects/elasticsearchFilter/537/elasticsearch/src/test/java/org/elasticsearch/test/disruption/SlowClusterStateProcessing.java)
+        public void run() {
+            while (disrupting && disruptedNode != null) {
+                try {
+                    TimeValue duration = new TimeValue(delayDurationMin + random.nextInt((int) (delayDurationMax - delayDurationMin)));
+                    if (!interruptClusterStateProcessing(duration)) {
+                        continue;
+                    }
+                    if (intervalBetweenDelaysMax > 0) {
+                        duration = new TimeValue(intervalBetweenDelaysMin + random.nextInt((int) (intervalBetweenDelaysMax - intervalBetweenDelaysMin)));
+                        if (disrupting && disruptedNode != null) {
+                            Thread.sleep(duration.millis());
+                        }
+                    }
+                } catch (InterruptedException e) {
+                } catch (Exception e) {
+                    logger.error("error in background worker", e);
+                }
+            }
+        }
+

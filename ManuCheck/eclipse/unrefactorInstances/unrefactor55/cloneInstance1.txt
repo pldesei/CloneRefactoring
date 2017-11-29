@@ -1,0 +1,35 @@
+(startLine=366 endLine=398 srcPath=/root/Projects/eclipse.jdt.coreFilter/926/eclipse.jdt.core/org.eclipse.jdt.core.tests.performance/src/org/eclipse/jdt/core/tests/performance/FullSourceWorkspaceModelTests.java)
+public void testPerfNameLookupFindKnownType() throws CoreException {
+    tagAsSummary("Model>NameLookup>Find>KnownType", false); // do NOT put in fingerprint
+
+    // Wait for indexing end
+    waitUntilIndexesReady();
+
+    // Warm up
+    String fullQualifiedName = BIG_PROJECT_TYPE_PATH.removeFileExtension().removeFirstSegments(2).toString();
+    fullQualifiedName = fullQualifiedName.replace('/', '.');
+    if (WARMUP_COUNT > 0) {
+        for (int i=0; i<WARMUP_COUNT; i++) {
+            NameLookup nameLookup = BIG_PROJECT.newNameLookup(DefaultWorkingCopyOwner.PRIMARY);
+            IType type = nameLookup.findType(fullQualifiedName, false /*full match*/, NameLookup.ACCEPT_ALL);
+            assertNotNull("We should find type '"+fullQualifiedName+"' in project "+BIG_PROJECT_NAME, type);
+        }
+    }
+
+    // Measures
+    resetCounters();
+    for (int i=0; i<MEASURES_COUNT; i++) {
+        runGc();
+        startMeasuring();
+        for (int n=0; n<ITERATIONS_COUNT; n++) {
+            NameLookup nameLookup = BIG_PROJECT.newNameLookup(DefaultWorkingCopyOwner.PRIMARY);
+            nameLookup.findType(fullQualifiedName, false /*full match*/, NameLookup.ACCEPT_ALL);
+        }
+        stopMeasuring();
+    }
+    
+    // Commit
+    commitMeasurements();
+    assertPerformance();
+}
+

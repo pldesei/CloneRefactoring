@@ -1,0 +1,23 @@
+(startLine=9297 endLine=9317 srcPath=/root/Projects/eclipse.jdt.coreFilter/475/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/formatter/FormatterRegressionTests.java)
+    public void test664() {
+        Map options = DefaultCodeFormatterConstants.getEclipse21Settings();
+        options.put(
+                DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION,
+                DefaultCodeFormatterConstants.createAlignmentValue(
+                        true,
+                        DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE,
+                        DefaultCodeFormatterConstants.INDENT_BY_ONE
+                ));
+        options.put(
+                DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION,
+                DefaultCodeFormatterConstants.createAlignmentValue(
+                        false,
+                        DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE,
+                        DefaultCodeFormatterConstants.INDENT_BY_ONE
+                ));
+        options.put(DefaultCodeFormatterConstants.FORMATTER_WRAP_BEFORE_BINARY_OPERATOR, DefaultCodeFormatterConstants.FALSE);
+        DefaultCodeFormatterOptions preferences = new DefaultCodeFormatterOptions(options);
+        DefaultCodeFormatter codeFormatter = new DefaultCodeFormatter(preferences);
+        runTest(codeFormatter, "test664", "A.java", CodeFormatter.K_STATEMENTS);//$NON-NLS-1$ //$NON-NLS-2$
+    }
+

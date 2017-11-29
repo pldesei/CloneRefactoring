@@ -1,0 +1,24 @@
+(startLine=182 endLine=203 srcPath=/root/Projects/elasticsearchFilter/1945/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/mlt/TransportMoreLikeThisAction.java)
+    private void parseSource(GetResponse getResponse, final BoolJsonQueryBuilder boolBuilder, DocumentMapper docMapper, final Set<String> fields, final MoreLikeThisRequest request) {
+        if (getResponse.source() == null) {
+            return;
+        }
+        docMapper.parse(request.type(), request.id(), getResponse.source(), new DocumentMapper.ParseListenerAdapter() {
+            @Override public boolean beforeFieldAdded(FieldMapper fieldMapper, Fieldable field, Object parseContext) {
+                if (fieldMapper instanceof InternalMapper) {
+                    return true;
+                }
+                String value = fieldMapper.valueAsString(field);
+                if (value == null) {
+                    return false;
+                }
+
+                if (fields.isEmpty() || fields.contains(field.name())) {
+                    addMoreLikeThis(request, boolBuilder, fieldMapper, field);
+                }
+
+                return false;
+            }
+        });
+    }
+

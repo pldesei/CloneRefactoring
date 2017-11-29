@@ -1,0 +1,20 @@
+(startLine=645 endLine=662 srcPath=/root/Projects/elasticsearchFilter/1349/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
+    public void testExternalVersioningIndexConflict() {
+        ParsedDocument doc = new ParsedDocument("1", "1", "test", null, -1, -1, doc().add(uidField("1")).build(), Lucene.STANDARD_ANALYZER, B_1, false);
+        Engine.Index index = new Engine.Index(null, newUid("1"), doc).versionType(VersionType.EXTERNAL).version(12);
+        engine.index(index);
+        assertThat(index.version(), equalTo(12l));
+
+        index = new Engine.Index(null, newUid("1"), doc).versionType(VersionType.EXTERNAL).version(14);
+        engine.index(index);
+        assertThat(index.version(), equalTo(14l));
+
+        index = new Engine.Index(null, newUid("1"), doc).versionType(VersionType.EXTERNAL).version(13l);
+        try {
+            engine.index(index);
+            assert false;
+        } catch (VersionConflictEngineException e) {
+            // all is well
+        }
+    }
+

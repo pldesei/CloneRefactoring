@@ -1,0 +1,16 @@
+(startLine=345 endLine=358 srcPath=/root/Projects/org.eclipse.emfFilter/91/org.eclipse.emf/plugins/org.eclipse.emf.common.ui/src/org/eclipse/emf/common/ui/dialogs/ResourceDialog.java)
+         private Object[] getContextSelection()
+         {
+           String path = getContextPath();
+           if (path != null)
+           {
+             IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+             IResource resource = root.findMember(path);
+             if (resource != null && resource.isAccessible())
+             {
+               return new Object[] { resource };
+             }
+           }
+           return null;
+         }
+

@@ -1,0 +1,140 @@
+(startLine=676 endLine=813 srcPath=/root/Projects/eclipse.jdt.coreFilter/1487/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+    protected IJavaProject createJavaProject(final String projectName, final String[] sourceFolders, final String[] libraries, final String[] projects, final boolean[] exportedProjects, final String projectOutput, final String[] sourceOutputs, final String[][] inclusionPatterns, final String[][] exclusionPatterns, final String compliance) throws CoreException {
+        final IJavaProject[] result = new IJavaProject[1];
+        IWorkspaceRunnable create = new IWorkspaceRunnable() {
+            public void run(IProgressMonitor monitor) throws CoreException {
+                // create project
+                createProject(projectName);
+                
+                // set java nature
+                addJavaNature(projectName);
+                
+                // create classpath entries 
+                IProject project = getWorkspaceRoot().getProject(projectName);
+                IPath projectPath = project.getFullPath();
+                int sourceLength = sourceFolders == null ? 0 : sourceFolders.length;
+                int libLength = libraries == null ? 0 : libraries.length;
+                int projectLength = projects == null ? 0 : projects.length;
+                IClasspathEntry[] entries = new IClasspathEntry[sourceLength+libLength+projectLength];
+                for (int i= 0; i < sourceLength; i++) {
+                    IPath sourcePath = new Path(sourceFolders[i]);
+                    int segmentCount = sourcePath.segmentCount();
+                    if (segmentCount > 0) {
+                        // create folder and its parents
+                        IContainer container = project;
+                        for (int j = 0; j < segmentCount; j++) {
+                            IFolder folder = container.getFolder(new Path(sourcePath.segment(j)));
+                            if (!folder.exists()) {
+                                folder.create(true, true, null);
+                            }
+                            container = folder;
+                        }
+                    }
+                    IPath outputPath = null;
+                    if (sourceOutputs != null) {
+                        // create out folder for source entry
+                        outputPath = sourceOutputs[i] == null ? null : new Path(sourceOutputs[i]);
+                        if (outputPath != null && outputPath.segmentCount() > 0) {
+                            IFolder output = project.getFolder(outputPath);
+                            if (!output.exists()) {
+                                output.create(true, true, null);
+                            }
+                        }
+                    }
+                // inclusion patterns
+                IPath[] inclusionPaths;
+                if (inclusionPatterns == null) {
+                    inclusionPaths = new IPath[0];
+                } else {
+                    String[] patterns = inclusionPatterns[i];
+                    int length = patterns.length;
+                    inclusionPaths = new IPath[length];
+                    for (int j = 0; j < length; j++) {
+                        String inclusionPattern = patterns[j];
+                        inclusionPaths[j] = new Path(inclusionPattern);
+                    }
+                }
+                    // exclusion patterns
+                    IPath[] exclusionPaths;
+                    if (exclusionPatterns == null) {
+                        exclusionPaths = new IPath[0];
+                    } else {
+                        String[] patterns = exclusionPatterns[i];
+                        int length = patterns.length;
+                        exclusionPaths = new IPath[length];
+                        for (int j = 0; j < length; j++) {
+                            String exclusionPattern = patterns[j];
+                            exclusionPaths[j] = new Path(exclusionPattern);
+                        }
+                    }
+                    // create source entry
+                    entries[i] = 
+                        JavaCore.newSourceEntry(
+                            projectPath.append(sourcePath), 
+                            inclusionPaths,
+                            exclusionPaths, 
+                            outputPath == null ? null : projectPath.append(outputPath)
+                        );
+                }
+                for (int i= 0; i < libLength; i++) {
+                    String lib = libraries[i];
+                    if (lib.startsWith("JCL_LIB")) {
+                        // ensure JCL variables are set
+                        if (JavaCore.getClasspathVariable("JCL_LIB") == null) {
+                            JavaCore.setClasspathVariables(
+                                new String[] {"JCL_LIB", "JCL_SRC", "JCL_SRCROOT"},
+                                new IPath[] {getExternalJCLPath(), getExternalJCLSourcePath(), getExternalJCLRootSourcePath()},
+                                null);
+                        }
+                    }
+                    if (lib.equals(lib.toUpperCase())) { // all upper case is a var 
+                        char[][] vars = CharOperation.splitOn(',', lib.toCharArray());
+                        entries[sourceLength+i] = JavaCore.newVariableEntry(
+                            new Path(new String(vars[0])), 
+                            vars.length > 1 ? new Path(new String(vars[1])) : null, 
+                            vars.length > 2 ? new Path(new String(vars[2])) : null);
+                    } else if (lib.startsWith("org.eclipse.jdt.core.tests.model.")) { // container
+                        entries[sourceLength+i] = JavaCore.newContainerEntry(new Path(lib));
+                    } else {
+                        IPath libPath = new Path(lib);
+                        if (!libPath.isAbsolute() && libPath.segmentCount() > 0 && libPath.getFileExtension() == null) {
+                            project.getFolder(libPath).create(true, true, null);
+                            libPath = projectPath.append(libPath);
+                        }
+                        entries[sourceLength+i] = JavaCore.newLibraryEntry(libPath, null, null);
+                    }
+                }
+                for  (int i= 0; i < projectLength; i++) {
+                    boolean isExported = exportedProjects != null && exportedProjects.length > i && exportedProjects[i];
+                    entries[sourceLength+libLength+i] = JavaCore.newProjectEntry(new Path(projects[i]), isExported);
+                }
+                
+                // create project's output folder
+                IPath outputPath = new Path(projectOutput);
+                if (outputPath.segmentCount() > 0) {
+                    IFolder output = project.getFolder(outputPath);
+                    if (!output.exists()) {
+                        output.create(true, true, null);
+                    }
+                }
+                
+                // set classpath and output location
+                IJavaProject javaProject = JavaCore.create(project);
+                javaProject.setRawClasspath(entries, projectPath.append(outputPath), null);
+                
+                // set compliance level options
+                if ("1.5".equals(compliance)) {
+                    Map options = new HashMap();
+                    options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_5);
+                    options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_5);    
+                    options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_5);    
+                    javaProject.setOptions(options);
+                }
+                
+                result[0] = javaProject;
+            }
+        };
+        getWorkspace().run(create, null);    
+        return result[0];
+    }
+

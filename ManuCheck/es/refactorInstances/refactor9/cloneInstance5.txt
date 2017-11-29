@@ -1,0 +1,13 @@
+(startLine=43 endLine=53 srcPath=/root/Projects/elasticsearchFilter/1778/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/PersianAnalyzerProvider.java)
+    @Inject public PersianAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = PersianAnalyzer.getDefaultStopSet();
+        }
+
+        analyzer = new PersianAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords);
+    }
+

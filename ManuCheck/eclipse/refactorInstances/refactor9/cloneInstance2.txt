@@ -1,0 +1,16 @@
+(startLine=358 endLine=371 srcPath=/root/Projects/eclipse.jdt.coreFilter/1964/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/WorkingCopy.java)
+public void open(IProgressMonitor monitor) throws JavaModelException {
+    if (this.useCount == 0) { // was destroyed
+        throw newNotPresentException();
+    } else {
+        super.open(monitor);
+        
+        if (monitor != null && monitor.isCanceled()) return;
+        if (this.problemRequestor != null && this.problemRequestor.isActive()){
+            this.problemRequestor.beginReporting();
+            CompilationUnitProblemFinder.process(this, this.problemRequestor, monitor); 
+            this.problemRequestor.endReporting();
+        }        
+    }
+}
+

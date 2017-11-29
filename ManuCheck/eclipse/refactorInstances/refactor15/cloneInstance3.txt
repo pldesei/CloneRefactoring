@@ -1,0 +1,10 @@
+(startLine=99 endLine=106 srcPath=/root/Projects/eclipse.jdt.coreFilter/1847/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/Initializer.java)
+public IJavaElement getPrimaryElement(boolean checkOwner) {
+    if (checkOwner) {
+        CompilationUnit cu = (CompilationUnit)getAncestor(COMPILATION_UNIT);
+        if (cu.owner == DefaultWorkingCopyOwner.PRIMARY) return this;
+    }
+    IJavaElement parent = fParent.getPrimaryElement(false);
+    return ((IType)parent).getInitializer(this.occurrenceCount);
+}
+

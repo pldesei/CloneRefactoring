@@ -1,0 +1,17 @@
+(startLine=133 endLine=147 srcPath=/root/Projects/org.eclipse.emfFilter/934/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/impl/C2Impl.java)
+  public void setA(A newA)
+  {
+    if (newA != a)
+    {
+      NotificationChain msgs = null;
+      if (a != null)
+        msgs = ((InternalEObject)a).eInverseRemove(this, RefPackage.A__C2, A.class, msgs);
+      if (newA != null)
+        msgs = ((InternalEObject)newA).eInverseAdd(this, RefPackage.A__C2, A.class, msgs);
+      msgs = basicSetA(newA, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C2__A, newA, newA));
+  }
+

@@ -1,0 +1,11 @@
+(startLine=1536 endLine=1544 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug82208_CLASS_AND_INTERFACE() throws CoreException {
+    this.resultCollector.showRule = true;
+    setUpBug82208();
+    search("B82208*", CLASS_AND_INTERFACE, ALL_OCCURRENCES);
+    assertSearchResults(
+        "src/b82208/Test.java b82208.B82208_I [B82208_I] EXACT_MATCH\n" +
+        "src/b82208/Test.java b82208.B82208 [B82208] EXACT_MATCH"
+    );
+}
+

@@ -1,0 +1,7 @@
+(startLine=103 endLine=107 srcPath=/root/Projects/eclipse.jdt.coreFilter/321/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/ExternalPackageFragmentRoot.java)
+    public IResource resource(PackageFragmentRoot root) {
+        if (this.resource == null)
+            return (IResource) (this.resource = JavaModelManager.getExternalManager().getFolder(this.externalPath));
+        return super.resource(root);
+    }
+

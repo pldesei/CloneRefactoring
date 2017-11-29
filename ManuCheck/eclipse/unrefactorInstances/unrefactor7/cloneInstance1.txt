@@ -1,0 +1,32 @@
+(startLine=86 endLine=115 srcPath=/root/Projects/eclipse.jdt.coreFilter/592/eclipse.jdt.core/org.eclipse.jdt.compiler.tool/src/org/eclipse/jdt/internal/compiler/tool/EclipseFileObject.java)
+    public NestingKind getNestingKind() {
+        switch(kind) {
+            case SOURCE :
+                return NestingKind.TOP_LEVEL;
+            case CLASS :
+                ClassFileReader reader = null;
+                try {
+                    reader = ClassFileReader.read(this.f);
+                } catch (ClassFormatException e) {
+                    // ignore
+                } catch (IOException e) {
+                    // ignore
+                }
+                if (reader == null) {
+                    return null;
+                }
+                if (reader.isAnonymous()) {
+                    return NestingKind.ANONYMOUS;
+                }
+                if (reader.isLocal()) {
+                    return NestingKind.LOCAL;
+                }
+                if (reader.isMember()) {
+                    return NestingKind.MEMBER;
+                }
+                return NestingKind.TOP_LEVEL;
+            default:
+                return null;
+        }
+    }
+

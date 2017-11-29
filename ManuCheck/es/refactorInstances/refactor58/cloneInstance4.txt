@@ -1,0 +1,14 @@
+(startLine=3629 endLine=3640 srcPath=/root/Projects/elasticsearchFilter/1190/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+    @SuppressWarnings("unchecked") public double reduceKeysToDoubleSequentially
+        (ObjectToDouble<? super K> transformer,
+         double basis,
+         DoubleByDoubleToDouble reducer) {
+        if (transformer == null || reducer == null)
+            throw new NullPointerException();
+        Traverser<K,V,Object> it = new Traverser<K,V,Object>(this);
+        double r = basis;
+        while (it.advance() != null)
+            r = reducer.apply(r, transformer.apply((K)it.nextKey));
+        return r;
+    }
+

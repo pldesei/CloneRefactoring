@@ -1,0 +1,13 @@
+(startLine=595 endLine=605 srcPath=/root/Projects/eclipse.jdt.coreFilter/322/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CopyResourceElementsOperation.java)
+    private void updateReadOnlyPackageFragmentsForCopy(IContainer sourceFolder, IPackageFragmentRoot root, String[] newFragName) {
+        IContainer parentFolder = (IContainer) root.getResource();
+        for (int i = 0, length = newFragName.length; i <length; i++) {
+            String subFolderName = newFragName[i];
+            parentFolder = parentFolder.getFolder(new Path(subFolderName));
+            sourceFolder = sourceFolder.getFolder(new Path(subFolderName));
+            if (sourceFolder.exists() && Util.isReadOnly(sourceFolder)) {
+                Util.setReadOnly(parentFolder, true);
+            }
+        }
+    }
+

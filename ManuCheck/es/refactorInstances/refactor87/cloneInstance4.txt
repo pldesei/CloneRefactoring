@@ -1,0 +1,13 @@
+(startLine=115 endLine=125 srcPath=/root/Projects/elasticsearchFilter/693/elasticsearch/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java)
+    public void testLocalPluginFolderAndFile() throws Exception {
+        //When we have a single top-level folder but also files in the top-level, we don't modify anything
+        String pluginName = "plugin-test";
+        URI uri = URI.create(PluginManagerTests.class.getResource("plugin_folder_file.zip").toString());
+        downloadAndExtract(pluginName, "file://" + uri.getPath());
+
+        internalCluster().startNode(SETTINGS);
+
+        assertPluginLoaded(pluginName);
+        assertPluginAvailable(pluginName);
+    }
+

@@ -1,0 +1,12 @@
+(startLine=1745 endLine=1754 srcPath=/root/Projects/eclipse.jdt.coreFilter/1209/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+    public void testBug84724d() throws CoreException {
+        resultCollector.showRule = true;
+        assertNotNull("Problem in tests processing", workingCopies);
+        assertEquals("Problem in tests processing", 2, workingCopies.length);
+        IMethod method = selectMethod(workingCopies[0], "X", 5);
+        search(method, REFERENCES);
+        assertSearchResults(
+            "src/b84724/Z.java void b84724.Z.foo() [new X(\"\", 3, \"\", \"\")] EXACT_MATCH"
+        );
+    }
+

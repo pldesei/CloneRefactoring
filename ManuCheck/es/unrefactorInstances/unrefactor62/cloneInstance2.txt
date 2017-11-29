@@ -1,0 +1,16 @@
+(startLine=95 endLine=108 srcPath=/root/Projects/elasticsearchFilter/1052/elasticsearch/src/main/java/org/elasticsearch/common/inject/Injectors.java)
+    public static <T> Set<T> getInstancesOf(Injector injector, Matcher<Class> matcher) {
+        Set<T> answer = Sets.newHashSet();
+        Set<Entry<Key<?>, Binding<?>>> entries = injector.getBindings().entrySet();
+        for (Entry<Key<?>, Binding<?>> entry : entries) {
+            Key<?> key = entry.getKey();
+            Class<?> keyType = getKeyType(key);
+            if (keyType != null && matcher.matches(keyType)) {
+                Binding<?> binding = entry.getValue();
+                Object value = binding.getProvider().get();
+                answer.add((T) value);
+            }
+        }
+        return answer;
+    }
+

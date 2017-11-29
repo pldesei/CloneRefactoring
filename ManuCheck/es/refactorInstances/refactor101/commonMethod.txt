@@ -1,0 +1,12 @@
+(startLine=55 endLine=64 srcPath=/root/Projects/elasticsearchFilter/263/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SEach.java)
+    @Override
+    void extractVariables(Set<String> variables) {
+        variables.add(name);
+
+        expression.extractVariables(variables);
+
+        if (block != null) {
+            block.extractVariables(variables);
+        }
+    }
+

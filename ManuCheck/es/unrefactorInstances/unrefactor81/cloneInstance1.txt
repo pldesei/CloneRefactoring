@@ -1,0 +1,13 @@
+(startLine=67 endLine=77 srcPath=/root/Projects/elasticsearchFilter/1189/elasticsearch/src/test/java/org/elasticsearch/test/integration/search/suggest/CustomSuggester.java)
+    public SuggestContextParser getContextParser() {
+        return new SuggestContextParser() {
+            @Override
+            public SuggestionSearchContext.SuggestionContext parse(XContentParser parser, MapperService mapperService) throws IOException {
+                Map<String, Object> options = parser.map();
+                CustomSuggestionsContext suggestionContext = new CustomSuggestionsContext(CustomSuggester.this, options);
+                suggestionContext.setField((String) options.get("field"));
+                return suggestionContext;
+            }
+        };
+    }
+

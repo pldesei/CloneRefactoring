@@ -1,0 +1,17 @@
+(startLine=152 endLine=166 srcPath=/root/Projects/org.eclipse.emfFilter/346/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/DImpl.java)
+  public void setC(C newC)
+  {
+    if (newC != c)
+    {
+      NotificationChain msgs = null;
+      if (c != null)
+        msgs = ((InternalEObject)c).eInverseRemove(this, RefPackage.C__D, C.class, msgs);
+      if (newC != null)
+        msgs = ((InternalEObject)newC).eInverseAdd(this, RefPackage.C__D, C.class, msgs);
+      msgs = basicSetC(newC, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.D__C, newC, newC));
+  }
+

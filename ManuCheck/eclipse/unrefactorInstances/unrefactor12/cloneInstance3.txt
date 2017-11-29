@@ -1,0 +1,49 @@
+(startLine=232 endLine=278 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void test003() {
+    try {
+        String sourceA003 =
+            "public class A003 {\n" +
+            "  public int foo() {\n" +
+            "    return 2;\n" +
+            "  }\n" +
+            "  public String toString() {\n" +
+            "    return \"hello\";\n" +
+            "  }\n" +
+            "}";
+        compileAndDeploy(sourceA003, "A003");
+        String userCode =
+            "new A003().foo();";
+        JDIStackFrame stackFrame = new JDIStackFrame(
+            this.jdiVM, 
+            this,
+            userCode,
+            "A003",
+            "foo",
+            -1);
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "return this;".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                null, // declaring type -- NO DELEGATE THIS
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(), 
+                getCompilerOptions(), 
+                requestor, 
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue("Should get one result but got " + requestor.resultIndex+1, requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should have a problem", result.hasProblems()); // 'this' cannot be referenced since there is no declaring type
+        assertTrue("Result should not have a value", !result.hasValue());
+    } finally {
+        removeTempClass("A003");
+    }
+}
+

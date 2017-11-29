@@ -1,0 +1,12 @@
+(startLine=360 endLine=369 srcPath=/root/Projects/org.eclipse.emfFilter/507/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/unsettable/impl/BUImpl.java)
+  @Override
+  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
+  {
+    switch (eContainerFeatureID)
+    {
+      case URefPackage.BU__C2U:
+        return eInternalContainer().eInverseRemove(this, URefPackage.C2U__BU, C2U.class, msgs);
+    }
+    return super.eBasicRemoveFromContainerFeature(msgs);
+  }
+

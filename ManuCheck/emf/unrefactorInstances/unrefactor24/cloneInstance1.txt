@@ -1,0 +1,16 @@
+(startLine=206 endLine=219 srcPath=/root/Projects/org.eclipse.emfFilter/168/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/AImpl.java)
+  public C getC()
+  {
+    if (c != null && c.eIsProxy())
+    {
+      InternalEObject oldC = (InternalEObject)c;
+      c = (C)eResolveProxy(oldC);
+      if (c != oldC)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefPackage.A__C, oldC, c));
+      }
+    }
+    return c;
+  }
+

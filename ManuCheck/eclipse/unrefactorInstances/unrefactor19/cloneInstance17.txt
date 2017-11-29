@@ -1,0 +1,28 @@
+(startLine=657 endLine=682 srcPath=/root/Projects/eclipse.jdt.coreFilter/772/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CodeCorrectionTests.java)
+public void testCorrectLocalVariable1() throws JavaModelException {
+    CorrectionEngine engine = new CorrectionEngine(JavaCore.getOptions());
+    CodeCorrectionTestsRequestor requestor = new CodeCorrectionTestsRequestor();
+    ICompilationUnit cu= getCompilationUnit("CodeCorrection", "src", "", "CorrectLocalVariable1.java");
+    IMarker[] markers = getMarkers(cu);
+    assertTrue("should have one problem",markers.length == 1);
+    engine.computeCorrections(markers[0], null, 0, requestor);
+
+    String src = cu.getSource();
+    String error = "bar";
+    int start = src.lastIndexOf(error);
+    int end = start + error.length();
+    
+    assertEquals(
+        "should have one suggestion",
+        "bar0",
+        requestor.getSuggestions());
+    assertEquals(
+        "a start of a suggestion is not correct", 
+        ""+start,
+        requestor.getStarts());
+    assertEquals(
+        "a end of a suggestion is not correct", 
+        ""+end,
+        requestor.getEnds());
+}
+

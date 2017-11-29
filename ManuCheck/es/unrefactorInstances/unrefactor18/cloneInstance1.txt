@@ -1,0 +1,13 @@
+(startLine=54 endLine=64 srcPath=/root/Projects/elasticsearchFilter/203/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/metrics/percentiles/tdigest/AbstractTDigestPercentilesAggregator.java)
+    public AbstractTDigestPercentilesAggregator(String name, ValuesSource.Numeric valuesSource, SearchContext context, Aggregator parent,
+            double[] keys, double compression, boolean keyed, DocValueFormat formatter,
+            List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData) throws IOException {
+        super(name, context, parent, pipelineAggregators, metaData);
+        this.valuesSource = valuesSource;
+        this.keyed = keyed;
+        this.formatter = formatter;
+        this.states = context.bigArrays().newObjectArray(1);
+        this.keys = keys;
+        this.compression = compression;
+    }
+

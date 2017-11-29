@@ -1,0 +1,11 @@
+(startLine=28 endLine=36 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PackageDeclarationPattern.java)
+protected StringBuffer print(StringBuffer output) {
+    output.append("PackageDeclarationPattern: <"); //$NON-NLS-1$
+    if (this.pkgName != null) 
+        output.append(this.pkgName);
+    else
+        output.append("*"); //$NON-NLS-1$
+    output.append(">"); //$NON-NLS-1$
+    return super.print(output);
+}
+

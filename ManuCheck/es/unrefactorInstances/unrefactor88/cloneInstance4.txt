@@ -1,0 +1,11 @@
+(startLine=56 endLine=64 srcPath=/root/Projects/elasticsearchFilter/1397/elasticsearch/src/main/java/org/elasticsearch/index/cache/filter/soft/SoftFilterCache.java)
+    @Inject public SoftFilterCache(Index index, @IndexSettings Settings indexSettings, IndexSettingsService indexSettingsService) {
+        super(index, indexSettings);
+        this.indexSettingsService = indexSettingsService;
+        this.maxSize = indexSettings.getAsInt("index.cache.filter.max_size", componentSettings.getAsInt("max_size", -1));
+        this.expire = indexSettings.getAsTime("index.cache.filter.expire", componentSettings.getAsTime("expire", null));
+        logger.debug("using [soft] filter cache with max_size [{}], expire [{}]", maxSize, expire);
+
+        indexSettingsService.addListener(applySettings);
+    }
+

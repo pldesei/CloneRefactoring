@@ -1,0 +1,26 @@
+(startLine=3028 endLine=3051 srcPath=/root/Projects/eclipse.jdt.coreFilter/1245/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+            public void run(IProgressMonitor monitor) throws CoreException {
+                for (int i = 0; i < numberOfParticipants; i++){
+                    projectNames[i] = "P"+i;
+                    projects[i] = createJavaProject(projectNames[i], new String[]{""}, "");
+                    allProjectsInCycle[i] = 1;
+                }        
+                for (int i = 0; i < numberOfParticipants; i++){
+                    IClasspathEntry[] extraEntries = new IClasspathEntry[numberOfParticipants-1];
+                    int index = 0;
+                    for (int j = 0; j < numberOfParticipants; j++){
+                        if (i == j) continue;
+                        extraEntries[index++] = JavaCore.newProjectEntry(projects[j].getPath());
+                    }
+                    // append project references            
+                    IClasspathEntry[] oldClasspath = projects[i].getRawClasspath();
+                    IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries.length];
+                    System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
+                    for (int j = 0; j < extraEntries.length; j++){
+                        newClasspath[oldClasspath.length+j] = extraEntries[j];
+                    }            
+                    // set classpath
+                    projects[i].setRawClasspath(newClasspath, null);
+                }
+            }
+

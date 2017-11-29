@@ -1,0 +1,17 @@
+(startLine=129 endLine=143 srcPath=/root/Projects/elasticsearchFilter/1204/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/search/geo/GeoDistanceRangeFilter.java)
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeoDistanceRangeFilter filter = (GeoDistanceRangeFilter) o;
+
+        if (Double.compare(filter.inclusiveLowerPoint, inclusiveLowerPoint) != 0) return false;
+        if (Double.compare(filter.inclusiveUpperPoint, inclusiveUpperPoint) != 0) return false;
+        if (Double.compare(filter.lat, lat) != 0) return false;
+        if (Double.compare(filter.lon, lon) != 0) return false;
+        if (fieldName != null ? !fieldName.equals(filter.fieldName) : filter.fieldName != null) return false;
+        if (geoDistance != filter.geoDistance) return false;
+
+        return true;
+    }
+

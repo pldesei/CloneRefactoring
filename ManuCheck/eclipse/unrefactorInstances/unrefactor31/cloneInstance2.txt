@@ -1,0 +1,12 @@
+(startLine=234 endLine=243 srcPath=/root/Projects/eclipse.jdt.coreFilter/2093/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PackageReferencePattern.java)
+public int matchLevel(AstNode node, boolean resolve) {
+    if (node instanceof QualifiedTypeReference) {
+        return this.matchLevel((QualifiedTypeReference)node, resolve);
+    } else if (node instanceof ImportReference) {
+        return this.matchLevel((ImportReference)node, resolve);
+    } else if (node instanceof QualifiedNameReference) {
+        return this.matchLevel((QualifiedNameReference)node, resolve);
+    }
+    return IMPOSSIBLE_MATCH;
+}
+

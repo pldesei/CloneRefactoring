@@ -1,0 +1,19 @@
+(startLine=105 endLine=121 srcPath=/root/Projects/elasticsearchFilter/1429/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/Annotations.java)
+    public static Annotation findBindingAnnotation(
+            Errors errors, Member member, Annotation[] annotations) {
+        Annotation found = null;
+
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().isAnnotationPresent(BindingAnnotation.class)) {
+                if (found != null) {
+                    errors.duplicateBindingAnnotations(member,
+                            found.annotationType(), annotation.annotationType());
+                } else {
+                    found = annotation;
+                }
+            }
+        }
+
+        return found;
+    }
+

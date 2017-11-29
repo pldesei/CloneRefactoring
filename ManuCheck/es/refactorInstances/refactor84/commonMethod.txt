@@ -1,0 +1,16 @@
+(startLine=348 endLine=361 srcPath=/root/Projects/elasticsearchFilter/824/elasticsearch/src/main/java/org/elasticsearch/tribe/TribeService.java)
+                private void addNewIndex(ClusterState tribeState, ClusterBlocks.Builder blocks, MetaData.Builder metaData, RoutingTable.Builder routingTable, IndexMetaData tribeIndex) {
+                    Settings tribeSettings = ImmutableSettings.builder().put(tribeIndex.settings()).put(TRIBE_NAME, tribeName).build();
+                    metaData.put(IndexMetaData.builder(tribeIndex).settings(tribeSettings));
+                    routingTable.add(tribeState.routingTable().index(tribeIndex.index()));
+                    if (Regex.simpleMatch(blockIndicesMetadata, tribeIndex.index())) {
+                        blocks.addIndexBlock(tribeIndex.index(), IndexMetaData.INDEX_METADATA_BLOCK);
+                    }
+                    if (Regex.simpleMatch(blockIndicesRead, tribeIndex.index())) {
+                        blocks.addIndexBlock(tribeIndex.index(), IndexMetaData.INDEX_READ_BLOCK);
+                    }
+                    if (Regex.simpleMatch(blockIndicesWrite, tribeIndex.index())) {
+                        blocks.addIndexBlock(tribeIndex.index(), IndexMetaData.INDEX_WRITE_BLOCK);
+                    }
+                }
+

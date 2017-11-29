@@ -1,0 +1,7 @@
+(startLine=35 endLine=39 srcPath=/root/Projects/elasticsearchFilter/775/elasticsearch/src/main/java/org/elasticsearch/index/query/QueryParserUtils.java)
+    public static void ensureNotDeleteByQuery(String name, QueryParseContext parseContext) {
+        if (TransportShardDeleteByQueryAction.DELETE_BY_QUERY_API.equals(SearchContext.current().source())) {
+            throw new QueryParsingException(parseContext.index(), "[" + name + "] unsupported in delete_by_query api");
+        }
+    }
+

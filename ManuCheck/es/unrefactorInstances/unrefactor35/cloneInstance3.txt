@@ -1,0 +1,28 @@
+(startLine=50 endLine=75 srcPath=/root/Projects/elasticsearchFilter/568/elasticsearch/src/main/java/org/elasticsearch/index/similarity/SimilarityLookupService.java)
+    public SimilarityLookupService(Index index, @IndexSettings Settings indexSettings, Map<String, SimilarityProvider.Factory> similarities) {
+        super(index, indexSettings);
+
+        MapBuilder<String, SimilarityProvider> providers = MapBuilder.newMapBuilder();
+
+        Map<String, Settings> similaritySettings = indexSettings.getGroups(SimilarityModule.SIMILARITY_SETTINGS_PREFIX);
+        for (Map.Entry<String, SimilarityProvider.Factory> entry : similarities.entrySet()) {
+            String name = entry.getKey();
+            SimilarityProvider.Factory factory = entry.getValue();
+
+            Settings settings = similaritySettings.get(name);
+            if (settings == null) {
+                settings = ImmutableSettings.Builder.EMPTY_SETTINGS;
+            }
+            providers.put(name, factory.create(name, settings));
+        }
+
+        // For testing
+        for (PreBuiltSimilarityProvider.Factory factory : Similarities.listFactories()) {
+            if (!providers.containsKey(factory.name())) {
+                providers.put(factory.name(), factory.get());
+            }
+        }
+
+        this.similarities = providers.immutableMap();
+    }
+

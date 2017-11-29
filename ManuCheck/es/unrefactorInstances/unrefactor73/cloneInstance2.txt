@@ -1,0 +1,11 @@
+(startLine=63 endLine=71 srcPath=/root/Projects/elasticsearchFilter/1095/elasticsearch/src/test/java/org/elasticsearch/test/hamcrest/ElasticsearchGeoAssertions.java)
+    private static int next(int top, Coordinate...points) {
+        for (int i = 1; i < points.length; i++) {
+            int n = (top + i) % points.length;
+            if((points[n].x != points[top].x) || (points[n].y != points[top].y)) {
+                return n;
+            } 
+        }
+        return -1;
+    }
+

@@ -1,0 +1,21 @@
+(startLine=2236 endLine=2254 srcPath=/root/Projects/eclipse.jdt.coreFilter/913/eclipse.jdt.core/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTMatcher.java)
+    public boolean match(VariableDeclarationExpression node, Object other) {
+        if (!(other instanceof VariableDeclarationExpression)) {
+            return false;
+        }
+        VariableDeclarationExpression o = (VariableDeclarationExpression) other;
+        int level = node.getAST().apiLevel;
+        if (level == AST.JLS2_INTERNAL) {
+            if (node.getModifiers() != o.getModifiers()) {
+                return false;
+            }
+        }
+        if (level >= AST.JLS3) {
+            if (!safeSubtreeListMatch(node.modifiers(), o.modifiers())) {
+                return false;
+            }
+        }
+        return safeSubtreeMatch(node.getType(), o.getType())
+            && safeSubtreeListMatch(node.fragments(), o.fragments());
+    }
+

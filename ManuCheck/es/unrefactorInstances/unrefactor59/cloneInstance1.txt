@@ -1,0 +1,17 @@
+(startLine=122 endLine=136 srcPath=/root/Projects/elasticsearchFilter/1887/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexStatus.java)
+    public SizeValue storeSize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.storeSize() != null) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.storeSize().bytes();
+            }
+        }
+        if (bytes == -1) {
+            return null;
+        }
+        return new SizeValue(bytes);
+    }
+

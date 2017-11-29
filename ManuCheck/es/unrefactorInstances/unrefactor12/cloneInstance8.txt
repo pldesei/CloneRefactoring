@@ -1,0 +1,51 @@
+(startLine=48 endLine=96 srcPath=/root/Projects/elasticsearchFilter/1163/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/query/WildcardQueryParser.java)
+    @Override public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        XContentParser.Token token = parser.nextToken();
+        assert token == XContentParser.Token.FIELD_NAME;
+        String fieldName = parser.currentName();
+
+
+        String value = null;
+        float boost = 1.0f;
+        token = parser.nextToken();
+        if (token == XContentParser.Token.START_OBJECT) {
+            String currentFieldName = null;
+            while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                if (token == XContentParser.Token.FIELD_NAME) {
+                    currentFieldName = parser.currentName();
+                } else {
+                    if ("wildcard".equals(currentFieldName)) {
+                        value = parser.text();
+                    } else if ("value".equals(currentFieldName)) {
+                        value = parser.text();
+                    } else if ("boost".equals(currentFieldName)) {
+                        boost = parser.floatValue();
+                    }
+                }
+            }
+            parser.nextToken();
+        } else {
+            value = parser.text();
+            parser.nextToken();
+        }
+
+        if (value == null) {
+            throw new QueryParsingException(parseContext.index(), "No value specified for prefix query");
+        }
+
+        MapperService.SmartNameFieldMappers smartNameFieldMappers = parseContext.smartFieldMappers(fieldName);
+        if (smartNameFieldMappers != null) {
+            if (smartNameFieldMappers.hasMapper()) {
+                fieldName = smartNameFieldMappers.mapper().names().indexName();
+                value = smartNameFieldMappers.mapper().indexedValue(value);
+            }
+        }
+
+        WildcardQuery query = new WildcardQuery(new Term(fieldName, value));
+        query.setRewriteMethod(MultiTermQuery.CONSTANT_SCORE_AUTO_REWRITE_DEFAULT);
+        query.setBoost(boost);
+        return wrapSmartNameQuery(query, smartNameFieldMappers, parseContext);
+    }
+

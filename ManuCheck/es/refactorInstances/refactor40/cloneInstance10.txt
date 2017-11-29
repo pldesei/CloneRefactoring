@@ -1,0 +1,8 @@
+(startLine=206 endLine=211 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/DoubleFieldMapper.java)
+    public Filter rangeFilter(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeFilter.newDoubleRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : Double.parseDouble(lowerTerm),
+                upperTerm == null ? null : Double.parseDouble(upperTerm),
+                includeLower, includeUpper);
+    }
+

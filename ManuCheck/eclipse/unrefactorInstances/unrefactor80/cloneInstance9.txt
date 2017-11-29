@@ -1,0 +1,23 @@
+(startLine=864 endLine=884 srcPath=/root/Projects/eclipse.jdt.coreFilter/1552/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest2.java)
+    public void test0427() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0427", "A.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        ASTNode result = runConversion(sourceUnit, true);
+        assertTrue("not a compilation unit", result.getNodeType() == ASTNode.COMPILATION_UNIT); //$NON-NLS-1$
+        CompilationUnit unit = (CompilationUnit) result;
+        assertEquals("Wrong number of problems", 1, unit.getProblems().length); //$NON-NLS-1$<
+        ASTNode node = getASTNode(unit, 1, 0, 0);
+        assertEquals("Not an expression statement", node.getNodeType(), ASTNode.EXPRESSION_STATEMENT);
+        ExpressionStatement expressionStatement = (ExpressionStatement) node;
+        Expression expression = expressionStatement.getExpression();
+        assertEquals("Not an assignment", expression.getNodeType(), ASTNode.ASSIGNMENT);
+        Assignment assignment = (Assignment) expression;
+        Expression expression2 = assignment.getLeftHandSide();
+        assertEquals("Not a super field access", expression2.getNodeType(), ASTNode.SUPER_FIELD_ACCESS);
+        SuperFieldAccess superFieldAccess = (SuperFieldAccess) expression2;
+        Name name = superFieldAccess.getName();
+        assertNotNull("No name", name);
+        IBinding binding = name.resolveBinding();
+        assertNull("Got a binding", binding);
+        assertNull("Got a binding", superFieldAccess.resolveFieldBinding());
+    }
+

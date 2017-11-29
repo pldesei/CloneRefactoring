@@ -1,0 +1,19 @@
+(startLine=115 endLine=131 srcPath=/root/Projects/elasticsearchFilter/1305/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/mapping/create/CreateMappingRequest.java)
+    @Override public void writeTo(DataOutput out) throws IOException {
+        if (indices == null) {
+            out.writeInt(0);
+        } else {
+            out.writeInt(indices.length);
+            for (String index : indices) {
+                out.writeUTF(index);
+            }
+        }
+        if (mappingType == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            out.writeUTF(mappingType);
+        }
+        out.writeUTF(mappingSource);
+    }
+

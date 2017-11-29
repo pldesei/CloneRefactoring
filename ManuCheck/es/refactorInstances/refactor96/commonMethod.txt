@@ -1,0 +1,10 @@
+(startLine=38 endLine=45 srcPath=/root/Projects/elasticsearchFilter/263/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/AnalysisTestsHelper.java)
+    public static ESTestCase.TestAnalysis createTestAnalysisFromClassPath(Path baseDir, String resource) throws IOException {
+        Settings settings = Settings.builder()
+                .loadFromStream(resource, AnalysisTestsHelper.class.getResourceAsStream(resource))
+                .put(Environment.PATH_HOME_SETTING.getKey(), baseDir.toString())
+                .build();
+
+        return createTestAnalysisFromSettings(settings);
+    }
+

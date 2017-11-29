@@ -1,0 +1,29 @@
+(startLine=169 endLine=195 srcPath=/root/Projects/eclipse.jdt.coreFilter/2032/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/RecoveredMethod.java)
+public RecoveredElement add(Statement statement, int bracketBalance) {
+
+    /* do not consider a type starting passed the type end (if set)
+        it must be belonging to an enclosing type */
+    if (methodDeclaration.declarationSourceEnd != 0 
+        && statement.sourceStart > methodDeclaration.declarationSourceEnd){
+
+        if (this.parent == null) {
+            return this; // ignore
+        } else {
+            return this.parent.add(statement, bracketBalance);
+        }
+    }
+    if (methodBody == null){
+        Block block = new Block(0);
+        block.sourceStart = methodDeclaration.bodyStart;
+        RecoveredElement currentBlock = this.add(block, 1);
+        if (this.bracketBalance > 0){
+            for (int i = 0; i < this.bracketBalance - 1; i++){
+                currentBlock = currentBlock.add(new Block(0), 1);
+            }
+            this.bracketBalance = 1;
+        }
+        return currentBlock.add(statement, bracketBalance);
+    }
+    return methodBody.add(statement, bracketBalance, true);    
+}
+

@@ -1,0 +1,11 @@
+(startLine=64 endLine=72 srcPath=/root/Projects/elasticsearchFilter/967/elasticsearch/src/main/java/org/elasticsearch/indices/InternalIndicesLifecycle.java)
+    public void beforeIndexCreated(Index index) {
+        for (Listener listener : listeners) {
+            try {
+                listener.beforeIndexCreated(index);
+            } catch (Throwable t) {
+                logger.warn("[{}] failed to invoke before index created callback", t, index.name());
+            }
+        }
+    }
+

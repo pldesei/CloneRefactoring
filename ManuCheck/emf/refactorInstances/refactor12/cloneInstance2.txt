@@ -1,0 +1,15 @@
+(startLine=160 endLine=172 srcPath=/root/Projects/org.eclipse.emfFilter/725/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/PeriodicalImpl.java)
+  public Object eGet(EStructuralFeature eFeature, boolean resolve)
+  {
+    switch (eDerivedStructuralFeatureID(eFeature))
+    {
+      case EXTLibraryPackage.PERIODICAL__PUBLICATION_DATE:
+        return getPublicationDate();
+      case EXTLibraryPackage.PERIODICAL__TITLE:
+        return getTitle();
+      case EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR:
+        return new Integer(getIssuesPerYear());
+    }
+    return eDynamicGet(eFeature, resolve);
+  }
+

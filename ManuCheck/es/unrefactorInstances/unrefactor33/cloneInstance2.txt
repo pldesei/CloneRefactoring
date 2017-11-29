@@ -1,0 +1,18 @@
+(startLine=124 endLine=139 srcPath=/root/Projects/elasticsearchFilter/866/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/node/Node.java)
+    @Override public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (nodeName.length() > 0) {
+            sb.append('[').append(nodeName).append(']');
+        }
+        if (nodeId != null) {
+            sb.append('[').append(nodeId).append(']');
+        }
+        if (dataNode) {
+            sb.append("[data]");
+        }
+        if (address != null) {
+            sb.append('[').append(address).append(']');
+        }
+        return sb.toString();
+    }
+

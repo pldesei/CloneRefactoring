@@ -1,0 +1,9 @@
+(startLine=1736 endLine=1742 srcPath=/root/Projects/eclipse.jdt.coreFilter/2218/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+    private int computeRelevanceForCaseMatching(char[] token, char[] proposalName){
+        if (CharOperation.prefixEquals(token, proposalName, true /* do not ignore case */)) {
+            return  CASEMATCHRELEVANCE;
+        } else {
+            return 0;
+        }
+    }
+

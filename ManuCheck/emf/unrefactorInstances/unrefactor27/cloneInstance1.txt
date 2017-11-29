@@ -1,0 +1,9 @@
+(startLine=1461 endLine=1467 srcPath=/root/Projects/org.eclipse.emfFilter/276/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/util/XMLTypeValidator.java)
+  public boolean validateUnsignedShort_Min(int unsignedShort, DiagnosticChain diagnostics, Map<Object, Object> context)
+  {
+    boolean result = unsignedShort >= UNSIGNED_SHORT__MIN__VALUE;
+    if (!result && diagnostics != null)
+      reportMinViolation(XMLTypePackage.Literals.UNSIGNED_SHORT, unsignedShort, UNSIGNED_SHORT__MIN__VALUE, true, diagnostics, context);
+    return result;
+  }
+

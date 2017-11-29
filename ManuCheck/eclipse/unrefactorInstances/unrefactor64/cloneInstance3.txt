@@ -1,0 +1,31 @@
+(startLine=8321 endLine=8349 srcPath=/root/Projects/eclipse.jdt.coreFilter/121/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+public void test0268() throws JavaModelException {
+    this.workingCopies = new ICompilationUnit[2];
+    this.workingCopies[0] = getWorkingCopy(
+        "/Completion/src/test/Test.java",
+        "package test;\n"+
+        "public class Test<T, U, TU> extends SuperTest {\n"+
+        "  foo\n"+
+        "}");
+
+    this.workingCopies[1] = getWorkingCopy(
+        "/Completion/src/test/SuperTest.java",
+        "package test;\n"+
+        "public class SuperTest {\n"+
+        "  public <T, U, TU> T foo(T t, U u, TU tu) {return null;}\n"+
+        "}");
+
+    CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true);
+
+    String str = this.workingCopies[0].getSource();
+    String completeBehind = "foo";
+    int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+    this.workingCopies[0].codeComplete(cursorLocation, requestor, this.wcOwner);
+
+    assertResults(
+            "foo[POTENTIAL_METHOD_DECLARATION]{foo, Ltest.Test<TT;TU;TTU;>;, ()V, foo, null, " + (R_DEFAULT + R_RESOLVED + R_INTERESTING + R_NON_RESTRICTED) + "}\n" +
+            "foo[METHOD_DECLARATION]{public <V, W, TU2> V foo(V t, W u, TU2 tu), Ltest.SuperTest;, <V:Ljava.lang.Object;W:Ljava.lang.Object;TU2:Ljava.lang.Object;>(TV;TW;TTU2;)TV;, foo, (t, u, tu), " +
+                (R_DEFAULT + R_RESOLVED + R_INTERESTING + R_CASE + R_EXACT_NAME + R_METHOD_OVERIDE + R_NON_RESTRICTED) + "}",
+            requestor.getResults());
+}
+

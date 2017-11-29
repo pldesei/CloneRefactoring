@@ -1,0 +1,45 @@
+(startLine=123 endLine=165 srcPath=/root/Projects/eclipse.jdt.coreFilter/2032/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/RecoveredMethod.java)
+public RecoveredElement add(LocalDeclaration localDeclaration, int bracketBalance) {
+
+    /* local variables inside method can only be final and non void */
+/*    
+    char[][] localTypeName; 
+    if ((localDeclaration.modifiers & ~AccFinal) != 0 // local var can only be final 
+        || (localDeclaration.type == null) // initializer
+        || ((localTypeName = localDeclaration.type.getTypeName()).length == 1 // non void
+            && CharOperation.equals(localTypeName[0], VoidBinding.sourceName()))){ 
+
+        if (this.parent == null){
+            return this; // ignore
+        } else {
+            this.updateSourceEndIfNecessary(this.previousAvailableLineEnd(localDeclaration.declarationSourceStart - 1));
+            return this.parent.add(localDeclaration, bracketBalance);
+        }
+    }
+*/
+    /* do not consider a type starting passed the type end (if set)
+        it must be belonging to an enclosing type */
+    if (methodDeclaration.declarationSourceEnd != 0 
+        && localDeclaration.declarationSourceStart > methodDeclaration.declarationSourceEnd){
+            
+        if (this.parent == null) {
+            return this; // ignore
+        } else {
+            return this.parent.add(localDeclaration, bracketBalance);
+        }
+    }
+    if (methodBody == null){
+        Block block = new Block(0);
+        block.sourceStart = methodDeclaration.bodyStart;
+        RecoveredElement currentBlock = this.add(block, 1);
+        if (this.bracketBalance > 0){
+            for (int i = 0; i < this.bracketBalance - 1; i++){
+                currentBlock = currentBlock.add(new Block(0), 1);
+            }
+            this.bracketBalance = 1;
+        }
+        return currentBlock.add(localDeclaration, bracketBalance);
+    }
+    return methodBody.add(localDeclaration, bracketBalance, true);
+}
+

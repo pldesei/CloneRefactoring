@@ -1,0 +1,14 @@
+(startLine=3367 endLine=3378 srcPath=/root/Projects/org.eclipse.emfFilter/529/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/EcoreValidator.java)
+  public boolean validateETypeParameter(ETypeParameter eTypeParameter, DiagnosticChain diagnostics, Map<Object, Object> context)
+  {
+    boolean result = validate_EveryMultiplicityConforms(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryDataValueConforms(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryReferenceIsContained(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryProxyResolves(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_UniqueID(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryKeyUnique(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryMapEntryUnique(eTypeParameter, diagnostics, context);
+    if (result || diagnostics != null) result &= validateENamedElement_WellFormedName(eTypeParameter, diagnostics, context);
+    return result;
+  }
+

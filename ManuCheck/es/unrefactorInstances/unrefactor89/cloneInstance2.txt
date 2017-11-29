@@ -1,0 +1,33 @@
+(startLine=213 endLine=243 srcPath=/root/Projects/elasticsearchFilter/1290/elasticsearch/src/main/java/org/elasticsearch/common/util/concurrent/TransferThreadPoolExecutor.java)
+    private void executeBlocking(Runnable command) {
+        int currentCapacity = queueSize.getAndIncrement();
+        boolean succeeded = workQueue.tryTransfer(command);
+        if (succeeded) {
+            return;
+        }
+        int currentPoolSize = poolSize.get();
+        if (currentPoolSize < maximumPoolSize) {
+            // if we manage to add a worker, add it, and tryTransfer again
+            if (poolSize.compareAndSet(currentPoolSize, currentPoolSize + 1)) {
+                Thread t = addWorker();
+                if (t == null) {
+                    poolSize.decrementAndGet();
+                    workQueue.add(command);
+                } else {
+                    t.start();
+                    succeeded = workQueue.tryTransfer(command);
+                    if (!succeeded) {
+                        transferOrAddBlocking(command, currentCapacity);
+                    }
+                }
+            } else {
+                succeeded = workQueue.tryTransfer(command);
+                if (!succeeded) {
+                    transferOrAddBlocking(command, currentCapacity);
+                }
+            }
+        } else {
+            transferOrAddBlocking(command, currentCapacity);
+        }
+    }
+

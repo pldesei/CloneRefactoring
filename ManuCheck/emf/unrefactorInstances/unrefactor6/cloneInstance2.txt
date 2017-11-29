@@ -1,0 +1,16 @@
+(startLine=283 endLine=296 srcPath=/root/Projects/org.eclipse.emfFilter/93/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/unsettable/impl/AUImpl.java)
+  public CU getCu()
+  {
+    if (cu != null && cu.eIsProxy())
+    {
+      InternalEObject oldCu = (InternalEObject)cu;
+      cu = (CU)eResolveProxy(oldCu);
+      if (cu != oldCu)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, URefPackage.AU__CU, oldCu, cu));
+      }
+    }
+    return cu;
+  }
+

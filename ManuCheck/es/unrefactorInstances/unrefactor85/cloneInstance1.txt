@@ -1,0 +1,24 @@
+(startLine=163 endLine=184 srcPath=/root/Projects/elasticsearchFilter/1008/elasticsearch/src/main/java/org/elasticsearch/monitor/os/OsInfo.java)
+    public void writeTo(StreamOutput out) throws IOException {
+        out.writeLong(refreshInterval);
+        out.writeInt(availableProcessors);
+        if (cpu == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            cpu.writeTo(out);
+        }
+        if (mem == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            mem.writeTo(out);
+        }
+        if (swap == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            swap.writeTo(out);
+        }
+    }
+

@@ -1,0 +1,17 @@
+(startLine=94 endLine=108 srcPath=/root/Projects/elasticsearchFilter/1440/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/internal/SizeFieldMapper.java)
+    @Override public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        // all are defaults, no need to write it at all
+        if (enabled == Defaults.ENABLED && store == Defaults.STORE) {
+            return builder;
+        }
+        builder.startObject(contentType());
+        if (enabled != Defaults.ENABLED) {
+            builder.field("enabled", enabled);
+        }
+        if (store != Defaults.STORE) {
+            builder.field("store", store.name().toLowerCase());
+        }
+        builder.endObject();
+        return builder;
+    }
+

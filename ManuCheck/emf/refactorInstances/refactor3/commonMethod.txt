@@ -1,0 +1,19 @@
+(startLine=4348 endLine=4364 srcPath=/root/Projects/org.eclipse.emfFilter/856/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  protected String getPluginClassName(String baseName, String defaultSuffix)
+  {
+    if (baseName == null)
+    {
+      String modelName = getModelName();
+      baseName = (isBlank(modelName) ? "" : modelName) + defaultSuffix;
+    }
+    else
+    {
+      int index = baseName.lastIndexOf(".");
+      if (index != -1)
+      {
+        baseName = baseName.substring(index + 1);
+      }
+    }
+    return baseName;
+  }
+

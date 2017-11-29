@@ -1,0 +1,19 @@
+(startLine=130 endLine=146 srcPath=/root/Projects/eclipse.jdt.coreFilter/521/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/ast/TypeReference.java)
+public TypeBinding resolveType(ClassScope classScope) {
+    // handle the error here
+    this.constant = NotAConstant;
+    if (this.resolvedType != null) // is a shared type reference which was already resolved
+        return this.resolvedType.isValidBinding() ? this.resolvedType : null; // already reported error
+
+    this.resolvedType = getTypeBinding(classScope);
+    if (this.resolvedType == null)
+        return null; // detected cycle while resolving hierarchy    
+    if (!this.resolvedType.isValidBinding()) {
+        reportInvalidType(classScope);
+        return null;
+    }
+    if (isTypeUseDeprecated(this.resolvedType, classScope))
+        reportDeprecatedType(classScope);
+    return this.resolvedType = classScope.convertToRawType(this.resolvedType);
+}
+

@@ -1,0 +1,12 @@
+(startLine=104 endLine=113 srcPath=/root/Projects/elasticsearchFilter/330/elasticsearch/src/test/java/org/elasticsearch/index/analysis/KeepFilterFactoryTests.java)
+    public void testCaseSensitiveMapping() throws IOException {
+        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(RESOURCE);
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("my_case_sensitive_keep_filter");
+        assertThat(tokenFilter, instanceOf(KeepWordFilterFactory.class));
+        String source = "Hello small world";
+        String[] expected = new String[]{"Hello"};
+        Tokenizer tokenizer = new WhitespaceTokenizer();
+        tokenizer.setReader(new StringReader(source));
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected, new int[]{1});
+    }
+

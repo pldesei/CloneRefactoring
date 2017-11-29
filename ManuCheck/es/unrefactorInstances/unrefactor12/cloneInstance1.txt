@@ -1,0 +1,59 @@
+(startLine=52 endLine=108 srcPath=/root/Projects/elasticsearchFilter/1163/elasticsearch/src/main/java/org/elasticsearch/index/query/WildcardQueryParser.java)
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        XContentParser.Token token = parser.nextToken();
+        if (token != XContentParser.Token.FIELD_NAME) {
+            throw new QueryParsingException(parseContext.index(), "[wildcard] query malformed, no field");
+        }
+        String fieldName = parser.currentName();
+        String rewriteMethod = null;
+
+        String value = null;
+        float boost = 1.0f;
+        token = parser.nextToken();
+        if (token == XContentParser.Token.START_OBJECT) {
+            String currentFieldName = null;
+            while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                if (token == XContentParser.Token.FIELD_NAME) {
+                    currentFieldName = parser.currentName();
+                } else {
+                    if ("wildcard".equals(currentFieldName)) {
+                        value = parser.text();
+                    } else if ("value".equals(currentFieldName)) {
+                        value = parser.text();
+                    } else if ("boost".equals(currentFieldName)) {
+                        boost = parser.floatValue();
+                    } else if ("rewrite".equals(currentFieldName)) {
+                        rewriteMethod = parser.textOrNull();
+                    } else {
+                        throw new QueryParsingException(parseContext.index(), "[wildcard] query does not support [" + currentFieldName + "]");
+                    }
+                }
+            }
+            parser.nextToken();
+        } else {
+            value = parser.text();
+            parser.nextToken();
+        }
+
+        if (value == null) {
+            throw new QueryParsingException(parseContext.index(), "No value specified for prefix query");
+        }
+
+        BytesRef valueBytes;
+        MapperService.SmartNameFieldMappers smartNameFieldMappers = parseContext.smartFieldMappers(fieldName);
+        if (smartNameFieldMappers != null && smartNameFieldMappers.hasMapper()) {
+            fieldName = smartNameFieldMappers.mapper().names().indexName();
+            valueBytes = smartNameFieldMappers.mapper().indexedValueForSearch(value);
+        } else {
+            valueBytes = new BytesRef(value);
+        }
+
+        WildcardQuery query = new WildcardQuery(new Term(fieldName, valueBytes));
+        QueryParsers.setRewriteMethod(query, rewriteMethod);
+        query.setRewriteMethod(QueryParsers.parseRewriteMethod(rewriteMethod));
+        query.setBoost(boost);
+        return wrapSmartNameQuery(query, smartNameFieldMappers, parseContext);
+    }
+

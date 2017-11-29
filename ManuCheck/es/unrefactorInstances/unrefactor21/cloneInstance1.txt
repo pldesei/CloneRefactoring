@@ -1,0 +1,18 @@
+(startLine=266 endLine=281 srcPath=/root/Projects/elasticsearchFilter/1059/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/xcontent/MultiFieldMapper.java)
+    @Override public void toXContent(XContentBuilder builder, Params params) throws IOException {
+        builder.startObject(name);
+        builder.field("type", CONTENT_TYPE);
+        builder.field("path", pathType.name().toLowerCase());
+
+        builder.startObject("fields");
+        if (defaultMapper != null) {
+            defaultMapper.toXContent(builder, params);
+        }
+        for (XContentMapper mapper : mappers.values()) {
+            mapper.toXContent(builder, params);
+        }
+        builder.endObject();
+
+        builder.endObject();
+    }
+

@@ -1,0 +1,12 @@
+(startLine=632 endLine=641 srcPath=/root/Projects/eclipse.jdt.coreFilter/178/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ExistenceTests.java)
+public void testUnderlyingResourceNonExistingPkgFragmentRoot() throws CoreException {
+    try {
+        IJavaProject project = createJavaProject("P", new String[] {"src"}, "bin");
+        IFolder folder = createFolder("/P/nonExistingRoot");
+        IPackageFragmentRoot root = project.getPackageFragmentRoot(folder);
+        assertUnderlyingResourceFails(root);
+    } finally {
+        deleteProject("P");
+    }
+}
+

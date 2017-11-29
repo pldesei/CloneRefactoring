@@ -1,0 +1,31 @@
+(startLine=507 endLine=535 srcPath=/root/Projects/eclipse.jdt.coreFilter/1077/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndex(long key) {
+    // Retrieve the index from the cache
+    // The long constant takes two indexes into the constant pool, but we only store
+    // the first index into the long table
+    int index;
+    // lazy initialization for base type caches
+    // If it is null, initialize it, otherwise use it
+    if (longCache == null) {
+        longCache = new LongCache(LONG_INITIAL_SIZE);
+    }
+    if ((index = longCache.get(key)) < 0) {
+        index = longCache.put(key, currentIndex++);
+        if (index > 0xFFFF){
+            this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+        }
+        currentIndex++; // long value need an extra place into thwe constant pool
+        // Write the long into the constant pool
+        // First add the tag
+        writeU1(LongTag);
+        // Then add the 8 bytes representing the long
+        if (currentOffset + 8 >= poolContent.length) {
+            resizePoolContents(8);
+        }
+        for (int i = 0; i < 8; i++) {
+            poolContent[currentOffset++] = (byte) (key >>> (56 - (i << 3)));
+        }
+    }
+    return index;
+}
+

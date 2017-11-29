@@ -1,0 +1,30 @@
+(startLine=986 endLine=1013 srcPath=/root/Projects/org.eclipse.emfFilter/373/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/DelegatingFeatureMap.java)
+  public Object[] toArray(EStructuralFeature feature)
+  {
+    List<Object> result = new BasicEList<Object>();
+    FeatureMapUtil.Validator validator = FeatureMapUtil.getValidator(owner.eClass(), feature);
+    if (FeatureMapUtil.isFeatureMap(feature))
+    {
+      for (int i = 0, size = delegateSize(); i < size; ++i)
+      {
+        Entry entry = delegateGet(i);
+        if (validator.isValid(entry.getEStructuralFeature()))
+        {
+          result.add(entry);
+        }
+      }
+    }
+    else
+    {
+      for (int i = 0, size = delegateSize(); i < size; ++i)
+      {
+        Entry entry = delegateGet(i);
+        if (validator.isValid(entry.getEStructuralFeature()))
+        {
+          result.add(entry.getValue());
+        }
+      }
+    }
+    return result.toArray();
+  }
+

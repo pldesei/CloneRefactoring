@@ -1,0 +1,31 @@
+(startLine=157 endLine=185 srcPath=/root/Projects/eclipse.jdt.coreFilter/511/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/TypeHierarchyNotificationTests.java)
+public void testAddCompilationUnit1() throws CoreException {
+    IJavaProject javaProject = getJavaProject("TypeHierarchyNotification");
+    ICompilationUnit cu = getCompilationUnit("TypeHierarchyNotification", "src", "p", "X.java");
+    IType type= cu.getType("X");
+    ITypeHierarchy h = type.newTypeHierarchy(javaProject, null);
+    h.addTypeHierarchyChangedListener(this);
+
+    // a cu with no types part of the hierarchy
+    IPackageFragment pkg = getPackageFragment("TypeHierarchyNotification", "src", "p");
+    ICompilationUnit newCU1 = pkg.createCompilationUnit(
+        "Z1.java", 
+        "package p;\n" +
+        "\n" +
+        "public class Z1 {\n" +
+        "\n" +
+        "    public static main(String[] args) {\n" +
+        "        System.out.println(\"HelloWorld\");\n" +
+        "    }\n" +
+        "}\n", 
+        false, 
+        null);
+    try {
+        assertCreation(newCU1);
+        assertTrue("Should not receive change", !this.changeReceived);
+    } finally {
+        // cleanup    
+        h.removeTypeHierarchyChangedListener(this);
+    }
+}    
+

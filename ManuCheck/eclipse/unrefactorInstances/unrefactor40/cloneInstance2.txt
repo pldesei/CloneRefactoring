@@ -1,0 +1,11 @@
+(startLine=37 endLine=45 srcPath=/root/Projects/eclipse.jdt.coreFilter/1950/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/SimpleNameVector.java)
+    public void addAll(char[][] newElements) {
+        
+        if (this.size + newElements.length >= this.maxSize) {
+            this.maxSize = this.size + newElements.length; // assume no more elements will be added
+            System.arraycopy(this.elements, 0, (this.elements = new char[this.maxSize][]), 0, this.size);
+        }
+        System.arraycopy(newElements, 0, this.elements, this.size, newElements.length);
+        this.size += newElements.length;
+    }
+

@@ -1,0 +1,44 @@
+(startLine=1337 endLine=1378 srcPath=/root/Projects/org.eclipse.emfFilter/524/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EPackageImpl.java)
+  protected EReference initEReference
+    (EReference r, 
+     EGenericType type, 
+     EReference otherEnd,
+     String name, 
+     String defaultValue,
+     int lowerBound, 
+     int upperBound, 
+     Class<?> containerClass,
+     boolean isTransient, 
+     boolean isVolatile, 
+     boolean isChangeable, 
+     boolean isContainment, 
+     boolean isResolveProxies,
+     boolean isUnsettable,
+     boolean isUnique,
+     boolean isDerived,
+     boolean isOrdered)
+  {
+    initEStructuralFeature
+      (r, 
+       type, 
+       name, 
+       defaultValue, 
+       lowerBound, 
+       upperBound, 
+       containerClass,
+       isTransient, 
+       isVolatile, 
+       isChangeable, 
+       isUnsettable, 
+       isUnique, 
+       isDerived, 
+       isOrdered);
+    r.setContainment(isContainment);
+    if (otherEnd != null)
+    {
+      r.setEOpposite(otherEnd);
+    }
+    r.setResolveProxies(isResolveProxies);
+    return r;
+  }
+

@@ -1,0 +1,21 @@
+(startLine=307 endLine=325 srcPath=/root/Projects/elasticsearchFilter/866/elasticsearch/src/main/java/org/elasticsearch/cluster/node/DiscoveryNode.java)
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (nodeName.length() > 0) {
+            sb.append('[').append(nodeName).append(']');
+        }
+        if (nodeId != null) {
+            sb.append('[').append(nodeId).append(']');
+        }
+        if (Strings.hasLength(hostName)) {
+            sb.append('[').append(hostName).append(']');
+        }
+        if (address != null) {
+            sb.append('[').append(address).append(']');
+        }
+        if (!attributes.isEmpty()) {
+            sb.append(attributes);
+        }
+        return sb.toString();
+    }
+

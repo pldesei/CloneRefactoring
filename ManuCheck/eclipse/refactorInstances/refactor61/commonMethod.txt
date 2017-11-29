@@ -1,0 +1,15 @@
+(startLine=148 endLine=160 srcPath=/root/Projects/eclipse.jdt.coreFilter/591/eclipse.jdt.core/org.eclipse.jdt.compiler.apt/batch/org/eclipse/jdt/internal/compiler/apt/dispatch/AnnotationDiscoveryVisitor.java)
+    private void resolveAnnotations(
+            BlockScope scope,
+            Annotation[] annotations,
+            Binding currentBinding) {
+        ASTNode.resolveAnnotations(scope, annotations, currentBinding);
+        
+        for (Annotation annotation : annotations) {
+            AnnotationBinding binding = annotation.getCompilerAnnotation();
+            TypeElement anno = (TypeElement)ElementFactory.newElement(binding.getAnnotationType()); 
+            Element element = ElementFactory.newElement(currentBinding);
+            _annoToElement.put(anno, element);
+        }
+    }
+

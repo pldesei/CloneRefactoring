@@ -1,0 +1,19 @@
+(startLine=4225 endLine=4241 srcPath=/root/Projects/org.eclipse.emfFilter/857/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  public String getTestSuiteClassName()
+  {
+    String result = getTestSuiteClass();
+    if (isBlank(result))
+    {
+      result = getModelName() + "AllTests";  
+    }
+    else
+    {
+      int index = result.lastIndexOf(".");
+      if (index != -1)
+      {
+        result = result.substring(index + 1);
+      }
+    }
+    return result;
+  }
+

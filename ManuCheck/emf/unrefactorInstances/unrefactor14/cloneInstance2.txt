@@ -1,0 +1,20 @@
+(startLine=914 endLine=931 srcPath=/root/Projects/org.eclipse.emfFilter/207/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/generator/GenPackageGeneratorAdapter.java)
+  protected Diagnostic generateTests(Object object, Monitor monitor)
+  {
+    monitor.beginTask("", 3);
+
+    GenPackage genPackage = (GenPackage)object;
+    message = CodeGenEcorePlugin.INSTANCE.getString
+      ("_UI_GeneratingTestsForPackage_message", new Object[] { genPackage.getBasicPackageName() });
+    monitor.subTask(message);
+
+    GenModel genModel = genPackage.getGenModel();
+    ensureProjectExists
+      (genModel.getTestsDirectory(), genPackage, TESTS_PROJECT_TYPE, genModel.isUpdateClasspath(), createMonitor(monitor, 1));
+
+    generatePackageTestSuite(genPackage, monitor);
+    generatePackageExample(genPackage, monitor);
+
+    return Diagnostic.OK_INSTANCE;
+  }
+

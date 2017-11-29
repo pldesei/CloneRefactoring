@@ -1,0 +1,15 @@
+(startLine=107 endLine=119 srcPath=/root/Projects/eclipse.jdt.coreFilter/1582/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchParticipantTests.java)
+    public void testScheduleDocumentIndexing2() throws CoreException {
+        try {
+            createJavaProject("P");
+            TestSearchParticipant participant = new TestSearchParticipant();
+            TestSearchDocument document = new TestSearchDocument("/P/X.test", participant);
+            participant.scheduleDocumentIndexing(document, getIndexLocation());
+            waitUntilIndexesReady();
+            assertTrue("Should have requested to index document", document.indexingRequested);
+        } finally {
+            deleteProject("P");
+            getIndexLocation().toFile().delete();
+        }
+    }
+

@@ -1,0 +1,17 @@
+(startLine=378 endLine=392 srcPath=/root/Projects/eclipse.jdt.coreFilter/705/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/ParserTest.java)
+public void test017() {
+    this.runNegativeTest(
+        new String[] {
+            "X.java",
+            "public class X {\n" + 
+            "    char c = '"
+        },
+        "----------\n" + 
+        "1. ERROR in X.java (at line 2)\n" + 
+        "    char c = \'\n" + 
+        "             ^\n" + 
+        "Invalid character constant\n" + 
+        "----------\n"
+    );
+}
+

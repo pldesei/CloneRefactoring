@@ -1,0 +1,29 @@
+(startLine=147 endLine=173 srcPath=/root/Projects/elasticsearchFilter/1050/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/BytesRefValComparator.java)
+        public BytesRef nextValue() {
+            BytesRef currentVal = delegate.nextValue();
+            // We MUST allocate a new byte[] since relevantVal might have been filled by reference by a PagedBytes instance
+            // meaning that the BytesRef.bytes are shared and shouldn't be overwritten. We can't use the bytes of the iterator
+            // either because they will be overwritten by subsequent calls in the current thread
+            scratch.bytes = new byte[ArrayUtil.oversize(currentVal.length, RamUsageEstimator.NUM_BYTES_BYTE)];
+            scratch.offset = 0;
+            scratch.length = currentVal.length;
+            System.arraycopy(currentVal.bytes, currentVal.offset, scratch.bytes, 0, currentVal.length);
+            for (int i = 1; i < numValues; i++) {
+                currentVal = delegate.nextValue();
+                if (sortMode == SortMode.MAX) {
+                    if (currentVal.compareTo(scratch) > 0) {
+                        scratch.grow(currentVal.length);
+                        scratch.length = currentVal.length;
+                        System.arraycopy(currentVal.bytes, currentVal.offset, scratch.bytes, 0, currentVal.length);
+                    }
+                } else {
+                    if (currentVal.compareTo(scratch) < 0) {
+                        scratch.grow(currentVal.length);
+                        scratch.length = currentVal.length;
+                        System.arraycopy(currentVal.bytes, currentVal.offset, scratch.bytes, 0, currentVal.length);
+                    }
+                }
+            }
+            return scratch;
+        }
+

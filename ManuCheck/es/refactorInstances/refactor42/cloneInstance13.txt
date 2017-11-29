@@ -1,0 +1,8 @@
+(startLine=210 endLine=215 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/LongFieldMapper.java)
+    public Filter rangeFilter(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeFilter.newLongRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : Long.parseLong(lowerTerm),
+                upperTerm == null ? null : Long.parseLong(upperTerm),
+                includeLower, includeUpper);
+    }
+

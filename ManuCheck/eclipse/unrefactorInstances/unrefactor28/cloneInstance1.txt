@@ -1,0 +1,17 @@
+(startLine=294 endLine=308 srcPath=/root/Projects/eclipse.jdt.coreFilter/1886/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/Compliance_1_4.java)
+public void test10() {
+    this.runConformTest(
+        new String[] {
+            "p1/Z.java",
+            "package p1; \n"+
+            "public class Z {    \n" +
+            "    public static void main(String[] arguments) { \n"+
+            "        String[] s = new String[]{\"SUCCESS\" };    \n" +
+            "        System.out.print(s.length);    \n"    +
+            "        System.out.print(((String[])s.clone())[0]);    \n"    +
+            "    } \n"+
+            "} \n"
+        },
+        "1SUCCESS");
+}
+

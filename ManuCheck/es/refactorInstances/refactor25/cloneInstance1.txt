@@ -1,0 +1,11 @@
+(startLine=112 endLine=120 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchDfsQueryThenFetchAction.java)
+                        @Override public void run() {
+                            for (final DfsSearchResult dfsResult : dfsResults) {
+                                DiscoveryNode node = nodes.get(dfsResult.shardTarget().nodeId());
+                                if (node.id().equals(nodes.localNodeId())) {
+                                    QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
+                                    executeQuery(dfsResult, counter, querySearchRequest, node);
+                                }
+                            }
+                        }
+

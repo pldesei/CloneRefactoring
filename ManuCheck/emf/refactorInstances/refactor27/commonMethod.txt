@@ -1,0 +1,29 @@
+(startLine=180 endLine=206 srcPath=/root/Projects/org.eclipse.emfFilter/335/org.eclipse.emf/plugins/org.eclipse.emf.ecore.editor/src/org/eclipse/emf/ecore/presentation/EcoreActionBarContributor.java)
+      protected Collection<EPackage> getAllPackages(Resource resource)
+      {
+        List<EPackage> result = new ArrayList<EPackage>();
+        for (TreeIterator<?> j = 
+               new EcoreUtil.ContentTreeIterator<Object>(resource.getContents())
+               {
+                 private static final long serialVersionUID = 1L;
+  
+                 @Override
+                 protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
+                 {
+                   return 
+                     eObject instanceof EPackage ? 
+                       ((EPackage)eObject).getESubpackages().iterator() : 
+                         Collections.<EObject>emptyList().iterator();
+                 }
+               };
+             j.hasNext(); )
+        {
+          Object content = j.next();
+          if (content instanceof EPackage)
+          {
+            result.add((EPackage)content);
+          }
+        }
+        return result;
+      }
+

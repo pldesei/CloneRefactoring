@@ -1,0 +1,11 @@
+(startLine=40 endLine=48 srcPath=/root/Projects/elasticsearchFilter/262/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/metrics/percentiles/tdigest/AbstractInternalTDigestPercentiles.java)
+    public AbstractInternalTDigestPercentiles(String name, double[] keys, TDigestState state, boolean keyed, DocValueFormat formatter,
+            List<PipelineAggregator> pipelineAggregators,
+            Map<String, Object> metaData) {
+        super(name, pipelineAggregators, metaData);
+        this.keys = keys;
+        this.state = state;
+        this.keyed = keyed;
+        this.format = formatter;
+    }
+

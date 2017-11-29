@@ -1,0 +1,8 @@
+(startLine=204 endLine=209 srcPath=/root/Projects/elasticsearchFilter/1333/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/FloatFieldMapper.java)
+    public Filter rangeFilter(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        return NumericRangeFilter.newFloatRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : Float.parseFloat(lowerTerm),
+                upperTerm == null ? null : Float.parseFloat(upperTerm),
+                includeLower, includeUpper);
+    }
+

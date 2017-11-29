@@ -1,0 +1,13 @@
+(startLine=87 endLine=97 srcPath=/root/Projects/org.eclipse.emfFilter/917/org.eclipse.emf/plugins/org.eclipse.emf.edit/src/org/eclipse/emf/edit/command/CutToClipboardCommand.java)
+  public static Command create(EditingDomain domain, Object owner, Object feature, Collection collection)
+  {
+    if (domain == null)
+    {
+      return new CutToClipboardCommand(domain, RemoveCommand.create(domain, owner, feature, collection));
+    }
+    else
+    {
+      return domain.createCommand(CutToClipboardCommand.class, new CommandParameter(owner, feature, collection));
+    }
+  }
+

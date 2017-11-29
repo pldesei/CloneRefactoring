@@ -1,0 +1,67 @@
+(startLine=105 endLine=169 srcPath=/root/Projects/eclipse.jdt.coreFilter/1597/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTestForConstructor.java)
+    public void test003() {
+        this.runNegativeTest(
+            new String[] {
+                "X.java",
+                "public class X {\n"
+                    + "    \n"
+                    + "    {\n"
+                    + "        new Z();\n"
+                    + "    }\n"
+                    + "}\n",
+                "Z.java",
+                "public class Z {\n"
+                    + "  /** \n"
+                    + "   * Invalid javadoc tags with valid deprecation at end\n"
+                    + "   *\n"
+                    + "   * @param\n"
+                    + "   * @return\n"
+                    + "   * @throws Unknown\n"
+                    + "   * @see \"Invalid\n"
+                    + "   * @see Unknown\n"
+                    + "   * @param x\n"
+                    + "   * @deprecated\n"
+                    + "   */\n"
+                    + "    public Z() { \n"
+                    + "    }\n"
+                    + "}\n",
+                },
+            "----------\n"
+                + "1. WARNING in X.java (at line 4)\n"
+                + "    new Z();\n"
+                + "    ^^^^^^^\n"
+                + "The constructor Z() is deprecated\n"
+                + "----------\n"
+                + "----------\n"
+                + "1. ERROR in Z.java (at line 5)\n"
+                + "    * @param\n"
+                + "       ^^^^^\n"
+                + "Javadoc: Missing parameter name\n"
+                + "----------\n"
+                + "2. ERROR in Z.java (at line 6)\n"
+                + "    * @return\n"
+                + "       ^^^^^^\n"
+                + "Javadoc: Unexpected tag\n"
+                + "----------\n"
+                + "3. ERROR in Z.java (at line 7)\n"
+                + "    * @throws Unknown\n"
+                + "              ^^^^^^^\n"
+                + "Javadoc: Unknown cannot be resolved or is not a type\n"
+                + "----------\n"
+                + "4. ERROR in Z.java (at line 8)\n"
+                + "    * @see \"Invalid\n"
+                + "          ^^^^^^^^^\n"
+                + "Javadoc: Invalid reference\n"
+                + "----------\n"
+                + "5. ERROR in Z.java (at line 9)\n"
+                + "    * @see Unknown\n"
+                + "           ^^^^^^^\n"
+                + "Javadoc: Unknown cannot be resolved or is not a type\n"
+                + "----------\n"
+                + "6. ERROR in Z.java (at line 10)\n"
+                + "    * @param x\n"
+                + "       ^^^^^\n"
+                + "Javadoc: Unexpected tag\n"
+                + "----------\n");
+    }
+

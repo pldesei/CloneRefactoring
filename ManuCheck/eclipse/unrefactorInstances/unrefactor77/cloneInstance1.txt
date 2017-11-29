@@ -1,0 +1,9 @@
+(startLine=187 endLine=193 srcPath=/root/Projects/eclipse.jdt.coreFilter/665/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/MementoTests.java)
+public void testBinaryMethodMemento2() throws JavaModelException {
+    IType type = getClassFile("/P/lib/p/X.class").getType();
+    IMethod method = type.getMethod("bar", new String[] {});
+    assertMemento(
+        "=P/lib<p(X.class[X~bar",
+        method);
+}    
+

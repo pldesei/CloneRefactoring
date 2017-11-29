@@ -1,0 +1,17 @@
+(startLine=143 endLine=157 srcPath=/root/Projects/org.eclipse.emfFilter/346/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/C3Impl.java)
+  public void setC(C newC)
+  {
+    if (newC != c)
+    {
+      NotificationChain msgs = null;
+      if (c != null)
+        msgs = ((InternalEObject)c).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RefPackage.C3__C, null, msgs);
+      if (newC != null)
+        msgs = ((InternalEObject)newC).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RefPackage.C3__C, null, msgs);
+      msgs = basicSetC(newC, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C3__C, newC, newC));
+  }
+

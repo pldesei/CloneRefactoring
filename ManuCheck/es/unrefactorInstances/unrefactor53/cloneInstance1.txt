@@ -1,0 +1,11 @@
+(startLine=139 endLine=147 srcPath=/root/Projects/elasticsearchFilter/321/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/significant/GlobalOrdinalsSignificantTermsAggregator.java)
+    public SignificantStringTerms buildEmptyAggregation() {
+        // We need to account for the significance of a miss in our global stats - provide corpus size as context
+        ContextIndexSearcher searcher = context.searchContext().searcher();
+        IndexReader topReader = searcher.getIndexReader();
+        int supersetSize = topReader.numDocs();
+        return new SignificantStringTerms(0, supersetSize, name, bucketCountThresholds.getRequiredSize(),
+                bucketCountThresholds.getMinDocCount(), termsAggFactory.getSignificanceHeuristic(),
+                Collections.<InternalSignificantTerms.Bucket> emptyList(), pipelineAggregators(), metaData());
+    }
+

@@ -1,0 +1,19 @@
+(startLine=103 endLine=119 srcPath=/root/Projects/elasticsearchFilter/1305/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/mapping/delete/DeleteMappingRequest.java)
+    public void writeTo(StreamOutput out) throws IOException {
+        super.writeTo(out);
+        if (indices == null) {
+            out.writeVInt(0);
+        } else {
+            out.writeVInt(indices.length);
+            for (String index : indices) {
+                out.writeString(index);
+            }
+        }
+        if (mappingType == null) {
+            out.writeBoolean(false);
+        } else {
+            out.writeBoolean(true);
+            out.writeString(mappingType);
+        }
+    }
+

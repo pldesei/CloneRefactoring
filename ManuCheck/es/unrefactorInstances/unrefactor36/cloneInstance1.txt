@@ -1,0 +1,14 @@
+(startLine=115 endLine=126 srcPath=/root/Projects/elasticsearchFilter/1417/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/PrivateElementsImpl.java)
+    public void applyTo(Binder binder) {
+        PrivateBinder privateBinder = binder.withSource(source).newPrivateBinder();
+
+        for (Element element : getElements()) {
+            element.applyTo(privateBinder);
+        }
+
+        getExposedKeys(); // ensure exposedKeysToSources is populated
+        for (Map.Entry<Key<?>, Object> entry : exposedKeysToSources.entrySet()) {
+            privateBinder.withSource(entry.getValue()).expose(entry.getKey());
+        }
+    }
+

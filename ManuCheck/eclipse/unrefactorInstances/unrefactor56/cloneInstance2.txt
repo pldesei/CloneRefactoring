@@ -1,0 +1,13 @@
+(startLine=1638 endLine=1648 srcPath=/root/Projects/eclipse.jdt.coreFilter/1209/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+    public void testBug84100d() throws CoreException {
+        resultCollector.showRule = true;
+        assertNotNull("Problem in tests processing", workingCopies);
+        assertEquals("Problem in tests processing", 2, workingCopies.length);
+        IMethod method = selectMethod(workingCopies[0], "foo", 4);
+        search(method, REFERENCES);
+        discard = false; // use working copy for next test
+        assertSearchResults(
+            "src/b84100/Z.java void b84100.Z.foo() [foo(3, \"\", \"\")] EXACT_MATCH"
+        );
+    }
+

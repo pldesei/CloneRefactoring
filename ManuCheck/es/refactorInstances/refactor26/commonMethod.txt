@@ -1,0 +1,9 @@
+(startLine=266 endLine=272 srcPath=/root/Projects/elasticsearchFilter/1431/elasticsearch/src/main/java/org/elasticsearch/index/query/QueryParseContext.java)
+    public Collection<String> queryTypes() {
+        String[] types = getTypes();
+        if (types == null || types.length == 0) {
+            return mapperService().types();
+        }
+        return Arrays.asList(types);
+    }
+

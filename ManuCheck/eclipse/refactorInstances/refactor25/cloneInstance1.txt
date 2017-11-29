@@ -1,0 +1,31 @@
+(startLine=1436 endLine=1464 srcPath=/root/Projects/eclipse.jdt.coreFilter/1483/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndexForJavaLangClassForName() {
+    int index;
+    int nameAndTypeIndex;
+    int classIndex;
+    // Looking into the method ref table
+    if ((index = wellKnownMethods[CLASS_FORNAME_METHOD]) == 0) {
+        classIndex = literalIndexForJavaLangClass();
+        if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[FORNAME_CLASS_METHOD_NAME_AND_TYPE]) == 0) {
+            int nameIndex = literalIndex(QualifiedNamesConstants.ForName);
+            int typeIndex = literalIndex(QualifiedNamesConstants.ForNameSignature);
+            nameAndTypeIndex = wellKnownMethodNameAndTypes[FORNAME_CLASS_METHOD_NAME_AND_TYPE] = currentIndex++;
+            writeU1(NameAndTypeTag);
+            writeU2(nameIndex);
+            writeU2(typeIndex);
+        }
+        index = wellKnownMethods[CLASS_FORNAME_METHOD] = currentIndex++;
+        if (index > 0xFFFF){
+            this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+        }
+        // Write the method ref constant into the constant pool
+        // First add the tag
+        writeU1(MethodRefTag);
+        // Then write the class index
+        writeU2(classIndex);
+        // The write the nameAndType index
+        writeU2(nameAndTypeIndex);
+    }
+    return index;
+}
+

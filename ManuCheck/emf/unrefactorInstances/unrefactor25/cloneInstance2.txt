@@ -1,0 +1,19 @@
+(startLine=189 endLine=205 srcPath=/root/Projects/org.eclipse.emfFilter/384/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/AImpl.java)
+  public void setC2(C2 newC2)
+  {
+    if (newC2 != eInternalContainer() || (eContainerFeatureID != RefPackage.A__C2 && newC2 != null))
+    {
+      if (EcoreUtil.isAncestor(this, newC2))
+        throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+      NotificationChain msgs = null;
+      if (eInternalContainer() != null)
+        msgs = eBasicRemoveFromContainer(msgs);
+      if (newC2 != null)
+        msgs = ((InternalEObject)newC2).eInverseAdd(this, RefPackage.C2__A, C2.class, msgs);
+      msgs = basicSetC2(newC2, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.A__C2, newC2, newC2));
+  }
+

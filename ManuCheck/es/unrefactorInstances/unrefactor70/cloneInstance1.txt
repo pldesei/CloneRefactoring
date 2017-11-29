@@ -1,0 +1,30 @@
+(startLine=221 endLine=248 srcPath=/root/Projects/elasticsearchFilter/1299/elasticsearch/src/main/java/org/elasticsearch/common/settings/ImmutableSettings.java)
+    public <T> Class<? extends T> getAsClass(String setting, Class<? extends T> defaultClazz, String prefixPackage, String suffixClassName) throws NoClassSettingsException {
+        String sValue = get(setting);
+        if (sValue == null) {
+            return defaultClazz;
+        }
+        String fullClassName = sValue;
+        try {
+            return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+        } catch (ClassNotFoundException e) {
+            String prefixValue = prefixPackage;
+            int packageSeparator = sValue.lastIndexOf('.');
+            if (packageSeparator > 0) {
+                prefixValue = sValue.substring(0, packageSeparator + 1);
+                sValue = sValue.substring(packageSeparator + 1);
+            }
+            fullClassName = prefixValue + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+            try {
+                return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+            } catch (ClassNotFoundException e1) {
+                fullClassName = prefixValue + toCamelCase(sValue).toLowerCase() + "." + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+                try {
+                    return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+                } catch (ClassNotFoundException e2) {
+                    throw new NoClassSettingsException("Failed to load class setting [" + setting + "] with value [" + get(setting) + "]", e);
+                }
+            }
+        }
+    }
+

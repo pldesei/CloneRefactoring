@@ -1,0 +1,8 @@
+(startLine=440 endLine=445 srcPath=/root/Projects/elasticsearchFilter/1669/elasticsearch/modules/elasticsearch/src/test/java/org/elasticsearch/index/engine/AbstractSimpleEngineTests.java)
+            @Override public void phase3(Translog.Snapshot snapshot) throws EngineException {
+                assertThat(snapshot.hasNext(), equalTo(true));
+                Translog.Create create = (Translog.Create) snapshot.next();
+                assertThat(snapshot.hasNext(), equalTo(false));
+                assertThat(create.source(), equalTo(B_3));
+            }
+

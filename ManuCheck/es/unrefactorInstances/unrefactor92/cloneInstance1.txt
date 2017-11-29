@@ -1,0 +1,13 @@
+(startLine=43 endLine=53 srcPath=/root/Projects/elasticsearchFilter/1346/elasticsearch/src/main/java/org/elasticsearch/index/analysis/MappingCharFilterFactory.java)
+    public MappingCharFilterFactory(Index index, @IndexSettings Settings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+
+        List<String> rules = Analysis.getWordList(env, settings, "mappings");
+        if (rules == null) {
+            throw new ElasticSearchIllegalArgumentException("mapping requires either `mappings` or `mappings_path` to be configured");
+        }
+
+        normMapBuilder = new NormalizeCharMap.Builder();
+        parseRules(rules, normMapBuilder);
+    }
+

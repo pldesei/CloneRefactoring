@@ -1,0 +1,14 @@
+(startLine=3501 endLine=3512 srcPath=/root/Projects/elasticsearchFilter/1190/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+    @SuppressWarnings("unchecked") public int reduceToIntSequentially
+        (ObjectByObjectToInt<? super K, ? super V> transformer,
+         int basis,
+         IntByIntToInt reducer) {
+        if (transformer == null || reducer == null)
+            throw new NullPointerException();
+        Traverser<K,V,Object> it = new Traverser<K,V,Object>(this);
+        int r = basis; V v;
+        while ((v = it.advance()) != null)
+            r = reducer.apply(r, transformer.apply((K)it.nextKey, v));
+        return r;
+    }
+

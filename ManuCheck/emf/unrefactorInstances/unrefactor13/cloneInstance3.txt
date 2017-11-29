@@ -1,0 +1,26 @@
+(startLine=404 endLine=427 srcPath=/root/Projects/org.eclipse.emfFilter/302/org.eclipse.emf/plugins/org.eclipse.emf.common/src/org/eclipse/emf/common/util/BasicEList.java)
+  public int lastIndexOf(Object object) 
+  {
+    if (useEquals() && object != null) 
+    {
+      for (int i = size - 1; i >= 0; --i)
+      {
+        if (object.equals(data[i]))
+        {
+          return i;
+        }
+      }
+    }
+    else
+    {
+      for (int i = size - 1; i >= 0; --i)
+      {
+        if (data[i] == object)
+        {
+          return i;
+        }
+      }
+    } 
+    return -1;
+  }
+

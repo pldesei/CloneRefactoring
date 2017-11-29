@@ -1,0 +1,32 @@
+(startLine=3093 endLine=3122 srcPath=/root/Projects/eclipse.jdt.coreFilter/1245/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+            public void run(IProgressMonitor monitor) throws CoreException {
+                if (!createProjectsFirst) {
+                    for (int i = 0; i < numberOfParticipants; i++){
+                        projectNames[i] = "P"+i;
+                        projects[i] = createJavaProject(projectNames[i], new String[]{""}, "");
+                        allProjectsInCycle[i] = 0;
+                    }        
+                }
+                for (int i = 0; i < numberOfParticipants; i++){
+                    IClasspathEntry[] extraEntries = new IClasspathEntry[useForwardReferences ? numberOfParticipants - i -1 : i];
+                    int index = 0;
+                    for (int j = useForwardReferences ? i+1 : 0; 
+                        useForwardReferences ? (j < numberOfParticipants) : (j < i); 
+                        j++){
+                        extraEntries[index++] = JavaCore.newProjectEntry(projects[j].getPath());
+                    }
+                    // append project references            
+                    IClasspathEntry[] oldClasspath = projects[i].getRawClasspath();
+                    IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries.length];
+                    System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
+                    for (int j = 0; j < extraEntries.length; j++){
+                        newClasspath[oldClasspath.length+j] = extraEntries[j];
+                    }            
+                    // set classpath
+                    long innerStart = System.currentTimeMillis(); // time spent in individual CP setting
+                    projects[i].setRawClasspath(newClasspath, null);
+                    time[0] += System.currentTimeMillis() - innerStart;
+                }
+                start[0] = System.currentTimeMillis(); // time spent in delta refresh
+            }
+

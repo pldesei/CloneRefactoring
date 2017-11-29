@@ -1,0 +1,10 @@
+(startLine=1768 endLine=1775 srcPath=/root/Projects/elasticsearchFilter/1489/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/math/MathUtils.java)
+    public static double distance(double[] p1, double[] p2) {
+        double sum = 0;
+        for (int i = 0; i < p1.length; i++) {
+            final double dp = p1[i] - p2[i];
+            sum += dp * dp;
+        }
+        return Math.sqrt(sum);
+    }
+

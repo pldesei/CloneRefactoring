@@ -1,0 +1,44 @@
+(startLine=1558 endLine=1599 srcPath=/root/Projects/eclipse.jdt.coreFilter/2092/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void invalidField(FieldReference fieldRef, TypeBinding searchedType) {
+    int severity = Error;
+    int flag = IProblem.UndefinedField;
+    FieldBinding field = fieldRef.binding;
+    switch (field.problemId()) {
+        case NotFound :
+            flag = IProblem.UndefinedField;
+/* also need to check that the searchedType is the receiver type
+            if (searchedType.isHierarchyInconsistent())
+                severity = SecondaryError;
+*/
+            break;
+        case NotVisible :
+            flag = IProblem.NotVisibleField;
+            break;
+        case Ambiguous :
+            flag = IProblem.AmbiguousField;
+            break;
+        case NonStaticReferenceInStaticContext :
+            flag = IProblem.NonStaticFieldFromStaticInvocation;
+            break;
+        case NonStaticReferenceInConstructorInvocation :
+            flag = IProblem.InstanceFieldDuringConstructorInvocation;
+            break;
+        case InheritedNameHidesEnclosingName :
+            flag = IProblem.InheritedFieldHidesEnclosingName;
+            break;
+        case NoError : // 0
+        default :
+            needImplementation(); // want to fail to see why we were here...
+            break;
+    }
+
+    String[] arguments = new String[] {new String(field.readableName())};
+    this.handle(
+        flag,
+        arguments,
+        arguments,
+        severity,
+        fieldRef.sourceStart,
+        fieldRef.sourceEnd);
+}
+

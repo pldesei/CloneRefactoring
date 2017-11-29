@@ -1,0 +1,15 @@
+(startLine=218 endLine=230 srcPath=/root/Projects/elasticsearchFilter/978/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/ScriptDocValues.java)
+        public List<Double> getValues() {
+            if (!listLoaded) {
+                int numValues = values.setDocument(docId);
+                list.offset = 0;
+                list.grow(numValues);
+                list.length = numValues;
+                for (int i = 0; i < numValues; i++) {
+                    list.values[i] = values.nextValue();
+                }
+                listLoaded = true;
+            }
+            return list;
+        }
+

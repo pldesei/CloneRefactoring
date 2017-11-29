@@ -1,0 +1,12 @@
+(startLine=149 endLine=158 srcPath=/root/Projects/elasticsearchFilter/892/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/discovery/zen/ping/ZenPingService.java)
+        @Override public void onPing(PingResponse[] pings) {
+            if (pings != null) {
+                for (PingResponse pingResponse : pings) {
+                    responses.put(pingResponse.target(), pingResponse);
+                }
+            }
+            if (counter.decrementAndGet() == 0) {
+                listener.onPing(responses.values().toArray(new PingResponse[responses.size()]));
+            }
+        }
+

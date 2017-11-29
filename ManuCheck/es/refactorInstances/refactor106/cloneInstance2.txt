@@ -1,0 +1,13 @@
+(startLine=93 endLine=103 srcPath=/root/Projects/elasticsearchFilter/15/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedNumericSamplerAggregator.java)
+                    public long get(int doc) {
+                        values.setDocument(doc);
+                        final int valuesCount = values.count();
+                        if (valuesCount > 1) {
+                            throw new IllegalArgumentException("Sample diversifying key must be a single valued-field");
+                        }
+                        if (valuesCount == 1) {
+                            return values.valueAt(0);
+                        }
+                        return Long.MIN_VALUE;
+                    }
+

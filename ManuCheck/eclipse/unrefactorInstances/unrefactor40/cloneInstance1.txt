@@ -1,0 +1,11 @@
+(startLine=35 endLine=43 srcPath=/root/Projects/eclipse.jdt.coreFilter/1950/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/ObjectVector.java)
+    public void addAll(Object[] newElements) {
+
+        if (this.size + newElements.length >= this.maxSize) {
+            maxSize = this.size + newElements.length; // assume no more elements will be added
+            System.arraycopy(this.elements, 0, (this.elements = new Object[this.maxSize]), 0, this.size);
+        }
+        System.arraycopy(newElements, 0, this.elements, size, newElements.length);
+        this.size += newElements.length;
+    }
+

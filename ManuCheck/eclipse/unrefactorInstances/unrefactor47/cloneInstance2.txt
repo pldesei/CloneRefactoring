@@ -1,0 +1,10 @@
+(startLine=157 endLine=164 srcPath=/root/Projects/eclipse.jdt.coreFilter/954/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+protected void assertStatus(String message, String expected, IStatus status) {
+    String actual = status.getMessage();
+    if (!expected.equals(actual)) {
+         System.out.print(Util.displayString(actual, 2));
+         System.out.println(",");
+    }
+    assertEquals(message, expected, actual);
+}
+

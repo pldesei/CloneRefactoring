@@ -1,0 +1,30 @@
+(startLine=378 endLine=405 srcPath=/root/Projects/eclipse.jdt.coreFilter/538/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/AbstractCompletionTest.java)
+private ASTNode findMethod(TypeDeclaration type, int cursorLocation) {
+    if (type.methods != null) {
+        for (int i = 0; i < type.methods.length; i++) {
+            AbstractMethodDeclaration method = type.methods[i];
+            if (method.declarationSourceStart <= cursorLocation && (cursorLocation <= method.declarationSourceEnd || method.declarationSourceEnd == 0)) {
+                return method;
+            }
+        }
+    }
+    if (type.memberTypes != null) {
+        for (int i = 0; i < type.memberTypes.length; i++) {
+            TypeDeclaration memberType = type.memberTypes[i];
+            ASTNode method = findMethod(memberType, cursorLocation);
+            if (method != null) {
+                return method;
+            }
+        }
+    }
+    if (type.fields != null) {
+        for (int i = 0; i < type.fields.length; i++) {
+            FieldDeclaration field = type.fields[i];
+            if (field instanceof Initializer && field.declarationSourceStart <= cursorLocation && (cursorLocation <= field.declarationSourceEnd || field.declarationSourceEnd == 0)) {
+                return type;
+            }
+        }
+    }
+    return null;
+}
+

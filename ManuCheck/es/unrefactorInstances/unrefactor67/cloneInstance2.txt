@@ -1,0 +1,34 @@
+(startLine=133 endLine=164 srcPath=/root/Projects/elasticsearchFilter/1030/elasticsearch/src/main/java/org/elasticsearch/search/facet/histogram/InternalCountHistogramFacet.java)
+    public Facet reduce(ReduceContext context) {
+        List<Facet> facets = context.facets();
+        if (facets.size() == 1) {
+            // need to sort here...
+            InternalCountHistogramFacet histoFacet = (InternalCountHistogramFacet) facets.get(0);
+            Arrays.sort(histoFacet.entries, histoFacet.comparatorType.comparator());
+            return facets.get(0);
+        }
+
+        Recycler.V<LongLongOpenHashMap> counts = context.cacheRecycler().longLongMap(-1);
+        for (Facet facet : facets) {
+            InternalCountHistogramFacet histoFacet = (InternalCountHistogramFacet) facet;
+            for (Entry entry : histoFacet.entries) {
+                counts.v().addTo(entry.getKey(), entry.getCount());
+            }
+        }
+        final boolean[] states = counts.v().allocated;
+        final long[] keys = counts.v().keys;
+        final long[] values = counts.v().values;
+        CountEntry[] entries = new CountEntry[counts.v().size()];
+        int entryIndex = 0;
+        for (int i = 0; i < states.length; i++) {
+            if (states[i]) {
+                entries[entryIndex++] = new CountEntry(keys[i], values[i]);
+            }
+        }
+        counts.release();
+
+        Arrays.sort(entries, comparatorType.comparator());
+
+        return new InternalCountHistogramFacet(getName(), comparatorType, entries);
+    }
+
