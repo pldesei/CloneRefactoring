@@ -1,35 +1,20 @@
-(startLine=99 endLine=131 srcPath=/root/Projects/eclipse.jdt.coreFilter/2025/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/MovePackageFragmentRootOperation.java)
-    protected void updateReferringProjectClasspaths(IPath rootPath) throws JavaModelException {
-        IJavaModel model = this.getJavaModel();
-        IJavaProject[] projects = model.getJavaProjects();
-        for (int i = 0, length = projects.length; i < length; i++) {
-            IJavaProject project = projects[i];
-            IClasspathEntry[] classpath = project.getRawClasspath();
-            IClasspathEntry[] newClasspath = null;
-            int cpLength = classpath.length;
-            int newCPIndex = -1;
-            for (int j = 0; j < cpLength; j++) {
-                IClasspathEntry entry = classpath[j];
-                if (rootPath.equals(entry.getPath())) {
-                    if (newClasspath == null) {
-                        newClasspath = new IClasspathEntry[cpLength];
-                        System.arraycopy(classpath, 0, newClasspath, 0, j);
-                        newCPIndex = j;
-                    }
-                    if (this.destination.segment(0).equals(project.getElementName())) continue;
-                    if (entry.getEntryKind() != IClasspathEntry.CPE_SOURCE) { // library entry
-                        newClasspath[newCPIndex++] = copy(entry);
-                    } // else source folder is moved to another project: deletes its classpath entry
-                } else if (newClasspath != null) {
-                    newClasspath[newCPIndex++] = entry;
-                }
-            }
-            if (newClasspath != null) {
-                if (newCPIndex < newClasspath.length) {
-                    System.arraycopy(newClasspath, 0, newClasspath = new IClasspathEntry[newCPIndex], 0, newCPIndex);
-                }
-                project.setRawClasspath(newClasspath, fMonitor);
-            }
-        }
-    }
+(startLine=292 endLine=309 srcPath=/root/Projects/eclipse.jdt.coreFilter/2045/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/TypeHierarchyTests.java)
+public void testSupertypeHierarchyGetSubclasses() throws JavaModelException {
+    IType type = getClassFile("TypeHierarchy", getExternalJCLPath(), "java.lang", "Object.class").getType();
+    ITypeHierarchy typeHierarchy = type.newSupertypeHierarchy(null);
+    IType[] types = typeHierarchy.getSubclasses(type);
+    assertTypesEqual(
+        "Unexpected subclasses of Object", 
+        "", 
+        types);
+    
+    ICompilationUnit cu = getCompilationUnit("TypeHierarchy", "src", "p1", "Y.java");
+    type = cu.getType("Y");
+    typeHierarchy = type.newSupertypeHierarchy(null);
+    types = typeHierarchy.getSubclasses(type);
+    assertTypesEqual(
+        "Unexpected subclasses of Y", 
+        "", 
+        types);
+}
 

@@ -1,16 +1,19 @@
-(startLine=248 endLine=261 srcPath=/root/Projects/org.eclipse.emfFilter/733/org.eclipse.emf/examples/org.eclipse.emf.java/src/org/eclipse/emf/java/impl/JParameterImpl.java)
-  public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs)
+(startLine=4097 endLine=4113 srcPath=/root/Projects/org.eclipse.emfFilter/857/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
+  public String getEditPluginClassName()
   {
-    if (eContainerFeatureID >= 0)
+    String result = getEditPluginClassToUse();
+    if (result == null)
     {
-      switch (eContainerFeatureID)
+      result = getModelName() + "EditPlugin";  
+    }
+    else
+    {
+      int index = result.lastIndexOf(".");
+      if (index != -1)
       {
-        case JavaPackage.JPARAMETER__METHOD:
-          return eInternalContainer().eInverseRemove(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
-        default:
-          return eDynamicBasicRemoveFromContainer(msgs);
+        result = result.substring(index + 1);
       }
     }
-    return eInternalContainer().eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+    return result;
   }
 

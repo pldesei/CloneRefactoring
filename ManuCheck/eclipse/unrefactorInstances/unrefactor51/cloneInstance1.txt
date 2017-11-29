@@ -1,20 +1,66 @@
-(startLine=399 endLine=416 srcPath=/root/Projects/eclipse.jdt.coreFilter/758/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/RootManipulationsTests.java)
-public void testFailCopySourceFolder1() throws CoreException {
-    try {
-        this.createJavaProject("P1", new String[] {"src"}, "bin");
-        this.createJavaProject("P2", new String[] {"src"}, "bin");
-
-        IPackageFragmentRoot root = this.getPackageFragmentRoot("/P1/src");
-        try {
-            root.copy(new Path("/P2/src"), IResource.NONE, IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH, null, null);
-        } catch (JavaModelException e) {
-            assertEquals("/P2/src already exists in target", e.getMessage());
-            return;
-        }
-        assertTrue("Should throw a JavaModelException", false);
-    } finally {
-        this.deleteProject("P1");
-        this.deleteProject("P2");
+(startLine=1064 endLine=1127 srcPath=/root/Projects/eclipse.jdt.coreFilter/1597/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTestForInterface.java)
+    public void test063() {
+        this.runNegativeTest(
+            new String[] {
+                "X.java",
+                "public class X {\n"
+                    + "    \n"
+                    + "    void foo(IX x) {\n"
+                    + "        x.foo(2);\n"
+                    + "    }\n"
+                    + "}\n",
+                "IX.java",
+                "public interface IX {\n"
+                    + "  /** \n"
+                    + "   * Invalid javadoc tags with valid deprecation\n"
+                    + "   *\n"
+                    + "   * @param\n"
+                    + "   * @return\n"
+                    + "   * @throws Unknown\n"
+                    + "   * @see \"Invalid\n"
+                    + "   * @see Unknown\n"
+                    + "   * @param x\n"
+                    + "   * @deprecated\n"
+                    + "   */\n"
+                    + "    public String foo(int x);\n"
+                    + "}\n",
+                },
+            "----------\n"
+                + "1. WARNING in X.java (at line 4)\n"
+                + "    x.foo(2);\n"
+                + "    ^^^^^^^^\n"
+                + "The method foo(int) from the type IX is deprecated\n"
+                + "----------\n"
+                + "----------\n"
+                + "1. ERROR in IX.java (at line 5)\n"
+                + "    * @param\n"
+                + "       ^^^^^\n"
+                + "Javadoc: Missing parameter name\n"
+                + "----------\n"
+                + "2. ERROR in IX.java (at line 7)\n"
+                + "    * @throws Unknown\n"
+                + "              ^^^^^^^\n"
+                + "Javadoc: Unknown cannot be resolved or is not a type\n"
+                + "----------\n"
+                + "3. ERROR in IX.java (at line 8)\n"
+                + "    * @see \"Invalid\n"
+                + "          ^^^^^^^^^\n"
+                + "Javadoc: Invalid reference\n"
+                + "----------\n"
+                + "4. ERROR in IX.java (at line 9)\n"
+                + "    * @see Unknown\n"
+                + "           ^^^^^^^\n"
+                + "Javadoc: Unknown cannot be resolved or is not a type\n"
+                + "----------\n"
+                + "5. ERROR in IX.java (at line 10)\n"
+                + "    * @param x\n"
+                + "       ^^^^^\n"
+                + "Javadoc: Unexpected tag\n"
+                + "----------\n"
+                + "6. ERROR in IX.java (at line 13)\n"
+                + "    public String foo(int x);\n"
+                + "                          ^\n"
+                + "Javadoc: Missing tag for parameter x\n"
+                + "----------\n");
     }
-}
 

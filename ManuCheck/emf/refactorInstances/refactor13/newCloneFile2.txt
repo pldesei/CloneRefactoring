@@ -12,57 +12,86 @@
  *
  * </copyright>
  *
- * $Id: VideoCassetteImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
+ * $Id: PeriodicalImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
 
-import java.util.Collection;
 import java.util.Date;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
-import org.eclipse.emf.examples.extlibrary.Person;
-import org.eclipse.emf.examples.extlibrary.VideoCassette;
+import org.eclipse.emf.examples.extlibrary.Periodical;
 
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Video Cassette</b></em>'.
+ * An implementation of the model object '<em><b>Periodical</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.VideoCassetteImpl#getCast <em>Cast</em>}</li>
+ *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.PeriodicalImpl#getTitle <em>Title</em>}</li>
+ *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.PeriodicalImpl#getIssuesPerYear <em>Issues Per Year</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCassette
+public abstract class PeriodicalImpl extends ItemImpl implements Periodical
 {
   /**
-   * The cached value of the '{@link #getCast() <em>Cast</em>}' reference list.
+   * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getCast()
+   * @see #getTitle()
    * @generated
    * @ordered
    */
-  protected EList cast = null;
+  protected static final String TITLE_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getTitle()
+   * @generated
+   * @ordered
+   */
+  protected String title = TITLE_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getIssuesPerYear() <em>Issues Per Year</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getIssuesPerYear()
+   * @generated
+   * @ordered
+   */
+  protected static final int ISSUES_PER_YEAR_EDEFAULT = 0;
+
+  /**
+   * The cached value of the '{@link #getIssuesPerYear() <em>Issues Per Year</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getIssuesPerYear()
+   * @generated
+   * @ordered
+   */
+  protected int issuesPerYear = ISSUES_PER_YEAR_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected VideoCassetteImpl()
+  protected PeriodicalImpl()
   {
     super();
   }
@@ -74,7 +103,7 @@ public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCasset
    */
   protected EClass eStaticClass()
   {
-    return EXTLibraryPackage.eINSTANCE.getVideoCassette();
+    return EXTLibraryPackage.eINSTANCE.getPeriodical();
   }
 
   /**
@@ -82,13 +111,45 @@ public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCasset
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList getCast()
+  public String getTitle()
   {
-    if (cast == null)
-    {
-      cast = new EObjectResolvingEList(Person.class, this, EXTLibraryPackage.VIDEO_CASSETTE__CAST);
-    }
-    return cast;
+    return title;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setTitle(String newTitle)
+  {
+    String oldTitle = title;
+    title = newTitle;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERIODICAL__TITLE, oldTitle, title));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public int getIssuesPerYear()
+  {
+    return issuesPerYear;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setIssuesPerYear(int newIssuesPerYear)
+  {
+    int oldIssuesPerYear = issuesPerYear;
+    issuesPerYear = newIssuesPerYear;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR, oldIssuesPerYear, issuesPerYear));
   }
 
   /**
@@ -100,20 +161,12 @@ public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCasset
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.VIDEO_CASSETTE__PUBLICATION_DATE:
+      case EXTLibraryPackage.PERIODICAL__PUBLICATION_DATE:
         return getPublicationDate();
-      case EXTLibraryPackage.VIDEO_CASSETTE__COPIES:
-        return new Integer(getCopies());
-      case EXTLibraryPackage.VIDEO_CASSETTE__BORROWERS:
-        return getBorrowers();
-      case EXTLibraryPackage.VIDEO_CASSETTE__TITLE:
+      case EXTLibraryPackage.PERIODICAL__TITLE:
         return getTitle();
-      case EXTLibraryPackage.VIDEO_CASSETTE__MINUTES_LENGTH:
-        return new Integer(getMinutesLength());
-      case EXTLibraryPackage.VIDEO_CASSETTE__DAMAGED:
-        return isDamaged() ? Boolean.TRUE : Boolean.FALSE;
-      case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
-        return getCast();
+      case EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR:
+        return new Integer(getIssuesPerYear());
     }
     return eDynamicGet(eFeature, resolve);
   }
@@ -127,28 +180,14 @@ public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCasset
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.VIDEO_CASSETTE__PUBLICATION_DATE:
+      case EXTLibraryPackage.PERIODICAL__PUBLICATION_DATE:
         setPublicationDate((Date)newValue);
         return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__COPIES:
-        setCopies(((Integer)newValue).intValue());
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__BORROWERS:
-        getBorrowers().clear();
-        getBorrowers().addAll((Collection)newValue);
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__TITLE:
+      case EXTLibraryPackage.PERIODICAL__TITLE:
         setTitle((String)newValue);
         return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__MINUTES_LENGTH:
-        setMinutesLength(((Integer)newValue).intValue());
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__DAMAGED:
-        setDamaged(((Boolean)newValue).booleanValue());
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
-        getCast().clear();
-        getCast().addAll((Collection)newValue);
+      case EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR:
+        setIssuesPerYear(((Integer)newValue).intValue());
         return;
     }
     eDynamicSet(eFeature, newValue);
@@ -163,26 +202,14 @@ public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCasset
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.VIDEO_CASSETTE__PUBLICATION_DATE:
+      case EXTLibraryPackage.PERIODICAL__PUBLICATION_DATE:
         setPublicationDate(PUBLICATION_DATE_EDEFAULT);
         return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__COPIES:
-        setCopies(COPIES_EDEFAULT);
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__BORROWERS:
-        getBorrowers().clear();
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__TITLE:
+      case EXTLibraryPackage.PERIODICAL__TITLE:
         setTitle(TITLE_EDEFAULT);
         return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__MINUTES_LENGTH:
-        setMinutesLength(MINUTES_LENGTH_EDEFAULT);
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__DAMAGED:
-        setDamaged(DAMAGED_EDEFAULT);
-        return;
-      case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
-        getCast().clear();
+      case EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR:
+        setIssuesPerYear(ISSUES_PER_YEAR_EDEFAULT);
         return;
     }
     eDynamicUnset(eFeature);
@@ -197,22 +224,32 @@ public class VideoCassetteImpl extends AudoVisualItemImpl implements VideoCasset
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.VIDEO_CASSETTE__PUBLICATION_DATE:
+      case EXTLibraryPackage.PERIODICAL__PUBLICATION_DATE:
         return PUBLICATION_DATE_EDEFAULT == null ? publicationDate != null : !PUBLICATION_DATE_EDEFAULT.equals(publicationDate);
-      case EXTLibraryPackage.VIDEO_CASSETTE__COPIES:
-        return copies != COPIES_EDEFAULT;
-      case EXTLibraryPackage.VIDEO_CASSETTE__BORROWERS:
-        return borrowers != null && !borrowers.isEmpty();
-      case EXTLibraryPackage.VIDEO_CASSETTE__TITLE:
+      case EXTLibraryPackage.PERIODICAL__TITLE:
         return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-      case EXTLibraryPackage.VIDEO_CASSETTE__MINUTES_LENGTH:
-        return minutesLength != MINUTES_LENGTH_EDEFAULT;
-      case EXTLibraryPackage.VIDEO_CASSETTE__DAMAGED:
-        return ((eFlags & DAMAGED_EFLAG) != 0) != DAMAGED_EDEFAULT;
-      case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
-        return cast != null && !cast.isEmpty();
+      case EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR:
+        return issuesPerYear != ISSUES_PER_YEAR_EDEFAULT;
     }
     return eDynamicIsSet(eFeature);
   }
 
-} //VideoCassetteImpl
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (title: "); //$NON-NLS-1$
+    result.append(title);
+    result.append(", issuesPerYear: "); //$NON-NLS-1$
+    result.append(issuesPerYear);
+    result.append(')');
+    return result.toString();
+  }
+
+} //PeriodicalImpl

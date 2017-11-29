@@ -1,17 +1,16 @@
-(startLine=142 endLine=156 srcPath=/root/Projects/elasticsearchFilter/1887/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexStatus.java)
-    public SizeValue estimatedFlushableMemorySize() {
-        long bytes = -1;
-        for (IndexShardStatus shard : this) {
-            if (shard.estimatedFlushableMemorySize() != null) {
-                if (bytes == -1) {
-                    bytes = 0;
-                }
-                bytes += shard.estimatedFlushableMemorySize().bytes();
+(startLine=809 endLine=822 srcPath=/root/Projects/elasticsearchFilter/1733/elasticsearch/plugins/transport/thrift/src/main/gen-java/org/elasticsearch/thrift/Rest.java)
+        public String toString() {
+            StringBuilder sb = new StringBuilder("execute_result(");
+            boolean first = true;
+
+            sb.append("success:");
+            if (this.success == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.success);
             }
+            first = false;
+            sb.append(")");
+            return sb.toString();
         }
-        if (bytes == -1) {
-            return null;
-        }
-        return new SizeValue(bytes);
-    }
 

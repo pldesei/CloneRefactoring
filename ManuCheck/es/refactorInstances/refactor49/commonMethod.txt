@@ -1,11 +1,11 @@
-(startLine=55 endLine=63 srcPath=/root/Projects/elasticsearchFilter/1307/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/LongValuesComparatorBase.java)
-    static final int compare(long left, long right) {
-        if (left > right) {
-            return 1;
-        } else if (left < right) {
-            return -1;
-        } else {
-            return 0;
+(startLine=194 endLine=202 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/ip/IpFieldMapper.java)
+    private long parseValue(Object value) {
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
         }
+        if (value instanceof BytesRef) {
+            return ipToLong(((BytesRef) value).utf8ToString());
+        }
+        return ipToLong(value.toString());
     }
 

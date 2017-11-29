@@ -1,30 +1,13 @@
-(startLine=2037 endLine=2064 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug83388() throws CoreException {
+(startLine=1882 endLine=1892 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug83304_MethodParameterizedElementPattern() throws CoreException {
     this.resultCollector.showRule = true;
-    this.workingCopies = new ICompilationUnit[1];
-    this.workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b83388/R.java",
-        "package b83388;\n" +
-        "import b83388.*;\n" +
-        "public class R {}\n"
-    );
-    IImportDeclaration importDeclaration = this.workingCopies[0].getImport("pack");
-    assertNotNull("Cannot find \"pack\" import declaration for "+this.workingCopies[0].getElementName(), importDeclaration);
-    SearchPattern pattern = SearchPattern.createPattern(
-        "pack",
-        PACKAGE,
-        DECLARATIONS,
-        EXACT_RULE);
-    assertNotNull("Pattern should not be null", pattern);
-    MatchLocator.setFocus(pattern, importDeclaration);
-    new SearchEngine(this.workingCopies).search(
-        pattern,
-        new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
-        getJavaSearchScope(),
-        this.resultCollector,
-        null
-    );
+    setUpBug83304_MethodParameterizedElementPattern();
+    IMethod method = selectMethod(this.workingCopies[0], "generic", 2);
+    search(method, REFERENCES, ERASURE_RULE);
     assertSearchResults(
-        "src/b83388/R.java b83388 [No source] EXACT_MATCH"
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(exc)] ERASURE_MATCH\n" +
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(exc)] EXACT_MATCH\n" +
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(\"\")] ERASURE_MATCH"
     );
 }
 

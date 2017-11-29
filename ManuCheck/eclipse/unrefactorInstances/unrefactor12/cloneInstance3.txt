@@ -1,49 +1,14 @@
-(startLine=232 endLine=278 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
-public void test003() {
-    try {
-        String sourceA003 =
-            "public class A003 {\n" +
-            "  public int foo() {\n" +
-            "    return 2;\n" +
-            "  }\n" +
-            "  public String toString() {\n" +
-            "    return \"hello\";\n" +
-            "  }\n" +
-            "}";
-        compileAndDeploy(sourceA003, "A003");
-        String userCode =
-            "new A003().foo();";
-        JDIStackFrame stackFrame = new JDIStackFrame(
-            this.jdiVM, 
-            this,
-            userCode,
-            "A003",
-            "foo",
-            -1);
-        DebugRequestor requestor = new DebugRequestor();
-        char[] snippet = "return this;".toCharArray();
-        try {
-            context.evaluate(
-                snippet,
-                stackFrame.localVariableTypeNames(),
-                stackFrame.localVariableNames(),
-                stackFrame.localVariableModifiers(),
-                null, // declaring type -- NO DELEGATE THIS
-                stackFrame.isStatic(),
-                stackFrame.isConstructorCall(),
-                getEnv(), 
-                getCompilerOptions(), 
-                requestor, 
-                getProblemFactory());
-        } catch (InstallException e) {
-            assertTrue("No targetException " + e.getMessage(), false);
-        }
-        assertTrue("Should get one result but got " + requestor.resultIndex+1, requestor.resultIndex == 0);
-        EvaluationResult result = requestor.results[0];
-        assertTrue("Code snippet should have a problem", result.hasProblems()); // 'this' cannot be referenced since there is no declaring type
-        assertTrue("Result should not have a value", !result.hasValue());
-    } finally {
-        removeTempClass("A003");
+(startLine=2275 endLine=2286 srcPath=/root/Projects/eclipse.jdt.coreFilter/272/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
+    public void test0101() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0101", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        char[] source = sourceUnit.getSource().toCharArray();
+        ASTNode result = runConversion(sourceUnit, false);
+        ASTNode node = getASTNode((CompilationUnit) result, 0, 0, 0);
+        assertNotNull("Expression should not be null", node); //$NON-NLS-1$
+        WhileStatement whileStatement = this.ast.newWhileStatement();
+        whileStatement.setExpression(this.ast.newBooleanLiteral(true));
+        whileStatement.setBody(this.ast.newBlock());
+        assertTrue("Both AST trees should be identical", whileStatement.subtreeMatch(new ASTMatcher(), node));        //$NON-NLS-1$
+        checkSourceRange(node, "while(true) {}", source);//$NON-NLS-1$
     }
-}
 

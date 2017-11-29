@@ -1,19 +1,11 @@
-(startLine=197 endLine=213 srcPath=/root/Projects/elasticsearchFilter/1374/elasticsearch/src/main/java/org/elasticsearch/index/mapper/multifield/MultiFieldMapper.java)
-    public void parse(ParseContext context) throws IOException {
-        ContentPath.Type origPathType = context.path().pathType();
-        context.path().pathType(pathType);
-
-        // do the default mapper without adding the path
-        if (defaultMapper != null) {
-            defaultMapper.parse(context);
-        }
-
-        context.path().add(name);
-        for (Mapper mapper : mappers.values()) {
-            mapper.parse(context);
-        }
-        context.path().remove();
-
-        context.path().pathType(origPathType);
+(startLine=181 endLine=189 srcPath=/root/Projects/elasticsearchFilter/1991/elasticsearch/modules/elasticsearch/src/test/java/org/elasticsearch/index/query/json/SimpleJsonIndexQueryParserTests.java)
+    @Test public void testPrefixQuery() throws IOException {
+        IndexQueryParser queryParser = newQueryParser();
+        String query = copyToStringFromClasspath("/org/elasticsearch/index/query/json/prefix.json");
+        Query parsedQuery = queryParser.parse(query);
+        assertThat(parsedQuery, instanceOf(PrefixQuery.class));
+        PrefixQuery prefixQuery = (PrefixQuery) parsedQuery;
+        // since age is automatically registered in data, we encode it as numeric
+        assertThat(prefixQuery.getPrefix(), equalTo(new Term("name.first", "sh")));
     }
 

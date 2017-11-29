@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: BookOnTapeImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
+ * $Id: CirculatingItemImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
@@ -21,6 +21,9 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -28,54 +31,67 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.examples.extlibrary.BookOnTape;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.eclipse.emf.examples.extlibrary.Borrower;
+import org.eclipse.emf.examples.extlibrary.CirculatingItem;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
-import org.eclipse.emf.examples.extlibrary.Person;
-import org.eclipse.emf.examples.extlibrary.Writer;
+import org.eclipse.emf.examples.extlibrary.Lendable;
 
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Book On Tape</b></em>'.
+ * An implementation of the model object '<em><b>Circulating Item</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getReader <em>Reader</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getAuthor <em>Author</em>}</li>
+ *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getCopies <em>Copies</em>}</li>
+ *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getBorrowers <em>Borrowers</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
+public abstract class CirculatingItemImpl extends ItemImpl implements CirculatingItem
 {
   /**
-   * The cached value of the '{@link #getReader() <em>Reader</em>}' reference.
+   * The default value of the '{@link #getCopies() <em>Copies</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getReader()
+   * @see #getCopies()
    * @generated
    * @ordered
    */
-  protected Person reader = null;
+  protected static final int COPIES_EDEFAULT = 0;
 
   /**
-   * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
+   * The cached value of the '{@link #getCopies() <em>Copies</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getAuthor()
+   * @see #getCopies()
    * @generated
    * @ordered
    */
-  protected Writer author = null;
+  protected int copies = COPIES_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getBorrowers() <em>Borrowers</em>}' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getBorrowers()
+   * @generated
+   * @ordered
+   */
+  protected EList borrowers = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected BookOnTapeImpl()
+  protected CirculatingItemImpl()
   {
     super();
   }
@@ -87,7 +103,7 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
    */
   protected EClass eStaticClass()
   {
-    return EXTLibraryPackage.eINSTANCE.getBookOnTape();
+    return EXTLibraryPackage.eINSTANCE.getCirculatingItem();
   }
 
   /**
@@ -95,19 +111,58 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
    * <!-- end-user-doc -->
    * @generated
    */
-  public Person getReader()
+  public int getCopies()
   {
-    if (reader != null && reader.eIsProxy())
+    return copies;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setCopies(int newCopies)
+  {
+    int oldCopies = copies;
+    copies = newCopies;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.CIRCULATING_ITEM__COPIES, oldCopies, copies));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList getBorrowers()
+  {
+    if (borrowers == null)
     {
-      Person oldReader = reader;
-      reader = (Person)eResolveProxy((InternalEObject)reader);
-      if (reader != oldReader)
+      borrowers = new EObjectWithInverseResolvingEList.ManyInverse(Borrower.class, this, EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS, EXTLibraryPackage.BORROWER__BORROWED);
+    }
+    return borrowers;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs)
+  {
+    if (featureID >= 0)
+    {
+      switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
+        case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
+          return ((InternalEList)getBorrowers()).basicAdd(otherEnd, msgs);
+        default:
+          return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
       }
     }
-    return reader;
+    if (eContainer != null)
+      msgs = eBasicRemoveFromContainer(msgs);
+    return eBasicSetContainer(otherEnd, featureID, msgs);
   }
 
   /**
@@ -115,65 +170,19 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
    * <!-- end-user-doc -->
    * @generated
    */
-  public Person basicGetReader()
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs)
   {
-    return reader;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setReader(Person newReader)
-  {
-    Person oldReader = reader;
-    reader = newReader;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Writer getAuthor()
-  {
-    if (author != null && author.eIsProxy())
+    if (featureID >= 0)
     {
-      Writer oldAuthor = author;
-      author = (Writer)eResolveProxy((InternalEObject)author);
-      if (author != oldAuthor)
+      switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
+        case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
+          return ((InternalEList)getBorrowers()).basicRemove(otherEnd, msgs);
+        default:
+          return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
       }
     }
-    return author;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Writer basicGetAuthor()
-  {
-    return author;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setAuthor(Writer newAuthor)
-  {
-    Writer oldAuthor = author;
-    author = newAuthor;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
+    return eBasicSetContainer(null, featureID, msgs);
   }
 
   /**
@@ -185,24 +194,12 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
         return getPublicationDate();
-      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
         return new Integer(getCopies());
-      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
         return getBorrowers();
-      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
-        return getTitle();
-      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
-        return new Integer(getMinutesLength());
-      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
-        return isDamaged() ? Boolean.TRUE : Boolean.FALSE;
-      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
-        if (resolve) return getReader();
-        return basicGetReader();
-      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
-        if (resolve) return getAuthor();
-        return basicGetAuthor();
     }
     return eDynamicGet(eFeature, resolve);
   }
@@ -216,30 +213,15 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
         setPublicationDate((Date)newValue);
         return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
         setCopies(((Integer)newValue).intValue());
         return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
         getBorrowers().clear();
         getBorrowers().addAll((Collection)newValue);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
-        setTitle((String)newValue);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
-        setMinutesLength(((Integer)newValue).intValue());
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
-        setDamaged(((Boolean)newValue).booleanValue());
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
-        setReader((Person)newValue);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
-        setAuthor((Writer)newValue);
         return;
     }
     eDynamicSet(eFeature, newValue);
@@ -254,29 +236,14 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
         setPublicationDate(PUBLICATION_DATE_EDEFAULT);
         return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
         setCopies(COPIES_EDEFAULT);
         return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
         getBorrowers().clear();
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
-        setTitle(TITLE_EDEFAULT);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
-        setMinutesLength(MINUTES_LENGTH_EDEFAULT);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
-        setDamaged(DAMAGED_EDEFAULT);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
-        setReader((Person)null);
-        return;
-      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
-        setAuthor((Writer)null);
         return;
     }
     eDynamicUnset(eFeature);
@@ -291,24 +258,68 @@ public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
         return PUBLICATION_DATE_EDEFAULT == null ? publicationDate != null : !PUBLICATION_DATE_EDEFAULT.equals(publicationDate);
-      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
         return copies != COPIES_EDEFAULT;
-      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
         return borrowers != null && !borrowers.isEmpty();
-      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
-        return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
-        return minutesLength != MINUTES_LENGTH_EDEFAULT;
-      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
-        return ((eFlags & DAMAGED_EFLAG) != 0) != DAMAGED_EDEFAULT;
-      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
-        return reader != null;
-      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
-        return author != null;
     }
     return eDynamicIsSet(eFeature);
   }
 
-} //BookOnTapeImpl
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass)
+  {
+    if (baseClass == Lendable.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case EXTLibraryPackage.CIRCULATING_ITEM__COPIES: return EXTLibraryPackage.LENDABLE__COPIES;
+        case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS: return EXTLibraryPackage.LENDABLE__BORROWERS;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass)
+  {
+    if (baseClass == Lendable.class)
+    {
+      switch (baseFeatureID)
+      {
+        case EXTLibraryPackage.LENDABLE__COPIES: return EXTLibraryPackage.CIRCULATING_ITEM__COPIES;
+        case EXTLibraryPackage.LENDABLE__BORROWERS: return EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (copies: "); //$NON-NLS-1$
+    result.append(copies);
+    result.append(')');
+    return result.toString();
+  }
+
+} //CirculatingItemImpl

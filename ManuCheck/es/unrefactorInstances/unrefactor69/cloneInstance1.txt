@@ -1,60 +1,44 @@
-(startLine=39 endLine=96 srcPath=/root/Projects/elasticsearchFilter/1378/elasticsearch/src/main/java/org/elasticsearch/common/logging/support/LoggerMessageFormat.java)
-    public static String format(final String prefix, final String messagePattern, final Object... argArray) {
-        if (messagePattern == null) {
-            return null;
-        }
-        if (argArray == null) {
-            if (prefix == null) {
-                return messagePattern;
-            } else {
-                return prefix + messagePattern;
-            }
-        }
-        int i = 0;
-        int j;
-        StringBuffer sbuf = new StringBuffer(messagePattern.length() + 50);
-        if (prefix != null) {
-            sbuf.append(prefix);
+(startLine=168 endLine=209 srcPath=/root/Projects/elasticsearchFilter/1057/elasticsearch/src/test/java/org/elasticsearch/routing/SimpleRoutingTests.java)
+    public void testRequiredRoutingMapping() throws Exception {
+        client().admin().indices().prepareCreate("test")
+                .addMapping("type1", XContentFactory.jsonBuilder().startObject().startObject("type1").startObject("_routing").field("required", true).endObject().endObject().endObject())
+                .execute().actionGet();
+        client().admin().cluster().prepareHealth().setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet();
+
+        logger.info("--> indexing with id [1], and routing [0]");
+        client().prepareIndex("test", "type1", "1").setRouting("0").setSource("field", "value1").setRefresh(true).execute().actionGet();
+        logger.info("--> verifying get with no routing, should not find anything");
+
+        logger.info("--> indexing with id [1], with no routing, should fail");
+        try {
+            client().prepareIndex("test", "type1", "1").setSource("field", "value1").setRefresh(true).execute().actionGet();
+            assert false;
+        } catch (ElasticSearchException e) {
+            assertThat(e.unwrapCause(), instanceOf(RoutingMissingException.class));
         }
 
-        for (int L = 0; L < argArray.length; L++) {
-
-            j = messagePattern.indexOf(DELIM_STR, i);
-
-            if (j == -1) {
-                // no more variables
-                if (i == 0) { // this is a simple string
-                    return messagePattern;
-                } else { // add the tail string which contains no variables and return
-                    // the result.
-                    sbuf.append(messagePattern.substring(i, messagePattern.length()));
-                    return sbuf.toString();
-                }
-            } else {
-                if (isEscapedDelimeter(messagePattern, j)) {
-                    if (!isDoubleEscaped(messagePattern, j)) {
-                        L--; // DELIM_START was escaped, thus should not be incremented
-                        sbuf.append(messagePattern.substring(i, j - 1));
-                        sbuf.append(DELIM_START);
-                        i = j + 1;
-                    } else {
-                        // The escape character preceding the delimiter start is
-                        // itself escaped: "abc x:\\{}"
-                        // we have to consume one backward slash
-                        sbuf.append(messagePattern.substring(i, j - 1));
-                        deeplyAppendParameter(sbuf, argArray[L], new HashMap());
-                        i = j + 2;
-                    }
-                } else {
-                    // normal case
-                    sbuf.append(messagePattern.substring(i, j));
-                    deeplyAppendParameter(sbuf, argArray[L], new HashMap());
-                    i = j + 2;
-                }
-            }
+        logger.info("--> verifying get with routing, should find");
+        for (int i = 0; i < 5; i++) {
+            assertThat(client().prepareGet("test", "type1", "1").setRouting("0").execute().actionGet().isExists(), equalTo(true));
         }
-        // append the characters following the last {} pair.
-        sbuf.append(messagePattern.substring(i, messagePattern.length()));
-        return sbuf.toString();
+
+        logger.info("--> deleting with no routing, should broadcast the delete since _routing is required");
+        client().prepareDelete("test", "type1", "1").setRefresh(true).execute().actionGet();
+        for (int i = 0; i < 5; i++) {
+            assertThat(client().prepareGet("test", "type1", "1").execute().actionGet().isExists(), equalTo(false));
+            assertThat(client().prepareGet("test", "type1", "1").setRouting("0").execute().actionGet().isExists(), equalTo(false));
+        }
+
+        logger.info("--> indexing with id [1], and routing [0]");
+        client().prepareIndex("test", "type1", "1").setRouting("0").setSource("field", "value1").setRefresh(true).execute().actionGet();
+        logger.info("--> verifying get with no routing, should not find anything");
+
+        logger.info("--> bulk deleting with no routing, should broadcast the delete since _routing is required");
+        client().prepareBulk().add(Requests.deleteRequest("test").type("type1").id("1")).execute().actionGet();
+        client().admin().indices().prepareRefresh().execute().actionGet();
+        for (int i = 0; i < 5; i++) {
+            assertThat(client().prepareGet("test", "type1", "1").execute().actionGet().isExists(), equalTo(false));
+            assertThat(client().prepareGet("test", "type1", "1").setRouting("0").execute().actionGet().isExists(), equalTo(false));
+        }
     }
 

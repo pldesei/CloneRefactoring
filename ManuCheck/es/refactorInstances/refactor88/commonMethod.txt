@@ -1,6 +1,7 @@
-(startLine=77 endLine=80 srcPath=/root/Projects/elasticsearchFilter/656/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/FloatValuesComparatorSource.java)
-                    @Override
-                    public float get(int docID) {
-                        return (float) selectedValues.get(docID);
-                    }
+(startLine=341 endLine=345 srcPath=/root/Projects/elasticsearchFilter/692/elasticsearch/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java)
+    private String getPluginUrlForResource(String resourceName) {
+        URI uri = URI.create(PluginManagerTests.class.getResource(resourceName).toString());
+
+        return "file://" + uri.getPath();
+    }
 

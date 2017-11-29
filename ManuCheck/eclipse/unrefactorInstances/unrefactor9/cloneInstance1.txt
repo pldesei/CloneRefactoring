@@ -1,22 +1,24 @@
-(startLine=5892 endLine=5911 srcPath=/root/Projects/eclipse.jdt.coreFilter/475/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/formatter/FormatterRegressionTests.java)
-    public void test459() {
-        Map options = DefaultCodeFormatterConstants.getEclipse21Settings();
-        options.put(
-                DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION,
-                DefaultCodeFormatterConstants.createAlignmentValue(
-                        true,
-                        DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE,
-                        DefaultCodeFormatterConstants.INDENT_BY_ONE
-                ));
-        options.put(
-                DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION,
-                DefaultCodeFormatterConstants.createAlignmentValue(
-                        false,
-                        DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE,
-                        DefaultCodeFormatterConstants.INDENT_BY_ONE
-                ));
-        DefaultCodeFormatterOptions preferences = new DefaultCodeFormatterOptions(options);
-        DefaultCodeFormatter codeFormatter = new DefaultCodeFormatter(preferences);
-        runTest(codeFormatter, "test459", "A.java", CodeFormatter.K_STATEMENTS);//$NON-NLS-1$ //$NON-NLS-2$
+(startLine=177 endLine=198 srcPath=/root/Projects/eclipse.jdt.coreFilter/776/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
+    public void test0005() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0005", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        char[] source = sourceUnit.getSource().toCharArray();
+        ASTNode result = runConversion(sourceUnit, false);
+        ASTNode expression = getASTNodeToCompare((CompilationUnit) result);
+        assertNotNull("Expression should not be null", expression); //$NON-NLS-1$
+        ClassInstanceCreation classInstanceCreation = this.ast.newClassInstanceCreation();
+        QualifiedName name = 
+            this.ast.newQualifiedName(
+                this.ast.newQualifiedName(
+                    this.ast.newSimpleName("java"), //$NON-NLS-1$
+                    this.ast.newSimpleName("lang")), //$NON-NLS-1$
+                this.ast.newSimpleName("Object"));//$NON-NLS-1$
+        classInstanceCreation.setName(name);
+        AnonymousClassDeclaration anonymousClassDeclaration = this.ast.newAnonymousClassDeclaration();
+        classInstanceCreation.setAnonymousClassDeclaration(anonymousClassDeclaration);
+        assertTrue("Both AST trees should be identical", classInstanceCreation.subtreeMatch(new ASTMatcher(), expression));        //$NON-NLS-1$
+        checkSourceRange(expression, "new java.lang.Object() {}", source); //$NON-NLS-1$
+        ClassInstanceCreation classInstanceCreation2 = (ClassInstanceCreation) expression;
+        Name name2 = classInstanceCreation2.getName();
+        checkSourceRange(name2, "java.lang.Object", source); //$NON-NLS-1$
     }
 

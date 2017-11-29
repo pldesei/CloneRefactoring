@@ -1,13 +1,11 @@
-(startLine=98 endLine=108 srcPath=/root/Projects/elasticsearchFilter/88/elasticsearch/core/src/test/java/org/elasticsearch/search/aggregations/pipeline/serialdiff/SerialDiffIT.java)
-    private void assertValidIterators(Iterator expectedBucketIter, Iterator expectedCountsIter, Iterator expectedValuesIter) {
-        if (!expectedBucketIter.hasNext()) {
-            fail("`expectedBucketIter` iterator ended before `actual` iterator, size mismatch");
-        }
-        if (!expectedCountsIter.hasNext()) {
-            fail("`expectedCountsIter` iterator ended before `actual` iterator, size mismatch");
-        }
-        if (!expectedValuesIter.hasNext()) {
-            fail("`expectedValuesIter` iterator ended before `actual` iterator, size mismatch");
+(startLine=134 endLine=142 srcPath=/root/Projects/elasticsearchFilter/967/elasticsearch/src/main/java/org/elasticsearch/indices/InternalIndicesLifecycle.java)
+    public void afterIndexClosed(Index index) {
+        for (Listener listener : listeners) {
+            try {
+                listener.afterIndexClosed(index);
+            } catch (Throwable t) {
+                logger.warn("[{}] failed to invoke after index closed callback", t, index.name());
+            }
         }
     }
 

@@ -1,41 +1,22 @@
-(startLine=2045 endLine=2083 srcPath=/root/Projects/eclipse.jdt.coreFilter/1482/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
-private void generateFieldAccess(byte opcode, int returnTypeSize, char[] declaringClass, char[] name, char[] signature) {
-    countLabels = 0;
-    switch(opcode) {
-        case OPC_getfield :
-            if (returnTypeSize == 2) {
-                stackDepth++;
-            }
-            break;
-        case OPC_getstatic :
-            if (returnTypeSize == 2) {
-                stackDepth += 2;
-            } else {
-                stackDepth++;
-            }
-            break;
-        case OPC_putfield :
-            if (returnTypeSize == 2) {
-                stackDepth -= 3;
-            } else {
-                stackDepth -= 2;
-            }
-            break;
-        case OPC_putstatic :
-            if (returnTypeSize == 2) {
-                stackDepth -= 2;
-            } else {
-                stackDepth--;
-            }
+(startLine=692 endLine=711 srcPath=/root/Projects/eclipse.jdt.coreFilter/1482/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+private int putInCache(final char[] key1, final char[] key2, final char[] key3, int index) {
+    HashtableOfObject value = (HashtableOfObject) this.methodsAndFieldsCache.get(key1);
+    if (value == null) {
+        value = new HashtableOfObject();
+        this.methodsAndFieldsCache.put(key1, value);
+        CharArrayCache charArrayCache = new CharArrayCache();
+        charArrayCache.put(key3, index);
+        value.put(key2, charArrayCache);
+    } else {
+        CharArrayCache charArrayCache = (CharArrayCache) value.get(key2);
+        if (charArrayCache == null) {
+            charArrayCache = new CharArrayCache();
+            charArrayCache.put(key3, index);
+            value.put(key2, charArrayCache);
+        } else {
+            charArrayCache.put(key3, index);            
+        }
     }
-    if (stackDepth > stackMax) {
-        stackMax = stackDepth;
-    }
-    if (classFileOffset + 2 >= bCodeStream.length) {
-        resizeByteArray();
-    }
-    position++;
-    bCodeStream[classFileOffset++] = opcode;
-    writeUnsignedShort(constantPool.literalIndexForField(declaringClass, name, signature));
+    return index;
 }
 

@@ -1,44 +1,20 @@
-(startLine=1558 endLine=1599 srcPath=/root/Projects/eclipse.jdt.coreFilter/2092/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
-public void invalidField(FieldReference fieldRef, TypeBinding searchedType) {
-    int severity = Error;
-    int flag = IProblem.UndefinedField;
-    FieldBinding field = fieldRef.binding;
-    switch (field.problemId()) {
-        case NotFound :
-            flag = IProblem.UndefinedField;
-/* also need to check that the searchedType is the receiver type
-            if (searchedType.isHierarchyInconsistent())
-                severity = SecondaryError;
-*/
-            break;
-        case NotVisible :
-            flag = IProblem.NotVisibleField;
-            break;
-        case Ambiguous :
-            flag = IProblem.AmbiguousField;
-            break;
-        case NonStaticReferenceInStaticContext :
-            flag = IProblem.NonStaticFieldFromStaticInvocation;
-            break;
-        case NonStaticReferenceInConstructorInvocation :
-            flag = IProblem.InstanceFieldDuringConstructorInvocation;
-            break;
-        case InheritedNameHidesEnclosingName :
-            flag = IProblem.InheritedFieldHidesEnclosingName;
-            break;
-        case NoError : // 0
-        default :
-            needImplementation(); // want to fail to see why we were here...
-            break;
-    }
+(startLine=399 endLine=416 srcPath=/root/Projects/eclipse.jdt.coreFilter/758/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/RootManipulationsTests.java)
+public void testFailCopySourceFolder1() throws CoreException {
+    try {
+        this.createJavaProject("P1", new String[] {"src"}, "bin");
+        this.createJavaProject("P2", new String[] {"src"}, "bin");
 
-    String[] arguments = new String[] {new String(field.readableName())};
-    this.handle(
-        flag,
-        arguments,
-        arguments,
-        severity,
-        fieldRef.sourceStart,
-        fieldRef.sourceEnd);
+        IPackageFragmentRoot root = this.getPackageFragmentRoot("/P1/src");
+        try {
+            root.copy(new Path("/P2/src"), IResource.NONE, IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH, null, null);
+        } catch (JavaModelException e) {
+            assertEquals("/P2/src already exists in target", e.getMessage());
+            return;
+        }
+        assertTrue("Should throw a JavaModelException", false);
+    } finally {
+        this.deleteProject("P1");
+        this.deleteProject("P2");
+    }
 }
 

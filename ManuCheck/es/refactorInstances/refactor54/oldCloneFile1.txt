@@ -17,230 +17,630 @@
  * under the License.
  */
 
-package org.elasticsearch.search.facet.terms.strings;
+package org.elasticsearch.index.fielddata.plain;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import gnu.trove.iterator.TObjectIntIterator;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import org.apache.lucene.index.AtomicReaderContext;
-import org.apache.lucene.search.Scorer;
 import org.apache.lucene.util.BytesRef;
-import org.elasticsearch.common.CacheRecycler;
-import org.elasticsearch.common.collect.BoundedTreeSet;
+import org.elasticsearch.common.RamUsage;
 import org.elasticsearch.common.lucene.HashedBytesRef;
-import org.elasticsearch.index.fielddata.HashedBytesValues;
-import org.elasticsearch.index.fielddata.IndexFieldData;
-import org.elasticsearch.script.SearchScript;
-import org.elasticsearch.search.facet.FacetExecutor;
-import org.elasticsearch.search.facet.InternalFacet;
-import org.elasticsearch.search.facet.terms.TermsFacet;
-import org.elasticsearch.search.facet.terms.support.EntryPriorityQueue;
-import org.elasticsearch.search.internal.SearchContext;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.elasticsearch.index.fielddata.AtomicFieldData;
+import org.elasticsearch.index.fielddata.ScriptDocValues;
+import org.elasticsearch.index.fielddata.ordinals.EmptyOrdinals;
+import org.elasticsearch.index.fielddata.ordinals.Ordinals;
+import org.elasticsearch.index.fielddata.util.BytesRefArrayRef;
+import org.elasticsearch.index.fielddata.util.IntArrayRef;
+import org.elasticsearch.index.fielddata.util.StringArrayRef;
 
 /**
- *
  */
-public class TermsStringFacetExecutor extends FacetExecutor {
+public class ConcreteBytesRefAtomicFieldData implements AtomicFieldData.WithOrdinals<ScriptDocValues.Strings> {
 
-    private final IndexFieldData indexFieldData;
-    private final TermsFacet.ComparatorType comparatorType;
-    private final ImmutableSet<BytesRef> excluded;
-    private final Pattern pattern;
-    private final SearchScript script;
+    public static ConcreteBytesRefAtomicFieldData empty(int numDocs) {
+        return new Empty(numDocs);
+    }
 
-    private final int size;
-    private final int numberOfShards;
+    // 0 ordinal in values means no value (its null)
+    private final BytesRef[] values;
+    protected final Ordinals ordinals;
 
-    // the aggregation map
-    TObjectIntHashMap<HashedBytesRef> facets;
-    long missing;
-    long total;
+    private int[] hashes;
+    private long size = -1;
 
-    public TermsStringFacetExecutor(IndexFieldData indexFieldData, int size, TermsFacet.ComparatorType comparatorType, boolean allTerms, SearchContext context,
-                                    ImmutableSet<BytesRef> excluded, Pattern pattern, SearchScript script) {
-        this.indexFieldData = indexFieldData;
-        this.size = size;
-        this.comparatorType = comparatorType;
-        this.numberOfShards = context.numberOfShards();
-        this.script = script;
-        this.excluded = excluded;
-        this.pattern = pattern;
-
-        this.facets = CacheRecycler.popObjectIntMap();
-
-        if (allTerms) {
-            // TODO: we need to support this back with the new field data!
-//            try {
-//                for (AtomicReaderContext readerContext : context.searcher().getTopReaderContext().leaves()) {
-//                    FieldData fieldData = fieldDataCache.cache(fieldDataType, readerContext.reader(), indexFieldName);
-//                    fieldData.forEachValue(aggregator);
-//                }
-//            } catch (Exception e) {
-//                throw new FacetPhaseExecutionException(facetName, "failed to load all terms", e);
-//            }
-        }
+    public ConcreteBytesRefAtomicFieldData(BytesRef[] values, Ordinals ordinals) {
+        this.values = values;
+        this.ordinals = ordinals;
     }
 
     @Override
-    public Collector collector() {
-        return new Collector();
+    public void close() {
     }
 
     @Override
-    public InternalFacet buildFacet(String facetName) {
-        if (facets.isEmpty()) {
-            CacheRecycler.pushObjectIntMap(facets);
-            return new InternalStringTermsFacet(facetName, comparatorType, size, ImmutableList.<InternalStringTermsFacet.TermEntry>of(), missing, total);
-        } else {
-            if (size < EntryPriorityQueue.LIMIT) {
-                EntryPriorityQueue ordered = new EntryPriorityQueue(size, comparatorType.comparator());
-                for (TObjectIntIterator<HashedBytesRef> it = facets.iterator(); it.hasNext(); ) {
-                    it.advance();
-                    ordered.insertWithOverflow(new InternalStringTermsFacet.TermEntry(it.key().bytes, it.value()));
-                }
-                InternalStringTermsFacet.TermEntry[] list = new InternalStringTermsFacet.TermEntry[ordered.size()];
-                for (int i = ordered.size() - 1; i >= 0; i--) {
-                    list[i] = ((InternalStringTermsFacet.TermEntry) ordered.pop());
-                }
-                CacheRecycler.pushObjectIntMap(facets);
-                return new InternalStringTermsFacet(facetName, comparatorType, size, Arrays.asList(list), missing, total);
-            } else {
-                BoundedTreeSet<InternalStringTermsFacet.TermEntry> ordered = new BoundedTreeSet<InternalStringTermsFacet.TermEntry>(comparatorType.comparator(), size);
-                for (TObjectIntIterator<HashedBytesRef> it = facets.iterator(); it.hasNext(); ) {
-                    it.advance();
-                    ordered.add(new InternalStringTermsFacet.TermEntry(it.key().bytes, it.value()));
-                }
-                CacheRecycler.pushObjectIntMap(facets);
-                return new InternalStringTermsFacet(facetName, comparatorType, size, ordered, missing, total);
-            }
-        }
+    public boolean isMultiValued() {
+        return ordinals.isMultiValued();
     }
 
-    class Collector extends FacetExecutor.Collector {
-
-        private final StaticAggregatorValueProc aggregator;
-        private HashedBytesValues values;
-
-        Collector() {
-            if (excluded.isEmpty() && pattern == null && script == null) {
-                aggregator = new StaticAggregatorValueProc(facets);
-            } else {
-                aggregator = new AggregatorValueProc(facets, excluded, pattern, script);
-            }
-        }
-
-        @Override
-        public void setScorer(Scorer scorer) throws IOException {
-            if (script != null) {
-                script.setScorer(scorer);
-            }
-        }
-
-        @Override
-        public void setNextReader(AtomicReaderContext context) throws IOException {
-            values = indexFieldData.load(context).getHashedBytesValues();
-            aggregator.values = values;
-            if (script != null) {
-                script.setNextReader(context);
-            }
-        }
-
-        @Override
-        public void collect(int doc) throws IOException {
-            values.forEachValueInDoc(doc, aggregator);
-        }
-
-        @Override
-        public void postCollection() {
-            TermsStringFacetExecutor.this.missing = aggregator.missing();
-            TermsStringFacetExecutor.this.total = aggregator.total();
-        }
+    @Override
+    public int getNumDocs() {
+        return ordinals.getNumDocs();
     }
 
-    public static class AggregatorValueProc extends StaticAggregatorValueProc {
+    @Override
+    public boolean isValuesOrdered() {
+        return true;
+    }
 
-        private final ImmutableSet<BytesRef> excluded;
-        private final Matcher matcher;
-        private final SearchScript script;
+    @Override
+    public long getMemorySizeInBytes() {
+        if (size == -1) {
+            long size = RamUsage.NUM_BYTES_ARRAY_HEADER;
+            for (BytesRef value : values) {
+                if (value != null) {
+                    size += RamUsage.NUM_BYTES_OBJECT_REF + RamUsage.NUM_BYTES_OBJECT_HEADER +
+                            RamUsage.NUM_BYTES_ARRAY_HEADER + (value.length + (2 * RamUsage.NUM_BYTES_INT));
+                }
+            }
+            size += ordinals.getMemorySizeInBytes();
+            this.size = size;
+        }
+        return size;
+    }
 
-        public AggregatorValueProc(TObjectIntHashMap<HashedBytesRef> facets, ImmutableSet<BytesRef> excluded, Pattern pattern, SearchScript script) {
-            super(facets);
-            this.excluded = excluded;
-            this.matcher = pattern != null ? pattern.matcher("") : null;
-            this.script = script;
+    @Override
+    public BytesValues.WithOrdinals getBytesValues() {
+        return ordinals.isMultiValued() ? new BytesValues.Multi(values, ordinals.ordinals()) : new BytesValues.Single(values, ordinals.ordinals());
+    }
+
+    @Override
+    public HashedBytesValues.WithOrdinals getHashedBytesValues() {
+        if (hashes == null) {
+            int[] hashes = new int[values.length];
+            for (int i = 0; i < values.length; i++) {
+                BytesRef value = values[i];
+                hashes[i] = value == null ? 0 : value.hashCode();
+            }
+            this.hashes = hashes;
+        }
+        return ordinals.isMultiValued() ? new HashedBytesValues.Multi(values, hashes, ordinals.ordinals()) : new HashedBytesValues.Single(values, hashes, ordinals.ordinals());
+    }
+
+    @Override
+    public StringValues.WithOrdinals getStringValues() {
+        return ordinals.isMultiValued() ? new StringValues.Multi(values, ordinals.ordinals()) : new StringValues.Single(values, ordinals.ordinals());
+    }
+
+    @Override
+    public ScriptDocValues.Strings getScriptValues() {
+        return new ScriptDocValues.Strings(getStringValues());
+    }
+
+    static abstract class BytesValues implements org.elasticsearch.index.fielddata.BytesValues.WithOrdinals {
+
+        protected final BytesRef[] values;
+        protected final Ordinals.Docs ordinals;
+
+        BytesValues(BytesRef[] values, Ordinals.Docs ordinals) {
+            this.values = values;
+            this.ordinals = ordinals;
         }
 
         @Override
-        public void onValue(int docId, HashedBytesRef value) {
-            if (excluded != null && excluded.contains(value.bytes)) {
-                return;
+        public Ordinals.Docs ordinals() {
+            return this.ordinals;
+        }
+
+        @Override
+        public BytesRef getValueByOrd(int ord) {
+            return values[ord];
+        }
+
+        @Override
+        public BytesRef getValueScratchByOrd(int ord, BytesRef ret) {
+            BytesRef value = values[ord];
+            if (value == null) {
+                ret.length = 0;
+            } else {
+                ret.bytes = value.bytes;
+                ret.offset = value.offset;
+                ret.length = value.length;
             }
-            // LUCENE 4 UPGRADE: use Lucene's RegexCapabilities
-            if (matcher != null && !matcher.reset(value.bytes.utf8ToString()).matches()) {
-                return;
+            return ret;
+        }
+
+        @Override
+        public BytesRef getSafeValueByOrd(int ord) {
+            return values[ord];
+        }
+
+        @Override
+        public boolean hasValue(int docId) {
+            return ordinals.getOrd(docId) != 0;
+        }
+
+        @Override
+        public BytesRef makeSafe(BytesRef bytes) {
+            // no need to do anything, its already concrete bytes...
+            return bytes;
+        }
+
+        @Override
+        public BytesRef getValue(int docId) {
+            return values[ordinals.getOrd(docId)];
+        }
+
+        @Override
+        public BytesRef getValueScratch(int docId, BytesRef ret) {
+            BytesRef value = values[ordinals.getOrd(docId)];
+            if (value == null) {
+                ret.length = 0;
+            } else {
+                ret.bytes = value.bytes;
+                ret.offset = value.offset;
+                ret.length = value.length;
             }
-            if (script != null) {
-                script.setNextDocId(docId);
-                // LUCENE 4 UPGRADE: needs optimization
-                script.setNextVar("term", value.bytes.utf8ToString());
-                Object scriptValue = script.run();
-                if (scriptValue == null) {
+            return ret;
+        }
+
+        static class Single extends BytesValues {
+
+            private final BytesRefArrayRef arrayScratch = new BytesRefArrayRef(new BytesRef[1], 1);
+            private final Iter.Single iter = new Iter.Single();
+
+            Single(BytesRef[] values, Ordinals.Docs ordinals) {
+                super(values, ordinals);
+            }
+
+            @Override
+            public boolean isMultiValued() {
+                return false;
+            }
+
+            @Override
+            public BytesRefArrayRef getValues(int docId) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) return BytesRefArrayRef.EMPTY;
+                arrayScratch.values[0] = values[ord];
+                return arrayScratch;
+            }
+
+            @Override
+            public Iter getIter(int docId) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) return Iter.Empty.INSTANCE;
+                return iter.reset(values[ord]);
+            }
+
+            @Override
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                } else {
+                    proc.onValue(docId, values[ord]);
+                }
+            }
+        }
+
+        static class Multi extends BytesValues {
+
+            private final BytesRefArrayRef arrayScratch = new BytesRefArrayRef(new BytesRef[10], 0);
+            private final ValuesIter iter;
+
+            Multi(BytesRef[] values, Ordinals.Docs ordinals) {
+                super(values, ordinals);
+                this.iter = new ValuesIter(values);
+            }
+
+            @Override
+            public boolean isMultiValued() {
+                return true;
+            }
+
+            @Override
+            public BytesRefArrayRef getValues(int docId) {
+                IntArrayRef ords = ordinals.getOrds(docId);
+                int size = ords.size();
+                if (size == 0) return BytesRefArrayRef.EMPTY;
+
+                arrayScratch.reset(size);
+                for (int i = ords.start; i < ords.end; i++) {
+                    arrayScratch.values[arrayScratch.end++] = values[ords.values[i]];
+                }
+                return arrayScratch;
+            }
+
+            @Override
+            public Iter getIter(int docId) {
+                return iter.reset(ordinals.getIter(docId));
+            }
+
+            @Override
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
+                int ord = iter.next();
+                if (ord == 0) {
+                    proc.onMissing(docId);
                     return;
                 }
-                if (scriptValue instanceof Boolean) {
-                    if (!((Boolean) scriptValue)) {
-                        return;
-                    }
-                } else {
-                    // LUCENE 4 UPGRADE: should be possible to convert directly to BR
-                    value = new HashedBytesRef(scriptValue.toString());
+                do {
+                    proc.onValue(docId, values[ord]);
+                } while ((ord = iter.next()) != 0);
+            }
+
+            static class ValuesIter implements Iter {
+
+                private final BytesRef[] values;
+                private Ordinals.Docs.Iter ordsIter;
+                private int ord;
+
+                ValuesIter(BytesRef[] values) {
+                    this.values = values;
+                }
+
+                public ValuesIter reset(Ordinals.Docs.Iter ordsIter) {
+                    this.ordsIter = ordsIter;
+                    this.ord = ordsIter.next();
+                    return this;
+                }
+
+                @Override
+                public boolean hasNext() {
+                    return ord != 0;
+                }
+
+                @Override
+                public BytesRef next() {
+                    BytesRef value = values[ord];
+                    ord = ordsIter.next();
+                    return value;
                 }
             }
-            super.onValue(docId, value);
         }
     }
 
-    public static class StaticAggregatorValueProc implements HashedBytesValues.ValueInDocProc {
+    static abstract class HashedBytesValues implements org.elasticsearch.index.fielddata.HashedBytesValues.WithOrdinals {
 
-        // LUCENE 4 UPGRADE: check if hashcode is not too expensive
-        private final TObjectIntHashMap<HashedBytesRef> facets;
+        protected final BytesRef[] values;
+        protected final int[] hashes;
+        protected final Ordinals.Docs ordinals;
 
-        HashedBytesValues values;
-        private int missing = 0;
-        private int total = 0;
+        protected final HashedBytesRef scratch = new HashedBytesRef();
 
-        public StaticAggregatorValueProc(TObjectIntHashMap<HashedBytesRef> facets) {
-            this.facets = facets;
+        HashedBytesValues(BytesRef[] values, int[] hashes, Ordinals.Docs ordinals) {
+            this.values = values;
+            this.hashes = hashes;
+            this.ordinals = ordinals;
         }
 
         @Override
-        public void onValue(int docId, HashedBytesRef value) {
-            // we have to "makeSafe", even if it exists, since it might not..., need to find a way to optimize it
-            facets.adjustOrPutValue(values.makeSafe(value), 1, 1);
-            total++;
+        public Ordinals.Docs ordinals() {
+            return this.ordinals;
         }
 
         @Override
-        public void onMissing(int docId) {
-            missing++;
+        public HashedBytesRef getValueByOrd(int ord) {
+            return scratch.reset(values[ord], hashes[ord]);
         }
 
-        public final TObjectIntHashMap<HashedBytesRef> facets() {
-            return facets;
+        @Override
+        public HashedBytesRef getSafeValueByOrd(int ord) {
+            return new HashedBytesRef(values[ord], hashes[ord]);
         }
 
-        public final int missing() {
-            return this.missing;
+        @Override
+        public boolean hasValue(int docId) {
+            return ordinals.getOrd(docId) != 0;
         }
 
-        public int total() {
-            return this.total;
+        @Override
+        public HashedBytesRef makeSafe(HashedBytesRef bytes) {
+            // we just need to create a copy of the bytes ref, no need
+            // to create a copy of the actual BytesRef, as its concrete
+            return new HashedBytesRef(bytes.bytes, bytes.hash);
+        }
+
+        @Override
+        public HashedBytesRef getValue(int docId) {
+            int ord = ordinals.getOrd(docId);
+            if (ord == 0) return null;
+            return scratch.reset(values[ord], hashes[ord]);
+        }
+
+        static class Single extends HashedBytesValues {
+
+            private final Iter.Single iter = new Iter.Single();
+
+            Single(BytesRef[] values, int[] hashes, Ordinals.Docs ordinals) {
+                super(values, hashes, ordinals);
+            }
+
+            @Override
+            public boolean isMultiValued() {
+                return false;
+            }
+
+            @Override
+            public Iter getIter(int docId) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) return Iter.Empty.INSTANCE;
+                return iter.reset(scratch.reset(values[ord], hashes[ord]));
+            }
+
+            @Override
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                } else {
+                    proc.onValue(docId, scratch.reset(values[ord], hashes[ord]));
+                }
+            }
+        }
+
+        static class Multi extends HashedBytesValues {
+
+            private final ValuesIter iter;
+
+            Multi(BytesRef[] values, int[] hashes, Ordinals.Docs ordinals) {
+                super(values, hashes, ordinals);
+                this.iter = new ValuesIter(values, hashes);
+            }
+
+            @Override
+            public boolean isMultiValued() {
+                return true;
+            }
+
+            @Override
+            public Iter getIter(int docId) {
+                return iter.reset(ordinals.getIter(docId));
+            }
+
+            @Override
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
+                int ord = iter.next();
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                    return;
+                }
+                do {
+                    proc.onValue(docId, scratch.reset(values[ord], hashes[ord]));
+                } while ((ord = iter.next()) != 0);
+            }
+
+            static class ValuesIter implements Iter {
+
+                private final BytesRef[] values;
+                private final int[] hashes;
+                private Ordinals.Docs.Iter ordsIter;
+                private int ord;
+
+                private final HashedBytesRef scratch = new HashedBytesRef();
+
+                ValuesIter(BytesRef[] values, int[] hashes) {
+                    this.values = values;
+                    this.hashes = hashes;
+                }
+
+                public ValuesIter reset(Ordinals.Docs.Iter ordsIter) {
+                    this.ordsIter = ordsIter;
+                    this.ord = ordsIter.next();
+                    return this;
+                }
+
+                @Override
+                public boolean hasNext() {
+                    return ord != 0;
+                }
+
+                @Override
+                public HashedBytesRef next() {
+                    HashedBytesRef value = scratch.reset(values[ord], hashes[ord]);
+                    ord = ordsIter.next();
+                    return value;
+                }
+            }
+        }
+    }
+
+    static abstract class StringValues implements org.elasticsearch.index.fielddata.StringValues.WithOrdinals {
+
+        protected final BytesRef[] values;
+        protected final Ordinals.Docs ordinals;
+
+        protected StringValues(BytesRef[] values, Ordinals.Docs ordinals) {
+            this.values = values;
+            this.ordinals = ordinals;
+        }
+
+        @Override
+        public Ordinals.Docs ordinals() {
+            return ordinals;
+        }
+
+        @Override
+        public String getValueByOrd(int ord) {
+            BytesRef value = values[ord];
+            if (value == null) return null;
+            return value.utf8ToString();
+        }
+
+        @Override
+        public boolean hasValue(int docId) {
+            return ordinals.getOrd(docId) != 0;
+        }
+
+        @Override
+        public String getValue(int docId) {
+            BytesRef value = values[ordinals.getOrd(docId)];
+            if (value == null) return null;
+            return value.utf8ToString();
+        }
+
+        static class Single extends StringValues {
+
+            private final StringArrayRef arrayScratch = new StringArrayRef(new String[1], 1);
+            private final Iter.Single iter = new Iter.Single();
+
+            Single(BytesRef[] values, Ordinals.Docs ordinals) {
+                super(values, ordinals);
+            }
+
+            @Override
+            public boolean isMultiValued() {
+                return false;
+            }
+
+            @Override
+            public StringArrayRef getValues(int docId) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) return StringArrayRef.EMPTY;
+                BytesRef value = values[ord];
+                arrayScratch.values[0] = value == null ? null : value.utf8ToString();
+                return arrayScratch;
+            }
+
+            @Override
+            public Iter getIter(int docId) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) return Iter.Empty.INSTANCE;
+                return iter.reset(values[ord].utf8ToString());
+            }
+
+            @Override
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                int ord = ordinals.getOrd(docId);
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                    return;
+                }
+                proc.onValue(docId, values[ord].utf8ToString());
+            }
+        }
+
+        static class Multi extends StringValues {
+
+            private final StringArrayRef arrayScratch = new StringArrayRef(new String[10], 0);
+            private final ValuesIter iter;
+
+            Multi(BytesRef[] values, Ordinals.Docs ordinals) {
+                super(values, ordinals);
+                iter = new ValuesIter(values);
+            }
+
+            @Override
+            public boolean isMultiValued() {
+                return true;
+            }
+
+            @Override
+            public StringArrayRef getValues(int docId) {
+                IntArrayRef ords = ordinals.getOrds(docId);
+                int size = ords.size();
+                if (size == 0) return StringArrayRef.EMPTY;
+
+                arrayScratch.reset(size);
+                for (int i = ords.start; i < ords.end; i++) {
+                    BytesRef value = values[ords.values[i]];
+                    arrayScratch.values[arrayScratch.end++] = value == null ? null : value.utf8ToString();
+                }
+                return arrayScratch;
+            }
+
+            @Override
+            public Iter getIter(int docId) {
+                return iter.reset(ordinals.getIter(docId));
+            }
+
+            @Override
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
+                int ord = iter.next();
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                    return;
+                }
+                do {
+                    BytesRef value = values[ord];
+                    proc.onValue(docId, value == null ? null : value.utf8ToString());
+                } while ((ord = iter.next()) != 0);
+            }
+
+            static class ValuesIter implements StringValues.Iter {
+
+                private final BytesRef[] values;
+                private Ordinals.Docs.Iter ordsIter;
+                private int ord;
+
+                ValuesIter(BytesRef[] values) {
+                    this.values = values;
+                }
+
+                public ValuesIter reset(Ordinals.Docs.Iter ordsIter) {
+                    this.ordsIter = ordsIter;
+                    this.ord = ordsIter.next();
+                    return this;
+                }
+
+                @Override
+                public boolean hasNext() {
+                    return ord != 0;
+                }
+
+                @Override
+                public String next() {
+                    BytesRef value = values[ord];
+                    ord = ordsIter.next();
+                    return value == null ? null : value.utf8ToString();
+                }
+            }
+        }
+    }
+
+    static class Empty extends ConcreteBytesRefAtomicFieldData {
+
+        Empty(int numDocs) {
+            super(null, new EmptyOrdinals(numDocs));
+        }
+
+        @Override
+        public boolean isMultiValued() {
+            return false;
+        }
+
+        @Override
+        public int getNumDocs() {
+            return ordinals.getNumDocs();
+        }
+
+        @Override
+        public boolean isValuesOrdered() {
+            return true;
+        }
+
+        @Override
+        public long getMemorySizeInBytes() {
+            return 0;
+        }
+
+        @Override
+        public BytesValues.WithOrdinals getBytesValues() {
+            return new BytesValues.WithOrdinals.Empty((EmptyOrdinals) ordinals);
+        }
+
+        @Override
+        public HashedBytesValues.WithOrdinals getHashedBytesValues() {
+            return new HashedBytesValues.WithOrdinals.Empty((EmptyOrdinals) ordinals);
+        }
+
+        @Override
+        public StringValues.WithOrdinals getStringValues() {
+            return new StringValues.WithOrdinals.Empty((EmptyOrdinals) ordinals);
+        }
+
+        @Override
+        public ScriptDocValues.Strings getScriptValues() {
+            return ScriptDocValues.EMPTY_STRINGS;
         }
     }
 }

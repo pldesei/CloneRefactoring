@@ -1,19 +1,23 @@
-(startLine=250 endLine=266 srcPath=/root/Projects/eclipse.jdt.coreFilter/604/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SortElementsOperation.java)
-            private void sortElements(List elements, ListRewrite listRewrite) {
-                if (elements.size() == 0)
-                    return;
-                
-                final List myCopy = new ArrayList();
-                myCopy.addAll(elements);
-                Collections.sort(myCopy, SortElementsOperation.this.comparator);
-                
-                for (int i = 0; i < elements.size(); i++) {
-                    ASTNode oldNode= (ASTNode) elements.get(i);
-                    ASTNode newNode= (ASTNode) myCopy.get(i);
-                    if (oldNode != newNode) {
-                        listRewrite.replace(oldNode, rewriter.createMoveTarget(newNode), group);
-                        hasChanges[0]= true;
-                    }
-                }
+(startLine=378 endLine=398 srcPath=/root/Projects/eclipse.jdt.coreFilter/676/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/UnresolvedReferenceNameFinder.java)
+    private int indexOfNextName(int index) {
+        int nextIndex = index + 1;
+        while (nextIndex <= this.potentialVariableNamesPtr &&
+                this.potentialVariableNames[nextIndex] == null) {
+            int jumpIndex = -this.potentialVariableNameStarts[nextIndex];
+            if (jumpIndex > 0) {
+                nextIndex = jumpIndex;
+            } else {
+                nextIndex++;
             }
+        }
+        
+        if (this.potentialVariableNamesPtr < nextIndex) {
+            this.potentialVariableNamesPtr = index;
+            return -1;
+        }
+        if (index + 1 < nextIndex) {
+            this.potentialVariableNameStarts[index + 1] = -nextIndex;
+        }
+        return nextIndex;
+    }
 

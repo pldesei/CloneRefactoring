@@ -1,17 +1,16 @@
-(startLine=122 endLine=136 srcPath=/root/Projects/elasticsearchFilter/1887/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexStatus.java)
-    public SizeValue storeSize() {
-        long bytes = -1;
-        for (IndexShardStatus shard : this) {
-            if (shard.storeSize() != null) {
-                if (bytes == -1) {
-                    bytes = 0;
-                }
-                bytes += shard.storeSize().bytes();
+(startLine=511 endLine=524 srcPath=/root/Projects/elasticsearchFilter/1733/elasticsearch/plugins/transport/thrift/src/main/gen-java/org/elasticsearch/thrift/Rest.java)
+        public String toString() {
+            StringBuilder sb = new StringBuilder("execute_args(");
+            boolean first = true;
+
+            sb.append("request:");
+            if (this.request == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.request);
             }
+            first = false;
+            sb.append(")");
+            return sb.toString();
         }
-        if (bytes == -1) {
-            return null;
-        }
-        return new SizeValue(bytes);
-    }
 

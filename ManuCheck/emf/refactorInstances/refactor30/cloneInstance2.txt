@@ -1,10 +1,39 @@
-(startLine=1094 endLine=1101 srcPath=/root/Projects/org.eclipse.emfFilter/70/org.eclipse.emf/plugins/org.eclipse.emf.common/src/org/eclipse/emf/common/util/SegmentSequence.java)
-      public String[] getInternalizedValue()
-      {
-        int length = segmentCount;
-        String[] newSegments = new String [length + 1];
-        System.arraycopy(segments, 0, newSegments, 0, length);
-        newSegments[length] = CommonUtil.STRING_POOL.intern(segment, offset, count, segmentHashCode);
-        return newSegments;
-      }
+(startLine=275 endLine=311 srcPath=/root/Projects/org.eclipse.emfFilter/92/org.eclipse.emf/plugins/org.eclipse.emf.common.ui/src/org/eclipse/emf/common/ui/dialogs/ResourceDialog.java)
+        public void widgetSelected(SelectionEvent event)
+         {
+           if (isMulti())
+           {
+             StringBuffer uris = new StringBuffer();
+
+             IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, true, null, null);
+             for (int i = 0, len = files.length; i < len; i++)
+             {
+               uris.append(URI.createPlatformResourceURI(files[i].getFullPath().toString(), true));
+               uris.append("  ");
+             }
+             uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
+           }
+           else
+           {
+             IFile file = null;
+
+             if (isSave())
+             {
+               file = WorkspaceResourceDialog.openNewFile(getShell(), null, null, null, null);
+             }
+             else
+             {
+               IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, false, null, null);
+               if (files.length != 0)
+               {
+                 file = files[0];
+               }
+             }
+             
+             if (file != null)
+             {
+               uriField.setText(URI.createPlatformResourceURI(file.getFullPath().toString(), true).toString());
+             }
+           }
+         }
 

@@ -1,32 +1,12 @@
-(startLine=56 endLine=85 srcPath=/root/Projects/org.eclipse.emfFilter/372/org.eclipse.emf/plugins/org.eclipse.emf.mapping.ecore2ecore.editor/src/org/eclipse/emf/mapping/ecore2ecore/action/AddInputRootAction.java)
-  static Collection<?> getRootsToAdd(final IWorkbenchPart workbenchPart, EditingDomain editingDomain)
+(startLine=399 endLine=408 srcPath=/root/Projects/org.eclipse.emfFilter/507/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/unsettable/impl/AUImpl.java)
+  @Override
+  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
   {
-    final Collection<Object> objects = new ArrayList<Object>();
-    EcoreActionBarContributor.ExtendedLoadResourceAction.ExtendedLoadResourceDialog loadEcoreResourceDialog =
-      new EcoreActionBarContributor.ExtendedLoadResourceAction.ExtendedLoadResourceDialog(workbenchPart.getSite().getShell(), editingDomain)
-      {
-        @Override
-        protected boolean processResources()
-        {
-          if (domain != null)
-          {
-            for (URI uri : getURIs())
-            {
-              try
-              {
-                objects.addAll(((Ecore2EcoreEditor)workbenchPart).getEditingDomain().getResourceSet().getResource(uri, true).getContents());
-              }
-              catch (RuntimeException exception)
-              {
-                Ecore2EcoreEditorPlugin.INSTANCE.log(exception);
-              }
-            }
-          }
-          return true;
-        }
-      };
-      
-    loadEcoreResourceDialog.open();
-    return objects;
+    switch (eContainerFeatureID)
+    {
+      case URefPackage.AU__C2U:
+        return eInternalContainer().eInverseRemove(this, URefPackage.C2U__AU, C2U.class, msgs);
+    }
+    return super.eBasicRemoveFromContainerFeature(msgs);
   }
 

@@ -1,17 +1,18 @@
-(startLine=213 endLine=227 srcPath=/root/Projects/elasticsearchFilter/1712/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/node/DiscoveryNodes.java)
-    public String prettyPrint() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("nodes: \n");
-        for (DiscoveryNode node : this) {
-            sb.append("   ").append(node);
-            if (node == localNode()) {
-                sb.append(", local");
-            }
-            if (node == masterNode()) {
-                sb.append(", master");
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
+(startLine=134 endLine=149 srcPath=/root/Projects/elasticsearchFilter/1204/elasticsearch/src/main/java/org/elasticsearch/index/search/geo/GeoDistanceRangeFilter.java)
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeoDistanceRangeFilter filter = (GeoDistanceRangeFilter) o;
+
+        if (Double.compare(filter.inclusiveLowerPoint, inclusiveLowerPoint) != 0) return false;
+        if (Double.compare(filter.inclusiveUpperPoint, inclusiveUpperPoint) != 0) return false;
+        if (Double.compare(filter.lat, lat) != 0) return false;
+        if (Double.compare(filter.lon, lon) != 0) return false;
+        if (!indexFieldData.getFieldNames().indexName().equals(filter.indexFieldData.getFieldNames().indexName()))
+            return false;
+        if (geoDistance != filter.geoDistance) return false;
+
+        return true;
     }
 

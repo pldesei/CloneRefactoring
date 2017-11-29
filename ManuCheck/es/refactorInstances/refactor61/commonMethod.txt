@@ -1,12 +1,9 @@
-(startLine=226 endLine=235 srcPath=/root/Projects/elasticsearchFilter/1126/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
-        void onPhaseFailure(Throwable t, long searchId, int shardIndex) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("[{}] Failed to execute query phase", t, searchId);
-            }
-            addShardFailure(shardIndex, new ShardSearchFailure(t));
-            successfulOps.decrementAndGet();
-            if (counter.decrementAndGet() == 0) {
-                finishHim();
-            }
-        }
+(startLine=223 endLine=229 srcPath=/root/Projects/elasticsearchFilter/1141/elasticsearch/src/test/java/org/elasticsearch/test/integration/indexlifecycle/IndexLifecycleActionTests.java)
+    private String getLocalNodeId(String name) {
+        assert node(name) != null : "no node for name: " + name;
+        Discovery discovery = ((InternalNode) node(name)).injector().getInstance(Discovery.class);
+        String nodeId = discovery.localNode().getId();
+        assertThat(nodeId, not(nullValue()));
+        return nodeId;
+    }
 

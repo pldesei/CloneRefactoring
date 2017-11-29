@@ -1,14 +1,12 @@
-(startLine=38 endLine=49 srcPath=/root/Projects/elasticsearchFilter/1777/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/Analysis.java)
-    public static Set<?> parseStopWords(Settings settings, Set<?> defaultStopWords) {
-        String value = settings.get("stopwords");
-        if (value != null && "_none_".equals(value)) {
-            return ImmutableSet.of();
+(startLine=57 endLine=66 srcPath=/root/Projects/elasticsearchFilter/1843/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/store/fs/FsStore.java)
+    protected LockFactory buildLockFactory() throws IOException {
+        String fsLock = componentSettings.get("fs_lock", "native");
+        LockFactory lockFactory = new NoLockFactory();
+        if (fsLock.equals("native")) {
+            lockFactory = new NativeFSLockFactory();
+        } else if (fsLock.equals("simple")) {
+            lockFactory = new SimpleFSLockFactory();
         }
-        String[] stopWords = settings.getAsArray("stopwords", null);
-        if (stopWords != null) {
-            return ImmutableSet.copyOf(Iterators.forArray(stopWords));
-        } else {
-            return defaultStopWords;
-        }
+        return lockFactory;
     }
 

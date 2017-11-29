@@ -1,15 +1,21 @@
-(startLine=81 endLine=93 srcPath=/root/Projects/elasticsearchFilter/877/elasticsearch/src/main/java/org/elasticsearch/cluster/metadata/AliasValidator.java)
-    public void validateAliasFilter(String alias, String filter, IndexQueryParserService indexQueryParserService) {
-        assert indexQueryParserService != null;
-        try {
-            XContentParser parser = XContentFactory.xContent(filter).createParser(filter);
-            try {
-                indexQueryParserService.parseInnerFilter(parser);
-            } finally {
-                parser.close();
+(startLine=456 endLine=474 srcPath=/root/Projects/elasticsearchFilter/940/elasticsearch/src/main/java/org/elasticsearch/cluster/routing/IndexShardRoutingTable.java)
+    private static ImmutableList<ShardRouting> collectAttributeShards(AttributesKey key, DiscoveryNodes nodes, ArrayList<ShardRouting> from) {
+        final ArrayList<ShardRouting> to = new ArrayList<ShardRouting>();
+        for (final String attribute : key.attributes) {
+            final String localAttributeValue = nodes.localNode().attributes().get(attribute);
+            if (localAttributeValue != null) {
+                for (Iterator<ShardRouting> iterator = from.iterator(); iterator.hasNext(); ) {
+                    ShardRouting fromShard = iterator.next();
+                    final DiscoveryNode discoveryNode = nodes.get(fromShard.currentNodeId());
+                    if (discoveryNode == null) {
+                        iterator.remove(); // node is not present anymore - ignore shard
+                    } else if (localAttributeValue.equals(discoveryNode.attributes().get(attribute))) {
+                        iterator.remove();
+                        to.add(fromShard);
+                    }
+                }
             }
-        } catch (Throwable e) {
-            throw new ElasticsearchIllegalArgumentException("failed to parse filter for alias [" + alias + "]", e);
         }
+        return ImmutableList.copyOf(to);
     }
 

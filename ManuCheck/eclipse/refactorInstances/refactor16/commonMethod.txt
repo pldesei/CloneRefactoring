@@ -1,21 +1,5 @@
-(startLine=39 endLine=57 srcPath=/root/Projects/eclipse.jdt.coreFilter/1764/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/ClassFileReaderTest.java)
-    private void checkClassFile(String className, String source, String expectedOutput) {
-        compileAndDeploy(source, className);
-        try {
-            File f = new File(EVAL_DIRECTORY + File.separator + className + ".class");
-            byte[] classFileBytes = org.eclipse.jdt.internal.compiler.util.Util.getFileByteContent(f);
-            ClassFileBytesDisassembler disassembler = ToolFactory.createDefaultClassFileBytesDisassembler();
-            String result = disassembler.disassemble(classFileBytes, "\n", ClassFileBytesDisassembler.DETAILED);
-            if (!result.equals(expectedOutput)) {
-                System.out.println(Util.displayString(result, 3));
-            }
-            assertEquals("Wrong contents", expectedOutput, result);
-        } catch (org.eclipse.jdt.core.util.ClassFormatException e) {
-            assertTrue(false);
-        } catch (IOException e) {
-            assertTrue(false);
-        } finally {
-            removeTempClass(className);
-        }
-    }
+(startLine=877 endLine=879 srcPath=/root/Projects/eclipse.jdt.coreFilter/1846/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CompilationUnit.java)
+public boolean isPrimary() {
+    return this.owner == DefaultWorkingCopyOwner.PRIMARY;
+}
 

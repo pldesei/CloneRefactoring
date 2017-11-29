@@ -1,0 +1,10 @@
+(startLine=952 endLine=959 srcPath=/root/Projects/org.eclipse.emfFilter/70/org.eclipse.emf/plugins/org.eclipse.emf.common/src/org/eclipse/emf/common/util/SegmentSequence.java)
+      public String[] getInternalizedValue()
+      {
+        int length = segmentCount;
+        String[] newSegments = new String [length + 1];
+        System.arraycopy(segments, 0, newSegments, 0, length);
+        newSegments[length] = needsInterning ? CommonUtil.STRING_POOL.intern(segment) : segment;
+        return newSegments;
+      }
+

@@ -1,30 +1,13 @@
-(startLine=96 endLine=123 srcPath=/root/Projects/elasticsearchFilter/1269/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/strings/TermsStringFacetExecutor.java)
-    public InternalFacet buildFacet(String facetName) {
-        if (facets.isEmpty()) {
-            CacheRecycler.pushObjectIntMap(facets);
-            return new InternalStringTermsFacet(facetName, comparatorType, size, ImmutableList.<InternalStringTermsFacet.TermEntry>of(), missing, total);
-        } else {
-            if (size < EntryPriorityQueue.LIMIT) {
-                EntryPriorityQueue ordered = new EntryPriorityQueue(size, comparatorType.comparator());
-                for (TObjectIntIterator<HashedBytesRef> it = facets.iterator(); it.hasNext(); ) {
-                    it.advance();
-                    ordered.insertWithOverflow(new InternalStringTermsFacet.TermEntry(it.key().bytes, it.value()));
+(startLine=257 endLine=267 srcPath=/root/Projects/elasticsearchFilter/1270/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/plain/ConcreteBytesRefAtomicFieldData.java)
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
+                int ord = iter.next();
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                    return;
                 }
-                InternalStringTermsFacet.TermEntry[] list = new InternalStringTermsFacet.TermEntry[ordered.size()];
-                for (int i = ordered.size() - 1; i >= 0; i--) {
-                    list[i] = ((InternalStringTermsFacet.TermEntry) ordered.pop());
-                }
-                CacheRecycler.pushObjectIntMap(facets);
-                return new InternalStringTermsFacet(facetName, comparatorType, size, Arrays.asList(list), missing, total);
-            } else {
-                BoundedTreeSet<InternalStringTermsFacet.TermEntry> ordered = new BoundedTreeSet<InternalStringTermsFacet.TermEntry>(comparatorType.comparator(), size);
-                for (TObjectIntIterator<HashedBytesRef> it = facets.iterator(); it.hasNext(); ) {
-                    it.advance();
-                    ordered.add(new InternalStringTermsFacet.TermEntry(it.key().bytes, it.value()));
-                }
-                CacheRecycler.pushObjectIntMap(facets);
-                return new InternalStringTermsFacet(facetName, comparatorType, size, ordered, missing, total);
+                do {
+                    proc.onValue(docId, values[ord]);
+                } while ((ord = iter.next()) != 0);
             }
-        }
-    }
 

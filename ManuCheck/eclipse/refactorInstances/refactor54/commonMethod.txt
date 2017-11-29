@@ -1,22 +1,26 @@
-(startLine=420 endLine=439 srcPath=/root/Projects/eclipse.jdt.coreFilter/1045/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor2.java)
-    private void formatAction(final int line, final Statement action) {
-        if (action != null) {
-            switch(action.getNodeType()) {
-                case ASTNode.BLOCK :
-                    formatLeftCurlyBrace(line, this.preferences.brace_position_for_block);
-                    action.accept(this);
-                    break;
-                case ASTNode.EMPTY_STATEMENT :
-                    action.accept(this);
-                    break;
-                default :
-                    this.scribe.printNewLine();
-                    this.scribe.indent();
-                    action.accept(this);
-                    this.scribe.unIndent();            
-            }
-        } else {
-            action.accept(this);
+(startLine=611 endLine=634 srcPath=/root/Projects/eclipse.jdt.coreFilter/1076/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndexForNameAndType(char[] name, char[] signature) {
+    int index;
+    if ((index = putInNameAndTypeCacheIfAbsent(name, signature, currentIndex)) < 0) {
+        // The entry doesn't exit yet
+        currentIndex++;
+        if ((index = -index) > 0xFFFF){
+            this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
         }
+        writeU1(NameAndTypeTag);
+        int nameIndexOffset = this.currentOffset;
+        if (currentOffset + 4 >= poolContent.length) {
+            resizePoolContents(4);
+        }
+        currentOffset+=4;
+        
+        final int nameIndex = literalIndex(name);
+        final int typeIndex = literalIndex(signature);
+        poolContent[nameIndexOffset++] = (byte) (nameIndex >> 8);
+        poolContent[nameIndexOffset++] = (byte) nameIndex;
+        poolContent[nameIndexOffset++] = (byte) (typeIndex >> 8);
+        poolContent[nameIndexOffset] = (byte) typeIndex;
     }
+    return index;
+}
 

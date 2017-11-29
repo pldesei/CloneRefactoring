@@ -1,47 +1,20 @@
-(startLine=78 endLine=122 srcPath=/root/Projects/eclipse.jdt.coreFilter/885/eclipse.jdt.core/org.eclipse.jdt.apt.tests/src/org/eclipse/jdt/apt/tests/ReadAnnotationTests.java)
-    private void addQuestionSources()
-    {
-        IPath srcRoot = getSourcePath();
-        // SimpleAnnotation.java
-        env.addClass( 
-                srcRoot, 
-                CodeExample.PACKAGE_QUESTION, 
-                CodeExample.SIMPLE_ANNOTATION_CLASS,
-                CodeExample.SIMPLE_ANNOTATION_CODE );
-        
-        // RTVisibleAnnotation.java
-        env.addClass(
-                srcRoot,
-                CodeExample.PACKAGE_QUESTION, 
-                CodeExample.RTVISIBLE_CLASS,
-                CodeExample.RTVISIBLE_ANNOTATION_CODE);
-        
-        // RTInvisibleAnnotation.java
-        env.addClass(
-                srcRoot,
-                CodeExample.PACKAGE_QUESTION, 
-                CodeExample.RTINVISIBLE_CLASS,
-                CodeExample.RTINVISIBLE_ANNOTATION_CODE);
-        
-        // package-info.java
-        env.addClass(
-                srcRoot,
-                CodeExample.PACKAGE_QUESTION, 
-                CodeExample.PACKAGE_INFO_CLASS,
-                CodeExample.PACKAGE_INFO_CODE);
-        
-        // Color.java
-        env.addClass(
-                srcRoot,
-                CodeExample.PACKAGE_QUESTION, 
-                CodeExample.COLOR_CLASS,
-                CodeExample.COLOR_CODE);
-        
-        // AnnotationTest.java
-        env.addClass(
-                srcRoot,
-                CodeExample.PACKAGE_QUESTION, 
-                CodeExample.ANNOTATION_TEST_CLASS,
-                CodeExample.ANNOTATION_TEST_CODE);
+(startLine=659 endLine=676 srcPath=/root/Projects/eclipse.jdt.coreFilter/1552/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTestAST3_2.java)
+    public void test0419() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0419", "A.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        ASTNode result = runConversion(AST.JLS3, sourceUnit, true);
+        assertTrue("not a compilation unit", result.getNodeType() == ASTNode.COMPILATION_UNIT); //$NON-NLS-1$
+        CompilationUnit unit = (CompilationUnit) result;
+        assertEquals("Wrong number of problems", 1, unit.getProblems().length); //$NON-NLS-1$<
+        ASTNode node = getASTNode(unit, 1, 0, 0);
+        assertEquals("Not an expression statement", node.getNodeType(), ASTNode.EXPRESSION_STATEMENT);
+        ExpressionStatement expressionStatement = (ExpressionStatement) node;
+        Expression expression = expressionStatement.getExpression();
+        assertEquals("Not an assignment", expression.getNodeType(), ASTNode.ASSIGNMENT);
+        Assignment assignment = (Assignment) expression;
+        Expression expression2 = assignment.getLeftHandSide();
+        assertEquals("Not a name", expression2.getNodeType(), ASTNode.SIMPLE_NAME);
+        SimpleName simpleName = (SimpleName) expression2;
+        IBinding binding = simpleName.resolveBinding();
+        assertNull(binding);
     }
 

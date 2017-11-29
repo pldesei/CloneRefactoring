@@ -1,5 +1,5 @@
-(startLine=79 endLine=97 srcPath=/root/Projects/elasticsearchFilter/1953/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryAndFetchAction.java)
-        @Override protected void moveToSecondPhase() {
+(startLine=165 endLine=183 srcPath=/root/Projects/elasticsearchFilter/1953/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchDfsQueryAndFetchAction.java)
+        private void innerFinishHim() {
             sortedShardList = searchPhaseController.sortDocs(queryFetchResults.values());
             final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryFetchResults, queryFetchResults);
             String scrollIdX = null;

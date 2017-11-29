@@ -1,7 +1,5 @@
-(startLine=103 endLine=107 srcPath=/root/Projects/eclipse.jdt.coreFilter/321/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/ExternalPackageFragmentRoot.java)
-    public IResource resource(PackageFragmentRoot root) {
-        if (this.resource == null)
-            return (IResource) (this.resource = JavaModelManager.getExternalManager().getFolder(this.externalPath));
-        return super.resource(root);
-    }
+(startLine=491 endLine=493 srcPath=/root/Projects/eclipse.jdt.coreFilter/321/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/ClassFile.java)
+public IResource resource(PackageFragmentRoot root) {
+    return ((IContainer) ((Openable) this.parent).resource(root)).getFile(new Path(this.getElementName()));
+}
 

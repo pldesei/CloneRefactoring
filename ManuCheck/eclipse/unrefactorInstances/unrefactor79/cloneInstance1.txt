@@ -1,61 +1,38 @@
-(startLine=6198 endLine=6256 srcPath=/root/Projects/eclipse.jdt.coreFilter/744/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AnnotationTest.java)
-public void test190() {
-    this.runConformTest(
-        new String[] {
-            "A.java",
-            "public @interface A {\n" +
-            "  int value();\n" +
-            "}\n"
-            },
-        "");
-    String binName1 = OUTPUT_DIR + File.separator + "bin1";
-    File bin1 = new File(binName1);
-    bin1.mkdir();
-    String [] javaClassLibs = Util.getJavaClassLibs();
-    int javaClassLibsLength;
-    String [] xClassLibs = new String[(javaClassLibsLength = javaClassLibs.length) + 2];
-    System.arraycopy(javaClassLibs, 0, xClassLibs, 0, javaClassLibsLength);
-    xClassLibs[javaClassLibsLength] = OUTPUT_DIR;
-    xClassLibs[javaClassLibsLength + 1] = binName1;
-    (new File(OUTPUT_DIR + File.separator + "A.class")).renameTo(new File(binName1 + File.separator + "A.class"));    
-    this.runConformTest(
-        new String[] {
-            "X.java",
-            "public class X {\n" + 
-            "    @A(0)\n" + 
-            "    void foo() {\n" + 
-            "        System.out.println(\"SUCCESS\");\n" + 
+(startLine=2648 endLine=2683 srcPath=/root/Projects/eclipse.jdt.coreFilter/2052/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testIC_1FMGUPR() {
+    String str = 
+            "package p; \n" + 
+            "/**\n" + 
+            " * 1FMGUPR\n" + 
+            " */\n" + 
+            "public class IC {\n" + 
+            "    void foo(){\n" + 
+            "        new String().toString().\n" + 
             "    }\n" + 
-            "    public static void main(String args[]) {\n" + 
-            "        new X().foo();\n" + 
-            "    }\n" + 
-            "}",
-        },
-        "SUCCESS",
-        xClassLibs,
-        false, // do not flush
-        null);
-    String binName2 = OUTPUT_DIR + File.separator + "bin2";
-    File bin2 = new File(binName2);
-    bin2.mkdir();
-    (new File(OUTPUT_DIR + File.separator + "X.class")).renameTo(new File(binName2 + File.separator + "X.class"));    
-    String [] yClassLibs = new String[javaClassLibsLength + 2];
-    System.arraycopy(javaClassLibs, 0, yClassLibs, 0, javaClassLibsLength);
-    yClassLibs[javaClassLibsLength] = OUTPUT_DIR;
-    yClassLibs[javaClassLibsLength + 1] = binName2;
-    // Y compiles despite the fact that A is not on the classpath
-    this.runConformTest(
-        new String[] {
-            "Y.java",
-            "public class Y {\n" + 
-            "    public static void main(String args[]) {\n" + 
-            "        new X().foo();\n" + 
-            "    }\n" + 
-            "}",
-        },
-        "SUCCESS",
-        yClassLibs,
-        false, // do not flush
-        null);
-}
+            "}\n";
+
+    String testName = "<complete on multiple method/field call>";
+    String completeBehind = "new String().toString().";
+    String expectedCompletionNodeToString = "<CompleteOnMemberAccess:new String().toString().>";
+    String completionIdentifier = "";
+    String expectedReplacedSource = "";
+    int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
+    String expectedUnitDisplayString =
+        "package p;\n" + 
+        "public class IC {\n" + 
+        "  public IC() {\n" + 
+        "  }\n" + 
+        "  void foo() {\n" + 
+        "    <CompleteOnMemberAccess:new String().toString().>;\n" + 
+        "  }\n" + 
+        "}\n";
+
+    checkMethodParse(
+        str.toCharArray(), 
+        cursorLocation, 
+        expectedCompletionNodeToString,
+        expectedUnitDisplayString,
+        completionIdentifier,
+        expectedReplacedSource,
+        testName); }
 

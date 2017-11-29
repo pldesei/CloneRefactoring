@@ -1,10 +1,10 @@
-(startLine=573 endLine=581 srcPath=/root/Projects/org.eclipse.emfFilter/732/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenFeatureImpl.java)
+(startLine=236 endLine=244 srcPath=/root/Projects/org.eclipse.emfFilter/732/org.eclipse.emf/examples/org.eclipse.emf.java/src/org/eclipse/emf/java/impl/JParameterImpl.java)
   public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
   {
     switch (eContainerFeatureID)
     {
-      case GenModelPackage.GEN_FEATURE__GEN_CLASS:
-        return eInternalContainer().eInverseRemove(this, GenModelPackage.GEN_CLASS__GEN_FEATURES, GenClass.class, msgs);
+      case JavaPackage.JPARAMETER__METHOD:
+        return eInternalContainer().eInverseRemove(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
     }
     return super.eBasicRemoveFromContainerFeature(msgs);
   }

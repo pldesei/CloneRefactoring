@@ -1,28 +1,34 @@
-(startLine=1536 endLine=1561 srcPath=/root/Projects/eclipse.jdt.coreFilter/405/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverter15Test.java)
-    public void test0049() throws JavaModelException {
-        ICompilationUnit sourceUnit = getCompilationUnit("Converter15" , "src", "test0049", "X.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        char[] source = sourceUnit.getSource().toCharArray();
-        ASTNode result = runJLS3Conversion(sourceUnit, true, true);
-        assertNotNull(result);
-        assertTrue("Not a compilation unit", result.getNodeType() == ASTNode.COMPILATION_UNIT);
-        CompilationUnit compilationUnit = (CompilationUnit) result;
-        assertProblemsSize(compilationUnit, 0);
-        ASTNode node = getASTNode(compilationUnit, 0);
-        assertEquals("Not an enum declaration", ASTNode.ENUM_DECLARATION, node.getNodeType());
-        EnumDeclaration enumDeclaration = (EnumDeclaration) node;
-        List enumConstants = enumDeclaration.enumConstants();
-        assertEquals("wrong size", 2, enumConstants.size());
-        EnumConstantDeclaration enumConstantDeclaration = (EnumConstantDeclaration) enumConstants.get(0);
-        IMethodBinding methodBinding = enumConstantDeclaration.resolveConstructorBinding();
-        assertNotNull("No binding", methodBinding);
-        assertTrue("Not a constructor", methodBinding.isConstructor());
-        checkSourceRange(enumConstantDeclaration, "GREEN(0, 1)", source);
-        checkSourceRange(enumConstantDeclaration.getName(), "GREEN", source);
-        enumConstantDeclaration = (EnumConstantDeclaration) enumConstants.get(1);
-        methodBinding = enumConstantDeclaration.resolveConstructorBinding();
-        assertNotNull("No binding", methodBinding);
-        assertTrue("Not a constructor", methodBinding.isConstructor());
-        checkSourceRange(enumConstantDeclaration.getName(), "RED", source);
-        checkSourceRange(enumConstantDeclaration, "RED", source);
+(startLine=268 endLine=299 srcPath=/root/Projects/eclipse.jdt.coreFilter/538/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/AbstractSelectionTest.java)
+protected ASTNode findMethod(TypeDeclaration type, int cursorLocation) {
+    if (type.methods != null) {
+        for (int i = 0; i < type.methods.length; i++) {
+            AbstractMethodDeclaration method = type.methods[i];
+            if (method.declarationSourceStart <= cursorLocation && (cursorLocation <= method.declarationSourceEnd || method.declarationSourceEnd == 0)) {
+                return method;
+            }
+        }
     }
+    if (type.memberTypes != null) {
+        for (int i = 0; i < type.memberTypes.length; i++) {
+            TypeDeclaration memberType = type.memberTypes[i];
+            ASTNode method = findMethod(memberType, cursorLocation);
+            if (method != null) {
+                return method;
+            }
+        }
+    }
+    if (type.fields != null) {
+        for (int i = 0; i < type.fields.length; i++) {
+            FieldDeclaration field = type.fields[i];
+            if (field instanceof Initializer) {
+                Initializer initializer = (Initializer)field;
+                Block block = initializer.block;
+                if (block != null && block.sourceStart <= cursorLocation && (cursorLocation <= block.sourceEnd || block.sourceEnd == 0)) {
+                    return type;
+                }
+            }
+        }
+    }
+    return null;
+}
 

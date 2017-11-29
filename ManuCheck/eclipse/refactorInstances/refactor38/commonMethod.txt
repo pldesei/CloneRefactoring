@@ -1,21 +1,14 @@
-(startLine=39 endLine=57 srcPath=/root/Projects/eclipse.jdt.coreFilter/1350/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
-    protected void assertBindingsEqual(String expected, IBinding[] actualBindings) {
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0, length = actualBindings.length; i < length; i++) {
-            if (i > 0) buffer.append('\n');
-            if (actualBindings[i] == null)
-                buffer.append("<null>");
-            else
-                buffer.append(actualBindings[i].getKey());
-        }
-        String actual = buffer.toString();
-        if (!expected.equals(actual)) {
-            System.out.print(displayString(actual, 4));
-            System.out.println(',');
-        }
-        assertEquals(
-            "Unexpected bindings",
-            expected,
-            actual);
-    }
+(startLine=236 endLine=247 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/SuperTypeReferencePattern.java)
+protected StringBuffer print(StringBuffer output) {
+    output.append(
+        this.checkOnlySuperinterfaces
+            ? "SuperInterfaceReferencePattern: <" //$NON-NLS-1$
+            : "SuperTypeReferencePattern: <"); //$NON-NLS-1$
+    if (superSimpleName != null) 
+        output.append(superSimpleName);
+    else
+        output.append("*"); //$NON-NLS-1$
+    output.append(">"); //$NON-NLS-1$
+    return super.print(output);
+}
 

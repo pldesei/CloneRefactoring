@@ -1,17 +1,20 @@
-(startLine=129 endLine=143 srcPath=/root/Projects/org.eclipse.emfFilter/346/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/C4Impl.java)
-  public void setC(C newC)
-  {
-    if (newC != c)
+(startLine=2076 endLine=2093 srcPath=/root/Projects/org.eclipse.emfFilter/782/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicFeatureMap.java)
+    protected boolean scanPrevious()
     {
-      NotificationChain msgs = null;
-      if (c != null)
-        msgs = ((InternalEObject)c).eInverseRemove(this, RefPackage.C__C4, C.class, msgs);
-      if (newC != null)
-        msgs = ((InternalEObject)newC).eInverseAdd(this, RefPackage.C__C4, C.class, msgs);
-      msgs = basicSetC(newC, msgs);
-      if (msgs != null) msgs.dispatch();
+      Entry [] entries = (Entry [])((BasicEList)featureMap).data();
+      while (--entryCursor >= 0)
+      {
+        Entry entry = entries[entryCursor];
+        if (validator.isValid(entry.getEStructuralFeature()))
+        {
+          preparedResult = extractValue(entry);
+          prepared = -2;
+          return true;
+        }
+      }
+
+      prepared = -1;
+      lastCursor = -1;
+      return false;
     }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C4__C, newC, newC));
-  }
 

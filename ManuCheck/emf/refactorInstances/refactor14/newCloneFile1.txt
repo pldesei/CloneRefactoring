@@ -12,10 +12,13 @@
  *
  * </copyright>
  *
- * $Id: EmployeeImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
+ * $Id: BookOnTapeImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
  */
 package org.eclipse.emf.examples.extlibrary.impl;
 
+
+import java.util.Collection;
+import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -25,41 +28,54 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.examples.extlibrary.BookOnTape;
 import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
-import org.eclipse.emf.examples.extlibrary.Employee;
+import org.eclipse.emf.examples.extlibrary.Person;
+import org.eclipse.emf.examples.extlibrary.Writer;
 
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Employee</b></em>'.
+ * An implementation of the model object '<em><b>Book On Tape</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.EmployeeImpl#getManager <em>Manager</em>}</li>
+ *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getReader <em>Reader</em>}</li>
+ *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.BookOnTapeImpl#getAuthor <em>Author</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class EmployeeImpl extends PersonImpl implements Employee
+public class BookOnTapeImpl extends AudoVisualItemImpl implements BookOnTape
 {
   /**
-   * The cached value of the '{@link #getManager() <em>Manager</em>}' reference.
+   * The cached value of the '{@link #getReader() <em>Reader</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getManager()
+   * @see #getReader()
    * @generated
    * @ordered
    */
-  protected Employee manager = null;
+  protected Person reader = null;
+
+  /**
+   * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAuthor()
+   * @generated
+   * @ordered
+   */
+  protected Writer author = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected EmployeeImpl()
+  protected BookOnTapeImpl()
   {
     super();
   }
@@ -71,7 +87,7 @@ public class EmployeeImpl extends PersonImpl implements Employee
    */
   protected EClass eStaticClass()
   {
-    return EXTLibraryPackage.eINSTANCE.getEmployee();
+    return EXTLibraryPackage.eINSTANCE.getBookOnTape();
   }
 
   /**
@@ -79,19 +95,19 @@ public class EmployeeImpl extends PersonImpl implements Employee
    * <!-- end-user-doc -->
    * @generated
    */
-  public Employee getManager()
+  public Person getReader()
   {
-    if (manager != null && manager.eIsProxy())
+    if (reader != null && reader.eIsProxy())
     {
-      Employee oldManager = manager;
-      manager = (Employee)eResolveProxy((InternalEObject)manager);
-      if (manager != oldManager)
+      Person oldReader = reader;
+      reader = (Person)eResolveProxy((InternalEObject)reader);
+      if (reader != oldReader)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.EMPLOYEE__MANAGER, oldManager, manager));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
       }
     }
-    return manager;
+    return reader;
   }
 
   /**
@@ -99,9 +115,9 @@ public class EmployeeImpl extends PersonImpl implements Employee
    * <!-- end-user-doc -->
    * @generated
    */
-  public Employee basicGetManager()
+  public Person basicGetReader()
   {
-    return manager;
+    return reader;
   }
 
   /**
@@ -109,12 +125,55 @@ public class EmployeeImpl extends PersonImpl implements Employee
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setManager(Employee newManager)
+  public void setReader(Person newReader)
   {
-    Employee oldManager = manager;
-    manager = newManager;
+    Person oldReader = reader;
+    reader = newReader;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.EMPLOYEE__MANAGER, oldManager, manager));
+      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__READER, oldReader, reader));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Writer getAuthor()
+  {
+    if (author != null && author.eIsProxy())
+    {
+      Writer oldAuthor = author;
+      author = (Writer)eResolveProxy((InternalEObject)author);
+      if (author != oldAuthor)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
+      }
+    }
+    return author;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Writer basicGetAuthor()
+  {
+    return author;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setAuthor(Writer newAuthor)
+  {
+    Writer oldAuthor = author;
+    author = newAuthor;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR, oldAuthor, author));
   }
 
   /**
@@ -126,15 +185,24 @@ public class EmployeeImpl extends PersonImpl implements Employee
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.EMPLOYEE__ADDRESS:
-        return getAddress();
-      case EXTLibraryPackage.EMPLOYEE__FIRST_NAME:
-        return getFirstName();
-      case EXTLibraryPackage.EMPLOYEE__LAST_NAME:
-        return getLastName();
-      case EXTLibraryPackage.EMPLOYEE__MANAGER:
-        if (resolve) return getManager();
-        return basicGetManager();
+      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+        return getPublicationDate();
+      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+        return new Integer(getCopies());
+      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+        return getBorrowers();
+      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
+        return getTitle();
+      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
+        return new Integer(getMinutesLength());
+      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
+        return isDamaged() ? Boolean.TRUE : Boolean.FALSE;
+      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
+        if (resolve) return getReader();
+        return basicGetReader();
+      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
+        if (resolve) return getAuthor();
+        return basicGetAuthor();
     }
     return eDynamicGet(eFeature, resolve);
   }
@@ -148,17 +216,30 @@ public class EmployeeImpl extends PersonImpl implements Employee
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.EMPLOYEE__ADDRESS:
-        setAddress((String)newValue);
+      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+        setPublicationDate((Date)newValue);
         return;
-      case EXTLibraryPackage.EMPLOYEE__FIRST_NAME:
-        setFirstName((String)newValue);
+      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+        setCopies(((Integer)newValue).intValue());
         return;
-      case EXTLibraryPackage.EMPLOYEE__LAST_NAME:
-        setLastName((String)newValue);
+      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+        getBorrowers().clear();
+        getBorrowers().addAll((Collection)newValue);
         return;
-      case EXTLibraryPackage.EMPLOYEE__MANAGER:
-        setManager((Employee)newValue);
+      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
+        setTitle((String)newValue);
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
+        setMinutesLength(((Integer)newValue).intValue());
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
+        setDamaged(((Boolean)newValue).booleanValue());
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
+        setReader((Person)newValue);
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
+        setAuthor((Writer)newValue);
         return;
     }
     eDynamicSet(eFeature, newValue);
@@ -173,17 +254,29 @@ public class EmployeeImpl extends PersonImpl implements Employee
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.EMPLOYEE__ADDRESS:
-        setAddress(ADDRESS_EDEFAULT);
+      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+        setPublicationDate(PUBLICATION_DATE_EDEFAULT);
         return;
-      case EXTLibraryPackage.EMPLOYEE__FIRST_NAME:
-        setFirstName(FIRST_NAME_EDEFAULT);
+      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+        setCopies(COPIES_EDEFAULT);
         return;
-      case EXTLibraryPackage.EMPLOYEE__LAST_NAME:
-        setLastName(LAST_NAME_EDEFAULT);
+      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+        getBorrowers().clear();
         return;
-      case EXTLibraryPackage.EMPLOYEE__MANAGER:
-        setManager((Employee)null);
+      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
+        setTitle(TITLE_EDEFAULT);
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
+        setMinutesLength(MINUTES_LENGTH_EDEFAULT);
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
+        setDamaged(DAMAGED_EDEFAULT);
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
+        setReader((Person)null);
+        return;
+      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
+        setAuthor((Writer)null);
         return;
     }
     eDynamicUnset(eFeature);
@@ -198,16 +291,24 @@ public class EmployeeImpl extends PersonImpl implements Employee
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.EMPLOYEE__ADDRESS:
-        return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
-      case EXTLibraryPackage.EMPLOYEE__FIRST_NAME:
-        return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
-      case EXTLibraryPackage.EMPLOYEE__LAST_NAME:
-        return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
-      case EXTLibraryPackage.EMPLOYEE__MANAGER:
-        return manager != null;
+      case EXTLibraryPackage.BOOK_ON_TAPE__PUBLICATION_DATE:
+        return PUBLICATION_DATE_EDEFAULT == null ? publicationDate != null : !PUBLICATION_DATE_EDEFAULT.equals(publicationDate);
+      case EXTLibraryPackage.BOOK_ON_TAPE__COPIES:
+        return copies != COPIES_EDEFAULT;
+      case EXTLibraryPackage.BOOK_ON_TAPE__BORROWERS:
+        return borrowers != null && !borrowers.isEmpty();
+      case EXTLibraryPackage.BOOK_ON_TAPE__TITLE:
+        return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+      case EXTLibraryPackage.BOOK_ON_TAPE__MINUTES_LENGTH:
+        return minutesLength != MINUTES_LENGTH_EDEFAULT;
+      case EXTLibraryPackage.BOOK_ON_TAPE__DAMAGED:
+        return ((eFlags & DAMAGED_EFLAG) != 0) != DAMAGED_EDEFAULT;
+      case EXTLibraryPackage.BOOK_ON_TAPE__READER:
+        return reader != null;
+      case EXTLibraryPackage.BOOK_ON_TAPE__AUTHOR:
+        return author != null;
     }
     return eDynamicIsSet(eFeature);
   }
 
-} //EmployeeImpl
+} //BookOnTapeImpl

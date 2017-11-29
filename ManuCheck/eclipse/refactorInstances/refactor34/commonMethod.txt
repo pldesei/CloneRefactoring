@@ -1,30 +1,31 @@
-(startLine=139 endLine=166 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/ConstructorPattern.java)
+(startLine=66 endLine=94 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/QualifiedTypeDeclarationPattern.java)
 protected StringBuffer print(StringBuffer output) {
-    if (this.findDeclarations) {
-        output.append(this.findReferences
-            ? "ConstructorCombinedPattern: " //$NON-NLS-1$
-            : "ConstructorDeclarationPattern: "); //$NON-NLS-1$
-    } else {
-        output.append("ConstructorReferencePattern: "); //$NON-NLS-1$
+    switch (this.typeSuffix){
+        case CLASS_SUFFIX :
+            output.append("ClassDeclarationPattern: qualification<"); //$NON-NLS-1$
+            break;
+        case INTERFACE_SUFFIX :
+            output.append("InterfaceDeclarationPattern: qualification<"); //$NON-NLS-1$
+            break;
+        case ENUM_SUFFIX :
+            output.append("EnumDeclarationPattern: qualification<"); //$NON-NLS-1$
+            break;
+        case ANNOTATION_TYPE_SUFFIX :
+            output.append("AnnotationTypeDeclarationPattern: qualification<"); //$NON-NLS-1$
+            break;
+        default :
+            output.append("TypeDeclarationPattern: qualification<"); //$NON-NLS-1$
+            break;
     }
-    if (declaringQualification != null)
-        output.append(declaringQualification).append('.');
-    if (declaringSimpleName != null) 
-        output.append(declaringSimpleName);
-    else if (declaringQualification != null)
+    if (this.qualification != null) 
+        output.append(this.qualification);
+    else
         output.append("*"); //$NON-NLS-1$
-
-    output.append('(');
-    if (parameterSimpleNames == null) {
-        output.append("..."); //$NON-NLS-1$
-    } else {
-        for (int i = 0, max = parameterSimpleNames.length; i < max; i++) {
-            if (i > 0) output.append(", "); //$NON-NLS-1$
-            if (parameterQualifications[i] != null) output.append(parameterQualifications[i]).append('.');
-            if (parameterSimpleNames[i] == null) output.append('*'); else output.append(parameterSimpleNames[i]);
-        }
-    }
-    output.append(')');
+    output.append(">, type<"); //$NON-NLS-1$
+    if (simpleName != null) 
+        output.append(simpleName);
+    else
+        output.append("*"); //$NON-NLS-1$
     return super.print(output);
 }
 

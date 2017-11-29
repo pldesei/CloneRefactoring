@@ -1,15 +1,27 @@
-(startLine=463 endLine=475 srcPath=/root/Projects/eclipse.jdt.coreFilter/1965/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
-protected void deleteProjects(final String[] projectNames) throws CoreException {
-    ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
-        public void run(IProgressMonitor monitor) throws CoreException {
-            if (projectNames != null){
-                for (int i = 0, max = projectNames.length; i < max; i++){
-                    if (projectNames[i] != null)
-                        deleteProject(projectNames[i]);
+(startLine=111 endLine=135 srcPath=/root/Projects/eclipse.jdt.coreFilter/2024/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/DeletePackageFragmentRootOperation.java)
+    protected void updateProjectClasspath(IPath rootPath, IJavaProject project)
+        throws JavaModelException {
+        IClasspathEntry[] classpath = project.getRawClasspath();
+        IClasspathEntry[] newClasspath = null;
+        int cpLength = classpath.length;
+        int newCPIndex = -1;
+        for (int j = 0; j < cpLength; j++) {
+            IClasspathEntry entry = classpath[j];
+            if (rootPath.equals(entry.getPath())) {
+                if (newClasspath == null) {
+                    newClasspath = new IClasspathEntry[cpLength-1];
+                    System.arraycopy(classpath, 0, newClasspath, 0, j);
+                    newCPIndex = j;
                 }
+            } else if (newClasspath != null) {
+                newClasspath[newCPIndex++] = entry;
             }
         }
-    },
-    null);
-}
+        if (newClasspath != null) {
+            if (newCPIndex < newClasspath.length) {
+                System.arraycopy(newClasspath, 0, newClasspath = new IClasspathEntry[newCPIndex], 0, newCPIndex);
+            }
+            project.setRawClasspath(newClasspath, fMonitor);
+        }
+    }    
 

@@ -1,14 +1,28 @@
-(startLine=115 endLine=126 srcPath=/root/Projects/elasticsearchFilter/1417/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/PrivateElementsImpl.java)
-    public void applyTo(Binder binder) {
-        PrivateBinder privateBinder = binder.withSource(source).newPrivateBinder();
+(startLine=57 endLine=82 srcPath=/root/Projects/elasticsearchFilter/568/elasticsearch/src/main/java/org/elasticsearch/index/codec/docvaluesformat/DocValuesFormatService.java)
+    public DocValuesFormatService(Index index, @IndexSettings Settings indexSettings, Map<String, DocValuesFormatProvider.Factory> docValuesFormatFactories) {
+        super(index, indexSettings);
 
-        for (Element element : getElements()) {
-            element.applyTo(privateBinder);
+        MapBuilder<String, DocValuesFormatProvider> providers = MapBuilder.newMapBuilder();
+
+        Map<String, Settings> docValuesFormatSettings = indexSettings.getGroups(DocValuesFormatProvider.DOC_VALUES_FORMAT_SETTINGS_PREFIX);
+        for (Map.Entry<String, DocValuesFormatProvider.Factory> entry : docValuesFormatFactories.entrySet()) {
+            String name = entry.getKey();
+            DocValuesFormatProvider.Factory factory = entry.getValue();
+
+            Settings settings = docValuesFormatSettings.get(name);
+            if (settings == null) {
+                settings = ImmutableSettings.Builder.EMPTY_SETTINGS;
+            }
+            providers.put(name, factory.create(name, settings));
         }
 
-        getExposedKeys(); // ensure exposedKeysToSources is populated
-        for (Map.Entry<Key<?>, Object> entry : exposedKeysToSources.entrySet()) {
-            privateBinder.withSource(entry.getValue()).expose(entry.getKey());
+        // This is only needed for tests when guice doesn't have the chance to populate the list of DVF factories
+        for (PreBuiltDocValuesFormatProvider.Factory factory : DocValuesFormats.listFactories()) {
+            if (!providers.containsKey(factory.name())) {
+                providers.put(factory.name(), factory.get());
+            }
         }
+
+        this.providers = providers.immutableMap();
     }
 

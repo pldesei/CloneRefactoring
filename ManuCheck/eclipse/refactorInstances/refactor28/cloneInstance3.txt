@@ -1,27 +1,19 @@
-(startLine=28 endLine=52 srcPath=/root/Projects/eclipse.jdt.coreFilter/1426/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PackageDeclarationPattern.java)
-public String toString() {
-    StringBuffer buffer = new StringBuffer(20);
-    buffer.append("PackageDeclarationPattern: <"); //$NON-NLS-1$
-    if (this.pkgName != null) 
-        buffer.append(this.pkgName);
+(startLine=4648 endLine=4664 srcPath=/root/Projects/eclipse.jdt.coreFilter/1483/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void putstatic(FieldBinding fieldBinding) {
+    if (DEBUG) System.out.println(position + "\t\tputstatic:"+fieldBinding); //$NON-NLS-1$
+    countLabels = 0;
+    int id;
+    if (((id = fieldBinding.type.id) == T_double) || (id == T_long))
+        stackDepth -= 2;
     else
-        buffer.append("*"); //$NON-NLS-1$
-    buffer.append(">, "); //$NON-NLS-1$
-    switch(getMatchMode()) {
-        case R_EXACT_MATCH : 
-            buffer.append("exact match, "); //$NON-NLS-1$
-            break;
-        case R_PREFIX_MATCH :
-            buffer.append("prefix match, "); //$NON-NLS-1$
-            break;
-        case R_PATTERN_MATCH :
-            buffer.append("pattern match, "); //$NON-NLS-1$
-            break;
+        stackDepth -= 1;
+    if (stackDepth > stackMax)
+        stackMax = stackDepth;
+    if (classFileOffset + 2 >= bCodeStream.length) {
+        resizeByteArray();
     }
-    if (isCaseSensitive())
-        buffer.append("case sensitive"); //$NON-NLS-1$
-    else
-        buffer.append("case insensitive"); //$NON-NLS-1$
-    return buffer.toString();
+    position++;
+    bCodeStream[classFileOffset++] = OPC_putstatic;
+    writeUnsignedShort(constantPool.literalIndex(fieldBinding));
 }
 

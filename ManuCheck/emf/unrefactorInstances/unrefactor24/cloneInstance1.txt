@@ -1,16 +1,13 @@
-(startLine=206 endLine=219 srcPath=/root/Projects/org.eclipse.emfFilter/168/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/AImpl.java)
-  public C getC()
+(startLine=84 endLine=94 srcPath=/root/Projects/org.eclipse.emfFilter/59/org.eclipse.emf/plugins/org.eclipse.emf.ecore.xmi/src/org/eclipse/emf/ecore/xmi/util/DefaultEcoreBuilder.java)
+  public Collection<? extends Resource> generate(Map<String, URI> targetNamespaceToURI) throws Exception
   {
-    if (c != null && c.eIsProxy())
+    if (targetNamespaceToURI != null && XSD_ECORE_BUILDER_CONSTRUCTOR != null && XSD_ECORE_BUILDER_GENERATE_RESOURCES_METHOD != null)
     {
-      InternalEObject oldC = (InternalEObject)c;
-      c = (C)eResolveProxy(oldC);
-      if (c != oldC)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefPackage.A__C, oldC, c));
-      }
+      Object ecoreBuilder = XSD_ECORE_BUILDER_CONSTRUCTOR.newInstance(new Object [] { extendedMetaData, XSD_ECORE_BUILDER_OPTIONS });
+      @SuppressWarnings("unchecked") Collection<? extends Resource> result = (Collection<? extends Resource>)
+        XSD_ECORE_BUILDER_GENERATE_RESOURCES_METHOD.invoke(ecoreBuilder, new Object [] { targetNamespaceToURI.values() });
+      return result;
     }
-    return c;
+    return Collections.emptyList();
   }
 

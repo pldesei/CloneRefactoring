@@ -1,16 +1,56 @@
-(startLine=376 endLine=389 srcPath=/root/Projects/elasticsearchFilter/1363/elasticsearch/src/test/java/org/elasticsearch/test/integration/search/basic/TransportTwoNodesSearchTests.java)
-    private XContentBuilder source(String id, String nameValue, int age) throws IOException {
-        StringBuilder multi = new StringBuilder().append(nameValue);
-        for (int i = 0; i < age; i++) {
-            multi.append(" ").append(nameValue);
+(startLine=224 endLine=277 srcPath=/root/Projects/elasticsearchFilter/1198/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/routing/strategy/DefaultShardsRoutingStrategy.java)
+    private boolean deassociateDeadNodes(RoutingNodes routingNodes, Iterable<Node> liveNodes) {
+        boolean changed = false;
+        Set<String> liveNodeIds = newHashSet();
+        for (Node liveNode : liveNodes) {
+            liveNodeIds.add(liveNode.id());
         }
-        return jsonBuilder().startObject()
-                .field("id", id)
-                .field("nid", Integer.parseInt(id))
-                .field("name", nameValue + id)
-                .field("age", age)
-                .field("multi", multi.toString())
-                .field("_boost", age * 10)
-                .endObject();
+        Set<String> nodeIdsToRemove = newHashSet();
+        for (RoutingNode routingNode : routingNodes) {
+            for (Iterator<MutableShardRouting> shardsIterator = routingNode.shards().iterator(); shardsIterator.hasNext();) {
+                MutableShardRouting shardRoutingEntry = shardsIterator.next();
+                if (shardRoutingEntry.assignedToNode()) {
+                    // we store the relocation state here since when we call de-assign node
+                    // later on, we will loose this state
+                    boolean relocating = shardRoutingEntry.relocating();
+                    String relocatingNodeId = shardRoutingEntry.relocatingNodeId();
+                    // is this the destination shard that we are relocating an existing shard to?
+                    // we know this since it has a relocating node id (the node we relocate from) and our state is INITIALIZING (and not RELOCATING)
+                    boolean isRelocationDestinationShard = relocatingNodeId != null && shardRoutingEntry.initializing();
+
+                    boolean currentNodeIsDead = false;
+                    if (!liveNodeIds.contains(shardRoutingEntry.currentNodeId())) {
+                        changed = true;
+                        nodeIdsToRemove.add(shardRoutingEntry.currentNodeId());
+
+                        if (!isRelocationDestinationShard) {
+                            routingNodes.unassigned().add(shardRoutingEntry);
+                        }
+
+                        shardRoutingEntry.deassignNode();
+                        currentNodeIsDead = true;
+                        shardsIterator.remove();
+                    }
+
+                    // move source shard back to active state and cancel relocation mode.
+                    if (relocating && !liveNodeIds.contains(relocatingNodeId)) {
+                        nodeIdsToRemove.add(relocatingNodeId);
+                        if (!currentNodeIsDead) {
+                            changed = true;
+                            shardRoutingEntry.cancelRelocation();
+                        }
+                    }
+
+                    if (isRelocationDestinationShard && !liveNodeIds.contains(relocatingNodeId)) {
+                        changed = true;
+                        shardsIterator.remove();
+                    }
+                }
+            }
+        }
+        for (String nodeIdToRemove : nodeIdsToRemove) {
+            routingNodes.nodesToShards().remove(nodeIdToRemove);
+        }
+        return changed;
     }
 

@@ -1,13 +1,26 @@
-(startLine=1034 endLine=1044 srcPath=/root/Projects/elasticsearchFilter/1066/elasticsearch/src/main/java/jsr166y/ConcurrentLinkedDeque.java)
-    public boolean removeLastOccurrence(Object o) {
-        checkNotNull(o);
-        for (Node<E> p = last(); p != null; p = pred(p)) {
-            E item = p.item;
-            if (item != null && o.equals(item) && p.casItem(item, null)) {
-                unlink(p);
-                return true;
+(startLine=957 endLine=980 srcPath=/root/Projects/elasticsearchFilter/984/elasticsearch/src/main/java/jsr166y/ForkJoinPool.java)
+        final boolean pollAndExecCC(ForkJoinTask<?> root) {
+            ForkJoinTask<?>[] a; int b; Object o;
+            outer: while ((b = base) - top < 0 && (a = array) != null) {
+                long j = (((a.length - 1) & b) << ASHIFT) + ABASE;
+                if ((o = U.getObject(a, j)) == null ||
+                    !(o instanceof CountedCompleter))
+                    break;
+                for (CountedCompleter<?> t = (CountedCompleter<?>)o, r = t;;) {
+                    if (r == root) {
+                        if (base == b &&
+                            U.compareAndSwapObject(a, j, t, null)) {
+                            base = b + 1;
+                            t.doExec();
+                            return true;
+                        }
+                        else
+                            break; // restart
+                    }
+                    if ((r = r.completer) == null)
+                        break outer; // not part of root computation
+                }
             }
+            return false;
         }
-        return false;
-    }
 

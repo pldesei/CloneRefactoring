@@ -1,103 +1,12 @@
-(startLine=6671 endLine=6771 srcPath=/root/Projects/eclipse.jdt.coreFilter/1433/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
-public void testX_1FGGV8C_1() {
-    String str = 
-        "package p; \n" + 
-        "import p2.Y; \n" + 
-        "/**\n" + 
-        " * 1FGGV8C and 1FGPE8E\n" + 
-        " */\n" + 
-        "public class X {\n" + 
-        "    public static final float Vars; \n" + 
-        "    public static final float Lines; \n" + 
-        "    public static final float Source; \n" + 
-        "    public static final float UnreachableCode; \n" + 
-        "    public static final float produceDebugAttributes; \n" + 
-        "    void foo() {\n" + 
-        "        int locale, \n" + 
-        "            errorThreshold, \n" + 
-        "            preserveAllLocalVariables; \n" + 
-        "        return new Y[] {\n" + 
-        "            new Y(\n" + 
-        "                \"debug.vars\", \n" + 
-        "                this, \n" + 
-        "                locale, \n" + 
-        "                (produceDebugAttributes\n" + 
-        "                    & Vars)\n" + 
-        "                    != 0\n" + 
-        "                    ? 0\n" + 
-        "                    : 1), \n" + 
-        "            new Y(\n" + 
-        "                \"debug.lines\", \n" + 
-        "                this, \n" + 
-        "                locale, \n" + 
-        "                (produceDebugAttributes\n" + 
-        "                    & Lines)\n" + 
-        "                    != 0\n" + 
-        "                    ? 0\n" + 
-        "                    : 1), \n" + 
-        "            new Y(\n" + 
-        "                \"debug.source\", \n" + 
-        "                this, \n" + 
-        "                locale, \n" + 
-        "                (produceDebugAttributes\n" + 
-        "                    & Source)\n" + 
-        "                    != 0\n" + 
-        "                    ? 0\n" + 
-        "                    : 1), \n" + 
-        "            new Y(\n" + 
-        "                \"debug.preserveAllLocals\", \n" + 
-        "                this, \n" + 
-        "                locale, \n" + 
-        "                preserveAllLocalVariables\n" + 
-        "                    ? 0\n" + 
-        "                    : 1), \n" + 
-        "            new Y(\n" + 
-        "                \"optionalError.unReachableCode\", \n" + 
-        "                this, \n" + 
-        "                locale, \n" + 
-        "                (errorThreshold\n" + 
-        "                    & UnreachableCode)\n" + 
-        "                    != 0\n" + 
-        "                    ? 0\n" + 
-        "                    : 1)\n" + 
-        "                 }\n" + 
-        "    }\n" + 
-        "}\n";
-
-    String testName = "<complete on argument of anonymous type declaration>";
-    String completeBehind = "t";
-    String expectedCompletionNodeToString = "<CompleteOnName:t>";
-    String completionIdentifier = "t";
-    String expectedReplacedSource = "this";
-    int cursorLocation = str.indexOf("this, ") + completeBehind.length() - 1;
-    String expectedUnitDisplayString =
-        "package p;\n" + 
-        "import p2.Y;\n" + 
-        "public class X {\n" + 
-        "  public static final float Vars;\n" + 
-        "  public static final float Lines;\n" + 
-        "  public static final float Source;\n" + 
-        "  public static final float UnreachableCode;\n" + 
-        "  public static final float produceDebugAttributes;\n" + 
-        "  <clinit>() {\n" + 
-        "  }\n" + 
-        "  public X() {\n" + 
-        "  }\n" + 
-        "  void foo() {\n" + 
-        "    int locale;\n" + 
-        "    int errorThreshold;\n" + 
-        "    int preserveAllLocalVariables;\n" + 
-        "    new Y(\"debug.vars\", <CompleteOnName:t>);\n" + 
-        "  }\n" + 
-        "}\n";
-
-    checkMethodParse(
-        str.toCharArray(), 
-        cursorLocation, 
-        expectedCompletionNodeToString,
-        expectedUnitDisplayString,
-        completionIdentifier,
-        expectedReplacedSource,
-        testName); 
+(startLine=546 endLine=555 srcPath=/root/Projects/eclipse.jdt.coreFilter/178/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ExistenceTests.java)
+public void testCorrespondingResourceNonExistingPkgFragmentRoot() throws CoreException {
+    try {
+        IJavaProject project = createJavaProject("P", new String[] {"src"}, "bin");
+        IFolder folder = createFolder("/P/nonExistingRoot");
+        IPackageFragmentRoot root = project.getPackageFragmentRoot(folder);
+        assertCorrespondingResourceFails(root);
+    } finally {
+        deleteProject("P");
+    }
 }
 

@@ -1,34 +1,16 @@
-(startLine=54 endLine=85 srcPath=/root/Projects/org.eclipse.emfFilter/373/org.eclipse.emf/plugins/org.eclipse.emf.mapping.ecore2ecore.editor/src/org/eclipse/emf/mapping/ecore2ecore/action/AddInputRootAction.java)
-  protected Collection<?> getTopsToAdd()
+(startLine=353 endLine=366 srcPath=/root/Projects/org.eclipse.emfFilter/508/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/unsettable/impl/DUImpl.java)
+  public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs)
   {
-    Collection<Object> objects = new ArrayList<Object>();
-
-    ViewerFilter viewerFilter = new ViewerFilter()
+    if (eContainerFeatureID >= 0)
     {
-      @Override
-      public boolean select(Viewer viewer, Object parentElement, Object element)
+      switch (eContainerFeatureID)
       {
-         return !(element instanceof IFile) || "ecore".equals(((IFile)element).getFileExtension());  //$NON-NLS-1$
-      }
-    };
-    final IFile[] files = WorkspaceResourceDialog.openFileSelection(
-      workbenchPart.getSite().getShell(), 
-      null, 
-      Ecore2EcoreEditorPlugin.INSTANCE.getString("_UI_SelectInputEcoreModels_label"), //$NON-NLS-1$
-      true, 
-      null, 
-      Collections.singletonList(viewerFilter));
-        
-    if (files.length > 0)
-    {
-      for (int i = 0; i < files.length; i++)
-      {
-        objects.addAll(((Ecore2EcoreEditor)workbenchPart).getEditingDomain().getResourceSet().getResource(
-          URI.createPlatformResourceURI(files[i].getFullPath().toString(), true),
-          true).getContents());
+        case URefPackage.DU__C4U:
+          return eContainer.eInverseRemove(this, URefPackage.C4U__DU, C4U.class, msgs);
+        default:
+          return eDynamicBasicRemoveFromContainer(msgs);
       }
     }
-
-    return objects;
+    return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
   }
 

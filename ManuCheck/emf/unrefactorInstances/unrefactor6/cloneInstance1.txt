@@ -1,16 +1,33 @@
-(startLine=108 endLine=121 srcPath=/root/Projects/org.eclipse.emfFilter/93/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/unsettable/impl/DUImpl.java)
-  public CU getCu()
+(startLine=1110 endLine=1140 srcPath=/root/Projects/org.eclipse.emfFilter/524/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EPackageImpl.java)
+  protected EReference initEReference
+    (EReference r, 
+     EClassifier type, 
+     EReference otherEnd,
+     String name, 
+     String defaultValue,
+     int lowerBound, 
+     int upperBound, 
+     boolean isTransient, 
+     boolean isVolatile, 
+     boolean isChangeable, 
+     boolean isContainment, 
+     boolean isResolveProxies)
   {
-    if (cu != null && cu.eIsProxy())
-    {
-      InternalEObject oldCu = (InternalEObject)cu;
-      cu = (CU)eResolveProxy(oldCu);
-      if (cu != oldCu)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, URefPackage.DU__CU, oldCu, cu));
-      }
-    }
-    return cu;
+    initEReference
+      (r, 
+       type, 
+       otherEnd, 
+       name, 
+       defaultValue, 
+       lowerBound, 
+       upperBound, 
+       isTransient, 
+       isVolatile, 
+       isChangeable, 
+       isContainment, 
+       isResolveProxies, 
+       false, 
+       true);
+    return r;
   }
 

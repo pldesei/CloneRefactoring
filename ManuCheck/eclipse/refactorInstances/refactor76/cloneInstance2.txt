@@ -1,30 +1,12 @@
-(startLine=2065 endLine=2092 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug83388b() throws CoreException {
+(startLine=1905 endLine=1914 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug83304_MethodStringPattern() throws CoreException {
     this.resultCollector.showRule = true;
-    this.workingCopies = new ICompilationUnit[1];
-    this.workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b83388/R.java",
-        "package b83388;\n" +
-        "import b83388.*;\n" +
-        "public class R {}\n"
-    );
-    IPackageDeclaration packageDeclaration = this.workingCopies[0].getPackageDeclaration("pack");
-    assertNotNull("Cannot find \"pack\" import declaration for "+this.workingCopies[0].getElementName(), packageDeclaration);
-    SearchPattern pattern = SearchPattern.createPattern(
-        "pack",
-        PACKAGE,
-        DECLARATIONS,
-        EXACT_RULE);
-    assertNotNull("Pattern should not be null", pattern);
-    MatchLocator.setFocus(pattern, packageDeclaration);
-    new SearchEngine(this.workingCopies).search(
-        pattern,
-        new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
-        getJavaSearchScope(),
-        this.resultCollector,
-        null
-    );
+    setUpBug83304_MethodParameterizedElementPattern();
+    search("<Exception>generic", METHOD, REFERENCES, ERASURE_RULE);
     assertSearchResults(
-        "src/b83388/R.java b83388 [No source] EXACT_MATCH"
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(exc)] ERASURE_MATCH\n" +
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(exc)] EXACT_MATCH\n" +
+        "src/b83304/Methods.java void b83304.Methods.test() [generic(\"\")] ERASURE_MATCH"
     );
 }
 

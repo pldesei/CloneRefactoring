@@ -1,14 +1,38 @@
-(startLine=88 endLine=99 srcPath=/root/Projects/elasticsearchFilter/693/elasticsearch/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java)
-    public void testLocalPluginInstallSiteFolder() throws Exception {
-        //When we have only a folder in top-level (no files either) but it's called _site, we make it work
-        //we can either remove the folder while extracting and then re-add it manually or just leave it as it is
-        String pluginName = "plugin-test";
-        URI uri = URI.create(PluginManagerTests.class.getResource("plugin_folder_site.zip").toString());
-        downloadAndExtract(pluginName, "file://" + uri.getPath());
+(startLine=252 endLine=287 srcPath=/root/Projects/elasticsearchFilter/761/elasticsearch/src/test/java/org/elasticsearch/nested/SimpleNestedTests.java)
+    private void noChildrenNestedDeleteByQuery(long total, int docToDelete) throws Exception {
 
-        String nodeName = internalCluster().startNode(SETTINGS);
+        assertAcked(prepareCreate("test")
+                .setSettings(settingsBuilder().put(indexSettings()).put("index.referesh_interval", -1).build())
+                .addMapping("type1", jsonBuilder().startObject().startObject("type1").startObject("properties")
+                        .startObject("nested1")
+                        .field("type", "nested")
+                        .endObject()
+                        .endObject().endObject().endObject()));
 
-        assertPluginLoaded(pluginName);
-        assertPluginAvailable(pluginName);
+        ensureGreen();
+
+
+        for (int i = 0; i < total; i++) {
+            client().prepareIndex("test", "type1", Integer.toString(i)).setSource(jsonBuilder().startObject()
+                    .field("field1", "value1")
+                    .endObject()).execute().actionGet();
+        }
+
+
+        flush();
+        refresh();
+
+        IndicesStatusResponse statusResponse = client().admin().indices().prepareStatus().execute().actionGet();
+        assertThat(statusResponse.getIndex("test").getDocs().getNumDocs(), equalTo(total));
+
+        client().prepareDeleteByQuery("test").setQuery(QueryBuilders.idsQuery("type1").ids(Integer.toString(docToDelete))).execute().actionGet();
+        flush();
+        refresh();
+        statusResponse = client().admin().indices().prepareStatus().execute().actionGet();
+        assertThat(statusResponse.getIndex("test").getDocs().getNumDocs(), equalTo((total) - 1));
+
+        for (int i = 0; i < total; i++) {
+            assertThat(client().prepareGet("test", "type1", Integer.toString(i)).execute().actionGet().isExists(), equalTo(i != docToDelete));
+        }
     }
 

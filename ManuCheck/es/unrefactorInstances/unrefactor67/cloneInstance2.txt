@@ -1,34 +1,8 @@
-(startLine=133 endLine=164 srcPath=/root/Projects/elasticsearchFilter/1030/elasticsearch/src/main/java/org/elasticsearch/search/facet/histogram/InternalCountHistogramFacet.java)
-    public Facet reduce(ReduceContext context) {
-        List<Facet> facets = context.facets();
-        if (facets.size() == 1) {
-            // need to sort here...
-            InternalCountHistogramFacet histoFacet = (InternalCountHistogramFacet) facets.get(0);
-            Arrays.sort(histoFacet.entries, histoFacet.comparatorType.comparator());
-            return facets.get(0);
-        }
-
-        Recycler.V<LongLongOpenHashMap> counts = context.cacheRecycler().longLongMap(-1);
-        for (Facet facet : facets) {
-            InternalCountHistogramFacet histoFacet = (InternalCountHistogramFacet) facet;
-            for (Entry entry : histoFacet.entries) {
-                counts.v().addTo(entry.getKey(), entry.getCount());
-            }
-        }
-        final boolean[] states = counts.v().allocated;
-        final long[] keys = counts.v().keys;
-        final long[] values = counts.v().values;
-        CountEntry[] entries = new CountEntry[counts.v().size()];
-        int entryIndex = 0;
-        for (int i = 0; i < states.length; i++) {
-            if (states[i]) {
-                entries[entryIndex++] = new CountEntry(keys[i], values[i]);
-            }
-        }
-        counts.release();
-
-        Arrays.sort(entries, comparatorType.comparator());
-
-        return new InternalCountHistogramFacet(getName(), comparatorType, entries);
+(startLine=53 endLine=58 srcPath=/root/Projects/elasticsearchFilter/1380/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/io/Streams.java)
+    public static long copy(File in, File out) throws IOException {
+        Preconditions.checkNotNull(in, "No input File specified");
+        Preconditions.checkNotNull(out, "No output File specified");
+        return copy(new BufferedInputStream(new FileInputStream(in)),
+                new BufferedOutputStream(new FileOutputStream(out)));
     }
 

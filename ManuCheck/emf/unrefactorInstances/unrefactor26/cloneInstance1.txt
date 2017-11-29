@@ -1,14 +1,19 @@
-(startLine=523 endLine=534 srcPath=/root/Projects/org.eclipse.emfFilter/529/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/EcoreValidator.java)
-  public boolean validateEAnnotation(EAnnotation eAnnotation, DiagnosticChain diagnostics, Map<Object, Object> context)
+(startLine=194 endLine=210 srcPath=/root/Projects/org.eclipse.emfFilter/384/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/BImpl.java)
+  public void setC2(C2 newC2)
   {
-    boolean result = validate_EveryMultiplicityConforms(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validate_EveryDataValueConforms(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validate_EveryReferenceIsContained(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validate_EveryProxyResolves(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validate_UniqueID(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validate_EveryKeyUnique(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validate_EveryMapEntryUnique(eAnnotation, diagnostics, context);
-    if (result || diagnostics != null) result &= validateEAnnotation_WellFormedSourceURI(eAnnotation, diagnostics, context);
-    return result;
+    if (newC2 != eInternalContainer() || (eContainerFeatureID != RefPackage.B__C2 && newC2 != null))
+    {
+      if (EcoreUtil.isAncestor(this, newC2))
+        throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+      NotificationChain msgs = null;
+      if (eInternalContainer() != null)
+        msgs = eBasicRemoveFromContainer(msgs);
+      if (newC2 != null)
+        msgs = ((InternalEObject)newC2).eInverseAdd(this, RefPackage.C2__B, C2.class, msgs);
+      msgs = basicSetC2(newC2, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.B__C2, newC2, newC2));
   }
 

@@ -1,16 +1,54 @@
-(startLine=798 endLine=811 srcPath=/root/Projects/org.eclipse.emfFilter/279/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenDataTypeImpl.java)
-  public boolean isXMLDuration()
-  {
-    ExtendedMetaData extendedMetaData = getExtendedMetaData();
-    for (EDataType eDataType = getEcoreDataType(); eDataType != null; eDataType = extendedMetaData.getBaseType(eDataType))
-    {
-      String namespace = extendedMetaData.getNamespace(eDataType);
-      String name = extendedMetaData.getName(eDataType);
-      if (XMLTypePackage.eNS_URI.equals(namespace) && "duration".equals(name))
-      {
-        return true;
-      }
-    }
-    return false;
-  }
+(startLine=155 endLine=206 srcPath=/root/Projects/org.eclipse.emfFilter/336/org.eclipse.emf/plugins/org.eclipse.emf.ecore.editor/src/org/eclipse/emf/ecore/presentation/EcoreActionBarContributor.java)
+            public void widgetSelected(SelectionEvent event)
+             {
+               RegisteredPackageDialog registeredPackageDialog = new RegisteredPackageDialog(getShell());
+               registeredPackageDialog.open();
+               Object [] result = registeredPackageDialog.getResult();
+               if (result != null)
+               {
+                 List<?> nsURIs = Arrays.asList(result);
+                 ResourceSet resourceSet = new ResourceSetImpl();
+                 resourceSet.getURIConverter().getURIMap().putAll(EcorePlugin.computePlatformURIMap());
+                 StringBuffer uris = new StringBuffer();
+                 Map<String, URI> ePackageNsURItoGenModelLocationMap = EcorePlugin.getEPackageNsURIToGenModelLocationMap();
+                 for (int i = 0, length = result.length; i < length; i++)
+                 {
+                   URI location = ePackageNsURItoGenModelLocationMap.get(result[i]);
+                   Resource resource = resourceSet.getResource(location, true);
+                   EcoreUtil.resolveAll(resource);
+                 }
+                 for (Resource resource : resourceSet.getResources())
+                 {
+                   for (TreeIterator<?> j = 
+                          new EcoreUtil.ContentTreeIterator<Object>(resource.getContents())
+                          {
+                            private static final long serialVersionUID = 1L;
+
+                            @Override
+                            protected Iterator<? extends EObject> getEObjectChildren(EObject eObject)
+                            {
+                              return 
+                                eObject instanceof EPackage ? 
+                                  ((EPackage)eObject).getESubpackages().iterator() : 
+                                    Collections.<EObject>emptyList().iterator();
+                            }
+                          };
+                        j.hasNext(); )
+                   {
+                     Object content = j.next();
+                     if (content instanceof EPackage)
+                     {
+                       EPackage ePackage = (EPackage)content;
+                       if (nsURIs.contains(ePackage.getNsURI()))
+                       {
+                         uris.append(resource.getURI());
+                         uris.append("  ");
+                        break;
+                       }
+                     }
+                   }
+                 }
+                 uriField.setText((uriField.getText() + "  " + uris.toString()).trim());
+               }
+             }
 

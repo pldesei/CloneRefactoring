@@ -1,18 +1,16 @@
-(startLine=121 endLine=136 srcPath=/root/Projects/org.eclipse.emfFilter/569/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/namespace/impl/XMLNamespaceFactoryImpl.java)
-  public String convertToString(EDataType eDataType, Object instanceValue)
+(startLine=283 endLine=296 srcPath=/root/Projects/org.eclipse.emfFilter/93/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/unsettable/impl/AUImpl.java)
+  public CU getCu()
   {
-    switch (eDataType.getClassifierID())
+    if (cu != null && cu.eIsProxy())
     {
-      case XMLNamespacePackage.SPACE_TYPE:
-        return convertSpaceTypeToString(eDataType, instanceValue);
-      case XMLNamespacePackage.LANG_TYPE:
-        return convertLangTypeToString(eDataType, instanceValue);
-      case XMLNamespacePackage.LANG_TYPE_NULL:
-        return convertLangTypeNullToString(eDataType, instanceValue);
-      case XMLNamespacePackage.SPACE_TYPE_OBJECT:
-        return convertSpaceTypeObjectToString(eDataType, instanceValue);
-      default:
-        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+      InternalEObject oldCu = (InternalEObject)cu;
+      cu = (CU)eResolveProxy(oldCu);
+      if (cu != oldCu)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, URefPackage.AU__CU, oldCu, cu));
+      }
     }
+    return cu;
   }
 

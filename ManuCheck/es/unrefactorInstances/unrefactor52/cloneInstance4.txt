@@ -1,21 +1,32 @@
-(startLine=149 endLine=167 srcPath=/root/Projects/elasticsearchFilter/822/elasticsearch/src/test/java/org/elasticsearch/search/aggregations/metrics/StatsTests.java)
-    public void testSingleValuedField_WithValueScript_WithParams() throws Exception {
-        SearchResponse searchResponse = client().prepareSearch("idx")
-                .setQuery(matchAllQuery())
-                .addAggregation(stats("stats").field("value").script("_value + inc").param("inc", 1))
-                .execute().actionGet();
+(startLine=886 endLine=915 srcPath=/root/Projects/elasticsearchFilter/1006/elasticsearch/src/test/java/org/elasticsearch/search/highlight/HighlighterSearchTests.java)
+    public void testMultiMapperNoVectorFromSource() throws Exception {
+        assertAcked(client().admin().indices().prepareCreate("test").setSettings(ImmutableSettings.settingsBuilder().put("index.number_of_shards", 2))
+                .addMapping("type1", jsonBuilder().startObject().startObject("type1").startObject("properties")
+                        .startObject("title").field("type", "multi_field").startObject("fields")
+                        .startObject("title").field("type", "string").field("store", "no").field("term_vector", "no").field("analyzer", "classic").endObject()
+                        .startObject("key").field("type", "string").field("store", "no").field("term_vector", "no").field("analyzer", "whitespace").endObject()
+                        .endObject().endObject()
+                        .endObject().endObject().endObject()));
+        ensureGreen();
+        client().prepareIndex("test", "type1", "1").setSource("title", "this is a test").get();
+        refresh();
 
-        assertShardExecutionState(searchResponse, 0);
+        // simple search on body with standard analyzer with a simple field query
+        SearchResponse search = client().prepareSearch()
+                .setQuery(fieldQuery("title", "this is a test"))
+                .setHighlighterEncoder("html")
+                .addHighlightedField("title", 50, 1)
+                .get();
 
-        assertThat(searchResponse.getHits().getTotalHits(), equalTo(10l));
+        assertHighlight(search, 0, "title", 0, 1, equalTo("this is a <em>test</em>"));
 
-        Stats stats = searchResponse.getAggregations().get("stats");
-        assertThat(stats, notNullValue());
-        assertThat(stats.getName(), equalTo("stats"));
-        assertThat(stats.getAvg(), equalTo((double) (2+3+4+5+6+7+8+9+10+11) / 10));
-        assertThat(stats.getMin(), equalTo(2.0));
-        assertThat(stats.getMax(), equalTo(11.0));
-        assertThat(stats.getSum(), equalTo((double) 2+3+4+5+6+7+8+9+10+11));
-        assertThat(stats.getCount(), equalTo(10l));
+        // search on title.key and highlight on title.key
+        search = client().prepareSearch()
+                .setQuery(fieldQuery("title.key", "this is a test"))
+                .setHighlighterEncoder("html")
+                .addHighlightedField("title.key", 50, 1)
+                .get();
+
+        assertHighlight(search, 0, "title.key", 0, 1, equalTo("<em>this</em> <em>is</em> <em>a</em> <em>test</em>"));
     }
 

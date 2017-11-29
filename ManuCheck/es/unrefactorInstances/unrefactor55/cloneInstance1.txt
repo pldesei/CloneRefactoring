@@ -1,44 +1,24 @@
-(startLine=216 endLine=257 srcPath=/root/Projects/elasticsearchFilter/982/elasticsearch/src/test/java/org/elasticsearch/index/fielddata/AbstractStringFieldDataTests.java)
-    public void testActualMissingValue(boolean reverse) throws IOException {
-        // missing value is set to an actual value
-        Document d = new Document();
-        final StringField s = new StringField("value", "", Field.Store.YES);
-        d.add(s);
-        final String[] values = new String[randomIntBetween(2, 30)];
-        for (int i = 1; i < values.length; ++i) {
-            values[i] = _TestUtil.randomUnicodeString(getRandom());
+(startLine=82 endLine=103 srcPath=/root/Projects/elasticsearchFilter/1893/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/DefaultClusterService.java)
+    @Override public ClusterService start() throws ElasticSearchException {
+        if (!lifecycle.moveToStarted()) {
+            return this;
         }
-        final int numDocs = atLeast(100);
-        for (int i = 0; i < numDocs; ++i) {
-            final String value = RandomPicks.randomFrom(getRandom(), values);
-            if (value == null) {
-                writer.addDocument(new Document());
-            } else {
-                s.setStringValue(value);
-                writer.addDocument(d);
+        this.updateTasksExecutor = newSingleThreadExecutor(daemonThreadFactory(settings, "clusterService#updateTask"));
+        scheduledFuture = threadPool.scheduleWithFixedDelay(new Runnable() {
+            @Override public void run() {
+                long timestamp = System.currentTimeMillis();
+                for (final TimeoutHolder holder : clusterStateTimeoutListeners) {
+                    if ((timestamp - holder.timestamp) > holder.timeout.millis()) {
+                        clusterStateTimeoutListeners.remove(holder);
+                        DefaultClusterService.this.threadPool.execute(new Runnable() {
+                            @Override public void run() {
+                                holder.listener.onTimeout(holder.timeout);
+                            }
+                        });
+                    }
+                }
             }
-            if (randomInt(10) == 0) {
-                writer.commit();
-            }
-        }
-
-        final IndexFieldData indexFieldData = getForField("value");
-        final String missingValue = values[1];
-        IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(writer, true));
-        XFieldComparatorSource comparator = indexFieldData.comparatorSource(missingValue, SortMode.MIN);
-        TopFieldDocs topDocs = searcher.search(new MatchAllDocsQuery(), randomBoolean() ? numDocs : randomIntBetween(10, numDocs), new Sort(new SortField("value", comparator, reverse)));
-        assertEquals(numDocs, topDocs.totalHits);
-        BytesRef previousValue = reverse ? UnicodeUtil.BIG_TERM : new BytesRef();
-        for (int i = 0; i < topDocs.scoreDocs.length; ++i) {
-            final String docValue = searcher.doc(topDocs.scoreDocs[i].doc).get("value");
-            final BytesRef value = new BytesRef(docValue == null ? missingValue : docValue);
-            if (reverse) {
-                assertTrue(previousValue.compareTo(value) >= 0);
-            } else {
-                assertTrue(previousValue.compareTo(value) <= 0);
-            }
-            previousValue = value;
-        }
-        searcher.getIndexReader().close();
+        }, timeoutInterval);
+        return this;
     }
 

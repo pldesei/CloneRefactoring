@@ -1,41 +1,12 @@
-(startLine=167 endLine=205 srcPath=/root/Projects/eclipse.jdt.coreFilter/2219/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
-    public void acceptClass(char[] packageName, char[] className, int modifiers) {
-
-        char[] fullyQualifiedName = CharOperation.concat(packageName, className, '.');
-        char[] completionName = fullyQualifiedName;
-        
-        if (this.knownTypes.containsKey(completionName)) return;
-
-        this.knownTypes.put(completionName, this);
-        
-        int relevance = DEFAULTRELEVANCE;
-        if (resolvingImports) {
-            completionName = CharOperation.concat(completionName, new char[] { ';' });
-            if(CharOperation.prefixEquals(token, fullyQualifiedName, true)){
-                relevance += CASEMATCHRELEVANCE;
-            }
-        } else {
-            if (!insideQualifiedReference) {
-                if (mustQualifyType(packageName, className)) {
-                    if (packageName == null || packageName.length == 0)
-                        if (unitScope != null && unitScope.fPackage.compoundName != NoCharChar)
-                            return; // ignore types from the default package from outside it
-                } else {
-                    completionName = className;
-                }
-            }
-            if(CharOperation.prefixEquals(token, className, true)){
-                relevance += CASEMATCHRELEVANCE;
-            }
+(startLine=72 endLine=81 srcPath=/root/Projects/eclipse.jdt.coreFilter/2298/eclipse.jdt.core/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/SuperMethodInvocation.java)
+    boolean equalSubtrees(Object other) {
+        if (!(other instanceof SuperMethodInvocation)) {
+            return false;
         }
-
-        requestor.acceptClass(
-            packageName,
-            className,
-            completionName,
-            modifiers,
-            startPosition - offset,
-            endPosition - offset,
-            relevance);
+        SuperMethodInvocation o = (SuperMethodInvocation) other;
+        return 
+            (ASTNode.equalNodes(getQualifier(), o.getQualifier())
+            && ASTNode.equalNodes(getName(), o.getName())
+            && ASTNode.equalLists(arguments(), o.arguments()));
     }
 

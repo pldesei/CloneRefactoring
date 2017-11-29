@@ -1,82 +1,22 @@
-(startLine=717 endLine=796 srcPath=/root/Projects/eclipse.jdt.coreFilter/1189/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests2.java)
-public void testAccessRestriction3() throws Exception {
-    Hashtable oldOptions = JavaCore.getOptions();
-    try {
-        Hashtable options = new Hashtable(oldOptions);
-        options.put(JavaCore.COMPILER_PB_FORBIDDEN_REFERENCE, JavaCore.ERROR);
-        options.put(JavaCore.CODEASSIST_HIDE_RESTRICTED_REFERENCES, JavaCore.NEVER);
-        JavaCore.setOptions(options);
-        
-        // create variable
-        JavaCore.setClasspathVariables(
-            new String[] {"JCL_LIB", "JCL_SRC", "JCL_SRCROOT"},
-            new IPath[] {getExternalJCLPath(), getExternalJCLSourcePath(), getExternalJCLRootSourcePath()},
-            null);
-
-        // create P1
-        this.createJavaProject(
-            "P1",
-            new String[]{"src"},
-            Util.getJavaClassLibs(),
-             "bin");
-        
-        this.createFolder("/P1/src/a");
-        this.createFile(
-                "/P1/src/a/XX1.java",
-                "package a;\n"+
-                "public class XX1 {\n"+
-                "}");
-
-        this.createFolder("/P1/src/b");
-        this.createFile(
-                "/P1/src/b/XX2.java",
-                "package b;\n"+
-                "public class XX2 {\n"+
-                "}");
-        
-        // create P2
-        this.createJavaProject(
-            "P2",
-            new String[]{"src"},
-            Util.getJavaClassLibs(),
-            null,
-            null,
-            new String[]{"/P1"},
-            new String[][]{{}},
-            new String[][]{{"a/*"}},
-            new boolean[]{false},
-            "bin",
-            null,
-            null,
-            null,
-            "1.4");
-        this.createFile(
-            "/P2/src/YY.java",
-            "public class YY {\n"+
-            "  void foo() {\n"+
-            "    XX\n"+
-            "  }\n"+
-            "}");
-        
-        waitUntilIndexesReady();
-        
-        // do completion
-        CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2();
-        ICompilationUnit cu= getCompilationUnit("P2", "src", "", "YY.java");
-        
-        String str = cu.getSource();
-        String completeBehind = "XX";
-        int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
-        cu.codeComplete(cursorLocation, requestor);
-        
-        assertResults(
-            "XX1[TYPE_REF]{a.XX1, a, La.XX1;, null, "+(R_DEFAULT + R_INTERESTING + R_CASE) + "}\n" +
-             "XX2[TYPE_REF]{b.XX2, b, Lb.XX2;, null, "+(R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}",
-            requestor.getResults());
-    } finally {
-        this.deleteProject("P1");
-        this.deleteProject("P2");
-        JavaCore.setOptions(oldOptions);
+(startLine=6393 endLine=6412 srcPath=/root/Projects/eclipse.jdt.coreFilter/207/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterAST3Test.java)
+    public void test0273() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0273", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        char[] source = sourceUnit.getSource().toCharArray();
+        ASTNode result = runConversion(AST.JLS3, sourceUnit, true);
+        assertNotNull("No compilation unit", result); //$NON-NLS-1$
+        assertTrue("result is not a compilation unit", result instanceof CompilationUnit); //$NON-NLS-1$
+        CompilationUnit compilationUnit = (CompilationUnit) result;
+        ASTNode node = getASTNode(compilationUnit, 0, 0, 0);
+        assertTrue("Not a For statement", node instanceof ForStatement); //$NON-NLS-1$
+        ForStatement forStatement = (ForStatement) node;
+        checkSourceRange(forStatement, "for (int i= 0; i < 10; i++) { foo(); }", source); //$NON-NLS-1$
+        Statement action = forStatement.getBody();
+        checkSourceRange(action, "{ foo(); }", source); //$NON-NLS-1$
+        assertTrue("Not a block", action instanceof Block); //$NON-NLS-1$
+        Block block = (Block) action;
+        List statements = block.statements();
+        assertEquals("Wrong size", 1, statements.size()); //$NON-NLS-1$
+        Statement stmt = (Statement) statements.get(0);
+        checkSourceRange(stmt, "foo();", source); //$NON-NLS-1$
     }
-}
 

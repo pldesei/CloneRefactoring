@@ -1,30 +1,36 @@
-(startLine=685 endLine=712 srcPath=/root/Projects/eclipse.jdt.coreFilter/1847/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
-    public String format(String string, int[] positions, CompilationUnitDeclaration compilationUnitDeclaration) {
-        // reset the scribe
-        this.scribe.reset(positions);
-        
-        if (compilationUnitDeclaration == null || compilationUnitDeclaration.ignoreFurtherInvestigation) {
-            return failedToFormat();
-        }
-
-        long startTime = System.currentTimeMillis();
-
-        final char[] compilationUnitSource = string.toCharArray();
-        
-        this.scribe.scanner.setSource(compilationUnitSource);
-        this.localScanner.setSource(compilationUnitSource);
-        this.scribe.scannerEndPosition = compilationUnitSource.length;
-        this.scribe.scanner.resetTo(0, this.scribe.scannerEndPosition);
-
-        this.lastLocalDeclarationSourceStart = -1;
+(startLine=244 endLine=277 srcPath=/root/Projects/eclipse.jdt.coreFilter/1868/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SourceMethod.java)
+protected void toStringInfo(int tab, StringBuffer buffer, Object info) {
+    buffer.append(this.tabString(tab));
+    if (info == null) {
+        buffer.append(getElementName());
+        buffer.append(" (not open)"); //$NON-NLS-1$
+    } else if (info == NO_INFO) {
+        buffer.append(getElementName());
+    } else {
         try {
-            compilationUnitDeclaration.traverse(this, compilationUnitDeclaration.scope);
-        } catch(AbortFormatting e){
-            return failedToFormat();
+            if (Flags.isStatic(this.getFlags())) {
+                buffer.append("static "); //$NON-NLS-1$
+            }
+            if (!this.isConstructor()) {
+                buffer.append(Signature.toString(this.getReturnType()));
+                buffer.append(' ');
+            }
+            buffer.append(this.getElementName());
+            buffer.append('(');
+            String[] parameterTypes = this.getParameterTypes();
+            int length;
+            if (parameterTypes != null && (length = parameterTypes.length) > 0) {
+                for (int i = 0; i < length; i++) {
+                    buffer.append(Signature.toString(parameterTypes[i]));
+                    if (i < length - 1) {
+                        buffer.append(", "); //$NON-NLS-1$
+                    }
+                }
+            }
+            buffer.append(')');
+        } catch (JavaModelException e) {
+            buffer.append("<JavaModelException in toString of " + getElementName()); //$NON-NLS-1$
         }
-        if (DEBUG){
-            System.out.println("Formatting time: " + (System.currentTimeMillis() - startTime));  //$NON-NLS-1$
-        }
-        return this.scribe.toString();
     }
+}
 

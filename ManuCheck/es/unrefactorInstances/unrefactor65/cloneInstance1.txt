@@ -1,92 +1,10 @@
-(startLine=287 endLine=376 srcPath=/root/Projects/elasticsearchFilter/910/elasticsearch/src/main/java/org/elasticsearch/node/internal/InternalNode.java)
-    public void close() {
-        if (lifecycle.started()) {
-            stop();
+(startLine=312 endLine=319 srcPath=/root/Projects/elasticsearchFilter/1355/elasticsearch/src/main/java/org/elasticsearch/cluster/block/ClusterBlocks.java)
+        public static void writeClusterBlocks(ClusterBlocks blocks, StreamOutput out) throws IOException {
+            writeBlockSet(blocks.global(), out);
+            out.writeVInt(blocks.indices().size());
+            for (Map.Entry<String, ImmutableSet<ClusterBlock>> entry : blocks.indices().entrySet()) {
+                out.writeUTF(entry.getKey());
+                writeBlockSet(entry.getValue(), out);
+            }
         }
-        if (!lifecycle.moveToClosed()) {
-            return;
-        }
-
-        ESLogger logger = Loggers.getLogger(Node.class, settings.get("name"));
-        logger.info("closing ...");
-
-        StopWatch stopWatch = new StopWatch("node_close");
-        stopWatch.start("bulk.udp");
-        injector.getInstance(BulkUdpService.class).close();
-        stopWatch.stop().start("http");
-        if (settings.getAsBoolean("http.enabled", true)) {
-            injector.getInstance(HttpServer.class).close();
-        }
-
-        stopWatch.stop().start("rivers");
-        injector.getInstance(RiversManager.class).close();
-
-        stopWatch.stop().start("client");
-        injector.getInstance(Client.class).close();
-        stopWatch.stop().start("indices_cluster");
-        injector.getInstance(IndicesClusterStateService.class).close();
-        stopWatch.stop().start("indices");
-        injector.getInstance(IndicesFilterCache.class).close();
-        injector.getInstance(IndicesFieldDataCache.class).close();
-        injector.getInstance(IndexingMemoryController.class).close();
-        injector.getInstance(IndicesTTLService.class).close();
-        injector.getInstance(IndicesService.class).close();
-        stopWatch.stop().start("routing");
-        injector.getInstance(RoutingService.class).close();
-        stopWatch.stop().start("cluster");
-        injector.getInstance(ClusterService.class).close();
-        stopWatch.stop().start("discovery");
-        injector.getInstance(DiscoveryService.class).close();
-        stopWatch.stop().start("monitor");
-        injector.getInstance(MonitorService.class).close();
-        stopWatch.stop().start("gateway");
-        injector.getInstance(GatewayService.class).close();
-        stopWatch.stop().start("search");
-        injector.getInstance(SearchService.class).close();
-        stopWatch.stop().start("rest");
-        injector.getInstance(RestController.class).close();
-        stopWatch.stop().start("transport");
-        injector.getInstance(TransportService.class).close();
-        stopWatch.stop().start("percolator_service");
-        injector.getInstance(PercolatorService.class).close();
-
-        for (Class<? extends LifecycleComponent> plugin : pluginsService.services()) {
-            stopWatch.stop().start("plugin(" + plugin.getName() + ")");
-            injector.getInstance(plugin).close();
-        }
-
-        stopWatch.stop().start("node_cache");
-        injector.getInstance(NodeCache.class).close();
-
-        stopWatch.stop().start("script");
-        injector.getInstance(ScriptService.class).close();
-
-        stopWatch.stop().start("thread_pool");
-        injector.getInstance(ThreadPool.class).shutdown();
-        try {
-            injector.getInstance(ThreadPool.class).awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            // ignore
-        }
-        stopWatch.stop().start("thread_pool_force_shutdown");
-        try {
-            injector.getInstance(ThreadPool.class).shutdownNow();
-        } catch (Exception e) {
-            // ignore
-        }
-        stopWatch.stop();
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("Close times for each service:\n{}", stopWatch.prettyPrint());
-        }
-
-        injector.getInstance(NodeEnvironment.class).close();
-        injector.getInstance(CacheRecycler.class).close();
-        injector.getInstance(PageCacheRecycler.class).close();
-        Injectors.close(injector);
-
-        CachedStreams.clear();
-
-        logger.info("closed");
-    }
 

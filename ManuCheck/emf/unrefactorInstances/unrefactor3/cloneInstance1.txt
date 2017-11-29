@@ -1,23 +1,23 @@
-(startLine=3646 endLine=3666 srcPath=/root/Projects/org.eclipse.emfFilter/960/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelImpl.java)
-  public String getEditPluginPackageName()
+(startLine=292 endLine=312 srcPath=/root/Projects/org.eclipse.emfFilter/774/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EDataTypeImpl.java)
+  public boolean eIsSet(EStructuralFeature eFeature)
   {
-    String result = getEditPluginClassToUse();
-    if (result == null)
+    switch (eDerivedStructuralFeatureID(eFeature))
     {
-      result = getEditPluginID();
+      case EcorePackage.EDATA_TYPE__EANNOTATIONS:
+        return eAnnotations != null && !eAnnotations.isEmpty();
+      case EcorePackage.EDATA_TYPE__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case EcorePackage.EDATA_TYPE__INSTANCE_CLASS_NAME:
+        return INSTANCE_CLASS_NAME_EDEFAULT == null ? instanceClassName != null : !INSTANCE_CLASS_NAME_EDEFAULT.equals(instanceClassName);
+      case EcorePackage.EDATA_TYPE__INSTANCE_CLASS:
+        return INSTANCE_CLASS_EDEFAULT == null ? getInstanceClass() != null : !INSTANCE_CLASS_EDEFAULT.equals(getInstanceClass());
+      case EcorePackage.EDATA_TYPE__DEFAULT_VALUE:
+        return DEFAULT_VALUE_EDEFAULT == null ? getDefaultValue() != null : !DEFAULT_VALUE_EDEFAULT.equals(getDefaultValue());
+      case EcorePackage.EDATA_TYPE__EPACKAGE:
+        return getEPackage() != null;
+      case EcorePackage.EDATA_TYPE__SERIALIZABLE:
+        return ((eFlags & SERIALIZABLE_EFLAG) != 0) != SERIALIZABLE_EDEFAULT;
     }
-    else
-    {
-      int index = result.lastIndexOf(".");
-      if (index == -1)
-      {
-        result = getEditPluginID();
-      }
-      else
-      {
-        result = result.substring(0, index);
-      }
-    }
-    return result;
+    return eDynamicIsSet(eFeature);
   }
 

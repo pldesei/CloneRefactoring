@@ -1,34 +1,27 @@
-(startLine=6052 endLine=6083 srcPath=/root/Projects/eclipse.jdt.coreFilter/1286/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Parser.java)
-protected void consumeSingleMemberAnnotation() {
-    // SingleMemberAnnotation ::= '@' Name '(' MemberValue ')'
-    SingleMemberAnnotation singleMemberAnnotation = null;
-    int length = this.identifierLengthStack[this.identifierLengthPtr--];
-    TypeReference typeReference;
-    if (length == 1) {
-        typeReference = new SingleTypeReference(
-                this.identifierStack[this.identifierPtr], 
-                this.identifierPositionStack[this.identifierPtr--]);
-    } else {
-        char[][] tokens = new char[length][];
-        this.identifierPtr -= length;
-        long[] positions = new long[length];
-        System.arraycopy(this.identifierStack, this.identifierPtr + 1, tokens, 0, length);
-        System.arraycopy(
-            this.identifierPositionStack, 
-            this.identifierPtr + 1, 
-            positions, 
-            0, 
-            length);
-        typeReference = new QualifiedTypeReference(tokens, positions);
+(startLine=2262 endLine=2286 srcPath=/root/Projects/eclipse.jdt.coreFilter/1329/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
+    public void testBug79809() throws JavaModelException, CoreException {
+        ICompilationUnit workingCopy = null;
+        int level = this.astLevel;
+        this.astLevel = AST.JLS3;
+        try {
+            workingCopy = getWorkingCopy("/Converter/src/javadoc/b79809/Test.java",
+                "package javadoc.b79809;\n" +
+                "/**\n" + 
+                " * @param <E>  Class type parameter\n" + 
+                " * @see Object\n" + 
+                " */\n" + 
+                "public class Test<E> {\n" + 
+                "    /**\n" + 
+                "     * @param t\n" + 
+                "     * @param <T> Method type parameter\n" + 
+                "     */\n" + 
+                "    <T> void foo(T t) {}\n" + 
+                "}\n");
+            verifyComments(workingCopy);
+        } finally {
+            if (workingCopy != null)
+                workingCopy.discardWorkingCopy();
+            this.astLevel = level;
+        }
     }
-    singleMemberAnnotation = new SingleMemberAnnotation(typeReference, this.intStack[this.intPtr--]);
-    singleMemberAnnotation.memberValue = this.expressionStack[this.expressionPtr--];
-    this.expressionLengthPtr--;
-    singleMemberAnnotation.declarationSourceEnd = this.rParenPos;
-    pushOnExpressionStack(singleMemberAnnotation);
-    if(options.sourceLevel < ClassFileConstants.JDK1_5 &&
-            this.lastErrorEndPositionBeforeRecovery < this.scanner.currentPosition) {
-        this.problemReporter().invalidUsageOfAnnotation(singleMemberAnnotation);
-    }
-}
 

@@ -1,39 +1,29 @@
-(startLine=52 endLine=88 srcPath=/root/Projects/elasticsearchFilter/1299/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/node/settings/NodeSettingsService.java)
-    @Override public void clusterChanged(ClusterChangedEvent event) {
-        // nothing to do until we actually recover from the gateway or any other block indicates we need to disable persistency
-        if (event.state().blocks().disableStatePersistence()) {
-            return;
+(startLine=206 endLine=232 srcPath=/root/Projects/elasticsearchFilter/1299/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/settings/ImmutableSettings.java)
+    @Override public <T> Class<? extends T> getAsClass(String setting, Class<? extends T> defaultClazz, String prefixPackage, String suffixClassName) throws NoClassSettingsException {
+        String sValue = get(setting);
+        if (sValue == null) {
+            return defaultClazz;
         }
-
-        if (!event.metaDataChanged()) {
-            // nothing changed in the metadata, no need to check
-            return;
-        }
-
-        if (lastSettingsApplied != null && event.state().metaData().settings().equals(lastSettingsApplied)) {
-            // nothing changed in the settings, ignore
-            return;
-        }
-
-        for (Listener listener : listeners) {
-            try {
-                listener.onRefreshSettings(event.state().metaData().settings());
-            } catch (Exception e) {
-                logger.warn("failed to refresh settings for [{}]", e, listener);
-            }
-        }
-
+        String fullClassName = sValue;
         try {
-            for (Map.Entry<String, String> entry : event.state().metaData().settings().getAsMap().entrySet()) {
-                if (entry.getKey().startsWith("logger.")) {
-                    String component = entry.getKey().substring("logger.".length());
-                    ESLoggerFactory.getLogger(component, entry.getValue()).setLevel(entry.getValue());
+            return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+        } catch (ClassNotFoundException e) {
+            fullClassName = prefixPackage + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+            try {
+                return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+            } catch (ClassNotFoundException e1) {
+                fullClassName = prefixPackage + toCamelCase(sValue) + "." + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+                try {
+                    return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+                } catch (ClassNotFoundException e2) {
+                    fullClassName = prefixPackage + toCamelCase(sValue).toLowerCase() + "." + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+                    try {
+                        return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+                    } catch (ClassNotFoundException e3) {
+                        throw new NoClassSettingsException("Failed to load class setting [" + setting + "] with value [" + sValue + "]", e);
+                    }
                 }
             }
-        } catch (Exception e) {
-            logger.warn("failed to refresh settings for [{}]", e, "logger");
         }
-
-        lastSettingsApplied = event.state().metaData().settings();
     }
 

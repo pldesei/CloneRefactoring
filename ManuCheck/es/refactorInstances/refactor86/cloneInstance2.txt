@@ -1,38 +1,114 @@
-(startLine=252 endLine=287 srcPath=/root/Projects/elasticsearchFilter/761/elasticsearch/src/test/java/org/elasticsearch/nested/SimpleNestedTests.java)
-    private void noChildrenNestedDeleteByQuery(long total, int docToDelete) throws Exception {
+(startLine=56 endLine=167 srcPath=/root/Projects/elasticsearchFilter/776/elasticsearch/src/main/java/org/elasticsearch/index/query/HasChildQueryParser.java)
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
 
-        assertAcked(prepareCreate("test")
-                .setSettings(settingsBuilder().put(indexSettings()).put("index.referesh_interval", -1).build())
-                .addMapping("type1", jsonBuilder().startObject().startObject("type1").startObject("properties")
-                        .startObject("nested1")
-                        .field("type", "nested")
-                        .endObject()
-                        .endObject().endObject().endObject()));
+        boolean queryFound = false;
+        float boost = 1.0f;
+        String childType = null;
+        ScoreType scoreType = null;
+        int shortCircuitParentDocSet = 8192;
+        String queryName = null;
 
-        ensureGreen();
-
-
-        for (int i = 0; i < total; i++) {
-            client().prepareIndex("test", "type1", Integer.toString(i)).setSource(jsonBuilder().startObject()
-                    .field("field1", "value1")
-                    .endObject()).execute().actionGet();
+        String currentFieldName = null;
+        XContentParser.Token token;
+        XContentStructure.InnerQuery iq = null;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                // Usually, the query would be parsed here, but the child
+                // type may not have been extracted yet, so use the
+                // XContentStructure.<type> facade to parse if available,
+                // or delay parsing if not.
+                if ("query".equals(currentFieldName)) {
+                    iq = new XContentStructure.InnerQuery(parseContext, childType == null ? null : new String[] {childType});
+                    queryFound = true;
+                } else {
+                    throw new QueryParsingException(parseContext.index(), "[has_child] query does not support [" + currentFieldName + "]");
+                }
+            } else if (token.isValue()) {
+                if ("type".equals(currentFieldName) || "child_type".equals(currentFieldName) || "childType".equals(currentFieldName)) {
+                    childType = parser.text();
+                } else if ("_scope".equals(currentFieldName)) {
+                    throw new QueryParsingException(parseContext.index(), "the [_scope] support in [has_child] query has been removed, use a filter as a facet_filter in the relevant global facet");
+                } else if ("score_type".equals(currentFieldName) || "scoreType".equals(currentFieldName)) {
+                    String scoreTypeValue = parser.text();
+                    if (!"none".equals(scoreTypeValue)) {
+                        scoreType = ScoreType.fromString(scoreTypeValue);
+                    }
+                } else if ("score_mode".equals(currentFieldName) || "scoreMode".equals(currentFieldName)) {
+                    String scoreModeValue = parser.text();
+                    if (!"none".equals(scoreModeValue)) {
+                        scoreType = ScoreType.fromString(scoreModeValue);
+                    }
+                } else if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else if ("short_circuit_cutoff".equals(currentFieldName)) {
+                    shortCircuitParentDocSet = parser.intValue();
+                } else if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else {
+                    throw new QueryParsingException(parseContext.index(), "[has_child] query does not support [" + currentFieldName + "]");
+                }
+            }
+        }
+        if (!queryFound) {
+            throw new QueryParsingException(parseContext.index(), "[has_child] requires 'query' field");
+        }
+        if (childType == null) {
+            throw new QueryParsingException(parseContext.index(), "[has_child] requires 'type' field");
         }
 
+        Query innerQuery = iq.asQuery(childType);
 
-        flush();
-        refresh();
-
-        IndicesStatusResponse statusResponse = client().admin().indices().prepareStatus().execute().actionGet();
-        assertThat(statusResponse.getIndex("test").getDocs().getNumDocs(), equalTo(total));
-
-        client().prepareDeleteByQuery("test").setQuery(QueryBuilders.idsQuery("type1").ids(Integer.toString(docToDelete))).execute().actionGet();
-        flush();
-        refresh();
-        statusResponse = client().admin().indices().prepareStatus().execute().actionGet();
-        assertThat(statusResponse.getIndex("test").getDocs().getNumDocs(), equalTo((total) - 1));
-
-        for (int i = 0; i < total; i++) {
-            assertThat(client().prepareGet("test", "type1", Integer.toString(i)).execute().actionGet().isExists(), equalTo(i != docToDelete));
+        if (innerQuery == null) {
+            return null;
         }
+        innerQuery.setBoost(boost);
+
+        DocumentMapper childDocMapper = parseContext.mapperService().documentMapper(childType);
+        if (childDocMapper == null) {
+            throw new QueryParsingException(parseContext.index(), "[has_child] No mapping for for type [" + childType + "]");
+        }
+        if (!childDocMapper.parentFieldMapper().active()) {
+            throw new QueryParsingException(parseContext.index(), "[has_child]  Type [" + childType + "] does not have parent mapping");
+        }
+
+        ParentFieldMapper parentFieldMapper = childDocMapper.parentFieldMapper();
+        if (!parentFieldMapper.active()) {
+            throw new QueryParsingException(parseContext.index(), "[has_child] _parent field not configured");
+        }
+
+        String parentType = parentFieldMapper.type();
+        DocumentMapper parentDocMapper = parseContext.mapperService().documentMapper(parentType);
+        if (parentDocMapper == null) {
+            throw new QueryParsingException(parseContext.index(), "[has_child]  Type [" + childType + "] points to a non existent parent type [" + parentType + "]");
+        }
+
+        Filter nonNestedDocsFilter = null;
+        if (parentDocMapper.hasNestedObjects()) {
+            nonNestedDocsFilter = parseContext.cacheFilter(NonNestedDocsFilter.INSTANCE, null);
+        }
+
+        // wrap the query with type query
+        innerQuery = new XFilteredQuery(innerQuery, parseContext.cacheFilter(childDocMapper.typeFilter(), null));
+
+        boolean deleteByQuery = "delete_by_query".equals(SearchContext.current().source());
+        Query query;
+        Filter parentFilter = parseContext.cacheFilter(parentDocMapper.typeFilter(), null);
+        ParentChildIndexFieldData parentChildIndexFieldData = parseContext.fieldData().getForField(parentFieldMapper);
+        if (!deleteByQuery && scoreType != null) {
+            query = new ChildrenQuery(parentChildIndexFieldData, parentType, childType, parentFilter, innerQuery, scoreType, shortCircuitParentDocSet, nonNestedDocsFilter);
+        } else {
+            query = new ChildrenConstantScoreQuery(parentChildIndexFieldData, innerQuery, parentType, childType, parentFilter, shortCircuitParentDocSet, nonNestedDocsFilter);
+            if (deleteByQuery) {
+                query = new XConstantScoreQuery(new DeleteByQueryWrappingFilter(query));
+            }
+        }
+        if (queryName != null) {
+            parseContext.addNamedFilter(queryName, new CustomQueryWrappingFilter(query));
+        }
+        query.setBoost(boost);
+        return query;
     }
 

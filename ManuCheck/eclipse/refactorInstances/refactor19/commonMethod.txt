@@ -1,6 +1,28 @@
-(startLine=106 endLine=109 srcPath=/root/Projects/eclipse.jdt.coreFilter/1689/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ReconcilerTests.java)
-private void setWorkingCopyContents(String contents) throws JavaModelException {
-    this.workingCopy.getBuffer().setContents(contents);
-    this.problemRequestor.initialize(contents.toCharArray());
-}
+(startLine=944 endLine=969 srcPath=/root/Projects/eclipse.jdt.coreFilter/1750/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/core/search/SearchEngine.java)
+    private void searchDeclarations(IWorkspace workspace, IJavaElement enclosingElement, IJavaSearchResultCollector resultCollector, SearchPattern pattern) throws JavaModelException {
+        IJavaSearchScope scope = createJavaSearchScope(new IJavaElement[] {enclosingElement});
+        IResource resource = this.getResource(enclosingElement);
+        if (resource instanceof IFile) {
+            if (VERBOSE) {
+                System.out.println("Searching for " + pattern + " in " + resource.getFullPath()); //$NON-NLS-1$//$NON-NLS-2$
+            }
+            try {
+                SearchParticipant participant = new JavaSearchParticipant(getWorkingCopies(enclosingElement));
+                participant.locateMatches(
+                    new SearchDocument[] {new JavaSearchDocument(enclosingElement.getPath().toString(), participant)}, 
+                    pattern, 
+                    scope, 
+                    new ResultCollectorAdapter(resultCollector), 
+                    resultCollector.getProgressMonitor());
+            } catch (CoreException e) {
+                if (e instanceof JavaModelException) {
+                    throw (JavaModelException) e;
+                } else {
+                    throw new JavaModelException(e);
+                }
+            }
+        } else {
+            search(workspace, pattern, scope, resultCollector);
+        }
+    }
 

@@ -1,25 +1,22 @@
-(startLine=611 endLine=634 srcPath=/root/Projects/eclipse.jdt.coreFilter/1076/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
-public int literalIndexForNameAndType(char[] name, char[] signature) {
+(startLine=774 endLine=794 srcPath=/root/Projects/eclipse.jdt.coreFilter/1076/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+private int putInCacheIfAbsent(final char[] key1, final char[] key2, final char[] key3, int value) {
     int index;
-    if ((index = putInNameAndTypeCacheIfAbsent(name, signature, currentIndex)) < 0) {
-        // The entry doesn't exit yet
-        currentIndex++;
-        if ((index = -index) > 0xFFFF){
-            this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+    HashtableOfObject key1Value = (HashtableOfObject) this.methodsAndFieldsCache.get(key1);
+    if (key1Value == null) {
+        key1Value = new HashtableOfObject();
+        this.methodsAndFieldsCache.put(key1, key1Value);
+        CharArrayCache charArrayCache = new CharArrayCache();
+        index = charArrayCache.putIfAbsent(key3, value);
+        key1Value.put(key2, charArrayCache);
+    } else {
+        CharArrayCache charArrayCache = (CharArrayCache) key1Value.get(key2);
+        if (charArrayCache == null) {
+            charArrayCache = new CharArrayCache();
+            index = charArrayCache.putIfAbsent(key3, value);
+            key1Value.put(key2, charArrayCache);
+        } else {
+            index = charArrayCache.putIfAbsent(key3, value);            
         }
-        writeU1(NameAndTypeTag);
-        int nameIndexOffset = this.currentOffset;
-        if (currentOffset + 4 >= poolContent.length) {
-            resizePoolContents(4);
-        }
-        currentOffset+=4;
-        
-        final int nameIndex = literalIndex(name);
-        final int typeIndex = literalIndex(signature);
-        poolContent[nameIndexOffset++] = (byte) (nameIndex >> 8);
-        poolContent[nameIndexOffset++] = (byte) nameIndex;
-        poolContent[nameIndexOffset++] = (byte) (typeIndex >> 8);
-        poolContent[nameIndexOffset] = (byte) typeIndex;
     }
     return index;
 }

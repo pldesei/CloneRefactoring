@@ -1,31 +1,12 @@
-(startLine=222 endLine=250 srcPath=/root/Projects/eclipse.jdt.coreFilter/772/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CodeCorrectionTests.java)
-public void testCorrectLocalVariableType1() throws JavaModelException {
-    CorrectionEngine engine = new CorrectionEngine(JavaCore.getOptions());
-    CodeCorrectionTestsRequestor requestor = new CodeCorrectionTestsRequestor();
-    ICompilationUnit cu= getCompilationUnit("CodeCorrection", "src", "", "CorrectLocalVariableType1.java");
-    IMarker[] markers = getMarkers(cu);
-    assertTrue("should have one problem",markers.length == 1);
-    engine.computeCorrections(markers[0], null, 0, requestor);
-    
-    String src = cu.getSource();
-    String error = "dddz";
-    int start = src.indexOf(error);
-    int end = start + error.length();
-    
-    assertEquals(
-        "should have two suggestions", 
-        "ddd\n"+
-        "ddd.eee",
-        requestor.getSuggestions());
-    assertEquals(
-        "a start of a suggestion is not correct", 
-        start+"\n"+
-        start,
-        requestor.getStarts());
-    assertEquals(
-        "a end of a suggestion is not correct", 
-        end+"\n"+
-        end,
-        requestor.getEnds());
+(startLine=36 endLine=45 srcPath=/root/Projects/eclipse.jdt.coreFilter/1996/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/HashtableOfLong.java)
+public boolean containsKey(long key) {
+    int index = ((int)(key >>> 32)) % valueTable.length;
+    long currentKey;
+    while ((currentKey = keyTable[index]) != 0) {
+        if (currentKey == key)
+            return true;
+        index = (index + 1) % keyTable.length;
+    }
+    return false;
 }
 

@@ -1,56 +1,55 @@
-(startLine=2248 endLine=2303 srcPath=/root/Projects/eclipse.jdt.coreFilter/1966/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
-private void noCycleDetection(final int numberOfParticipants, final boolean useForwardReferences) throws CoreException {
+(startLine=2033 endLine=2087 srcPath=/root/Projects/eclipse.jdt.coreFilter/1966/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+public void testCycleDetection2() throws CoreException {
     
-    final IJavaProject[] projects = new IJavaProject[numberOfParticipants];
-    final int[] allProjectsInCycle = new int[numberOfParticipants];
-    
-    final long[] start = new long[1];
-    final long[] time = new long[1];
-    
+    IJavaProject[] p = null;
     try {
-        JavaCore.run(new IWorkspaceRunnable() {
-            public void run(IProgressMonitor monitor) throws CoreException {
-                for (int i = 0; i < numberOfParticipants; i++){
-                    projects[i] = createJavaProject("P"+i, new String[]{""}, "");
-                    allProjectsInCycle[i] = 0;
-                }        
-                for (int i = 0; i < numberOfParticipants; i++){
-                    IClasspathEntry[] extraEntries = new IClasspathEntry[useForwardReferences ? numberOfParticipants - i -1 : i];
-                    int index = 0;
-                    for (int j = useForwardReferences ? i+1 : 0; 
-                        useForwardReferences ? (j < numberOfParticipants) : (j < i); 
-                        j++){
-                        extraEntries[index++] = JavaCore.newProjectEntry(projects[j].getPath());
-                    }
-                    // append project references            
-                    IClasspathEntry[] oldClasspath = projects[i].getRawClasspath();
-                    IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries.length];
-                    System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
-                    for (int j = 0; j < extraEntries.length; j++){
-                        newClasspath[oldClasspath.length+j] = extraEntries[j];
-                    }            
-                    // set classpath
-                    long innerStart = System.currentTimeMillis(); // time spent in individual CP setting
-                    projects[i].setRawClasspath(newClasspath, null);
-                    time[0] += System.currentTimeMillis() - innerStart;
-                }
-                start[0] = System.currentTimeMillis(); // time spent in delta refresh
-            }
-        }, 
-        null);
-        time[0] += System.currentTimeMillis()-start[0];
-        System.out.println("No cycle check ("+numberOfParticipants+" participants) : "+ time[0]+" ms, "+ (useForwardReferences ? "forward references" : "backward references"));
+
+        p = new IJavaProject[]{
+            this.createJavaProject("P0", new String[] {""}, ""),
+            this.createJavaProject("P1", new String[] {""}, ""),
+            this.createJavaProject("P2", new String[] {""}, ""),
+            this.createJavaProject("P3", new String[] {""}, ""),
+            this.createJavaProject("P4", new String[] {""}, ""),
+        };
         
-        for (int i = 0; i < numberOfParticipants; i++){
+        IClasspathEntry[][] extraEntries = new IClasspathEntry[][]{ 
+            { JavaCore.newProjectEntry(p[1].getPath()), JavaCore.newProjectEntry(p[3].getPath()) },
+            { JavaCore.newProjectEntry(p[2].getPath()) },
+            { JavaCore.newProjectEntry(p[0].getPath()) }, 
+            { JavaCore.newProjectEntry(p[4].getPath())}, 
+            { JavaCore.newProjectEntry(p[0].getPath()) } 
+        }; 
+
+        int[][] expectedCycleParticipants = new int[][] {
+            { 0, 0, 0, 0, 0 }, // after setting CP p[0]
+            { 0, 0, 0, 0, 0 }, // after setting CP p[1]
+            { 1, 1, 1, 0, 0 }, // after setting CP p[2]
+            { 1, 1, 1, 0, 0 }, // after setting CP p[3]
+            { 1, 1, 1, 1, 1 }, // after setting CP p[4]
+        };
+        
+        for (int i = 0; i < p.length; i++){
+
+            // append project references            
+            IClasspathEntry[] oldClasspath = p[i].getRawClasspath();
+            IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries[i].length];
+            System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
+            for (int j = 0; j < extraEntries[i].length; j++){
+                newClasspath[oldClasspath.length+j] = extraEntries[i][j];
+            }            
+            // set classpath
+            p[i].setRawClasspath(newClasspath, null);
+
             // check cycle markers
-            this.assertCycleMarkers(projects[i], projects, allProjectsInCycle);
+            this.assertCycleMarkers(p[i], p, expectedCycleParticipants[i]);
         }
+        //this.startDeltas();
         
     } finally {
-        if (projects != null){
-            for (int i = 0; i < numberOfParticipants; i++){
-                if (projects[i] != null)
-                    this.deleteProject(projects[i].getElementName());
+        //this.stopDeltas();
+        if (p != null){
+            for (int i = 0; i < p.length; i++){
+                this.deleteProject(p[i].getElementName());
             }
         }
     }

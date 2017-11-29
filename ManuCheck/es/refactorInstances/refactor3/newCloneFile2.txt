@@ -21,8 +21,7 @@ package org.elasticsearch.action.search.type;
 
 import com.google.inject.Inject;
 import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.*;
 import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.node.Node;
 import org.elasticsearch.cluster.routing.ShardRouting;
@@ -31,23 +30,28 @@ import org.elasticsearch.search.SearchShardTarget;
 import org.elasticsearch.search.action.SearchServiceListener;
 import org.elasticsearch.search.action.SearchServiceTransportAction;
 import org.elasticsearch.search.controller.SearchPhaseController;
+import org.elasticsearch.search.dfs.AggregatedDfs;
+import org.elasticsearch.search.dfs.DfsSearchResult;
 import org.elasticsearch.search.fetch.QueryFetchSearchResult;
 import org.elasticsearch.search.internal.InternalSearchRequest;
 import org.elasticsearch.search.internal.InternalSearchResponse;
+import org.elasticsearch.search.query.QuerySearchRequest;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.util.settings.Settings;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.elasticsearch.action.search.type.TransportSearchHelper.*;
 
 /**
  * @author kimchy (Shay Banon)
  */
-public class TransportSearchQueryAndFetchAction extends TransportSearchTypeAction {
+public class TransportSearchDfsQueryAndFetchAction extends TransportSearchTypeAction {
 
-    @Inject public TransportSearchQueryAndFetchAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, IndicesService indicesService,
-                                                      TransportSearchCache transportSearchCache, SearchServiceTransportAction searchService, SearchPhaseController searchPhaseController) {
+    @Inject public TransportSearchDfsQueryAndFetchAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, IndicesService indicesService,
+                                                         TransportSearchCache transportSearchCache, SearchServiceTransportAction searchService, SearchPhaseController searchPhaseController) {
         super(settings, threadPool, clusterService, indicesService, transportSearchCache, searchService, searchPhaseController);
     }
 
@@ -55,7 +59,9 @@ public class TransportSearchQueryAndFetchAction extends TransportSearchTypeActio
         new AsyncAction(searchRequest, listener).start();
     }
 
-    private class AsyncAction extends BaseAsyncAction<QueryFetchSearchResult> {
+    private class AsyncAction extends BaseAsyncAction<DfsSearchResult> {
+
+        private final Collection<DfsSearchResult> dfsResults = searchCache.obtainDfsResults();
 
         private final Map<SearchShardTarget, QueryFetchSearchResult> queryFetchResults = searchCache.obtainQueryFetchResults();
 
@@ -65,18 +71,98 @@ public class TransportSearchQueryAndFetchAction extends TransportSearchTypeActio
         }
 
         @Override protected String firstPhaseName() {
-            return "query_fetch";
+            return "dfs";
         }
 
-        @Override protected void sendExecuteFirstPhase(Node node, InternalSearchRequest request, SearchServiceListener<QueryFetchSearchResult> listener) {
-            searchService.sendExecuteFetch(node, request, listener);
+        @Override protected void sendExecuteFirstPhase(Node node, InternalSearchRequest request, SearchServiceListener<DfsSearchResult> listener) {
+            searchService.sendExecuteDfs(node, request, listener);
         }
 
-        @Override protected void processFirstPhaseResult(ShardRouting shard, QueryFetchSearchResult result) {
-            queryFetchResults.put(result.shardTarget(), result);
+        @Override protected void processFirstPhaseResult(ShardRouting shard, DfsSearchResult result) {
+            dfsResults.add(result);
         }
 
         @Override protected void moveToSecondPhase() {
+            final AggregatedDfs dfs = searchPhaseController.aggregateDfs(dfsResults);
+            final AtomicInteger counter = new AtomicInteger(dfsResults.size());
+
+            int localOperations = 0;
+            for (DfsSearchResult dfsResult : dfsResults) {
+                Node node = nodes.get(dfsResult.shardTarget().nodeId());
+                if (node.id().equals(nodes.localNodeId())) {
+                    localOperations++;
+                } else {
+                    QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
+                    executeSecondPhase(counter, node, querySearchRequest);
+                }
+            }
+            if (localOperations > 0) {
+                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
+                    threadPool.execute(new Runnable() {
+                        @Override public void run() {
+                            for (DfsSearchResult dfsResult : dfsResults) {
+                                Node node = nodes.get(dfsResult.shardTarget().nodeId());
+                                if (node.id().equals(nodes.localNodeId())) {
+                                    QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
+                                    executeSecondPhase(counter, node, querySearchRequest);
+                                }
+                            }
+                            searchCache.releaseDfsResults(dfsResults);
+                        }
+                    });
+                } else {
+                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
+                    for (DfsSearchResult dfsResult : dfsResults) {
+                        final Node node = nodes.get(dfsResult.shardTarget().nodeId());
+                        if (node.id().equals(nodes.localNodeId())) {
+                            final QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
+                            if (localAsync) {
+                                threadPool.execute(new Runnable() {
+                                    @Override public void run() {
+                                        executeSecondPhase(counter, node, querySearchRequest);
+                                    }
+                                });
+                            } else {
+                                executeSecondPhase(counter, node, querySearchRequest);
+                            }
+                        }
+                    }
+                    searchCache.releaseDfsResults(dfsResults);
+                }
+            }
+        }
+
+        private void executeSecondPhase(final AtomicInteger counter, Node node, QuerySearchRequest querySearchRequest) {
+            searchService.sendExecuteFetch(node, querySearchRequest, new SearchServiceListener<QueryFetchSearchResult>() {
+                @Override public void onResult(QueryFetchSearchResult result) {
+                    queryFetchResults.put(result.shardTarget(), result);
+                    if (counter.decrementAndGet() == 0) {
+                        finishHim();
+                    }
+                }
+
+                @Override public void onFailure(Throwable t) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Failed to execute query phase", t);
+                    }
+                    AsyncAction.this.shardFailures.add(new ShardSearchFailure(t));
+                    successulOps.decrementAndGet();
+                    if (counter.decrementAndGet() == 0) {
+                        finishHim();
+                    }
+                }
+            });
+        }
+
+        private void finishHim() {
+            try {
+                innerFinishHim();
+            } catch (Exception e) {
+                listener.onFailure(new ReduceSearchPhaseException("query_fetch", "", e));
+            }
+        }
+
+        private void innerFinishHim() {
             sortedShardList = searchPhaseController.sortDocs(queryFetchResults.values());
             final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryFetchResults, queryFetchResults);
             String scrollIdX = null;

@@ -1,8 +1,13 @@
-(startLine=51 endLine=56 srcPath=/root/Projects/elasticsearchFilter/657/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/DoubleValuesComparatorSource.java)
-    public FieldComparator<?> newComparator(String fieldname, int numHits, int sortPos, boolean reversed) throws IOException {
-        assert fieldname.equals(indexFieldData.getFieldNames().indexName());
+(startLine=75 endLine=85 srcPath=/root/Projects/elasticsearchFilter/693/elasticsearch/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java)
+    public void testLocalPluginInstallSingleFolder() throws Exception {
+        //When we have only a folder in top-level (no files either) we remove that folder while extracting
+        String pluginName = "plugin-test";
+        URI uri = URI.create(PluginManagerTests.class.getResource("plugin_single_folder.zip").toString());
+        downloadAndExtract(pluginName, "file://" + uri.getPath());
 
-        final double dMissingValue = (Double) missingObject(missingValue, reversed);
-        return new DoubleValuesComparator(indexFieldData, dMissingValue, numHits, sortMode);
+        internalCluster().startNode(SETTINGS);
+
+        assertPluginLoaded(pluginName);
+        assertPluginAvailable(pluginName);
     }
 

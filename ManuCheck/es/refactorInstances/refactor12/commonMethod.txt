@@ -1,30 +1,18 @@
-(startLine=568 endLine=595 srcPath=/root/Projects/elasticsearchFilter/1548/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/discovery/zen/ZenDiscovery.java)
-    private ClusterState disconnectFromCluster(ClusterState clusterState, String reason) {
-        logger.warn(reason + ", current nodes: {}", clusterState.nodes());
-        nodesFD.stop();
-        masterFD.stop(reason);
-        master = false;
-
-        ClusterBlocks clusterBlocks = ClusterBlocks.builder().blocks(clusterState.blocks())
-                .addGlobalBlock(NO_MASTER_BLOCK)
-                .addGlobalBlock(GatewayService.STATE_NOT_RECOVERED_BLOCK)
-                .build();
-
-        // clear the routing table, we have no master, so we need to recreate the routing when we reform the cluster
-        RoutingTable routingTable = RoutingTable.builder().version(clusterState.routingTable().version()).build();
-        // we also clean the metadata, since we are going to recover it if we become master
-        MetaData metaData = MetaData.builder().build();
-
-        // clean the nodes, we are now not connected to anybody, since we try and reform the cluster
-        latestDiscoNodes = new DiscoveryNodes.Builder().put(localNode).localNodeId(localNode.id()).build();
-
-        asyncJoinCluster();
-
-        return newClusterStateBuilder().state(clusterState)
-                .blocks(clusterBlocks)
-                .nodes(latestDiscoNodes)
-                .routingTable(routingTable)
-                .metaData(metaData)
-                .build();
+(startLine=45 endLine=60 srcPath=/root/Projects/elasticsearchFilter/1578/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/Analysis.java)
+    public static Set<?> parseStemExclusion(Settings settings, Set<?> defaultStemExclusion) {
+        String value = settings.get("stem_exclusion");
+        if (value != null) {
+            if ("_none_".equals(value)) {
+                return ImmutableSet.of();
+            } else {
+                return ImmutableSet.copyOf(Strings.commaDelimitedListToSet(value));
+            }
+        }
+        String[] stopWords = settings.getAsArray("stem_exclusion", null);
+        if (stopWords != null) {
+            return ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            return defaultStemExclusion;
+        }
     }
 

@@ -1,12 +1,22 @@
-(startLine=698 endLine=707 srcPath=/root/Projects/eclipse.jdt.coreFilter/394/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchTests.java)
-public void testSearchPatternCreation15() {
-    IImportDeclaration importDecl = getCompilationUnit("/P/x/y/z/Foo.java").getImport("x.y.*");
-    SearchPattern searchPattern = createPattern(
-            importDecl, 
-            IJavaSearchConstants.REFERENCES);
-    
-    assertPattern(
-        "PackageReferencePattern: <x.y>, exact match, case sensitive, erasure only",
-        searchPattern);
-}
+(startLine=16459 endLine=16478 srcPath=/root/Projects/eclipse.jdt.coreFilter/260/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
+    public void test0534() {
+        this.runConformTest(
+            new String[] {
+                "X.java",
+                "import java.util.EnumSet;\n" + 
+                "\n" + 
+                "enum Foo {\n" + 
+                "    blargh, baz, boz;\n" + 
+                "}\n" + 
+                "\n" + 
+                "public class X {\n" + 
+                "    public static void main(String[] args) {\n" + 
+                "        Class c = Foo.class;\n" + 
+                "        EnumSet<Foo> eSet = EnumSet.allOf(c);\n" + 
+                "    }\n" + 
+                "}\n",
+            },
+            ""
+        );
+    }
 

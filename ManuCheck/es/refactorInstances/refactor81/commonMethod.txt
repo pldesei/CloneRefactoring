@@ -1,6 +1,15 @@
-(startLine=62 endLine=65 srcPath=/root/Projects/elasticsearchFilter/853/elasticsearch/src/test/java/org/elasticsearch/search/aggregations/bucket/ShardSizeTests.java)
-    protected void createIdx(String keyFieldMapping) {
-        assertAcked(prepareCreate("idx")
-                .addMapping("type", "key", keyFieldMapping));
+(startLine=81 endLine=93 srcPath=/root/Projects/elasticsearchFilter/877/elasticsearch/src/main/java/org/elasticsearch/cluster/metadata/AliasValidator.java)
+    public void validateAliasFilter(String alias, String filter, IndexQueryParserService indexQueryParserService) {
+        assert indexQueryParserService != null;
+        try {
+            XContentParser parser = XContentFactory.xContent(filter).createParser(filter);
+            try {
+                indexQueryParserService.parseInnerFilter(parser);
+            } finally {
+                parser.close();
+            }
+        } catch (Throwable e) {
+            throw new ElasticsearchIllegalArgumentException("failed to parse filter for alias [" + alias + "]", e);
+        }
     }
 

@@ -1,19 +1,10 @@
-(startLine=186 endLine=202 srcPath=/root/Projects/elasticsearchFilter/1374/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/xcontent/MultiFieldMapper.java)
-    @Override public void parse(ParseContext context) throws IOException {
-        ContentPath.Type origPathType = context.path().pathType();
-        context.path().pathType(pathType);
-
-        // do the default mapper without adding the path
-        if (defaultMapper != null) {
-            defaultMapper.parse(context);
-        }
-
-        context.path().add(name);
-        for (XContentMapper mapper : mappers.values()) {
-            mapper.parse(context);
-        }
-        context.path().remove();
-
-        context.path().pathType(origPathType);
+(startLine=237 endLine=244 srcPath=/root/Projects/elasticsearchFilter/1991/elasticsearch/modules/elasticsearch/src/test/java/org/elasticsearch/index/query/json/SimpleJsonIndexQueryParserTests.java)
+    @Test public void testWildcardQuery() throws IOException {
+        IndexQueryParser queryParser = newQueryParser();
+        String query = copyToStringFromClasspath("/org/elasticsearch/index/query/json/wildcard.json");
+        Query parsedQuery = queryParser.parse(query);
+        assertThat(parsedQuery, instanceOf(WildcardQuery.class));
+        WildcardQuery wildcardQuery = (WildcardQuery) parsedQuery;
+        assertThat(wildcardQuery.getTerm(), equalTo(new Term("name.first", "sh*")));
     }
 

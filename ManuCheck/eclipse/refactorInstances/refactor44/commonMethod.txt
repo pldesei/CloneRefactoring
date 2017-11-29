@@ -1,5 +1,18 @@
-(startLine=63 endLine=65 srcPath=/root/Projects/eclipse.jdt.coreFilter/1341/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchGenericConstructorExactTests.java)
-    protected void search(String patternString, int searchFor, int limitTo, IJavaSearchScope scope, SearchRequestor requestor) throws CoreException {
-        search(patternString, searchFor, limitTo, EXACT_RULE, scope, requestor);
+(startLine=487 endLine=502 srcPath=/root/Projects/eclipse.jdt.coreFilter/1341/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaSearchTests.java)
+    protected void search(String patternString, int searchFor, int limitTo, int matchRule, IJavaSearchScope scope, SearchRequestor requestor) throws CoreException {
+        if (patternString.indexOf('*') != -1 || patternString.indexOf('?') != -1)
+            matchRule |= SearchPattern.R_PATTERN_MATCH;
+        SearchPattern pattern = SearchPattern.createPattern(
+            patternString, 
+            searchFor,
+            limitTo, 
+            matchRule);
+        assertNotNull("Pattern should not be null", pattern);
+        new SearchEngine(workingCopies).search(
+            pattern,
+            new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
+            scope,
+            requestor,
+            null);
     }
 

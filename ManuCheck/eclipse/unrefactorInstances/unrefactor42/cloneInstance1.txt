@@ -1,27 +1,34 @@
-(startLine=6222 endLine=6246 srcPath=/root/Projects/eclipse.jdt.coreFilter/18/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/BatchCompilerTest.java)
-public void test154_warn_options() {
-    // same source as 153, skip default checks
+(startLine=1043 endLine=1074 srcPath=/root/Projects/eclipse.jdt.coreFilter/871/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/Compliance_1_4.java)
+public void test029() {
+
     this.runConformTest(
         new String[] {
-            "X.java",
-            "public class X {\n" +
-            "    public static void foo() {\n" +
-            "     String s = null;\n" +
-            "     s.toString();\n" +
-            "     String u;\n" +
-            "   }\n" +
-            "}",
+            "p/X.java",
+            "package p;    \n" +
+            "public class X {    \n" +
+            "    public static void main(String[] args) {    \n" +
+            "        new X();    \n" +
+            "        System.out.println(\"SUCCESS\");    \n" +
+            "    }      \n" +
+            "    Woof woof_1;    \n" +
+            "    public class Honk {    \n" +
+            "        Integer honks;    \n" +
+            "    }    \n" +
+            "    public class Meow {    \n" +
+            "        Honk honk_1;    \n" +
+            "    }    \n" +
+            "    public class Woof {    \n" +
+            "        Meow meow_1;    \n" +
+            "    }    \n" +
+            "    public void setHonks(int num) {    \n" +
+            "        // This is the line that causes the VerifyError    \n" +
+            "        woof_1.meow_1.honk_1.honks = new Integer(num);    \n" +
+            "        // Here is equivalent code that does not cause the error.    \n" +
+            "        //  Honk h = woof_1.moo_1.meow_1.honk_1;    \n" +
+            "        //  h.honks = new Integer(num);    \n" +
+            "    }    \n" +
+            "}    \n"
         },
-        "\"" + OUTPUT_DIR +  File.separator + "X.java\""
-        + " -warn:null -proc:none -d \"" + OUTPUT_DIR + "\"",
-        "",
-        "----------\n" +
-        "1. WARNING in ---OUTPUT_DIR_PLACEHOLDER---/X.java (at line 4)\n" +
-        "    s.toString();\n" +
-        "    ^\n" +
-        "Null pointer access: The variable s can only be null at this location\n" +
-        "----------\n" +
-        "1 problem (1 warning)",
-        true);
+        "SUCCESS");
 }
 

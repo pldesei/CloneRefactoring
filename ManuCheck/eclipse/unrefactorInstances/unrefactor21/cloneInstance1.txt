@@ -1,105 +1,28 @@
-(startLine=260 endLine=362 srcPath=/root/Projects/eclipse.jdt.coreFilter/2025/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CopyMoveTests.java)
-public void movePositive(IJavaElement[] elements, IJavaElement[] destinations, IJavaElement[] siblings, String[] names, boolean force, IProgressMonitor monitor) throws JavaModelException {
-    // if forcing, ensure that a name collision exists
-    int i;
-    if (force) {
-        for (i = 0; i < elements.length; i++) {
-            IJavaElement e = elements[i];
-            IJavaElement collision = null;
-            if (names == null) {
-                collision = generateHandle(e, null, destinations[i]);
-            } else {
-                collision = generateHandle(e, names[i], destinations[i]);
-            }
-            assertTrue("Collision does not exist", collision.exists());
-        }
-    }
-
-    try {
-        startDeltas();
-        
-        // move
-        getJavaModel().move(elements, destinations, siblings, names, force, monitor);
-        for (i = 0; i < elements.length; i++) {
-            IJavaElement element = elements[i];
-            IJavaElement moved = null;
-            if (names == null) {
-                moved = generateHandle(element, null, destinations[i]);
-            } else {
-                moved = generateHandle(element, names[i], destinations[i]);
-            }
-            // ensure the original element no longer exists, unless moving within the same container
-            if (!destinations[i].equals(element.getParent())) {
-                if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
-                    //moving a package fragment does not necessary mean that it no longer exists
-                    //it could have members that are not part of the Java Model
-                    try {
-                        IResource[] members = ((IContainer) element.getUnderlyingResource()).members();
-                        if (members.length == 0) {
-                            assertTrue("The original element must not exist", !element.exists());
-                        }
-                    } catch (CoreException ce) {
-                        throw new JavaModelException(ce);
-                    }
-                } else {
-                    assertTrue("The original element must not exist", !element.exists());
-                }
-            }
-            assertTrue("Moved element should exist", moved.exists());
-    
-            //ensure correct position
-            if (element.getElementType() > IJavaElement.COMPILATION_UNIT) {
-                if (siblings != null && siblings.length > 0) {
-                    ensureCorrectPositioning((IParent) moved.getParent(), siblings[i], moved);
-                }
-            } else {
-                IJavaElement container = destinations[i];
-                if (container.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT) {
-                } else { // ensure package name is correct
-    
-                    if (container.getElementName().equals("")) {
-                        // default package - should be no package decl
-                        IJavaElement[] children = ((ICompilationUnit) moved).getChildren();
-                        boolean found = false;
-                        for (int j = 0; j < children.length; j++) {
-                            if (children[j] instanceof IPackageDeclaration) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        assertTrue("Should not find package decl", !found);
-                    } else {
-                        IJavaElement[] children = ((ICompilationUnit) moved).getChildren();
-                        boolean found = false;
-                        for (int j = 0; j < children.length; j++) {
-                            if (children[j] instanceof IPackageDeclaration) {
-                                assertTrue("package declaration incorrect", ((IPackageDeclaration) children[j]).getElementName().equals(container.getElementName()));
-                                found = true;
-                                break;
-                            }
-                        }
-                        assertTrue("Did not find package decl", found);
-                    }
-                }
-            }
-            IJavaElementDelta destDelta = null;
-            if (isMainType(element, destinations[i]) && names != null && names[i] != null) { //moved/renamed main type to same cu
-                destDelta = getDeltaFor(moved.getParent());
-                assertTrue("Renamed compilation unit as result of main type not added", destDelta != null && destDelta.getKind() == IJavaElementDelta.ADDED);
-                assertTrue("flag should be F_MOVED_FROM", (destDelta.getFlags() & IJavaElementDelta.F_MOVED_FROM) > 0);
-                assertTrue("moved from handle should be original", destDelta.getMovedFromElement().equals(element.getParent()));
-            } else {
-                destDelta = getDeltaFor(destinations[i], true);
-                assertTrue("Destination container not changed", destDelta != null && destDelta.getKind() == IJavaElementDelta.CHANGED);
-                IJavaElementDelta[] deltas = destDelta.getAddedChildren();
-                assertTrue("Added children not correct for element copy", deltas[i].getElement().equals(moved));
-                assertTrue("should be K_ADDED", deltas[i].getKind() == IJavaElementDelta.ADDED);
-                IJavaElementDelta sourceDelta= getDeltaFor(element, false);
-                assertTrue("should be K_REMOVED", sourceDelta.getKind() == IJavaElementDelta.REMOVED);
+(startLine=281 endLine=306 srcPath=/root/Projects/eclipse.jdt.coreFilter/1076/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/classfmt/MethodInfo.java)
+private void readModifierRelatedAttributes() {
+    int attributesCount = u2At(6);
+    int readOffset = 8;
+    for (int i = 0; i < attributesCount; i++) {
+        int utf8Offset = constantPoolOffsets[u2At(readOffset)] - structOffset;
+        char[] attributeName = utf8At(utf8Offset + 3, u2At(utf8Offset + 1));
+        // test added for obfuscated .class file. See 79772
+        if (attributeName.length != 0) {
+            switch(attributeName[0]) {
+                case 'D' :
+                    if (CharOperation.equals(attributeName, DeprecatedName))
+                        this.accessFlags |= AccDeprecated;
+                    break;
+                case 'S' :
+                    if (CharOperation.equals(attributeName, SyntheticName))
+                        this.accessFlags |= AccSynthetic;
+                    break;
+                case 'A' :
+                    if (CharOperation.equals(attributeName, AnnotationDefaultName))
+                        this.accessFlags |= AccAnnotationDefault;
+                    break;
             }
         }
-    } finally {
-        stopDeltas();
+        readOffset += (6 + u4At(readOffset + 2));
     }
 }
 

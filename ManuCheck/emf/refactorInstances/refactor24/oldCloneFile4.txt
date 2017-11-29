@@ -2,12 +2,16 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AUImpl.java,v 1.1 2005/08/09 04:43:08 davidms Exp $
+ * $Id: DImpl.java,v 1.2 2005/07/08 02:16:32 davidms Exp $
  */
-package org.eclipse.emf.test.models.ref.unsettable.impl;
+package org.eclipse.emf.test.models.ref.impl;
+
+import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -16,75 +20,59 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.emf.test.models.ref.unsettable.AU;
-import org.eclipse.emf.test.models.ref.unsettable.BU;
-import org.eclipse.emf.test.models.ref.unsettable.C2U;
-import org.eclipse.emf.test.models.ref.unsettable.CU;
-import org.eclipse.emf.test.models.ref.unsettable.URefPackage;
+import org.eclipse.emf.test.models.ref.C;
+import org.eclipse.emf.test.models.ref.C4;
+import org.eclipse.emf.test.models.ref.D;
+import org.eclipse.emf.test.models.ref.E;
+import org.eclipse.emf.test.models.ref.RefPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>AU</b></em>'.
+ * An implementation of the model object '<em><b>D</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.test.models.ref.unsettable.impl.AUImpl#getBu <em>Bu</em>}</li>
- *   <li>{@link org.eclipse.emf.test.models.ref.unsettable.impl.AUImpl#getC2u <em>C2u</em>}</li>
- *   <li>{@link org.eclipse.emf.test.models.ref.unsettable.impl.AUImpl#getCu <em>Cu</em>}</li>
+ *   <li>{@link org.eclipse.emf.test.models.ref.impl.DImpl#getC <em>C</em>}</li>
+ *   <li>{@link org.eclipse.emf.test.models.ref.impl.DImpl#getE <em>E</em>}</li>
+ *   <li>{@link org.eclipse.emf.test.models.ref.impl.DImpl#getC4 <em>C4</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class AUImpl extends EObjectImpl implements AU
+public class DImpl extends EObjectImpl implements D
 {
   /**
-   * The cached value of the '{@link #getBu() <em>Bu</em>}' reference.
+   * The cached value of the '{@link #getC() <em>C</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getBu()
+   * @see #getC()
    * @generated
    * @ordered
    */
-  protected BU bu = null;
+  protected C c = null;
 
   /**
-   * This is true if the Bu reference has been set.
+   * The cached value of the '{@link #getE() <em>E</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
+   * @see #getE()
    * @generated
    * @ordered
    */
-  protected boolean buESet = false;
-
-  /**
-   * The cached value of the '{@link #getCu() <em>Cu</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCu()
-   * @generated
-   * @ordered
-   */
-  protected CU cu = null;
-
-  /**
-   * This is true if the Cu reference has been set.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  protected boolean cuESet = false;
+  protected EList e = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected AUImpl()
+  protected DImpl()
   {
     super();
   }
@@ -96,7 +84,7 @@ public class AUImpl extends EObjectImpl implements AU
    */
   protected EClass eStaticClass()
   {
-    return URefPackage.eINSTANCE.getAU();
+    return RefPackage.eINSTANCE.getD();
   }
 
   /**
@@ -104,19 +92,19 @@ public class AUImpl extends EObjectImpl implements AU
    * <!-- end-user-doc -->
    * @generated
    */
-  public BU getBu()
+  public C getC()
   {
-    if (bu != null && bu.eIsProxy())
+    if (c != null && c.eIsProxy())
     {
-      BU oldBu = bu;
-      bu = (BU)eResolveProxy((InternalEObject)bu);
-      if (bu != oldBu)
+      C oldC = c;
+      c = (C)eResolveProxy((InternalEObject)c);
+      if (c != oldC)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, URefPackage.AU__BU, oldBu, bu));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefPackage.D__C, oldC, c));
       }
     }
-    return bu;
+    return c;
   }
 
   /**
@@ -124,9 +112,9 @@ public class AUImpl extends EObjectImpl implements AU
    * <!-- end-user-doc -->
    * @generated
    */
-  public BU basicGetBu()
+  public C basicGetC()
   {
-    return bu;
+    return c;
   }
 
   /**
@@ -134,15 +122,13 @@ public class AUImpl extends EObjectImpl implements AU
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetBu(BU newBu, NotificationChain msgs)
+  public NotificationChain basicSetC(C newC, NotificationChain msgs)
   {
-    BU oldBu = bu;
-    bu = newBu;
-    boolean oldBuESet = buESet;
-    buESet = true;
+    C oldC = c;
+    c = newC;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, URefPackage.AU__BU, oldBu, newBu, !oldBuESet);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RefPackage.D__C, oldC, newC);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -153,25 +139,20 @@ public class AUImpl extends EObjectImpl implements AU
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setBu(BU newBu)
+  public void setC(C newC)
   {
-    if (newBu != bu)
+    if (newC != c)
     {
       NotificationChain msgs = null;
-      if (bu != null)
-        msgs = ((InternalEObject)bu).eInverseRemove(this, URefPackage.BU__AU, BU.class, msgs);
-      if (newBu != null)
-        msgs = ((InternalEObject)newBu).eInverseAdd(this, URefPackage.BU__AU, BU.class, msgs);
-      msgs = basicSetBu(newBu, msgs);
+      if (c != null)
+        msgs = ((InternalEObject)c).eInverseRemove(this, RefPackage.C__D, C.class, msgs);
+      if (newC != null)
+        msgs = ((InternalEObject)newC).eInverseAdd(this, RefPackage.C__D, C.class, msgs);
+      msgs = basicSetC(newC, msgs);
       if (msgs != null) msgs.dispatch();
     }
-    else
-        {
-      boolean oldBuESet = buESet;
-      buESet = true;
-      if (eNotificationRequired())
-        eNotify(new ENotificationImpl(this, Notification.SET, URefPackage.AU__BU, newBu, newBu, !oldBuESet));
-        }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.D__C, newC, newC));
   }
 
   /**
@@ -179,18 +160,13 @@ public class AUImpl extends EObjectImpl implements AU
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicUnsetBu(NotificationChain msgs)
+  public EList getE()
   {
-    BU oldBu = bu;
-    bu = null;
-    boolean oldBuESet = buESet;
-    buESet = false;
-    if (eNotificationRequired())
+    if (e == null)
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.UNSET, URefPackage.AU__BU, oldBu, null, oldBuESet);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
+      e = new EObjectWithInverseResolvingEList.ManyInverse(E.class, this, RefPackage.D__E, RefPackage.E__D);
     }
-    return msgs;
+    return e;
   }
 
   /**
@@ -198,136 +174,33 @@ public class AUImpl extends EObjectImpl implements AU
    * <!-- end-user-doc -->
    * @generated
    */
-  public void unsetBu()
+  public C4 getC4()
   {
-    if (bu != null)
+    if (eContainerFeatureID != RefPackage.D__C4) return null;
+    return (C4)eContainer;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setC4(C4 newC4)
+  {
+    if (newC4 != eContainer || (eContainerFeatureID != RefPackage.D__C4 && newC4 != null))
     {
-      NotificationChain msgs = null;
-      msgs = ((InternalEObject)bu).eInverseRemove(this, URefPackage.BU__AU, BU.class, msgs);
-      msgs = basicUnsetBu(msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else
-        {
-      boolean oldBuESet = buESet;
-      buESet = false;
-      if (eNotificationRequired())
-        eNotify(new ENotificationImpl(this, Notification.UNSET, URefPackage.AU__BU, null, null, oldBuESet));
-        }
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean isSetBu()
-  {
-    return buESet;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public C2U getC2u()
-  {
-    if (eContainerFeatureID != URefPackage.AU__C2U) return null;
-    return (C2U)eContainer;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setC2u(C2U newC2u)
-  {
-    if (newC2u != eContainer || (eContainerFeatureID != URefPackage.AU__C2U && newC2u != null))
-    {
-      if (EcoreUtil.isAncestor(this, newC2u))
+      if (EcoreUtil.isAncestor(this, newC4))
         throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
       NotificationChain msgs = null;
       if (eContainer != null)
         msgs = eBasicRemoveFromContainer(msgs);
-      if (newC2u != null)
-        msgs = ((InternalEObject)newC2u).eInverseAdd(this, URefPackage.C2U__AU, C2U.class, msgs);
-      msgs = eBasicSetContainer((InternalEObject)newC2u, URefPackage.AU__C2U, msgs);
+      if (newC4 != null)
+        msgs = ((InternalEObject)newC4).eInverseAdd(this, RefPackage.C4__D, C4.class, msgs);
+      msgs = eBasicSetContainer((InternalEObject)newC4, RefPackage.D__C4, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, URefPackage.AU__C2U, newC2u, newC2u));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public CU getCu()
-  {
-    if (cu != null && cu.eIsProxy())
-    {
-      CU oldCu = cu;
-      cu = (CU)eResolveProxy((InternalEObject)cu);
-      if (cu != oldCu)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, URefPackage.AU__CU, oldCu, cu));
-      }
-    }
-    return cu;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public CU basicGetCu()
-  {
-    return cu;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setCu(CU newCu)
-  {
-    CU oldCu = cu;
-    cu = newCu;
-    boolean oldCuESet = cuESet;
-    cuESet = true;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, URefPackage.AU__CU, oldCu, cu, !oldCuESet));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void unsetCu()
-  {
-    CU oldCu = cu;
-    boolean oldCuESet = cuESet;
-    cu = null;
-    cuESet = false;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.UNSET, URefPackage.AU__CU, oldCu, null, oldCuESet));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean isSetCu()
-  {
-    return cuESet;
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.D__C4, newC4, newC4));
   }
 
   /**
@@ -341,14 +214,16 @@ public class AUImpl extends EObjectImpl implements AU
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case URefPackage.AU__BU:
-          if (bu != null)
-            msgs = ((InternalEObject)bu).eInverseRemove(this, URefPackage.BU__AU, BU.class, msgs);
-          return basicSetBu((BU)otherEnd, msgs);
-        case URefPackage.AU__C2U:
+        case RefPackage.D__C:
+          if (c != null)
+            msgs = ((InternalEObject)c).eInverseRemove(this, RefPackage.C__D, C.class, msgs);
+          return basicSetC((C)otherEnd, msgs);
+        case RefPackage.D__E:
+          return ((InternalEList)getE()).basicAdd(otherEnd, msgs);
+        case RefPackage.D__C4:
           if (eContainer != null)
             msgs = eBasicRemoveFromContainer(msgs);
-          return eBasicSetContainer(otherEnd, URefPackage.AU__C2U, msgs);
+          return eBasicSetContainer(otherEnd, RefPackage.D__C4, msgs);
         default:
           return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
       }
@@ -369,10 +244,12 @@ public class AUImpl extends EObjectImpl implements AU
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case URefPackage.AU__BU:
-          return basicUnsetBu(msgs);
-        case URefPackage.AU__C2U:
-          return eBasicSetContainer(null, URefPackage.AU__C2U, msgs);
+        case RefPackage.D__C:
+          return basicSetC(null, msgs);
+        case RefPackage.D__E:
+          return ((InternalEList)getE()).basicRemove(otherEnd, msgs);
+        case RefPackage.D__C4:
+          return eBasicSetContainer(null, RefPackage.D__C4, msgs);
         default:
           return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
       }
@@ -391,8 +268,8 @@ public class AUImpl extends EObjectImpl implements AU
     {
       switch (eContainerFeatureID)
       {
-        case URefPackage.AU__C2U:
-          return eContainer.eInverseRemove(this, URefPackage.C2U__AU, C2U.class, msgs);
+        case RefPackage.D__C4:
+          return eContainer.eInverseRemove(this, RefPackage.C4__D, C4.class, msgs);
         default:
           return eDynamicBasicRemoveFromContainer(msgs);
       }
@@ -409,14 +286,13 @@ public class AUImpl extends EObjectImpl implements AU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.AU__BU:
-        if (resolve) return getBu();
-        return basicGetBu();
-      case URefPackage.AU__C2U:
-        return getC2u();
-      case URefPackage.AU__CU:
-        if (resolve) return getCu();
-        return basicGetCu();
+      case RefPackage.D__C:
+        if (resolve) return getC();
+        return basicGetC();
+      case RefPackage.D__E:
+        return getE();
+      case RefPackage.D__C4:
+        return getC4();
     }
     return eDynamicGet(eFeature, resolve);
   }
@@ -430,14 +306,15 @@ public class AUImpl extends EObjectImpl implements AU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.AU__BU:
-        setBu((BU)newValue);
+      case RefPackage.D__C:
+        setC((C)newValue);
         return;
-      case URefPackage.AU__C2U:
-        setC2u((C2U)newValue);
+      case RefPackage.D__E:
+        getE().clear();
+        getE().addAll((Collection)newValue);
         return;
-      case URefPackage.AU__CU:
-        setCu((CU)newValue);
+      case RefPackage.D__C4:
+        setC4((C4)newValue);
         return;
     }
     eDynamicSet(eFeature, newValue);
@@ -452,14 +329,14 @@ public class AUImpl extends EObjectImpl implements AU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.AU__BU:
-        unsetBu();
+      case RefPackage.D__C:
+        setC((C)null);
         return;
-      case URefPackage.AU__C2U:
-        setC2u((C2U)null);
+      case RefPackage.D__E:
+        getE().clear();
         return;
-      case URefPackage.AU__CU:
-        unsetCu();
+      case RefPackage.D__C4:
+        setC4((C4)null);
         return;
     }
     eDynamicUnset(eFeature);
@@ -474,14 +351,14 @@ public class AUImpl extends EObjectImpl implements AU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.AU__BU:
-        return isSetBu();
-      case URefPackage.AU__C2U:
-        return getC2u() != null;
-      case URefPackage.AU__CU:
-        return isSetCu();
+      case RefPackage.D__C:
+        return c != null;
+      case RefPackage.D__E:
+        return e != null && !e.isEmpty();
+      case RefPackage.D__C4:
+        return getC4() != null;
     }
     return eDynamicIsSet(eFeature);
   }
 
-} //AUImpl
+} //DImpl

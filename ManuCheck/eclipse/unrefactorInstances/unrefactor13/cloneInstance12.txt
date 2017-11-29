@@ -1,0 +1,51 @@
+(startLine=1075 endLine=1123 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
+public void _test019() {
+  try {
+        String sourceA019 =
+            "public class A019 {\n" +
+            "  public int x = 1;\n" +
+            "  public int foo() {\n" +
+            "    x++;\n" + // workaround pb with JDK 1.4.1 that doesn't stop if only return
+            "    return x;\n" +
+            "  }\n" +
+            "}";
+        compileAndDeploy(sourceA019, "A019");
+        String userCode =
+            "new A019().foo();";
+        JDIStackFrame stackFrame = new JDIStackFrame(
+            this.jdiVM, 
+            this,
+            userCode,
+            "A019",
+            "foo",
+            -1);
+
+        DebugRequestor requestor = new DebugRequestor();
+        char[] snippet = "return super.clone().equals(this);".toCharArray();
+        try {
+            context.evaluate(
+                snippet,
+                stackFrame.localVariableTypeNames(),
+                stackFrame.localVariableNames(),
+                stackFrame.localVariableModifiers(),
+                stackFrame.declaringTypeName(),
+                stackFrame.isStatic(),
+                stackFrame.isConstructorCall(),
+                getEnv(), 
+                getCompilerOptions(), 
+                requestor, 
+                getProblemFactory());
+        } catch (InstallException e) {
+            assertTrue("No targetException " + e.getMessage(), false);
+        }
+        assertTrue("Should get one result but got " + requestor.resultIndex+1, requestor.resultIndex == 0);
+        EvaluationResult result = requestor.results[0];
+        assertTrue("Code snippet should not have problems", !result.hasProblems());
+        assertTrue("Result should have a value", result.hasValue());
+        assertEquals("Value", "true".toCharArray(), result.getValueDisplayString());
+        assertEquals("Type", "boolean".toCharArray(), result.getValueTypeName());
+    } finally {
+        removeTempClass("A019");
+    }
+}
+

@@ -1,23 +1,15 @@
-(startLine=3543 endLine=3563 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug95794c() throws CoreException {
-    this.resultCollector.showRule = true;
-    ICompilationUnit unit = getCompilationUnit("JavaSearchBugs", "src", "b95794", "Test.java");
-    IField field = unit.getType("Test").getType("Color").getField("WHITE");
-
-    // Verify matches
-    TestCollector occurencesCollector = new TestCollector();
-    occurencesCollector.showAccuracy = true;
-    search(field, ALL_OCCURRENCES, getJavaSearchScope(), occurencesCollector);
-    assertSearchResults(
-        "src/b95794/Test.java [WHITE] EXACT_MATCH\n" +
-        "src/b95794/Test.java void b95794.Test.main(String[]) [WHITE] EXACT_MATCH\n" +
-        "src/b95794/Test.java b95794.Test$Color.WHITE [WHITE] EXACT_MATCH",
-        occurencesCollector
-    );
-
-    // Verify with references matches
-    TestCollector referencesCollector = new TestCollector();
-    search(field, REFERENCES, getJavaSearchScope(), referencesCollector);
-    assertEquals("Problem with occurences or references number of matches: ", occurencesCollector.matches.size()-1, referencesCollector.matches.size());
-}
+(startLine=607 endLine=619 srcPath=/root/Projects/eclipse.jdt.coreFilter/322/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CopyResourceElementsOperation.java)
+    private void updateReadOnlyPackageFragmentsForMove(IContainer sourceFolder, IPackageFragmentRoot root, String[] newFragName, boolean sourceFolderIsReadOnly) {
+        IContainer parentFolder = (IContainer) root.getResource();
+        for (int i = 0, length = newFragName.length; i < length; i++) {
+            String subFolderName = newFragName[i];
+            parentFolder = parentFolder.getFolder(new Path(subFolderName));
+            sourceFolder = sourceFolder.getFolder(new Path(subFolderName));
+            if ((sourceFolder.exists() && Util.isReadOnly(sourceFolder)) || (i == length - 1 && sourceFolderIsReadOnly)) {
+                Util.setReadOnly(parentFolder, true);
+                // the source folder will be deleted anyway (move operation)
+                Util.setReadOnly(sourceFolder, false);
+            }
+        }
+    }
 

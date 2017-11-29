@@ -1,37 +1,14 @@
-(startLine=622 endLine=656 srcPath=/root/Projects/eclipse.jdt.coreFilter/1710/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/eval/DebugEvaluationTest.java)
-public void test011() {
-    String userCode =
-        "String s = \"s\";\n" +
-        "java.util.Vector v = new java.util.Vector();\n" +
-        "v.addElement(s);\n";
-    JDIStackFrame stackFrame = new JDIStackFrame(
-        this.jdiVM, 
-        this,
-        userCode);
-    
-    DebugRequestor requestor = new DebugRequestor();
-    char[] snippet = "return v;".toCharArray();
-    try {
-        context.evaluate(
-            snippet,
-            stackFrame.localVariableTypeNames(),
-            stackFrame.localVariableNames(),
-            stackFrame.localVariableModifiers(),
-            stackFrame.declaringTypeName(),
-            stackFrame.isStatic(),
-            stackFrame.isConstructorCall(),
-            getEnv(), 
-            getCompilerOptions(), 
-            requestor, 
-            getProblemFactory());
-    } catch (InstallException e) {
-        assertTrue("No targetException " + e.getMessage(), false);
+(startLine=2177 endLine=2188 srcPath=/root/Projects/eclipse.jdt.coreFilter/272/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterAST3Test.java)
+    public void test0101() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0101", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        char[] source = sourceUnit.getSource().toCharArray();
+        ASTNode result = runConversion(AST.JLS3, sourceUnit, false);
+        ASTNode node = getASTNode((CompilationUnit) result, 0, 0, 0);
+        assertNotNull("Expression should not be null", node); //$NON-NLS-1$
+        WhileStatement whileStatement = this.ast.newWhileStatement();
+        whileStatement.setExpression(this.ast.newBooleanLiteral(true));
+        whileStatement.setBody(this.ast.newBlock());
+        assertTrue("Both AST trees should be identical", whileStatement.subtreeMatch(new ASTMatcher(), node));        //$NON-NLS-1$
+        checkSourceRange(node, "while(true) {}", source);//$NON-NLS-1$
     }
-    assertTrue("Should get one result but got " + requestor.resultIndex+1, requestor.resultIndex == 0);
-    EvaluationResult result = requestor.results[0];
-    assertTrue("Code snippet should not have problems", !result.hasProblems());
-    assertTrue("Result should have a value", result.hasValue());
-    assertEquals("Value", "[s]".toCharArray(), result.getValueDisplayString());
-    assertEquals("Type", "java.util.Vector".toCharArray(), result.getValueTypeName());
-}
 

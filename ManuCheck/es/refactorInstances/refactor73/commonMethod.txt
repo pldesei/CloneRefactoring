@@ -1,6 +1,12 @@
-(startLine=306 endLine=309 srcPath=/root/Projects/elasticsearchFilter/1057/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/DateFieldMapper.java)
-    public long parseToMilliseconds(Object value, @Nullable QueryParseContext context, boolean includeUpper) {
-        long now = context == null ? System.currentTimeMillis() : context.nowInMillis();
-        return includeUpper ? dateMathParser.parseUpperInclusive(convertToString(value), now) : dateMathParser.parse(convertToString(value), now);
-    }
+(startLine=224 endLine=233 srcPath=/root/Projects/elasticsearchFilter/1126/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollQueryAndFetchAction.java)
+        private void onPhaseFailure(Throwable t, long searchId, int shardIndex) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("[{}] Failed to execute query phase", t, searchId);
+            }
+            addShardFailure(shardIndex, new ShardSearchFailure(t));
+            successfulOps.decrementAndGet();
+            if (counter.decrementAndGet() == 0) {
+                finishHim();
+            }
+        }
 

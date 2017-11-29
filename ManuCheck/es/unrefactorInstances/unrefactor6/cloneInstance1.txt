@@ -1,18 +1,13 @@
-(startLine=1794 endLine=1809 srcPath=/root/Projects/elasticsearchFilter/678/elasticsearch/src/test/java/org/elasticsearch/percolator/PercolatorTests.java)
-    void initNestedIndexAndPercolation() throws IOException {
-        XContentBuilder mapping = XContentFactory.jsonBuilder();
-        mapping.startObject().startObject("properties").startObject("companyname").field("type", "string").endObject()
-                .startObject("employee").field("type", "nested").startObject("properties")
-                .startObject("name").field("type", "string").endObject().endObject().endObject().endObject()
-                .endObject();
-
-        assertAcked(client().admin().indices().prepareCreate("nestedindex").addMapping("company", mapping));
-        ensureGreen("nestedindex");
-
-        client().prepareIndex("nestedindex", PercolatorService.TYPE_NAME, "Q").setSource(jsonBuilder().startObject()
-                .field("query", QueryBuilders.nestedQuery("employee", QueryBuilders.matchQuery("employee.name", "virginia potts").operator(MatchQueryBuilder.Operator.AND)).scoreMode("avg")).endObject()).get();
-
-        refresh();
-
+(startLine=42 endLine=52 srcPath=/root/Projects/elasticsearchFilter/1636/elasticsearch/modules/benchmark/micro/src/main/java/org/elasticsearch/benchmark/checksum/ChecksumBenchmarkTest.java)
+    private static void crc(long dataSize) {
+        long start = System.currentTimeMillis();
+        CRC32 crc = new CRC32();
+        byte[] data = new byte[BATCH_SIZE];
+        long iter = dataSize / BATCH_SIZE;
+        for (long i = 0; i < iter; i++) {
+            crc.update(data);
+        }
+        crc.getValue();
+        System.out.println("CRC took " + new TimeValue(System.currentTimeMillis() - start));
     }
 

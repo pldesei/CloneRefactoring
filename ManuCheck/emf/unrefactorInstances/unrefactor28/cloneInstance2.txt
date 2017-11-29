@@ -1,77 +1,9 @@
-(startLine=788 endLine=862 srcPath=/root/Projects/org.eclipse.emfFilter/353/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicExtendedMetaData.java)
-  protected EStructuralFeature getLocalElement(EClass eClass, String namespace, String name)
+(startLine=1483 endLine=1489 srcPath=/root/Projects/org.eclipse.emfFilter/276/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/util/XMLTypeValidator.java)
+  public boolean validateUnsignedShort_Max(int unsignedShort, DiagnosticChain diagnostics, Map<Object, Object> context)
   {
-    EStructuralFeature result = null;
-    if (isFeatureKindSpecific())
-    {
-      List<EStructuralFeature> allElements = getAllElements(eClass);
-      for (int i = 0, size = allElements.size(); i < size; ++i)
-      {
-        EStructuralFeature eStructuralFeature = allElements.get(i);
-        if (name.equals(getName(eStructuralFeature)))
-        {
-          String featureNamespace = getNamespace(eStructuralFeature);
-          if (namespace == null) 
-          {
-            if (featureNamespace == null)
-            {
-              return eStructuralFeature;
-            }
-            else if (result == null)
-            {
-              result = eStructuralFeature;
-            }
-          }
-          else if (namespace.equals(featureNamespace))
-          {
-            return eStructuralFeature;
-          }
-          else if (featureNamespace == null && result == null)
-          {
-            result = eStructuralFeature;
-          }
-        }
-      }
-    }
-    else
-    {
-      for (int i = 0, size = eClass.getFeatureCount(); i < size; ++i)
-      {
-        EStructuralFeature eStructuralFeature = eClass.getEStructuralFeature(i);
-        switch (getFeatureKind(eStructuralFeature))
-        {
-          case UNSPECIFIED_FEATURE:
-          case ELEMENT_FEATURE:
-          {
-            if (name.equals(getName(eStructuralFeature)))
-            {
-              String featureNamespace = getNamespace(eStructuralFeature);
-              if (namespace == null) 
-              {
-                if (featureNamespace == null)
-                {
-                  return eStructuralFeature;
-                }
-                else if (result == null)
-                {
-                  result = eStructuralFeature;
-                }
-              }
-              else if (namespace.equals(featureNamespace))
-              {
-                return eStructuralFeature;
-              }
-              else if (featureNamespace == null && result == null)
-              {
-                result = eStructuralFeature;
-              }
-            }
-            break;
-          }
-        }
-      }
-    }
-
-    return isFeatureNamespaceMatchingLax() ? result : null;
+    boolean result = unsignedShort <= UNSIGNED_SHORT__MAX__VALUE;
+    if (!result && diagnostics != null)
+      reportMaxViolation(XMLTypePackage.Literals.UNSIGNED_SHORT, unsignedShort, UNSIGNED_SHORT__MAX__VALUE, true, diagnostics, context);
+    return result;
   }
 

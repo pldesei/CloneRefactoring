@@ -17,190 +17,206 @@
  * under the License.
  */
 
-package org.elasticsearch.index.search.geo;
+package org.elasticsearch.action.admin.indices.status;
 
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.DocIdSet;
-import org.apache.lucene.search.Filter;
-import org.elasticsearch.ElasticSearchIllegalArgumentException;
-import org.elasticsearch.common.collect.ImmutableList;
-import org.elasticsearch.common.lucene.docset.AndDocSet;
-import org.elasticsearch.common.lucene.docset.DocSet;
-import org.elasticsearch.common.lucene.docset.DocSets;
-import org.elasticsearch.common.lucene.docset.GetDocSet;
-import org.elasticsearch.common.unit.DistanceUnit;
-import org.elasticsearch.index.cache.field.data.FieldDataCache;
-import org.elasticsearch.index.mapper.geo.GeoPointFieldData;
-import org.elasticsearch.index.mapper.geo.GeoPointFieldDataType;
-import org.elasticsearch.index.mapper.geo.GeoPointFieldMapper;
+import org.elasticsearch.common.collect.Maps;
+import org.elasticsearch.common.unit.ByteSizeValue;
+import org.elasticsearch.index.flush.FlushStats;
+import org.elasticsearch.index.merge.MergeStats;
+import org.elasticsearch.index.refresh.RefreshStats;
 
-import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.elasticsearch.common.collect.Lists.*;
 
 /**
+ * @author kimchy (shay.banon)
  */
-public class GeoDistanceFilter extends Filter {
+public class IndexStatus implements Iterable<IndexShardStatus> {
 
-    private final double lat;
+    private final String index;
 
-    private final double lon;
+    private final Map<Integer, IndexShardStatus> indexShards;
 
-    private final double distance; // in miles
+    IndexStatus(String index, ShardStatus[] shards) {
+        this.index = index;
 
-    private final GeoDistance geoDistance;
-
-    private final String fieldName;
-
-    private final FieldDataCache fieldDataCache;
-
-    private final GeoDistance.FixedSourceDistance fixedSourceDistance;
-    private GeoDistance.DistanceBoundingCheck distanceBoundingCheck;
-    private final Filter boundingBoxFilter;
-
-    public GeoDistanceFilter(double lat, double lon, double distance, GeoDistance geoDistance, String fieldName, GeoPointFieldMapper mapper, FieldDataCache fieldDataCache,
-                             String optimizeBbox) {
-        this.lat = lat;
-        this.lon = lon;
-        this.distance = distance;
-        this.geoDistance = geoDistance;
-        this.fieldName = fieldName;
-        this.fieldDataCache = fieldDataCache;
-
-        this.fixedSourceDistance = geoDistance.fixedSourceDistance(lat, lon, DistanceUnit.MILES);
-        if (optimizeBbox != null && !"none".equals(optimizeBbox)) {
-            distanceBoundingCheck = GeoDistance.distanceBoundingCheck(lat, lon, distance, DistanceUnit.MILES);
-            if ("memory".equals(optimizeBbox)) {
-                boundingBoxFilter = null;
-            } else if ("indexed".equals(optimizeBbox)) {
-                boundingBoxFilter = IndexedGeoBoundingBoxFilter.create(distanceBoundingCheck.topLeft(), distanceBoundingCheck.bottomRight(), mapper);
-                distanceBoundingCheck = GeoDistance.ALWAYS_INSTANCE; // fine, we do the bounding box check using the filter
-            } else {
-                throw new ElasticSearchIllegalArgumentException("type [" + optimizeBbox + "] for bounding box optimization not supported");
+        Map<Integer, List<ShardStatus>> tmpIndexShards = Maps.newHashMap();
+        for (ShardStatus shard : shards) {
+            List<ShardStatus> lst = tmpIndexShards.get(shard.shardRouting().id());
+            if (lst == null) {
+                lst = newArrayList();
+                tmpIndexShards.put(shard.shardRouting().id(), lst);
             }
-        } else {
-            distanceBoundingCheck = GeoDistance.ALWAYS_INSTANCE;
-            boundingBoxFilter = null;
+            lst.add(shard);
+        }
+        indexShards = Maps.newHashMap();
+        for (Map.Entry<Integer, List<ShardStatus>> entry : tmpIndexShards.entrySet()) {
+            indexShards.put(entry.getKey(), new IndexShardStatus(entry.getValue().get(0).shardRouting().shardId(), entry.getValue().toArray(new ShardStatus[entry.getValue().size()])));
         }
     }
 
-    public double lat() {
-        return lat;
+    public String index() {
+        return this.index;
     }
 
-    public double lon() {
-        return lon;
+    public String getIndex() {
+        return index();
     }
 
-    public double distance() {
-        return distance;
+    /**
+     * A shard id to index shard status map (note, index shard status is the replication shard group that maps
+     * to the shard id).
+     */
+    public Map<Integer, IndexShardStatus> shards() {
+        return this.indexShards;
     }
 
-    public GeoDistance geoDistance() {
-        return geoDistance;
+    public Map<Integer, IndexShardStatus> getShards() {
+        return shards();
     }
 
-    public String fieldName() {
-        return fieldName;
-    }
-
-    @Override public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
-        DocSet boundingBoxDocSet = null;
-        if (boundingBoxFilter != null) {
-            DocIdSet docIdSet = boundingBoxFilter.getDocIdSet(reader);
-            if (docIdSet == null) {
-                return null;
-            }
-            boundingBoxDocSet = DocSets.convert(reader, docIdSet);
-        }
-        final GeoPointFieldData fieldData = (GeoPointFieldData) fieldDataCache.cache(GeoPointFieldDataType.TYPE, reader, fieldName);
-        GeoDistanceDocSet distDocSet = new GeoDistanceDocSet(reader.maxDoc(), fieldData, fixedSourceDistance, distanceBoundingCheck, distance);
-        if (boundingBoxDocSet == null) {
-            return distDocSet;
-        } else {
-            return new AndDocSet(ImmutableList.of(boundingBoxDocSet, distDocSet));
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GeoDistanceFilter filter = (GeoDistanceFilter) o;
-
-        if (Double.compare(filter.distance, distance) != 0) return false;
-        if (Double.compare(filter.lat, lat) != 0) return false;
-        if (Double.compare(filter.lon, lon) != 0) return false;
-        if (fieldName != null ? !fieldName.equals(filter.fieldName) : filter.fieldName != null) return false;
-        if (geoDistance != filter.geoDistance) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = lat != +0.0d ? Double.doubleToLongBits(lat) : 0L;
-        result = (int) (temp ^ (temp >>> 32));
-        temp = lon != +0.0d ? Double.doubleToLongBits(lon) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = distance != +0.0d ? Double.doubleToLongBits(distance) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (geoDistance != null ? geoDistance.hashCode() : 0);
-        result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
-        return result;
-    }
-
-    public static class GeoDistanceDocSet extends GetDocSet {
-        private final double distance; // in miles
-        private final GeoPointFieldData fieldData;
-        private final GeoDistance.FixedSourceDistance fixedSourceDistance;
-        private final GeoDistance.DistanceBoundingCheck distanceBoundingCheck;
-
-        public GeoDistanceDocSet(int maxDoc, GeoPointFieldData fieldData, GeoDistance.FixedSourceDistance fixedSourceDistance, GeoDistance.DistanceBoundingCheck distanceBoundingCheck,
-                                 double distance) {
-            super(maxDoc);
-            this.fieldData = fieldData;
-            this.fixedSourceDistance = fixedSourceDistance;
-            this.distanceBoundingCheck = distanceBoundingCheck;
-            this.distance = distance;
-        }
-
-        @Override public boolean isCacheable() {
-            // not cacheable for several reasons:
-            // 1. It is only relevant when _cache is set to true, and then, we really want to create in mem bitset
-            // 2. Its already fast without in mem bitset, since it works with field data
-            return false;
-        }
-
-        @Override public boolean get(int doc) {
-            if (!fieldData.hasValue(doc)) {
-                return false;
-            }
-
-            if (fieldData.multiValued()) {
-                double[] lats = fieldData.latValues(doc);
-                double[] lons = fieldData.lonValues(doc);
-                for (int i = 0; i < lats.length; i++) {
-                    double lat = lats[i];
-                    double lon = lons[i];
-                    if (distanceBoundingCheck.isWithin(lat, lon)) {
-                        double d = fixedSourceDistance.calculate(lat, lon);
-                        if (d < distance) {
-                            return true;
-                        }
-                    }
+    /**
+     * Returns only the primary shards store size in bytes.
+     */
+    public ByteSizeValue primaryStoreSize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.primaryStoreSize() != null) {
+                if (bytes == -1) {
+                    bytes = 0;
                 }
-                return false;
-            } else {
-                double lat = fieldData.latValue(doc);
-                double lon = fieldData.lonValue(doc);
-                if (distanceBoundingCheck.isWithin(lat, lon)) {
-                    double d = fixedSourceDistance.calculate(lat, lon);
-                    return d < distance;
-                }
+                bytes += shard.primaryStoreSize().bytes();
             }
-            return false;
         }
+        if (bytes == -1) {
+            return null;
+        }
+        return new ByteSizeValue(bytes);
     }
+
+    /**
+     * Returns only the primary shards store size in bytes.
+     */
+    public ByteSizeValue getPrimaryStoreSize() {
+        return primaryStoreSize();
+    }
+
+    /**
+     * Returns the full store size in bytes, of both primaries and replicas.
+     */
+    public ByteSizeValue storeSize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.storeSize() != null) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.storeSize().bytes();
+            }
+        }
+        if (bytes == -1) {
+            return null;
+        }
+        return new ByteSizeValue(bytes);
+    }
+
+    /**
+     * Returns the full store size in bytes, of both primaries and replicas.
+     */
+    public ByteSizeValue getStoreSize() {
+        return storeSize();
+    }
+
+    public long translogOperations() {
+        long translogOperations = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.translogOperations() != -1) {
+                if (translogOperations == -1) {
+                    translogOperations = 0;
+                }
+                translogOperations += shard.translogOperations();
+            }
+        }
+        return translogOperations;
+    }
+
+    public long getTranslogOperations() {
+        return translogOperations();
+    }
+
+    private transient DocsStatus docs;
+
+    public DocsStatus docs() {
+        if (docs != null) {
+            return docs;
+        }
+        DocsStatus docs = null;
+        for (IndexShardStatus shard : this) {
+            if (shard.docs() == null) {
+                continue;
+            }
+            if (docs == null) {
+                docs = new DocsStatus();
+            }
+            docs.numDocs += shard.docs().numDocs();
+            docs.maxDoc += shard.docs().maxDoc();
+            docs.deletedDocs += shard.docs().deletedDocs();
+        }
+        this.docs = docs;
+        return docs;
+    }
+
+    public DocsStatus getDocs() {
+        return docs();
+    }
+
+    /**
+     * Total merges of this index.
+     */
+    public MergeStats mergeStats() {
+        MergeStats mergeStats = new MergeStats();
+        for (IndexShardStatus shard : this) {
+            mergeStats.add(shard.mergeStats());
+        }
+        return mergeStats;
+    }
+
+    /**
+     * Total merges of this index.
+     */
+    public MergeStats getMergeStats() {
+        return this.mergeStats();
+    }
+
+    public RefreshStats refreshStats() {
+        RefreshStats refreshStats = new RefreshStats();
+        for (IndexShardStatus shard : this) {
+            refreshStats.add(shard.refreshStats());
+        }
+        return refreshStats;
+    }
+
+    public RefreshStats getRefreshStats() {
+        return refreshStats();
+    }
+
+    public FlushStats flushStats() {
+        FlushStats flushStats = new FlushStats();
+        for (IndexShardStatus shard : this) {
+            flushStats.add(shard.flushStats());
+        }
+        return flushStats;
+    }
+
+    public FlushStats getFlushStats() {
+        return flushStats();
+    }
+
+    @Override public Iterator<IndexShardStatus> iterator() {
+        return indexShards.values().iterator();
+    }
+
 }

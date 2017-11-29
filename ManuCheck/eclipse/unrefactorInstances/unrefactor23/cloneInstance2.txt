@@ -1,29 +1,32 @@
-(startLine=1882 endLine=1908 srcPath=/root/Projects/eclipse.jdt.coreFilter/1789/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
-    public boolean visit(
-        ArrayTypeReference arrayTypeReference,
-        ClassScope scope) {
-
-        final int numberOfParens = (arrayTypeReference.bits & AstNode.ParenthesizedMASK) >> AstNode.ParenthesizedSHIFT;
-        if (numberOfParens > 0) { 
-            manageOpeningParenthesizedExpression(arrayTypeReference, numberOfParens);
-        }
-        this.scribe.printNextToken(SINGLETYPEREFERENCE_EXPECTEDTOKENS, false, true);
-        int dimensions = getExtraDimension();
-        if (dimensions != 0) {
-            if (this.preferences.insert_space_before_bracket_in_array_type_reference) {
-                this.scribe.space();
-            }
-            for (int i = 0; i < dimensions; i++) {
-                this.scribe.printNextToken(TerminalTokens.TokenNameLBRACKET);
-                if (this.preferences.insert_space_between_brackets_in_array_type_reference) {
-                    this.scribe.space();
+(startLine=3093 endLine=3122 srcPath=/root/Projects/eclipse.jdt.coreFilter/1245/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+            public void run(IProgressMonitor monitor) throws CoreException {
+                if (!createProjectsFirst) {
+                    for (int i = 0; i < numberOfParticipants; i++){
+                        projectNames[i] = "P"+i;
+                        projects[i] = createJavaProject(projectNames[i], new String[]{""}, "");
+                        allProjectsInCycle[i] = 0;
+                    }        
                 }
-                this.scribe.printNextToken(TerminalTokens.TokenNameRBRACKET);
+                for (int i = 0; i < numberOfParticipants; i++){
+                    IClasspathEntry[] extraEntries = new IClasspathEntry[useForwardReferences ? numberOfParticipants - i -1 : i];
+                    int index = 0;
+                    for (int j = useForwardReferences ? i+1 : 0; 
+                        useForwardReferences ? (j < numberOfParticipants) : (j < i); 
+                        j++){
+                        extraEntries[index++] = JavaCore.newProjectEntry(projects[j].getPath());
+                    }
+                    // append project references            
+                    IClasspathEntry[] oldClasspath = projects[i].getRawClasspath();
+                    IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries.length];
+                    System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
+                    for (int j = 0; j < extraEntries.length; j++){
+                        newClasspath[oldClasspath.length+j] = extraEntries[j];
+                    }            
+                    // set classpath
+                    long innerStart = System.currentTimeMillis(); // time spent in individual CP setting
+                    projects[i].setRawClasspath(newClasspath, null);
+                    time[0] += System.currentTimeMillis() - innerStart;
+                }
+                start[0] = System.currentTimeMillis(); // time spent in delta refresh
             }
-        }
-        if (numberOfParens > 0) {
-            manageClosingParenthesizedExpression(arrayTypeReference, numberOfParens);
-        }
-        return false;
-    }
 

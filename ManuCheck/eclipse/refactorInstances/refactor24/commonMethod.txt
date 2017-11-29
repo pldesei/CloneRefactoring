@@ -1,13 +1,21 @@
-(startLine=674 endLine=684 srcPath=/root/Projects/eclipse.jdt.coreFilter/1482/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
-private int putInNameAndTypeCache(final char[] key1, final char[] key2, int index) {
-    CharArrayCache value = (CharArrayCache) this.nameAndTypeCacheForFieldsAndMethods.get(key1);
-    if (value == null) {
-        CharArrayCache charArrayCache = new CharArrayCache();
-        charArrayCache.put(key2, index);
-        this.nameAndTypeCacheForFieldsAndMethods.put(key1, charArrayCache);
-    } else {
-        value.put(key2, index);
+(startLine=1388 endLine=1406 srcPath=/root/Projects/eclipse.jdt.coreFilter/1486/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+    public void setUpJCLClasspathVariables(String compliance) throws JavaModelException, IOException {
+        if ("1.5".equals(compliance)) {
+            if (JavaCore.getClasspathVariable("JCL15_LIB") == null) {
+                setupExternalJCL("jclMin1.5");
+                JavaCore.setClasspathVariables(
+                    new String[] {"JCL15_LIB", "JCL15_SRC", "JCL_SRCROOT"},
+                    new IPath[] {getExternalJCLPath(compliance), getExternalJCLSourcePath(compliance), getExternalJCLRootSourcePath()},
+                    null);
+            } 
+        } else {
+            if (JavaCore.getClasspathVariable("JCL_LIB") == null) {
+                setupExternalJCL("jclMin");
+                JavaCore.setClasspathVariables(
+                    new String[] {"JCL_LIB", "JCL_SRC", "JCL_SRCROOT"},
+                    new IPath[] {getExternalJCLPath(), getExternalJCLSourcePath(), getExternalJCLRootSourcePath()},
+                    null);
+            } 
+        }    
     }
-    return index;
-}
 

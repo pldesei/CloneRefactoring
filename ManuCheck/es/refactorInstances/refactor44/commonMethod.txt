@@ -1,11 +1,11 @@
-(startLine=159 endLine=167 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/LongFieldMapper.java)
-    private long parseValue(Object value) {
+(startLine=158 endLine=166 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/FloatFieldMapper.java)
+    private float parseValue(Object value) {
         if (value instanceof Number) {
-            return ((Number) value).longValue();
+            return ((Number) value).floatValue();
         }
         if (value instanceof BytesRef) {
-            return Long.parseLong(((BytesRef) value).utf8ToString());
+            return Float.parseFloat(((BytesRef) value).utf8ToString());
         }
-        return Long.parseLong(value.toString());
+        return Float.parseFloat(value.toString());
     }
 

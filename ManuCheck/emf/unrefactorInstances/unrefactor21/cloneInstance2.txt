@@ -1,22 +1,17 @@
-(startLine=2131 endLine=2150 srcPath=/root/Projects/org.eclipse.emfFilter/522/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/internal/RegEx.java)
-      private static final boolean regionMatchesIgnoreCase(char[]  target, int offset, int limit,
-                                                           int offset2, int partlen) {
-          if (offset < 0)  return false;
-          if (limit-offset < partlen)
-              return false;
-          int i = offset2;
-          while (partlen-- > 0) {
-              char ch1 =  target [  offset++ ] ;
-              char ch2 =  target [  i++ ] ;
-              if (ch1 == ch2)
-                  continue;
-              char uch1 = Character.toUpperCase(ch1);
-              char uch2 = Character.toUpperCase(ch2);
-              if (uch1 == uch2)
-                  continue;
-              if (Character.toLowerCase(uch1) != Character.toLowerCase(uch2))
-                  return false;
-          }
-          return true;
-      }
+(startLine=141 endLine=155 srcPath=/root/Projects/org.eclipse.emfFilter/934/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/impl/BImpl.java)
+  public void setA(A newA)
+  {
+    if (newA != a)
+    {
+      NotificationChain msgs = null;
+      if (a != null)
+        msgs = ((InternalEObject)a).eInverseRemove(this, RefPackage.A__B, A.class, msgs);
+      if (newA != null)
+        msgs = ((InternalEObject)newA).eInverseAdd(this, RefPackage.A__B, A.class, msgs);
+      msgs = basicSetA(newA, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.B__A, newA, newA));
+  }
 

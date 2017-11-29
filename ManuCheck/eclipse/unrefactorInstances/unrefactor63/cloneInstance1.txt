@@ -1,16 +1,23 @@
-(startLine=62 endLine=75 srcPath=/root/Projects/eclipse.jdt.coreFilter/1537/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodBinding.java)
-public final boolean areParametersEqual(MethodBinding method) {
-    TypeBinding[] args = method.parameters;
-    if (parameters == args)
-        return true;
+(startLine=259 endLine=279 srcPath=/root/Projects/eclipse.jdt.coreFilter/716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CopyMoveResourcesTests.java)
+public void testCopyCUForce() throws CoreException {
+    this.createFolder("/P/src/p1");
+    this.createFile(
+        "/P/src/p1/X.java",
+        "package p1;\n" +
+        "public class X {\n" +
+        "}"
+    );
+    ICompilationUnit cuSource = getCompilationUnit("/P/src/p1/X.java");
 
-    int length = parameters.length;
-    if (length != args.length)
-        return false;
-    
-    for (int i = 0; i < length; i++)
-        if (parameters[i] != args[i])
-            return false;
-    return true;
+    this.createFolder("/P/src/p2");
+    this.createFile(
+        "/P/src/p2/X.java",
+        "package p2;\n" +
+        "public class X {\n" +
+        "}"
+    );
+    IPackageFragment pkgDest = getPackage("/P/src/p2");
+
+    copyPositive(cuSource, pkgDest, null, null, true);
 }
 

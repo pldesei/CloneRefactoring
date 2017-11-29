@@ -1,28 +1,103 @@
-(startLine=5466 endLine=5491 srcPath=/root/Projects/eclipse.jdt.coreFilter/816/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
-    public void test0186() {
-        this.runNegativeTest(
-            new String[] {
-                "X.java",
-                "public class X {\n" + 
-                "\n" + 
-                "    <T, U extends String> T foo(T t, U u) {\n" + 
-                "        return t;\n" + 
-                "    }\n" + 
-                "    public static void main(String[] args) {\n" + 
-                "        System.out.println(new X().<String, X>foo(\"SUCCESS\", null));\n" + 
-                "    }\n" + 
-                "}\n", 
-            },
-            "----------\n" + 
-            "1. WARNING in X.java (at line 3)\n" + 
-            "    <T, U extends String> T foo(T t, U u) {\n" + 
-            "                  ^^^^^^\n" + 
-            "The type parameter U should not be bounded by the final type String. Final types cannot be further extended\n" + 
-            "----------\n" + 
-            "2. ERROR in X.java (at line 7)\n" + 
-            "    System.out.println(new X().<String, X>foo(\"SUCCESS\", null));\n" + 
-            "                                          ^^^\n" + 
-            "Bound mismatch: The generic method foo(T, U) of type X is not applicable for the arguments (String, null). The inferred type X is not a valid substitute for the bounded parameter <U extends String>\n" + 
-            "----------\n");
-    }            
+(startLine=6671 endLine=6771 srcPath=/root/Projects/eclipse.jdt.coreFilter/1433/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void testX_1FGGV8C_1() {
+    String str = 
+        "package p; \n" + 
+        "import p2.Y; \n" + 
+        "/**\n" + 
+        " * 1FGGV8C and 1FGPE8E\n" + 
+        " */\n" + 
+        "public class X {\n" + 
+        "    public static final float Vars; \n" + 
+        "    public static final float Lines; \n" + 
+        "    public static final float Source; \n" + 
+        "    public static final float UnreachableCode; \n" + 
+        "    public static final float produceDebugAttributes; \n" + 
+        "    void foo() {\n" + 
+        "        int locale, \n" + 
+        "            errorThreshold, \n" + 
+        "            preserveAllLocalVariables; \n" + 
+        "        return new Y[] {\n" + 
+        "            new Y(\n" + 
+        "                \"debug.vars\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (produceDebugAttributes\n" + 
+        "                    & Vars)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new Y(\n" + 
+        "                \"debug.lines\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (produceDebugAttributes\n" + 
+        "                    & Lines)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new Y(\n" + 
+        "                \"debug.source\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (produceDebugAttributes\n" + 
+        "                    & Source)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new Y(\n" + 
+        "                \"debug.preserveAllLocals\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                preserveAllLocalVariables\n" + 
+        "                    ? 0\n" + 
+        "                    : 1), \n" + 
+        "            new Y(\n" + 
+        "                \"optionalError.unReachableCode\", \n" + 
+        "                this, \n" + 
+        "                locale, \n" + 
+        "                (errorThreshold\n" + 
+        "                    & UnreachableCode)\n" + 
+        "                    != 0\n" + 
+        "                    ? 0\n" + 
+        "                    : 1)\n" + 
+        "                 }\n" + 
+        "    }\n" + 
+        "}\n";
+
+    String testName = "<complete on argument of anonymous type declaration>";
+    String completeBehind = "t";
+    String expectedCompletionNodeToString = "<CompleteOnName:t>";
+    String completionIdentifier = "t";
+    String expectedReplacedSource = "this";
+    int cursorLocation = str.indexOf("this, ") + completeBehind.length() - 1;
+    String expectedUnitDisplayString =
+        "package p;\n" + 
+        "import p2.Y;\n" + 
+        "public class X {\n" + 
+        "  public static final float Vars;\n" + 
+        "  public static final float Lines;\n" + 
+        "  public static final float Source;\n" + 
+        "  public static final float UnreachableCode;\n" + 
+        "  public static final float produceDebugAttributes;\n" + 
+        "  <clinit>() {\n" + 
+        "  }\n" + 
+        "  public X() {\n" + 
+        "  }\n" + 
+        "  void foo() {\n" + 
+        "    int locale;\n" + 
+        "    int errorThreshold;\n" + 
+        "    int preserveAllLocalVariables;\n" + 
+        "    new Y(\"debug.vars\", <CompleteOnName:t>);\n" + 
+        "  }\n" + 
+        "}\n";
+
+    checkMethodParse(
+        str.toCharArray(), 
+        cursorLocation, 
+        expectedCompletionNodeToString,
+        expectedUnitDisplayString,
+        completionIdentifier,
+        expectedReplacedSource,
+        testName); 
+}
 

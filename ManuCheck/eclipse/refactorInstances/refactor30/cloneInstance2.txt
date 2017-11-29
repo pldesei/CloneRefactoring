@@ -1,7 +1,7 @@
-(startLine=70 endLine=96 srcPath=/root/Projects/eclipse.jdt.coreFilter/1426/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PackageReferencePattern.java)
+(startLine=28 endLine=52 srcPath=/root/Projects/eclipse.jdt.coreFilter/1426/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PackageDeclarationPattern.java)
 public String toString() {
     StringBuffer buffer = new StringBuffer(20);
-    buffer.append("PackageReferencePattern: <"); //$NON-NLS-1$
+    buffer.append("PackageDeclarationPattern: <"); //$NON-NLS-1$
     if (this.pkgName != null) 
         buffer.append(this.pkgName);
     else
@@ -17,8 +17,6 @@ public String toString() {
         case R_PATTERN_MATCH :
             buffer.append("pattern match, "); //$NON-NLS-1$
             break;
-        case R_REGEXP_MATCH :
-            buffer.append("regexp match, "); //$NON-NLS-1$
     }
     if (isCaseSensitive())
         buffer.append("case sensitive"); //$NON-NLS-1$

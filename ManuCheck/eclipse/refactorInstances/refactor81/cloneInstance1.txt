@@ -1,25 +1,14 @@
-(startLine=3021 endLine=3043 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug92944_TYPE() throws CoreException {
-    this.resultCollector.showRule = true;
-    setUpBug92944();
-    TypeNameRequestor requestor =  new SearchTests.SearchTypeNameRequestor();
-    new SearchEngine(this.workingCopies).searchAllTypeNames(
-        null,
-        SearchPattern.R_EXACT_MATCH,
-        null,
-        SearchPattern.R_PATTERN_MATCH, // case insensitive
-        TYPE,
-        getJavaSearchScopeBugs("b92944", true),
-        requestor,
-        IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
-        null
-    );
+(startLine=2508 endLine=2519 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug86380_Method() throws CoreException {
+    this.resultCollector.showInsideDoc = true;
+    setUpBug86380();
+    ICompilationUnit unit = getCompilationUnit("JavaSearchBugs", "src", "b86380", "Annot.java");
+    IMethod[] methods = unit.getType("Annot").getMethods();
+    assertEquals("Invalid number of methods", 1, methods.length);
+    search(methods[0], REFERENCES);
     assertSearchResults(
-        "Unexpected all type names",
-        "b92944.B92944\n" +
-        "b92944.B92944_A\n" +
-        "b92944.B92944_E\n" +
-        "b92944.B92944_I",
-        requestor);
+        "src/b86380/Test.java b86380.Test [12] EXACT_MATCH OUTSIDE_JAVADOC\n" +
+        "src/b86380/package-info.java [value] EXACT_MATCH OUTSIDE_JAVADOC"
+    );
 }
 

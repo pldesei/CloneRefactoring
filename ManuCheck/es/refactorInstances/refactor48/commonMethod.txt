@@ -1,11 +1,11 @@
-(startLine=194 endLine=202 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/ip/IpFieldMapper.java)
-    private long parseValue(Object value) {
+(startLine=159 endLine=167 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/ShortFieldMapper.java)
+    private short parseValue(Object value) {
         if (value instanceof Number) {
-            return ((Number) value).longValue();
+            return ((Number) value).shortValue();
         }
         if (value instanceof BytesRef) {
-            return ipToLong(((BytesRef) value).utf8ToString());
+            return Short.parseShort(((BytesRef) value).utf8ToString());
         }
-        return ipToLong(value.toString());
+        return Short.parseShort(value.toString());
     }
 

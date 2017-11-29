@@ -1,16 +1,13 @@
-(startLine=108 endLine=121 srcPath=/root/Projects/elasticsearchFilter/1234/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/io/FastCharArrayWriter.java)
-    public void write(char c[], int off, int len) {
-        if ((off < 0) || (off > c.length) || (len < 0) ||
-                ((off + len) > c.length) || ((off + len) < 0)) {
-            throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
-            return;
+(startLine=98 endLine=108 srcPath=/root/Projects/elasticsearchFilter/88/elasticsearch/core/src/test/java/org/elasticsearch/search/aggregations/pipeline/serialdiff/SerialDiffIT.java)
+    private void assertValidIterators(Iterator expectedBucketIter, Iterator expectedCountsIter, Iterator expectedValuesIter) {
+        if (!expectedBucketIter.hasNext()) {
+            fail("`expectedBucketIter` iterator ended before `actual` iterator, size mismatch");
         }
-        int newcount = count + len;
-        if (newcount > buf.length) {
-            buf = Arrays.copyOf(buf, Math.max(buf.length << 1, newcount));
+        if (!expectedCountsIter.hasNext()) {
+            fail("`expectedCountsIter` iterator ended before `actual` iterator, size mismatch");
         }
-        System.arraycopy(c, off, buf, count, len);
-        count = newcount;
+        if (!expectedValuesIter.hasNext()) {
+            fail("`expectedValuesIter` iterator ended before `actual` iterator, size mismatch");
+        }
     }
 

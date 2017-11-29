@@ -1,24 +1,32 @@
-(startLine=170 endLine=191 srcPath=/root/Projects/eclipse.jdt.coreFilter/776/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterAST3Test.java)
-    public void test0005() throws JavaModelException {
-        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0005", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        char[] source = sourceUnit.getSource().toCharArray();
-        ASTNode result = runConversion(AST.JLS3, sourceUnit, false);
-        ASTNode expression = getASTNodeToCompare((CompilationUnit) result);
-        assertNotNull("Expression should not be null", expression); //$NON-NLS-1$
-        ClassInstanceCreation classInstanceCreation = this.ast.newClassInstanceCreation();
-        QualifiedName name = 
-            this.ast.newQualifiedName(
-                this.ast.newQualifiedName(
-                    this.ast.newSimpleName("java"), //$NON-NLS-1$
-                    this.ast.newSimpleName("lang")), //$NON-NLS-1$
-                this.ast.newSimpleName("Object"));//$NON-NLS-1$
-        classInstanceCreation.setType(this.ast.newSimpleType(name));
-        AnonymousClassDeclaration anonymousClassDeclaration = this.ast.newAnonymousClassDeclaration();
-        classInstanceCreation.setAnonymousClassDeclaration(anonymousClassDeclaration);
-        assertTrue("Both AST trees should be identical", classInstanceCreation.subtreeMatch(new ASTMatcher(), expression));        //$NON-NLS-1$
-        checkSourceRange(expression, "new java.lang.Object() {}", source); //$NON-NLS-1$
-        ClassInstanceCreation classInstanceCreation2 = (ClassInstanceCreation) expression;
-        Type type = classInstanceCreation2.getType();
-        checkSourceRange(type, "java.lang.Object", source); //$NON-NLS-1$
+(startLine=101 endLine=130 srcPath=/root/Projects/eclipse.jdt.coreFilter/592/eclipse.jdt.core/org.eclipse.jdt.compiler.tool/src/org/eclipse/jdt/internal/compiler/tool/ArchiveFileObject.java)
+    public NestingKind getNestingKind() {
+        switch(getKind()) {
+            case SOURCE :
+                return NestingKind.TOP_LEVEL;
+            case CLASS :
+                ClassFileReader reader = null;
+                try {
+                    reader = ClassFileReader.read(this.zipFile, this.entryName);
+                } catch (ClassFormatException e) {
+                    // ignore
+                } catch (IOException e) {
+                    // ignore
+                }
+                if (reader == null) {
+                    return null;
+                }
+                if (reader.isAnonymous()) {
+                    return NestingKind.ANONYMOUS;
+                }
+                if (reader.isLocal()) {
+                    return NestingKind.LOCAL;
+                }
+                if (reader.isMember()) {
+                    return NestingKind.MEMBER;
+                }
+                return NestingKind.TOP_LEVEL;
+            default:
+                return null;
+        }
     }
 

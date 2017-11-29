@@ -1,8 +1,18 @@
-(startLine=160 endLine=165 srcPath=/root/Projects/elasticsearchFilter/1441/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/monitor/jvm/DeadlockAnalyzer.java)
-        @Override public int hashCode() {
-            int result = members != null ? Arrays.hashCode(members) : 0;
-            result = 31 * result + (description != null ? description.hashCode() : 0);
-            result = 31 * result + (memberIds != null ? memberIds.hashCode() : 0);
-            return result;
+(startLine=124 endLine=139 srcPath=/root/Projects/elasticsearchFilter/866/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/node/Node.java)
+    @Override public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (nodeName.length() > 0) {
+            sb.append('[').append(nodeName).append(']');
         }
+        if (nodeId != null) {
+            sb.append('[').append(nodeId).append(']');
+        }
+        if (dataNode) {
+            sb.append("[data]");
+        }
+        if (address != null) {
+            sb.append('[').append(address).append(']');
+        }
+        return sb.toString();
+    }
 

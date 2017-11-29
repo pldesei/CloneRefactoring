@@ -1,18 +1,11 @@
-(startLine=1834 endLine=1849 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug83304_TypeGenericElementPattern() throws CoreException {
+(startLine=1545 endLine=1553 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug82208_CLASS_AND_ENUMERATION() throws CoreException {
     this.resultCollector.showRule = true;
-    setUpBug83304_TypeParameterizedElementPattern();
-    IType type = getClassFile("JavaSearchBugs", "lib/JavaSearch15.jar", "g1.t.s.def", "Generic.class").getType();
-    search(type, REFERENCES, ERASURE_RULE);
+    setUpBug82208();
+    search("B82208*", CLASS_AND_ENUM, ALL_OCCURRENCES);
     assertSearchResults(
-        "src/b83304/Types.java [g1.t.s.def.Generic] EQUIVALENT_RAW_MATCH\n" +
-        "src/b83304/Types.java b83304.Types.gen [Generic] ERASURE_RAW_MATCH\n" +
-        "src/b83304/Types.java b83304.Types.gen_obj [Generic] ERASURE_MATCH\n" +
-        "src/b83304/Types.java b83304.Types.gen_exc [Generic] ERASURE_MATCH\n" +
-        "src/b83304/Types.java b83304.Types.gen_wld [Generic] ERASURE_MATCH\n" +
-        "src/b83304/Types.java b83304.Types.gen_thr [Generic] ERASURE_MATCH\n" +
-        "src/b83304/Types.java b83304.Types.gen_run [Generic] ERASURE_MATCH\n" +
-        "lib/JavaSearch15.jar g1.t.s.def.Generic<T> g1.t.s.def.Generic.foo() EXACT_MATCH"
+        "src/b82208/Test.java b82208.B82208_E [B82208_E] EXACT_MATCH\n" +
+        "src/b82208/Test.java b82208.B82208 [B82208] EXACT_MATCH"
     );
 }
 

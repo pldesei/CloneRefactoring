@@ -1,16 +1,17 @@
-(startLine=99 endLine=112 srcPath=/root/Projects/elasticsearchFilter/938/elasticsearch/src/main/java/org/elasticsearch/indices/recovery/StartRecoveryRequest.java)
-    public void readFrom(StreamInput in) throws IOException {
-        super.readFrom(in);
-        recoveryId = in.readLong();
-        shardId = ShardId.readShardId(in);
-        sourceNode = DiscoveryNode.readNode(in);
-        targetNode = DiscoveryNode.readNode(in);
-        markAsRelocated = in.readBoolean();
-        int size = in.readVInt();
-        existingFiles = Maps.newHashMapWithExpectedSize(size);
-        for (int i = 0; i < size; i++) {
-            StoreFileMetaData md = StoreFileMetaData.readStoreFileMetaData(in);
-            existingFiles.put(md.name(), md);
+(startLine=122 endLine=136 srcPath=/root/Projects/elasticsearchFilter/1887/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexStatus.java)
+    public SizeValue storeSize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.storeSize() != null) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.storeSize().bytes();
+            }
         }
+        if (bytes == -1) {
+            return null;
+        }
+        return new SizeValue(bytes);
     }
 

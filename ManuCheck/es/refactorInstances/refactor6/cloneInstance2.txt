@@ -1,74 +1,21 @@
-(startLine=83 endLine=154 srcPath=/root/Projects/elasticsearchFilter/1946/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/mlt/TransportMoreLikeThisAction.java)
-            @Override public void onResponse(GetResponse getResponse) {
-                if (!getResponse.exists()) {
-                    listener.onFailure(new ElasticSearchException("document missing"));
-                    return;
-                }
-                final BoolJsonQueryBuilder boolBuilder = boolQuery();
-                try {
-                    DocumentMapper docMapper = indicesService.indexServiceSafe(request.index()).mapperService().documentMapper(request.type());
-                    final Set<String> fields = Sets.newHashSet();
-                    if (request.fields() != null) {
-                        for (String field : request.fields()) {
-                            FieldMappers fieldMappers = docMapper.mappers().smartName(field);
-                            if (fieldMappers != null) {
-                                fields.add(fieldMappers.mapper().names().indexName());
-                            } else {
-                                fields.add(field);
-                            }
-                        }
-                    }
-                    docMapper.parse(request.type(), request.id(), getResponse.source(), new DocumentMapper.ParseListenerAdapter() {
-                        @Override public boolean beforeFieldAdded(FieldMapper fieldMapper, Fieldable field, Object parseContext) {
-                            if (fieldMapper instanceof InternalMapper) {
-                                return true;
-                            }
-                            String value = fieldMapper.valueAsString(field);
-                            if (value == null) {
-                                return false;
-                            }
-
-                            if (fields.isEmpty() || fields.contains(field.name())) {
-                                addMoreLikeThis(request, boolBuilder, fieldMapper, field);
-                            }
-
-                            return false;
-                        }
-                    });
-                    // exclude myself
-                    Term uidTerm = docMapper.uidMapper().term(request.type(), request.id());
-                    boolBuilder.mustNot(termQuery(uidTerm.field(), uidTerm.text()));
-                } catch (Exception e) {
-                    listener.onFailure(e);
-                }
-
-                String[] searchIndices = request.searchIndices();
-                if (searchIndices == null) {
-                    searchIndices = new String[]{request.index()};
-                }
-                String[] searchTypes = request.searchTypes();
-                if (searchTypes == null) {
-                    searchTypes = new String[]{request.type()};
-                }
-
-                SearchRequest searchRequest = searchRequest(searchIndices)
-                        .types(searchTypes)
-                        .searchType(request.searchType())
-                        .source(request.searchSource())
-                        .scroll(request.searchScroll())
-                        .extraSource(searchSource()
-                                .query(boolBuilder)
-                        )
-                        .listenerThreaded(request.listenerThreaded());
-                searchAction.execute(searchRequest, new ActionListener<SearchResponse>() {
-                    @Override public void onResponse(SearchResponse response) {
-                        listener.onResponse(response);
-                    }
-
-                    @Override public void onFailure(Throwable e) {
-                        listener.onFailure(e);
+(startLine=79 endLine=97 srcPath=/root/Projects/elasticsearchFilter/1953/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryAndFetchAction.java)
+        @Override protected void moveToSecondPhase() {
+            sortedShardList = searchPhaseController.sortDocs(queryFetchResults.values());
+            final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryFetchResults, queryFetchResults);
+            String scrollIdX = null;
+            if (request.scroll() != null) {
+                scrollIdX = buildScrollId(request.searchType(), queryFetchResults.values());
+            }
+            final String scrollId = scrollIdX;
+            searchCache.releaseQueryFetchResults(queryFetchResults);
+            if (request.listenerThreaded()) {
+                threadPool.execute(new Runnable() {
+                    @Override public void run() {
+                        listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get(), buildShardFailures()));
                     }
                 });
-
+            } else {
+                listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get(), buildShardFailures()));
             }
+        }
 

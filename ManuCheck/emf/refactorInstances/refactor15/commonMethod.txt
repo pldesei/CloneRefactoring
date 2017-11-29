@@ -1,15 +1,18 @@
-(startLine=263 endLine=275 srcPath=/root/Projects/org.eclipse.emfFilter/724/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/AudioVisualItemImpl.java)
-  public boolean eIsSet(int featureID)
+(startLine=241 endLine=256 srcPath=/root/Projects/org.eclipse.emfFilter/724/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/AudioVisualItemImpl.java)
+  public void eUnset(int featureID)
   {
     switch (featureID)
     {
       case EXTLibraryPackage.AUDIO_VISUAL_ITEM__TITLE:
-        return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+        setTitle(TITLE_EDEFAULT);
+        return;
       case EXTLibraryPackage.AUDIO_VISUAL_ITEM__MINUTES_LENGTH:
-        return minutesLength != MINUTES_LENGTH_EDEFAULT;
+        setMinutesLength(MINUTES_LENGTH_EDEFAULT);
+        return;
       case EXTLibraryPackage.AUDIO_VISUAL_ITEM__DAMAGED:
-        return ((eFlags & DAMAGED_EFLAG) != 0) != DAMAGED_EDEFAULT;
+        setDamaged(DAMAGED_EDEFAULT);
+        return;
     }
-    return super.eIsSet(featureID);
+    super.eUnset(featureID);
   }
 

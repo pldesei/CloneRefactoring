@@ -1,11 +1,10 @@
-(startLine=42 endLine=50 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/CJKFilterFactoryTests.java)
-    public void testNoFlags() throws IOException {
-        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
-        TokenFilterFactory tokenFilter = analysisService.tokenFilter("cjk_no_flags");
-        String source = "多くの学生が試験に落ちた。";
-        String[] expected = new String[]{"多く", "くの", "の学", "学生", "生が", "が試", "試験", "験に", "に落", "落ち", "ちた" };
-        Tokenizer tokenizer = new StandardTokenizer();
-        tokenizer.setReader(new StringReader(source));
-        assertTokenStreamContents(tokenFilter.create(tokenizer), expected);
+(startLine=94 endLine=101 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/action/support/AutoCreateIndexTests.java)
+    public void testAutoCreationPatternDisabled() {
+        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "-index*").build();
+        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
+        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
+        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
+        //default is false when patterns are specified
+        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
     }
 

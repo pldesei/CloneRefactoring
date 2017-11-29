@@ -1,26 +1,74 @@
-(startLine=5979 endLine=6002 srcPath=/root/Projects/eclipse.jdt.coreFilter/98/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
-    public void test0249() throws JavaModelException {
-        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0249", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        ASTNode result = runConversion(sourceUnit, true);
-        assertNotNull("No compilation unit", result); //$NON-NLS-1$
-        assertTrue("result is not a compilation unit", result instanceof CompilationUnit); //$NON-NLS-1$
-        ASTNode node = getASTNode((CompilationUnit) result, 0, 2, 1);
-        assertTrue("Not an ExpressionStatement", node instanceof ExpressionStatement); //$NON-NLS-1$
-        ExpressionStatement expressionStatement = (ExpressionStatement) node;
-        Expression expression = expressionStatement.getExpression();
-        assertTrue("Not an assignment", expression instanceof Assignment); //$NON-NLS-1$
-        Assignment assignment = (Assignment) expression;
-        Expression leftHandSide = assignment.getLeftHandSide();
-        assertTrue("Not a qualified name", leftHandSide instanceof QualifiedName); //$NON-NLS-1$
-        QualifiedName qualifiedName = (QualifiedName) leftHandSide;
-        Name simpleName = qualifiedName.getName();
-        IBinding binding = simpleName.resolveBinding();
-        assertNotNull("no binding", binding); //$NON-NLS-1$
-        assertTrue("Not a IVariableBinding", binding instanceof IVariableBinding); //$NON-NLS-1$
-        IVariableBinding variableBinding = (IVariableBinding) binding;
-        assertEquals("Wrong name", "k", variableBinding.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-        assertEquals("Wrong modifier", Modifier.STATIC, variableBinding.getModifiers()); //$NON-NLS-1$
-        assertEquals("Wrong type", "int", variableBinding.getType().getName()); //$NON-NLS-1$ //$NON-NLS-2$
-        assertEquals("Wrong declaring class name", "j", variableBinding.getDeclaringClass().getName()); //$NON-NLS-1$ //$NON-NLS-2$
+(startLine=563 endLine=634 srcPath=/root/Projects/eclipse.jdt.coreFilter/1189/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests2.java)
+public void testAccessRestriction1() throws Exception {
+    Hashtable oldOptions = JavaCore.getOptions();
+    try {
+        Hashtable options = new Hashtable(oldOptions);
+        options.put(JavaCore.COMPILER_PB_FORBIDDEN_REFERENCE, JavaCore.IGNORE);
+        options.put(JavaCore.COMPILER_PB_DISCOURAGED_REFERENCE, JavaCore.IGNORE);
+        options.put(JavaCore.CODEASSIST_HIDE_RESTRICTED_REFERENCES, JavaCore.NEVER);
+        JavaCore.setOptions(options);
+        
+        // create variable
+        JavaCore.setClasspathVariables(
+            new String[] {"JCL_LIB", "JCL_SRC", "JCL_SRCROOT"},
+            new IPath[] {getExternalJCLPath(), getExternalJCLSourcePath(), getExternalJCLRootSourcePath()},
+            null);
+
+        // create P1
+        this.createJavaProject(
+            "P1",
+            new String[]{"src"},
+            Util.getJavaClassLibs(),
+             "bin");
+        
+        this.createFolder("/P1/src/a");
+        this.createFile(
+                "/P1/src/a/XX1.java",
+                "package a;\n"+
+                "public class XX1 {\n"+
+                "}");
+
+        this.createFolder("/P1/src/b");
+        this.createFile(
+                "/P1/src/b/XX2.java",
+                "package b;\n"+
+                "public class XX2 {\n"+
+                "}");
+        
+        // create P2
+        this.createJavaProject(
+            "P2",
+            new String[]{"src"},
+            Util.getJavaClassLibs(),
+            new String[]{"/P1"},
+            "bin");
+        this.createFile(
+            "/P2/src/YY.java",
+            "public class YY {\n"+
+            "  void foo() {\n"+
+            "    XX\n"+
+            "  }\n"+
+            "}");
+        
+        waitUntilIndexesReady();
+        
+        // do completion
+        CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2();
+        ICompilationUnit cu= getCompilationUnit("P2", "src", "", "YY.java");
+        
+        String str = cu.getSource();
+        String completeBehind = "XX";
+        int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+        cu.codeComplete(cursorLocation, requestor);
+        
+        assertResults(
+            "XX1[TYPE_REF]{a.XX1, a, La.XX1;, null, "+(R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}\n" +
+             "XX2[TYPE_REF]{b.XX2, b, Lb.XX2;, null, "+(R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}",
+            requestor.getResults());
+    } finally {
+        this.deleteProject("P1");
+        this.deleteProject("P2");
+        JavaCore.setOptions(oldOptions);
     }
+}
 

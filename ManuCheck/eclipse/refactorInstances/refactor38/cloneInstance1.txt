@@ -1,19 +1,27 @@
-(startLine=120 endLine=136 srcPath=/root/Projects/eclipse.jdt.coreFilter/1351/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
-    public void testMethod1() throws JavaModelException {
-        ASTNode node = buildAST(
-            "public class X<K, V> {\n" +
-            "  /*start*/void foo(int i, Object o, java.lang.String s, Class[] c, X<K, V> x) {\n" +
-            "  }/*end*/\n" +
-            "}"
-        );
-        IBinding binding = ((MethodDeclaration) node).resolveBinding();
-        assertNotNull("No binding", binding);
-        IJavaElement element = binding.getJavaElement();
-        assertElementEquals(
-            "Unexpected Java element",
-            "foo(int, Object, java.lang.String, Class[], X<K,V>) [in X [in [Working copy] X.java [in <default> [in <project root> [in P]]]]]",
-            element
-        );
-        assertTrue("Element should exist", element.exists());
+(startLine=58 endLine=82 srcPath=/root/Projects/eclipse.jdt.coreFilter/1426/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/LocalVariablePattern.java)
+public String toString() {
+    StringBuffer buffer = new StringBuffer(20);
+    if (this.findDeclarations) {
+        buffer.append(this.findReferences
+            ? "LocalVarCombinedPattern: " //$NON-NLS-1$
+            : "LocalVarDeclarationPattern: "); //$NON-NLS-1$
+    } else {
+        buffer.append("LocalVarReferencePattern: "); //$NON-NLS-1$
     }
+    buffer.append(this.localVariable.toStringWithAncestors());
+    buffer.append(", "); //$NON-NLS-1$
+    switch(getMatchMode()) {
+        case R_EXACT_MATCH : 
+            buffer.append("exact match, "); //$NON-NLS-1$
+            break;
+        case R_PREFIX_MATCH :
+            buffer.append("prefix match, "); //$NON-NLS-1$
+            break;
+        case R_PATTERN_MATCH :
+            buffer.append("pattern match, "); //$NON-NLS-1$
+            break;
+    }
+    buffer.append(isCaseSensitive() ? "case sensitive" : "case insensitive"); //$NON-NLS-1$ //$NON-NLS-2$
+    return buffer.toString();
+}
 

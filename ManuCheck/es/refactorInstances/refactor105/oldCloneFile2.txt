@@ -17,95 +17,106 @@
  * under the License.
  */
 
-package org.elasticsearch.search.aggregations.bucket.sampler;
+package org.elasticsearch.painless.node;
 
-import org.apache.lucene.index.LeafReaderContext;
-import org.apache.lucene.index.NumericDocValues;
-import org.apache.lucene.index.SortedNumericDocValues;
-import org.apache.lucene.search.DiversifiedTopDocsCollector;
-import org.apache.lucene.search.DiversifiedTopDocsCollector.ScoreDocKey;
-import org.apache.lucene.search.TopDocsCollector;
-import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.search.aggregations.Aggregator;
-import org.elasticsearch.search.aggregations.AggregatorFactories;
-import org.elasticsearch.search.aggregations.bucket.DeferringBucketCollector;
-import org.elasticsearch.search.aggregations.pipeline.PipelineAggregator;
-import org.elasticsearch.search.aggregations.support.ValuesSource;
-import org.elasticsearch.search.internal.SearchContext;
+import org.elasticsearch.painless.Definition;
+import org.elasticsearch.painless.Location;
+import org.elasticsearch.painless.Variables;
+import org.objectweb.asm.Label;
+import org.elasticsearch.painless.MethodWriter;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+/**
+ * Represents a while loop.
+ */
+public final class SWhile extends AStatement {
 
-public class DiversifiedNumericSamplerAggregator extends SamplerAggregator {
+    final int maxLoopCounter;
+    AExpression condition;
+    final SBlock block;
 
-    private ValuesSource.Numeric valuesSource;
-    private int maxDocsPerValue;
+    public SWhile(Location location, int maxLoopCounter, AExpression condition, SBlock block) {
+        super(location);
 
-    DiversifiedNumericSamplerAggregator(String name, int shardSize, AggregatorFactories factories,
-            SearchContext context, Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData,
-            ValuesSource.Numeric valuesSource, int maxDocsPerValue) throws IOException {
-        super(name, shardSize, factories, context, parent, pipelineAggregators, metaData);
-        this.valuesSource = valuesSource;
-        this.maxDocsPerValue = maxDocsPerValue;
+        this.maxLoopCounter = maxLoopCounter;
+        this.condition = condition;
+        this.block = block;
     }
 
     @Override
-    public DeferringBucketCollector getDeferringCollector() {
-        bdd = new DiverseDocsDeferringCollector();
-        return bdd;
-    }
+    void analyze(Variables variables) {
+        variables.incrementScope();
 
-    /**
-     * A {@link DeferringBucketCollector} that identifies top scoring documents
-     * but de-duped by a key then passes only these on to nested collectors.
-     * This implementation is only for use with a single bucket aggregation.
-     */
-    class DiverseDocsDeferringCollector extends BestDocsDeferringCollector {
-        DiverseDocsDeferringCollector() {
-            super(shardSize, context.bigArrays());
-        }
+        condition.expected = Definition.BOOLEAN_TYPE;
+        condition.analyze(variables);
+        condition = condition.cast(variables);
 
-        @Override
-        protected TopDocsCollector<ScoreDocKey> createTopDocsCollector(int size) {
-            return new ValuesDiversifiedTopDocsCollector(size, maxDocsPerValue);
-        }
+        boolean continuous = false;
 
-        // This class extends the DiversifiedTopDocsCollector and provides
-        // a lookup from elasticsearch's ValuesSource
-        class ValuesDiversifiedTopDocsCollector extends DiversifiedTopDocsCollector {
+        if (condition.constant != null) {
+            continuous = (boolean)condition.constant;
 
-            private SortedNumericDocValues values;
-
-            ValuesDiversifiedTopDocsCollector(int numHits, int maxHitsPerKey) {
-                super(numHits, maxHitsPerKey);
+            if (!continuous) {
+                throw createError(new IllegalArgumentException("Extraneous while loop."));
             }
 
-            @Override
-            protected NumericDocValues getKeys(LeafReaderContext context) {
-                try {
-                    values = valuesSource.longValues(context);
-                } catch (IOException e) {
-                    throw new ElasticsearchException("Error reading values", e);
-                }
-                return new NumericDocValues() {
-                    @Override
-                    public long get(int doc) {
-                        values.setDocument(doc);
-                        final int valuesCount = values.count();
-                        if (valuesCount > 1) {
-                            throw new IllegalArgumentException("Sample diversifying key must be a single valued-field");
-                        }
-                        if (valuesCount == 1) {
-                            return values.valueAt(0);
-                        }
-                        return Long.MIN_VALUE;
-                    }
-                };
+            if (block == null) {
+                throw createError(new IllegalArgumentException("While loop has no escape."));
             }
-
         }
 
+        if (block != null) {
+            block.beginLoop = true;
+            block.inLoop = true;
+
+            block.analyze(variables);
+
+            if (block.loopEscape && !block.anyContinue) {
+                throw createError(new IllegalArgumentException("Extraneous while loop."));
+            }
+
+            if (continuous && !block.anyBreak) {
+                methodEscape = true;
+                allEscape = true;
+            }
+
+            block.statementCount = Math.max(1, block.statementCount);
+        }
+
+        statementCount = 1;
+
+        if (maxLoopCounter > 0) {
+            loopCounterSlot = variables.getVariable(location, "#loop").slot;
+        }
+
+        variables.decrementScope();
     }
 
+    @Override
+    void write(MethodWriter writer) {
+        writer.writeStatementOffset(location);
+
+        Label begin = new Label();
+        Label end = new Label();
+
+        writer.mark(begin);
+
+        condition.fals = end;
+        condition.write(writer);
+
+        if (block != null) {
+            writer.writeLoopCounter(loopCounterSlot, Math.max(1, block.statementCount), location);
+
+            block.continu = begin;
+            block.brake = end;
+            block.write(writer);
+        } else {
+            writer.writeLoopCounter(loopCounterSlot, 1, location);
+        }
+
+        if (block == null || !block.allEscape) {
+            writer.goTo(begin);
+        }
+
+        writer.mark(end);
+    }
 }

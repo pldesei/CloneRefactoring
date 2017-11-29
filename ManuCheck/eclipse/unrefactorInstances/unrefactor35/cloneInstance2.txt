@@ -1,19 +1,31 @@
-(startLine=5355 endLine=5371 srcPath=/root/Projects/eclipse.jdt.coreFilter/106/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
-public void testRemoveExternalLibFolder4() throws CoreException {
+(startLine=348 endLine=376 srcPath=/root/Projects/eclipse.jdt.coreFilter/511/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/TypeHierarchyNotificationTests.java)
+public void testAddExternalCompilationUnit() throws CoreException {
+    IJavaProject javaProject = getJavaProject("TypeHierarchyNotification");
+    ICompilationUnit cu = getCompilationUnit("TypeHierarchyNotification", "src", "p", "X.java");
+    IType type= cu.getType("X");
+    ITypeHierarchy h = type.newTypeHierarchy(javaProject, null);
+    h.addTypeHierarchyChangedListener(this);
+    
+    IPackageFragment pkg = getPackageFragment("TypeHierarchyNotification", "src", "p.other");
+    ICompilationUnit newCU= pkg.createCompilationUnit(
+        "Z.java", 
+        "package p.other;\n" +
+        "\n" +
+        "public class Z {\n" +
+        "\n" +
+        "    public static main(String[] args) {\n" +
+        "        System.out.println(\"HelloWorld\");\n" +
+        "    }\n" +
+        "}\n", 
+        false, 
+        null);
     try {
-        simulateExitRestart();
-        createExternalFolder("externalLib");
-        IJavaProject p = createJavaProject("P", new String[0], new String[] {getExternalResourcePath("externalLib")}, "");
-        waitForAutoBuild();
-        deleteExternalResource("externalLib");
-        refresh(p);
-        assertMarkers(
-            "Unexpected markers",
-            "Project \'P\' is missing required library: \'"+ getExternalPath() + "externalLib\'",
-            p);
+        assertCreation(newCU);
+        assertTrue("Should not receive changes", !this.changeReceived);
     } finally {
-        deleteExternalResource("externalLib");
-        deleteProject("P");
+        // cleanup    
+        deleteResource(newCU.getUnderlyingResource());
+        h.removeTypeHierarchyChangedListener(this);
     }
 }
 

@@ -1,10 +1,9 @@
-(startLine=236 endLine=259 srcPath=/root/Projects/elasticsearchFilter/1127/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchDfsQueryThenFetchAction.java)
-        void executeFetch(final int shardIndex, final SearchShardTarget shardTarget, final AtomicInteger counter, final FetchSearchRequest fetchSearchRequest, DiscoveryNode node) {
-            searchService.sendExecuteFetch(node, fetchSearchRequest, new SearchServiceListener<FetchSearchResult>() {
+(startLine=203 endLine=225 srcPath=/root/Projects/elasticsearchFilter/1127/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollQueryAndFetchAction.java)
+        private void executePhase(final int shardIndex, DiscoveryNode node, final long searchId) {
+            searchService.sendExecuteFetch(node, internalScrollSearchRequest(searchId, request), new SearchServiceListener<QueryFetchSearchResult>() {
                 @Override
-                public void onResult(FetchSearchResult result) {
-                    result.shardTarget(shardTarget);
-                    fetchResults.set(shardIndex, result);
+                public void onResult(QueryFetchSearchResult result) {
+                    queryFetchResults.set(shardIndex, result);
                     if (counter.decrementAndGet() == 0) {
                         finishHim();
                     }
@@ -13,10 +12,10 @@
                 @Override
                 public void onFailure(Throwable t) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug("[{}] Failed to execute fetch phase", t, fetchSearchRequest.id());
+                        logger.debug("[{}] Failed to execute query phase", t, searchId);
                     }
-                    AsyncAction.this.addShardFailure(shardIndex, shardTarget, t);
-                    successulOps.decrementAndGet();
+                    addShardFailure(shardIndex, new ShardSearchFailure(t));
+                    successfulOps.decrementAndGet();
                     if (counter.decrementAndGet() == 0) {
                         finishHim();
                     }

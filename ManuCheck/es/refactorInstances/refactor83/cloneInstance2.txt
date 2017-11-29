@@ -1,61 +1,66 @@
-(startLine=232 endLine=290 srcPath=/root/Projects/elasticsearchFilter/825/elasticsearch/src/main/java/org/elasticsearch/tribe/TribeService.java)
-                public ClusterState execute(ClusterState currentState) throws Exception {
-                    ClusterState tribeState = event.state();
-                    DiscoveryNodes.Builder nodes = DiscoveryNodes.builder(currentState.nodes());
-                    // -- merge nodes
-                    // go over existing nodes, and see if they need to be removed
-                    for (DiscoveryNode discoNode : currentState.nodes()) {
-                        String markedTribeName = discoNode.attributes().get(TRIBE_NAME);
-                        if (markedTribeName != null && markedTribeName.equals(tribeName)) {
-                            if (tribeState.nodes().get(discoNode.id()) == null) {
-                                logger.info("[{}] removing node [{}]", tribeName, discoNode);
-                                nodes.remove(discoNode.id());
-                            }
-                        }
-                    }
-                    // go over tribe nodes, and see if they need to be added
-                    for (DiscoveryNode tribe : tribeState.nodes()) {
-                        if (currentState.nodes().get(tribe.id()) == null) {
-                            // a new node, add it, but also add the tribe name to the attributes
-                            ImmutableMap<String, String> tribeAttr = MapBuilder.newMapBuilder(tribe.attributes()).put(TRIBE_NAME, tribeName).immutableMap();
-                            DiscoveryNode discoNode = new DiscoveryNode(tribe.name(), tribe.id(), tribe.getHostName(), tribe.getHostAddress(), tribe.address(), tribeAttr, tribe.version());
-                            logger.info("[{}] adding node [{}]", tribeName, discoNode);
-                            nodes.put(discoNode);
-                        }
-                    }
+(startLine=84 endLine=147 srcPath=/root/Projects/elasticsearchFilter/831/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryThenFetchAction.java)
+        protected void moveToSecondPhase() {
+            sortedShardList = searchPhaseController.sortDocs(firstResults);
+            searchPhaseController.fillDocIdsToLoad(docIdsToLoad, sortedShardList);
 
-                    // -- merge metadata
-                    MetaData.Builder metaData = MetaData.builder(currentState.metaData());
-                    RoutingTable.Builder routingTable = RoutingTable.builder(currentState.routingTable());
-                    // go over existing indices, and see if they need to be removed
-                    for (IndexMetaData index : currentState.metaData()) {
-                        String markedTribeName = index.settings().get(TRIBE_NAME);
-                        if (markedTribeName != null && markedTribeName.equals(tribeName)) {
-                            IndexMetaData tribeIndex = tribeState.metaData().index(index.index());
-                            if (tribeIndex == null) {
-                                logger.info("[{}] removing index [{}]", tribeName, index.index());
-                                metaData.remove(index.index());
-                                routingTable.remove(index.index());
-                            } else {
-                                // always make sure to update the metadata and routing table, in case
-                                // there are changes in them (new mapping, shards moving from initializing to started)
-                                routingTable.add(tribeState.routingTable().index(index.index()));
-                                Settings tribeSettings = ImmutableSettings.builder().put(tribeIndex.settings()).put(TRIBE_NAME, tribeName).build();
-                                metaData.put(IndexMetaData.builder(tribeIndex).settings(tribeSettings));
-                            }
-                        }
-                    }
-                    // go over tribe one, and see if they need to be added
-                    for (IndexMetaData tribeIndex : tribeState.metaData()) {
-                        if (!currentState.metaData().hasIndex(tribeIndex.index())) {
-                            // a new index, add it, and add the tribe name as a setting
-                            logger.info("[{}] adding index [{}]", tribeName, tribeIndex.index());
-                            Settings tribeSettings = ImmutableSettings.builder().put(tribeIndex.settings()).put(TRIBE_NAME, tribeName).build();
-                            metaData.put(IndexMetaData.builder(tribeIndex).settings(tribeSettings));
-                            routingTable.add(tribeState.routingTable().index(tribeIndex.index()));
-                        }
-                    }
+            if (docIdsToLoad.asList().isEmpty()) {
+                finishHim();
+                return;
+            }
 
-                    return ClusterState.builder(currentState).nodes(nodes).metaData(metaData).routingTable(routingTable).build();
+            final AtomicInteger counter = new AtomicInteger(docIdsToLoad.asList().size());
+
+            int localOperations = 0;
+            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                QuerySearchResult queryResult = firstResults.get(entry.index);
+                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                if (node.id().equals(nodes.localNodeId())) {
+                    localOperations++;
+                } else {
+                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
                 }
+            }
+
+            if (localOperations > 0) {
+                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
+                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                                QuerySearchResult queryResult = firstResults.get(entry.index);
+                                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                                if (node.id().equals(nodes.localNodeId())) {
+                                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
+                    for (final AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                        final QuerySearchResult queryResult = firstResults.get(entry.index);
+                        final DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                        if (node.id().equals(nodes.localNodeId())) {
+                            final FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                            try {
+                                if (localAsync) {
+                                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                        }
+                                    });
+                                } else {
+                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                }
+                            } catch (Throwable t) {
+                                onFetchFailure(t, fetchSearchRequest, entry.index, queryResult.shardTarget(), counter);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 

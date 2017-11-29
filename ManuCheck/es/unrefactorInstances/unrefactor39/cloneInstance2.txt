@@ -1,11 +1,19 @@
-(startLine=134 endLine=142 srcPath=/root/Projects/elasticsearchFilter/967/elasticsearch/src/main/java/org/elasticsearch/indices/InternalIndicesLifecycle.java)
-    public void afterIndexClosed(Index index) {
-        for (Listener listener : listeners) {
-            try {
-                listener.afterIndexClosed(index);
-            } catch (Throwable t) {
-                logger.warn("[{}] failed to invoke after index closed callback", t, index.name());
+(startLine=105 endLine=121 srcPath=/root/Projects/elasticsearchFilter/1429/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/Annotations.java)
+    public static Annotation findBindingAnnotation(
+            Errors errors, Member member, Annotation[] annotations) {
+        Annotation found = null;
+
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().isAnnotationPresent(BindingAnnotation.class)) {
+                if (found != null) {
+                    errors.duplicateBindingAnnotations(member,
+                            found.annotationType(), annotation.annotationType());
+                } else {
+                    found = annotation;
+                }
             }
         }
+
+        return found;
     }
 

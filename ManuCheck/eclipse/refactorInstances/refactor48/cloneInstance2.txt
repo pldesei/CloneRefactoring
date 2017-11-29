@@ -1,27 +1,13 @@
-(startLine=2262 endLine=2286 srcPath=/root/Projects/eclipse.jdt.coreFilter/1329/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
-    public void testBug79809() throws JavaModelException, CoreException {
-        ICompilationUnit workingCopy = null;
-        int level = this.astLevel;
-        this.astLevel = AST.JLS3;
+(startLine=120 endLine=130 srcPath=/root/Projects/eclipse.jdt.coreFilter/1342/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+    public ICompilationUnit getWorkingCopy(String fileName, String source, WorkingCopyOwner owner) throws JavaModelException {
+        IPath folder = new Path(fileName).removeLastSegments(1);
         try {
-            workingCopy = getWorkingCopy("/Converter/src/javadoc/b79809/Test.java",
-                "package javadoc.b79809;\n" +
-                "/**\n" + 
-                " * @param <E>  Class type parameter\n" + 
-                " * @see Object\n" + 
-                " */\n" + 
-                "public class Test<E> {\n" + 
-                "    /**\n" + 
-                "     * @param t\n" + 
-                "     * @param <T> Method type parameter\n" + 
-                "     */\n" + 
-                "    <T> void foo(T t) {}\n" + 
-                "}\n");
-            verifyComments(workingCopy);
-        } finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-            this.astLevel = level;
+            createFolder(folder);
+        } catch (CoreException e) {
+            e.printStackTrace();
         }
+        ICompilationUnit workingCopy = super.getWorkingCopy(fileName, source, owner, true/*compute problems*/);
+        workingCopy.commitWorkingCopy(true, null);    // need to commit to index file
+        return workingCopy;
     }
 

@@ -8,1169 +8,1755 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.core.tests.model;
+package org.eclipse.jdt.internal.compiler.batch;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
-import junit.framework.Test;
+import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.core.compiler.InvalidInputException;
+import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jdt.internal.compiler.ClassFile;
+import org.eclipse.jdt.internal.compiler.CompilationResult;
+import org.eclipse.jdt.internal.compiler.Compiler;
+import org.eclipse.jdt.internal.compiler.ICompilerRequestor;
+import org.eclipse.jdt.internal.compiler.IErrorHandlingPolicy;
+import org.eclipse.jdt.internal.compiler.IProblemFactory;
+import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.internal.compiler.problem.DefaultProblem;
+import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
+import org.eclipse.jdt.internal.compiler.problem.ProblemSeverities;
+import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
+import org.eclipse.jdt.internal.compiler.util.HashtableOfObject;
+import org.eclipse.jdt.internal.compiler.util.Util;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.search.*;
-import org.eclipse.jdt.core.tests.model.JavaSearchTests.JavaSearchResultCollector;
-import org.eclipse.jdt.internal.core.PackageFragment;
-import org.eclipse.jdt.internal.core.search.indexing.IIndexConstants;
-import org.eclipse.jdt.internal.core.search.matching.TypeDeclarationPattern;
+public class Main implements ProblemSeverities, SuffixConstants {
 
-/**
- * Tests the Java search engine where results are JavaElements and source positions.
- */
-public class JavaSearchBugsTests extends AbstractJavaModelTests implements IJavaSearchConstants {
-
-    public static List TEST_SUITES = null;
-    protected static IJavaProject JAVA_PROJECT;
-
-    protected JavaSearchTests.JavaSearchResultCollector resultCollector;
-
-    public JavaSearchBugsTests(String name) {
-        super(name, 3);
-        this.displayName = true;
+    public static class Logger {
+        
+        PrintWriter out;
+        PrintWriter err;
+        PrintWriter log;
+        
+        public Logger(PrintWriter out, PrintWriter err) {
+            this.out = out;
+            this.err = err;
+        }
+        
+        public void setLog(PrintWriter log) {
+            this.log = log;
+        }
+        
+        public void close() {
+            if (this.log != null) {
+                this.log.close();
+            }
+        }
+        
+        public void flush() {
+            this.out.flush();
+            this.err.flush();
+            if (this.log != null) {
+                this.log.flush();
+            }
+        }
+        
+        public void printErr(String s) {
+            this.err.print(s);
+            if (this.log != null) {
+                this.log.print(s);
+            }
+        }
+        
+        public void printlnErr(String s) {
+            this.err.println(s);
+            if (this.log != null) {
+                this.log.println(s);
+            }
+        }
+        
+        public void printlnOut(String s) {
+            this.out.println(s);
+        }
+        
+        public void printlnOut() {
+            this.out.println();
+        }
+        
+        public void printOut(char c) {
+            this.out.print(c);
+        }
     }
-    public static Test suite() {
-        return buildTestSuite(JavaSearchBugsTests.class);
-    }
-    // Use this static initializer to specify subset for tests
-    // All specified tests which do not belong to the class are skipped...
     static {
-//        SearchBasicEngine.VERBOSE = true;
-//        TESTS_PREFIX =  "testBug81556";
-//        TESTS_NAMES = new String[] { "testBug82088" };
-//        TESTS_NUMBERS = new int[] { 81084 };
-    //    TESTS_RANGE = new int[] { 16, -1 };
-        }
+        relocalize();
+    }
 
-    protected void assertSearchResults(String expected) {
-        assertSearchResults("Unexpected search results", expected, this.resultCollector);
+    /* Bundle containing messages */
+    public static ResourceBundle bundle;
+    public final static String bundleName =
+        "org.eclipse.jdt.internal.compiler.batch.messages";     //$NON-NLS-1$
+
+    public final static char[] DOUBLE_QUOTES = "''".toCharArray(); //$NON-NLS-1$
+    public final static char[] SINGLE_QUOTE = "'".toCharArray(); //$NON-NLS-1$
+    public String[] classpaths;
+    public String destinationPath;
+    public String[] encodings;
+    public Logger logger;    
+    public int exportedClassFilesCounter;
+    public String[] filenames;
+    public boolean generatePackagesStructure;
+    public int globalErrorsCount;
+    public int globalProblemsCount;
+    public int globalWarningsCount;
+    public long lineCount;
+    public String log;
+
+    public boolean noWarn = false;
+
+    public Map options; 
+    public CompilerOptions compilerOptions; // read-only
+
+    public boolean proceed = true;
+    public boolean proceedOnError = false;
+    public boolean produceRefInfo = false;
+    public int repetitions;
+    public int maxProblems;
+    public boolean showProgress = false;
+    public boolean systemExitWhenFinished = true;
+    public long startTime;
+    public boolean timing = false;
+    public boolean verbose = false;
+
+    public Main(PrintWriter outWriter, PrintWriter errWriter, boolean systemExitWhenFinished) {
+        this(outWriter, errWriter, systemExitWhenFinished, null);
     }
-    IJavaSearchScope getJavaSearchScopeBugs() {
-        return SearchEngine.createJavaSearchScope(new IJavaProject[] {getJavaProject("JavaSearchBugs")});
+    
+    public Main(PrintWriter outWriter, PrintWriter errWriter, boolean systemExitWhenFinished, Map customDefaultOptions) {
+        this.logger = new Logger(outWriter, errWriter);
+        this.systemExitWhenFinished = systemExitWhenFinished;
+        this.options = new CompilerOptions().getMap();
+        if (customDefaultOptions != null) {
+            for (Iterator iter = customDefaultOptions.keySet().iterator(); iter.hasNext();) {
+                Object key = iter.next();
+                this.options.put(key, customDefaultOptions.get(key));
+            }
+        }
     }
-    IJavaSearchScope getJavaSearchScopeBugs(String packageName, boolean addSubpackages) throws JavaModelException {
-        if (packageName == null) return getJavaSearchScopeBugs();
-        return getJavaSearchPackageScope("JavaSearchBugs", packageName, addSubpackages);
+    
+    /*
+     * Lookup the message with the given ID in this catalog 
+     */
+    public static String bind(String id) {
+        return bind(id, (String[]) null);
     }
-    IJavaSearchScope getJavaSearchPackageScope(String projectName, String packageName, boolean addSubpackages) throws JavaModelException {
-        IPackageFragment fragment = getPackageFragment(projectName, "src", packageName);
-        if (fragment == null) return null;
-        IJavaElement[] searchPackages = null;
-        if (addSubpackages) {
-            // Create list of package with first found one
-            List packages = new ArrayList();
-            packages.add(fragment);
-            // Add all possible subpackages
-            IJavaElement[] children= ((IPackageFragmentRoot)fragment.getParent()).getChildren();
-            String[] names = ((PackageFragment)fragment).names;
-            int namesLength = names.length;
-            nextPackage: for (int i= 0, length = children.length; i < length; i++) {
-                PackageFragment currentPackage = (PackageFragment) children[i];
-                String[] otherNames = currentPackage.names;
-                if (otherNames.length <= namesLength) continue nextPackage;
-                for (int j = 0; j < namesLength; j++) {
-                    if (!names[j].equals(otherNames[j]))
-                        continue nextPackage;
+
+    /*
+     * Lookup the message with the given ID in this catalog and bind its
+     * substitution locations with the given string.
+     */
+    public static String bind(String id, String binding) {
+        return bind(id, new String[] { binding });
+    }
+
+    /*
+     * Lookup the message with the given ID in this catalog and bind its
+     * substitution locations with the given strings.
+     */
+    public static String bind(String id, String binding1, String binding2) {
+        return bind(id, new String[] { binding1, binding2 });
+    }
+
+    /*
+     * Lookup the message with the given ID in this catalog and bind its
+     * substitution locations with the given string values.
+     */
+    public static String bind(String id, String[] arguments) {
+        if (id == null)
+            return "No message available"; //$NON-NLS-1$
+        String message = null;
+        try {
+            message = bundle.getString(id);
+        } catch (MissingResourceException e) {
+            // If we got an exception looking for the message, fail gracefully by just returning
+            // the id we were looking for.  In most cases this is semi-informative so is not too bad.
+            return "Missing message: " + id + " in: " + bundleName; //$NON-NLS-2$ //$NON-NLS-1$
+        }
+        // for compatibility with MessageFormat which eliminates double quotes in original message
+        char[] messageWithNoDoubleQuotes =
+            CharOperation.replace(message.toCharArray(), DOUBLE_QUOTES, SINGLE_QUOTE);
+        
+        message = new String(messageWithNoDoubleQuotes);
+        int length = message.length();
+        int start = -1;
+        int end = length;
+        StringBuffer output = null;
+        while (true) {
+            if ((end = message.indexOf('{', start)) > -1) {
+                if (output == null) output = new StringBuffer(80);
+                output.append(message.substring(start + 1, end));
+                if ((start = message.indexOf('}', end)) > -1) {
+                    int index = -1;
+                    try {
+                        String argId = message.substring(end + 1, start);
+                        index = Integer.parseInt(argId);
+                        if (arguments[index] == null) {
+                            output.append('{').append(argId).append('}'); // leave parameter in since no better arg '{0}'
+                        } else {
+                            output.append(arguments[index]);
+                        }                        
+                    } catch (NumberFormatException nfe) { // could be nested message ID {compiler.name}
+                        String argId = message.substring(end + 1, start);
+                        boolean done = false;
+                        if (!id.equals(argId)) {
+                            String argMessage = null;
+                            try {
+                                argMessage = bundle.getString(argId);
+                                output.append(argMessage);
+                                done = true;
+                            } catch (MissingResourceException e) {
+                                // missing the right resource
+                            }
+                        }
+                        if (!done) output.append(message.substring(end + 1, start + 1));
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        output.append("{missing " + Integer.toString(index) + "}"); //$NON-NLS-2$ //$NON-NLS-1$
+                    }
+                } else {
+                    output.append(message.substring(end, length));
+                    break;
                 }
-                packages.add(currentPackage);
+            } else {
+                if (output == null) return message;
+                output.append(message.substring(start + 1, length));
+                break;
             }
-            searchPackages = new IJavaElement[packages.size()];
-            packages.toArray(searchPackages);
-        } else {
-            searchPackages = new IJavaElement[1];
-            searchPackages[0] = fragment;
         }
-        return SearchEngine.createJavaSearchScope(searchPackages);
+        return output.toString();
     }
+
     /*
-     * Overrides super method to create parent folders if necessary
+     * Internal IDE API
      */
-    public ICompilationUnit getWorkingCopy(String fileName, String source) throws JavaModelException {
-        IPath folder = new Path(fileName).removeLastSegments(1);
-        try {
-            createFolder(folder);
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-        ICompilationUnit workingCopy = super.getWorkingCopy(fileName, source, true/*compute problems*/);
-        workingCopy.commitWorkingCopy(true, null);    // need to commit to index file
-        return workingCopy;
+    public static boolean compile(String commandLine) {
+
+        return compile(commandLine, new PrintWriter(System.out), new PrintWriter(System.err));
     }
+
     /*
-     * Overrides super method to create parent folders if necessary
+     * Internal IDE API for test harness purpose
      */
-    public ICompilationUnit getWorkingCopy(String fileName, String source, WorkingCopyOwner owner, boolean computeProblems) throws JavaModelException {
-        ICompilationUnit workingCopy = super.getWorkingCopy(fileName, source, owner, computeProblems);
-        workingCopy.commitWorkingCopy(true, null);    // need to commit to index file
-        return workingCopy;
+    public static boolean compile(String commandLine, PrintWriter outWriter, PrintWriter errWriter) {
+
+        return new Main(outWriter, errWriter, false).compile(tokenize(commandLine));
     }
+    
     /*
-     * Overrides super method to create parent folders if necessary
+     * External API
      */
-    public ICompilationUnit getWorkingCopy(String fileName, String source, WorkingCopyOwner owner) throws JavaModelException {
-        IPath folder = new Path(fileName).removeLastSegments(1);
-        try {
-            createFolder(folder);
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-        ICompilationUnit workingCopy = super.getWorkingCopy(fileName, source, owner, true/*compute problems*/);
-        workingCopy.commitWorkingCopy(true, null);    // need to commit to index file
-        return workingCopy;
-    }
-    protected void search(IJavaElement element, int limitTo/*, IJavaSearchScope scope*/) throws CoreException {
-        search(element, limitTo, SearchPattern.R_EXACT_MATCH|SearchPattern.R_CASE_SENSITIVE, getJavaSearchScopeBugs(), this.resultCollector);
-    }
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.core.tests.model.SuiteOfTestCases#setUpSuite()
-     */
-    public void setUpSuite() throws Exception {
-        super.setUpSuite();
-        JAVA_PROJECT = setUpJavaProject("JavaSearchBugs", "1.5");
-    }
-    public void tearDownSuite() throws Exception {
-        deleteProject("JavaSearchBugs");
-        super.tearDownSuite();
-    }
-    protected void setUp () throws Exception {
-        this.resultCollector = new JavaSearchTests.JavaSearchResultCollector();
-        this.resultCollector.showAccuracy = true;
-        super.setUp();
-    }
-    /**
-     * Bug 41018: Method reference not found
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=41018"
-     */
-    public void testBug41018() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b41018/A.java",
-                "package b41018;\n" +
-                "public class A {\n" + 
-                "    protected void anotherMethod() {\n" + 
-                "        methodA(null);\n" + 
-                "    }\n" + 
-                "    private Object methodA(ClassB.InnerInterface arg3) {\n" + 
-                "        return null;\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "class ClassB implements InterfaceB {\n" + 
-                "}\n" + 
-                "interface InterfaceB {\n" + 
-                "    interface InnerInterface {\n" + 
-                "    }\n" + 
-                "}\n"
-                );
-            IType type = workingCopy.getType("A");
-            IMethod method = type.getMethod("methodA", new String[] { "QClassB.InnerInterface;" });
-            search(method, REFERENCES);
-            assertSearchResults(
-                "src/b41018/A.java void b41018.A.anotherMethod() [methodA(null)] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    /**
-     * Bug 70827: [Search] wrong reference match to private method of supertype
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=70827"
-     */
-    public void testBug70827() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b70827/A.java",
-                "package b70827;\n" + 
-                "class A {\n" + 
-                "    private void privateMethod() {\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "class Second extends A {\n" + 
-                "    void call() {\n" + 
-                "        int i= privateMethod();\n" + 
-                "    }\n" + 
-                "    int privateMethod() {\n" + 
-                "        return 1;\n" + 
-                "    }\n" + 
-                "}\n"
-                );
-            IType type = workingCopy.getType("A");
-            IMethod method = type.getMethod("privateMethod", new String[] {});
-            search(method, REFERENCES);
-            assertSearchResults(
-                ""
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
+
+    public static void main(String[] argv) {
+        new Main(new PrintWriter(System.out), new PrintWriter(System.err), true).compile(argv);
     }
 
     /**
-     * Bug 71279: [Search] NPE in TypeReferenceLocator when moving CU with unresolved type reference
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=71279"
+     * Creates a NLS catalog for the given locale.
      */
-    public void testBug71279() throws CoreException {
-        JavaSearchResultCollector result = new JavaSearchResultCollector() {
-            public void beginReporting() {
-                results.append("Starting search...");
+    public static void relocalize() {
+        try {
+            bundle = ResourceBundle.getBundle(bundleName, Locale.getDefault());
+        } catch(MissingResourceException e) {
+            System.out.println("Missing resource : " + bundleName.replace('.', '/') + ".properties for locale " + Locale.getDefault()); //$NON-NLS-1$//$NON-NLS-2$
+            throw e;
+        }
+    }
+
+    public static String[] tokenize(String commandLine) {
+
+        int count = 0;
+        String[] arguments = new String[10];
+        StringTokenizer tokenizer = new StringTokenizer(commandLine, " \"", true); //$NON-NLS-1$
+        String token = ""; //$NON-NLS-1$
+        boolean insideQuotes = false;
+        boolean startNewToken = true;
+
+        // take care to quotes on the command line
+        // 'xxx "aaa bbb";ccc yyy' --->  {"xxx", "aaa bbb;ccc", "yyy" }
+        // 'xxx "aaa bbb;ccc" yyy' --->  {"xxx", "aaa bbb;ccc", "yyy" }
+        // 'xxx "aaa bbb";"ccc" yyy' --->  {"xxx", "aaa bbb;ccc", "yyy" }
+        // 'xxx/"aaa bbb";"ccc" yyy' --->  {"xxx/aaa bbb;ccc", "yyy" }
+        while (tokenizer.hasMoreTokens()) {
+            token = tokenizer.nextToken();
+
+            if (token.equals(" ")) { //$NON-NLS-1$
+                if (insideQuotes) {
+                    arguments[count - 1] += token;
+                    startNewToken = false;
+                } else {
+                    startNewToken = true;
+                }
+            } else if (token.equals("\"")) { //$NON-NLS-1$
+                if (!insideQuotes && startNewToken) { //$NON-NLS-1$
+                    if (count == arguments.length)
+                        System.arraycopy(arguments, 0, (arguments = new String[count * 2]), 0, count);
+                    arguments[count++] = ""; //$NON-NLS-1$
+                }
+                insideQuotes = !insideQuotes;
+                startNewToken = false;
+            } else {
+                if (insideQuotes) {
+                    arguments[count - 1] += token;
+                } else {
+                    if (token.length() > 0 && !startNewToken) {
+                        arguments[count - 1] += token;
+                    } else {
+                        if (count == arguments.length)
+                            System.arraycopy(arguments, 0, (arguments = new String[count * 2]), 0, count);
+                        String trimmedToken = token.trim();
+                        if (trimmedToken.length() != 0) {
+                            arguments[count++] = trimmedToken;
+                        }
+                    }
+                }
+                startNewToken = false;
             }
-            public void endReporting() {
-                results.append("\nDone searching.");
+        }
+        System.arraycopy(arguments, 0, arguments = new String[count], 0, count);
+        return arguments;
+    }
+
+    /*
+     *  Low-level API performing the actual compilation
+     */
+    public boolean compile(String[] argv) {
+
+        // decode command line arguments
+        try {
+            configure(argv);
+            if (this.proceed) {
+//                if (this.verbose) {
+//                    System.out.println(new CompilerOptions(this.options));
+//                }
+                if (this.showProgress)
+                    this.logger.printlnOut(Main.bind("progress.compiling")); //$NON-NLS-1$
+                for (int i = 0; i < this.repetitions; i++) {
+                    this.globalProblemsCount = 0;
+                    this.globalErrorsCount = 0;
+                    this.globalWarningsCount = 0;
+                    this.lineCount = 0;
+                    this.exportedClassFilesCounter = 0;
+
+                    if (this.repetitions > 1) {
+                        this.logger.flush();
+                        this.logger.printlnOut(
+                            Main.bind(
+                                "compile.repetition", //$NON-NLS-1$
+                                String.valueOf(i + 1),
+                                String.valueOf(this.repetitions)));
+                    } 
+                    // request compilation
+                    performCompilation();
+                }
+                if (this.showProgress)
+                    this.logger.printlnOut();
+            }
+            if (this.systemExitWhenFinished) {
+                this.logger.flush();
+                System.exit(this.globalErrorsCount > 0 ? -1 : 0);
+            }
+        } catch (InvalidInputException e) {
+            this.logger.printlnErr(e.getMessage());
+            if (this.systemExitWhenFinished) {
+                this.logger.flush();
+                this.logger.close();
+                System.exit(-1);
+            }
+            return false;
+        } catch (RuntimeException e) { // internal compiler failure
+            if (this.systemExitWhenFinished) {
+                this.logger.flush();
+                this.logger.close();
+                System.exit(-1);
+            }
+            return false;
+            //e.printStackTrace();
+        } finally {
+            this.logger.flush();
+            this.logger.close();
+        }
+        if (this.globalErrorsCount == 0)
+            return true;
+        return false;
+    }
+
+    /*
+    Decode the command line arguments 
+     */
+    public void configure(String[] argv) throws InvalidInputException {
+        
+        if ((argv == null) || (argv.length == 0)) {
+            printUsage();
+            return;
+        }
+        final int InsideClasspath = 1;
+        final int InsideDestinationPath = 2;
+        final int TargetSetting = 4;
+        final int InsideLog = 8;
+        final int InsideRepetition = 16;
+        final int InsideSource = 32;
+        final int InsideDefaultEncoding = 64;
+        final int InsideBootClasspath = 128;
+        final int InsideMaxProblems = 256;
+        final int Default = 0;
+        String[] bootclasspaths = null;
+        int DEFAULT_SIZE_CLASSPATH = 4;
+        int pathCount = 0;
+        int bootclasspathCount = 0;
+        int index = -1, filesCount = 0, argCount = argv.length;
+        int mode = Default;
+        this.repetitions = 0;
+        boolean printUsageRequired = false;
+        boolean printVersionRequired = false;
+        
+        boolean didSpecifySource = false;
+        boolean didSpecifyCompliance = false;
+        boolean didSpecifyDefaultEncoding = false;
+        boolean didSpecifyTarget = false;
+        boolean didSpecifyDeprecation = false;
+        boolean didSpecifyWarnings = false;
+        boolean useEnableJavadoc = false;
+
+        String customEncoding = null;
+        String currentArg = ""; //$NON-NLS-1$
+
+        // expand the command line if necessary
+        boolean needExpansion = false;
+        loop: for (int i = 0; i < argCount; i++) {
+                if (argv[i].startsWith("@")) { //$NON-NLS-1$
+                    needExpansion = true;
+                    break loop;
+                }
+        }
+
+        String[] newCommandLineArgs = null;
+        if (needExpansion) {
+            newCommandLineArgs = new String[argCount];
+            index = 0;
+            for (int i = 0; i < argCount; i++) {
+                String[] newArgs = null;
+                String arg = argv[i].trim();
+                if (arg.startsWith("@")) { //$NON-NLS-1$
+                    try {
+                        LineNumberReader reader = new LineNumberReader(new StringReader(new String(Util.getFileCharContent(new File(arg.substring(1)), null))));
+                        StringBuffer buffer = new StringBuffer();
+                        String line;
+                        while((line = reader.readLine()) != null) {
+                            buffer.append(line).append(" "); //$NON-NLS-1$
+                        }
+                        newArgs = tokenize(buffer.toString());
+                    } catch(IOException e) {
+                        throw new InvalidInputException(
+                            Main.bind("configure.invalidexpansionargumentname", arg)); //$NON-NLS-1$
+                    }
+                }
+                if (newArgs != null) {
+                    int newCommandLineArgsLength = newCommandLineArgs.length;
+                    int newArgsLength = newArgs.length;
+                    System.arraycopy(newCommandLineArgs, 0, (newCommandLineArgs = new String[newCommandLineArgsLength + newArgsLength - 1]), 0, index);
+                    System.arraycopy(newArgs, 0, newCommandLineArgs, index, newArgsLength);
+                    index += newArgsLength;
+                } else {
+                    newCommandLineArgs[index++] = arg;
+                }
+            }
+            index = -1;
+        } else {
+            newCommandLineArgs = argv;
+            for (int i = 0; i < argCount; i++) {
+                newCommandLineArgs[i] = newCommandLineArgs[i].trim();
+            }
+        }
+        argCount = newCommandLineArgs.length;
+        while (++index < argCount) {
+
+            if (customEncoding != null) {
+                throw new InvalidInputException(
+                    Main.bind("configure.unexpectedCustomEncoding", currentArg, customEncoding)); //$NON-NLS-1$
+            }
+
+            currentArg = newCommandLineArgs[index];
+
+            customEncoding = null;
+            if (currentArg.endsWith("]")) { //$NON-NLS-1$ 
+                // look for encoding specification
+                int encodingStart = currentArg.indexOf('[') + 1;
+                int encodingEnd = currentArg.length() - 1;
+                if (encodingStart >= 1) {
+                    if (encodingStart < encodingEnd) {
+                        customEncoding = currentArg.substring(encodingStart, encodingEnd);
+                        try { // ensure encoding is supported
+                            new InputStreamReader(new ByteArrayInputStream(new byte[0]), customEncoding);
+                        } catch (UnsupportedEncodingException e) {
+                            throw new InvalidInputException(
+                                Main.bind("configure.unsupportedEncoding", customEncoding)); //$NON-NLS-1$
+                        }
+                    }
+                    currentArg = currentArg.substring(0, encodingStart - 1);
+                }
+            }
+
+            if (currentArg.endsWith(SUFFIX_STRING_java)) {
+                if (this.filenames == null) {
+                    this.filenames = new String[argCount - index];
+                    this.encodings = new String[argCount - index];
+                } else if (filesCount == this.filenames.length) {
+                    int length = this.filenames.length;
+                    System.arraycopy(
+                        this.filenames,
+                        0,
+                        (this.filenames = new String[length + argCount - index]),
+                        0,
+                        length);
+                    System.arraycopy(
+                        this.encodings,
+                        0,
+                        (this.encodings = new String[length + argCount - index]),
+                        0,
+                        length);
+                }
+                this.filenames[filesCount] = currentArg;
+                this.encodings[filesCount++] = customEncoding;
+                customEncoding = null;
+                mode = Default;
+                continue;
+            }
+            if (currentArg.equals("-log")) { //$NON-NLS-1$
+                if (this.log != null)
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateLog", currentArg)); //$NON-NLS-1$
+                mode = InsideLog;
+                continue;
+            }
+            if (currentArg.equals("-repeat")) { //$NON-NLS-1$
+                if (this.repetitions > 0)
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateRepeat", currentArg)); //$NON-NLS-1$
+                mode = InsideRepetition;
+                continue;
+            }
+            if (currentArg.equals("-maxProblems")) { //$NON-NLS-1$
+                if (this.maxProblems > 0)
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateMaxProblems", currentArg)); //$NON-NLS-1$
+                mode = InsideMaxProblems;
+                continue;
+            }
+            if (currentArg.equals("-source")) { //$NON-NLS-1$
+                mode = InsideSource;
+                continue;
+            }
+            if (currentArg.equals("-encoding")) { //$NON-NLS-1$
+                mode = InsideDefaultEncoding;
+                continue;
+            }
+            if (currentArg.equals("-1.3")) { //$NON-NLS-1$
+                if (didSpecifyCompliance) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateCompliance", currentArg));//$NON-NLS-1$
+                }
+                didSpecifyCompliance = true;
+                this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_3);
+                mode = Default;
+                continue;
+            }
+            if (currentArg.equals("-1.4")) { //$NON-NLS-1$
+                if (didSpecifyCompliance) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateCompliance", currentArg)); //$NON-NLS-1$
+                }
+                didSpecifyCompliance = true;
+                this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_4);
+                mode = Default;
+                continue;
+            }
+            if (currentArg.equals("-1.5")) { //$NON-NLS-1$
+                if (didSpecifyCompliance) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateCompliance", currentArg)); //$NON-NLS-1$
+                }
+                didSpecifyCompliance = true;
+                this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_5);
+                mode = Default;
+                continue;
+            }            
+            if (currentArg.equals("-d")) { //$NON-NLS-1$
+                if (this.destinationPath != null)
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateOutputPath", currentArg)); //$NON-NLS-1$
+                mode = InsideDestinationPath;
+                this.generatePackagesStructure = true;
+                continue;
+            }
+            if (currentArg.equals("-classpath") //$NON-NLS-1$
+                || currentArg.equals("-cp")) { //$NON-NLS-1$ //$NON-NLS-2$
+                if (pathCount == 0) {
+                    this.classpaths = new String[DEFAULT_SIZE_CLASSPATH];
+                }
+                mode = InsideClasspath;
+                continue;
+            }
+            if (currentArg.equals("-bootclasspath")) {//$NON-NLS-1$
+                if (bootclasspathCount > 0)
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateBootClasspath", currentArg)); //$NON-NLS-1$
+                bootclasspaths = new String[DEFAULT_SIZE_CLASSPATH];
+                mode = InsideBootClasspath;
+                continue;
+            }
+            if (currentArg.equals("-progress")) { //$NON-NLS-1$
+                mode = Default;
+                this.showProgress = true;
+                continue;
+            }
+            if (currentArg.equals("-proceedOnError")) { //$NON-NLS-1$
+                mode = Default;
+                this.proceedOnError = true;
+                continue;
+            }
+            if (currentArg.equals("-time")) { //$NON-NLS-1$
+                mode = Default;
+                this.timing = true;
+                continue;
+            }
+            if (currentArg.equals("-version") //$NON-NLS-1$
+                    || currentArg.equals("-v")) { //$NON-NLS-1$
+                printVersion();
+                this.proceed = false;
+                return;
+            }
+            if (currentArg.equals("-showversion")) { //$NON-NLS-1$
+                printVersionRequired = true;
+                continue;
+            }            
+            if ("-deprecation".equals(currentArg)) { //$NON-NLS-1$
+                didSpecifyDeprecation = true;
+                this.options.put(CompilerOptions.OPTION_ReportDeprecation, CompilerOptions.WARNING);
+                continue;
+            }
+            if (currentArg.equals("-help") || currentArg.equals("-?")) { //$NON-NLS-1$ //$NON-NLS-2$
+                printUsageRequired = true;
+                continue;
+            }
+            if (currentArg.equals("-noExit")) { //$NON-NLS-1$
+                mode = Default;
+                this.systemExitWhenFinished = false;
+                continue;
+            }
+            if (currentArg.equals("-verbose")) { //$NON-NLS-1$
+                mode = Default;
+                this.verbose = true;
+                continue;
+            }
+            if (currentArg.equals("-referenceInfo")) { //$NON-NLS-1$
+                mode = Default;
+                this.produceRefInfo = true;
+                continue;
+            }
+            if (currentArg.equals("-inlineJSR")) { //$NON-NLS-1$
+                mode = Default;
+                this.options.put(
+                        CompilerOptions.OPTION_InlineJsr,
+                        CompilerOptions.ENABLED);
+                continue;
+            }
+            if (currentArg.startsWith("-g")) { //$NON-NLS-1$
+                mode = Default;
+                String debugOption = currentArg;
+                int length = currentArg.length();
+                if (length == 2) {
+                    this.options.put(
+                        CompilerOptions.OPTION_LocalVariableAttribute,
+                        CompilerOptions.GENERATE);
+                    this.options.put(
+                        CompilerOptions.OPTION_LineNumberAttribute,
+                        CompilerOptions.GENERATE);
+                    this.options.put(
+                        CompilerOptions.OPTION_SourceFileAttribute,
+                        CompilerOptions.GENERATE);
+                    continue;
+                }
+                if (length > 3) {
+                    this.options.put(
+                        CompilerOptions.OPTION_LocalVariableAttribute,
+                        CompilerOptions.DO_NOT_GENERATE);
+                    this.options.put(
+                        CompilerOptions.OPTION_LineNumberAttribute,
+                        CompilerOptions.DO_NOT_GENERATE);
+                    this.options.put(
+                        CompilerOptions.OPTION_SourceFileAttribute,
+                        CompilerOptions.DO_NOT_GENERATE);
+                    if (length == 7 && debugOption.equals("-g:none")) //$NON-NLS-1$
+                        continue;
+                    StringTokenizer tokenizer =
+                        new StringTokenizer(debugOption.substring(3, debugOption.length()), ","); //$NON-NLS-1$
+                    while (tokenizer.hasMoreTokens()) {
+                        String token = tokenizer.nextToken();
+                        if (token.equals("vars")) { //$NON-NLS-1$
+                            this.options.put(
+                                CompilerOptions.OPTION_LocalVariableAttribute,
+                                CompilerOptions.GENERATE);
+                        } else if (token.equals("lines")) { //$NON-NLS-1$
+                            this.options.put(
+                                CompilerOptions.OPTION_LineNumberAttribute,
+                                CompilerOptions.GENERATE);
+                        } else if (token.equals("source")) { //$NON-NLS-1$
+                            this.options.put(
+                                CompilerOptions.OPTION_SourceFileAttribute,
+                                CompilerOptions.GENERATE);
+                        } else {
+                            throw new InvalidInputException(
+                                Main.bind("configure.invalidDebugOption", debugOption)); //$NON-NLS-1$
+                        }
+                    }
+                    continue;
+                }
+                throw new InvalidInputException(
+                    Main.bind("configure.invalidDebugOption", debugOption)); //$NON-NLS-1$
+            }
+            if (currentArg.startsWith("-nowarn")) { //$NON-NLS-1$
+                disableWarnings();
+                mode = Default;
+                continue;
+            }
+            if (currentArg.startsWith("-warn")) { //$NON-NLS-1$
+                mode = Default;
+                String warningOption = currentArg;
+                int length = currentArg.length();
+                if (length == 10 && warningOption.equals("-warn:none")) { //$NON-NLS-1$
+                    disableWarnings();
+                    continue;
+                }
+                if (length <= 6) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.invalidWarningConfiguration", warningOption)); //$NON-NLS-1$
+                }
+                int warnTokenStart;
+                boolean isEnabling;
+                switch (warningOption.charAt(6)) {
+                    case '+' : 
+                        warnTokenStart = 7;
+                        isEnabling = true;
+                        break;
+                    case '-' :
+                        warnTokenStart = 7;
+                        isEnabling = false; // mentionned warnings are disabled
+                        break;
+                    default:
+                        warnTokenStart = 6;
+                        // clear default warning level
+                        // but allow multiple warning option on the command line
+                        if (!didSpecifyWarnings) disableWarnings();
+                        isEnabling = true;
+                }
+            
+                StringTokenizer tokenizer =
+                    new StringTokenizer(warningOption.substring(warnTokenStart, warningOption.length()), ","); //$NON-NLS-1$
+                int tokenCounter = 0;
+
+                if (didSpecifyDeprecation) {  // deprecation could have also been set through -deprecation option
+                    this.options.put(CompilerOptions.OPTION_ReportDeprecation, CompilerOptions.WARNING);
+                }
+                
+                while (tokenizer.hasMoreTokens()) {
+                    String token = tokenizer.nextToken();
+                    tokenCounter++;
+                    if (token.equals("constructorName")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportMethodWithConstructorName,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("pkgDefaultMethod") || token.equals("packageDefaultMethod")/*backward compatible*/ ) { //$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportOverridingPackageDefaultMethod,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("maskedCatchBlock") || token.equals("maskedCatchBlocks")/*backward compatible*/) { //$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportHiddenCatchBlock,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("deprecation")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportDeprecation, 
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportDeprecationInDeprecatedCode, 
+                            CompilerOptions.DISABLED);
+                    } else if (token.equals("allDeprecation")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportDeprecation, 
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportDeprecationInDeprecatedCode, 
+                            isEnabling ? CompilerOptions.ENABLED : CompilerOptions.DISABLED);
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportDeprecationWhenOverridingDeprecatedMethod, 
+                            isEnabling ? CompilerOptions.ENABLED : CompilerOptions.DISABLED);
+                    } else if (token.equals("unusedLocal") || token.equals("unusedLocals")/*backward compatible*/) { //$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnusedLocal, 
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unusedArgument") || token.equals("unusedArguments")/*backward compatible*/) { //$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnusedParameter,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unusedImport") || token.equals("unusedImports")/*backward compatible*/) { //$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnusedImport,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unusedPrivate")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnusedPrivateMember,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("localHiding")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportLocalVariableHiding,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("fieldHiding")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportFieldHiding,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("specialParamHiding")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportSpecialParameterHidingField,
+                            isEnabling ? CompilerOptions.ENABLED : CompilerOptions.DISABLED);
+                    } else if (token.equals("conditionAssign")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportPossibleAccidentalBooleanAssignment,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                       } else if (token.equals("syntheticAccess")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportSyntheticAccessEmulation,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("nls")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportNonExternalizedStringLiteral,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("staticReceiver")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportNonStaticAccessToStatic,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("indirectStatic")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportIndirectStaticAccess,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("noEffectAssign")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportNoEffectAssignment,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("intfNonInherited") || token.equals("interfaceNonInherited")/*backward compatible*/) { //$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportIncompatibleNonInheritedInterfaceMethod,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("charConcat") || token.equals("noImplicitStringConversion")/*backward compatible*/) {//$NON-NLS-1$ //$NON-NLS-2$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportNoImplicitStringConversion,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("semicolon")) {//$NON-NLS-1$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportEmptyStatement,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("serial")) {//$NON-NLS-1$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportMissingSerialVersion,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("emptyBlock")) {//$NON-NLS-1$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUndocumentedEmptyBlock,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("uselessTypeCheck")) {//$NON-NLS-1$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnnecessaryTypeCheck,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unchecked") || token.equals("unsafe")) {//$NON-NLS-1$ //$NON-NLS-2$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUncheckedTypeOperation,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("finalBound")) {//$NON-NLS-1$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportFinalParameterBound,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unnecessaryElse")) {//$NON-NLS-1$ 
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnnecessaryElse,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("javadoc")) {//$NON-NLS-1$ 
+                        if (!useEnableJavadoc) {
+                            this.options.put(
+                                CompilerOptions.OPTION_DocCommentSupport,
+                                isEnabling ? CompilerOptions.ENABLED: CompilerOptions.DISABLED);
+                        }
+                        // if disabling then it's not necessary to set other javadoc options
+                        if (isEnabling) {
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadoc,
+                                CompilerOptions.WARNING);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadocTags,
+                                CompilerOptions.ENABLED);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadocTagsDeprecatedRef,
+                                CompilerOptions.DISABLED);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadocTagsNotVisibleRef,
+                                CompilerOptions.DISABLED);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadocTagsVisibility,
+                                CompilerOptions.PRIVATE);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportMissingJavadocTags,
+                                CompilerOptions.WARNING);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportMissingJavadocTagsVisibility,
+                                CompilerOptions.PRIVATE);
+                        }
+                    } else if (token.equals("allJavadoc")) { //$NON-NLS-1$
+                        if (!useEnableJavadoc) {
+                            this.options.put(
+                                CompilerOptions.OPTION_DocCommentSupport,
+                                isEnabling ? CompilerOptions.ENABLED: CompilerOptions.DISABLED);
+                        }
+                        // if disabling then it's not necessary to set other javadoc options
+                        if (isEnabling) {
+                            this.options.put(
+                            CompilerOptions.OPTION_ReportInvalidJavadoc,
+                            CompilerOptions.WARNING);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadocTags,
+                                CompilerOptions.ENABLED);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportInvalidJavadocTagsVisibility,
+                                CompilerOptions.PRIVATE);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportMissingJavadocTags,
+                                CompilerOptions.WARNING);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportMissingJavadocTagsVisibility,
+                                CompilerOptions.PRIVATE);
+                            this.options.put(
+                                CompilerOptions.OPTION_ReportMissingJavadocComments,
+                                CompilerOptions.WARNING);
+                        }
+                    } else if (token.startsWith("tasks")) { //$NON-NLS-1$
+                        String taskTags = ""; //$NON-NLS-1$
+                        int start = token.indexOf('(');
+                        int end = token.indexOf(')');
+                        if (start >= 0 && end >= 0 && start < end){
+                            taskTags = token.substring(start+1, end).trim();
+                            taskTags = taskTags.replace('|',',');
+                        }
+                        if (taskTags.length() == 0){
+                            throw new InvalidInputException(Main.bind("configure.invalidTaskTag", token)); //$NON-NLS-1$
+                        }
+                        this.options.put(
+                            CompilerOptions.OPTION_TaskTags,
+                            isEnabling ? taskTags : "");  //$NON-NLS-1$
+                    } else if (token.equals("assertIdentifier")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportAssertIdentifier,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("enumIdentifier")) { //$NON-NLS-1$
+                        this.options.put(
+                                CompilerOptions.OPTION_ReportEnumIdentifier,
+                                isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("finally")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportFinallyBlockNotCompletingNormally,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unusedThrown")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnusedDeclaredThrownException,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("unqualifiedField")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportUnqualifiedFieldAccess,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);
+                    } else if (token.equals("varargsCast")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportVarargsArgumentNeedCast,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);                        
+                    } else if (token.equals("null")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportNullReference,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);                        
+                    } else if (token.equals("boxing")) { //$NON-NLS-1$
+                        this.options.put(
+                            CompilerOptions.OPTION_ReportAutoboxing,
+                            isEnabling ? CompilerOptions.WARNING : CompilerOptions.IGNORE);                        
+                    } else {
+                        throw new InvalidInputException(Main.bind("configure.invalidWarning", token)); //$NON-NLS-1$
+                    }
+                }
+                if (tokenCounter == 0)
+                    throw new InvalidInputException(
+                        Main.bind("configure.invalidWarningOption", currentArg)); //$NON-NLS-1$
+                didSpecifyWarnings = true;
+                continue;
+            }
+            if (currentArg.equals("-target")) { //$NON-NLS-1$
+                mode = TargetSetting;
+                continue;
+            }
+            if (currentArg.equals("-preserveAllLocals")) { //$NON-NLS-1$
+                this.options.put(
+                    CompilerOptions.OPTION_PreserveUnusedLocal,
+                    CompilerOptions.PRESERVE);
+                continue;
+            }
+            if (currentArg.equals("-enableJavadoc")) {//$NON-NLS-1$
+                this.options.put(
+                    CompilerOptions.OPTION_DocCommentSupport,
+                    CompilerOptions.ENABLED);
+                useEnableJavadoc = true;
+                continue;
+            }
+            if (mode == TargetSetting) {
+                if (didSpecifyTarget) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateTarget", currentArg));//$NON-NLS-1$
+                }                
+                didSpecifyTarget = true;
+                if (currentArg.equals("1.1")) { //$NON-NLS-1$
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_1);
+                } else if (currentArg.equals("1.2")) { //$NON-NLS-1$
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_2);
+                } else if (currentArg.equals("1.3")) { //$NON-NLS-1$
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_3);
+                } else if (currentArg.equals("1.4")) { //$NON-NLS-1$
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_4);
+                    if (didSpecifyCompliance && CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Compliance)) < ClassFileConstants.JDK1_4) {
+                        throw new InvalidInputException(Main.bind("configure.incompatibleComplianceForTarget", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
+                    }
+                    this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_4);
+                } else if (currentArg.equals("1.5") || currentArg.equals("5")) { //$NON-NLS-1$//$NON-NLS-2$
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_5);
+                    if (didSpecifyCompliance && CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Compliance)) < ClassFileConstants.JDK1_5) {
+                        throw new InvalidInputException(Main.bind("configure.incompatibleComplianceForTarget", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
+                    }
+                    this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_5);
+                } else {
+                    throw new InvalidInputException(Main.bind("configure.targetJDK", currentArg)); //$NON-NLS-1$
+                }
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideLog) {
+                this.log = currentArg;
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideRepetition) {
+                try {
+                    this.repetitions = Integer.parseInt(currentArg);
+                    if (this.repetitions <= 0) {
+                        throw new InvalidInputException(Main.bind("configure.repetition", currentArg)); //$NON-NLS-1$
+                    }
+                } catch (NumberFormatException e) {
+                    throw new InvalidInputException(Main.bind("configure.repetition", currentArg)); //$NON-NLS-1$
+                }
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideMaxProblems) {
+                try {
+                    this.maxProblems = Integer.parseInt(currentArg);
+                    if (this.maxProblems <= 0) {
+                        throw new InvalidInputException(Main.bind("configure.maxProblems", currentArg)); //$NON-NLS-1$
+                    }
+                    this.options.put(CompilerOptions.OPTION_MaxProblemPerUnit, currentArg);
+                } catch (NumberFormatException e) {
+                    throw new InvalidInputException(Main.bind("configure.maxProblems", currentArg)); //$NON-NLS-1$
+                }
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideSource) {
+                if (didSpecifySource) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateSource", currentArg));//$NON-NLS-1$
+                }                
+                didSpecifySource = true;
+                if (currentArg.equals("1.3")) { //$NON-NLS-1$
+                    this.options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_3);
+                } else if (currentArg.equals("1.4")) { //$NON-NLS-1$
+                    this.options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_4);
+                } else if (currentArg.equals("1.5") || currentArg.equals("5")) { //$NON-NLS-1$//$NON-NLS-2$
+                    this.options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_5);
+                } else {
+                    throw new InvalidInputException(Main.bind("configure.source", currentArg)); //$NON-NLS-1$
+                }
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideDefaultEncoding) {
+                if (didSpecifyDefaultEncoding) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.duplicateDefaultEncoding", currentArg)); //$NON-NLS-1$
+                }
+                try { // ensure encoding is supported
+                    new InputStreamReader(new ByteArrayInputStream(new byte[0]), currentArg);
+                } catch (UnsupportedEncodingException e) {
+                    throw new InvalidInputException(
+                        Main.bind("configure.unsupportedEncoding", currentArg)); //$NON-NLS-1$
+                }
+                this.options.put(CompilerOptions.OPTION_Encoding, currentArg);
+                didSpecifyDefaultEncoding = true;
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideDestinationPath) {
+                this.destinationPath = currentArg;
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideClasspath) {
+                StringTokenizer tokenizer = new StringTokenizer(currentArg, File.pathSeparator);
+                while (tokenizer.hasMoreTokens()) {
+                    int length;
+                    if ((length = this.classpaths.length) <= pathCount) {
+                        System.arraycopy(
+                            this.classpaths,
+                            0,
+                            (this.classpaths = new String[length * 2]),
+                            0,
+                            length);
+                    }
+                    this.classpaths[pathCount++] = tokenizer.nextToken();
+                }
+                mode = Default;
+                continue;
+            }
+            if (mode == InsideBootClasspath) {
+                StringTokenizer tokenizer = new StringTokenizer(currentArg, File.pathSeparator);
+                while (tokenizer.hasMoreTokens()) {
+                    int length;
+                    if ((length = bootclasspaths.length) <= bootclasspathCount) {
+                        System.arraycopy(
+                            bootclasspaths,
+                            0,
+                            (bootclasspaths = new String[length * 2]),
+                            0,
+                            length);
+                    }
+                    bootclasspaths[bootclasspathCount++] = tokenizer.nextToken();
+                }
+                mode = Default;
+                continue;
+            }            
+            //default is input directory
+            currentArg = currentArg.replace('/', File.separatorChar);
+            if (currentArg.endsWith(File.separator))
+                currentArg =
+                    currentArg.substring(0, currentArg.length() - File.separator.length());
+            File dir = new File(currentArg);
+            if (!dir.isDirectory())
+                throw new InvalidInputException(
+                    Main.bind("configure.directoryNotExist", currentArg)); //$NON-NLS-1$
+            FileFinder finder = new FileFinder();
+            try {
+                finder.find(dir, SUFFIX_STRING_JAVA, this.verbose); //$NON-NLS-1$
+            } catch (Exception e) {
+                throw new InvalidInputException(Main.bind("configure.IOError", currentArg)); //$NON-NLS-1$
+            }
+            if (this.filenames != null) {
+                // some source files were specified explicitly
+                String results[] = finder.resultFiles;
+                int length = results.length;
+                System.arraycopy(
+                    this.filenames,
+                    0,
+                    (this.filenames = new String[length + filesCount]),
+                    0,
+                    filesCount);
+                System.arraycopy(
+                    this.encodings,
+                    0,
+                    (this.encodings = new String[length + filesCount]),
+                    0,
+                    filesCount);
+                System.arraycopy(results, 0, this.filenames, filesCount, length);
+                for (int i = 0; i < length; i++) {
+                    this.encodings[filesCount + i] = customEncoding;
+                }
+                filesCount += length;
+                customEncoding = null;
+            } else {
+                this.filenames = finder.resultFiles;
+                filesCount = this.filenames.length;
+                this.encodings = new String[filesCount];
+                for (int i = 0; i < filesCount; i++) {
+                    this.encodings[i] = customEncoding;
+                }
+                customEncoding = null;
+            }
+            mode = Default;
+            continue;
+        }
+        if (printUsageRequired || filesCount == 0) {
+            printUsage();
+            this.proceed = false;
+            return;
+        }
+        if (printVersionRequired) {
+            printVersion();
+        }
+
+        if (filesCount != 0)
+            System.arraycopy(
+                this.filenames,
+                0,
+                (this.filenames = new String[filesCount]),
+                0,
+                filesCount);
+        if (pathCount == 0) {
+            // no user classpath specified.
+            String classProp = System.getProperty("java.class.path"); //$NON-NLS-1$
+            if ((classProp == null) || (classProp.length() == 0)) {
+                this.logger.printlnErr(Main.bind("configure.noClasspath")); //$NON-NLS-1$
+                classProp = System.getProperty("user.dir"); //$NON-NLS-1$
+            }
+            StringTokenizer tokenizer = new StringTokenizer(classProp, File.pathSeparator);
+            this.classpaths = new String[tokenizer.countTokens() + 1];
+            while (tokenizer.hasMoreTokens()) {
+                this.classpaths[pathCount++] = tokenizer.nextToken();
+            }
+            this.classpaths[pathCount++] = System.getProperty("user.dir");//$NON-NLS-1$
+        }
+        
+        if (bootclasspathCount == 0) {
+            /* no bootclasspath specified
+             * we can try to retrieve the default librairies of the VM used to run
+             * the batch compiler
+             */
+             String javaversion = System.getProperty("java.version");//$NON-NLS-1$
+             if (javaversion != null && javaversion.equalsIgnoreCase("1.1.8")) { //$NON-NLS-1$
+                this.logger.printlnErr(Main.bind("configure.requiresJDK1.2orAbove")); //$NON-NLS-1$
+                this.proceed = false;
+                return;
+             }
+
+             /*
+              * Handle >= JDK 1.2.2 settings: retrieve rt.jar
+              */
+              String javaHome = System.getProperty("java.home");//$NON-NLS-1$
+              if (javaHome != null) {
+                  File javaHomeFile = new File(javaHome);
+                  if (javaHomeFile.exists()) {
+                    try {
+                        javaHomeFile = new File(javaHomeFile.getCanonicalPath());
+                        // add all jars in the lib subdirectory
+                        File[] directoriesToCheck = new File[] { new File(javaHomeFile, "lib"), new File(javaHomeFile, "lib/ext")};//$NON-NLS-1$//$NON-NLS-2$
+                        File[][] systemLibrariesJars = getLibrariesFiles(directoriesToCheck);
+                        if (systemLibrariesJars != null) {
+                            int length = getLength(systemLibrariesJars);
+                            bootclasspaths = new String[length];
+                            for (int i = 0, max = systemLibrariesJars.length; i < max; i++) {
+                                File[] current = systemLibrariesJars[i];
+                                if (current != null) {
+                                    for (int j = 0, max2 = current.length; j < max2; j++) {
+                                        bootclasspaths[bootclasspathCount++] = current[j].getAbsolutePath();
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        // cannot retrieve libraries
+                    }
+                  }
+              }
+        }
+
+        if (this.log != null) {
+            try {
+                this.logger.setLog(new PrintWriter(new FileOutputStream(this.log, false)));
+            } catch (IOException e) {
+                throw new InvalidInputException(Main.bind("configure.cannotOpenLog")); //$NON-NLS-1$
+            }
+        } else {
+            this.showProgress = false;
+        }
+
+        if (this.classpaths == null) {
+            this.classpaths = new String[0];
+        }
+        /* 
+         * We put the bootclasspath at the beginning of the classpath entries
+         */
+        String[] newclasspaths = null;
+        if ((pathCount + bootclasspathCount) != this.classpaths.length) {
+            newclasspaths = new String[pathCount + bootclasspathCount];
+        } else {
+            newclasspaths = this.classpaths;
+        }
+        System.arraycopy(
+            this.classpaths,
+            0,
+            newclasspaths,
+            bootclasspathCount,
+            pathCount);
+
+        if (bootclasspathCount != 0) {
+            System.arraycopy(
+                bootclasspaths,
+                0,
+                newclasspaths,
+                0,
+                bootclasspathCount);
+        }
+        this.classpaths = newclasspaths;
+        for (int i = 0, max = this.classpaths.length; i < max; i++) {
+            File file = new File(this.classpaths[i]);
+            if (!file.exists()) { // signal missing classpath entry file
+                this.logger.printlnErr(Main.bind("configure.incorrectClasspath", this.classpaths[i])); //$NON-NLS-1$
+            }
+        }
+        if (this.destinationPath == null) {
+            this.generatePackagesStructure = false;
+        } else if ("none".equals(this.destinationPath)) { //$NON-NLS-1$
+            this.destinationPath = null;
+        }
+        
+        if (didSpecifyCompliance) {
+            Object version = this.options.get(CompilerOptions.OPTION_Compliance);
+            if (CompilerOptions.VERSION_1_3.equals(version)) {
+                    if (!didSpecifySource) this.options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_3);
+                    if (!didSpecifyTarget) this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_1);
+            } else if (CompilerOptions.VERSION_1_4.equals(version)) {
+                    if (!didSpecifySource) this.options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_3);
+                    if (!didSpecifyTarget) this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_2);
+            } else if (CompilerOptions.VERSION_1_5.equals(version)) {
+                    if (!didSpecifySource) this.options.put(CompilerOptions.OPTION_Source, CompilerOptions.VERSION_1_5);
+                    if (!didSpecifyTarget) this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_5);
+            }
+        }
+        if (didSpecifySource) {
+            Object version = this.options.get(CompilerOptions.OPTION_Source);
+             if (CompilerOptions.VERSION_1_4.equals(version)) {
+                    if (!didSpecifyCompliance) this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_4);
+                    if (!didSpecifyTarget) this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_4);
+            } else if (CompilerOptions.VERSION_1_5.equals(version)) {
+                    if (!didSpecifyCompliance) this.options.put(CompilerOptions.OPTION_Compliance, CompilerOptions.VERSION_1_5);
+                    if (!didSpecifyTarget) this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_5);
+            }
+        }
+
+        // check and set compliance/source/target compatibilities
+        if (didSpecifyTarget) {
+            // target must be 1.5 if source is 1.5
+            if (CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Source)) >= ClassFileConstants.JDK1_5
+                    && CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_TargetPlatform)) < ClassFileConstants.JDK1_5){ 
+                throw new InvalidInputException(Main.bind("configure.incompatibleTargetForSource", (String)this.options.get(CompilerOptions.OPTION_TargetPlatform), CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
+            }
+                // target must be 1.4 if source is 1.4
+               if (CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Source)) >= ClassFileConstants.JDK1_4
+                    && CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_TargetPlatform)) < ClassFileConstants.JDK1_4){ 
+                throw new InvalidInputException(Main.bind("configure.incompatibleTargetForSource", (String)this.options.get(CompilerOptions.OPTION_TargetPlatform), CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
+               }
+            // target cannot be greater than compliance level
+            if (CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Compliance)) < CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_TargetPlatform))){ 
+                    throw new InvalidInputException(Main.bind("configure.incompatibleComplianceForTarget", (String)this.options.get(CompilerOptions.OPTION_Compliance), (String)this.options.get(CompilerOptions.OPTION_TargetPlatform))); //$NON-NLS-1$
+            }
+        }
+
+        // compliance must be 1.5 if source is 1.5
+        if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_5)
+                && CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Compliance)) < ClassFileConstants.JDK1_5) {
+            throw new InvalidInputException(Main.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
+        } else 
+            // compliance must be 1.4 if source is 1.4
+            if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_4)
+                    && CompilerOptions.versionToJdkLevel(this.options.get(CompilerOptions.OPTION_Compliance)) < ClassFileConstants.JDK1_4) { 
+                throw new InvalidInputException(Main.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
+        }
+        // set default target according to compliance & sourcelevel.
+        if (!didSpecifyTarget) {
+            if (this.options.get(CompilerOptions.OPTION_Compliance).equals(CompilerOptions.VERSION_1_3)) {
+                this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_1);
+            } else if (this.options.get(CompilerOptions.OPTION_Compliance).equals(CompilerOptions.VERSION_1_4)) {
+                if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_3)) {
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_2);
+                } else if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_4)) {
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_4);
+                }
+            } else if (this.options.get(CompilerOptions.OPTION_Compliance).equals(CompilerOptions.VERSION_1_5)) {
+                if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_3)) {
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_2);
+                } else if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_4)) {
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_4);
+                } else if (this.options.get(CompilerOptions.OPTION_Source).equals(CompilerOptions.VERSION_1_5)) {
+                    this.options.put(CompilerOptions.OPTION_TargetPlatform, CompilerOptions.VERSION_1_5);
+                }
+            }
+        }
+
+        if (this.repetitions == 0) {
+            this.repetitions = 1;
+        }
+    }
+
+    private void disableWarnings() {
+        Object[] entries = this.options.entrySet().toArray();
+        for (int i = 0, max = entries.length; i < max; i++) {
+            Map.Entry entry = (Map.Entry) entries[i];
+            if (!(entry.getKey() instanceof String))
+                continue;
+            if (!(entry.getValue() instanceof String))
+                continue;
+            if (((String) entry.getValue()).equals(CompilerOptions.WARNING)) {
+                this.options.put(entry.getKey(), CompilerOptions.IGNORE);
+            }
+        }
+        this.options.put(CompilerOptions.OPTION_TaskTags, ""); //$NON-NLS-1$
+    }
+
+    public String extractDestinationPathFromSourceFile(CompilationResult result) {
+        ICompilationUnit compilationUnit = result.compilationUnit;
+        if (compilationUnit != null) {
+            char[] fileName = compilationUnit.getFileName();
+            int lastIndex = CharOperation.lastIndexOf(java.io.File.separatorChar, fileName);
+            if (lastIndex == -1) {
+                return System.getProperty("user.dir"); //$NON-NLS-1$
+            }
+            return new String(CharOperation.subarray(fileName, 0, lastIndex));
+        }
+        return System.getProperty("user.dir"); //$NON-NLS-1$
+    }
+    /*
+     * Answer the component to which will be handed back compilation results from the compiler
+     */
+    public ICompilerRequestor getBatchRequestor() {
+        return new ICompilerRequestor() {
+            int lineDelta = 0;
+            public void acceptResult(CompilationResult compilationResult) {
+                if (compilationResult.lineSeparatorPositions != null) {
+                    int unitLineCount = compilationResult.lineSeparatorPositions.length;
+                    Main.this.lineCount += unitLineCount;
+                    this.lineDelta += unitLineCount;
+                    if (Main.this.showProgress
+                        && this.lineDelta > 2000) { // in -log mode, dump a dot every 2000 lines compiled
+                        Main.this.logger.printOut('.');
+                        this.lineDelta = 0;
+                    }
+                }
+                if (compilationResult.hasProblems() || compilationResult.hasTasks()) {
+                    IProblem[] problems = compilationResult.getAllProblems();
+                    int count = problems.length;
+                    int localErrorCount = 0;
+                    char[] unitSource = compilationResult.compilationUnit.getContents();
+                    for (int i = 0; i < count; i++) {
+                        if (problems[i] != null) {
+                            Main.this.globalProblemsCount++;
+                            if (localErrorCount == 0)
+                                Main.this.logger.printlnErr("----------"); //$NON-NLS-1$
+                            Main.this.logger.printErr(
+                                Main.this.globalProblemsCount
+                                    + ". "  //$NON-NLS-1$
+                                    + (problems[i].isError()
+                                        ? Main.bind("requestor.error")  //$NON-NLS-1$
+                                        : Main.bind("requestor.warning")));  //$NON-NLS-1$
+                            if (problems[i].isError()) {
+                                Main.this.globalErrorsCount++;
+                            } else {
+                                Main.this.globalWarningsCount++;
+                            }
+                            Main.this.logger.printErr(" "); //$NON-NLS-1$
+                            Main.this.logger.printErr(
+                                Main.bind("requestor.in", new String(problems[i].getOriginatingFileName()))); //$NON-NLS-1$
+                            try {
+                                Main.this.logger.printlnErr(
+                                    ((DefaultProblem) problems[i]).errorReportSource(unitSource));
+                                Main.this.logger.printlnErr(problems[i].getMessage());
+                            } catch (Exception e) {
+                                Main.this.logger.printlnErr(
+                                    Main.bind("requestor.notRetrieveErrorMessage", problems[i].toString())); //$NON-NLS-1$
+                            }
+                            Main.this.logger.printlnErr("----------"); //$NON-NLS-1$
+                            if (problems[i].isError())
+                                localErrorCount++;
+                        }
+                    }
+                    // exit?
+                    if (Main.this.systemExitWhenFinished && !Main.this.proceedOnError && (localErrorCount > 0)) {
+                        Main.this.printStats();
+                        Main.this.logger.flush();
+                        System.exit(-1);
+                    }
+                }
+                outputClassFiles(compilationResult);
             }
         };
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b71279/AA.java",
-                "package b71279;\n" + 
-                "public class AA {\n" + 
-                "    Unknown ref;\n" + 
-                "}\n"
-                );
-            new SearchEngine().searchDeclarationsOfReferencedTypes(workingCopy, result, null);
-            assertSearchResults(
-                "Starting search...\n" + 
-                "Done searching.",
-                result);
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
     }
+    /*
+     *  Build the set of compilation source units
+     */
+    public CompilationUnit[] getCompilationUnits()
+        throws InvalidInputException {
+        int fileCount = this.filenames.length;
+        CompilationUnit[] units = new CompilationUnit[fileCount];
+        HashtableOfObject knownFileNames = new HashtableOfObject(fileCount);
 
-    /**
-     * Bug 72866: [search] references to endVisit(MethodInvocation) reports refs to endVisit(SuperMethodInvocation)
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=72866"
-     */
-    public void testBug72866() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[4];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b72866/A.java",
-                "package b72866;\n" + 
-                "public abstract class A {\n" + 
-                "    public abstract void foo(V v);\n" + 
-                "}\n",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b72866/SX.java",
-                "package b72866;\n" + 
-                "public class SX extends A {\n" + 
-                "    public void foo(V v) {\n" + 
-                "        v.bar(this);\n" + 
-                "    }\n" + 
-                "}\n"    ,
-                owner,
-                true);
-            workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b72866/V.java",
-                "package b72866;\n" + 
-                "public class V {\n" + 
-                "    void bar(A a) {}\n" + 
-                "    void bar(X x) {}\n" + 
-                "    void bar(SX s) {}\n" + 
-                "}\n"    ,
-                owner,
-                true);
-            workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b72866/X.java",
-                "package b72866;\n" + 
-                "public class X extends A {\n" + 
-                "    public void foo(V v) {\n" + 
-                "        v.bar(this);\n" + 
-                "    }\n" + 
-                "}\n"    ,
-                owner,
-                true    );
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopies[2].getType("V");
-            IMethod method = type.getMethod("bar", new String[] {"QX;"});
-            search(method, REFERENCES);
-            assertSearchResults(
-                "src/b72866/X.java void b72866.X.foo(V) [bar(this)] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
+        String defaultEncoding = (String) this.options.get(CompilerOptions.OPTION_Encoding);
+        if ("".equals(defaultEncoding)) //$NON-NLS-1$
+            defaultEncoding = null; //$NON-NLS-1$
 
-    /**
-     * Bug 73112: [Search] SearchEngine doesn't find all fields multiple field declarations
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=73112"
+        for (int i = 0; i < fileCount; i++) {
+            char[] charName = this.filenames[i].toCharArray();
+            if (knownFileNames.get(charName) != null)
+                throw new InvalidInputException(Main.bind("unit.more", this.filenames[i])); //$NON-NLS-1$
+            knownFileNames.put(charName, charName);
+            File file = new File(this.filenames[i]);
+            if (!file.exists())
+                throw new InvalidInputException(Main.bind("unit.missing", this.filenames[i])); //$NON-NLS-1$
+            String encoding = this.encodings[i];
+            if (encoding == null)
+                encoding = defaultEncoding;
+            units[i] = new CompilationUnit(null, this.filenames[i], encoding);
+        }
+        return units;
+    }
+    
+    private File[][] getLibrariesFiles(File[] files) {
+        FilenameFilter filter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                String lowerCaseName = name.toLowerCase();
+                if (lowerCaseName.endsWith(SUFFIX_STRING_jar) || lowerCaseName.endsWith(SUFFIX_STRING_zip)) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        final int filesLength = files.length;
+        File[][] result = new File[filesLength][];
+        for (int i = 0; i < filesLength; i++) {
+            File currentFile = files[i];
+            if (currentFile.exists() && currentFile.isDirectory()) {
+                result[i] = currentFile.listFiles(filter);
+            }
+        }
+        return result;
+    }
+    
+    private int getLength(File[][] libraries) {
+        int sum = 0;
+        if (libraries != null) {
+            for (int i = 0, max = libraries.length; i < max; i++) {
+                final File[] currentFiles = libraries[i];
+                if (currentFiles != null) {
+                    sum+= currentFiles.length;
+                }
+            }
+        }
+        return sum;
+    }
+    /*
+     *  Low-level API performing the actual compilation
      */
-    public void testBug73112a() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b73112/A.java",
-                "package b73112;\n" + 
-                "public class A {\n" + 
-                "    int fieldA73112a = 1, fieldA73112b = new Integer(2).intValue(), fieldA73112c = fieldA73112a + fieldA73112b;\n" + 
-                "    int fieldA73112d;\n" + 
-                "    \n" + 
-                "    public void method(){}\n" + 
-                "}\n");
-            // search field references to first multiple field
-            search(
-                "fieldA73112*",
-                FIELD,
-                ALL_OCCURRENCES,
-                getJavaSearchScopeBugs(),
-                this.resultCollector);
-            assertSearchResults(
-                "src/b73112/A.java b73112.A.fieldA73112a [fieldA73112a] EXACT_MATCH\n" + 
-                "src/b73112/A.java b73112.A.fieldA73112b [fieldA73112b] EXACT_MATCH\n" + 
-                "src/b73112/A.java b73112.A.fieldA73112c [fieldA73112c] EXACT_MATCH\n" + 
-                "src/b73112/A.java b73112.A.fieldA73112c [fieldA73112a] EXACT_MATCH\n" + 
-                "src/b73112/A.java b73112.A.fieldA73112c [fieldA73112b] EXACT_MATCH\n" + 
-                "src/b73112/A.java b73112.A.fieldA73112d [fieldA73112d] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    public void testBug73112b() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = super.getWorkingCopy("/JavaSearchBugs/src/b73112/B.java",
-                "package b73112;\n" + 
-                "public class B {\n" + 
-                "    int fieldB73112a, fieldB73112b = 10;\n" + 
-                "    int fieldB73112c = fieldB73112a + fieldB73112b, fieldB73112d = fieldB73112c + fieldB73112a, fieldB73112e;\n" + 
-                "    \n" + 
-                "    public void method(){}\n" + 
-                "}\n");
-            workingCopy.commitWorkingCopy(true, null);
-            // search field references to first multiple field
-            search(
-                "fieldB73112*",
-                FIELD,
-                ALL_OCCURRENCES,
-                getJavaSearchScopeBugs(),
-                this.resultCollector);
-            assertSearchResults(
-                "src/b73112/B.java b73112.B.fieldB73112a [fieldB73112a] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112b [fieldB73112b] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112c [fieldB73112c] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112c [fieldB73112a] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112c [fieldB73112b] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112d [fieldB73112d] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112d [fieldB73112c] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112d [fieldB73112a] EXACT_MATCH\n" + 
-                "src/b73112/B.java b73112.B.fieldB73112e [fieldB73112e] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
+    public IErrorHandlingPolicy getHandlingPolicy() {
 
-    /**
-     * Bug 73336: [1.5][search] Search Engine does not find type references of actual generic type parameters
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=73336"
-     */
-    public void testBug73336() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[6];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b73336/A.java",
-                "package b73336;\n" + 
-                "public class A {}\n",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b73336/AA.java",
-                "package b73336;\n" + 
-                "public class AA extends A {}\n",
-                owner,
-                true);
-            workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b73336/B.java",
-                "package b73336;\n" + 
-                "public class B extends X<A, A> {\n" + 
-                "    <T> void foo(T t) {}\n" + 
-                "}\n",
-                owner,
-                true);
-            workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b73336/C.java",
-                "package b73336;\n" + 
-                "public class C implements I<A> {\n" + 
-                "    public void foo() {\n" + 
-                "        B b = new B();\n" + 
-                "        b.<A>foo(new A());\n" + 
-                "    }\n" + 
-                "}\n",
-                owner,
-                true    );
-            workingCopies[4] = getWorkingCopy("/JavaSearchBugs/src/b73336/I.java",
-                "package b73336;\n" + 
-                "public interface I<T>  {\n" + 
-                "    public void foo();\n" + 
-                "}\n",
-                owner,
-                true    );
-            workingCopies[5] = getWorkingCopy("/JavaSearchBugs/src/b73336/X.java",
-                "package b73336;\n" + 
-                "public class X<T, U> {\n" + 
-                "    <V> void foo(V v) {}\n" + 
-                "    class Member<T> {\n" + 
-                "        void foo() {}\n" + 
-                "    }\n" + 
-                "}\n",
-                owner,
-                true    );
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopies[0].getType("A");
-            search(type,
-                REFERENCES,
-                getJavaSearchScopeBugs("b73336", false),
-                this.resultCollector);
-            assertSearchResults(
-                "src/b73336/AA.java b73336.AA [A] EXACT_MATCH\n" + 
-                "src/b73336/B.java b73336.B [A] EXACT_MATCH\n" + 
-                "src/b73336/B.java b73336.B [A] EXACT_MATCH\n" + 
-                "src/b73336/C.java b73336.C [A] EXACT_MATCH\n" + 
-                "src/b73336/C.java void b73336.C.foo() [A] EXACT_MATCH\n" + 
-                "src/b73336/C.java void b73336.C.foo() [A] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
+        // passes the initial set of files to the batch oracle (to avoid finding more than once the same units when case insensitive match)    
+        return new IErrorHandlingPolicy() {
+            public boolean proceedOnErrors() {
+                return Main.this.proceedOnError; // stop if there are some errors 
+            }
+            public boolean stopOnFirstError() {
+                return false;
+            }
+        };
     }
-    public void testBug73336b() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[4];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b73336b/A.java",
-                "package b73336b;\n" + 
-                "public class A {}\n",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b73336b/B.java",
-                "package b73336b;\n" + 
-                "public class B extends X<A, A> {\n" + 
-                "}\n",
-                owner,
-                true);
-            workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b73336b/C.java",
-                "package b73336b;\n" + 
-                "public class C extends X<A, A>.Member<A> {\n" + 
-                "    public C() {\n" + 
-                "        new X<A, A>().super();\n" + 
-                "    }\n" + 
-                "}\n",
-                owner,
-                true);
-            workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b73336b/X.java",
-                "package b73336b;\n" + 
-                "public class X<T, U> {\n" + 
-                "    <V> void foo(V v) {}\n" + 
-                "    class Member<T> {\n" + 
-                "        void foo() {}\n" + 
-                "    }\n" + 
-                "}\n",
-                owner,
-                true    );
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopies[0].getType("A");
-            search(type,
-                REFERENCES,
-                getJavaSearchScopeBugs("b73336b", false), 
-                this.resultCollector);
-            assertSearchResults(
-                "src/b73336b/B.java b73336b.B [A] EXACT_MATCH\n" + 
-                "src/b73336b/B.java b73336b.B [A] EXACT_MATCH\n" + 
-                "src/b73336b/C.java b73336b.C [A] EXACT_MATCH\n" + 
-                "src/b73336b/C.java b73336b.C [A] EXACT_MATCH\n" + 
-                "src/b73336b/C.java b73336b.C [A] EXACT_MATCH\n" + 
-                "src/b73336b/C.java b73336b.C() [A] EXACT_MATCH\n" + 
-                "src/b73336b/C.java b73336b.C() [A] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
-    // Verify that no NPE was raised on following case (which produces compiler error)
-    public void testBug73336c() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[4];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b73336c/A.java",
-                "package b73336c;\n" + 
-                "public class A {}\n",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b73336c/B.java",
-                "package b73336c;\n" + 
-                "public class B extends X<A, A> {\n" + 
-                "}\n",
-                owner,
-                true);
-            workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b73336c/C.java",
-                "package b73336c;\n" + 
-                "public class C implements X<A, A>.Interface<A>  {\n" + 
-                "    void bar() {}\n" + 
-                "}\n",
-                owner,
-                true);
-            workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b73336c/X.java",
-                "package b73336c;\n" + 
-                "public class X<T, U> {\n" + 
-                "    interface Interface<V> {\n" + 
-                "        void bar();\n" + 
-                "    }\n" + 
-                "}\n",
-                owner,
-                true    );
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopies[0].getType("A");
-            search(type,
-                REFERENCES,
-                getJavaSearchScopeBugs("b73336c", false), 
-                this.resultCollector);
-            assertSearchResults(
-                "src/b73336c/B.java b73336c.B [A] EXACT_MATCH\n" + 
-                "src/b73336c/B.java b73336c.B [A] EXACT_MATCH\n" + 
-                "src/b73336c/C.java b73336c.C [A] EXACT_MATCH\n" + 
-                "src/b73336c/C.java b73336c.C [A] EXACT_MATCH\n" + 
-                "src/b73336c/C.java b73336c.C [A] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
+    public FileSystem getLibraryAccess() {
 
-    /**
-     * Bug 73696: searching only works for IJavaSearchConstants.TYPE, but not CLASS or INTERFACE
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=73696"
-     */
-    public void testBug73696() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[2];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b73696/C.java",
-                "package b73696;\n" + 
-                "public class C implements  I {\n" + 
-                "}",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b73696/I.java",
-                "package b73696;\n" + 
-                "public interface I {}\n",
-                owner,
-                true);
-            IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] {workingCopies[0].getParent()});
-            
-            // Interface declaration
-            TypeDeclarationPattern pattern = new TypeDeclarationPattern(
-                null,
-                null,
-                null,
-                IIndexConstants.INTERFACE_SUFFIX,
-                SearchPattern.R_PATTERN_MATCH
-            );
-            new SearchEngine().search(
-                pattern,
-                new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
-                scope,
-                resultCollector,
-                null);
-            // Class declaration
-            pattern = new TypeDeclarationPattern(
-                null,
-                null,
-                null,
-                IIndexConstants.CLASS_SUFFIX,
-                SearchPattern.R_PATTERN_MATCH
-            );
-            new SearchEngine().search(
-                pattern,
-                new SearchParticipant[] {SearchEngine.getDefaultSearchParticipant()},
-                scope,
-                resultCollector,
-                null);
-            assertSearchResults(
-                "src/b73696/I.java b73696.I [I] EXACT_MATCH\n" + 
-                "src/b73696/C.java b73696.C [C] EXACT_MATCH",
-                this.resultCollector);
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
+        String defaultEncoding = (String) this.options.get(CompilerOptions.OPTION_Encoding);
+        if ("".equals(defaultEncoding)) //$NON-NLS-1$
+            defaultEncoding = null; //$NON-NLS-1$    
+        return new FileSystem(this.classpaths, this.filenames, defaultEncoding);
     }
+    /*
+     *  Low-level API performing the actual compilation
+     */
+    public IProblemFactory getProblemFactory() {
+        return new DefaultProblemFactory(Locale.getDefault());
+    }
+    // Dump classfiles onto disk for all compilation units that where successfull.
 
-    /**
-     * Bug 74776: [Search] Wrong search results for almost identical method
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=74776"
-     */
-    public void testBug74776() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[3];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b74776/A.java",
-                "package b74776;\n" + 
-                "public class A {\n" + 
-                "    /**\n" + 
-                "     * @deprecated Use {@link #foo(IRegion)} instead\n" + 
-                "     * @param r\n" + 
-                "     */\n" + 
-                "    void foo(Region r) {\n" + 
-                "        foo((IRegion)r);\n" + 
-                "    }\n" + 
-                "    void foo(IRegion r) {\n" + 
-                "    }\n" + 
-                "}\n",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b74776/IRegion.java",
-                "package b74776;\n" + 
-                "public interface IRegion {\n" + 
-                "}\n",
-                owner,
-                true);
-            workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b74776/Region.java",
-                "package b74776;\n" + 
-                "public class Region implements IRegion {\n" + 
-                "\n" + 
-                "}\n",
-                owner,
-                true);
-            // search method references
-            IType type = workingCopies[0].getType("A");
-            IMethod method = type.getMethod("foo", new String[] { "QRegion;" });
-            search(method, REFERENCES);
-            assertSearchResults("");
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
+    public void outputClassFiles(CompilationResult unitResult) {
 
-    /**
-     * Bug 77093: [search] No references found to method with member type argument
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=77093"
+        if (!((unitResult == null) || (unitResult.hasErrors() && !this.proceedOnError))) {
+            Enumeration classFiles = unitResult.compiledTypes.elements();
+            if (!this.generatePackagesStructure) {
+                while (classFiles.hasMoreElements()) {
+                    this.destinationPath = extractDestinationPathFromSourceFile(unitResult);
+                    // retrieve the key and the corresponding classfile
+                    ClassFile classFile = (ClassFile) classFiles.nextElement();
+                    char[] filename = classFile.fileName();
+                    int length = filename.length;
+                    char[] relativeName = new char[length + 6];
+                    System.arraycopy(filename, 0, relativeName, 0, length);
+                    System.arraycopy(SUFFIX_class, 0, relativeName, length, 6);
+                    CharOperation.replace(relativeName, '/', File.separatorChar);
+                    try {
+                        if (this.compilerOptions.verbose)
+                            System.out.println(Util.bind("compilation.write", //$NON-NLS-1$
+                                new String[] {
+                                    String.valueOf(this.exportedClassFilesCounter+1),
+                                    new String(relativeName) }));                        
+                        ClassFile.writeToDisk(
+                            this.generatePackagesStructure,
+                            this.destinationPath,
+                            new String(relativeName),
+                            classFile.getBytes());
+                    } catch (IOException e) {
+                        String fileName = this.destinationPath + new String(relativeName);
+                        e.printStackTrace();
+                        this.logger.printlnErr(Main.bind("output.noClassFileCreated", fileName));  //$NON-NLS-1$
+                    }
+                    this.exportedClassFilesCounter++;
+                }
+            } else if (this.destinationPath != null) {
+                while (classFiles.hasMoreElements()) {
+                    // retrieve the key and the corresponding classfile
+                    ClassFile classFile = (ClassFile) classFiles.nextElement();
+                    char[] filename = classFile.fileName();
+                    int length = filename.length;
+                    char[] relativeName = new char[length + 6];
+                    System.arraycopy(filename, 0, relativeName, 0, length);
+                    System.arraycopy(SUFFIX_class, 0, relativeName, length, 6);
+                    CharOperation.replace(relativeName, '/', File.separatorChar);
+                    try {
+                        if (this.compilerOptions.verbose)
+                            System.out.println(Util.bind("compilation.write", //$NON-NLS-1$
+                                new String[] {
+                                    String.valueOf(this.exportedClassFilesCounter+1),
+                                    new String(relativeName) }));                        
+                        ClassFile.writeToDisk(
+                            this.generatePackagesStructure,
+                            this.destinationPath,
+                            new String(relativeName),
+                            classFile.getBytes());
+                    } catch (IOException e) {
+                        String fileName = this.destinationPath + new String(relativeName);
+                        e.printStackTrace();
+                        this.logger.printlnErr(Main.bind("output.noClassFileCreated", fileName)); //$NON-NLS-1$
+                    }
+                    this.exportedClassFilesCounter++;
+                }
+            }
+        }
+    }
+    /*
+     *  Low-level API performing the actual compilation
      */
-    public void testBug77093constructor() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b77093/X.java",
-                "package b77093;\n" + 
-                "public class X {\n" + 
-                "    class Z {\n" + 
-                "    }\n" + 
-                "    Z[][] z_arrays;\n" + 
-                "    X() {\n" + 
-                "        this(new Z[10][]);\n" + 
-                "    }\n" + 
-                "    X(Z[][] arrays) {\n" + 
-                "        z_arrays = arrays;\n" + 
-                "    }\n" + 
-                "    private void foo(Z[] args) {\n" + 
-                "    }\n" + 
-                "    void bar() {\n" + 
-                "        for (int i=0; i<z_arrays.length; i++)\n" + 
-                "            foo(z_arrays[i]);\n" + 
-                "    }\n" + 
-                "}");
-            IType type = workingCopy.getType("X");
-            IMethod method = type.getMethod("X", new String[] {"[[QZ;"});
-            // Search for constructor declarations and references
-            search(method, ALL_OCCURRENCES);
-            assertSearchResults(
-                "src/b77093/X.java b77093.X() [this(new Z[10][])] EXACT_MATCH\n"+
-                "src/b77093/X.java b77093.X(Z[][]) [X] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    public void testBug77093field() throws CoreException {
-        ICompilationUnit unit = getCompilationUnit("/JavaSearchBugs/src/b77093/X.java");
-        IType type = unit.getType("X");
-        IField field = type.getField("z_arrays");
-        // Search for field declarations and references
-        search(field, ALL_OCCURRENCES);
-        assertSearchResults(
-            "src/b77093/X.java b77093.X.z_arrays [z_arrays] EXACT_MATCH\n" +
-            "src/b77093/X.java b77093.X(Z[][]) [z_arrays] EXACT_MATCH\n" + 
-            "src/b77093/X.java void b77093.X.bar() [z_arrays] EXACT_MATCH\n" + 
-            "src/b77093/X.java void b77093.X.bar() [z_arrays] EXACT_MATCH"
-        );
-    }
-    public void testBug77093method() throws CoreException {
-        IType type = getCompilationUnit("JavaSearchBugs/src/b77093/X.java").getType("X");
-        IMethod method = type.getMethod("foo", new String[] {"[QZ;"});
-        search(method, ALL_OCCURRENCES);
-        assertSearchResults(
-            "src/b77093/X.java void b77093.X.foo(Z[]) [foo] EXACT_MATCH\n" +
-            "src/b77093/X.java void b77093.X.bar() [foo(z_arrays[i])] EXACT_MATCH"
-        );
-    }
-    /**
-     * Bug 77388: [compiler] Reference to constructor includes space after closing parenthesis
-     */
-    public void testBug77388() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b77388/Test.java",
-                "package b77388;\n" + 
-                "class Test {\n" + 
-                "    Test(int a, int b) {    }\n" + 
-                "    void take(Test mc) { }\n" + 
-                "    void run() {\n" + 
-                "        take( new Test(1, 2) ); // space in \") )\" is in match\n" + 
-                "    }\n" + 
-                "}");
-            IType type = workingCopy.getType("Test");
-            IMethod method = type.getMethod("Test", new String[] {"I", "I"});
-            // Search for constructor references
-            search(method, REFERENCES);
-            assertSearchResults(
-                "src/b77388/Test.java void b77388.Test.run() [new Test(1, 2)] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    /**
-     * Bug 78082: [1.5][search] FieldReferenceMatch in static import should not include qualifier
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=78082"
-     */
-    public void testBug78082() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[2];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b78082/M.java",
-                "package b78082;\n" + 
-                "public class M {\n" + 
-                "    static int VAL=78082;\n" + 
-                "}\n",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b78082/XY.java",
-                "package b78082;\n" + 
-                "import static b78082.M.VAL;\n" + 
-                "public class XY {\n" + 
-                "    double val = VAL;\n" + 
-                "    double val2= b78082.M.VAL;\n" + 
-                "}\n",
-                owner,
-                true);
-            // search field references
-            IType type = workingCopies[0].getType("M");
-            IField field = type.getField("VAL");
-            search(field, ALL_OCCURRENCES);
-            assertSearchResults(
-                "src/b78082/M.java b78082.M.VAL [VAL] EXACT_MATCH\n" + 
-                "src/b78082/XY.java [VAL] EXACT_MATCH\n" + 
-                "src/b78082/XY.java b78082.XY.val [VAL] EXACT_MATCH\n" + 
-                "src/b78082/XY.java b78082.XY.val2 [VAL] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
+    public void performCompilation() throws InvalidInputException {
 
-    /**
-     * Bug 79267: [search] Refactoring of static generic member fails partially
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=79267"
-     */
-    public void testBug79267() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b79267/Test.java",
-                "package b79267;\n" + 
-                "public class Test {\n" + 
-                "    private static final X<String, String> BEFORE    = new X<String, String>(4);\n" + 
-                "\n" + 
-                "    static {\n" + 
-                "        BEFORE.put(\"key1\",\"value1\");\n" + 
-                "        BEFORE.put(\"key2\",\"value2\");\n" + 
-                "    }\n" + 
-                "    \n" + 
-                "    private static final X<Y, Object>    objectToPrimitiveMap    = new X<Y, Object>(8);\n" + 
-                "\n" + 
-                "    static {\n" + 
-                "        objectToPrimitiveMap.put(new Y<Object>(new Object()), new Object());\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "\n" + 
-                "class X<T, U> {\n" + 
-                "    X(int x) {}\n" + 
-                "    void put(T t, U u) {}\n" + 
-                "}\n" + 
-                "\n" + 
-                "class Y<T> {\n" + 
-                "    Y(T t) {}\n" + 
-                "}\n");
-            // search field references
-            IType type = workingCopy.getType("Test");
-            IField field = type.getField("BEFORE");
-            search(field, REFERENCES);
-            field = type.getField("objectToPrimitiveMap");
-            search(field, REFERENCES);
-            assertSearchResults(
-                "src/b79267/Test.java b79267.Test.static {} [BEFORE] EXACT_MATCH\n" + 
-                "src/b79267/Test.java b79267.Test.static {} [BEFORE] EXACT_MATCH\n" + 
-                "src/b79267/Test.java b79267.Test.static {} [objectToPrimitiveMap] EXACT_MATCH",
-                resultCollector);
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
+        this.startTime = System.currentTimeMillis();
 
-    /**
-     * Bug 79803: [1.5][search] Search for references to type A reports match for type variable A
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=79803"
-     */
-    public void testBug79803() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b79803/A.java",
-                "package b79803;\n" + 
-                "class A<A> {\n" + 
-                "    A a;\n" + 
-                "    b79803.A pa= new b79803.A();\n" + 
-                "}\n"    );
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopy.getType("A");
-            search(type,
-                REFERENCES,
-                SearchPattern.R_CASE_SENSITIVE|SearchPattern.R_ERASURE_MATCH,
-                getJavaSearchScopeBugs("b79803", false),
-                this.resultCollector);
-            assertSearchResults(
-                "src/b79803/A.java b79803.A.pa [b79803.A] EXACT_MATCH\n" + 
-                "src/b79803/A.java b79803.A.pa [b79803.A] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    public void testBug79803b() throws CoreException {
-        search("A", TYPE, REFERENCES, getJavaSearchScopeBugs("b79803", false), this.resultCollector);
-        assertSearchResults(
-            "src/b79803/A.java b79803.A.a [A] EXACT_MATCH\n" + 
-            "src/b79803/A.java b79803.A.pa [A] EXACT_MATCH\n" + 
-            "src/b79803/A.java b79803.A.pa [A] EXACT_MATCH",
-            this.resultCollector);
-    }
+        INameEnvironment environment = getLibraryAccess();
+        Compiler batchCompiler =
+            new Compiler(
+                environment,
+                getHandlingPolicy(),
+                this.options,
+                getBatchRequestor(),
+                getProblemFactory());
+        this.compilerOptions = batchCompiler.options;
 
-    /**
-     * Bug 79860: [1.5][search] Search doesn't find type reference in type parameter bound
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=79860"
-     */
-    public void testBug79860() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[2];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b79860/X.java",
-                "package b79860;\n" + 
-                "public class X<T extends A> { }\n" + 
-                "class A { }",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b79860/Y.java",
-                "package b79860;\n" + 
-                "public class Y<T extends B&I1&I2&I3> { }\n" + 
-                "class B { }\n" + 
-                "interface I1 {}\n" + 
-                "interface I2 {}\n" + 
-                "interface I3 {}\n",
-                owner,
-                true);
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopies[0].getType("A");
-            search(type,
-                REFERENCES,
-                getJavaSearchScopeBugs("b79860", false), 
-                this.resultCollector);
-            assertSearchResults(
-                "src/b79860/X.java b79860.X [A] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
-    public void testBug79860b() throws CoreException {
-        search("I?", TYPE, REFERENCES, getJavaSearchScopeBugs("b79860", false), resultCollector);
-        assertSearchResults(
-            "src/b79860/Y.java b79860.Y [I1] EXACT_MATCH\n" + 
-            "src/b79860/Y.java b79860.Y [I2] EXACT_MATCH\n" + 
-            "src/b79860/Y.java b79860.Y [I3] EXACT_MATCH"
-        );
-    }
+        // set the non-externally configurable options.
+        this.compilerOptions.verbose = this.verbose;
+        this.compilerOptions.produceReferenceInfo = this.produceRefInfo;
+        batchCompiler.compile(getCompilationUnits());
 
-    /**
-     * Bug 80223: [search] Declaration search doesn't consider visibility to determine overriding methods
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=80223"
-     */
-    public void testBug80223() throws CoreException {
-        ICompilationUnit[] workingCopies = new ICompilationUnit[2];
-        try {
-            WorkingCopyOwner owner = new WorkingCopyOwner() {};
-            workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b80223/a/A.java",
-                "package b80223.a;\n" + 
-                "public class A {\n" + 
-                "    void m() {}\n" + 
-                "}",
-                owner
-                );
-            workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b80223/b/B.java",
-                "package b80223.b;\n" + 
-                "public class B extends b80223.a.A {\n" + 
-                "    void m() {}\n" + 
-                "}",
-                owner);
-            // search for method declaration should find only A match
-            IType type = workingCopies[0].getType("A");
-            IMethod method = type.getMethod("m", new String[0]);
-            search(method,
-                DECLARATIONS,
-                getJavaSearchScopeBugs("b80223", true), 
-                this.resultCollector);
-            assertSearchResults(
-                "src/b80223/a/A.java void b80223.a.A.m() [m] EXACT_MATCH"
-            );
-        }
-        finally {
-            discardWorkingCopies(workingCopies);
-        }
-    }
-
-    /**
-     * Bug 80890: [search] Strange search engine behaviour
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=80890"
-     */
-    public void testBug80890() throws CoreException, JavaModelException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b80890/A.java",
-                "package b80890;\n" + 
-                "public class A {\n" + 
-                "    protected void foo(Exception e) {}\n" + 
-                "    protected void foo(String s) {}\n" + 
-                "}\n" + 
-                "class B1 extends A {\n" + 
-                "    public void bar1() {\n" + 
-                "        foo(null);\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "class B2 extends A {\n" + 
-                "    public void bar2() {\n" + 
-                "        foo(null);\n" + 
-                "    }\n" + 
-                "}\n"
-                );
-            // search for first and second method should both return 2 inaccurate matches
-            IType type = workingCopy.getType("A");
-            IMethod method = type.getMethods()[0];
-            search(method, REFERENCES);
-            method = type.getMethods()[1];
-            search(method, REFERENCES);
-            assertSearchResults(
-                "src/b80890/A.java void b80890.B1.bar1() [foo(null)] POTENTIAL_MATCH\n" + 
-                "src/b80890/A.java void b80890.B2.bar2() [foo(null)] POTENTIAL_MATCH\n" + 
-                "src/b80890/A.java void b80890.B1.bar1() [foo(null)] POTENTIAL_MATCH\n" + 
-                "src/b80890/A.java void b80890.B2.bar2() [foo(null)] POTENTIAL_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-
-    /**
-     * Bug 80918: [1.5][search] ClassCastException when searching for references to binary type
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=80918"
-     */
-    public void testBug80918() throws CoreException {
-        IType type = getClassFile("JavaSearchBugs", getExternalJCLPathString("1.5"), "java.lang", "Exception.class").getType();
-        search(type, REFERENCES, SearchPattern.R_CASE_SENSITIVE|SearchPattern.R_ERASURE_MATCH, getJavaSearchScopeBugs("b79803", false), this.resultCollector);
-        assertSearchResults(
-            "", // do not expect to find anything, just verify that no CCE happens
-            this.resultCollector);
-    }
-
-    /**
-     * Bug 81084: [1.5][search]Rename field fails on field based on parameterized type with member type parameter
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=81084"
-     */
-    public void testBug81084a() throws CoreException, JavaModelException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b81084a/Test.java",
-                "package b81084a;\n" + 
-                "class List<E> {}\n" + 
-                "public class Test {\n" + 
-                "    class Element{}\n" + 
-                "    static class Inner {\n" + 
-                "        private final List<Element> fList1;\n" + 
-                "        private final List<Test.Element> fList2;\n" + 
-                "        public Inner(List<Element> list) {\n" + 
-                "            fList1 = list;\n" + 
-                "            fList2 = list;\n" + 
-                "        }\n" + 
-                "    }\n" + 
-                "}\n"
-                );
-            IType type = workingCopy.getType("Test").getType("Inner");
-            IField field1 = type.getField("fList1");
-            search(field1, REFERENCES);
-            IField field2 = type.getField("fList2");
-            search(field2, REFERENCES);
-            assertSearchResults(
-                "src/b81084a/Test.java b81084a.Test$Inner(List<Element>) [fList1] EXACT_MATCH\n" + 
-                "src/b81084a/Test.java b81084a.Test$Inner(List<Element>) [fList2] EXACT_MATCH",
-                this.resultCollector);
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    public void testBug81084b() throws CoreException, JavaModelException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b81084b/Test.java",
-                "package b81084b;\n" + 
-                "class List<E> {}\n" + 
-                "public class Test {\n" + 
-                "    class Element{}\n" + 
-                "    static class Inner {\n" + 
-                "        private final List<? extends Element> fListb1;\n" + 
-                "        private final List<? extends Test.Element> fListb2;\n" + 
-                "        public Inner(List<Element> list) {\n" + 
-                "            fListb1 = list;\n" + 
-                "            fListb2 = list;\n" + 
-                "        }\n" + 
-                "    }\n" + 
-                "}\n"
-                );
-            IType type = workingCopy.getType("Test").getType("Inner");
-            IField field1 = type.getField("fListb1");
-            search(field1, REFERENCES);
-            IField field2 = type.getField("fListb2");
-            search(field2, REFERENCES);
-            assertSearchResults(
-                "src/b81084b/Test.java b81084b.Test$Inner(List<Element>) [fListb1] EXACT_MATCH\n" + 
-                "src/b81084b/Test.java b81084b.Test$Inner(List<Element>) [fListb2] EXACT_MATCH",
-                this.resultCollector);
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
-    }
-    public void testBug81084c() throws CoreException, JavaModelException {
-        search("fList1", FIELD, REFERENCES, getJavaSearchScopeBugs(), this.resultCollector);
-        search("fList2", FIELD, REFERENCES, getJavaSearchScopeBugs(), this.resultCollector);
-        assertSearchResults(
-            "src/b81084a/Test.java b81084a.Test$Inner(List<Element>) [fList1] EXACT_MATCH\n" + 
-            "src/b81084a/Test.java b81084a.Test$Inner(List<Element>) [fList2] EXACT_MATCH",
-            this.resultCollector);
-    }
-
-    /**
-     * Bug 81556: [search] correct results are missing in java search
-     * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=81556"
-     */
-    public void testBug81556() throws CoreException {
-        IType type = getCompilationUnit("JavaSearchBugs", "src", "b81556.a", "X81556.java").getType("X81556");
-        IMethod method = type.getMethod("foo", new String[0]);
+        printStats();
         
-        search(method, REFERENCES);
-        assertSearchResults(
-            "src/b81556/a/A81556.java void b81556.a.A81556.bar(XX81556) [foo()] EXACT_MATCH"
-        );
+        // cleanup
+        environment.cleanup();
     }
+    
+    public void printStats() {
+        if (this.timing) {
 
-    /**
-     * Test fix for bug 82088: [search][javadoc] Method parameter types references not found in @see/@link tags
-     * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=82088"
-     */
-    public void testBug82088method() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b82088/m/Test.java",
-                "package b82088.m;\n" +
-                "/**\n" + 
-                " * @see #setA(A)\n" + 
-                " */\n" + 
-                "public class Test {\n" + 
-                "    A a;\n" + 
-                "    public void setA(A a) {\n" + 
-                "        this.a = a;\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "class A {}\n"
-                );
-            IType type = workingCopy.getType("A");
-            search(type, REFERENCES);
-            assertSearchResults(
-                "src/b82088/m/Test.java b82088.m.Test [A] EXACT_MATCH\n" + 
-                "src/b82088/m/Test.java b82088.m.Test.a [A] EXACT_MATCH\n" + 
-                "src/b82088/m/Test.java void b82088.m.Test.setA(A) [A] EXACT_MATCH"
-            );
+            long time = System.currentTimeMillis() - this.startTime;
+            if (this.lineCount != 0) {
+                this.logger.printlnOut(
+                    Main.bind(
+                        "compile.instantTime",     //$NON-NLS-1$
+                        new String[] {
+                            String.valueOf(this.lineCount),
+                            String.valueOf(time),
+                            String.valueOf(((int)(this.lineCount * 10000.0 / time)) / 10.0)}));
+            } else {
+                this.logger.printlnOut(Main.bind("compile.totalTime", String.valueOf(time))); //$NON-NLS-1$
+            }
         }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
+        if (this.globalProblemsCount > 0) {
+            if (this.globalProblemsCount == 1) {
+                this.logger.printErr(Main.bind("compile.oneProblem")); //$NON-NLS-1$
+            } else {
+                this.logger.printErr(
+                    Main.bind("compile.severalProblems", String.valueOf(this.globalProblemsCount)));     //$NON-NLS-1$
+            }
+            this.logger.printErr(" ("); //$NON-NLS-1$
+            if (this.globalErrorsCount > 0) {
+                if (this.globalErrorsCount == 1) {
+                    this.logger.printErr(Main.bind("compile.oneError")); //$NON-NLS-1$
+                } else {
+                    this.logger.printErr(
+                        Main.bind("compile.severalErrors", String.valueOf(this.globalErrorsCount)));     //$NON-NLS-1$
+                }
+            }
+            if (this.globalWarningsCount > 0) {
+                if (this.globalErrorsCount > 0) {
+                    this.logger.printErr(", "); //$NON-NLS-1$
+                }
+                if (this.globalWarningsCount == 1) {
+                    this.logger.printErr(Main.bind("compile.oneWarning")); //$NON-NLS-1$
+                } else {
+                    this.logger.printErr(
+                        Main.bind("compile.severalWarnings", String.valueOf(this.globalWarningsCount)));     //$NON-NLS-1$
+                }
+            }
+            this.logger.printlnErr(")"); //$NON-NLS-1$
+        }
+        if (this.exportedClassFilesCounter != 0
+            && (this.showProgress || this.timing || this.verbose)) {
+            if (this.exportedClassFilesCounter == 1) {
+                this.logger.printlnOut(Main.bind("compile.oneClassFileGenerated")); //$NON-NLS-1$
+            } else {
+                this.logger.printlnOut(
+                    Main.bind(
+                        "compile.severalClassFilesGenerated", //$NON-NLS-1$
+                        String.valueOf(this.exportedClassFilesCounter)));
+            }
         }
     }
-    public void testBug82088constructor() throws CoreException {
-        ICompilationUnit workingCopy = null;
-        try {
-            workingCopy = getWorkingCopy("/JavaSearchBugs/src/b82088/c/Test.java",
-                "package b82088.c;\n" +
-                "/**\n" + 
-                " * @see #Test(A)\n" + 
-                " */\n" + 
-                "public class Test {\n" + 
-                "    A a;\n" + 
-                "    Test(A a) {\n" + 
-                "        this.a = a;\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "class A {}\n"
-                );
-            IType type = workingCopy.getType("A");
-            search(type, REFERENCES);
-            assertSearchResults(
-                "src/b82088/c/Test.java b82088.c.Test [A] EXACT_MATCH\n" + 
-                "src/b82088/c/Test.java b82088.c.Test.a [A] EXACT_MATCH\n" + 
-                "src/b82088/c/Test.java b82088.c.Test(A) [A] EXACT_MATCH"
-            );
-        }
-        finally {
-            if (workingCopy != null)
-                workingCopy.discardWorkingCopy();
-        }
+    public void printUsage() {
+        this.logger.printlnOut(Main.bind("misc.usage", System.getProperty("path.separator"))); //$NON-NLS-1$//$NON-NLS-2$
+        this.logger.flush();
+    }
+    public void printVersion() {
+        this.logger.printlnOut(Main.bind("misc.version"));  //$NON-NLS-1$
+        this.logger.flush();
     }
 }

@@ -1,9 +1,9 @@
-(startLine=223 endLine=229 srcPath=/root/Projects/elasticsearchFilter/1141/elasticsearch/src/test/java/org/elasticsearch/test/integration/indexlifecycle/IndexLifecycleActionTests.java)
-    private String getLocalNodeId(String name) {
-        assert node(name) != null : "no node for name: " + name;
-        Discovery discovery = ((InternalNode) node(name)).injector().getInstance(Discovery.class);
-        String nodeId = discovery.localNode().getId();
-        assertThat(nodeId, not(nullValue()));
-        return nodeId;
+(startLine=3410 endLine=3416 srcPath=/root/Projects/elasticsearchFilter/1189/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+    final int batchFor(long b) {
+        long n;
+        if (b == Long.MAX_VALUE || (n = sumCount()) <= 1L || n < b)
+            return 0;
+        int sp = ForkJoinPool.getCommonPoolParallelism() << 2; // slack of 4
+        return (b <= 0L || (n /= b) >= sp) ? sp : (int)n;
     }
 

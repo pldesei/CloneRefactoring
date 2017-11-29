@@ -1,17 +1,13 @@
-(startLine=257 endLine=271 srcPath=/root/Projects/elasticsearchFilter/609/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/plain/ParentChildIndexFieldData.java)
-    public IndexParentChildFieldData loadGlobal(IndexReader indexReader) {
-        if (indexReader.leaves().size() <= 1) {
-            // ordinals are already global
-            return this;
-        }
-        try {
-            return cache.load(indexReader, this);
-        } catch (Throwable e) {
-            if (e instanceof ElasticsearchException) {
-                throw (ElasticsearchException) e;
-            } else {
-                throw new ElasticsearchException(e.getMessage(), e);
-            }
-        }
+(startLine=258 endLine=268 srcPath=/root/Projects/elasticsearchFilter/291/elasticsearch/plugins/repository-s3/src/test/java/org/elasticsearch/repositories/s3/AbstractS3SnapshotRestoreTest.java)
+    public void assertRepositoryWithCustomCredentialsIsNotAccessibleByDefaultCredentials() {
+        Client client = client();
+        Settings bucketSettings = internalCluster().getInstance(Settings.class).getByPrefix("repositories.s3.private-bucket.");
+        logger.info("-->  creating s3 repository with bucket[{}] and path [{}]", bucketSettings.get("bucket"), basePath);
+        client.admin().cluster().preparePutRepository("test-repo")
+        .setType("s3").setSettings(Settings.settingsBuilder()
+                .put("base_path", basePath)
+                .put("bucket", bucketSettings.get("bucket"))
+                ).get();
+        fail("repository verification should have raise an exception!");
     }
 

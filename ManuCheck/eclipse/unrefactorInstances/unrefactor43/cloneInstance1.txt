@@ -1,57 +1,27 @@
-(startLine=6263 endLine=6317 srcPath=/root/Projects/eclipse.jdt.coreFilter/314/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
-public void _testVB_2() {
-    String str = 
-        "package p; \n" + 
-        "public class VB {\n" + 
-        "    void foo() {\n" + 
-        "        new java.io.File(\"error\") {\n" + 
-        "            protected void runTest() {\n" + 
-        "                Vector v11111 = new Vector();\n" + 
-        "                v }\n" + 
-        "        }.\n" + 
-        "    }\n" + 
-        "}\n";
-
-    String testName = "<complete on anonymous type declaration>";
-    String completeBehind =
-        "new java.io.File(\"error\") {\n" + 
-        "            protected void runTest() {\n" + 
-        "                Vector v11111 = new Vector();\n" + 
-        "                v }\n" + 
-        "        }.";
-    String expectedCompletionNodeToString = 
-        "<CompleteOnMemberAccess:new java.io.File(\"error\") {\n" + 
-        "  protected void runTest() {\n" + 
-        "  }\n" +
-        "}.>";
-    String completionIdentifier = "";
-    String expectedReplacedSource =
-        "new java.io.File(\"error\") {\n" + 
-        "            protected void runTest() {\n" + 
-        "                Vector v11111 = new Vector();\n" + 
-        "                v }\n" + 
-        "        }.";
-    int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
-    String expectedUnitDisplayString =
-        "package p;\n" + 
-        "public class VB {\n" + 
-        "  public VB() {\n" + 
-        "  }\n" + 
-        "  void foo() {\n" + 
-        "    <CompleteOnMemberAccess:new java.io.File(\"error\") {\n" + 
-        "  protected void runTest() {\n" + 
-        "  }\n" +
-        "}.>;\n" + 
-        "  }\n" + 
-        "}\n";
-
-    checkMethodParse(
-        str.toCharArray(), 
-        cursorLocation, 
-        expectedCompletionNodeToString,
-        expectedUnitDisplayString,
-        completionIdentifier,
-        expectedReplacedSource,
-        testName); 
+(startLine=6222 endLine=6246 srcPath=/root/Projects/eclipse.jdt.coreFilter/18/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/BatchCompilerTest.java)
+public void test154_warn_options() {
+    // same source as 153, skip default checks
+    this.runConformTest(
+        new String[] {
+            "X.java",
+            "public class X {\n" +
+            "    public static void foo() {\n" +
+            "     String s = null;\n" +
+            "     s.toString();\n" +
+            "     String u;\n" +
+            "   }\n" +
+            "}",
+        },
+        "\"" + OUTPUT_DIR +  File.separator + "X.java\""
+        + " -warn:null -proc:none -d \"" + OUTPUT_DIR + "\"",
+        "",
+        "----------\n" +
+        "1. WARNING in ---OUTPUT_DIR_PLACEHOLDER---/X.java (at line 4)\n" +
+        "    s.toString();\n" +
+        "    ^\n" +
+        "Null pointer access: The variable s can only be null at this location\n" +
+        "----------\n" +
+        "1 problem (1 warning)",
+        true);
 }
 

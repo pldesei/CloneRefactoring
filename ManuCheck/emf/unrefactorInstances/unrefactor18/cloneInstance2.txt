@@ -1,13 +1,18 @@
-(startLine=72 endLine=82 srcPath=/root/Projects/org.eclipse.emfFilter/338/org.eclipse.emf/plugins/org.eclipse.emf.edit/src/org/eclipse/emf/edit/command/CutToClipboardCommand.java)
-  public static Command create(EditingDomain domain, Collection<?> collection) 
+(startLine=124 endLine=139 srcPath=/root/Projects/org.eclipse.emfFilter/682/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/genmodel/impl/GenModelFactoryImpl.java)
+  public String convertToString(EDataType eDataType, Object instanceValue)
   {
-    if (domain == null)
+    switch (eDataType.getClassifierID())
     {
-      return new CutToClipboardCommand(domain, RemoveCommand.create(domain, collection));
-    }
-    else
-    {
-      return domain.createCommand(CutToClipboardCommand.class, new CommandParameter(null, null, collection));
+      case GenModelPackage.GEN_PROVIDER_KIND:
+        return convertGenProviderKindToString(eDataType, instanceValue);
+      case GenModelPackage.GEN_PROPERTY_KIND:
+        return convertGenPropertyKindToString(eDataType, instanceValue);
+      case GenModelPackage.GEN_RESOURCE_KIND:
+        return convertGenResourceKindToString(eDataType, instanceValue);
+      case GenModelPackage.GEN_DELEGATION_KIND:
+        return convertGenDelegationKindToString(eDataType, instanceValue);
+      default:
+        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
     }
   }
 

@@ -1,13 +1,58 @@
-(startLine=55 endLine=65 srcPath=/root/Projects/org.eclipse.emfFilter/917/org.eclipse.emf/plugins/org.eclipse.emf.edit/src/org/eclipse/emf/edit/command/CutToClipboardCommand.java)
-  public static Command create(EditingDomain domain, Object owner, Object feature, Object value) 
-  {
-    if (domain == null)
-    {
-      return new CutToClipboardCommand(domain, RemoveCommand.create(domain, owner, feature, value));
-    }
-    else
-    {
-      return domain.createCommand(CutToClipboardCommand.class, new CommandParameter(owner, feature, Collections.singleton(value)));
-    }
-  }
+(startLine=6049 endLine=6104 srcPath=/root/Projects/org.eclipse.emfFilter/991/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/internal/RegEx.java)
+      final int getMinLength() {
+          switch (this.type) {
+            case CONCAT:
+              int sum = 0;
+              for (int i = 0;  i < this.size();  i ++)
+                  sum += this.getChild(i).getMinLength();
+              return sum;
+
+            case CONDITION:
+            case UNION:
+              if (this.size() == 0)
+                  return 0;
+              int ret = this.getChild(0).getMinLength();
+              for (int i = 1;  i < this.size();  i ++) {
+                  int min = this.getChild(i).getMinLength();
+                  if (min < ret)  ret = min;
+              }
+              return ret;
+
+            case CLOSURE:
+            case NONGREEDYCLOSURE:
+              if (this.getMin() >= 0)
+                  return this.getMin() * this.getChild(0).getMinLength();
+              return 0;
+
+            case EMPTY:
+            case ANCHOR:
+              return 0;
+
+            case DOT:
+            case CHAR:
+            case RANGE:
+            case NRANGE:
+              return 1;
+
+            case INDEPENDENT:
+            case PAREN:
+            case MODIFIERGROUP:
+              return this.getChild(0).getMinLength();
+
+            case BACKREFERENCE:
+              return 0;                           // *******
+
+            case STRING:
+              return this.getString().length();
+
+            case LOOKAHEAD:
+            case NEGATIVELOOKAHEAD:
+            case LOOKBEHIND:
+            case NEGATIVELOOKBEHIND:
+              return 0;                           // ***** Really?
+
+            default:
+              throw new RuntimeException("Token#getMinLength(): Invalid Type: "+this.type);
+          }
+      }
 

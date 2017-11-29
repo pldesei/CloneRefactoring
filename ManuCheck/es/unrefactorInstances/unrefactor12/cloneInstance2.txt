@@ -1,77 +1,17 @@
-(startLine=54 endLine=128 srcPath=/root/Projects/elasticsearchFilter/1163/elasticsearch/src/main/java/org/elasticsearch/index/query/RegexpQueryParser.java)
-    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
-        XContentParser parser = parseContext.parser();
-
-        XContentParser.Token token = parser.nextToken();
-        if (token != XContentParser.Token.FIELD_NAME) {
-            throw new QueryParsingException(parseContext.index(), "[regexp] query malformed, no field");
-        }
-        String fieldName = parser.currentName();
-        String rewriteMethod = null;
-
-        Object value = null;
-        float boost = 1.0f;
-        int flagsValue = -1;
-        token = parser.nextToken();
-        if (token == XContentParser.Token.START_OBJECT) {
-            String currentFieldName = null;
-            while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
-                if (token == XContentParser.Token.FIELD_NAME) {
-                    currentFieldName = parser.currentName();
-                } else if (token.isValue()) {
-                    if ("value".equals(currentFieldName)) {
-                        value = parser.objectBytes();
-                    } else if ("boost".equals(currentFieldName)) {
-                        boost = parser.floatValue();
-                    } else if ("rewrite".equals(currentFieldName)) {
-                        rewriteMethod = parser.textOrNull();
-                    } else if ("flags".equals(currentFieldName)) {
-                        String flags = parser.textOrNull();
-                        flagsValue = RegexpFlag.resolveValue(flags);
-                    } else if ("flags_value".equals(currentFieldName)) {
-                        flagsValue = parser.intValue();
-                        if (flagsValue < 0) {
-                            flagsValue = RegExp.ALL;
-                        }
-                    }
-                } else {
-                    throw new QueryParsingException(parseContext.index(), "[regexp] query does not support [" + currentFieldName + "]");
-                }
+(startLine=213 endLine=227 srcPath=/root/Projects/elasticsearchFilter/1712/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/node/DiscoveryNodes.java)
+    public String prettyPrint() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("nodes: \n");
+        for (DiscoveryNode node : this) {
+            sb.append("   ").append(node);
+            if (node == localNode()) {
+                sb.append(", local");
             }
-            parser.nextToken();
-        } else {
-            value = parser.objectBytes();
-            parser.nextToken();
-        }
-
-        if (value == null) {
-            throw new QueryParsingException(parseContext.index(), "No value specified for regexp query");
-        }
-
-        MultiTermQuery.RewriteMethod method = QueryParsers.parseRewriteMethod(rewriteMethod, null);
-
-        Query query = null;
-        MapperService.SmartNameFieldMappers smartNameFieldMappers = parseContext.smartFieldMappers(fieldName);
-        if (smartNameFieldMappers != null && smartNameFieldMappers.hasMapper()) {
-            if (smartNameFieldMappers.explicitTypeInNameWithDocMapper()) {
-                String[] previousTypes = QueryParseContext.setTypesWithPrevious(new String[]{smartNameFieldMappers.docMapper().type()});
-                try {
-                    query = smartNameFieldMappers.mapper().regexpQuery(value, flagsValue, method, parseContext);
-                } finally {
-                    QueryParseContext.setTypes(previousTypes);
-                }
-            } else {
-                query = smartNameFieldMappers.mapper().regexpQuery(value, flagsValue, method, parseContext);
+            if (node == masterNode()) {
+                sb.append(", master");
             }
+            sb.append("\n");
         }
-        if (query == null) {
-            RegexpQuery regexpQuery = new RegexpQuery(new Term(fieldName, BytesRefs.toBytesRef(value)), flagsValue);
-            if (method != null) {
-                regexpQuery.setRewriteMethod(method);
-            }
-            query = regexpQuery;
-        }
-        query.setBoost(boost);
-        return wrapSmartNameQuery(query, smartNameFieldMappers, parseContext);
+        return sb.toString();
     }
 

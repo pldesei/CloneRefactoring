@@ -1,54 +1,16 @@
-(startLine=6313 endLine=6364 srcPath=/root/Projects/eclipse.jdt.coreFilter/669/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/MethodVerifyTest.java)
-public void test102() {
-    Map options = this.getCompilerOptions();
-    options.put(CompilerOptions.OPTION_ReportSyntheticAccessEmulation, CompilerOptions.IGNORE);
-    this.runNegativeTest(
-        new String[] {
-            "X.java",
-            "public class X {\n" + 
-            "    private interface ReturnBase {\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    private interface ReturnDerived extends ReturnBase {\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    private interface ReturnLeaf extends ReturnDerived {\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    private interface Interface {\n" + 
-            "        ReturnBase bar();\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    private static class Implementation {\n" + 
-            "        public final ReturnDerived bar() {\n" + 
-            "            return null;\n" + 
-            "        }\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    private static class Child extends Implementation implements Interface {\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    private static class Grandchild extends Child implements Interface {\n" +
-            "        @Override\n" + 
-            "        public ReturnLeaf bar() {\n" + 
-            "            return null;\n" + 
-            "        }\n" + 
-            "    }\n" + 
-            "\n" + 
-            "    public static void main(String[] args) {\n" + 
-            "        new Grandchild();\n" + 
-            "    }\n" + 
-            "}"
-        },
-        "----------\n" + 
-        "1. ERROR in X.java (at line 26)\n" + 
-        "    public ReturnLeaf bar() {\n" + 
-        "                      ^^^^^\n" + 
-        "Cannot override the final method from X.Implementation\n" + 
-        "----------\n",
-        null,
-        true,
-        options
+(startLine=312 endLine=325 srcPath=/root/Projects/eclipse.jdt.coreFilter/1716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ExclusionPatternsTests.java)
+public void testIsOnClasspath1() throws CoreException {
+    this.setClasspath(new String[] {"/P/src", ""});
+    this.createFolder("/P/src/p");
+    IFile file = this.createFile(
+        "/P/src/p/A.java",
+        "package p;\n" +
+        "public class A {\n" +
+        "}"
     );
+    assertTrue("Resource should be on classpath", project.isOnClasspath(file));
+    
+    ICompilationUnit cu = getCompilationUnit("/P/src/p/A.java");
+    assertTrue("CU should be on classpath", project.isOnClasspath(cu));
 }
 

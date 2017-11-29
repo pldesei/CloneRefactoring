@@ -1,12 +1,8 @@
-(startLine=47 endLine=56 srcPath=/root/Projects/elasticsearchFilter/166/elasticsearch/qa/evil-tests/src/test/java/org/elasticsearch/plugins/PluginSecurityTests.java)
-    public void testParseTwoPermissions() throws Exception {
-        assumeTrue("test cannot run with security manager enabled", System.getSecurityManager() == null);
-        Path scratch = createTempDir();
-        Path testFile = this.getDataPath("security/complex-plugin-security.policy");
-        Permissions expected = new Permissions();
-        expected.add(new RuntimePermission("getClassLoader"));
-        expected.add(new RuntimePermission("closeClassLoader"));
-        PermissionCollection actual = PluginSecurity.parsePermissions(Terminal.DEFAULT, testFile, scratch);
-        assertEquals(expected, actual);
-    }
+(startLine=4831 endLine=4836 srcPath=/root/Projects/elasticsearchFilter/893/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+        ForEachMappingTask
+            (BulkTask<K,V,?> p, int b, int i, int f, Node<K,V>[] t,
+             BiAction<? super K,? super V> action) {
+            super(p, b, i, f, t);
+            this.action = action;
+        }
 

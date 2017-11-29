@@ -1,66 +1,27 @@
-(startLine=84 endLine=147 srcPath=/root/Projects/elasticsearchFilter/831/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryThenFetchAction.java)
-        protected void moveToSecondPhase() {
-            sortedShardList = searchPhaseController.sortDocs(firstResults);
-            searchPhaseController.fillDocIdsToLoad(docIdsToLoad, sortedShardList);
+(startLine=119 endLine=143 srcPath=/root/Projects/elasticsearchFilter/854/elasticsearch/src/test/java/org/elasticsearch/search/aggregations/bucket/ShardSizeTermsTests.java)
+    public void withShardSize_string_singleShard() throws Exception {
 
-            if (docIdsToLoad.asList().isEmpty()) {
-                finishHim();
-                return;
-            }
+        client().admin().indices().prepareCreate("idx")
+                .addMapping("type", "key", "type=string,index=not_analyzed")
+                .execute().actionGet();
 
-            final AtomicInteger counter = new AtomicInteger(docIdsToLoad.asList().size());
+        indexData();
 
-            int localOperations = 0;
-            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
-                QuerySearchResult queryResult = firstResults.get(entry.index);
-                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
-                if (node.id().equals(nodes.localNodeId())) {
-                    localOperations++;
-                } else {
-                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
-                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
-                }
-            }
+        SearchResponse response = client().prepareSearch("idx").setTypes("type").setRouting("1")
+                .setQuery(matchAllQuery())
+                .addAggregation(terms("keys").field("key").size(3).shardSize(5).order(Terms.Order.count(false)))
+                .execute().actionGet();
 
-            if (localOperations > 0) {
-                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
-                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
-                                QuerySearchResult queryResult = firstResults.get(entry.index);
-                                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
-                                if (node.id().equals(nodes.localNodeId())) {
-                                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
-                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
-                                }
-                            }
-                        }
-                    });
-                } else {
-                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
-                    for (final AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
-                        final QuerySearchResult queryResult = firstResults.get(entry.index);
-                        final DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
-                        if (node.id().equals(nodes.localNodeId())) {
-                            final FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
-                            try {
-                                if (localAsync) {
-                                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
-                                        }
-                                    });
-                                } else {
-                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
-                                }
-                            } catch (Throwable t) {
-                                onFetchFailure(t, fetchSearchRequest, entry.index, queryResult.shardTarget(), counter);
-                            }
-                        }
-                    }
-                }
-            }
+        Terms terms = response.getAggregations().get("keys");
+        Collection<Terms.Bucket> buckets = terms.getBuckets();
+        assertThat(buckets.size(), equalTo(3)); // we still only return 3 entries (based on the 'size' param)
+        Map<String, Long> expected = ImmutableMap.<String, Long>builder()
+                .put("1", 5l)
+                .put("2", 4l)
+                .put("3", 3l) // <-- count is now fixed
+                .build();
+        for (Terms.Bucket bucket: buckets) {
+            assertThat(bucket.getDocCount(), equalTo(expected.get(bucket.getKey())));
         }
+    }
 

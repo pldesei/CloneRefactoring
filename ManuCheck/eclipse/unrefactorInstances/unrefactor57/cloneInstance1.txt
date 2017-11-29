@@ -1,22 +1,13 @@
-(startLine=36 endLine=55 srcPath=/root/Projects/eclipse.jdt.coreFilter/163/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/FieldLocator.java)
-public int match(ASTNode node, MatchingNodeSet nodeSet) {
-    int declarationsLevel = IMPOSSIBLE_MATCH;
-    if (this.pattern.findReferences) {
-        if (node instanceof ImportReference) {
-            // With static import, we can have static field reference in import reference
-            ImportReference importRef = (ImportReference) node;
-            int length = importRef.tokens.length-1;
-            if (importRef.isStatic() && ((importRef.bits & ASTNode.OnDemand) == 0) && matchesName(this.pattern.name, importRef.tokens[length])) {
-                char[][] compoundName = new char[length][];
-                System.arraycopy(importRef.tokens, 0, compoundName, 0, length);
-                FieldPattern fieldPattern = (FieldPattern) this.pattern;
-                char[] declaringType = CharOperation.concat(fieldPattern.declaringQualification, fieldPattern.declaringSimpleName, '.');
-                if (matchesName(declaringType, CharOperation.concatWith(compoundName, '.'))) {
-                    declarationsLevel = this.pattern.mustResolve ? POSSIBLE_MATCH : ACCURATE_MATCH;
-                }
-            }
-        }
+(startLine=1615 endLine=1625 srcPath=/root/Projects/eclipse.jdt.coreFilter/1209/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+    public void testBug84100b() throws CoreException {
+        resultCollector.showRule = true;
+        assertNotNull("Problem in tests processing", workingCopies);
+        assertEquals("Problem in tests processing", 2, workingCopies.length);
+        IMethod method = selectMethod(workingCopies[0], "foo", 2);
+        search(method, REFERENCES);
+        discard = false; // use working copy for next test
+        assertSearchResults(
+            "src/b84100/Z.java void b84100.Z.foo() [foo(\"\")] EXACT_MATCH"
+        );
     }
-    return nodeSet.addMatch(node, declarationsLevel);
-}
 

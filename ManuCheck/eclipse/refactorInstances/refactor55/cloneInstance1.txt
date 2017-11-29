@@ -1,25 +1,48 @@
-(startLine=84 endLine=106 srcPath=/root/Projects/eclipse.jdt.coreFilter/953/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTPositionsTest.java)
-    public void test002() throws JavaModelException {
-        this.workingCopy = getWorkingCopy("/Converter15/src/X.java", true/*resolve*/);
-        final String contents =
-            "import java.util.Map;\n" +
-            "public class X {\n" +
-            "    Map<String, Number> map= null;\n" +
-            "}\n";
-        ASTNode node = buildAST(
-                contents,
-                this.workingCopy,
-                false);
-        assertEquals("Not a compilation unit", ASTNode.COMPILATION_UNIT, node.getNodeType());
-        CompilationUnit compilationUnit = (CompilationUnit) node;
-        for (int i = 0, max = contents.length(); i < max; i++) {
-            final int lineNumber = compilationUnit.lineNumber(i);
-            final int columnNumber = compilationUnit.columnNumber(i);
-            final int position = compilationUnit.getPosition(lineNumber, columnNumber);
-            if (position == 0) {
-                assertEquals("Only true for first character", 0, i);
+(startLine=1405 endLine=1450 srcPath=/root/Projects/eclipse.jdt.coreFilter/1046/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor2.java)
+    public boolean visit(DoStatement node) {
+        this.scribe.printNextToken(TerminalTokens.TokenNamedo);
+        final int line = this.scribe.line;
+        
+        final Statement action = node.getBody();
+        if (action != null) {
+            switch(action.getNodeType()) {
+                case ASTNode.BLOCK :
+                    formatLeftCurlyBrace(line, this.preferences.brace_position_for_block);
+                    action.accept(this);
+                    break;
+                case ASTNode.EMPTY_STATEMENT :
+                    this.scribe.indent();
+                    action.accept(this);
+                    this.scribe.unIndent();
+                    break;
+                default:
+                    this.scribe.printNewLine();
+                    this.scribe.indent();
+                    action.accept(this);
+                    this.scribe.printNewLine();
+                    this.scribe.unIndent();
             }
-            assertEquals("Wrong char", contents.charAt(i), contents.charAt(position));
+        } else {
+            this.scribe.indent();
+            action.accept(this);
+            this.scribe.unIndent();
         }
+        
+        if (this.preferences.insert_new_line_before_while_in_do_statement) {
+            this.scribe.printNewLine();
+        }
+        this.scribe.printNextToken(TerminalTokens.TokenNamewhile, this.preferences.insert_space_after_closing_brace_in_block);
+        this.scribe.printNextToken(TerminalTokens.TokenNameLPAREN, this.preferences.insert_space_before_opening_paren_in_while);
+        
+        if (this.preferences.insert_space_after_opening_paren_in_while) {
+            this.scribe.space();
+        }
+        
+        node.getExpression().accept(this);
+        
+        this.scribe.printNextToken(TerminalTokens.TokenNameRPAREN, this.preferences.insert_space_before_closing_paren_in_while);
+        this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
+        this.scribe.printTrailingComment();
+        return false;
     }
 

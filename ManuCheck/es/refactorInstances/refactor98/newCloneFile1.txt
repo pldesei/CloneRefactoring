@@ -19,91 +19,63 @@
 
 package org.elasticsearch.index.analysis;
 
+import com.carrotsearch.randomizedtesting.annotations.ThreadLeakScope;
+import com.carrotsearch.randomizedtesting.annotations.ThreadLeakScope.Scope;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.core.WhitespaceTokenizer;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.env.Environment;
 import org.elasticsearch.test.ESTokenStreamTestCase;
-import org.junit.Assert;
 
 import java.io.IOException;
 import java.io.StringReader;
 
 import static org.hamcrest.Matchers.instanceOf;
 
-public class KeepFilterFactoryTests extends ESTokenStreamTestCase {
-    private static final String RESOURCE = "/org/elasticsearch/index/analysis/keep_analysis.json";
+@ThreadLeakScope(Scope.NONE)
+public class ShingleTokenFilterFactoryTests extends ESTokenStreamTestCase {
+    private static final String RESOURCE = "/org/elasticsearch/index/analysis/shingle_analysis.json";
 
-    public void testLoadWithoutSettings() throws IOException {
+    public void testDefault() throws IOException {
         AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
-        TokenFilterFactory tokenFilter = analysisService.tokenFilter("keep");
-        Assert.assertNull(tokenFilter);
-    }
-
-    public void testLoadOverConfiguredSettings() {
-        Settings settings = Settings.builder()
-                .put(Environment.PATH_HOME_SETTING.getKey(), createTempDir().toString())
-                .put("index.analysis.filter.broken_keep_filter.type", "keep")
-                .put("index.analysis.filter.broken_keep_filter.keep_words_path", "does/not/exists.txt")
-                .put("index.analysis.filter.broken_keep_filter.keep_words", "[\"Hello\", \"worlD\"]")
-                .build();
-        try {
-            AnalysisTestsHelper.createAnalysisServiceFromSettings(settings);
-            Assert.fail("path and array are configured");
-        } catch (IllegalArgumentException e) {
-        } catch (IOException e) {
-            fail("expected IAE");
-        }
-    }
-
-    public void testKeepWordsPathSettings() {
-        Settings settings = Settings.builder()
-                .put(Environment.PATH_HOME_SETTING.getKey(), createTempDir().toString())
-                .put("index.analysis.filter.non_broken_keep_filter.type", "keep")
-                .put("index.analysis.filter.non_broken_keep_filter.keep_words_path", "does/not/exists.txt")
-                .build();
-        try {
-            // test our none existing setup is picked up
-            AnalysisTestsHelper.createAnalysisServiceFromSettings(settings);
-            fail("expected an exception due to non existent keep_words_path");
-        } catch (IllegalArgumentException e) {
-        } catch (IOException e) {
-            fail("expected IAE");
-        }
-
-        settings = Settings.builder().put(settings)
-                .put("index.analysis.filter.non_broken_keep_filter.keep_words", new String[]{"test"})
-                .build();
-        try {
-            // test our none existing setup is picked up
-            AnalysisTestsHelper.createAnalysisServiceFromSettings(settings);
-            fail("expected an exception indicating that you can't use [keep_words_path] with [keep_words] ");
-        } catch (IllegalArgumentException e) {
-        } catch (IOException e) {
-            fail("expected IAE");
-        }
-
-    }
-
-    public void testCaseInsensitiveMapping() throws IOException {
-        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
-        TokenFilterFactory tokenFilter = analysisService.tokenFilter("my_keep_filter");
-        assertThat(tokenFilter, instanceOf(KeepWordFilterFactory.class));
-        String source = "hello small world";
-        String[] expected = new String[]{"hello", "world"};
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("shingle");
+        String source = "the quick brown fox";
+        String[] expected = new String[]{"the", "the quick", "quick", "quick brown", "brown", "brown fox", "fox"};
         Tokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setReader(new StringReader(source));
-        assertTokenStreamContents(tokenFilter.create(tokenizer), expected, new int[]{1, 2});
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected);
     }
 
-    public void testCaseSensitiveMapping() throws IOException {
+    public void testInverseMapping() throws IOException {
         AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
-        TokenFilterFactory tokenFilter = analysisService.tokenFilter("my_case_sensitive_keep_filter");
-        assertThat(tokenFilter, instanceOf(KeepWordFilterFactory.class));
-        String source = "Hello small world";
-        String[] expected = new String[]{"Hello"};
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("shingle_inverse");
+        assertThat(tokenFilter, instanceOf(ShingleTokenFilterFactory.class));
+        String source = "the quick brown fox";
+        String[] expected = new String[]{"the_quick_brown", "quick_brown_fox"};
         Tokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setReader(new StringReader(source));
-        assertTokenStreamContents(tokenFilter.create(tokenizer), expected, new int[]{1});
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected);
+    }
+
+    public void testInverseMappingNoShingles() throws IOException {
+        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("shingle_inverse");
+        assertThat(tokenFilter, instanceOf(ShingleTokenFilterFactory.class));
+        String source = "the quick";
+        String[] expected = new String[]{"the", "quick"};
+        Tokenizer tokenizer = new WhitespaceTokenizer();
+        tokenizer.setReader(new StringReader(source));
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected);
+    }
+
+    public void testFillerToken() throws IOException {
+        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("shingle_filler");
+        String source = "simon the sorcerer";
+        String[] expected = new String[]{"simon FILLER", "simon FILLER sorcerer", "FILLER sorcerer"};
+        Tokenizer tokenizer = new WhitespaceTokenizer();
+        tokenizer.setReader(new StringReader(source));
+        TokenStream stream = new StopFilter(tokenizer, StopFilter.makeStopSet("the"));
+        assertTokenStreamContents(tokenFilter.create(stream), expected);
     }
 }

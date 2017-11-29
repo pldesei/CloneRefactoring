@@ -1,13 +1,58 @@
-(startLine=258 endLine=268 srcPath=/root/Projects/elasticsearchFilter/291/elasticsearch/plugins/repository-s3/src/test/java/org/elasticsearch/repositories/s3/AbstractS3SnapshotRestoreTest.java)
-    public void assertRepositoryWithCustomCredentialsIsNotAccessibleByDefaultCredentials() {
-        Client client = client();
-        Settings bucketSettings = internalCluster().getInstance(Settings.class).getByPrefix("repositories.s3.private-bucket.");
-        logger.info("-->  creating s3 repository with bucket[{}] and path [{}]", bucketSettings.get("bucket"), basePath);
-        client.admin().cluster().preparePutRepository("test-repo")
-        .setType("s3").setSettings(Settings.settingsBuilder()
-                .put("base_path", basePath)
-                .put("bucket", bucketSettings.get("bucket"))
-                ).get();
-        fail("repository verification should have raise an exception!");
-    }
+(startLine=214 endLine=269 srcPath=/root/Projects/elasticsearchFilter/1387/elasticsearch/src/main/java/org/elasticsearch/action/support/broadcast/TransportBroadcastOperationAction.java)
+        void performOperation(final ShardIterator shardIt, final ShardRouting shard, boolean localAsync) {
+            if (shard == null) {
+                // no more active shards... (we should not really get here, just safety)
+                onOperation(null, shardIt, null);
+            } else {
+                final ShardRequest shardRequest = newShardRequest(shard, request);
+                if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                    if (localAsync) {
+                        threadPool.executor(executor).execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    onOperation(shard, shardOperation(shardRequest));
+                                } catch (Exception e) {
+                                    onOperation(shard, shardIt, e);
+                                }
+                            }
+                        });
+                    } else {
+                        try {
+                            onOperation(shard, shardOperation(shardRequest));
+                        } catch (Exception e) {
+                            onOperation(shard, shardIt, e);
+                        }
+                    }
+                } else {
+                    DiscoveryNode node = nodes.get(shard.currentNodeId());
+                    if (node == null) {
+                        // no node connected, act as failure
+                        onOperation(shard, shardIt, null);
+                    } else {
+                        transportService.sendRequest(node, transportShardAction, shardRequest, new BaseTransportResponseHandler<ShardResponse>() {
+                            @Override
+                            public ShardResponse newInstance() {
+                                return newShardResponse();
+                            }
+
+                            @Override
+                            public String executor() {
+                                return ThreadPool.Names.SAME;
+                            }
+
+                            @Override
+                            public void handleResponse(ShardResponse response) {
+                                onOperation(shard, response);
+                            }
+
+                            @Override
+                            public void handleException(TransportException e) {
+                                onOperation(shard, shardIt, e);
+                            }
+                        });
+                    }
+                }
+            }
+        }
 

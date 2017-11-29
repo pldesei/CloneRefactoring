@@ -1,11 +1,21 @@
-(startLine=139 endLine=147 srcPath=/root/Projects/elasticsearchFilter/321/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/significant/GlobalOrdinalsSignificantTermsAggregator.java)
-    public SignificantStringTerms buildEmptyAggregation() {
-        // We need to account for the significance of a miss in our global stats - provide corpus size as context
-        ContextIndexSearcher searcher = context.searchContext().searcher();
-        IndexReader topReader = searcher.getIndexReader();
-        int supersetSize = topReader.numDocs();
-        return new SignificantStringTerms(0, supersetSize, name, bucketCountThresholds.getRequiredSize(),
-                bucketCountThresholds.getMinDocCount(), termsAggFactory.getSignificanceHeuristic(),
-                Collections.<InternalSignificantTerms.Bucket> emptyList(), pipelineAggregators(), metaData());
+(startLine=86 endLine=104 srcPath=/root/Projects/elasticsearchFilter/822/elasticsearch/src/test/java/org/elasticsearch/search/aggregations/metrics/StatsTests.java)
+    public void testSingleValuedField() throws Exception {
+        SearchResponse searchResponse = client().prepareSearch("idx")
+                .setQuery(matchAllQuery())
+                .addAggregation(stats("stats").field("value"))
+                .execute().actionGet();
+
+        assertShardExecutionState(searchResponse, 0);
+
+        assertThat(searchResponse.getHits().getTotalHits(), equalTo(10l));
+
+        Stats stats = searchResponse.getAggregations().get("stats");
+        assertThat(stats, notNullValue());
+        assertThat(stats.getName(), equalTo("stats"));
+        assertThat(stats.getAvg(), equalTo((double) (1+2+3+4+5+6+7+8+9+10) / 10));
+        assertThat(stats.getMin(), equalTo(1.0));
+        assertThat(stats.getMax(), equalTo(10.0));
+        assertThat(stats.getSum(), equalTo((double) 1+2+3+4+5+6+7+8+9+10));
+        assertThat(stats.getCount(), equalTo(10l));
     }
 

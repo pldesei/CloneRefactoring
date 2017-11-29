@@ -1,26 +1,15 @@
-(startLine=638 endLine=661 srcPath=/root/Projects/eclipse.jdt.coreFilter/499/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
-    public void acceptUnresolvedName(char[] name) {
-        int relevance = computeBaseRelevance();
-        relevance += computeRelevanceForResolution(false);
-        relevance += computeRelevanceForInterestingProposal();
-        relevance += computeRelevanceForCaseMatching(completionToken, name);
-        relevance += computeRelevanceForQualification(false);
-        relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for local variable
-        CompletionEngine.this.noProposal = false;
-        if(!CompletionEngine.this.requestor.isIgnored(CompletionProposal.LOCAL_VARIABLE_REF)) {
-            CompletionProposal proposal = CompletionEngine.this.createProposal(CompletionProposal.LOCAL_VARIABLE_REF, CompletionEngine.this.actualCompletionPosition);
-            proposal.setSignature(JAVA_LANG_OBJECT_SIGNATURE);
-            proposal.setPackageName(JAVA_LANG_NAME);
-            proposal.setTypeName(OBJECT);
-            proposal.setName(name);
-            proposal.setCompletion(name);
-            proposal.setFlags(Flags.AccDefault);
-            proposal.setReplaceRange(CompletionEngine.this.startPosition - CompletionEngine.this.offset, CompletionEngine.this.endPosition - CompletionEngine.this.offset);
-            proposal.setRelevance(relevance);
-            CompletionEngine.this.requestor.accept(proposal);
-            if(DEBUG) {
-                CompletionEngine.this.printDebug(proposal);
-            }
+(startLine=148 endLine=160 srcPath=/root/Projects/eclipse.jdt.coreFilter/591/eclipse.jdt.core/org.eclipse.jdt.compiler.apt/batch/org/eclipse/jdt/internal/compiler/apt/dispatch/AnnotationDiscoveryVisitor.java)
+    private void resolveAnnotations(
+            BlockScope scope,
+            Annotation[] annotations,
+            Binding currentBinding) {
+        ASTNode.resolveAnnotations(scope, annotations, currentBinding);
+        
+        for (Annotation annotation : annotations) {
+            AnnotationBinding binding = annotation.getCompilerAnnotation();
+            TypeElement anno = (TypeElement)ElementFactory.newElement(binding.getAnnotationType()); 
+            Element element = ElementFactory.newElement(currentBinding);
+            _annoToElement.put(anno, element);
         }
     }
 

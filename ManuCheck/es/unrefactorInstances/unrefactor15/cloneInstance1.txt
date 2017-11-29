@@ -1,18 +1,53 @@
-(startLine=159 endLine=174 srcPath=/root/Projects/elasticsearchFilter/537/elasticsearch/src/test/java/org/elasticsearch/test/disruption/LongGCDisruption.java)
-        public void run() {
-            while (disrupting && disruptedNode != null) {
-                try {
-                    TimeValue duration = new TimeValue(delayDurationMin + random.nextInt((int) (delayDurationMax - delayDurationMin)));
-                    simulateLongGC(duration);
+(startLine=180 endLine=230 srcPath=/root/Projects/elasticsearchFilter/1574/elasticsearch/modules/test/integration/src/test/java/org/elasticsearch/test/integration/search/embedded/SingleShardEmbeddedSearchTests.java)
+    @Test public void testQueryThenFetchIterateWithFrom() throws Exception {
+        QuerySearchResult queryResult = searchService.executeQueryPhase(searchRequest(searchSource().query(matchAllQuery()).from(0).size(2), SearchType.QUERY_THEN_FETCH));
+        assertThat(queryResult.topDocs().totalHits, equalTo(5));
 
-                    duration = new TimeValue(intervalBetweenDelaysMin + random.nextInt((int) (intervalBetweenDelaysMax - intervalBetweenDelaysMin)));
-                    if (disrupting && disruptedNode != null) {
-                        Thread.sleep(duration.millis());
-                    }
-                } catch (InterruptedException e) {
-                } catch (Exception e) {
-                    logger.error("error in background worker", e);
-                }
-            }
+        Set<String> idsLoaded = Sets.newHashSet();
+
+        ShardDoc[] sortedShardList = searchPhaseController.sortDocs(newArrayList(queryResult));
+        Map<SearchShardTarget, ExtTIntArrayList> docIdsToLoad = searchPhaseController.docIdsToLoad(sortedShardList);
+        assertThat(docIdsToLoad.size(), equalTo(1));
+        assertThat(docIdsToLoad.values().iterator().next().size(), equalTo(2));
+
+        FetchSearchResult fetchResult = searchService.executeFetchPhase(new FetchSearchRequest(queryResult.id(), docIdsToLoad.values().iterator().next()));
+        assertThat(fetchResult.hits().hits().length, equalTo(2));
+        for (SearchHit hit : fetchResult.hits()) {
+            idsLoaded.add(hit.id());
         }
+
+        // iterate to the next 2
+        queryResult = searchService.executeQueryPhase(searchRequest(searchSource().query(matchAllQuery()).from(2).size(2), SearchType.QUERY_THEN_FETCH));
+        assertThat(queryResult.topDocs().totalHits, equalTo(5));
+
+        sortedShardList = searchPhaseController.sortDocs(newArrayList(queryResult));
+        docIdsToLoad = searchPhaseController.docIdsToLoad(sortedShardList);
+        assertThat(docIdsToLoad.size(), equalTo(1));
+        assertThat(docIdsToLoad.values().iterator().next().size(), equalTo(2));
+
+        fetchResult = searchService.executeFetchPhase(new FetchSearchRequest(queryResult.id(), docIdsToLoad.values().iterator().next()));
+        assertThat(fetchResult.hits().hits().length, equalTo(2));
+        for (SearchHit hit : fetchResult.hits()) {
+            idsLoaded.add(hit.id());
+        }
+
+        // iterate to the next 2
+        queryResult = searchService.executeQueryPhase(searchRequest(searchSource().query(matchAllQuery()).from(4).size(2), SearchType.QUERY_THEN_FETCH));
+        assertThat(queryResult.topDocs().totalHits, equalTo(5));
+
+        sortedShardList = searchPhaseController.sortDocs(newArrayList(queryResult));
+        docIdsToLoad = searchPhaseController.docIdsToLoad(sortedShardList);
+        assertThat(docIdsToLoad.size(), equalTo(1));
+        assertThat(docIdsToLoad.values().iterator().next().size(), equalTo(1));
+
+        fetchResult = searchService.executeFetchPhase(new FetchSearchRequest(queryResult.id(), docIdsToLoad.values().iterator().next()));
+        assertThat(fetchResult.hits().hits().length, equalTo(1));
+        for (SearchHit hit : fetchResult.hits()) {
+            idsLoaded.add(hit.id());
+        }
+
+        // verify all ids were loaded
+        Set<String> expectedIds = Sets.newHashSet("1", "2", "3", "4", "5");
+        assertThat(idsLoaded, equalTo(expectedIds));
+    }
 

@@ -1,19 +1,27 @@
-(startLine=2340 endLine=2356 srcPath=/root/Projects/eclipse.jdt.coreFilter/480/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavadocMethodCompletionModelTest.java)
-public void test150() throws JavaModelException {
-    String source =
-        "package javadoc.methods.tags;\n" + 
-        "public class BasicTestMethods {\n" + 
-        "    void foo() {}\n" + 
-        "    /**\n" + 
-        "     * Completion after:\n" + 
-        "     *     @see #BasicTestMethods(in\n" + 
-        "     */\n" + 
-        "    BasicTestMethods(int xxx, float real, Class clazz) {}\n" + 
-        "}\n";
-    completeInJavadoc("/Completion/src/javadoc/methods/tags/BasicTestMethods.java", source, true, "in");
-    assertResults(
-        "int[KEYWORD]{int, null, null, int, null, "+this.positions+R_DRICNR+"}\n" + 
-        "InterruptedException[TYPE_REF]{InterruptedException, java.lang, Ljava.lang.InterruptedException;, null, null, "+this.positions+R_DRIUNR+"}"
-    );
-}
+(startLine=172 endLine=196 srcPath=/root/Projects/eclipse.jdt.coreFilter/376/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTest_1_5.java)
+    public void test008() {
+        this.runNegativeTest(
+            new String[] {
+                "X.java",
+                    " /**\n" + 
+                    "  * Invalid type parameter reference\n" + 
+                    "  * @param <T> Type parameter 1\n" + 
+                    "  * @param <U> Type parameter 2\n" + 
+                    "  * @param <V> Type parameter 3\n" + 
+                    "  */\n" + 
+                    " public class X<T> {}"
+            },
+            "----------\n" + 
+                "1. ERROR in X.java (at line 4)\n" + 
+                "    * @param <U> Type parameter 2\n" + 
+                "              ^\n" + 
+                "Javadoc: U cannot be resolved to a type\n" + 
+                "----------\n" + 
+                "2. ERROR in X.java (at line 5)\n" + 
+                "    * @param <V> Type parameter 3\n" + 
+                "              ^\n" + 
+                "Javadoc: V cannot be resolved to a type\n" + 
+                "----------\n"
+        );
+    }
 

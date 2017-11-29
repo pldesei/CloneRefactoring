@@ -17,630 +17,435 @@
  * under the License.
  */
 
-package org.elasticsearch.index.fielddata.plain;
+package org.elasticsearch.action.update;
 
-import org.apache.lucene.util.BytesRef;
-import org.elasticsearch.common.RamUsage;
-import org.elasticsearch.common.lucene.HashedBytesRef;
-import org.elasticsearch.index.fielddata.AtomicFieldData;
-import org.elasticsearch.index.fielddata.ScriptDocValues;
-import org.elasticsearch.index.fielddata.ordinals.EmptyOrdinals;
-import org.elasticsearch.index.fielddata.ordinals.Ordinals;
-import org.elasticsearch.index.fielddata.util.BytesRefArrayRef;
-import org.elasticsearch.index.fielddata.util.IntArrayRef;
-import org.elasticsearch.index.fielddata.util.StringArrayRef;
+import com.google.common.collect.ImmutableList;
+import org.elasticsearch.ElasticSearchException;
+import org.elasticsearch.ElasticSearchIllegalArgumentException;
+import org.elasticsearch.ExceptionsHelper;
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.create.TransportCreateIndexAction;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.delete.TransportDeleteAction;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.index.TransportIndexAction;
+import org.elasticsearch.action.support.AutoCreateIndex;
+import org.elasticsearch.action.support.single.instance.TransportInstanceSingleOperationAction;
+import org.elasticsearch.client.Requests;
+import org.elasticsearch.cluster.ClusterService;
+import org.elasticsearch.cluster.ClusterState;
+import org.elasticsearch.cluster.block.ClusterBlockException;
+import org.elasticsearch.cluster.block.ClusterBlockLevel;
+import org.elasticsearch.cluster.metadata.MetaData;
+import org.elasticsearch.cluster.routing.PlainShardIterator;
+import org.elasticsearch.cluster.routing.ShardIterator;
+import org.elasticsearch.cluster.routing.ShardRouting;
+import org.elasticsearch.common.Nullable;
+import org.elasticsearch.common.bytes.BytesReference;
+import org.elasticsearch.common.collect.Tuple;
+import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentHelper;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.engine.DocumentAlreadyExistsException;
+import org.elasticsearch.index.engine.DocumentMissingException;
+import org.elasticsearch.index.engine.DocumentSourceMissingException;
+import org.elasticsearch.index.engine.VersionConflictEngineException;
+import org.elasticsearch.index.get.GetField;
+import org.elasticsearch.index.get.GetResult;
+import org.elasticsearch.index.mapper.internal.ParentFieldMapper;
+import org.elasticsearch.index.mapper.internal.RoutingFieldMapper;
+import org.elasticsearch.index.mapper.internal.SourceFieldMapper;
+import org.elasticsearch.index.mapper.internal.TTLFieldMapper;
+import org.elasticsearch.index.service.IndexService;
+import org.elasticsearch.index.shard.IllegalIndexShardStateException;
+import org.elasticsearch.index.shard.ShardId;
+import org.elasticsearch.index.shard.service.IndexShard;
+import org.elasticsearch.indices.IndexAlreadyExistsException;
+import org.elasticsearch.indices.IndicesService;
+import org.elasticsearch.script.ExecutableScript;
+import org.elasticsearch.script.ScriptService;
+import org.elasticsearch.search.lookup.SourceLookup;
+import org.elasticsearch.threadpool.ThreadPool;
+import org.elasticsearch.transport.TransportService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 /**
  */
-public class ConcreteBytesRefAtomicFieldData implements AtomicFieldData.WithOrdinals<ScriptDocValues.Strings> {
+public class TransportUpdateAction extends TransportInstanceSingleOperationAction<UpdateRequest, UpdateResponse> {
 
-    public static ConcreteBytesRefAtomicFieldData empty(int numDocs) {
-        return new Empty(numDocs);
-    }
+    private final IndicesService indicesService;
 
-    // 0 ordinal in values means no value (its null)
-    private final BytesRef[] values;
-    protected final Ordinals ordinals;
+    private final TransportDeleteAction deleteAction;
 
-    private int[] hashes;
-    private long size = -1;
+    private final TransportIndexAction indexAction;
 
-    public ConcreteBytesRefAtomicFieldData(BytesRef[] values, Ordinals ordinals) {
-        this.values = values;
-        this.ordinals = ordinals;
-    }
+    private final ScriptService scriptService;
 
-    @Override
-    public void close() {
-    }
+    private final AutoCreateIndex autoCreateIndex;
 
-    @Override
-    public boolean isMultiValued() {
-        return ordinals.isMultiValued();
-    }
+    private final TransportCreateIndexAction createIndexAction;
 
-    @Override
-    public int getNumDocs() {
-        return ordinals.getNumDocs();
+    @Inject
+    public TransportUpdateAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, TransportService transportService,
+                                 IndicesService indicesService, TransportIndexAction indexAction, TransportDeleteAction deleteAction, ScriptService scriptService, TransportCreateIndexAction createIndexAction) {
+        super(settings, threadPool, clusterService, transportService);
+        this.indicesService = indicesService;
+        this.indexAction = indexAction;
+        this.deleteAction = deleteAction;
+        this.scriptService = scriptService;
+        this.createIndexAction = createIndexAction;
+        this.autoCreateIndex = new AutoCreateIndex(settings);
     }
 
     @Override
-    public boolean isValuesOrdered() {
+    protected String transportAction() {
+        return UpdateAction.NAME;
+    }
+
+    @Override
+    protected String executor() {
+        return ThreadPool.Names.INDEX;
+    }
+
+    @Override
+    protected UpdateRequest newRequest() {
+        return new UpdateRequest();
+    }
+
+    @Override
+    protected UpdateResponse newResponse() {
+        return new UpdateResponse();
+    }
+
+    @Override
+    protected ClusterBlockException checkGlobalBlock(ClusterState state, UpdateRequest request) {
+        return state.blocks().globalBlockedException(ClusterBlockLevel.WRITE);
+    }
+
+    @Override
+    protected ClusterBlockException checkRequestBlock(ClusterState state, UpdateRequest request) {
+        return state.blocks().indexBlockedException(ClusterBlockLevel.WRITE, request.index());
+    }
+
+    @Override
+    protected boolean retryOnFailure(Throwable e) {
+        e = ExceptionsHelper.unwrapCause(e);
+        if (e instanceof IllegalIndexShardStateException) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean resolveRequest(ClusterState state, UpdateRequest request, ActionListener<UpdateResponse> listener) {
+        MetaData metaData = clusterService.state().metaData();
+        String aliasOrIndex = request.index();
+        request.routing((metaData.resolveIndexRouting(request.routing(), aliasOrIndex)));
+        request.index(metaData.concreteIndex(request.index()));
         return true;
     }
 
     @Override
-    public long getMemorySizeInBytes() {
-        if (size == -1) {
-            long size = RamUsage.NUM_BYTES_ARRAY_HEADER;
-            for (BytesRef value : values) {
+    protected void doExecute(final UpdateRequest request, final ActionListener<UpdateResponse> listener) {
+        // if we don't have a master, we don't have metadata, that's fine, let it find a master using create index API
+        if (autoCreateIndex.shouldAutoCreate(request.index(), clusterService.state())) {
+            request.beforeLocalFork(); // we fork on another thread...
+            createIndexAction.execute(new CreateIndexRequest(request.index()).cause("auto(update api)").masterNodeTimeout(request.timeout()), new ActionListener<CreateIndexResponse>() {
+                @Override
+                public void onResponse(CreateIndexResponse result) {
+                    innerExecute(request, listener);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    if (ExceptionsHelper.unwrapCause(e) instanceof IndexAlreadyExistsException) {
+                        // we have the index, do it
+                        try {
+                            innerExecute(request, listener);
+                        } catch (Exception e1) {
+                            listener.onFailure(e1);
+                        }
+                    } else {
+                        listener.onFailure(e);
+                    }
+                }
+            });
+        } else {
+            innerExecute(request, listener);
+        }
+    }
+
+    private void innerExecute(final UpdateRequest request, final ActionListener<UpdateResponse> listener) {
+        super.doExecute(request, listener);
+    }
+
+    @Override
+    protected ShardIterator shards(ClusterState clusterState, UpdateRequest request) throws ElasticSearchException {
+        if (request.shardId() != -1) {
+            return clusterState.routingTable().index(request.index()).shard(request.shardId()).primaryShardIt();
+        }
+        ShardIterator shardIterator = clusterService.operationRouting()
+                .indexShards(clusterService.state(), request.index(), request.type(), request.id(), request.routing());
+        ShardRouting shard;
+        while ((shard = shardIterator.nextOrNull()) != null) {
+            if (shard.primary()) {
+                return new PlainShardIterator(shardIterator.shardId(), ImmutableList.of(shard));
+            }
+        }
+        return new PlainShardIterator(shardIterator.shardId(), ImmutableList.<ShardRouting>of());
+    }
+
+    @Override
+    protected void shardOperation(final UpdateRequest request, final ActionListener<UpdateResponse> listener) throws ElasticSearchException {
+        shardOperation(request, listener, 0);
+    }
+
+    protected void shardOperation(final UpdateRequest request, final ActionListener<UpdateResponse> listener, final int retryCount) throws ElasticSearchException {
+        IndexService indexService = indicesService.indexServiceSafe(request.index());
+        IndexShard indexShard = indexService.shardSafe(request.shardId());
+
+        long getDate = System.currentTimeMillis();
+        final GetResult getResult = indexShard.getService().get(request.type(), request.id(),
+                new String[]{SourceFieldMapper.NAME, RoutingFieldMapper.NAME, ParentFieldMapper.NAME, TTLFieldMapper.NAME}, true);
+
+        // no doc, what to do, what to do...
+        if (!getResult.exists()) {
+            if (request.upsertRequest() == null) {
+                listener.onFailure(new DocumentMissingException(new ShardId(request.index(), request.shardId()), request.type(), request.id()));
+                return;
+            }
+            final IndexRequest indexRequest = request.upsertRequest();
+            indexRequest.index(request.index()).type(request.type()).id(request.id())
+                    // it has to be a "create!"
+                    .create(true)
+                    .routing(request.routing())
+                    .percolate(request.percolate())
+                    .refresh(request.refresh())
+                    .replicationType(request.replicationType()).consistencyLevel(request.consistencyLevel());
+            indexRequest.operationThreaded(false);
+            // we fetch it from the index request so we don't generate the bytes twice, its already done in the index request
+            final BytesReference updateSourceBytes = indexRequest.source();
+            indexAction.execute(indexRequest, new ActionListener<IndexResponse>() {
+                @Override
+                public void onResponse(IndexResponse response) {
+                    UpdateResponse update = new UpdateResponse(response.index(), response.type(), response.id(), response.version());
+                    update.matches(response.matches());
+                    if (request.fields() != null && request.fields().length > 0) {
+                        Tuple<XContentType, Map<String, Object>> sourceAndContent = XContentHelper.convertToMap(updateSourceBytes, true);
+                        update.getResult(extractGetResult(request, response.version(), sourceAndContent.v2(), sourceAndContent.v1(), updateSourceBytes));
+                    } else {
+                        update.getResult(null);
+                    }
+                    listener.onResponse(update);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    e = ExceptionsHelper.unwrapCause(e);
+                    if (e instanceof VersionConflictEngineException || e instanceof DocumentAlreadyExistsException) {
+                        if (retryCount < request.retryOnConflict()) {
+                            threadPool.executor(executor()).execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shardOperation(request, listener, retryCount + 1);
+                                }
+                            });
+                            return;
+                        }
+                    }
+                    listener.onFailure(e);
+                }
+            });
+            return;
+        }
+
+        if (getResult.internalSourceRef() == null) {
+            // no source, we can't do nothing, through a failure...
+            listener.onFailure(new DocumentSourceMissingException(new ShardId(request.index(), request.shardId()), request.type(), request.id()));
+            return;
+        }
+
+        Tuple<XContentType, Map<String, Object>> sourceAndContent = XContentHelper.convertToMap(getResult.internalSourceRef(), true);
+        String operation = null;
+        String timestamp = null;
+        Long ttl = null;
+        Object fetchedTTL = null;
+        final Map<String, Object> updatedSourceAsMap;
+        final XContentType updateSourceContentType = sourceAndContent.v1();
+        String routing = getResult.fields().containsKey(RoutingFieldMapper.NAME) ? getResult.field(RoutingFieldMapper.NAME).value().toString() : null;
+        String parent = getResult.fields().containsKey(ParentFieldMapper.NAME) ? getResult.field(ParentFieldMapper.NAME).value().toString() : null;
+
+        if (request.script() == null && request.doc() != null) {
+            IndexRequest indexRequest = request.doc();
+            updatedSourceAsMap = sourceAndContent.v2();
+            if (indexRequest.ttl() > 0) {
+                ttl = indexRequest.ttl();
+            }
+            timestamp = indexRequest.timestamp();
+            if (indexRequest.routing() != null) {
+                routing = indexRequest.routing();
+            }
+            if (indexRequest.parent() != null) {
+                parent = indexRequest.parent();
+            }
+            XContentHelper.update(updatedSourceAsMap, indexRequest.sourceAsMap());
+        } else {
+            Map<String, Object> ctx = new HashMap<String, Object>(2);
+            ctx.put("_source", sourceAndContent.v2());
+
+            try {
+                ExecutableScript script = scriptService.executable(request.scriptLang, request.script, request.scriptParams);
+                script.setNextVar("ctx", ctx);
+                script.run();
+                // we need to unwrap the ctx...
+                ctx = (Map<String, Object>) script.unwrap(ctx);
+            } catch (Exception e) {
+                throw new ElasticSearchIllegalArgumentException("failed to execute script", e);
+            }
+
+            operation = (String) ctx.get("op");
+            timestamp = (String) ctx.get("_timestamp");
+            fetchedTTL = ctx.get("_ttl");
+            if (fetchedTTL != null) {
+                if (fetchedTTL instanceof Number) {
+                    ttl = ((Number) fetchedTTL).longValue();
+                } else {
+                    ttl = TimeValue.parseTimeValue((String) fetchedTTL, null).millis();
+                }
+            }
+
+            updatedSourceAsMap = (Map<String, Object>) ctx.get("_source");
+        }
+
+        // apply script to update the source
+        // No TTL has been given in the update script so we keep previous TTL value if there is one
+        if (ttl == null) {
+            ttl = getResult.fields().containsKey(TTLFieldMapper.NAME) ? (Long) getResult.field(TTLFieldMapper.NAME).value() : null;
+            if (ttl != null) {
+                ttl = ttl - (System.currentTimeMillis() - getDate); // It is an approximation of exact TTL value, could be improved
+            }
+        }
+
+        // TODO: external version type, does it make sense here? does not seem like it...
+
+        if (operation == null || "index".equals(operation)) {
+            final IndexRequest indexRequest = Requests.indexRequest(request.index()).type(request.type()).id(request.id()).routing(routing).parent(parent)
+                    .source(updatedSourceAsMap, updateSourceContentType)
+                    .version(getResult.version()).replicationType(request.replicationType()).consistencyLevel(request.consistencyLevel())
+                    .timestamp(timestamp).ttl(ttl)
+                    .percolate(request.percolate())
+                    .refresh(request.refresh());
+            indexRequest.operationThreaded(false);
+            // we fetch it from the index request so we don't generate the bytes twice, its already done in the index request
+            final BytesReference updateSourceBytes = indexRequest.source();
+            indexAction.execute(indexRequest, new ActionListener<IndexResponse>() {
+                @Override
+                public void onResponse(IndexResponse response) {
+                    UpdateResponse update = new UpdateResponse(response.index(), response.type(), response.id(), response.version());
+                    update.matches(response.matches());
+                    update.getResult(extractGetResult(request, response.version(), updatedSourceAsMap, updateSourceContentType, updateSourceBytes));
+                    listener.onResponse(update);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    e = ExceptionsHelper.unwrapCause(e);
+                    if (e instanceof VersionConflictEngineException) {
+                        if (retryCount < request.retryOnConflict()) {
+                            threadPool.executor(executor()).execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shardOperation(request, listener, retryCount + 1);
+                                }
+                            });
+                            return;
+                        }
+                    }
+                    listener.onFailure(e);
+                }
+            });
+        } else if ("delete".equals(operation)) {
+            DeleteRequest deleteRequest = Requests.deleteRequest(request.index()).type(request.type()).id(request.id()).routing(routing).parent(parent)
+                    .version(getResult.version()).replicationType(request.replicationType()).consistencyLevel(request.consistencyLevel());
+            deleteRequest.operationThreaded(false);
+            deleteAction.execute(deleteRequest, new ActionListener<DeleteResponse>() {
+                @Override
+                public void onResponse(DeleteResponse response) {
+                    UpdateResponse update = new UpdateResponse(response.index(), response.type(), response.id(), response.version());
+                    update.getResult(extractGetResult(request, response.version(), updatedSourceAsMap, updateSourceContentType, null));
+                    listener.onResponse(update);
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    e = ExceptionsHelper.unwrapCause(e);
+                    if (e instanceof VersionConflictEngineException) {
+                        if (retryCount < request.retryOnConflict()) {
+                            threadPool.executor(executor()).execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shardOperation(request, listener, retryCount + 1);
+                                }
+                            });
+                            return;
+                        }
+                    }
+                    listener.onFailure(e);
+                }
+            });
+        } else if ("none".equals(operation)) {
+            UpdateResponse update = new UpdateResponse(getResult.index(), getResult.type(), getResult.id(), getResult.version());
+            update.getResult(extractGetResult(request, getResult.version(), updatedSourceAsMap, updateSourceContentType, null));
+            listener.onResponse(update);
+        } else {
+            logger.warn("Used update operation [{}] for script [{}], doing nothing...", operation, request.script);
+            listener.onResponse(new UpdateResponse(getResult.index(), getResult.type(), getResult.id(), getResult.version()));
+        }
+    }
+
+    @Nullable
+    protected GetResult extractGetResult(final UpdateRequest request, long version, final Map<String, Object> source, XContentType sourceContentType, @Nullable final BytesReference sourceAsBytes) {
+        if (request.fields() == null || request.fields().length == 0) {
+            return null;
+        }
+        boolean sourceRequested = false;
+        Map<String, GetField> fields = null;
+        if (request.fields() != null && request.fields().length > 0) {
+            SourceLookup sourceLookup = new SourceLookup();
+            sourceLookup.setNextSource(source);
+            for (String field : request.fields()) {
+                if (field.equals("_source")) {
+                    sourceRequested = true;
+                    continue;
+                }
+                Object value = sourceLookup.extractValue(field);
                 if (value != null) {
-                    size += RamUsage.NUM_BYTES_OBJECT_REF + RamUsage.NUM_BYTES_OBJECT_HEADER +
-                            RamUsage.NUM_BYTES_ARRAY_HEADER + (value.length + (2 * RamUsage.NUM_BYTES_INT));
-                }
-            }
-            size += ordinals.getMemorySizeInBytes();
-            this.size = size;
-        }
-        return size;
-    }
-
-    @Override
-    public BytesValues.WithOrdinals getBytesValues() {
-        return ordinals.isMultiValued() ? new BytesValues.Multi(values, ordinals.ordinals()) : new BytesValues.Single(values, ordinals.ordinals());
-    }
-
-    @Override
-    public HashedBytesValues.WithOrdinals getHashedBytesValues() {
-        if (hashes == null) {
-            int[] hashes = new int[values.length];
-            for (int i = 0; i < values.length; i++) {
-                BytesRef value = values[i];
-                hashes[i] = value == null ? 0 : value.hashCode();
-            }
-            this.hashes = hashes;
-        }
-        return ordinals.isMultiValued() ? new HashedBytesValues.Multi(values, hashes, ordinals.ordinals()) : new HashedBytesValues.Single(values, hashes, ordinals.ordinals());
-    }
-
-    @Override
-    public StringValues.WithOrdinals getStringValues() {
-        return ordinals.isMultiValued() ? new StringValues.Multi(values, ordinals.ordinals()) : new StringValues.Single(values, ordinals.ordinals());
-    }
-
-    @Override
-    public ScriptDocValues.Strings getScriptValues() {
-        return new ScriptDocValues.Strings(getStringValues());
-    }
-
-    static abstract class BytesValues implements org.elasticsearch.index.fielddata.BytesValues.WithOrdinals {
-
-        protected final BytesRef[] values;
-        protected final Ordinals.Docs ordinals;
-
-        BytesValues(BytesRef[] values, Ordinals.Docs ordinals) {
-            this.values = values;
-            this.ordinals = ordinals;
-        }
-
-        @Override
-        public Ordinals.Docs ordinals() {
-            return this.ordinals;
-        }
-
-        @Override
-        public BytesRef getValueByOrd(int ord) {
-            return values[ord];
-        }
-
-        @Override
-        public BytesRef getValueScratchByOrd(int ord, BytesRef ret) {
-            BytesRef value = values[ord];
-            if (value == null) {
-                ret.length = 0;
-            } else {
-                ret.bytes = value.bytes;
-                ret.offset = value.offset;
-                ret.length = value.length;
-            }
-            return ret;
-        }
-
-        @Override
-        public BytesRef getSafeValueByOrd(int ord) {
-            return values[ord];
-        }
-
-        @Override
-        public boolean hasValue(int docId) {
-            return ordinals.getOrd(docId) != 0;
-        }
-
-        @Override
-        public BytesRef makeSafe(BytesRef bytes) {
-            // no need to do anything, its already concrete bytes...
-            return bytes;
-        }
-
-        @Override
-        public BytesRef getValue(int docId) {
-            return values[ordinals.getOrd(docId)];
-        }
-
-        @Override
-        public BytesRef getValueScratch(int docId, BytesRef ret) {
-            BytesRef value = values[ordinals.getOrd(docId)];
-            if (value == null) {
-                ret.length = 0;
-            } else {
-                ret.bytes = value.bytes;
-                ret.offset = value.offset;
-                ret.length = value.length;
-            }
-            return ret;
-        }
-
-        static class Single extends BytesValues {
-
-            private final BytesRefArrayRef arrayScratch = new BytesRefArrayRef(new BytesRef[1], 1);
-            private final Iter.Single iter = new Iter.Single();
-
-            Single(BytesRef[] values, Ordinals.Docs ordinals) {
-                super(values, ordinals);
-            }
-
-            @Override
-            public boolean isMultiValued() {
-                return false;
-            }
-
-            @Override
-            public BytesRefArrayRef getValues(int docId) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) return BytesRefArrayRef.EMPTY;
-                arrayScratch.values[0] = values[ord];
-                return arrayScratch;
-            }
-
-            @Override
-            public Iter getIter(int docId) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) return Iter.Empty.INSTANCE;
-                return iter.reset(values[ord]);
-            }
-
-            @Override
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                } else {
-                    proc.onValue(docId, values[ord]);
+                    if (fields == null) {
+                        fields = newHashMapWithExpectedSize(2);
+                    }
+                    GetField getField = fields.get(field);
+                    if (getField == null) {
+                        getField = new GetField(field, new ArrayList<Object>(2));
+                        fields.put(field, getField);
+                    }
+                    getField.values().add(value);
                 }
             }
         }
 
-        static class Multi extends BytesValues {
+        // TODO when using delete/none, we can still return the source as bytes by generating it (using the sourceContentType)
 
-            private final BytesRefArrayRef arrayScratch = new BytesRefArrayRef(new BytesRef[10], 0);
-            private final ValuesIter iter;
-
-            Multi(BytesRef[] values, Ordinals.Docs ordinals) {
-                super(values, ordinals);
-                this.iter = new ValuesIter(values);
-            }
-
-            @Override
-            public boolean isMultiValued() {
-                return true;
-            }
-
-            @Override
-            public BytesRefArrayRef getValues(int docId) {
-                IntArrayRef ords = ordinals.getOrds(docId);
-                int size = ords.size();
-                if (size == 0) return BytesRefArrayRef.EMPTY;
-
-                arrayScratch.reset(size);
-                for (int i = ords.start; i < ords.end; i++) {
-                    arrayScratch.values[arrayScratch.end++] = values[ords.values[i]];
-                }
-                return arrayScratch;
-            }
-
-            @Override
-            public Iter getIter(int docId) {
-                return iter.reset(ordinals.getIter(docId));
-            }
-
-            @Override
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
-                int ord = iter.next();
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                    return;
-                }
-                do {
-                    proc.onValue(docId, values[ord]);
-                } while ((ord = iter.next()) != 0);
-            }
-
-            static class ValuesIter implements Iter {
-
-                private final BytesRef[] values;
-                private Ordinals.Docs.Iter ordsIter;
-                private int ord;
-
-                ValuesIter(BytesRef[] values) {
-                    this.values = values;
-                }
-
-                public ValuesIter reset(Ordinals.Docs.Iter ordsIter) {
-                    this.ordsIter = ordsIter;
-                    this.ord = ordsIter.next();
-                    return this;
-                }
-
-                @Override
-                public boolean hasNext() {
-                    return ord != 0;
-                }
-
-                @Override
-                public BytesRef next() {
-                    BytesRef value = values[ord];
-                    ord = ordsIter.next();
-                    return value;
-                }
-            }
-        }
-    }
-
-    static abstract class HashedBytesValues implements org.elasticsearch.index.fielddata.HashedBytesValues.WithOrdinals {
-
-        protected final BytesRef[] values;
-        protected final int[] hashes;
-        protected final Ordinals.Docs ordinals;
-
-        protected final HashedBytesRef scratch = new HashedBytesRef();
-
-        HashedBytesValues(BytesRef[] values, int[] hashes, Ordinals.Docs ordinals) {
-            this.values = values;
-            this.hashes = hashes;
-            this.ordinals = ordinals;
-        }
-
-        @Override
-        public Ordinals.Docs ordinals() {
-            return this.ordinals;
-        }
-
-        @Override
-        public HashedBytesRef getValueByOrd(int ord) {
-            return scratch.reset(values[ord], hashes[ord]);
-        }
-
-        @Override
-        public HashedBytesRef getSafeValueByOrd(int ord) {
-            return new HashedBytesRef(values[ord], hashes[ord]);
-        }
-
-        @Override
-        public boolean hasValue(int docId) {
-            return ordinals.getOrd(docId) != 0;
-        }
-
-        @Override
-        public HashedBytesRef makeSafe(HashedBytesRef bytes) {
-            // we just need to create a copy of the bytes ref, no need
-            // to create a copy of the actual BytesRef, as its concrete
-            return new HashedBytesRef(bytes.bytes, bytes.hash);
-        }
-
-        @Override
-        public HashedBytesRef getValue(int docId) {
-            int ord = ordinals.getOrd(docId);
-            if (ord == 0) return null;
-            return scratch.reset(values[ord], hashes[ord]);
-        }
-
-        static class Single extends HashedBytesValues {
-
-            private final Iter.Single iter = new Iter.Single();
-
-            Single(BytesRef[] values, int[] hashes, Ordinals.Docs ordinals) {
-                super(values, hashes, ordinals);
-            }
-
-            @Override
-            public boolean isMultiValued() {
-                return false;
-            }
-
-            @Override
-            public Iter getIter(int docId) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) return Iter.Empty.INSTANCE;
-                return iter.reset(scratch.reset(values[ord], hashes[ord]));
-            }
-
-            @Override
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                } else {
-                    proc.onValue(docId, scratch.reset(values[ord], hashes[ord]));
-                }
-            }
-        }
-
-        static class Multi extends HashedBytesValues {
-
-            private final ValuesIter iter;
-
-            Multi(BytesRef[] values, int[] hashes, Ordinals.Docs ordinals) {
-                super(values, hashes, ordinals);
-                this.iter = new ValuesIter(values, hashes);
-            }
-
-            @Override
-            public boolean isMultiValued() {
-                return true;
-            }
-
-            @Override
-            public Iter getIter(int docId) {
-                return iter.reset(ordinals.getIter(docId));
-            }
-
-            @Override
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
-                int ord = iter.next();
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                    return;
-                }
-                do {
-                    proc.onValue(docId, scratch.reset(values[ord], hashes[ord]));
-                } while ((ord = iter.next()) != 0);
-            }
-
-            static class ValuesIter implements Iter {
-
-                private final BytesRef[] values;
-                private final int[] hashes;
-                private Ordinals.Docs.Iter ordsIter;
-                private int ord;
-
-                private final HashedBytesRef scratch = new HashedBytesRef();
-
-                ValuesIter(BytesRef[] values, int[] hashes) {
-                    this.values = values;
-                    this.hashes = hashes;
-                }
-
-                public ValuesIter reset(Ordinals.Docs.Iter ordsIter) {
-                    this.ordsIter = ordsIter;
-                    this.ord = ordsIter.next();
-                    return this;
-                }
-
-                @Override
-                public boolean hasNext() {
-                    return ord != 0;
-                }
-
-                @Override
-                public HashedBytesRef next() {
-                    HashedBytesRef value = scratch.reset(values[ord], hashes[ord]);
-                    ord = ordsIter.next();
-                    return value;
-                }
-            }
-        }
-    }
-
-    static abstract class StringValues implements org.elasticsearch.index.fielddata.StringValues.WithOrdinals {
-
-        protected final BytesRef[] values;
-        protected final Ordinals.Docs ordinals;
-
-        protected StringValues(BytesRef[] values, Ordinals.Docs ordinals) {
-            this.values = values;
-            this.ordinals = ordinals;
-        }
-
-        @Override
-        public Ordinals.Docs ordinals() {
-            return ordinals;
-        }
-
-        @Override
-        public String getValueByOrd(int ord) {
-            BytesRef value = values[ord];
-            if (value == null) return null;
-            return value.utf8ToString();
-        }
-
-        @Override
-        public boolean hasValue(int docId) {
-            return ordinals.getOrd(docId) != 0;
-        }
-
-        @Override
-        public String getValue(int docId) {
-            BytesRef value = values[ordinals.getOrd(docId)];
-            if (value == null) return null;
-            return value.utf8ToString();
-        }
-
-        static class Single extends StringValues {
-
-            private final StringArrayRef arrayScratch = new StringArrayRef(new String[1], 1);
-            private final Iter.Single iter = new Iter.Single();
-
-            Single(BytesRef[] values, Ordinals.Docs ordinals) {
-                super(values, ordinals);
-            }
-
-            @Override
-            public boolean isMultiValued() {
-                return false;
-            }
-
-            @Override
-            public StringArrayRef getValues(int docId) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) return StringArrayRef.EMPTY;
-                BytesRef value = values[ord];
-                arrayScratch.values[0] = value == null ? null : value.utf8ToString();
-                return arrayScratch;
-            }
-
-            @Override
-            public Iter getIter(int docId) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) return Iter.Empty.INSTANCE;
-                return iter.reset(values[ord].utf8ToString());
-            }
-
-            @Override
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                int ord = ordinals.getOrd(docId);
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                    return;
-                }
-                proc.onValue(docId, values[ord].utf8ToString());
-            }
-        }
-
-        static class Multi extends StringValues {
-
-            private final StringArrayRef arrayScratch = new StringArrayRef(new String[10], 0);
-            private final ValuesIter iter;
-
-            Multi(BytesRef[] values, Ordinals.Docs ordinals) {
-                super(values, ordinals);
-                iter = new ValuesIter(values);
-            }
-
-            @Override
-            public boolean isMultiValued() {
-                return true;
-            }
-
-            @Override
-            public StringArrayRef getValues(int docId) {
-                IntArrayRef ords = ordinals.getOrds(docId);
-                int size = ords.size();
-                if (size == 0) return StringArrayRef.EMPTY;
-
-                arrayScratch.reset(size);
-                for (int i = ords.start; i < ords.end; i++) {
-                    BytesRef value = values[ords.values[i]];
-                    arrayScratch.values[arrayScratch.end++] = value == null ? null : value.utf8ToString();
-                }
-                return arrayScratch;
-            }
-
-            @Override
-            public Iter getIter(int docId) {
-                return iter.reset(ordinals.getIter(docId));
-            }
-
-            @Override
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
-                int ord = iter.next();
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                    return;
-                }
-                do {
-                    BytesRef value = values[ord];
-                    proc.onValue(docId, value == null ? null : value.utf8ToString());
-                } while ((ord = iter.next()) != 0);
-            }
-
-            static class ValuesIter implements StringValues.Iter {
-
-                private final BytesRef[] values;
-                private Ordinals.Docs.Iter ordsIter;
-                private int ord;
-
-                ValuesIter(BytesRef[] values) {
-                    this.values = values;
-                }
-
-                public ValuesIter reset(Ordinals.Docs.Iter ordsIter) {
-                    this.ordsIter = ordsIter;
-                    this.ord = ordsIter.next();
-                    return this;
-                }
-
-                @Override
-                public boolean hasNext() {
-                    return ord != 0;
-                }
-
-                @Override
-                public String next() {
-                    BytesRef value = values[ord];
-                    ord = ordsIter.next();
-                    return value == null ? null : value.utf8ToString();
-                }
-            }
-        }
-    }
-
-    static class Empty extends ConcreteBytesRefAtomicFieldData {
-
-        Empty(int numDocs) {
-            super(null, new EmptyOrdinals(numDocs));
-        }
-
-        @Override
-        public boolean isMultiValued() {
-            return false;
-        }
-
-        @Override
-        public int getNumDocs() {
-            return ordinals.getNumDocs();
-        }
-
-        @Override
-        public boolean isValuesOrdered() {
-            return true;
-        }
-
-        @Override
-        public long getMemorySizeInBytes() {
-            return 0;
-        }
-
-        @Override
-        public BytesValues.WithOrdinals getBytesValues() {
-            return new BytesValues.WithOrdinals.Empty((EmptyOrdinals) ordinals);
-        }
-
-        @Override
-        public HashedBytesValues.WithOrdinals getHashedBytesValues() {
-            return new HashedBytesValues.WithOrdinals.Empty((EmptyOrdinals) ordinals);
-        }
-
-        @Override
-        public StringValues.WithOrdinals getStringValues() {
-            return new StringValues.WithOrdinals.Empty((EmptyOrdinals) ordinals);
-        }
-
-        @Override
-        public ScriptDocValues.Strings getScriptValues() {
-            return ScriptDocValues.EMPTY_STRINGS;
-        }
+        return new GetResult(request.index(), request.type(), request.id(), version, true, sourceRequested ? sourceAsBytes : null, fields);
     }
 }

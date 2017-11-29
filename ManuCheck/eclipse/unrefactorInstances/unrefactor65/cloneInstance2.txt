@@ -1,17 +1,32 @@
-(startLine=1756 endLine=1770 srcPath=/root/Projects/eclipse.jdt.coreFilter/1755/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
-public void testMethodDeclarationInJar() throws CoreException {
-    IType type = getClassFile("JavaSearch", "MyJar.jar", "p1", "A.class").getType();
-    IMethod method = type.getMethod("foo", new String[] {"Ljava.lang.String;"});
-    JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
-    new SearchEngine().search(
-        getWorkspace(), 
-        method, 
-        DECLARATIONS, 
-        getJavaSearchScope(), 
-        resultCollector);
-    // System.out.println(displayString(resultCollector, 2));
-    assertSearchResults(
-        "MyJar.jar boolean p1.A.foo(java.lang.String) [No source]",
-        resultCollector);
+(startLine=8290 endLine=8319 srcPath=/root/Projects/eclipse.jdt.coreFilter/121/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+public void test0267() throws JavaModelException {
+    this.workingCopies = new ICompilationUnit[2];
+    this.workingCopies[0] = getWorkingCopy(
+        "/Completion/src/test/Test.java",
+        "package test;\n"+
+        "public class Test<T, U, TU> extends SuperTest {\n"+
+        "  foo\n"+
+        "}");
+
+    this.workingCopies[1] = getWorkingCopy(
+        "/Completion/src/test/SuperTest.java",
+        "package test;\n"+
+        "public class SuperTest<E> {\n"+
+        "  public <T, U, TU> T foo(SuperTest<T> t, SuperTest<U> u, SuperTest<TU> tu, SuperTest<E> e) {return null;}\n"+
+        "}");
+
+    CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true);
+
+    String str = this.workingCopies[0].getSource();
+    String completeBehind = "foo";
+    int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+    this.workingCopies[0].codeComplete(cursorLocation, requestor, this.wcOwner);
+
+    assertResults(
+            "foo[POTENTIAL_METHOD_DECLARATION]{foo, Ltest.Test<TT;TU;TTU;>;, ()V, foo, null, " + (R_DEFAULT + R_RESOLVED + R_INTERESTING + R_NON_RESTRICTED) + "}\n" +
+            "foo[METHOD_DECLARATION]{public Object foo(SuperTest t, SuperTest u, SuperTest tu, SuperTest e), Ltest.SuperTest;, (Ltest.SuperTest;" +
+                "Ltest.SuperTest;Ltest.SuperTest;Ltest.SuperTest;)Ljava.lang.Object;, foo, (t, u, tu, e), " +
+                (R_DEFAULT + R_RESOLVED + R_INTERESTING + R_CASE + R_EXACT_NAME + R_METHOD_OVERIDE + R_NON_RESTRICTED) + "}",
+            requestor.getResults());
 }
 

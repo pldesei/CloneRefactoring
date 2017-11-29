@@ -1,13 +1,8 @@
-(startLine=257 endLine=267 srcPath=/root/Projects/elasticsearchFilter/1270/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/plain/ConcreteBytesRefAtomicFieldData.java)
-            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
-                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
-                int ord = iter.next();
-                if (ord == 0) {
-                    proc.onMissing(docId);
-                    return;
+(startLine=354 endLine=359 srcPath=/root/Projects/elasticsearchFilter/1301/elasticsearch/src/main/java/org/elasticsearch/action/update/TransportUpdateAction.java)
+                public void onResponse(IndexResponse response) {
+                    UpdateResponse update = new UpdateResponse(response.index(), response.type(), response.id(), response.version());
+                    update.matches(response.matches());
+                    update.getResult(extractGetResult(request, response.version(), updatedSourceAsMap, updateSourceContentType, updateSourceBytes));
+                    listener.onResponse(update);
                 }
-                do {
-                    proc.onValue(docId, values[ord]);
-                } while ((ord = iter.next()) != 0);
-            }
 

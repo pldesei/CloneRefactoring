@@ -1,13 +1,30 @@
-(startLine=54 endLine=64 srcPath=/root/Projects/elasticsearchFilter/1636/elasticsearch/modules/benchmark/micro/src/main/java/org/elasticsearch/benchmark/checksum/ChecksumBenchmarkTest.java)
-    private static void md5(long dataSize) {
-        long start = System.currentTimeMillis();
-        byte[] data = new byte[BATCH_SIZE];
-        long iter = dataSize / BATCH_SIZE;
-        MessageDigest digest = Digest.getMd5Digest();
-        for (long i = 0; i < iter; i++) {
-            digest.update(data);
+(startLine=641 endLine=668 srcPath=/root/Projects/elasticsearchFilter/1252/elasticsearch/src/main/java/jsr166e/StampedLock.java)
+    public long tryConvertToReadLock(long stamp) {
+        long a = stamp & ABITS, m, s, next; WNode h;
+        while (((s = state) & SBITS) == (stamp & SBITS)) {
+            if ((m = s & ABITS) == 0L) {
+                if (a != 0L)
+                    break;
+                else if (m < RFULL) {
+                    if (U.compareAndSwapLong(this, STATE, s, next = s + RUNIT))
+                        return next;
+                }
+                else if ((next = tryIncReaderOverflow(s)) != 0L)
+                    return next;
+            }
+            else if (m == WBIT) {
+                if (a != m)
+                    break;
+                state = next = s + (WBIT + RUNIT);
+                if ((h = whead) != null && h.status != 0)
+                    release(h);
+                return next;
+            }
+            else if (a != 0L && a < WBIT)
+                return stamp;
+            else
+                break;
         }
-        digest.digest();
-        System.out.println("md5 took " + new TimeValue(System.currentTimeMillis() - start));
+        return 0L;
     }
 

@@ -1,52 +1,18 @@
-(startLine=89 endLine=138 srcPath=/root/Projects/elasticsearchFilter/235/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/EComp.java)
-    private void analyzeEq(Locals variables) {
-        left.analyze(variables);
-        right.analyze(variables);
+(startLine=401 endLine=416 srcPath=/root/Projects/elasticsearchFilter/1398/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/MoreTypes.java)
+    public static Type resolveTypeVariable(Type type, Class<?> rawType, TypeVariable unknown) {
+        Class<?> declaredByRaw = declaringClassOf(unknown);
 
-        promotedType = AnalyzerCaster.promoteEquality(left.actual, right.actual);
-
-        if (promotedType == null) {
-            throw createError(new ClassCastException("Cannot apply equals [==] to types " +
-                "[" + left.actual.name + "] and [" + right.actual.name + "]."));
+        // we can't reduce this further
+        if (declaredByRaw == null) {
+            return unknown;
         }
 
-        if (promotedType.sort == Sort.DEF) {
-            left.expected = left.actual;
-            right.expected = right.actual;
-        } else {
-            left.expected = promotedType;
-            right.expected = promotedType;
+        Type declaredBy = getGenericSupertype(type, rawType, declaredByRaw);
+        if (declaredBy instanceof ParameterizedType) {
+            int index = indexOf(declaredByRaw.getTypeParameters(), unknown);
+            return ((ParameterizedType) declaredBy).getActualTypeArguments()[index];
         }
 
-        left = left.cast(variables);
-        right = right.cast(variables);
-
-        if (left.isNull && right.isNull) {
-            throw createError(new IllegalArgumentException("Extraneous comparison of null constants."));
-        }
-
-        if ((left.constant != null || left.isNull) && (right.constant != null || right.isNull)) {
-            Sort sort = promotedType.sort;
-
-            if (sort == Sort.BOOL) {
-                constant = (boolean)left.constant == (boolean)right.constant;
-            } else if (sort == Sort.INT) {
-                constant = (int)left.constant == (int)right.constant;
-            } else if (sort == Sort.LONG) {
-                constant = (long)left.constant == (long)right.constant;
-            } else if (sort == Sort.FLOAT) {
-                constant = (float)left.constant == (float)right.constant;
-            } else if (sort == Sort.DOUBLE) {
-                constant = (double)left.constant == (double)right.constant;
-            } else if (!left.isNull) {
-                constant = left.constant.equals(right.constant);
-            } else if (!right.isNull) {
-                constant = right.constant.equals(null);
-            } else {
-                throw createError(new IllegalStateException("Illegal tree structure."));
-            }
-        }
-
-        actual = Definition.BOOLEAN_TYPE;
+        return unknown;
     }
 

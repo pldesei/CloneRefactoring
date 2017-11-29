@@ -1,44 +1,30 @@
-(startLine=66 endLine=107 srcPath=/root/Projects/elasticsearchFilter/1299/elasticsearch/src/main/java/org/elasticsearch/node/settings/NodeSettingsService.java)
-    public void clusterChanged(ClusterChangedEvent event) {
-        // nothing to do until we actually recover from the gateway or any other block indicates we need to disable persistency
-        if (event.state().blocks().disableStatePersistence()) {
-            return;
+(startLine=221 endLine=248 srcPath=/root/Projects/elasticsearchFilter/1299/elasticsearch/src/main/java/org/elasticsearch/common/settings/ImmutableSettings.java)
+    public <T> Class<? extends T> getAsClass(String setting, Class<? extends T> defaultClazz, String prefixPackage, String suffixClassName) throws NoClassSettingsException {
+        String sValue = get(setting);
+        if (sValue == null) {
+            return defaultClazz;
         }
-
-        if (!event.metaDataChanged()) {
-            // nothing changed in the metadata, no need to check
-            return;
-        }
-
-        if (lastSettingsApplied != null && event.state().metaData().settings().equals(lastSettingsApplied)) {
-            // nothing changed in the settings, ignore
-            return;
-        }
-
-        for (Listener listener : listeners) {
-            try {
-                listener.onRefreshSettings(event.state().metaData().settings());
-            } catch (Exception e) {
-                logger.warn("failed to refresh settings for [{}]", e, listener);
-            }
-        }
-
+        String fullClassName = sValue;
         try {
-            for (Map.Entry<String, String> entry : event.state().metaData().settings().getAsMap().entrySet()) {
-                if (entry.getKey().startsWith("logger.")) {
-                    String component = entry.getKey().substring("logger.".length());
-                    if ("_root".equals(component)) {
-                        ESLoggerFactory.getRootLogger().setLevel(entry.getValue());
-                    } else {
-                        ESLoggerFactory.getLogger(component).setLevel(entry.getValue());
-                    }
+            return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+        } catch (ClassNotFoundException e) {
+            String prefixValue = prefixPackage;
+            int packageSeparator = sValue.lastIndexOf('.');
+            if (packageSeparator > 0) {
+                prefixValue = sValue.substring(0, packageSeparator + 1);
+                sValue = sValue.substring(packageSeparator + 1);
+            }
+            fullClassName = prefixValue + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+            try {
+                return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+            } catch (ClassNotFoundException e1) {
+                fullClassName = prefixValue + toCamelCase(sValue).toLowerCase() + "." + Strings.capitalize(toCamelCase(sValue)) + suffixClassName;
+                try {
+                    return (Class<? extends T>) getClassLoader().loadClass(fullClassName);
+                } catch (ClassNotFoundException e2) {
+                    throw new NoClassSettingsException("Failed to load class setting [" + setting + "] with value [" + get(setting) + "]", e);
                 }
             }
-        } catch (Exception e) {
-            logger.warn("failed to refresh settings for [{}]", e, "logger");
         }
-
-        lastSettingsApplied = event.state().metaData().settings();
-        globalSettings = lastSettingsApplied;
     }
 

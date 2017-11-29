@@ -1,38 +1,9 @@
-(startLine=2824 endLine=2859 srcPath=/root/Projects/eclipse.jdt.coreFilter/2052/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
-public void testJC_1FLG1ZC() {
-    String str = 
-            "package p; \n" + 
-            "/**\n" + 
-            " * 1FLG1ZC\n" + 
-            " */\n" + 
-            "public class JC {\n" + 
-            "    void foo() {\n" + 
-            "        new String ().\n" + 
-            "    }\n" + 
-            "}\n";
-
-    String testName = "<complete on method/field of object creation with dummy spaces>";
-    String completeBehind = "new String ().";
-    String expectedCompletionNodeToString = "<CompleteOnMemberAccess:new String().>";
-    String completionIdentifier = "";
-    String expectedReplacedSource = "";
-    int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
-    String expectedUnitDisplayString =
-        "package p;\n" + 
-        "public class JC {\n" + 
-        "  public JC() {\n" + 
-        "  }\n" + 
-        "  void foo() {\n" + 
-        "    <CompleteOnMemberAccess:new String().>;\n" + 
-        "  }\n" + 
-        "}\n";
-
-    checkMethodParse(
-        str.toCharArray(), 
-        cursorLocation, 
-        expectedCompletionNodeToString,
-        expectedUnitDisplayString,
-        completionIdentifier,
-        expectedReplacedSource,
-        testName); }
+(startLine=197 endLine=203 srcPath=/root/Projects/eclipse.jdt.coreFilter/665/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/MementoTests.java)
+public void testBinaryMethodMemento3() throws JavaModelException {
+    IType type = getClassFile("/P/lib/p/X.class").getType();
+    IMethod method = type.getMethod("fred", new String[] {"[Z"});
+    assertMemento(
+        "=P/lib<p(X.class[X~fred~\\[Z",
+        method);
+}
 

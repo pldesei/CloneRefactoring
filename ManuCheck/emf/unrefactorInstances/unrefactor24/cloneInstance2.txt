@@ -1,16 +1,13 @@
-(startLine=99 endLine=112 srcPath=/root/Projects/org.eclipse.emfFilter/168/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/DImpl.java)
-  public C getC()
+(startLine=96 endLine=106 srcPath=/root/Projects/org.eclipse.emfFilter/59/org.eclipse.emf/plugins/org.eclipse.emf.ecore.xmi/src/org/eclipse/emf/ecore/xmi/util/DefaultEcoreBuilder.java)
+  public Collection<? extends Resource> generate(Collection<URI> uris) throws Exception
   {
-    if (c != null && c.eIsProxy())
+    if (uris != null && XSD_ECORE_BUILDER_CONSTRUCTOR != null && XSD_ECORE_BUILDER_GENERATE_RESOURCES_METHOD != null)
     {
-      InternalEObject oldC = (InternalEObject)c;
-      c = (C)eResolveProxy(oldC);
-      if (c != oldC)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefPackage.D__C, oldC, c));
-      }
+      Object ecoreBuilder = XSD_ECORE_BUILDER_CONSTRUCTOR.newInstance(new Object [] { extendedMetaData, XSD_ECORE_BUILDER_OPTIONS });
+      @SuppressWarnings("unchecked") Collection<? extends Resource> result = (Collection<? extends Resource>)
+        XSD_ECORE_BUILDER_GENERATE_RESOURCES_METHOD.invoke(ecoreBuilder, new Object [] { uris });
+      return result;
     }
-    return c;
+    return Collections.emptyList();
   }
 

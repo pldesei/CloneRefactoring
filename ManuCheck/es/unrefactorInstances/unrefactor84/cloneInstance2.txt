@@ -1,34 +1,66 @@
-(startLine=95 endLine=126 srcPath=/root/Projects/elasticsearchFilter/1870/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/util/http/client/providers/NettyAsyncHttpProvider.java)
-            public ChannelPipeline getPipeline() throws Exception {
-                ChannelPipeline pipeline = pipeline();
+(startLine=84 endLine=147 srcPath=/root/Projects/elasticsearchFilter/875/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryThenFetchAction.java)
+        protected void moveToSecondPhase() {
+            sortedShardList = searchPhaseController.sortDocs(firstResults);
+            searchPhaseController.fillDocIdsToLoad(docIdsToLoad, sortedShardList);
 
-                if (useSSL) {
-                    try {
-                        SSLEngine sslEngine = config.getSSLEngine();
-                        if (sslEngine == null) {
-                            sslEngine = SslUtils.getSSLEngine();
-                        }
-                        pipeline.addLast("ssl", new SslHandler(sslEngine));
-                    } catch (Throwable ex) {
-                        cl.future().abort(ex);
-                    }
-                }
-
-                pipeline.addLast("codec", new HttpClientCodec());
-
-                if (config.isCompressionEnabled()) {
-                    pipeline.addLast("inflater", new HttpContentDecompressor());
-                }
-
-                IdleStateHandler h = new IdleStateHandler(timer, 0, 0, config.getIdleConnectionTimeoutInMs(), TimeUnit.MILLISECONDS) {
-                    @SuppressWarnings("unused")
-                    public void channelIdle(ChannelHandlerContext ctx, IdleStateEvent e) throws MalformedURLException {
-                        e.getChannel().close();
-                        removeFromCache(ctx, e);
-                    }
-                };
-                pipeline.addLast("timeout", h);
-                pipeline.addLast("httpProcessor", NettyAsyncHttpProvider.this);
-                return pipeline;
+            if (docIdsToLoad.asList().isEmpty()) {
+                finishHim();
+                return;
             }
+
+            final AtomicInteger counter = new AtomicInteger(docIdsToLoad.asList().size());
+
+            int localOperations = 0;
+            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                QuerySearchResult queryResult = firstResults.get(entry.index);
+                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                if (node.id().equals(nodes.localNodeId())) {
+                    localOperations++;
+                } else {
+                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                }
+            }
+
+            if (localOperations > 0) {
+                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
+                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                                QuerySearchResult queryResult = firstResults.get(entry.index);
+                                DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                                if (node.id().equals(nodes.localNodeId())) {
+                                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
+                    for (final AtomicArray.Entry<IntArrayList> entry : docIdsToLoad.asList()) {
+                        final QuerySearchResult queryResult = firstResults.get(entry.index);
+                        final DiscoveryNode node = nodes.get(queryResult.shardTarget().nodeId());
+                        if (node.id().equals(nodes.localNodeId())) {
+                            final FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(request, queryResult.id(), entry.value);
+                            try {
+                                if (localAsync) {
+                                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                        }
+                                    });
+                                } else {
+                                    executeFetch(entry.index, queryResult.shardTarget(), counter, fetchSearchRequest, node);
+                                }
+                            } catch (Throwable t) {
+                                onFetchFailure(t, fetchSearchRequest, entry.index, queryResult.shardTarget(), counter);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 

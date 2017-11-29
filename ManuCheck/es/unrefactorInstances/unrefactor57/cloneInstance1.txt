@@ -1,17 +1,27 @@
-(startLine=202 endLine=216 srcPath=/root/Projects/elasticsearchFilter/1440/elasticsearch/src/main/java/org/elasticsearch/index/mapper/internal/TTLFieldMapper.java)
-    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
-        // if all are defaults, no sense to write it at all
-        if (enabled == Defaults.ENABLED && defaultTTL == Defaults.DEFAULT) {
-            return builder;
+(startLine=346 endLine=370 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/engine/robin/RobinEngine.java)
+    public void create(Create create) throws EngineException {
+        rwl.readLock().lock();
+        try {
+            IndexWriter writer = this.indexWriter;
+            if (writer == null) {
+                throw new EngineClosedException(shardId, failedEngine);
+            }
+            innerCreate(create, writer);
+            dirty = true;
+            possibleMergeNeeded = true;
+            flushNeeded = true;
+        } catch (IOException e) {
+            throw new CreateFailedEngineException(shardId, create, e);
+        } catch (OutOfMemoryError e) {
+            failEngine(e);
+            throw new CreateFailedEngineException(shardId, create, e);
+        } catch (IllegalStateException e) {
+            if (e.getMessage().contains("OutOfMemoryError")) {
+                failEngine(e);
+            }
+            throw new CreateFailedEngineException(shardId, create, e);
+        } finally {
+            rwl.readLock().unlock();
         }
-        builder.startObject(CONTENT_TYPE);
-        if (enabled != Defaults.ENABLED) {
-            builder.field("enabled", enabled);
-        }
-        if (defaultTTL != Defaults.DEFAULT) {
-            builder.field("default", defaultTTL);
-        }
-        builder.endObject();
-        return builder;
     }
 

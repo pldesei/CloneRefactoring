@@ -1,43 +1,205 @@
-(startLine=7381 endLine=7421 srcPath=/root/Projects/eclipse.jdt.coreFilter/2010/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
-    public void test0312() throws JavaModelException {
-        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "", "test0312", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        char[] source = sourceUnit.getSource().toCharArray();
-        ASTNode result = runConversion(sourceUnit, true);
-        assertNotNull("No compilation unit", result); //$NON-NLS-1$
-        assertTrue("result is not a compilation unit", result instanceof CompilationUnit); //$NON-NLS-1$
-        CompilationUnit compilationUnit = (CompilationUnit) result;
-        ASTNode node = getASTNode(compilationUnit, 0, 0, 1);
-        assertTrue("Not a VariableDeclarationStatement", node instanceof VariableDeclarationStatement); //$NON-NLS-1$
-        VariableDeclarationStatement variableDeclarationStatement = (VariableDeclarationStatement) node;
-        List fragments = variableDeclarationStatement.fragments();
-        assertEquals("wrong size", 1, fragments.size()); //$NON-NLS-1$
-        VariableDeclarationFragment variableDeclarationFragment = (VariableDeclarationFragment) fragments.get(0);
-        Expression expression = variableDeclarationFragment.getInitializer();
-        assertTrue("not a class instance creation", expression instanceof ClassInstanceCreation); //$NON-NLS-1$
-        ClassInstanceCreation classInstanceCreation = (ClassInstanceCreation) expression;
-        AnonymousClassDeclaration anonymousClassDeclaration = classInstanceCreation.getAnonymousClassDeclaration();
-        assertNotNull("No body", anonymousClassDeclaration); //$NON-NLS-1$
-        List bodyDeclarations = anonymousClassDeclaration.bodyDeclarations();
-        assertEquals("wrong size for body declarations", 1, bodyDeclarations.size()); //$NON-NLS-1$
-        BodyDeclaration bodyDeclaration = (BodyDeclaration) bodyDeclarations.get(0);
-        assertTrue("Not a method declaration", bodyDeclaration instanceof MethodDeclaration); //$NON-NLS-1$
-        MethodDeclaration methodDeclaration = (MethodDeclaration) bodyDeclaration;
-        Block block = methodDeclaration.getBody();
-        assertNotNull("no body", block); //$NON-NLS-1$
-        List statements = block.statements();
-        assertEquals("Wrong size for statements", 1, statements.size()); //$NON-NLS-1$
-        Statement statement = (Statement) statements.get(0);
-        assertTrue("not a variable declaration statement", statement instanceof VariableDeclarationStatement); //$NON-NLS-1$
-        VariableDeclarationStatement variableDeclarationStatement2 = (VariableDeclarationStatement) statement;
-        List fragments2 = variableDeclarationStatement2.fragments();
-        assertEquals("wrong size for fragments2", 1, fragments2.size()); //$NON-NLS-1$
-        VariableDeclarationFragment variableDeclarationFragment2 = (VariableDeclarationFragment) fragments2.get(0);
-        Expression expression2 = variableDeclarationFragment2.getInitializer();
-        assertTrue("Not a name", expression2 instanceof Name); //$NON-NLS-1$
-        Name name = (Name) expression2;
-        checkSourceRange(name, "j", source); //$NON-NLS-1$
-        IBinding binding = name.resolveBinding();
-        ASTNode declaringNode = compilationUnit.findDeclaringNode(binding);
-        assertNull("No declaring node is available", declaringNode); //$NON-NLS-1$
+(startLine=2541 endLine=2743 srcPath=/root/Projects/eclipse.jdt.coreFilter/888/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndexForJavaLangStringBuilderAppend(int typeID) {
+    int index = 0;
+    int nameAndTypeIndex = 0;
+    int classIndex = 0;
+    switch (typeID) {
+        case T_int :
+        case T_byte :
+        case T_short :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_INT_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_INT_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendIntSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_INT_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_INT_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_long :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_LONG_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_LONG_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendLongSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_LONG_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_LONG_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_float :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_FLOAT_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_FLOAT_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendFloatSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_FLOAT_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_FLOAT_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_double :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_DOUBLE_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_DOUBLE_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendDoubleSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_DOUBLE_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_DOUBLE_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_char :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_CHAR_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_CHAR_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendCharSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_CHAR_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_CHAR_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_boolean :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_BOOLEAN_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_BOOLEAN_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendBooleanSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_BOOLEAN_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_BOOLEAN_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_Object :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_OBJECT_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_OBJECT_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendObjectSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_OBJECT_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_OBJECT_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
+        case T_String :
+        case T_null :
+            if ((index = wellKnownMethods[STRINGBUILDER_APPEND_STRING_METHOD]) == 0) {
+                classIndex = literalIndexForJavaLangStringBuilder();
+                if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_STRING_STRINGBUILDER_METHOD_NAME_AND_TYPE]) == 0) {
+                    int nameIndex = literalIndex(QualifiedNamesConstants.Append);
+                    int typeIndex = literalIndex(QualifiedNamesConstants.StringBuilderAppendStringSignature);
+                    nameAndTypeIndex = wellKnownMethodNameAndTypes[APPEND_STRING_STRINGBUILDER_METHOD_NAME_AND_TYPE] = currentIndex++;
+                    writeU1(NameAndTypeTag);
+                    writeU2(nameIndex);
+                    writeU2(typeIndex);
+                }
+                index = wellKnownMethods[STRINGBUILDER_APPEND_STRING_METHOD] = currentIndex++;
+                if (index > 0xFFFF){
+                    this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+                }
+                // Write the method ref constant into the constant pool
+                // First add the tag
+                writeU1(MethodRefTag);
+                // Then write the class index
+                writeU2(classIndex);
+                // The write the nameAndType index
+                writeU2(nameAndTypeIndex);
+            }
+            break;
     }
+    return index;
+}
 

@@ -1,9 +1,9 @@
-(startLine=52 endLine=60 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/CJKFilterFactoryTests.java)
-    public void testHanOnly() throws IOException {
+(startLine=32 endLine=40 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/CJKFilterFactoryTests.java)
+    public void testDefault() throws IOException {
         AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
-        TokenFilterFactory tokenFilter = analysisService.tokenFilter("cjk_han_only");
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("cjk_bigram");
         String source = "多くの学生が試験に落ちた。";
-        String[] expected = new String[]{"多", "く", "の",  "学生", "が",  "試験", "に",  "落", "ち", "た"  };
+        String[] expected = new String[]{"多く", "くの", "の学", "学生", "生が", "が試", "試験", "験に", "に落", "落ち", "ちた" };
         Tokenizer tokenizer = new StandardTokenizer();
         tokenizer.setReader(new StringReader(source));
         assertTokenStreamContents(tokenFilter.create(tokenizer), expected);

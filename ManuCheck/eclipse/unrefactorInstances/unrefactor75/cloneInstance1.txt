@@ -1,36 +1,43 @@
-(startLine=926 endLine=959 srcPath=/root/Projects/eclipse.jdt.coreFilter/321/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SourceMapper.java)
-    public SourceRange getNameRange(IJavaElement element) {
-        switch(element.getElementType()) {
-            case IJavaElement.METHOD :
-                if (((IMember) element).isBinary()) {
-                    IJavaElement[] el = getUnqualifiedMethodHandle((IMethod) element, false);
-                    if(el[1] != null && this.sourceRanges.get(el[0]) == null) {
-                        element = getUnqualifiedMethodHandle((IMethod) element, true)[0];
-                    } else {
-                        element = el[0];
-                    }
-                }
-                break;
-            case IJavaElement.TYPE_PARAMETER :
-                IJavaElement parent = element.getParent();
-                if (parent.getElementType() == IJavaElement.METHOD) {
-                    IMethod method = (IMethod) parent;
-                    if (method.isBinary()) {
-                        IJavaElement[] el = getUnqualifiedMethodHandle(method, false);
-                        if(el[1] != null && this.sourceRanges.get(el[0]) == null) {
-                            method = (IMethod) getUnqualifiedMethodHandle(method, true)[0];
-                        } else {
-                            method = (IMethod) el[0];
-                        }
-                        element = method.getTypeParameter(element.getElementName());
-                    }
-                }
-        }
-        SourceRange[] ranges = (SourceRange[]) this.sourceRanges.get(element);
-        if (ranges == null) {
-            return UNKNOWN_RANGE;
-        } else {
-            return ranges[1];
-        }
-    }
+(startLine=406 endLine=446 srcPath=/root/Projects/eclipse.jdt.coreFilter/1113/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionRecoveryTest.java)
+public void test09() {
+    this.runTestCheckDietParse(
+        // compilationUnit:
+        "package pack;                                \n"+
+        "class A  {                                    \n"+
+        "                                            \n"+
+        "    public static void main(String[] argv    \n"+
+        "            new Member().f                    \n"+
+        "            ;                                \n"+
+        "    }                                        \n"+
+        "    class Member {                            \n"+
+        "        int foo()                            \n"+
+        "        }                                    \n"+
+        "    }                                        \n"+
+        "};                                            \n",
+        // completeBehind:
+        "argv",
+        // expectedCompletionNodeToString:
+        "<CompleteOnArgumentName:String[] argv>",
+        // expectedUnitDisplayString:
+        "package pack;\n" + 
+        "class A {\n" + 
+        "  class Member {\n" + 
+        "    Member() {\n" + 
+        "    }\n" + 
+        "    int foo() {\n" + 
+        "    }\n" + 
+        "  }\n" + 
+        "  A() {\n" + 
+        "  }\n" + 
+        "  public static void main(<CompleteOnArgumentName:String[] argv>) {\n" + 
+        "  }\n" + 
+        "}\n",
+        // expectedCompletionIdentifier:
+        "argv",
+        // expectedReplacedSource:
+        "argv",
+        // test name
+        "<completion on argument name>"
+    );
+}
 

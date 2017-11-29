@@ -1,11 +1,11 @@
-(startLine=160 endLine=168 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/DoubleFieldMapper.java)
-    private double parseValue(Object value) {
+(startLine=159 endLine=167 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/ShortFieldMapper.java)
+    private short parseValue(Object value) {
         if (value instanceof Number) {
-            return ((Number) value).doubleValue();
+            return ((Number) value).shortValue();
         }
         if (value instanceof BytesRef) {
-            return Double.parseDouble(((BytesRef) value).utf8ToString());
+            return Short.parseShort(((BytesRef) value).utf8ToString());
         }
-        return Double.parseDouble(value.toString());
+        return Short.parseShort(value.toString());
     }
 

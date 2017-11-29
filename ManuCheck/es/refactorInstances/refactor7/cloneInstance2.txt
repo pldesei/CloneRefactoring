@@ -1,26 +1,74 @@
-(startLine=50 endLine=73 srcPath=/root/Projects/elasticsearchFilter/1844/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/store/fs/SimpleFsStore.java)
-    @Inject public SimpleFsStore(ShardId shardId, @IndexSettings Settings indexSettings, Environment environment, @LocalNodeId String localNodeId) throws IOException {
-        super(shardId, indexSettings);
-        // by default, we don't need to sync to disk, since we use the gateway
-        this.syncToDisk = componentSettings.getAsBoolean("sync_to_disk", false);
-        String fsLock = componentSettings.get("use_fs_lock", "none");
-        LockFactory lockFactory = new NoLockFactory();
-        if (fsLock.equals("native")) {
-            lockFactory = new NativeFSLockFactory();
-        } else if (fsLock.equals("simple")) {
-            lockFactory = new SimpleFSLockFactory();
-        }
-        this.fsDirectory = new CustomSimpleFSDirectory(createStoreFilePath(environment.workWithClusterFile(), localNodeId, shardId, MAIN_INDEX_SUFFIX), lockFactory, syncToDisk);
+(startLine=83 endLine=154 srcPath=/root/Projects/elasticsearchFilter/1946/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/mlt/TransportMoreLikeThisAction.java)
+            @Override public void onResponse(GetResponse getResponse) {
+                if (!getResponse.exists()) {
+                    listener.onFailure(new ElasticSearchException("document missing"));
+                    return;
+                }
+                final BoolJsonQueryBuilder boolBuilder = boolQuery();
+                try {
+                    DocumentMapper docMapper = indicesService.indexServiceSafe(request.index()).mapperService().documentMapper(request.type());
+                    final Set<String> fields = Sets.newHashSet();
+                    if (request.fields() != null) {
+                        for (String field : request.fields()) {
+                            FieldMappers fieldMappers = docMapper.mappers().smartName(field);
+                            if (fieldMappers != null) {
+                                fields.add(fieldMappers.mapper().names().indexName());
+                            } else {
+                                fields.add(field);
+                            }
+                        }
+                    }
+                    docMapper.parse(request.type(), request.id(), getResponse.source(), new DocumentMapper.ParseListenerAdapter() {
+                        @Override public boolean beforeFieldAdded(FieldMapper fieldMapper, Fieldable field, Object parseContext) {
+                            if (fieldMapper instanceof InternalMapper) {
+                                return true;
+                            }
+                            String value = fieldMapper.valueAsString(field);
+                            if (value == null) {
+                                return false;
+                            }
 
-        SwitchDirectory switchDirectory = buildSwitchDirectoryIfNeeded(fsDirectory);
-        if (switchDirectory != null) {
-            suggestUseCompoundFile = false;
-            logger.debug("Using [simple_fs] Store with path [{}], cache [true] with extensions [{}]", fsDirectory.getFile(), switchDirectory.primaryExtensions());
-            directory = switchDirectory;
-        } else {
-            suggestUseCompoundFile = true;
-            directory = fsDirectory;
-            logger.debug("Using [simple_fs] Store with path [{}]", fsDirectory.getFile());
-        }
-    }
+                            if (fields.isEmpty() || fields.contains(field.name())) {
+                                addMoreLikeThis(request, boolBuilder, fieldMapper, field);
+                            }
+
+                            return false;
+                        }
+                    });
+                    // exclude myself
+                    Term uidTerm = docMapper.uidMapper().term(request.type(), request.id());
+                    boolBuilder.mustNot(termQuery(uidTerm.field(), uidTerm.text()));
+                } catch (Exception e) {
+                    listener.onFailure(e);
+                }
+
+                String[] searchIndices = request.searchIndices();
+                if (searchIndices == null) {
+                    searchIndices = new String[]{request.index()};
+                }
+                String[] searchTypes = request.searchTypes();
+                if (searchTypes == null) {
+                    searchTypes = new String[]{request.type()};
+                }
+
+                SearchRequest searchRequest = searchRequest(searchIndices)
+                        .types(searchTypes)
+                        .searchType(request.searchType())
+                        .source(request.searchSource())
+                        .scroll(request.searchScroll())
+                        .extraSource(searchSource()
+                                .query(boolBuilder)
+                        )
+                        .listenerThreaded(request.listenerThreaded());
+                searchAction.execute(searchRequest, new ActionListener<SearchResponse>() {
+                    @Override public void onResponse(SearchResponse response) {
+                        listener.onResponse(response);
+                    }
+
+                    @Override public void onFailure(Throwable e) {
+                        listener.onFailure(e);
+                    }
+                });
+
+            }
 

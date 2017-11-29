@@ -1,18 +1,11 @@
-(startLine=68 endLine=85 srcPath=/root/Projects/eclipse.jdt.coreFilter/592/eclipse.jdt.core/org.eclipse.jdt.compiler.apt/batch/org/eclipse/jdt/internal/compiler/apt/dispatch/AnnotationDiscoveryVisitor.java)
-    public boolean visit(ConstructorDeclaration constructorDeclaration, ClassScope scope) {
-        this.currentBinding = constructorDeclaration.binding;
-        Annotation[] annotations = constructorDeclaration.annotations;
+(startLine=56 endLine=66 srcPath=/root/Projects/eclipse.jdt.coreFilter/592/eclipse.jdt.core/org.eclipse.jdt.compiler.apt/batch/org/eclipse/jdt/internal/compiler/apt/dispatch/AnnotationDiscoveryVisitor.java)
+    public boolean visit(Argument argument, BlockScope scope) {
+        this.currentBinding = argument.binding;
+        Annotation[] annotations = argument.annotations;
         if (annotations != null) {
             int annotationsLength = annotations.length;
             for (int i = 0; i < annotationsLength; i++) {
-                annotations[i].traverse(this, constructorDeclaration.scope);
-            }
-        }
-        Argument[] arguments = constructorDeclaration.arguments;
-        if (arguments != null) {
-            int argumentLength = arguments.length;
-            for (int i = 0; i < argumentLength; i++) {
-                arguments[i].traverse(this, constructorDeclaration.scope);
+                annotations[i].traverse(this, scope);
             }
         }
         return false;

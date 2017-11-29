@@ -1,7 +1,12 @@
-(startLine=118 endLine=122 srcPath=/root/Projects/elasticsearchFilter/1348/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
-    private Document testDocument(String id) {
-        Document document = new Document();
-        document.add(new UidField("_uid", id, 0));
-        return document;
-    }
+(startLine=39 endLine=48 srcPath=/root/Projects/elasticsearchFilter/1410/elasticsearch/src/main/java/org/elasticsearch/common/settings/loader/SettingsLoader.java)
+        public static Map<String, String> loadNestedFromMap(@Nullable Map map) {
+            Map<String, String> settings = newHashMap();
+            if (map == null) {
+                return settings;
+            }
+            StringBuilder sb = new StringBuilder();
+            List<String> path = newArrayList();
+            serializeMap(settings, sb, path, map);
+            return settings;
+        }
 

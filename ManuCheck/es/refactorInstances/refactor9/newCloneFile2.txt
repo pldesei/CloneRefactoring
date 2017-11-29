@@ -19,7 +19,7 @@
 
 package org.elasticsearch.index.analysis;
 
-import org.apache.lucene.analysis.cz.CzechAnalyzer;
+import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.elasticsearch.common.collect.ImmutableSet;
 import org.elasticsearch.common.collect.Iterators;
 import org.elasticsearch.common.inject.Inject;
@@ -34,25 +34,33 @@ import java.util.Set;
 /**
  * @author kimchy (shay.banon)
  */
-public class CzechAnalyzerProvider extends AbstractIndexAnalyzerProvider<CzechAnalyzer> {
+public class BrazilianAnalyzerProvider extends AbstractIndexAnalyzerProvider<BrazilianAnalyzer> {
 
     private final Set<?> stopWords;
 
-    private final CzechAnalyzer analyzer;
+    private final Set<?> stemExclusion;
 
-    @Inject public CzechAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+    private final BrazilianAnalyzer analyzer;
+
+    @Inject public BrazilianAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
         super(index, indexSettings, name);
         String[] stopWords = settings.getAsArray("stopwords", null);
         if (stopWords != null) {
             this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
         } else {
-            this.stopWords = CzechAnalyzer.getDefaultStopSet();
+            this.stopWords = BrazilianAnalyzer.getDefaultStopSet();
         }
 
-        analyzer = new CzechAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords);
+        String[] stemExclusion = settings.getAsArray("stem_exclusion");
+        if (stemExclusion.length > 0) {
+            this.stemExclusion = ImmutableSet.copyOf(Iterators.forArray(stemExclusion));
+        } else {
+            this.stemExclusion = ImmutableSet.of();
+        }
+        analyzer = new BrazilianAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords, this.stemExclusion);
     }
 
-    @Override public CzechAnalyzer get() {
+    @Override public BrazilianAnalyzer get() {
         return this.analyzer;
     }
 }

@@ -1,12 +1,11 @@
-(startLine=546 endLine=555 srcPath=/root/Projects/eclipse.jdt.coreFilter/178/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ExistenceTests.java)
-public void testCorrespondingResourceNonExistingPkgFragmentRoot() throws CoreException {
-    try {
-        IJavaProject project = createJavaProject("P", new String[] {"src"}, "bin");
-        IFolder folder = createFolder("/P/nonExistingRoot");
-        IPackageFragmentRoot root = project.getPackageFragmentRoot(folder);
-        assertCorrespondingResourceFails(root);
-    } finally {
-        deleteProject("P");
+(startLine=101 endLine=109 srcPath=/root/Projects/eclipse.jdt.coreFilter/482/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/ast/FloatLiteral.java)
+    public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+        int pc = codeStream.position;
+        if (valueRequired)
+            if ((implicitConversion >> 4) == T_float)
+                codeStream.generateInlinedValue(value);
+            else
+                codeStream.generateConstant(constant, implicitConversion);
+        codeStream.recordPositionsFrom(pc, this.sourceStart);
     }
-}
 

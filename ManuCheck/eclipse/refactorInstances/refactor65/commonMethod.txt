@@ -1,13 +1,8 @@
-(startLine=242 endLine=252 srcPath=/root/Projects/eclipse.jdt.coreFilter/416/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/StackMapFrameCodeStream.java)
-private void addStackDepthMarker(int pc, int delta, TypeBinding typeBinding) {
-    if (this.stackDepthMarkers == null) {
-        this.stackDepthMarkers = new ArrayList();
-        this.stackDepthMarkers.add(new StackDepthMarker(pc, delta, typeBinding));
-    } else {
-        int size = this.stackDepthMarkers.size();
-        if (size == 0 || ((StackDepthMarker) this.stackDepthMarkers.get(size - 1)).pc != this.position) {
-            this.stackDepthMarkers.add(new StackDepthMarker(pc, delta, typeBinding));
-        }
+(startLine=47 endLine=52 srcPath=/root/Projects/eclipse.jdt.coreFilter/482/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/MethodVerifyTest.java)
+    String mustOverrideMessage(String method, String type) {
+        return "The method " + method + " of type " + type +
+            (new CompilerOptions(getCompilerOptions()).sourceLevel < ClassFileConstants.JDK1_6
+                ? " must override a superclass method\n"
+                : " must override or implement a supertype method\n");
     }
-}
 

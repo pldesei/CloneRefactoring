@@ -1,11 +1,11 @@
-(startLine=40 endLine=48 srcPath=/root/Projects/elasticsearchFilter/262/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/metrics/percentiles/tdigest/AbstractInternalTDigestPercentiles.java)
-    public AbstractInternalTDigestPercentiles(String name, double[] keys, TDigestState state, boolean keyed, DocValueFormat formatter,
-            List<PipelineAggregator> pipelineAggregators,
-            Map<String, Object> metaData) {
-        super(name, pipelineAggregators, metaData);
-        this.keys = keys;
-        this.state = state;
-        this.keyed = keyed;
-        this.format = formatter;
+(startLine=71 endLine=79 srcPath=/root/Projects/elasticsearchFilter/456/elasticsearch/src/main/java/org/elasticsearch/index/analysis/compound/HyphenationCompoundWordTokenFilterFactory.java)
+    public TokenStream create(TokenStream tokenStream) {
+        if (version.onOrAfter(Version.LUCENE_4_4_0)) {
+            return new HyphenationCompoundWordTokenFilter(tokenStream, hyphenationTree, wordList, minWordSize, 
+                                                          minSubwordSize, maxSubwordSize, onlyLongestMatch);
+        } else {
+            return new Lucene43HyphenationCompoundWordTokenFilter(tokenStream, hyphenationTree, wordList, minWordSize, 
+                    minSubwordSize, maxSubwordSize, onlyLongestMatch);
+        }
     }
 

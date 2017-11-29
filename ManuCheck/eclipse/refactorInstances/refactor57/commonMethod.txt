@@ -1,29 +1,36 @@
-(startLine=97 endLine=123 srcPath=/root/Projects/eclipse.jdt.coreFilter/820/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/ReferenceBinding.java)
-public static long binarySearch(char[] selector, MethodBinding[] sortedMethods) {
-    if (sortedMethods == null)
-        return -1;
-    int max = sortedMethods.length;
-    if (max == 0)
-        return -1;
-    int left = 0, right = max - 1, selectorLength = selector.length;
-    int mid = 0;
-    char[] midSelector;
-    while (left <= right) {
-        mid = (left + right) /2;
-        int compare = compare(selector, midSelector = sortedMethods[mid].selector, selectorLength, midSelector.length);
-        if (compare < 0) {
-            right = mid-1;
-        } else if (compare > 0) {
-            left = mid+1;
-        } else {
-            int start = mid, end = mid;
-            // find first method with same selector
-            while (start > left && CharOperation.equals(sortedMethods[start-1].selector, selector)){ start--; }
-            // find last method with same selector
-            while (end < right && CharOperation.equals(sortedMethods[end+1].selector, selector)){ end++; }
-            return start + ((long)end<< 32);
-        }
+(startLine=823 endLine=856 srcPath=/root/Projects/eclipse.jdt.coreFilter/895/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/flow/UnconditionalFlowInfo.java)
+final public boolean isPotentiallyNull(LocalVariableBinding local) {
+    if ((this.tagBits & NULL_FLAG_MASK) == 0 || 
+            (local.type.tagBits & TagBits.IsBaseType) != 0) {
+        return false;
     }
-    return -1;
+    int position;
+    long mask;
+    if ((position = local.id + this.maxFieldCount) < BitCacheSize) {
+        // use bits
+        return
+            (this.nullAssignmentStatusBit2 & (mask = 1L << position)) != 0 ?
+            (this.nullAssignmentStatusBit1 & mask) == 0 : // protected null
+            (this.nullAssignmentValueBit1 & mask) != 0 && // null bit set and
+                ((this.nullAssignmentStatusBit1 & mask) == 0 || // (potential or
+                 (this.nullAssignmentValueBit2 & mask) == 0); 
+                                            // assigned, but not unknown)
+    }
+    // use extra vector
+    if (this.extra == null) {
+        return false; // if vector not yet allocated, then not initialized
+    }
+    int vectorIndex;
+    if ((vectorIndex = (position / BitCacheSize) - 1) >= 
+            this.extra[0].length) {
+        return false; // if not enough room in vector, then not initialized
+    }
+    return 
+        (this.extra[3][vectorIndex] & 
+            (mask = 1L << (position % BitCacheSize))) != 0 ?
+        (this.extra[2][vectorIndex] & mask) == 0 :
+        (this.extra[4][vectorIndex] & mask) != 0 && 
+            ((this.extra[2][vectorIndex] & mask) == 0 || 
+             (this.extra[5][vectorIndex] & mask) == 0); 
 }
 

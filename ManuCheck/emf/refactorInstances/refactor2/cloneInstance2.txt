@@ -1,13 +1,4 @@
-(startLine=116 endLine=413 srcPath=/root/Projects/org.eclipse.emfFilter/938/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/Rose2GenModel.java)
-  public Object run(Object object) 
-  {
-    try
-    {
-      final String[] arguments = (String[])object;
-      final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-      IWorkspaceRunnable runnable = 
-        new IWorkspaceRunnable()
-        {
+(startLine=125 endLine=401 srcPath=/root/Projects/org.eclipse.emfFilter/938/org.eclipse.emf/plugins/org.eclipse.emf.codegen.ecore/src/org/eclipse/emf/codegen/ecore/Rose2GenModel.java)
           public void run(IProgressMonitor progressMonitor) throws CoreException
           {
             try
@@ -285,16 +276,4 @@
               progressMonitor.done();
             }
           }
-        };
-      workspace.run(runnable, new StreamProgressMonitor(System.out));
-
-      return new Integer(0);
-    }
-    catch (Exception exception)
-    {
-      exception.printStackTrace();
-      CodeGenEcorePlugin.INSTANCE.log(exception);
-      return new Integer(1);
-    }
-  }
 

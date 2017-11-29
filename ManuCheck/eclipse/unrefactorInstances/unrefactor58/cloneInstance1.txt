@@ -1,22 +1,22 @@
-(startLine=16459 endLine=16478 srcPath=/root/Projects/eclipse.jdt.coreFilter/260/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
-    public void test0534() {
-        this.runConformTest(
-            new String[] {
-                "X.java",
-                "import java.util.EnumSet;\n" + 
-                "\n" + 
-                "enum Foo {\n" + 
-                "    blargh, baz, boz;\n" + 
-                "}\n" + 
-                "\n" + 
-                "public class X {\n" + 
-                "    public static void main(String[] args) {\n" + 
-                "        Class c = Foo.class;\n" + 
-                "        EnumSet<Foo> eSet = EnumSet.allOf(c);\n" + 
-                "    }\n" + 
-                "}\n",
-            },
-            ""
-        );
+(startLine=36 endLine=55 srcPath=/root/Projects/eclipse.jdt.coreFilter/163/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/FieldLocator.java)
+public int match(ASTNode node, MatchingNodeSet nodeSet) {
+    int declarationsLevel = IMPOSSIBLE_MATCH;
+    if (this.pattern.findReferences) {
+        if (node instanceof ImportReference) {
+            // With static import, we can have static field reference in import reference
+            ImportReference importRef = (ImportReference) node;
+            int length = importRef.tokens.length-1;
+            if (importRef.isStatic() && ((importRef.bits & ASTNode.OnDemand) == 0) && matchesName(this.pattern.name, importRef.tokens[length])) {
+                char[][] compoundName = new char[length][];
+                System.arraycopy(importRef.tokens, 0, compoundName, 0, length);
+                FieldPattern fieldPattern = (FieldPattern) this.pattern;
+                char[] declaringType = CharOperation.concat(fieldPattern.declaringQualification, fieldPattern.declaringSimpleName, '.');
+                if (matchesName(declaringType, CharOperation.concatWith(compoundName, '.'))) {
+                    declarationsLevel = this.pattern.mustResolve ? POSSIBLE_MATCH : ACCURATE_MATCH;
+                }
+            }
+        }
     }
+    return nodeSet.addMatch(node, declarationsLevel);
+}
 

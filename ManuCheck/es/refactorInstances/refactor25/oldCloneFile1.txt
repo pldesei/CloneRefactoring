@@ -17,263 +17,190 @@
  * under the License.
  */
 
-package org.elasticsearch.action.search.type;
+package org.elasticsearch.index.search.geo;
 
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.search.ReduceSearchPhaseException;
-import org.elasticsearch.action.search.SearchOperationThreading;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.ShardSearchFailure;
-import org.elasticsearch.cluster.ClusterService;
-import org.elasticsearch.cluster.node.DiscoveryNode;
-import org.elasticsearch.cluster.routing.ShardRouting;
-import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.trove.ExtTIntArrayList;
-import org.elasticsearch.search.SearchShardTarget;
-import org.elasticsearch.search.action.SearchServiceListener;
-import org.elasticsearch.search.action.SearchServiceTransportAction;
-import org.elasticsearch.search.controller.SearchPhaseController;
-import org.elasticsearch.search.dfs.AggregatedDfs;
-import org.elasticsearch.search.dfs.DfsSearchResult;
-import org.elasticsearch.search.fetch.FetchSearchRequest;
-import org.elasticsearch.search.fetch.FetchSearchResult;
-import org.elasticsearch.search.internal.InternalSearchRequest;
-import org.elasticsearch.search.internal.InternalSearchResponse;
-import org.elasticsearch.search.query.QuerySearchRequest;
-import org.elasticsearch.search.query.QuerySearchResult;
-import org.elasticsearch.search.query.QuerySearchResultProvider;
-import org.elasticsearch.threadpool.ThreadPool;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.DocIdSet;
+import org.apache.lucene.search.Filter;
+import org.elasticsearch.ElasticSearchIllegalArgumentException;
+import org.elasticsearch.common.collect.ImmutableList;
+import org.elasticsearch.common.lucene.docset.AndDocSet;
+import org.elasticsearch.common.lucene.docset.DocSet;
+import org.elasticsearch.common.lucene.docset.DocSets;
+import org.elasticsearch.common.lucene.docset.GetDocSet;
+import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.index.cache.field.data.FieldDataCache;
+import org.elasticsearch.index.mapper.geo.GeoPointFieldData;
+import org.elasticsearch.index.mapper.geo.GeoPointFieldDataType;
+import org.elasticsearch.index.mapper.geo.GeoPointFieldMapper;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.io.IOException;
 
 /**
- * @author kimchy (shay.banon)
  */
-public class TransportSearchDfsQueryThenFetchAction extends TransportSearchTypeAction {
+public class GeoDistanceFilter extends Filter {
 
-    @Inject public TransportSearchDfsQueryThenFetchAction(Settings settings, ThreadPool threadPool, ClusterService clusterService,
-                                                          TransportSearchCache transportSearchCache, SearchServiceTransportAction searchService, SearchPhaseController searchPhaseController) {
-        super(settings, threadPool, clusterService, transportSearchCache, searchService, searchPhaseController);
+    private final double lat;
+
+    private final double lon;
+
+    private final double distance; // in miles
+
+    private final GeoDistance geoDistance;
+
+    private final String fieldName;
+
+    private final FieldDataCache fieldDataCache;
+
+    private final GeoDistance.FixedSourceDistance fixedSourceDistance;
+    private GeoDistance.DistanceBoundingCheck distanceBoundingCheck;
+    private final Filter boundingBoxFilter;
+
+    public GeoDistanceFilter(double lat, double lon, double distance, GeoDistance geoDistance, String fieldName, GeoPointFieldMapper mapper, FieldDataCache fieldDataCache,
+                             String optimizeBbox) {
+        this.lat = lat;
+        this.lon = lon;
+        this.distance = distance;
+        this.geoDistance = geoDistance;
+        this.fieldName = fieldName;
+        this.fieldDataCache = fieldDataCache;
+
+        this.fixedSourceDistance = geoDistance.fixedSourceDistance(lat, lon, DistanceUnit.MILES);
+        if (optimizeBbox != null && !"none".equals(optimizeBbox)) {
+            distanceBoundingCheck = GeoDistance.distanceBoundingCheck(lat, lon, distance, DistanceUnit.MILES);
+            if ("memory".equals(optimizeBbox)) {
+                boundingBoxFilter = null;
+            } else if ("indexed".equals(optimizeBbox)) {
+                boundingBoxFilter = IndexedGeoBoundingBoxFilter.create(distanceBoundingCheck.topLeft(), distanceBoundingCheck.bottomRight(), mapper);
+                distanceBoundingCheck = GeoDistance.ALWAYS_INSTANCE; // fine, we do the bounding box check using the filter
+            } else {
+                throw new ElasticSearchIllegalArgumentException("type [" + optimizeBbox + "] for bounding box optimization not supported");
+            }
+        } else {
+            distanceBoundingCheck = GeoDistance.ALWAYS_INSTANCE;
+            boundingBoxFilter = null;
+        }
     }
 
-    @Override protected void doExecute(SearchRequest searchRequest, ActionListener<SearchResponse> listener) {
-        new AsyncAction(searchRequest, listener).start();
+    public double lat() {
+        return lat;
     }
 
-    private class AsyncAction extends BaseAsyncAction<DfsSearchResult> {
+    public double lon() {
+        return lon;
+    }
 
-        private final Collection<DfsSearchResult> dfsResults = searchCache.obtainDfsResults();
+    public double distance() {
+        return distance;
+    }
 
-        private final Map<SearchShardTarget, QuerySearchResultProvider> queryResults = searchCache.obtainQueryResults();
+    public GeoDistance geoDistance() {
+        return geoDistance;
+    }
 
-        private final Map<SearchShardTarget, FetchSearchResult> fetchResults = searchCache.obtainFetchResults();
+    public String fieldName() {
+        return fieldName;
+    }
 
-        private volatile Map<SearchShardTarget, ExtTIntArrayList> docIdsToLoad;
+    @Override public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
+        DocSet boundingBoxDocSet = null;
+        if (boundingBoxFilter != null) {
+            DocIdSet docIdSet = boundingBoxFilter.getDocIdSet(reader);
+            if (docIdSet == null) {
+                return null;
+            }
+            boundingBoxDocSet = DocSets.convert(reader, docIdSet);
+        }
+        final GeoPointFieldData fieldData = (GeoPointFieldData) fieldDataCache.cache(GeoPointFieldDataType.TYPE, reader, fieldName);
+        GeoDistanceDocSet distDocSet = new GeoDistanceDocSet(reader.maxDoc(), fieldData, fixedSourceDistance, distanceBoundingCheck, distance);
+        if (boundingBoxDocSet == null) {
+            return distDocSet;
+        } else {
+            return new AndDocSet(ImmutableList.of(boundingBoxDocSet, distDocSet));
+        }
+    }
 
-        private AsyncAction(SearchRequest request, ActionListener<SearchResponse> listener) {
-            super(request, listener);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeoDistanceFilter filter = (GeoDistanceFilter) o;
+
+        if (Double.compare(filter.distance, distance) != 0) return false;
+        if (Double.compare(filter.lat, lat) != 0) return false;
+        if (Double.compare(filter.lon, lon) != 0) return false;
+        if (fieldName != null ? !fieldName.equals(filter.fieldName) : filter.fieldName != null) return false;
+        if (geoDistance != filter.geoDistance) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = lat != +0.0d ? Double.doubleToLongBits(lat) : 0L;
+        result = (int) (temp ^ (temp >>> 32));
+        temp = lon != +0.0d ? Double.doubleToLongBits(lon) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = distance != +0.0d ? Double.doubleToLongBits(distance) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (geoDistance != null ? geoDistance.hashCode() : 0);
+        result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
+        return result;
+    }
+
+    public static class GeoDistanceDocSet extends GetDocSet {
+        private final double distance; // in miles
+        private final GeoPointFieldData fieldData;
+        private final GeoDistance.FixedSourceDistance fixedSourceDistance;
+        private final GeoDistance.DistanceBoundingCheck distanceBoundingCheck;
+
+        public GeoDistanceDocSet(int maxDoc, GeoPointFieldData fieldData, GeoDistance.FixedSourceDistance fixedSourceDistance, GeoDistance.DistanceBoundingCheck distanceBoundingCheck,
+                                 double distance) {
+            super(maxDoc);
+            this.fieldData = fieldData;
+            this.fixedSourceDistance = fixedSourceDistance;
+            this.distanceBoundingCheck = distanceBoundingCheck;
+            this.distance = distance;
         }
 
-        @Override protected String firstPhaseName() {
-            return "dfs";
+        @Override public boolean isCacheable() {
+            // not cacheable for several reasons:
+            // 1. It is only relevant when _cache is set to true, and then, we really want to create in mem bitset
+            // 2. Its already fast without in mem bitset, since it works with field data
+            return false;
         }
 
-        @Override protected void sendExecuteFirstPhase(DiscoveryNode node, InternalSearchRequest request, SearchServiceListener<DfsSearchResult> listener) {
-            searchService.sendExecuteDfs(node, request, listener);
-        }
-
-        @Override protected void processFirstPhaseResult(ShardRouting shard, DfsSearchResult result) {
-            dfsResults.add(result);
-        }
-
-        @Override protected void moveToSecondPhase() {
-            final AggregatedDfs dfs = searchPhaseController.aggregateDfs(dfsResults);
-            final AtomicInteger counter = new AtomicInteger(dfsResults.size());
-
-
-            int localOperations = 0;
-            for (final DfsSearchResult dfsResult : dfsResults) {
-                DiscoveryNode node = nodes.get(dfsResult.shardTarget().nodeId());
-                if (node.id().equals(nodes.localNodeId())) {
-                    localOperations++;
-                } else {
-                    QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
-                    executeQuery(dfsResult, counter, querySearchRequest, node);
-                }
+        @Override public boolean get(int doc) {
+            if (!fieldData.hasValue(doc)) {
+                return false;
             }
 
-            if (localOperations > 0) {
-                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
-                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
-                        @Override public void run() {
-                            for (final DfsSearchResult dfsResult : dfsResults) {
-                                DiscoveryNode node = nodes.get(dfsResult.shardTarget().nodeId());
-                                if (node.id().equals(nodes.localNodeId())) {
-                                    QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
-                                    executeQuery(dfsResult, counter, querySearchRequest, node);
-                                }
-                            }
-                        }
-                    });
-                } else {
-                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
-                    for (final DfsSearchResult dfsResult : dfsResults) {
-                        final DiscoveryNode node = nodes.get(dfsResult.shardTarget().nodeId());
-                        if (node.id().equals(nodes.localNodeId())) {
-                            final QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
-                            if (localAsync) {
-                                threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
-                                    @Override public void run() {
-                                        executeQuery(dfsResult, counter, querySearchRequest, node);
-                                    }
-                                });
-                            } else {
-                                executeQuery(dfsResult, counter, querySearchRequest, node);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        void executeQuery(final DfsSearchResult dfsResult, final AtomicInteger counter, final QuerySearchRequest querySearchRequest, DiscoveryNode node) {
-            searchService.sendExecuteQuery(node, querySearchRequest, new SearchServiceListener<QuerySearchResult>() {
-                @Override public void onResult(QuerySearchResult result) {
-                    result.shardTarget(dfsResult.shardTarget());
-                    queryResults.put(result.shardTarget(), result);
-                    if (counter.decrementAndGet() == 0) {
-                        executeFetchPhase();
-                    }
-                }
-
-                @Override public void onFailure(Throwable t) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("[{}] Failed to execute query phase", t, querySearchRequest.id());
-                    }
-                    AsyncAction.this.shardFailures.add(new ShardSearchFailure(t));
-                    successulOps.decrementAndGet();
-                    if (counter.decrementAndGet() == 0) {
-                        executeFetchPhase();
-                    }
-                }
-            });
-        }
-
-        void executeFetchPhase() {
-            try {
-                innerExecuteFetchPhase();
-            } catch (Exception e) {
-                listener.onFailure(new ReduceSearchPhaseException("query", "", e, buildShardFailures()));
-            }
-        }
-
-        void innerExecuteFetchPhase() {
-            sortedShardList = searchPhaseController.sortDocs(queryResults.values());
-            final Map<SearchShardTarget, ExtTIntArrayList> docIdsToLoad = searchPhaseController.docIdsToLoad(sortedShardList);
-            this.docIdsToLoad = docIdsToLoad;
-
-            if (docIdsToLoad.isEmpty()) {
-                finishHim();
-                return;
-            }
-
-            final AtomicInteger counter = new AtomicInteger(docIdsToLoad.size());
-            int localOperations = 0;
-            for (final Map.Entry<SearchShardTarget, ExtTIntArrayList> entry : docIdsToLoad.entrySet()) {
-                DiscoveryNode node = nodes.get(entry.getKey().nodeId());
-                if (node.id().equals(nodes.localNodeId())) {
-                    localOperations++;
-                } else {
-                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(queryResults.get(entry.getKey()).id(), entry.getValue());
-                    executeFetch(entry.getKey(), counter, fetchSearchRequest, node);
-                }
-            }
-
-            if (localOperations > 0) {
-                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
-                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
-                        @Override public void run() {
-                            for (final Map.Entry<SearchShardTarget, ExtTIntArrayList> entry : docIdsToLoad.entrySet()) {
-                                DiscoveryNode node = nodes.get(entry.getKey().nodeId());
-                                if (node.id().equals(nodes.localNodeId())) {
-                                    FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(queryResults.get(entry.getKey()).id(), entry.getValue());
-                                    executeFetch(entry.getKey(), counter, fetchSearchRequest, node);
-                                }
-                            }
-                        }
-                    });
-                } else {
-                    boolean localAsync = request.operationThreading() == SearchOperationThreading.THREAD_PER_SHARD;
-                    for (final Map.Entry<SearchShardTarget, ExtTIntArrayList> entry : docIdsToLoad.entrySet()) {
-                        final DiscoveryNode node = nodes.get(entry.getKey().nodeId());
-                        if (node.id().equals(nodes.localNodeId())) {
-                            final FetchSearchRequest fetchSearchRequest = new FetchSearchRequest(queryResults.get(entry.getKey()).id(), entry.getValue());
-                            if (localAsync) {
-                                threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
-                                    @Override public void run() {
-                                        executeFetch(entry.getKey(), counter, fetchSearchRequest, node);
-                                    }
-                                });
-                            } else {
-                                executeFetch(entry.getKey(), counter, fetchSearchRequest, node);
-                            }
+            if (fieldData.multiValued()) {
+                double[] lats = fieldData.latValues(doc);
+                double[] lons = fieldData.lonValues(doc);
+                for (int i = 0; i < lats.length; i++) {
+                    double lat = lats[i];
+                    double lon = lons[i];
+                    if (distanceBoundingCheck.isWithin(lat, lon)) {
+                        double d = fixedSourceDistance.calculate(lat, lon);
+                        if (d < distance) {
+                            return true;
                         }
                     }
                 }
-            }
-        }
-
-        void executeFetch(final SearchShardTarget shardTarget, final AtomicInteger counter, final FetchSearchRequest fetchSearchRequest, DiscoveryNode node) {
-            searchService.sendExecuteFetch(node, fetchSearchRequest, new SearchServiceListener<FetchSearchResult>() {
-                @Override public void onResult(FetchSearchResult result) {
-                    result.shardTarget(shardTarget);
-                    fetchResults.put(result.shardTarget(), result);
-                    if (counter.decrementAndGet() == 0) {
-                        finishHim();
-                    }
+                return false;
+            } else {
+                double lat = fieldData.latValue(doc);
+                double lon = fieldData.lonValue(doc);
+                if (distanceBoundingCheck.isWithin(lat, lon)) {
+                    double d = fixedSourceDistance.calculate(lat, lon);
+                    return d < distance;
                 }
-
-                @Override public void onFailure(Throwable t) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("[{}] Failed to execute fetch phase", t, fetchSearchRequest.id());
-                    }
-                    AsyncAction.this.shardFailures.add(new ShardSearchFailure(t));
-                    successulOps.decrementAndGet();
-                    if (counter.decrementAndGet() == 0) {
-                        finishHim();
-                    }
-                }
-            });
-        }
-
-        void finishHim() {
-            try {
-                innerFinishHim();
-            } catch (Exception e) {
-                ReduceSearchPhaseException failure = new ReduceSearchPhaseException("fetch", "", e, buildShardFailures());
-                if (logger.isDebugEnabled()) {
-                    logger.debug("failed to reduce search", failure);
-                }
-                listener.onFailure(failure);
-            } finally {
-                releaseIrrelevantSearchContexts(queryResults, docIdsToLoad);
-                searchCache.releaseDfsResults(dfsResults);
-                searchCache.releaseQueryResults(queryResults);
-                searchCache.releaseFetchResults(fetchResults);
             }
-        }
-
-        void innerFinishHim() throws Exception {
-            final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryResults, fetchResults);
-            String scrollId = null;
-            if (request.scroll() != null) {
-                scrollId = TransportSearchHelper.buildScrollId(request.searchType(), dfsResults, null);
-            }
-            listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get(), buildTookInMillis(), buildShardFailures()));
+            return false;
         }
     }
 }

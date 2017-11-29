@@ -1,15 +1,11 @@
-(startLine=200 endLine=212 srcPath=/root/Projects/org.eclipse.emfFilter/724/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/AudioVisualItemImpl.java)
-  public Object eGet(int featureID, boolean resolve, boolean coreType)
+(startLine=270 endLine=278 srcPath=/root/Projects/org.eclipse.emfFilter/732/org.eclipse.emf/examples/org.eclipse.emf.java/src/org/eclipse/emf/java/impl/JMemberImpl.java)
+  public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs)
   {
-    switch (featureID)
+    switch (eContainerFeatureID)
     {
-      case EXTLibraryPackage.AUDIO_VISUAL_ITEM__TITLE:
-        return getTitle();
-      case EXTLibraryPackage.AUDIO_VISUAL_ITEM__MINUTES_LENGTH:
-        return new Integer(getMinutesLength());
-      case EXTLibraryPackage.AUDIO_VISUAL_ITEM__DAMAGED:
-        return isDamaged() ? Boolean.TRUE : Boolean.FALSE;
+      case JavaPackage.JMEMBER__CONTAINING_TYPE:
+        return eInternalContainer().eInverseRemove(this, JavaPackage.JCLASS__MEMBERS, JClass.class, msgs);
     }
-    return super.eGet(featureID, resolve, coreType);
+    return super.eBasicRemoveFromContainerFeature(msgs);
   }
 

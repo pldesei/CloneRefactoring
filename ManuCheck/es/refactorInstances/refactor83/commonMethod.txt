@@ -1,7 +1,10 @@
-(startLine=342 endLine=346 srcPath=/root/Projects/elasticsearchFilter/824/elasticsearch/src/main/java/org/elasticsearch/tribe/TribeService.java)
-                private void removeIndex(ClusterBlocks.Builder blocks, MetaData.Builder metaData, RoutingTable.Builder routingTable, IndexMetaData index) {
-                    metaData.remove(index.index());
-                    routingTable.remove(index.index());
-                    blocks.removeIndexBlocks(index.index());
-                }
+(startLine=399 endLine=406 srcPath=/root/Projects/elasticsearchFilter/830/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchTypeAction.java)
+        protected FetchSearchRequest createFetchRequest(QuerySearchResult queryResult, AtomicArray.Entry<IntArrayList> entry, ScoreDoc[] lastEmittedDocPerShard) {
+            if (lastEmittedDocPerShard != null) {
+                ScoreDoc lastEmittedDoc = lastEmittedDocPerShard[entry.index];
+                return new FetchSearchRequest(request, queryResult.id(), entry.value, lastEmittedDoc);
+            } else {
+                return new FetchSearchRequest(request, queryResult.id(), entry.value);
+            }
+        }
 

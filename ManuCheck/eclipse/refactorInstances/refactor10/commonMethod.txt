@@ -1,11 +1,14 @@
-(startLine=649 endLine=657 srcPath=/root/Projects/eclipse.jdt.coreFilter/1933/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
-    private String failedToFormat(final char[] compilationUnitSource) {
-        StringBuffer buffer = new StringBuffer(this.scribe.formattedSource());
-        buffer.append(compilationUnitSource, this.scribe.scanner.getCurrentTokenEndPosition(), this.scribe.scannerEndPosition - this.scribe.scanner.getCurrentTokenEndPosition());
-        System.out.println("COULD NOT FORMAT \n" + this.scribe.scanner); //$NON-NLS-1$
-        if (DEBUG) {
-            System.out.println(this.scribe);
-        }
-        return buffer.toString();
+(startLine=220 endLine=231 srcPath=/root/Projects/eclipse.jdt.coreFilter/1963/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/WorkingCopy.java)
+    private void reportProblemsIfNeeded(WorkingCopyElementInfo info) {
+        if (info.problems != null) {
+            this.problemRequestor.beginReporting();
+            Iterator iterator = info.problems.iterator();
+            while (iterator.hasNext()) {
+                this.problemRequestor.acceptProblem((IProblem)iterator.next());
+            } 
+            this.problemRequestor.endReporting();
+            info.problems = null;
+            this.computeProblems = false;
+        }        
     }
 

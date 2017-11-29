@@ -1,37 +1,59 @@
-(startLine=197 endLine=231 srcPath=/root/Projects/elasticsearchFilter/529/elasticsearch/src/main/java/org/elasticsearch/common/lucene/docset/OrDocIdSet.java)
-        private final void heapAdjust() {
-            final Item[] heap = _heap;
-            final Item top = heap[0];
-            final int doc = top.doc;
-            final int size = _size;
-            int i = 0;
+(startLine=52 endLine=108 srcPath=/root/Projects/elasticsearchFilter/1163/elasticsearch/src/main/java/org/elasticsearch/index/query/WildcardQueryParser.java)
+    public Query parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
 
-            while (true) {
-                int lchild = (i << 1) + 1;
-                if (lchild >= size) break;
+        XContentParser.Token token = parser.nextToken();
+        if (token != XContentParser.Token.FIELD_NAME) {
+            throw new QueryParsingException(parseContext.index(), "[wildcard] query malformed, no field");
+        }
+        String fieldName = parser.currentName();
+        String rewriteMethod = null;
 
-                Item left = heap[lchild];
-                int ldoc = left.doc;
-
-                int rchild = lchild + 1;
-                if (rchild < size) {
-                    Item right = heap[rchild];
-                    int rdoc = right.doc;
-
-                    if (rdoc <= ldoc) {
-                        if (doc <= rdoc) break;
-
-                        heap[i] = right;
-                        i = rchild;
-                        continue;
+        String value = null;
+        float boost = 1.0f;
+        token = parser.nextToken();
+        if (token == XContentParser.Token.START_OBJECT) {
+            String currentFieldName = null;
+            while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                if (token == XContentParser.Token.FIELD_NAME) {
+                    currentFieldName = parser.currentName();
+                } else {
+                    if ("wildcard".equals(currentFieldName)) {
+                        value = parser.text();
+                    } else if ("value".equals(currentFieldName)) {
+                        value = parser.text();
+                    } else if ("boost".equals(currentFieldName)) {
+                        boost = parser.floatValue();
+                    } else if ("rewrite".equals(currentFieldName)) {
+                        rewriteMethod = parser.textOrNull();
+                    } else {
+                        throw new QueryParsingException(parseContext.index(), "[wildcard] query does not support [" + currentFieldName + "]");
                     }
                 }
-
-                if (doc <= ldoc) break;
-
-                heap[i] = left;
-                i = lchild;
             }
-            heap[i] = top;
+            parser.nextToken();
+        } else {
+            value = parser.text();
+            parser.nextToken();
         }
+
+        if (value == null) {
+            throw new QueryParsingException(parseContext.index(), "No value specified for prefix query");
+        }
+
+        BytesRef valueBytes;
+        MapperService.SmartNameFieldMappers smartNameFieldMappers = parseContext.smartFieldMappers(fieldName);
+        if (smartNameFieldMappers != null && smartNameFieldMappers.hasMapper()) {
+            fieldName = smartNameFieldMappers.mapper().names().indexName();
+            valueBytes = smartNameFieldMappers.mapper().indexedValueForSearch(value);
+        } else {
+            valueBytes = new BytesRef(value);
+        }
+
+        WildcardQuery query = new WildcardQuery(new Term(fieldName, valueBytes));
+        QueryParsers.setRewriteMethod(query, rewriteMethod);
+        query.setRewriteMethod(QueryParsers.parseRewriteMethod(rewriteMethod));
+        query.setBoost(boost);
+        return wrapSmartNameQuery(query, smartNameFieldMappers, parseContext);
+    }
 

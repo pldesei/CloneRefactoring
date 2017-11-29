@@ -1,23 +1,15 @@
-(startLine=196 endLine=216 srcPath=/root/Projects/org.eclipse.emfFilter/725/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/VideoCassetteImpl.java)
-  public boolean eIsSet(EStructuralFeature eFeature)
+(startLine=160 endLine=172 srcPath=/root/Projects/org.eclipse.emfFilter/725/org.eclipse.emf/examples/org.eclipse.emf.examples.library/src/org/eclipse/emf/examples/extlibrary/impl/PeriodicalImpl.java)
+  public Object eGet(EStructuralFeature eFeature, boolean resolve)
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case EXTLibraryPackage.VIDEO_CASSETTE__PUBLICATION_DATE:
-        return PUBLICATION_DATE_EDEFAULT == null ? publicationDate != null : !PUBLICATION_DATE_EDEFAULT.equals(publicationDate);
-      case EXTLibraryPackage.VIDEO_CASSETTE__COPIES:
-        return copies != COPIES_EDEFAULT;
-      case EXTLibraryPackage.VIDEO_CASSETTE__BORROWERS:
-        return borrowers != null && !borrowers.isEmpty();
-      case EXTLibraryPackage.VIDEO_CASSETTE__TITLE:
-        return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-      case EXTLibraryPackage.VIDEO_CASSETTE__MINUTES_LENGTH:
-        return minutesLength != MINUTES_LENGTH_EDEFAULT;
-      case EXTLibraryPackage.VIDEO_CASSETTE__DAMAGED:
-        return ((eFlags & DAMAGED_EFLAG) != 0) != DAMAGED_EDEFAULT;
-      case EXTLibraryPackage.VIDEO_CASSETTE__CAST:
-        return cast != null && !cast.isEmpty();
+      case EXTLibraryPackage.PERIODICAL__PUBLICATION_DATE:
+        return getPublicationDate();
+      case EXTLibraryPackage.PERIODICAL__TITLE:
+        return getTitle();
+      case EXTLibraryPackage.PERIODICAL__ISSUES_PER_YEAR:
+        return new Integer(getIssuesPerYear());
     }
-    return eDynamicIsSet(eFeature);
+    return eDynamicGet(eFeature, resolve);
   }
 

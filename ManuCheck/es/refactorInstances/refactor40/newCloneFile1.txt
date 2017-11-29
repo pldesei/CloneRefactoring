@@ -1,13 +1,13 @@
 /*
- * Licensed to Elastic Search and Shay Banon under one
+ * Licensed to ElasticSearch and Shay Banon under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership. Elastic Search licenses this
+ * regarding copyright ownership. ElasticSearch licenses this
  * file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -31,6 +31,7 @@ import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.NumericUtils;
 import org.elasticsearch.common.Explicit;
 import org.elasticsearch.common.Nullable;
+import org.elasticsearch.common.Numbers;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -48,16 +49,16 @@ import org.elasticsearch.index.similarity.SimilarityProvider;
 import java.io.IOException;
 import java.util.Map;
 
-import static org.elasticsearch.common.xcontent.support.XContentMapValues.nodeByteValue;
-import static org.elasticsearch.index.mapper.MapperBuilders.byteField;
+import static org.elasticsearch.common.xcontent.support.XContentMapValues.nodeIntegerValue;
+import static org.elasticsearch.index.mapper.MapperBuilders.integerField;
 import static org.elasticsearch.index.mapper.core.TypeParsers.parseNumberField;
 
 /**
  *
  */
-public class ByteFieldMapper extends NumberFieldMapper<Byte> {
+public class IntegerFieldMapper extends NumberFieldMapper<Integer> {
 
-    public static final String CONTENT_TYPE = "byte";
+    public static final String CONTENT_TYPE = "integer";
 
     public static class Defaults extends NumberFieldMapper.Defaults {
         public static final FieldType FIELD_TYPE = new FieldType(NumberFieldMapper.Defaults.FIELD_TYPE);
@@ -66,29 +67,29 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
             FIELD_TYPE.freeze();
         }
 
-        public static final Byte NULL_VALUE = null;
+        public static final Integer NULL_VALUE = null;
     }
 
-    public static class Builder extends NumberFieldMapper.Builder<Builder, ByteFieldMapper> {
+    public static class Builder extends NumberFieldMapper.Builder<Builder, IntegerFieldMapper> {
 
-        protected Byte nullValue = Defaults.NULL_VALUE;
+        protected Integer nullValue = Defaults.NULL_VALUE;
 
         public Builder(String name) {
             super(name, new FieldType(Defaults.FIELD_TYPE));
             builder = this;
         }
 
-        public Builder nullValue(byte nullValue) {
+        public Builder nullValue(int nullValue) {
             this.nullValue = nullValue;
             return this;
         }
 
         @Override
-        public ByteFieldMapper build(BuilderContext context) {
+        public IntegerFieldMapper build(BuilderContext context) {
             fieldType.setOmitNorms(fieldType.omitNorms() && boost == 1.0f);
-            ByteFieldMapper fieldMapper = new ByteFieldMapper(buildNames(context),
-                    precisionStep, fuzzyFactor, boost, fieldType, nullValue, ignoreMalformed(context),
-                    provider, similarity);
+            IntegerFieldMapper fieldMapper = new IntegerFieldMapper(buildNames(context),
+                    precisionStep, fuzzyFactor, boost, fieldType,
+                    nullValue, ignoreMalformed(context), provider, similarity);
             fieldMapper.includeInAll(includeInAll);
             return fieldMapper;
         }
@@ -97,28 +98,30 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
     public static class TypeParser implements Mapper.TypeParser {
         @Override
         public Mapper.Builder parse(String name, Map<String, Object> node, ParserContext parserContext) throws MapperParsingException {
-            ByteFieldMapper.Builder builder = byteField(name);
+            IntegerFieldMapper.Builder builder = integerField(name);
             parseNumberField(builder, name, node, parserContext);
             for (Map.Entry<String, Object> entry : node.entrySet()) {
                 String propName = Strings.toUnderscoreCase(entry.getKey());
                 Object propNode = entry.getValue();
                 if (propName.equals("null_value")) {
-                    builder.nullValue(nodeByteValue(propNode));
+                    builder.nullValue(nodeIntegerValue(propNode));
                 }
             }
             return builder;
         }
     }
 
-    private Byte nullValue;
+    private Integer nullValue;
 
     private String nullValueAsString;
 
-    protected ByteFieldMapper(Names names, int precisionStep, String fuzzyFactor, float boost, FieldType fieldType,
-                              Byte nullValue, Explicit<Boolean> ignoreMalformed, PostingsFormatProvider provider, SimilarityProvider similarity) {
+    protected IntegerFieldMapper(Names names, int precisionStep, String fuzzyFactor,
+                                 float boost, FieldType fieldType,
+                                 Integer nullValue, Explicit<Boolean> ignoreMalformed,
+                                 PostingsFormatProvider provider, SimilarityProvider similarity) {
         super(names, precisionStep, fuzzyFactor, boost, fieldType,
-                ignoreMalformed, new NamedAnalyzer("_byte/" + precisionStep, new NumericIntegerAnalyzer(precisionStep)),
-                new NamedAnalyzer("_byte/max", new NumericIntegerAnalyzer(Integer.MAX_VALUE)), provider, similarity);
+                ignoreMalformed, new NamedAnalyzer("_int/" + precisionStep, new NumericIntegerAnalyzer(precisionStep)),
+                new NamedAnalyzer("_int/max", new NumericIntegerAnalyzer(Integer.MAX_VALUE)), provider, similarity);
         this.nullValue = nullValue;
         this.nullValueAsString = nullValue == null ? null : nullValue.toString();
     }
@@ -134,37 +137,36 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
     }
 
     @Override
-    public Byte value(Object value) {
+    public Integer value(Object value) {
         if (value == null) {
             return null;
         }
         if (value instanceof Number) {
-            return ((Number) value).byteValue();
+            return ((Number) value).intValue();
         }
-        BytesReference bytesReference = (BytesReference) value;
-        return bytesReference.get(bytesReference.arrayOffset());
+        return Numbers.bytesToInt(((BytesReference) value).array());
     }
 
     @Override
-    public Byte valueFromString(String value) {
-        return Byte.valueOf(value);
+    public Integer valueFromString(String value) {
+        return Integer.parseInt(value);
     }
 
     @Override
     public BytesRef indexedValue(String value) {
         BytesRef bytesRef = new BytesRef();
-        NumericUtils.intToPrefixCoded(Byte.parseByte(value), precisionStep(), bytesRef);
+        NumericUtils.intToPrefixCoded(Integer.parseInt(value), precisionStep(), bytesRef);
         return bytesRef;
     }
 
     @Override
     public Query fuzzyQuery(String value, String minSim, int prefixLength, int maxExpansions, boolean transpositions) {
-        byte iValue = Byte.parseByte(value);
-        byte iSim;
+        int iValue = Integer.parseInt(value);
+        int iSim;
         try {
-            iSim = Byte.parseByte(minSim);
+            iSim = Integer.parseInt(minSim);
         } catch (NumberFormatException e) {
-            iSim = (byte) Float.parseFloat(minSim);
+            iSim = (int) Float.parseFloat(minSim);
         }
         return NumericRangeQuery.newIntRange(names.indexName(), precisionStep,
                 iValue - iSim,
@@ -174,8 +176,8 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
 
     @Override
     public Query fuzzyQuery(String value, double minSim, int prefixLength, int maxExpansions, boolean transpositions) {
-        byte iValue = Byte.parseByte(value);
-        byte iSim = (byte) (minSim * dFuzzyFactor);
+        int iValue = Integer.parseInt(value);
+        int iSim = (int) (minSim * dFuzzyFactor);
         return NumericRangeQuery.newIntRange(names.indexName(), precisionStep,
                 iValue - iSim,
                 iValue + iSim,
@@ -214,9 +216,9 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
 
     @Override
     public Filter rangeFilter(FieldDataCache fieldDataCache, String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
-        return NumericRangeFieldDataFilter.newByteRange(fieldDataCache, names.indexName(),
-                lowerTerm == null ? null : Byte.parseByte(lowerTerm),
-                upperTerm == null ? null : Byte.parseByte(upperTerm),
+        return NumericRangeFieldDataFilter.newIntRange(fieldDataCache, names.indexName(),
+                lowerTerm == null ? null : Integer.parseInt(lowerTerm),
+                upperTerm == null ? null : Integer.parseInt(upperTerm),
                 includeLower, includeUpper);
     }
 
@@ -226,8 +228,8 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
             return null;
         }
         return NumericRangeFilter.newIntRange(names.indexName(), precisionStep,
-                nullValue.intValue(),
-                nullValue.intValue(),
+                nullValue,
+                nullValue,
                 true, true);
     }
 
@@ -238,7 +240,7 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
 
     @Override
     protected Field innerParseCreateField(ParseContext context) throws IOException {
-        byte value;
+        int value;
         float boost = this.boost;
         if (context.externalValueSet()) {
             Object externalValue = context.externalValue();
@@ -255,13 +257,13 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
                     }
                     value = nullValue;
                 } else {
-                    value = Byte.parseByte(sExternalValue);
+                    value = Integer.parseInt(sExternalValue);
                 }
             } else {
-                value = ((Number) externalValue).byteValue();
+                value = ((Number) externalValue).intValue();
             }
             if (context.includeInAll(includeInAll, this)) {
-                context.allEntries().addText(names.fullName(), Byte.toString(value), boost);
+                context.allEntries().addText(names.fullName(), Integer.toString(value), boost);
             }
         } else {
             XContentParser parser = context.parser();
@@ -277,14 +279,14 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
             } else if (parser.currentToken() == XContentParser.Token.START_OBJECT) {
                 XContentParser.Token token;
                 String currentFieldName = null;
-                Byte objValue = nullValue;
+                Integer objValue = nullValue;
                 while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
                     if (token == XContentParser.Token.FIELD_NAME) {
                         currentFieldName = parser.currentName();
                     } else {
                         if ("value".equals(currentFieldName) || "_value".equals(currentFieldName)) {
                             if (parser.currentToken() != XContentParser.Token.VALUE_NULL) {
-                                objValue = (byte) parser.shortValue();
+                                objValue = parser.intValue();
                             }
                         } else if ("boost".equals(currentFieldName) || "_boost".equals(currentFieldName)) {
                             boost = parser.floatValue();
@@ -297,20 +299,21 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
                 }
                 value = objValue;
             } else {
-                value = (byte) parser.shortValue();
+                value = parser.intValue();
                 if (context.includeInAll(includeInAll, this)) {
                     context.allEntries().addText(names.fullName(), parser.text(), boost);
                 }
             }
         }
-        CustomByteNumericField field = new CustomByteNumericField(this, value, fieldType);
+
+        CustomIntegerNumericField field = new CustomIntegerNumericField(this, value, fieldType);
         field.setBoost(boost);
         return field;
     }
 
     @Override
     public FieldDataType fieldDataType() {
-        return FieldDataType.DefaultTypes.BYTE;
+        return FieldDataType.DefaultTypes.INT;
     }
 
     @Override
@@ -325,8 +328,8 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
             return;
         }
         if (!mergeContext.mergeFlags().simulate()) {
-            this.nullValue = ((ByteFieldMapper) mergeWith).nullValue;
-            this.nullValueAsString = ((ByteFieldMapper) mergeWith).nullValueAsString;
+            this.nullValue = ((IntegerFieldMapper) mergeWith).nullValue;
+            this.nullValueAsString = ((IntegerFieldMapper) mergeWith).nullValueAsString;
         }
     }
 
@@ -347,20 +350,20 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
         }
     }
 
-    public static class CustomByteNumericField extends CustomNumericField {
+    public static class CustomIntegerNumericField extends CustomNumericField {
 
-        private final byte number;
+        private final int number;
 
         private final NumberFieldMapper mapper;
 
-        public CustomByteNumericField(NumberFieldMapper mapper, byte number, FieldType fieldType) {
-            super(mapper, mapper.fieldType.stored() ? new byte[]{number} : null, fieldType);
+        public CustomIntegerNumericField(NumberFieldMapper mapper, int number, FieldType fieldType) {
+            super(mapper, mapper.fieldType().stored() ? Numbers.intToBytes(number) : null, fieldType);
             this.mapper = mapper;
             this.number = number;
         }
 
         @Override
-        public TokenStream tokenStream(Analyzer analyzer) {
+        public TokenStream tokenStream(Analyzer analyzer) throws IOException {
             if (fieldType().indexed()) {
                 return mapper.popCachedStream().setIntValue(number);
             }
@@ -369,7 +372,7 @@ public class ByteFieldMapper extends NumberFieldMapper<Byte> {
 
         @Override
         public String numericAsString() {
-            return Byte.toString(number);
+            return Integer.toString(number);
         }
     }
 }

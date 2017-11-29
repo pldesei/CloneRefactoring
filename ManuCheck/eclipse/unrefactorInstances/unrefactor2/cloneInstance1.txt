@@ -1,11 +1,19 @@
-(startLine=4232 endLine=4240 srcPath=/root/Projects/eclipse.jdt.coreFilter/565/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
-public void unnecessaryCast(CastExpression castExpression) {
-    TypeBinding castedExpressionType = castExpression.expression.resolvedType;
-    this.handle(
-        IProblem.UnnecessaryCast,
-        new String[]{ new String(castedExpressionType.readableName()), new String(castExpression.resolvedType.readableName())},
-        new String[]{ new String(castedExpressionType.shortReadableName()), new String(castExpression.resolvedType.shortReadableName())},
-        castExpression.sourceStart,
-        castExpression.sourceEnd);
+(startLine=113 endLine=129 srcPath=/root/Projects/eclipse.jdt.coreFilter/521/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Compiler/src/org/eclipse/jdt/internal/compiler/ast/TypeReference.java)
+public TypeBinding resolveType(BlockScope blockScope) {
+    // handle the error here
+    this.constant = NotAConstant;
+    if (this.resolvedType != null) // is a shared type reference which was already resolved
+        return this.resolvedType.isValidBinding() ? this.resolvedType : null; // already reported error
+
+    this.resolvedType = getTypeBinding(blockScope);
+    if (this.resolvedType == null)
+        return null; // detected cycle while resolving hierarchy    
+    if (!this.resolvedType.isValidBinding()) {
+        reportInvalidType(blockScope);
+        return null;
+    }
+    if (isTypeUseDeprecated(this.resolvedType, blockScope))
+        reportDeprecatedType(blockScope);
+    return this.resolvedType = blockScope.convertToRawType(this.resolvedType);
 }
 

@@ -1,32 +1,13 @@
-(startLine=101 endLine=130 srcPath=/root/Projects/org.eclipse.emfFilter/269/org.eclipse.emf/plugins/org.eclipse.emf.common.ui/src/org/eclipse/emf/common/ui/dialogs/WorkspaceResourceDialog.java)
-  public static IFile[] openFileSelection(
-    Shell parent,
-    String title,
-    String message,
-    boolean allowMultipleSelection,
-    Object[] initialSelection,
-    List<ViewerFilter> viewerFilters)
+(startLine=87 endLine=97 srcPath=/root/Projects/org.eclipse.emfFilter/917/org.eclipse.emf/plugins/org.eclipse.emf.edit/src/org/eclipse/emf/edit/command/CutToClipboardCommand.java)
+  public static Command create(EditingDomain domain, Object owner, Object feature, Collection collection)
   {
-    WorkspaceResourceDialog dialog = new WorkspaceResourceDialog(parent, new WorkbenchLabelProvider(), new WorkbenchContentProvider());
-    dialog.setAllowMultiple(allowMultipleSelection);
-    dialog.setTitle(title != null ? title : CommonUIPlugin.INSTANCE.getString("_UI_FileSelection_title"));
-    dialog.setMessage(message);
-
-    dialog.addFilter(dialog.createDefaultViewerFilter(true));
-    if (viewerFilters != null)
+    if (domain == null)
     {
-      for (ViewerFilter viewerFilter : viewerFilters)
-      {
-        dialog.addFilter(viewerFilter);
-      }
+      return new CutToClipboardCommand(domain, RemoveCommand.create(domain, owner, feature, collection));
     }
-
-    if (initialSelection != null)
+    else
     {
-      dialog.setInitialSelections(initialSelection);
+      return domain.createCommand(CutToClipboardCommand.class, new CommandParameter(owner, feature, collection));
     }
-
-    dialog.loadContents();
-    return dialog.open() == Window.OK ? dialog.getSelectedFiles() : new IFile [0];
   }
 

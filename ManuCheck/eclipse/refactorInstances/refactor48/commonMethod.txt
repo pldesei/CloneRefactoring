@@ -1,10 +1,5 @@
-(startLine=1249 endLine=1256 srcPath=/root/Projects/eclipse.jdt.coreFilter/1328/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
-    protected void verifyWorkingCopiesComments() throws JavaModelException {
-        assumeNotNull("No working copies to verify!", workingCopies);
-        int length = workingCopies.length;
-        assumeTrue("We need to have at least one working copy to verify!", length>0);
-        for (int i=0; i<length; i++) {
-            verifyComments(workingCopies[i]);
-        }
+(startLine=84 endLine=86 srcPath=/root/Projects/eclipse.jdt.coreFilter/1341/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaSearchGenericTests.java)
+    protected void search(String patternString, int searchFor, int limitTo, IJavaSearchScope scope, SearchRequestor requestor) throws CoreException {
+        search(patternString, searchFor, limitTo, ERASURE_RULE, scope, requestor);
     }
 

@@ -1,5 +1,11 @@
-(startLine=60 endLine=62 srcPath=/root/Projects/elasticsearchFilter/1300/elasticsearch/src/main/java/org/elasticsearch/action/search/type/ParsedScrollId.java)
-    public Tuple<String, Long>[] getContext() {
-        return context;
+(startLine=63 endLine=71 srcPath=/root/Projects/elasticsearchFilter/1307/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/DoubleValuesComparatorBase.java)
+    static final int compare(double left, double right) {
+        if (left > right) {
+            return 1;
+        } else if (left < right) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 

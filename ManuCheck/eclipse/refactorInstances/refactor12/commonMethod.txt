@@ -1,11 +1,11 @@
-(startLine=307 endLine=320 srcPath=/root/Projects/eclipse.jdt.coreFilter/1867/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/BinaryMethod.java)
+(startLine=269 endLine=282 srcPath=/root/Projects/eclipse.jdt.coreFilter/1867/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SourceMethod.java)
 private void toStringParameters(StringBuffer buffer) {
     buffer.append('(');
-    String[] parameters = this.getParameterTypes();
+    String[] parameterTypes = this.getParameterTypes();
     int length;
-    if (parameters != null && (length = parameters.length) > 0) {
+    if (parameterTypes != null && (length = parameterTypes.length) > 0) {
         for (int i = 0; i < length; i++) {
-            buffer.append(Signature.toString(parameters[i]));
+            buffer.append(Signature.toString(parameterTypes[i]));
             if (i < length - 1) {
                 buffer.append(", "); //$NON-NLS-1$
             }

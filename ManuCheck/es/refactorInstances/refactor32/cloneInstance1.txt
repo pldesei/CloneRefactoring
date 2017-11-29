@@ -1,49 +1,18 @@
-(startLine=718 endLine=766 srcPath=/root/Projects/elasticsearchFilter/1349/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
-    public void testVersioningDeleteConflict() {
+(startLine=645 endLine=662 srcPath=/root/Projects/elasticsearchFilter/1349/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
+    public void testExternalVersioningIndexConflict() {
         ParsedDocument doc = new ParsedDocument("1", "1", "test", null, -1, -1, doc().add(uidField("1")).build(), Lucene.STANDARD_ANALYZER, B_1, false);
-        Engine.Index index = new Engine.Index(null, newUid("1"), doc);
+        Engine.Index index = new Engine.Index(null, newUid("1"), doc).versionType(VersionType.EXTERNAL).version(12);
         engine.index(index);
-        assertThat(index.version(), equalTo(1l));
+        assertThat(index.version(), equalTo(12l));
 
-        index = new Engine.Index(null, newUid("1"), doc);
+        index = new Engine.Index(null, newUid("1"), doc).versionType(VersionType.EXTERNAL).version(14);
         engine.index(index);
-        assertThat(index.version(), equalTo(2l));
+        assertThat(index.version(), equalTo(14l));
 
-        Engine.Delete delete = new Engine.Delete("test", "1", newUid("1")).version(1l);
-        try {
-            engine.delete(delete);
-            assert false;
-        } catch (VersionConflictEngineException e) {
-            // all is well
-        }
-
-        // future versions should not work as well
-        delete = new Engine.Delete("test", "1", newUid("1")).version(3l);
-        try {
-            engine.delete(delete);
-            assert false;
-        } catch (VersionConflictEngineException e) {
-            // all is well
-        }
-
-        // now actually delete
-        delete = new Engine.Delete("test", "1", newUid("1")).version(2l);
-        engine.delete(delete);
-        assertThat(delete.version(), equalTo(3l));
-
-        // now check if we can index to a delete doc with version
-        index = new Engine.Index(null, newUid("1"), doc).version(2l);
+        index = new Engine.Index(null, newUid("1"), doc).versionType(VersionType.EXTERNAL).version(13l);
         try {
             engine.index(index);
             assert false;
-        } catch (VersionConflictEngineException e) {
-            // all is well
-        }
-
-        // we shouldn't be able to create as well
-        Engine.Create create = new Engine.Create(null, newUid("1"), doc).version(2l);
-        try {
-            engine.create(create);
         } catch (VersionConflictEngineException e) {
             // all is well
         }

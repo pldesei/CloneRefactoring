@@ -1,13 +1,17 @@
-(startLine=67 endLine=77 srcPath=/root/Projects/elasticsearchFilter/1189/elasticsearch/src/test/java/org/elasticsearch/test/integration/search/suggest/CustomSuggester.java)
-    public SuggestContextParser getContextParser() {
-        return new SuggestContextParser() {
-            @Override
-            public SuggestionSearchContext.SuggestionContext parse(XContentParser parser, MapperService mapperService) throws IOException {
-                Map<String, Object> options = parser.map();
-                CustomSuggestionsContext suggestionContext = new CustomSuggestionsContext(CustomSuggester.this, options);
-                suggestionContext.setField((String) options.get("field"));
-                return suggestionContext;
+(startLine=257 endLine=271 srcPath=/root/Projects/elasticsearchFilter/609/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/plain/ParentChildIndexFieldData.java)
+    public IndexParentChildFieldData loadGlobal(IndexReader indexReader) {
+        if (indexReader.leaves().size() <= 1) {
+            // ordinals are already global
+            return this;
+        }
+        try {
+            return cache.load(indexReader, this);
+        } catch (Throwable e) {
+            if (e instanceof ElasticsearchException) {
+                throw (ElasticsearchException) e;
+            } else {
+                throw new ElasticsearchException(e.getMessage(), e);
             }
-        };
+        }
     }
 

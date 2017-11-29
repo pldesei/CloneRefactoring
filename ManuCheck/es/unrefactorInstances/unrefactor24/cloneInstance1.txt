@@ -1,18 +1,10 @@
-(startLine=401 endLine=416 srcPath=/root/Projects/elasticsearchFilter/1398/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/MoreTypes.java)
-    public static Type resolveTypeVariable(Type type, Class<?> rawType, TypeVariable unknown) {
-        Class<?> declaredByRaw = declaringClassOf(unknown);
-
-        // we can't reduce this further
-        if (declaredByRaw == null) {
-            return unknown;
+(startLine=1768 endLine=1775 srcPath=/root/Projects/elasticsearchFilter/1489/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/math/MathUtils.java)
+    public static double distance(double[] p1, double[] p2) {
+        double sum = 0;
+        for (int i = 0; i < p1.length; i++) {
+            final double dp = p1[i] - p2[i];
+            sum += dp * dp;
         }
-
-        Type declaredBy = getGenericSupertype(type, rawType, declaredByRaw);
-        if (declaredBy instanceof ParameterizedType) {
-            int index = indexOf(declaredByRaw.getTypeParameters(), unknown);
-            return ((ParameterizedType) declaredBy).getActualTypeArguments()[index];
-        }
-
-        return unknown;
+        return Math.sqrt(sum);
     }
 

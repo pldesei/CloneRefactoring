@@ -1,17 +1,28 @@
-(startLine=294 endLine=308 srcPath=/root/Projects/eclipse.jdt.coreFilter/1886/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/Compliance_1_4.java)
-public void test10() {
-    this.runConformTest(
-        new String[] {
-            "p1/Z.java",
-            "package p1; \n"+
-            "public class Z {    \n" +
-            "    public static void main(String[] arguments) { \n"+
-            "        String[] s = new String[]{\"SUCCESS\" };    \n" +
-            "        System.out.print(s.length);    \n"    +
-            "        System.out.print(((String[])s.clone())[0]);    \n"    +
-            "    } \n"+
-            "} \n"
-        },
-        "1SUCCESS");
-}
+(startLine=5466 endLine=5491 srcPath=/root/Projects/eclipse.jdt.coreFilter/816/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
+    public void test0186() {
+        this.runNegativeTest(
+            new String[] {
+                "X.java",
+                "public class X {\n" + 
+                "\n" + 
+                "    <T, U extends String> T foo(T t, U u) {\n" + 
+                "        return t;\n" + 
+                "    }\n" + 
+                "    public static void main(String[] args) {\n" + 
+                "        System.out.println(new X().<String, X>foo(\"SUCCESS\", null));\n" + 
+                "    }\n" + 
+                "}\n", 
+            },
+            "----------\n" + 
+            "1. WARNING in X.java (at line 3)\n" + 
+            "    <T, U extends String> T foo(T t, U u) {\n" + 
+            "                  ^^^^^^\n" + 
+            "The type parameter U should not be bounded by the final type String. Final types cannot be further extended\n" + 
+            "----------\n" + 
+            "2. ERROR in X.java (at line 7)\n" + 
+            "    System.out.println(new X().<String, X>foo(\"SUCCESS\", null));\n" + 
+            "                                          ^^^\n" + 
+            "Bound mismatch: The generic method foo(T, U) of type X is not applicable for the arguments (String, null). The inferred type X is not a valid substitute for the bounded parameter <U extends String>\n" + 
+            "----------\n");
+    }            
 

@@ -1,9 +1,14 @@
-(startLine=1461 endLine=1467 srcPath=/root/Projects/org.eclipse.emfFilter/276/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/util/XMLTypeValidator.java)
-  public boolean validateUnsignedShort_Min(int unsignedShort, DiagnosticChain diagnostics, Map<Object, Object> context)
+(startLine=523 endLine=534 srcPath=/root/Projects/org.eclipse.emfFilter/529/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/EcoreValidator.java)
+  public boolean validateEAnnotation(EAnnotation eAnnotation, DiagnosticChain diagnostics, Map<Object, Object> context)
   {
-    boolean result = unsignedShort >= UNSIGNED_SHORT__MIN__VALUE;
-    if (!result && diagnostics != null)
-      reportMinViolation(XMLTypePackage.Literals.UNSIGNED_SHORT, unsignedShort, UNSIGNED_SHORT__MIN__VALUE, true, diagnostics, context);
+    boolean result = validate_EveryMultiplicityConforms(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryDataValueConforms(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryReferenceIsContained(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryProxyResolves(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_UniqueID(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryKeyUnique(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validate_EveryMapEntryUnique(eAnnotation, diagnostics, context);
+    if (result || diagnostics != null) result &= validateEAnnotation_WellFormedSourceURI(eAnnotation, diagnostics, context);
     return result;
   }
 

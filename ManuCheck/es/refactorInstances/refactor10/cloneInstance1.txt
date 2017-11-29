@@ -1,10 +1,13 @@
-(startLine=134 endLine=141 srcPath=/root/Projects/elasticsearchFilter/1616/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollQueryAndFetchAction.java)
-                        @Override public void run() {
-                            for (Tuple<String, Long> target : scrollId.values()) {
-                                DiscoveryNode node = nodes.get(target.v1());
-                                if (node != null && nodes.localNodeId().equals(node.id())) {
-                                    executePhase(node, target.v2());
-                                }
-                            }
-                        }
+(startLine=43 endLine=53 srcPath=/root/Projects/elasticsearchFilter/1778/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/GreekAnalyzerProvider.java)
+    @Inject public GreekAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = GreekAnalyzer.getDefaultStopSet();
+        }
+
+        analyzer = new GreekAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords);
+    }
 

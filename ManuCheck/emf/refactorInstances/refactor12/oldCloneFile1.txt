@@ -1,97 +1,87 @@
 /**
  * <copyright>
  *
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2002-2004 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: 
+ *
+ * Contributors:
  *   IBM - Initial API and implementation
  *
  * </copyright>
  *
- * $Id: CirculatingItemImpl.java,v 1.1 2005/11/10 18:55:52 marcelop Exp $
+ * $Id: JParameterImpl.java,v 1.5 2005/11/23 18:09:54 emerks Exp $
  */
-package org.eclipse.emf.examples.extlibrary.impl;
+package org.eclipse.emf.java.impl;
 
-
-import java.util.Collection;
-import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.eclipse.emf.examples.extlibrary.Borrower;
-import org.eclipse.emf.examples.extlibrary.CirculatingItem;
-import org.eclipse.emf.examples.extlibrary.EXTLibraryPackage;
-import org.eclipse.emf.examples.extlibrary.Lendable;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.java.JClass;
+import org.eclipse.emf.java.JMethod;
+import org.eclipse.emf.java.JParameter;
+import org.eclipse.emf.java.JavaPackage;
 
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Circulating Item</b></em>'.
+ * An implementation of the model object '<em><b>JParameter</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getCopies <em>Copies</em>}</li>
- *   <li>{@link org.eclipse.emf.examples.extlibrary.impl.CirculatingItemImpl#getBorrowers <em>Borrowers</em>}</li>
+ *   <li>{@link org.eclipse.emf.java.impl.JParameterImpl#isFinal <em>Final</em>}</li>
+ *   <li>{@link org.eclipse.emf.java.impl.JParameterImpl#getMethod <em>Method</em>}</li>
+ *   <li>{@link org.eclipse.emf.java.impl.JParameterImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class CirculatingItemImpl extends ItemImpl implements CirculatingItem
+public class JParameterImpl extends JModelElementImpl implements JParameter
 {
   /**
-   * The default value of the '{@link #getCopies() <em>Copies</em>}' attribute.
+   * The default value of the '{@link #isFinal() <em>Final</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getCopies()
+   * @see #isFinal()
    * @generated
    * @ordered
    */
-  protected static final int COPIES_EDEFAULT = 0;
+  protected static final boolean FINAL_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #getCopies() <em>Copies</em>}' attribute.
+   * The cached value of the '{@link #isFinal() <em>Final</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getCopies()
+   * @see #isFinal()
    * @generated
    * @ordered
    */
-  protected int copies = COPIES_EDEFAULT;
+  protected boolean final_ = FINAL_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getBorrowers() <em>Borrowers</em>}' reference list.
+   * The cached value of the '{@link #getType() <em>Type</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getBorrowers()
+   * @see #getType()
    * @generated
    * @ordered
    */
-  protected EList borrowers = null;
+  protected JClass type = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected CirculatingItemImpl()
+  protected JParameterImpl()
   {
     super();
   }
@@ -103,7 +93,7 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
    */
   protected EClass eStaticClass()
   {
-    return EXTLibraryPackage.eINSTANCE.getCirculatingItem();
+    return JavaPackage.Literals.JPARAMETER;
   }
 
   /**
@@ -111,9 +101,9 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
    * <!-- end-user-doc -->
    * @generated
    */
-  public int getCopies()
+  public boolean isFinal()
   {
-    return copies;
+    return final_;
   }
 
   /**
@@ -121,12 +111,12 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setCopies(int newCopies)
+  public void setFinal(boolean newFinal)
   {
-    int oldCopies = copies;
-    copies = newCopies;
+    boolean oldFinal = final_;
+    final_ = newFinal;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, EXTLibraryPackage.CIRCULATING_ITEM__COPIES, oldCopies, copies));
+      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JPARAMETER__FINAL, oldFinal, final_));
   }
 
   /**
@@ -134,13 +124,76 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList getBorrowers()
+  public JMethod getMethod()
   {
-    if (borrowers == null)
+    if (eContainerFeatureID != JavaPackage.JPARAMETER__METHOD) return null;
+    return (JMethod)eContainer();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setMethod(JMethod newMethod)
+  {
+    if (newMethod != eInternalContainer() || (eContainerFeatureID != JavaPackage.JPARAMETER__METHOD && newMethod != null))
     {
-      borrowers = new EObjectWithInverseResolvingEList.ManyInverse(Borrower.class, this, EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS, EXTLibraryPackage.BORROWER__BORROWED);
+      if (EcoreUtil.isAncestor(this, newMethod))
+        throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+      NotificationChain msgs = null;
+      if (eInternalContainer() != null)
+        msgs = eBasicRemoveFromContainer(msgs);
+      if (newMethod != null)
+        msgs = ((InternalEObject)newMethod).eInverseAdd(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
+      msgs = eBasicSetContainer((InternalEObject)newMethod, JavaPackage.JPARAMETER__METHOD, msgs);
+      if (msgs != null) msgs.dispatch();
     }
-    return borrowers;
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JPARAMETER__METHOD, newMethod, newMethod));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public JClass getType()
+  {
+    if (type != null && type.eIsProxy())
+    {
+      InternalEObject oldType = (InternalEObject)type;
+      type = (JClass)eResolveProxy(oldType);
+      if (type != oldType)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, JavaPackage.JPARAMETER__TYPE, oldType, type));
+      }
+    }
+    return type;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public JClass basicGetType()
+  {
+    return type;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setType(JClass newType)
+  {
+    JClass oldType = type;
+    type = newType;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JPARAMETER__TYPE, oldType, type));
   }
 
   /**
@@ -154,13 +207,15 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-          return ((InternalEList)getBorrowers()).basicAdd(otherEnd, msgs);
+        case JavaPackage.JPARAMETER__METHOD:
+          if (eInternalContainer() != null)
+            msgs = eBasicRemoveFromContainer(msgs);
+          return eBasicSetContainer(otherEnd, JavaPackage.JPARAMETER__METHOD, msgs);
         default:
           return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
       }
     }
-    if (eContainer != null)
+    if (eInternalContainer() != null)
       msgs = eBasicRemoveFromContainer(msgs);
     return eBasicSetContainer(otherEnd, featureID, msgs);
   }
@@ -176,8 +231,8 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-          return ((InternalEList)getBorrowers()).basicRemove(otherEnd, msgs);
+        case JavaPackage.JPARAMETER__METHOD:
+          return eBasicSetContainer(null, JavaPackage.JPARAMETER__METHOD, msgs);
         default:
           return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
       }
@@ -190,101 +245,19 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
    * <!-- end-user-doc -->
    * @generated
    */
-  public Object eGet(EStructuralFeature eFeature, boolean resolve)
+  public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs)
   {
-    switch (eDerivedStructuralFeatureID(eFeature))
+    if (eContainerFeatureID >= 0)
     {
-      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
-        return getPublicationDate();
-      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
-        return new Integer(getCopies());
-      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-        return getBorrowers();
-    }
-    return eDynamicGet(eFeature, resolve);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void eSet(EStructuralFeature eFeature, Object newValue)
-  {
-    switch (eDerivedStructuralFeatureID(eFeature))
-    {
-      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
-        setPublicationDate((Date)newValue);
-        return;
-      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
-        setCopies(((Integer)newValue).intValue());
-        return;
-      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-        getBorrowers().clear();
-        getBorrowers().addAll((Collection)newValue);
-        return;
-    }
-    eDynamicSet(eFeature, newValue);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void eUnset(EStructuralFeature eFeature)
-  {
-    switch (eDerivedStructuralFeatureID(eFeature))
-    {
-      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
-        setPublicationDate(PUBLICATION_DATE_EDEFAULT);
-        return;
-      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
-        setCopies(COPIES_EDEFAULT);
-        return;
-      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-        getBorrowers().clear();
-        return;
-    }
-    eDynamicUnset(eFeature);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean eIsSet(EStructuralFeature eFeature)
-  {
-    switch (eDerivedStructuralFeatureID(eFeature))
-    {
-      case EXTLibraryPackage.CIRCULATING_ITEM__PUBLICATION_DATE:
-        return PUBLICATION_DATE_EDEFAULT == null ? publicationDate != null : !PUBLICATION_DATE_EDEFAULT.equals(publicationDate);
-      case EXTLibraryPackage.CIRCULATING_ITEM__COPIES:
-        return copies != COPIES_EDEFAULT;
-      case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS:
-        return borrowers != null && !borrowers.isEmpty();
-    }
-    return eDynamicIsSet(eFeature);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public int eBaseStructuralFeatureID(int derivedFeatureID, Class baseClass)
-  {
-    if (baseClass == Lendable.class)
-    {
-      switch (derivedFeatureID)
+      switch (eContainerFeatureID)
       {
-        case EXTLibraryPackage.CIRCULATING_ITEM__COPIES: return EXTLibraryPackage.LENDABLE__COPIES;
-        case EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS: return EXTLibraryPackage.LENDABLE__BORROWERS;
-        default: return -1;
+        case JavaPackage.JPARAMETER__METHOD:
+          return eInternalContainer().eInverseRemove(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
+        default:
+          return eDynamicBasicRemoveFromContainer(msgs);
       }
     }
-    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    return eInternalContainer().eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
   }
 
   /**
@@ -292,18 +265,102 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
    * <!-- end-user-doc -->
    * @generated
    */
-  public int eDerivedStructuralFeatureID(int baseFeatureID, Class baseClass)
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
-    if (baseClass == Lendable.class)
+    switch (featureID)
     {
-      switch (baseFeatureID)
-      {
-        case EXTLibraryPackage.LENDABLE__COPIES: return EXTLibraryPackage.CIRCULATING_ITEM__COPIES;
-        case EXTLibraryPackage.LENDABLE__BORROWERS: return EXTLibraryPackage.CIRCULATING_ITEM__BORROWERS;
-        default: return -1;
-      }
+      case JavaPackage.JPARAMETER__NAME:
+        return getName();
+      case JavaPackage.JPARAMETER__JNODE:
+        return getJNode();
+      case JavaPackage.JPARAMETER__FINAL:
+        return isFinal() ? Boolean.TRUE : Boolean.FALSE;
+      case JavaPackage.JPARAMETER__METHOD:
+        return getMethod();
+      case JavaPackage.JPARAMETER__TYPE:
+        if (resolve) return getType();
+        return basicGetType();
     }
-    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    return eDynamicGet(featureID, resolve, coreType);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void eSet(int featureID, Object newValue)
+  {
+    switch (featureID)
+    {
+      case JavaPackage.JPARAMETER__NAME:
+        setName((String)newValue);
+        return;
+      case JavaPackage.JPARAMETER__JNODE:
+        setJNode((Object)newValue);
+        return;
+      case JavaPackage.JPARAMETER__FINAL:
+        setFinal(((Boolean)newValue).booleanValue());
+        return;
+      case JavaPackage.JPARAMETER__METHOD:
+        setMethod((JMethod)newValue);
+        return;
+      case JavaPackage.JPARAMETER__TYPE:
+        setType((JClass)newValue);
+        return;
+    }
+    eDynamicSet(featureID, newValue);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void eUnset(int featureID)
+  {
+    switch (featureID)
+    {
+      case JavaPackage.JPARAMETER__NAME:
+        setName(NAME_EDEFAULT);
+        return;
+      case JavaPackage.JPARAMETER__JNODE:
+        setJNode(JNODE_EDEFAULT);
+        return;
+      case JavaPackage.JPARAMETER__FINAL:
+        setFinal(FINAL_EDEFAULT);
+        return;
+      case JavaPackage.JPARAMETER__METHOD:
+        setMethod((JMethod)null);
+        return;
+      case JavaPackage.JPARAMETER__TYPE:
+        setType((JClass)null);
+        return;
+    }
+    eDynamicUnset(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean eIsSet(int featureID)
+  {
+    switch (featureID)
+    {
+      case JavaPackage.JPARAMETER__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case JavaPackage.JPARAMETER__JNODE:
+        return JNODE_EDEFAULT == null ? jNode != null : !JNODE_EDEFAULT.equals(jNode);
+      case JavaPackage.JPARAMETER__FINAL:
+        return final_ != FINAL_EDEFAULT;
+      case JavaPackage.JPARAMETER__METHOD:
+        return getMethod() != null;
+      case JavaPackage.JPARAMETER__TYPE:
+        return type != null;
+    }
+    return eDynamicIsSet(featureID);
   }
 
   /**
@@ -316,10 +373,10 @@ public abstract class CirculatingItemImpl extends ItemImpl implements Circulatin
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (copies: "); //$NON-NLS-1$
-    result.append(copies);
+    result.append(" (final: ");
+    result.append(final_);
     result.append(')');
     return result.toString();
   }
 
-} //CirculatingItemImpl
+} //JParameterImpl

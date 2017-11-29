@@ -1,11 +1,8 @@
-(startLine=36 endLine=44 srcPath=/root/Projects/elasticsearchFilter/166/elasticsearch/qa/evil-tests/src/test/java/org/elasticsearch/plugins/PluginSecurityTests.java)
-    public void testParsePermissions() throws Exception {
-        assumeTrue("test cannot run with security manager enabled", System.getSecurityManager() == null);
-        Path scratch = createTempDir();
-        Path testFile = this.getDataPath("security/simple-plugin-security.policy");
-        Permissions expected = new Permissions();
-        expected.add(new RuntimePermission("queuePrintJob"));
-        PermissionCollection actual = PluginSecurity.parsePermissions(Terminal.DEFAULT, testFile, scratch);
-        assertEquals(expected, actual);
-    }
+(startLine=4804 endLine=4809 srcPath=/root/Projects/elasticsearchFilter/893/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+        ForEachEntryTask
+            (BulkTask<K,V,?> p, int b, int i, int f, Node<K,V>[] t,
+             Action<? super Entry<K,V>> action) {
+            super(p, b, i, f, t);
+            this.action = action;
+        }
 

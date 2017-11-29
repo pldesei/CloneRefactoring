@@ -1,13 +1,24 @@
-(startLine=43 endLine=53 srcPath=/root/Projects/elasticsearchFilter/1346/elasticsearch/src/main/java/org/elasticsearch/index/analysis/MappingCharFilterFactory.java)
-    public MappingCharFilterFactory(Index index, @IndexSettings Settings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings) {
-        super(index, indexSettings, name);
-
-        List<String> rules = Analysis.getWordList(env, settings, "mappings");
-        if (rules == null) {
-            throw new ElasticSearchIllegalArgumentException("mapping requires either `mappings` or `mappings_path` to be configured");
+(startLine=104 endLine=125 srcPath=/root/Projects/elasticsearchFilter/1205/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/stats/TransportIndicesStatsAction.java)
+    protected IndicesStatsResponse newResponse(IndicesStatsRequest request, AtomicReferenceArray shardsResponses, ClusterState clusterState) {
+        int successfulShards = 0;
+        int failedShards = 0;
+        List<ShardOperationFailedException> shardFailures = null;
+        final List<ShardStats> shards = Lists.newArrayList();
+        for (int i = 0; i < shardsResponses.length(); i++) {
+            Object shardResponse = shardsResponses.get(i);
+            if (shardResponse == null) {
+                // simply ignore non active shards
+            } else if (shardResponse instanceof BroadcastShardOperationFailedException) {
+                failedShards++;
+                if (shardFailures == null) {
+                    shardFailures = newArrayList();
+                }
+                shardFailures.add(new DefaultShardOperationFailedException((BroadcastShardOperationFailedException) shardResponse));
+            } else {
+                shards.add((ShardStats) shardResponse);
+                successfulShards++;
+            }
         }
-
-        normMapBuilder = new NormalizeCharMap.Builder();
-        parseRules(rules, normMapBuilder);
+        return new IndicesStatsResponse(shards.toArray(new ShardStats[shards.size()]), clusterState, shardsResponses.length(), successfulShards, failedShards, shardFailures);
     }
 

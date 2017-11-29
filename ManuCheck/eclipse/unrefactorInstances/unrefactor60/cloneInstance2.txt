@@ -1,21 +1,12 @@
-(startLine=326 endLine=344 srcPath=/root/Projects/eclipse.jdt.coreFilter/25/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SelectionJavadocModelTests.java)
-    public void test12() throws JavaModelException {
-        setUnit("Test.java",
-            "public class Test {\n" +
-            "    /**\n" +
-            "     * @exception RuntimeException runtime exception\n" +
-            "     * @exception InterruptedException interrupted exception\n" +
-            "     */\n" +
-            "    void foo() {}\n" +
-            "}\n"
-        );
-        IJavaElement[] elements = new IJavaElement[2];
-        elements[0] = selectType(this.workingCopies[0], "RuntimeException");
-        elements[1] = selectType(this.workingCopies[0], "InterruptedException");
-        assertElementsEqual("Invalid selection(s)",
-            "RuntimeException [in RuntimeException.class [in java.lang [in "+ getExternalJCLPathString("1.5") + "]]]\n" +
-            "InterruptedException [in InterruptedException.class [in java.lang [in "+ getExternalJCLPathString("1.5") + "]]]",
-            elements
-        );
-    }
+(startLine=881 endLine=890 srcPath=/root/Projects/eclipse.jdt.coreFilter/394/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchTests.java)
+public void testSearchPatternCreation28() {
+    IImportDeclaration importDecl = getCompilationUnit("/P/x/y/z/Foo.java").getImport("x.y.*");
+    SearchPattern searchPattern = createPattern(
+            importDecl, 
+            IJavaSearchConstants.DECLARATIONS);
+    
+    assertPattern(
+        "PackageDeclarationPattern: <x.y>, exact match, case sensitive, erasure only",
+        searchPattern);
+}
 

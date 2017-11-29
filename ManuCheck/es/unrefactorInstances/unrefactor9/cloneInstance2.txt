@@ -1,32 +1,11 @@
-(startLine=237 endLine=266 srcPath=/root/Projects/elasticsearchFilter/1061/elasticsearch/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
-        public void collect(int doc) throws IOException {
-            spare.hash = values.getValueHashed(doc, spare.bytes);
-            Query query = queries.get(spare);
-            if (query == null) {
-                // log???
-                return;
-            }
-            // run the query
-            try {
-                collector.reset();
-                if (context.highlight() != null) {
-                    context.parsedQuery(new ParsedQuery(query, ImmutableMap.<String, Filter>of()));
-                    context.hitContext().cache().clear();
-                }
-                searcher.search(query, collector);
-                if (collector.exists()) {
-                    if (!limit || counter < size) {
-                        matches.add(values.makeSafe(spare.bytes));
-                        scores.add(scorer.score());
-                        if (context.highlight() != null) {
-                            highlightPhase.hitExecute(context, context.hitContext());
-                            hls.add(context.hitContext().hit().getHighlightFields());
-                        }
-                    }
-                    counter++;
-                }
-            } catch (IOException e) {
-                logger.warn("[" + spare.bytes.utf8ToString() + "] failed to execute query", e);
-            }
-        }
+(startLine=40 endLine=48 srcPath=/root/Projects/elasticsearchFilter/262/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/metrics/percentiles/tdigest/AbstractInternalTDigestPercentiles.java)
+    public AbstractInternalTDigestPercentiles(String name, double[] keys, TDigestState state, boolean keyed, DocValueFormat formatter,
+            List<PipelineAggregator> pipelineAggregators,
+            Map<String, Object> metaData) {
+        super(name, pipelineAggregators, metaData);
+        this.keys = keys;
+        this.state = state;
+        this.keyed = keyed;
+        this.format = formatter;
+    }
 

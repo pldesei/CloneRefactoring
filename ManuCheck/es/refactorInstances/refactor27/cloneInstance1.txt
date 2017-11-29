@@ -1,16 +1,62 @@
-(startLine=41 endLine=54 srcPath=/root/Projects/elasticsearchFilter/1411/elasticsearch/src/main/java/org/elasticsearch/common/settings/loader/YamlSettingsLoader.java)
-    public Map<String, String> load(String source) throws IOException {
-        // replace tabs with whitespace (yaml does not accept tabs, but many users might use it still...)
-        source = source.replace("\t", "  ");
-        Yaml yaml = new Yaml();
-        Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(source);
-        StringBuilder sb = new StringBuilder();
-        Map<String, String> settings = newHashMap();
-        if (yamlMap == null) {
-            return settings;
+(startLine=50 endLine=109 srcPath=/root/Projects/elasticsearchFilter/1432/elasticsearch/src/main/java/org/elasticsearch/index/query/IdsFilterParser.java)
+    public Filter parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        List<String> ids = new ArrayList<String>();
+        Collection<String> types = null;
+        String filterName = null;
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_ARRAY) {
+                if ("values".equals(currentFieldName)) {
+                    while ((token = parser.nextToken()) != XContentParser.Token.END_ARRAY) {
+                        String value = parser.textOrNull();
+                        if (value == null) {
+                            throw new QueryParsingException(parseContext.index(), "No value specified for term filter");
+                        }
+                        ids.add(value);
+                    }
+                } else if ("types".equals(currentFieldName) || "type".equals(currentFieldName)) {
+                    types = new ArrayList<String>();
+                    while ((token = parser.nextToken()) != XContentParser.Token.END_ARRAY) {
+                        String value = parser.textOrNull();
+                        if (value == null) {
+                            throw new QueryParsingException(parseContext.index(), "No type specified for term filter");
+                        }
+                        types.add(value);
+                    }
+                }
+            } else if (token.isValue()) {
+                if ("type".equals(currentFieldName) || "_type".equals(currentFieldName)) {
+                    types = ImmutableList.of(parser.text());
+                } else if ("_name".equals(currentFieldName)) {
+                    filterName = parser.text();
+                }
+            }
         }
-        List<String> path = newArrayList();
-        serializeMap(settings, sb, path, yamlMap);
-        return settings;
+
+        if (ids.size() == 0) {
+            throw new QueryParsingException(parseContext.index(), "[ids] filter, no ids values provided");
+        }
+
+        if (types == null || types.isEmpty()) {
+            SearchContext searchContext = SearchContext.current();
+            if (searchContext.hasTypes()) {
+                types = Arrays.asList(searchContext.types());
+            } else {
+                types = parseContext.mapperService().types();
+            }
+        } else if (types.size() == 1 && Iterables.getFirst(types, null).equals("_all")) {
+            types = parseContext.mapperService().types();
+        }
+
+        UidFilter filter = new UidFilter(types, ids, parseContext.indexCache().bloomCache());
+        if (filterName != null) {
+            parseContext.addNamedFilter(filterName, filter);
+        }
+        return filter;
     }
 

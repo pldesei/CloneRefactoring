@@ -1,17 +1,21 @@
-(startLine=141 endLine=155 srcPath=/root/Projects/org.eclipse.emfFilter/934/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/impl/BImpl.java)
-  public void setA(A newA)
+(startLine=1171 endLine=1189 srcPath=/root/Projects/org.eclipse.emfFilter/1026/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicExtendedMetaData.java)
+  public List getPatternFacet(EDataType eDataType)
   {
-    if (newA != a)
+    EAnnotation eAnnotation = getAnnotation(eDataType, false);
+    if (eAnnotation != null)
     {
-      NotificationChain msgs = null;
-      if (a != null)
-        msgs = ((InternalEObject)a).eInverseRemove(this, RefPackage.A__B, A.class, msgs);
-      if (newA != null)
-        msgs = ((InternalEObject)newA).eInverseAdd(this, RefPackage.A__B, A.class, msgs);
-      msgs = basicSetA(newA, msgs);
-      if (msgs != null) msgs.dispatch();
+      String patternLiteral = (String)eAnnotation.getDetails().get("pattern");
+      if (patternLiteral != null)
+      {
+        List result = new ArrayList();
+        for (StringTokenizer stringTokenizer = new StringTokenizer(patternLiteral, " "); stringTokenizer.hasMoreTokens(); )
+        {
+          String pattern = stringTokenizer.nextToken().replaceAll("%20", " ").replaceAll("%25", "%");
+          result.add(pattern);
+        }
+        return result;
+      }
     }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.B__A, newA, newA));
+    return Collections.EMPTY_LIST;
   }
 

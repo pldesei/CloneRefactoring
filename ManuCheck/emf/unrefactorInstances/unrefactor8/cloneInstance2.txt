@@ -1,19 +1,18 @@
-(startLine=909 endLine=925 srcPath=/root/Projects/org.eclipse.emfFilter/345/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/resource/impl/ResourceImpl.java)
-  protected void detachedHelper(EObject eObject)
+(startLine=121 endLine=136 srcPath=/root/Projects/org.eclipse.emfFilter/569/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/namespace/impl/XMLNamespaceFactoryImpl.java)
+  public String convertToString(EDataType eDataType, Object instanceValue)
   {
-    Map<String, EObject> map = getIntrinsicIDToEObjectMap();
-    if (map != null)
+    switch (eDataType.getClassifierID())
     {
-      String id = EcoreUtil.getID(eObject);
-      if (id != null)
-      {
-        map.remove(id);
-      }
-    }
-
-    if (isTrackingModification())
-    {
-      eObject.eAdapters().remove(modificationTrackingAdapter);
+      case XMLNamespacePackage.SPACE_TYPE:
+        return convertSpaceTypeToString(eDataType, instanceValue);
+      case XMLNamespacePackage.LANG_TYPE:
+        return convertLangTypeToString(eDataType, instanceValue);
+      case XMLNamespacePackage.LANG_TYPE_NULL:
+        return convertLangTypeNullToString(eDataType, instanceValue);
+      case XMLNamespacePackage.SPACE_TYPE_OBJECT:
+        return convertSpaceTypeObjectToString(eDataType, instanceValue);
+      default:
+        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
     }
   }
 

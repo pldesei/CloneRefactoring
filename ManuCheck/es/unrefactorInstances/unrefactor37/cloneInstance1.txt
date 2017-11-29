@@ -1,30 +1,14 @@
-(startLine=180 endLine=207 srcPath=/root/Projects/elasticsearchFilter/951/elasticsearch/src/main/java/org/elasticsearch/index/mapper/internal/ParentFieldMapper.java)
-    protected void parseCreateField(ParseContext context, List<Field> fields) throws IOException {
-        if (!active()) {
-            return;
+(startLine=115 endLine=126 srcPath=/root/Projects/elasticsearchFilter/1417/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/PrivateElementsImpl.java)
+    public void applyTo(Binder binder) {
+        PrivateBinder privateBinder = binder.withSource(source).newPrivateBinder();
+
+        for (Element element : getElements()) {
+            element.applyTo(privateBinder);
         }
 
-        if (context.parser().currentName() != null && context.parser().currentName().equals(Defaults.NAME)) {
-            // we are in the parsing of _parent phase
-            String parentId = context.parser().text();
-            context.sourceToParse().parent(parentId);
-            fields.add(new Field(names.indexName(), Uid.createUid(context.stringBuilder(), type, parentId), fieldType));
-        } else {
-            // otherwise, we are running it post processing of the xcontent
-            String parsedParentId = context.doc().get(Defaults.NAME);
-            if (context.sourceToParse().parent() != null) {
-                String parentId = context.sourceToParse().parent();
-                if (parsedParentId == null) {
-                    if (parentId == null) {
-                        throw new MapperParsingException("No parent id provided, not within the document, and not externally");
-                    }
-                    // we did not add it in the parsing phase, add it now
-                    fields.add(new Field(names.indexName(), Uid.createUid(context.stringBuilder(), type, parentId), fieldType));
-                } else if (parentId != null && !parsedParentId.equals(Uid.createUid(context.stringBuilder(), type, parentId))) {
-                    throw new MapperParsingException("Parent id mismatch, document value is [" + Uid.createUid(parsedParentId).id() + "], while external value is [" + parentId + "]");
-                }
-            }
+        getExposedKeys(); // ensure exposedKeysToSources is populated
+        for (Map.Entry<Key<?>, Object> entry : exposedKeysToSources.entrySet()) {
+            privateBinder.withSource(entry.getValue()).expose(entry.getKey());
         }
-        // we have parent mapping, yet no value was set, ignore it...
     }
 

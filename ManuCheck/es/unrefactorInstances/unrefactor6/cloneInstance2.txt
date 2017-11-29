@@ -1,18 +1,13 @@
-(startLine=273 endLine=288 srcPath=/root/Projects/elasticsearchFilter/678/elasticsearch/src/test/java/org/elasticsearch/percolator/MultiPercolatorTests.java)
-    void initNestedIndexAndPercolation() throws IOException {
-        XContentBuilder mapping = XContentFactory.jsonBuilder();
-        mapping.startObject().startObject("properties").startObject("companyname").field("type", "string").endObject()
-                .startObject("employee").field("type", "nested").startObject("properties")
-                .startObject("name").field("type", "string").endObject().endObject().endObject().endObject()
-                .endObject();
-
-        assertAcked(client().admin().indices().prepareCreate("nestedindex").addMapping("company", mapping));
-        ensureGreen("nestedindex");
-
-        client().prepareIndex("nestedindex", PercolatorService.TYPE_NAME, "Q").setSource(jsonBuilder().startObject()
-                .field("query", QueryBuilders.nestedQuery("employee", QueryBuilders.matchQuery("employee.name", "virginia potts").operator(MatchQueryBuilder.Operator.AND)).scoreMode("avg")).endObject()).get();
-
-        refresh();
-
+(startLine=54 endLine=64 srcPath=/root/Projects/elasticsearchFilter/1636/elasticsearch/modules/benchmark/micro/src/main/java/org/elasticsearch/benchmark/checksum/ChecksumBenchmarkTest.java)
+    private static void md5(long dataSize) {
+        long start = System.currentTimeMillis();
+        byte[] data = new byte[BATCH_SIZE];
+        long iter = dataSize / BATCH_SIZE;
+        MessageDigest digest = Digest.getMd5Digest();
+        for (long i = 0; i < iter; i++) {
+            digest.update(data);
+        }
+        digest.digest();
+        System.out.println("md5 took " + new TimeValue(System.currentTimeMillis() - start));
     }
 

@@ -17,104 +17,79 @@
  * under the License.
  */
 
-package org.elasticsearch.index.mapper.ip;
+package org.elasticsearch.index.mapper.core;
 
-import org.apache.lucene.analysis.NumericTokenStream;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.NumericRangeFilter;
+import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.NumericUtils;
-import org.elasticsearch.ElasticSearchIllegalArgumentException;
 import org.elasticsearch.common.Explicit;
 import org.elasticsearch.common.Nullable;
 import org.elasticsearch.common.Numbers;
 import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentParser;
 import org.elasticsearch.index.analysis.NamedAnalyzer;
-import org.elasticsearch.index.analysis.NumericAnalyzer;
-import org.elasticsearch.index.analysis.NumericTokenizer;
+import org.elasticsearch.index.analysis.NumericFloatAnalyzer;
 import org.elasticsearch.index.cache.field.data.FieldDataCache;
 import org.elasticsearch.index.codec.postingsformat.PostingsFormatProvider;
 import org.elasticsearch.index.field.data.FieldDataType;
 import org.elasticsearch.index.mapper.*;
-import org.elasticsearch.index.mapper.core.LongFieldMapper;
-import org.elasticsearch.index.mapper.core.NumberFieldMapper;
 import org.elasticsearch.index.query.QueryParseContext;
 import org.elasticsearch.index.search.NumericRangeFieldDataFilter;
 import org.elasticsearch.index.similarity.SimilarityProvider;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-import static org.elasticsearch.index.mapper.MapperBuilders.ipField;
+import static org.elasticsearch.common.xcontent.support.XContentMapValues.nodeFloatValue;
+import static org.elasticsearch.index.mapper.MapperBuilders.floatField;
 import static org.elasticsearch.index.mapper.core.TypeParsers.parseNumberField;
 
 /**
  *
  */
-public class IpFieldMapper extends NumberFieldMapper<Long> {
+public class FloatFieldMapper extends NumberFieldMapper<Float> {
 
-    public static final String CONTENT_TYPE = "ip";
-
-    public static String longToIp(long longIp) {
-        int octet3 = (int) ((longIp >> 24) % 256);
-        int octet2 = (int) ((longIp >> 16) % 256);
-        int octet1 = (int) ((longIp >> 8) % 256);
-        int octet0 = (int) ((longIp) % 256);
-        return octet3 + "." + octet2 + "." + octet1 + "." + octet0;
-    }
-
-    private static final Pattern pattern = Pattern.compile("\\.");
-
-    public static long ipToLong(String ip) throws ElasticSearchIllegalArgumentException {
-        try {
-            String[] octets = pattern.split(ip);
-            if (octets.length != 4) {
-                throw new ElasticSearchIllegalArgumentException("failed to parse ip [" + ip + "], not full ip address (4 dots)");
-            }
-            return (Long.parseLong(octets[0]) << 24) + (Integer.parseInt(octets[1]) << 16) +
-                    (Integer.parseInt(octets[2]) << 8) + Integer.parseInt(octets[3]);
-        } catch (Exception e) {
-            if (e instanceof ElasticSearchIllegalArgumentException) {
-                throw (ElasticSearchIllegalArgumentException) e;
-            }
-            throw new ElasticSearchIllegalArgumentException("failed to parse ip [" + ip + "]", e);
-        }
-    }
+    public static final String CONTENT_TYPE = "float";
 
     public static class Defaults extends NumberFieldMapper.Defaults {
-        public static final String NULL_VALUE = null;
-
         public static final FieldType FIELD_TYPE = new FieldType(NumberFieldMapper.Defaults.FIELD_TYPE);
 
         static {
             FIELD_TYPE.freeze();
         }
+
+        public static final Float NULL_VALUE = null;
     }
 
-    public static class Builder extends NumberFieldMapper.Builder<Builder, IpFieldMapper> {
+    public static class Builder extends NumberFieldMapper.Builder<Builder, FloatFieldMapper> {
 
-        protected String nullValue = Defaults.NULL_VALUE;
+        protected Float nullValue = Defaults.NULL_VALUE;
 
         public Builder(String name) {
             super(name, new FieldType(Defaults.FIELD_TYPE));
             builder = this;
         }
 
-        public Builder nullValue(String nullValue) {
+        public Builder nullValue(float nullValue) {
             this.nullValue = nullValue;
             return this;
         }
 
         @Override
-        public IpFieldMapper build(BuilderContext context) {
+        public FloatFieldMapper build(BuilderContext context) {
             fieldType.setOmitNorms(fieldType.omitNorms() && boost == 1.0f);
-            IpFieldMapper fieldMapper = new IpFieldMapper(buildNames(context),
-                    precisionStep, boost, fieldType, nullValue, ignoreMalformed(context), provider, similarity);
+            FloatFieldMapper fieldMapper = new FloatFieldMapper(buildNames(context),
+                    precisionStep, fuzzyFactor, boost, fieldType, nullValue,
+                    ignoreMalformed(context), provider, similarity);
             fieldMapper.includeInAll(includeInAll);
             return fieldMapper;
         }
@@ -123,29 +98,30 @@ public class IpFieldMapper extends NumberFieldMapper<Long> {
     public static class TypeParser implements Mapper.TypeParser {
         @Override
         public Mapper.Builder parse(String name, Map<String, Object> node, ParserContext parserContext) throws MapperParsingException {
-            IpFieldMapper.Builder builder = ipField(name);
+            FloatFieldMapper.Builder builder = floatField(name);
             parseNumberField(builder, name, node, parserContext);
             for (Map.Entry<String, Object> entry : node.entrySet()) {
                 String propName = Strings.toUnderscoreCase(entry.getKey());
                 Object propNode = entry.getValue();
                 if (propName.equals("null_value")) {
-                    builder.nullValue(propNode.toString());
+                    builder.nullValue(nodeFloatValue(propNode));
                 }
             }
             return builder;
         }
     }
 
-    private String nullValue;
+    private Float nullValue;
 
-    protected IpFieldMapper(Names names, int precisionStep,
-                            float boost, FieldType fieldType,
-                            String nullValue, Explicit<Boolean> ignoreMalformed,
-                            PostingsFormatProvider provider, SimilarityProvider similarity) {
-        super(names, precisionStep, null, boost, fieldType,
-                ignoreMalformed, new NamedAnalyzer("_ip/" + precisionStep, new NumericIpAnalyzer(precisionStep)),
-                new NamedAnalyzer("_ip/max", new NumericIpAnalyzer(Integer.MAX_VALUE)), provider, similarity);
+    private String nullValueAsString;
+
+    protected FloatFieldMapper(Names names, int precisionStep, String fuzzyFactor, float boost, FieldType fieldType,
+                               Float nullValue, Explicit<Boolean> ignoreMalformed, PostingsFormatProvider provider, SimilarityProvider similarity) {
+        super(names, precisionStep, fuzzyFactor, boost, fieldType,
+                ignoreMalformed, new NamedAnalyzer("_float/" + precisionStep, new NumericFloatAnalyzer(precisionStep)),
+                new NamedAnalyzer("_float/max", new NumericFloatAnalyzer(Integer.MAX_VALUE)), provider, similarity);
         this.nullValue = nullValue;
+        this.nullValueAsString = nullValue == null ? null : nullValue.toString();
     }
 
     @Override
@@ -155,62 +131,38 @@ public class IpFieldMapper extends NumberFieldMapper<Long> {
 
     @Override
     protected int maxPrecisionStep() {
-        return 64;
+        return 32;
     }
 
     @Override
-    public Long value(Object value) {
+    public Float value(Object value) {
         if (value == null) {
             return null;
         }
-        return Numbers.bytesToLong((byte[]) value);
-    }
-
-    @Override
-    public Long valueFromString(String value) {
-        return ipToLong(value);
-    }
-
-    /**
-     * IPs should return as a string.
-     *
-     * @param value
-     */
-    @Override
-    public Object valueForSearch(Object value) {
-        return valueAsString(value);
-    }
-
-    @Override
-    public String valueAsString(Object value) {
-        Long val = value(value);
-        if (val == null) {
-            return null;
+        if (value instanceof Number) {
+            return ((Number) value).floatValue();
         }
-        return longToIp(val);
+        return Numbers.bytesToFloat(((BytesReference) value).array());
+    }
+
+    @Override
+    public Float valueFromString(String value) {
+        return Float.parseFloat(value);
     }
 
     @Override
     public BytesRef indexedValue(String value) {
+        int intValue = NumericUtils.floatToSortableInt(Float.parseFloat(value));
         BytesRef bytesRef = new BytesRef();
-        NumericUtils.longToPrefixCoded(ipToLong(value), precisionStep(), bytesRef);
+        NumericUtils.intToPrefixCoded(intValue, precisionStep(), bytesRef);
         return bytesRef;
     }
 
     @Override
     public Query fuzzyQuery(String value, String minSim, int prefixLength, int maxExpansions, boolean transpositions) {
-        long iValue = ipToLong(value);
-        long iSim;
-        try {
-            iSim = ipToLong(minSim);
-        } catch (ElasticSearchIllegalArgumentException e) {
-            try {
-                iSim = Long.parseLong(minSim);
-            } catch (NumberFormatException e1) {
-                iSim = (long) Double.parseDouble(minSim);
-            }
-        }
-        return NumericRangeQuery.newLongRange(names.indexName(), precisionStep,
+        float iValue = Float.parseFloat(value);
+        float iSim = Float.parseFloat(minSim);
+        return NumericRangeQuery.newFloatRange(names.indexName(), precisionStep,
                 iValue - iSim,
                 iValue + iSim,
                 true, true);
@@ -218,32 +170,49 @@ public class IpFieldMapper extends NumberFieldMapper<Long> {
 
     @Override
     public Query fuzzyQuery(String value, double minSim, int prefixLength, int maxExpansions, boolean transpositions) {
-        // Lucene 4 Upgrade: It's surprising this uses FuzzyQuery instead of NumericRangeQuery
-        int edits = FuzzyQuery.floatToEdits((float) minSim, value.codePointCount(0, value.length()));
-        return new FuzzyQuery(names.createIndexNameTerm(indexedValue(value)), edits, prefixLength, maxExpansions, transpositions);
+        float iValue = Float.parseFloat(value);
+        float iSim = (float) (minSim * dFuzzyFactor);
+        return NumericRangeQuery.newFloatRange(names.indexName(), precisionStep,
+                iValue - iSim,
+                iValue + iSim,
+                true, true);
+    }
+
+    @Override
+    public Query fieldQuery(String value, @Nullable QueryParseContext context) {
+        float fValue = Float.parseFloat(value);
+        return NumericRangeQuery.newFloatRange(names.indexName(), precisionStep,
+                fValue, fValue, true, true);
     }
 
     @Override
     public Query rangeQuery(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
-        return NumericRangeQuery.newLongRange(names.indexName(), precisionStep,
-                lowerTerm == null ? null : ipToLong(lowerTerm),
-                upperTerm == null ? null : ipToLong(upperTerm),
+        return NumericRangeQuery.newFloatRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : Float.parseFloat(lowerTerm),
+                upperTerm == null ? null : Float.parseFloat(upperTerm),
                 includeLower, includeUpper);
     }
 
     @Override
+    public Filter fieldFilter(String value, @Nullable QueryParseContext context) {
+        float fValue = Float.parseFloat(value);
+        return NumericRangeFilter.newFloatRange(names.indexName(), precisionStep,
+                fValue, fValue, true, true);
+    }
+
+    @Override
     public Filter rangeFilter(String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
-        return NumericRangeFilter.newLongRange(names.indexName(), precisionStep,
-                lowerTerm == null ? null : ipToLong(lowerTerm),
-                upperTerm == null ? null : ipToLong(upperTerm),
+        return NumericRangeFilter.newFloatRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : Float.parseFloat(lowerTerm),
+                upperTerm == null ? null : Float.parseFloat(upperTerm),
                 includeLower, includeUpper);
     }
 
     @Override
     public Filter rangeFilter(FieldDataCache fieldDataCache, String lowerTerm, String upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
-        return NumericRangeFieldDataFilter.newLongRange(fieldDataCache, names.indexName(),
-                lowerTerm == null ? null : ipToLong(lowerTerm),
-                upperTerm == null ? null : ipToLong(upperTerm),
+        return NumericRangeFieldDataFilter.newFloatRange(fieldDataCache, names.indexName(),
+                lowerTerm == null ? null : Float.parseFloat(lowerTerm),
+                upperTerm == null ? null : Float.parseFloat(upperTerm),
                 includeLower, includeUpper);
     }
 
@@ -252,43 +221,93 @@ public class IpFieldMapper extends NumberFieldMapper<Long> {
         if (nullValue == null) {
             return null;
         }
-        final long value = ipToLong(nullValue);
-        return NumericRangeFilter.newLongRange(names.indexName(), precisionStep,
-                value,
-                value,
+        return NumericRangeFilter.newFloatRange(names.indexName(), precisionStep,
+                nullValue,
+                nullValue,
                 true, true);
     }
 
     @Override
+    protected boolean customBoost() {
+        return true;
+    }
+
+    @Override
     protected Field innerParseCreateField(ParseContext context) throws IOException {
-        String ipAsString;
+        float value;
+        float boost = this.boost;
         if (context.externalValueSet()) {
-            ipAsString = (String) context.externalValue();
-            if (ipAsString == null) {
-                ipAsString = nullValue;
+            Object externalValue = context.externalValue();
+            if (externalValue == null) {
+                if (nullValue == null) {
+                    return null;
+                }
+                value = nullValue;
+            } else if (externalValue instanceof String) {
+                String sExternalValue = (String) externalValue;
+                if (sExternalValue.length() == 0) {
+                    if (nullValue == null) {
+                        return null;
+                    }
+                    value = nullValue;
+                } else {
+                    value = Float.parseFloat(sExternalValue);
+                }
+            } else {
+                value = ((Number) externalValue).floatValue();
+            }
+            if (context.includeInAll(includeInAll, this)) {
+                context.allEntries().addText(names.fullName(), Float.toString(value), boost);
             }
         } else {
-            if (context.parser().currentToken() == XContentParser.Token.VALUE_NULL) {
-                ipAsString = nullValue;
+            XContentParser parser = context.parser();
+            if (parser.currentToken() == XContentParser.Token.VALUE_NULL ||
+                    (parser.currentToken() == XContentParser.Token.VALUE_STRING && parser.textLength() == 0)) {
+                if (nullValue == null) {
+                    return null;
+                }
+                value = nullValue;
+                if (nullValueAsString != null && (context.includeInAll(includeInAll, this))) {
+                    context.allEntries().addText(names.fullName(), nullValueAsString, boost);
+                }
+            } else if (parser.currentToken() == XContentParser.Token.START_OBJECT) {
+                XContentParser.Token token;
+                String currentFieldName = null;
+                Float objValue = nullValue;
+                while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                    if (token == XContentParser.Token.FIELD_NAME) {
+                        currentFieldName = parser.currentName();
+                    } else {
+                        if ("value".equals(currentFieldName) || "_value".equals(currentFieldName)) {
+                            if (parser.currentToken() != XContentParser.Token.VALUE_NULL) {
+                                objValue = parser.floatValue();
+                            }
+                        } else if ("boost".equals(currentFieldName) || "_boost".equals(currentFieldName)) {
+                            boost = parser.floatValue();
+                        }
+                    }
+                }
+                if (objValue == null) {
+                    // no value
+                    return null;
+                }
+                value = objValue;
             } else {
-                ipAsString = context.parser().text();
+                value = parser.floatValue();
+                if (context.includeInAll(includeInAll, this)) {
+                    context.allEntries().addText(names.fullName(), parser.text(), boost);
+                }
             }
         }
 
-        if (ipAsString == null) {
-            return null;
-        }
-        if (context.includeInAll(includeInAll, this)) {
-            context.allEntries().addText(names.fullName(), ipAsString, boost);
-        }
-
-        final long value = ipToLong(ipAsString);
-        return new LongFieldMapper.CustomLongNumericField(this, value, fieldType);
+        CustomFloatNumericField field = new CustomFloatNumericField(this, value, fieldType);
+        field.setBoost(boost);
+        return field;
     }
 
     @Override
     public FieldDataType fieldDataType() {
-        return FieldDataType.DefaultTypes.LONG;
+        return FieldDataType.DefaultTypes.FLOAT;
     }
 
     @Override
@@ -303,15 +322,20 @@ public class IpFieldMapper extends NumberFieldMapper<Long> {
             return;
         }
         if (!mergeContext.mergeFlags().simulate()) {
-            this.nullValue = ((IpFieldMapper) mergeWith).nullValue;
+            this.nullValue = ((FloatFieldMapper) mergeWith).nullValue;
+            this.nullValueAsString = ((FloatFieldMapper) mergeWith).nullValueAsString;
         }
     }
+
 
     @Override
     protected void doXContentBody(XContentBuilder builder) throws IOException {
         super.doXContentBody(builder);
         if (precisionStep != Defaults.PRECISION_STEP) {
             builder.field("precision_step", precisionStep);
+        }
+        if (fuzzyFactor != Defaults.FUZZY_FACTOR) {
+            builder.field("fuzzy_factor", fuzzyFactor);
         }
         if (nullValue != null) {
             builder.field("null_value", nullValue);
@@ -321,37 +345,29 @@ public class IpFieldMapper extends NumberFieldMapper<Long> {
         }
     }
 
-    public static class NumericIpAnalyzer extends NumericAnalyzer<NumericIpTokenizer> {
+    public static class CustomFloatNumericField extends CustomNumericField {
 
-        private final int precisionStep;
+        private final float number;
 
-        public NumericIpAnalyzer() {
-            this(NumericUtils.PRECISION_STEP_DEFAULT);
-        }
+        private final NumberFieldMapper mapper;
 
-        public NumericIpAnalyzer(int precisionStep) {
-            this.precisionStep = precisionStep;
-        }
-
-        @Override
-        protected NumericIpTokenizer createNumericTokenizer(Reader reader, char[] buffer) throws IOException {
-            return new NumericIpTokenizer(reader, precisionStep, buffer);
-        }
-    }
-
-    public static class NumericIpTokenizer extends NumericTokenizer {
-
-        public NumericIpTokenizer(Reader reader, int precisionStep) throws IOException {
-            super(reader, new NumericTokenStream(precisionStep), null);
-        }
-
-        public NumericIpTokenizer(Reader reader, int precisionStep, char[] buffer) throws IOException {
-            super(reader, new NumericTokenStream(precisionStep), buffer, null);
+        public CustomFloatNumericField(NumberFieldMapper mapper, float number, FieldType fieldType) {
+            super(mapper, mapper.fieldType().stored() ? Numbers.floatToBytes(number) : null, fieldType);
+            this.mapper = mapper;
+            this.number = number;
         }
 
         @Override
-        protected void setValue(NumericTokenStream tokenStream, String value) {
-            tokenStream.setLongValue(ipToLong(value));
+        public TokenStream tokenStream(Analyzer analyzer) throws IOException {
+            if (fieldType().indexed()) {
+                return mapper.popCachedStream().setFloatValue(number);
+            }
+            return null;
+        }
+
+        @Override
+        public String numericAsString() {
+            return Float.toString(number);
         }
     }
 }

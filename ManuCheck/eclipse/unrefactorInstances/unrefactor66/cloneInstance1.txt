@@ -1,22 +1,16 @@
-(startLine=17700 endLine=17719 srcPath=/root/Projects/eclipse.jdt.coreFilter/529/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
-    public void test0579() {
-        this.runNegativeTest(
-            new String[] {
-                "X.java",
-                "public class X {\n" + 
-                "    void foo(Box<? super int[]> box) {\n" + 
-                "        int[] ints = box.get();\n" + 
-                "    }\n" + 
-                "}\n" + 
-                "class Box<T> {\n" + 
-                "    T get() { return null; }\n" + 
-                "}\n"
-            },
-            "----------\n" + 
-            "1. ERROR in X.java (at line 3)\n" + 
-            "    int[] ints = box.get();\n" + 
-            "                 ^^^^^^^^^\n" + 
-            "Type mismatch: cannot convert from capture#1-of ? super int[] to int[]\n" + 
-            "----------\n");
-    }        
+(startLine=533 endLine=546 srcPath=/root/Projects/eclipse.jdt.coreFilter/1755/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+public void testConstructorDeclarationInJar() throws CoreException {
+    IType type = getClassFile("JavaSearch", "MyJar.jar", "p1", "A.class").getType();
+    IMethod method = type.getMethod("A", new String[] {"Ljava.lang.String;"});
+    JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
+    new SearchEngine().search(
+        getWorkspace(), 
+        method, 
+        DECLARATIONS, 
+        getJavaSearchScope(), 
+        resultCollector);
+    assertSearchResults(
+        "MyJar.jar p1.A(java.lang.String) [No source]", 
+        resultCollector);
+}
 

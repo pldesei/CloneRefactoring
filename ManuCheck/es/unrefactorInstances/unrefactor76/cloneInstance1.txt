@@ -1,25 +1,18 @@
-(startLine=939 endLine=961 srcPath=/root/Projects/elasticsearchFilter/984/elasticsearch/src/main/java/jsr166e/ForkJoinPool.java)
-        final boolean pollAndExecCC(CountedCompleter<?> root) {
-            ForkJoinTask<?>[] a; int b; Object o; CountedCompleter<?> t, r;
-            if ((b = base) - top < 0 && (a = array) != null) {
-                long j = (((a.length - 1) & b) << ASHIFT) + ABASE;
-                if ((o = U.getObjectVolatile(a, j)) == null)
-                    return true; // retry
-                if (o instanceof CountedCompleter) {
-                    for (t = (CountedCompleter<?>)o, r = t;;) {
-                        if (r == root) {
-                            if (base == b &&
-                                U.compareAndSwapObject(a, j, t, null)) {
-                                U.putOrderedInt(this, QBASE, b + 1);
-                                t.doExec();
-                            }
-                            return true;
-                        }
-                        else if ((r = r.completer) == null)
-                            break; // not part of root computation
-                    }
-                }
-            }
-            return false;
+(startLine=91 endLine=106 srcPath=/root/Projects/elasticsearchFilter/242/elasticsearch/core/src/main/java/org/elasticsearch/common/xcontent/json/JsonXContentParser.java)
+    public Object objectText() throws IOException {
+        JsonToken currentToken = parser.getCurrentToken();
+        if (currentToken == JsonToken.VALUE_STRING) {
+            return text();
+        } else if (currentToken == JsonToken.VALUE_NUMBER_INT || currentToken == JsonToken.VALUE_NUMBER_FLOAT) {
+            return parser.getNumberValue();
+        } else if (currentToken == JsonToken.VALUE_TRUE) {
+            return Boolean.TRUE;
+        } else if (currentToken == JsonToken.VALUE_FALSE) {
+            return Boolean.FALSE;
+        } else if (currentToken == JsonToken.VALUE_NULL) {
+            return null;
+        } else {
+            return text();
         }
+    }
 

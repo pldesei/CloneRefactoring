@@ -1,102 +1,58 @@
-(startLine=1403 endLine=1502 srcPath=/root/Projects/elasticsearchFilter/1190/elasticsearch/src/main/java/jsr166e/ConcurrentHashMapV8.java)
-    @SuppressWarnings("unchecked") private final V internalComputeIfAbsent
-        (K k, Fun<? super K, ? extends V> mf) {
-        if (k == null || mf == null)
-            throw new NullPointerException();
-        int h = spread(k.hashCode());
-        V val = null;
-        int len = 0;
-        for (Node<V>[] tab = table;;) {
-            Node<V> f; int i; Object fk;
-            if (tab == null)
-                tab = initTable();
-            else if ((f = tabAt(tab, i = (tab.length - 1) & h)) == null) {
-                Node<V> node = new Node<V>(h, k, null, null);
-                synchronized (node) {
-                    if (casTabAt(tab, i, null, node)) {
-                        len = 1;
-                        try {
-                            if ((val = mf.apply(k)) != null)
-                                node.val = val;
-                        } finally {
-                            if (val == null)
-                                setTabAt(tab, i, null);
-                        }
-                    }
-                }
-                if (len != 0)
-                    break;
-            }
-            else if (f.hash < 0) {
-                if ((fk = f.key) instanceof TreeBin) {
-                    TreeBin<V> t = (TreeBin<V>)fk;
-                    boolean added = false;
-                    t.acquire(0);
-                    try {
-                        if (tabAt(tab, i) == f) {
-                            len = 1;
-                            TreeNode<V> p = t.getTreeNode(h, k, t.root);
-                            if (p != null)
-                                val = p.val;
-                            else if ((val = mf.apply(k)) != null) {
-                                added = true;
-                                len = 2;
-                                t.putTreeNode(h, k, val);
-                            }
-                        }
-                    } finally {
-                        t.release(0);
-                    }
-                    if (len != 0) {
-                        if (!added)
-                            return val;
-                        break;
-                    }
-                }
-                else
-                    tab = (Node<V>[])fk;
-            }
-            else {
-                for (Node<V> e = f; e != null; e = e.next) { // prescan
-                    Object ek; V ev;
-                    if (e.hash == h && (ev = e.val) != null &&
-                        ((ek = e.key) == k || k.equals(ek)))
-                        return ev;
-                }
-                boolean added = false;
-                synchronized (f) {
-                    if (tabAt(tab, i) == f) {
-                        len = 1;
-                        for (Node<V> e = f;; ++len) {
-                            Object ek; V ev;
-                            if (e.hash == h &&
-                                (ev = e.val) != null &&
-                                ((ek = e.key) == k || k.equals(ek))) {
-                                val = ev;
-                                break;
-                            }
-                            Node<V> last = e;
-                            if ((e = e.next) == null) {
-                                if ((val = mf.apply(k)) != null) {
-                                    added = true;
-                                    last.next = new Node<V>(h, k, val, null);
-                                    if (len >= TREE_THRESHOLD)
-                                        replaceWithTreeBin(tab, i, k);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (len != 0) {
-                    if (!added)
-                        return val;
-                    break;
-                }
-            }
+(startLine=724 endLine=779 srcPath=/root/Projects/elasticsearchFilter/1196/elasticsearch/src/main/java/org/elasticsearch/common/xcontent/XContentBuilder.java)
+    public XContentBuilder field(String name, Object value) throws IOException {
+        if (value == null) {
+            nullField(name);
+            return this;
         }
-        if (val != null)
-            addCount(1L, len);
-        return val;
+        Class type = value.getClass();
+        if (type == String.class) {
+            field(name, (String) value);
+        } else if (type == Float.class) {
+            field(name, ((Float) value).floatValue());
+        } else if (type == Double.class) {
+            field(name, ((Double) value).doubleValue());
+        } else if (type == Integer.class) {
+            field(name, ((Integer) value).intValue());
+        } else if (type == Long.class) {
+            field(name, ((Long) value).longValue());
+        } else if (type == Short.class) {
+            field(name, ((Short) value).shortValue());
+        } else if (type == Byte.class) {
+            field(name, ((Byte) value).byteValue());
+        } else if (type == Boolean.class) {
+            field(name, ((Boolean) value).booleanValue());
+        } else if (value instanceof Date) {
+            field(name, (Date) value);
+        } else if (value instanceof Calendar) {
+            field(name, convertCalendar((Calendar) value));
+        } else if (type == byte[].class) {
+            field(name, (byte[]) value);
+        } else if (value instanceof ReadableInstant) {
+            field(name, (ReadableInstant) value);
+        } else if (value instanceof Map) {
+            //noinspection unchecked
+            field(name, (Map<String, Object>) value);
+        } else if (value instanceof Iterable) {
+            field(name, (Iterable) value);
+        } else if (value instanceof Object[]) {
+            field(name, (Object[]) value);
+        } else if (value instanceof int[]) {
+            field(name, (int[]) value);
+        } else if (value instanceof long[]) {
+            field(name, (long[]) value);
+        } else if (value instanceof float[]) {
+            field(name, (float[]) value);
+        } else if (value instanceof double[]) {
+            field(name, (double[]) value);
+        } else if (value instanceof BytesReference) {
+            field(name, (BytesReference) value);
+        } else if (value instanceof Text) {
+            field(name, (Text) value);
+        } else if (value instanceof ToXContent) {
+            field(name, (ToXContent) value);
+        } else {
+            field(name, value.toString());
+        }
+        return this;
     }
 

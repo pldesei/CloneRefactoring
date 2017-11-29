@@ -1,11 +1,9 @@
-(startLine=113 endLine=127 srcPath=/root/Projects/elasticsearchFilter/14/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedOrdinalsSamplerAggregator.java)
+(startLine=105 endLine=117 srcPath=/root/Projects/elasticsearchFilter/14/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedBytesHashSamplerAggregator.java)
                     @Override
                     public boolean advanceExact(int target) throws IOException {
-                        if (globalOrds.advanceExact(target)) {
-                            value = globalOrds.nextOrd();
-                            // Check there isn't a second value for this
-                            // document
-                            if (globalOrds.nextOrd() != SortedSetDocValues.NO_MORE_ORDS) {
+                        docID = target;
+                        if (values.advanceExact(target)) {
+                            if (values.docValueCount() > 1) {
                                 throw new IllegalArgumentException(
                                         "Sample diversifying key must be a single valued-field");
                             }

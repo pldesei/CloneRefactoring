@@ -17,131 +17,111 @@
  * under the License.
  */
 
-package org.elasticsearch.action.support;
+package org.elasticsearch.common.network;
 
-import org.elasticsearch.Version;
-import org.elasticsearch.cluster.ClusterName;
-import org.elasticsearch.cluster.ClusterState;
-import org.elasticsearch.cluster.metadata.IndexMetaData;
-import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
-import org.elasticsearch.cluster.metadata.MetaData;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.index.mapper.MapperService;
 import org.elasticsearch.test.ESTestCase;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.Random;
 
-public class AutoCreateIndexTests extends ESTestCase {
+/**
+ * Tests for network address formatting. Please avoid using any methods that cause DNS lookups!
+ */
+public class NetworkAddressTests extends ESTestCase {
+    
+    public void testFormatV4() throws Exception {
+        assertEquals("localhost/127.0.0.1", NetworkAddress.format(forge("localhost", "127.0.0.1")));
+        assertEquals("127.0.0.1", NetworkAddress.format(forge(null, "127.0.0.1")));
+    }
+    
+    public void testFormatV6() throws Exception {
+        assertEquals("localhost/::1", NetworkAddress.format(forge("localhost", "::1")));
+        assertEquals("::1", NetworkAddress.format(forge(null, "::1")));
+    }
+    
+    public void testFormatAddressV4() throws Exception {
+        assertEquals("127.0.0.1", NetworkAddress.formatAddress(forge("localhost", "127.0.0.1")));
+        assertEquals("127.0.0.1", NetworkAddress.formatAddress(forge(null, "127.0.0.1")));
+    }
+    
+    public void testFormatAddressV6() throws Exception {
+        assertEquals("::1", NetworkAddress.formatAddress(forge("localhost", "::1")));
+        assertEquals("::1", NetworkAddress.formatAddress(forge(null, "::1")));
+    }
+    
+    public void testFormatPortV4() throws Exception {
+        assertEquals("localhost/127.0.0.1:1234", NetworkAddress.format(new InetSocketAddress(forge("localhost", "127.0.0.1"), 1234)));
+        assertEquals("127.0.0.1:1234", NetworkAddress.format(new InetSocketAddress(forge(null, "127.0.0.1"), 1234)));
+    }
+    
+    public void testFormatPortV6() throws Exception {
+        assertEquals("localhost/[::1]:1234", NetworkAddress.format(new InetSocketAddress(forge("localhost", "::1"), 1234)));
+        assertEquals("[::1]:1234",NetworkAddress.format(new InetSocketAddress(forge(null, "::1"), 1234)));
+    }
+    
+    public void testFormatAddressPortV4() throws Exception {
+        assertEquals("127.0.0.1:1234", NetworkAddress.formatAddress(new InetSocketAddress(forge("localhost", "127.0.0.1"), 1234)));
+        assertEquals("127.0.0.1:1234", NetworkAddress.formatAddress(new InetSocketAddress(forge(null, "127.0.0.1"), 1234)));
+    }
+    
+    public void testFormatAddressPortV6() throws Exception {
+        assertEquals("[::1]:1234", NetworkAddress.formatAddress(new InetSocketAddress(forge("localhost", "::1"), 1234)));
+        assertEquals("[::1]:1234", NetworkAddress.formatAddress(new InetSocketAddress(forge(null, "::1"), 1234)));
+    }
+    
+    public void testNoScopeID() throws Exception {
+        assertEquals("::1", NetworkAddress.format(forgeScoped(null, "::1", 5)));
+        assertEquals("localhost/::1", NetworkAddress.format(forgeScoped("localhost", "::1", 5)));
+        
+        assertEquals("::1", NetworkAddress.formatAddress(forgeScoped(null, "::1", 5)));
+        assertEquals("::1", NetworkAddress.formatAddress(forgeScoped("localhost", "::1", 5)));
+        
+        assertEquals("[::1]:1234", NetworkAddress.format(new InetSocketAddress(forgeScoped(null, "::1", 5), 1234)));
+        assertEquals("localhost/[::1]:1234", NetworkAddress.format(new InetSocketAddress(forgeScoped("localhost", "::1", 5), 1234)));
+        
+        assertEquals("[::1]:1234", NetworkAddress.formatAddress(new InetSocketAddress(forgeScoped(null, "::1", 5), 1234)));
+        assertEquals("[::1]:1234", NetworkAddress.formatAddress(new InetSocketAddress(forgeScoped("localhost", "::1", 5), 1234)));
+    }
 
-    public void testParseFailed() {
-        try {
-            new AutoCreateIndex(Settings.builder().put("action.auto_create_index", ",,,").build(), new IndexNameExpressionResolver(Settings.EMPTY));
-            fail("initialization should have failed");
-        } catch (IllegalArgumentException ex) {
-            assertEquals("Can't parse [,,,] for setting [action.auto_create_index] must be either [true, false, or a comma separated list of index patterns]", ex.getMessage());
+    /** Test that ipv4 address formatting round trips */
+    public void testRoundTripV4() throws Exception {
+        byte bytes[] = new byte[4];
+        Random random = random();
+        for (int i = 0; i < 10000; i++) {
+            random.nextBytes(bytes);
+            InetAddress expected = Inet4Address.getByAddress(bytes);
+            String formatted = NetworkAddress.formatAddress(expected);
+            InetAddress actual = InetAddress.getByName(formatted);
+            assertEquals(expected, actual);
         }
     }
 
-    public void testParseFailedMissingIndex() {
-        String prefix = randomFrom("+", "-");
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), prefix).build();
-        try {
-            new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-            fail("initialization should have failed");
-        } catch(IllegalArgumentException ex) {
-            assertEquals("Can't parse [" + prefix + "] for setting [action.auto_create_index] must contain an index name after [" + prefix + "]", ex.getMessage());
+    /** Test that ipv6 address formatting round trips */
+    public void testRoundTripV6() throws Exception {
+        byte bytes[] = new byte[16];
+        Random random = random();
+        for (int i = 0; i < 10000; i++) {
+            random.nextBytes(bytes);
+            InetAddress expected = Inet6Address.getByAddress(bytes);
+            String formatted = NetworkAddress.formatAddress(expected);
+            InetAddress actual = InetAddress.getByName(formatted);
+            assertEquals(expected, actual);
         }
     }
-
-    public void testAutoCreationDisabled() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), false).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(Settings.EMPTY));
-        assertThat(autoCreateIndex.shouldAutoCreate(randomAsciiOfLengthBetween(1, 10), buildClusterState()), equalTo(false));
+    
+    /** creates address without any lookups. hostname can be null, for missing */
+    private InetAddress forge(String hostname, String address) throws IOException {
+        byte bytes[] = InetAddress.getByName(address).getAddress();
+        return InetAddress.getByAddress(hostname, bytes);
     }
-
-    public void testAutoCreationEnabled() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), true).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(Settings.EMPTY));
-        assertThat(autoCreateIndex.shouldAutoCreate(randomAsciiOfLengthBetween(1, 10), buildClusterState()), equalTo(true));
-    }
-
-    public void testDefaultAutoCreation() {
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(Settings.EMPTY, new IndexNameExpressionResolver(Settings.EMPTY));
-        assertThat(autoCreateIndex.shouldAutoCreate(randomAsciiOfLengthBetween(1, 10), buildClusterState()), equalTo(true));
-    }
-
-    public void testExistingIndex() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), randomFrom(true, false, randomAsciiOfLengthBetween(7, 10))).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(Settings.EMPTY));
-        assertThat(autoCreateIndex.shouldAutoCreate(randomFrom("index1", "index2", "index3"), buildClusterState("index1", "index2", "index3")), equalTo(false));
-    }
-
-    public void testDynamicMappingDisabled() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), randomFrom(true, randomAsciiOfLengthBetween(1, 10)))
-            .put(MapperService.INDEX_MAPPER_DYNAMIC_SETTING.getKey(), false).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(Settings.EMPTY));
-        assertThat(autoCreateIndex.shouldAutoCreate(randomAsciiOfLengthBetween(1, 10), buildClusterState()), equalTo(false));
-    }
-
-    public void testAutoCreationPatternEnabled() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), randomFrom("+index*", "index*")).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-    }
-
-    public void testAutoCreationPatternDisabled() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "-index*").build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-        //default is false when patterns are specified
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-    }
-
-    public void testAutoCreationMultiplePatternsWithWildcards() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), randomFrom("+test*,-index*", "test*,-index*")).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-        assertThat(autoCreateIndex.shouldAutoCreate("test" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-    }
-
-    public void testAutoCreationMultiplePatternsNoWildcards() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "+test1,-index1").build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("test1", clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-        assertThat(autoCreateIndex.shouldAutoCreate("test" + randomAsciiOfLengthBetween(2, 5), clusterState), equalTo(false));
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-    }
-
-    public void testAutoCreationMultipleIndexNames() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "test1,test2").build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("test1", clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("test2", clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-    }
-
-    public void testAutoCreationConflictingPatternsFirstWins() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "+test1,-test1,-test2,+test2").build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("test1", clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("test2", clusterState), equalTo(false));
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-    }
-
-    private static ClusterState buildClusterState(String... indices) {
-        MetaData.Builder metaData = MetaData.builder();
-        for (String index : indices) {
-            metaData.put(IndexMetaData.builder(index).settings(settings(Version.CURRENT)).numberOfShards(1).numberOfReplicas(1));
-        }
-        return ClusterState.builder(org.elasticsearch.cluster.ClusterName.DEFAULT).metaData(metaData).build();
+    
+    /** creates scoped ipv6 address without any lookups. hostname can be null, for missing */
+    private InetAddress forgeScoped(String hostname, String address, int scopeid) throws IOException {
+        byte bytes[] = InetAddress.getByName(address).getAddress();
+        return Inet6Address.getByAddress(hostname, bytes, scopeid);
     }
 }

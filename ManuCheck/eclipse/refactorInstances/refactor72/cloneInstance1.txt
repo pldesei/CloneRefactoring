@@ -1,2 +1,24 @@
-(startLine=943 endLine=975 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchJavadocTests.java)
+(startLine=3521 endLine=3542 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug95794b() throws CoreException {
+    this.resultCollector.showRule = true;
+    ICompilationUnit unit = getCompilationUnit("JavaSearchBugs", "src", "b95794", "Test.java");
+    IType type = unit.getType("Test").getType("Color");
+
+    // Verify matches
+    TestCollector occurencesCollector = new TestCollector();
+    occurencesCollector.showAccuracy = true;
+    search(type, ALL_OCCURRENCES, getJavaSearchScope(), occurencesCollector);
+    assertSearchResults(
+        "src/b95794/Test.java [b95794.Test.Color] EXACT_MATCH\n" +
+        "src/b95794/Test.java [b95794.Test.Color] EXACT_MATCH\n" +
+        "src/b95794/Test.java void b95794.Test.main(String[]) [Color] EXACT_MATCH\n" +
+        "src/b95794/Test.java b95794.Test$Color [Color] EXACT_MATCH",
+        occurencesCollector
+    );
+
+    // Verify with references matches
+    TestCollector referencesCollector = new TestCollector();
+    search(type, REFERENCES, getJavaSearchScope(), referencesCollector);
+    assertEquals("Problem with occurences or references number of matches: ", occurencesCollector.matches.size()-1, referencesCollector.matches.size());
+}
 

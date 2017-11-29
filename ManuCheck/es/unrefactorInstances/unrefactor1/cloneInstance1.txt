@@ -1,9 +1,28 @@
-(startLine=50 endLine=56 srcPath=/root/Projects/elasticsearchFilter/1374/elasticsearch/src/main/java/org/elasticsearch/search/facet/histogram/unbounded/ScriptHistogramFacetCollector.java)
-    public ScriptHistogramFacetCollector(String facetName, String scriptLang, String keyScript, String valueScript, Map<String, Object> params, long interval, HistogramFacet.ComparatorType comparatorType, SearchContext context) {
-        super(facetName);
-        this.keyScript = context.scriptService().search(context.lookup(), scriptLang, keyScript, params);
-        this.valueScript = context.scriptService().search(context.lookup(), scriptLang, valueScript, params);
-        this.interval = interval > 0 ? interval : 0;
-        this.comparatorType = comparatorType;
+(startLine=87 endLine=112 srcPath=/root/Projects/elasticsearchFilter/1254/elasticsearch/src/main/java/org/elasticsearch/monitor/dump/summary/SummaryDumpContributor.java)
+    private void processThrowables(PrintWriter writer, Dump dump) {
+        writer.println("===== EXCEPTIONS =====");
+        Object throwables = dump.context().get("throwables");
+        if (throwables == null) {
+            return;
+        }
+        if (throwables instanceof Throwable[]) {
+            Throwable[] array = (Throwable[]) throwables;
+            for (Throwable t : array) {
+                writer.println();
+                writer.println("---- Exception ----");
+                t.printStackTrace(writer);
+            }
+        } else if (throwables instanceof Collection) {
+            Collection collection = (Collection) throwables;
+            for (Object o : collection) {
+                Throwable t = (Throwable) o;
+                writer.println();
+                writer.println("---- Exception ----");
+                t.printStackTrace(writer);
+            }
+        } else {
+            throw new DumpContributionFailedException(getName(), "Can't handle throwables type [" + throwables.getClass() + "]");
+        }
+        writer.println();
     }
 

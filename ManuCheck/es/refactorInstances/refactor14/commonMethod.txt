@@ -1,6 +1,10 @@
-(startLine=98 endLine=101 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchCache.java)
-    public void releaseFetchResults(Map<SearchShardTarget, FetchSearchResult> fetchResults) {
-        fetchResults.clear();
-        cacheFetchResults.offer(fetchResults);
+(startLine=360 endLine=367 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/search/SearchService.java)
+    private void contextProcessingDone(SearchContext context) {
+        if (context.keepAliveTimeout() != null) {
+            ((KeepAliveTimerTask) context.keepAliveTimeout().getTask()).doneProcessing();
+        } else {
+            context.accessed(timerService.estimatedTimeInMillis());
+            context.keepAliveTimeout(timerService.newTimeout(new KeepAliveTimerTask(context), context.keepAlive(), TimerService.ExecutionType.DEFAULT));
+        }
     }
 

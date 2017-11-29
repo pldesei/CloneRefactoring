@@ -1,4 +1,4 @@
-(startLine=111 endLine=135 srcPath=/root/Projects/eclipse.jdt.coreFilter/2024/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/DeletePackageFragmentRootOperation.java)
+(startLine=129 endLine=157 srcPath=/root/Projects/eclipse.jdt.coreFilter/2024/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/MovePackageFragmentRootOperation.java)
     protected void updateProjectClasspath(IPath rootPath, IJavaProject project)
         throws JavaModelException {
         IClasspathEntry[] classpath = project.getRawClasspath();
@@ -9,10 +9,14 @@
             IClasspathEntry entry = classpath[j];
             if (rootPath.equals(entry.getPath())) {
                 if (newClasspath == null) {
-                    newClasspath = new IClasspathEntry[cpLength-1];
+                    newClasspath = new IClasspathEntry[cpLength];
                     System.arraycopy(classpath, 0, newClasspath, 0, j);
                     newCPIndex = j;
                 }
+                if (this.destination.segment(0).equals(project.getElementName())) continue;
+                if (entry.getEntryKind() != IClasspathEntry.CPE_SOURCE) { // library entry
+                    newClasspath[newCPIndex++] = copy(entry);
+                } // else source folder is moved to another project: deletes its classpath entry
             } else if (newClasspath != null) {
                 newClasspath[newCPIndex++] = entry;
             }
@@ -23,5 +27,5 @@
             }
             project.setRawClasspath(newClasspath, fMonitor);
         }
-    }    
+    }
 

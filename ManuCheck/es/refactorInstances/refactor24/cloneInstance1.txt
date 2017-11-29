@@ -1,19 +1,17 @@
-(startLine=105 endLine=121 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/search/geo/GeoDistanceFilter.java)
-    @Override public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
-        DocSet boundingBoxDocSet = null;
-        if (boundingBoxFilter != null) {
-            DocIdSet docIdSet = boundingBoxFilter.getDocIdSet(reader);
-            if (docIdSet == null) {
-                return null;
+(startLine=110 endLine=124 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexStatus.java)
+    public ByteSizeValue storeSize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.storeSize() != null) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.storeSize().bytes();
             }
-            boundingBoxDocSet = DocSets.convert(reader, docIdSet);
         }
-        final GeoPointFieldData fieldData = (GeoPointFieldData) fieldDataCache.cache(GeoPointFieldDataType.TYPE, reader, fieldName);
-        GeoDistanceDocSet distDocSet = new GeoDistanceDocSet(reader.maxDoc(), fieldData, fixedSourceDistance, distanceBoundingCheck, distance);
-        if (boundingBoxDocSet == null) {
-            return distDocSet;
-        } else {
-            return new AndDocSet(ImmutableList.of(boundingBoxDocSet, distDocSet));
+        if (bytes == -1) {
+            return null;
         }
+        return new ByteSizeValue(bytes);
     }
 

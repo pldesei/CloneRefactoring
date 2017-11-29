@@ -1,15 +1,11 @@
-(startLine=59 endLine=71 srcPath=/root/Projects/elasticsearchFilter/1113/elasticsearch/src/main/java/org/elasticsearch/action/support/broadcast/TransportBroadcastOperationAction.java)
-    protected TransportBroadcastOperationAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, TransportService transportService) {
-        super(settings, threadPool);
-        this.clusterService = clusterService;
-        this.transportService = transportService;
-        this.threadPool = threadPool;
-
-        this.transportAction = transportAction();
-        this.transportShardAction = transportAction() + "/s";
-        this.executor = executor();
-
-        transportService.registerHandler(transportAction, new TransportHandler());
-        transportService.registerHandler(transportShardAction, new ShardTransportHandler());
+(startLine=53 endLine=61 srcPath=/root/Projects/elasticsearchFilter/1095/elasticsearch/src/test/java/org/elasticsearch/test/hamcrest/ElasticsearchGeoAssertions.java)
+    private static int prev(int top, Coordinate...points) {
+        for (int i = 1; i < points.length; i++) {
+            int p = (top + points.length - i) % points.length;
+            if((points[p].x != points[top].x) || (points[p].y != points[top].y)) {
+                return p;
+            } 
+        }
+        return -1;
     }
 

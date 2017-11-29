@@ -1,17 +1,21 @@
-(startLine=133 endLine=147 srcPath=/root/Projects/org.eclipse.emfFilter/934/org.eclipse.emf/tests/org.eclipse.emf.test.edit/src/org/eclipse/emf/test/models/ref/impl/C2Impl.java)
-  public void setA(A newA)
+(startLine=1128 endLine=1146 srcPath=/root/Projects/org.eclipse.emfFilter/1026/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicExtendedMetaData.java)
+  public List getEnumerationFacet(EDataType eDataType)
   {
-    if (newA != a)
+    EAnnotation eAnnotation = getAnnotation(eDataType, false);
+    if (eAnnotation != null)
     {
-      NotificationChain msgs = null;
-      if (a != null)
-        msgs = ((InternalEObject)a).eInverseRemove(this, RefPackage.A__C2, A.class, msgs);
-      if (newA != null)
-        msgs = ((InternalEObject)newA).eInverseAdd(this, RefPackage.A__C2, A.class, msgs);
-      msgs = basicSetA(newA, msgs);
-      if (msgs != null) msgs.dispatch();
+      String enumerationLiteral = (String)eAnnotation.getDetails().get("enumeration");
+      if (enumerationLiteral != null)
+      {
+        List result = new ArrayList();
+        for (StringTokenizer stringTokenizer = new StringTokenizer(enumerationLiteral, " "); stringTokenizer.hasMoreTokens(); )
+        {
+          String enumeration = stringTokenizer.nextToken().replaceAll("%20", " ").replaceAll("%25", "%");
+          result.add(enumeration);
+        }
+        return result;
+      }
     }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C2__A, newA, newA));
+    return Collections.EMPTY_LIST;
   }
 

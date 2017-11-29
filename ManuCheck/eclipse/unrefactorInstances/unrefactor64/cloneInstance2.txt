@@ -1,32 +1,16 @@
-(startLine=8290 endLine=8319 srcPath=/root/Projects/eclipse.jdt.coreFilter/121/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
-public void test0267() throws JavaModelException {
-    this.workingCopies = new ICompilationUnit[2];
-    this.workingCopies[0] = getWorkingCopy(
-        "/Completion/src/test/Test.java",
-        "package test;\n"+
-        "public class Test<T, U, TU> extends SuperTest {\n"+
-        "  foo\n"+
-        "}");
+(startLine=78 endLine=91 srcPath=/root/Projects/eclipse.jdt.coreFilter/1537/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodBinding.java)
+public final boolean areParameterErasuresEqual(MethodBinding method) {
+    TypeBinding[] args = method.parameters;
+    if (parameters == args)
+        return true;
 
-    this.workingCopies[1] = getWorkingCopy(
-        "/Completion/src/test/SuperTest.java",
-        "package test;\n"+
-        "public class SuperTest<E> {\n"+
-        "  public <T, U, TU> T foo(SuperTest<T> t, SuperTest<U> u, SuperTest<TU> tu, SuperTest<E> e) {return null;}\n"+
-        "}");
+    int length = parameters.length;
+    if (length != args.length)
+        return false;
 
-    CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true);
-
-    String str = this.workingCopies[0].getSource();
-    String completeBehind = "foo";
-    int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
-    this.workingCopies[0].codeComplete(cursorLocation, requestor, this.wcOwner);
-
-    assertResults(
-            "foo[POTENTIAL_METHOD_DECLARATION]{foo, Ltest.Test<TT;TU;TTU;>;, ()V, foo, null, " + (R_DEFAULT + R_RESOLVED + R_INTERESTING + R_NON_RESTRICTED) + "}\n" +
-            "foo[METHOD_DECLARATION]{public Object foo(SuperTest t, SuperTest u, SuperTest tu, SuperTest e), Ltest.SuperTest;, (Ltest.SuperTest;" +
-                "Ltest.SuperTest;Ltest.SuperTest;Ltest.SuperTest;)Ljava.lang.Object;, foo, (t, u, tu, e), " +
-                (R_DEFAULT + R_RESOLVED + R_INTERESTING + R_CASE + R_EXACT_NAME + R_METHOD_OVERIDE + R_NON_RESTRICTED) + "}",
-            requestor.getResults());
+    for (int i = 0; i < length; i++) {
+        if (parameters[i].erasure() != args[i].erasure()) return false;
+    }
+    return true;
 }
 

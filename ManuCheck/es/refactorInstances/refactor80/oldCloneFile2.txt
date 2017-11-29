@@ -1,11 +1,11 @@
 /*
- * Licensed to Elasticsearch under one or more contributor
- * license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright
- * ownership. Elasticsearch licenses this file to you under
- * the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to Elastic Search and Shay Banon under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. Elastic Search licenses this 
+ * file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -17,201 +17,620 @@
  * under the License.
  */
 
-package org.elasticsearch.cluster.metadata;
+package org.elasticsearch.cluster.routing;
 
-import com.carrotsearch.hppc.cursors.ObjectCursor;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.elasticsearch.ElasticsearchIllegalArgumentException;
-import org.elasticsearch.action.admin.indices.alias.IndicesAliasesClusterStateUpdateRequest;
-import org.elasticsearch.cluster.AckedClusterStateUpdateTask;
-import org.elasticsearch.cluster.ClusterService;
-import org.elasticsearch.cluster.ClusterState;
-import org.elasticsearch.cluster.ack.ClusterStateUpdateListener;
-import org.elasticsearch.cluster.ack.ClusterStateUpdateResponse;
-import org.elasticsearch.cluster.node.DiscoveryNode;
-import org.elasticsearch.common.Nullable;
-import org.elasticsearch.common.Priority;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.component.AbstractComponent;
-import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.index.Index;
-import org.elasticsearch.index.mapper.MapperService;
-import org.elasticsearch.index.query.IndexQueryParserService;
-import org.elasticsearch.index.service.IndexService;
-import org.elasticsearch.indices.IndexMissingException;
-import org.elasticsearch.indices.IndicesService;
-import org.elasticsearch.indices.InvalidAliasNameException;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.UnmodifiableIterator;
+import jsr166y.ThreadLocalRandom;
+import org.elasticsearch.cluster.node.DiscoveryNodes;
+import org.elasticsearch.common.collect.MapBuilder;
+import org.elasticsearch.common.io.stream.StreamInput;
+import org.elasticsearch.common.io.stream.StreamOutput;
+import org.elasticsearch.index.shard.ShardId;
 
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
- * Service responsible for submitting add and remove aliases requests
+ * {@link IndexShardRoutingTable} encapsulates all instances of a single shard.
+ * Each ElasticSearch index consists of multiple shards, each shard encapsulates
+ * a disjoint set of the index data and each shard has one or more instances
+ * referred to as replicas of a shard. Given that, this class encapsulates all
+ * replicas (instances) for a single index shard.
  */
-public class MetaDataIndexAliasesService extends AbstractComponent {
+public class IndexShardRoutingTable implements Iterable<ShardRouting> {
 
-    private final ClusterService clusterService;
+    final ShardId shardId;
 
-    private final IndicesService indicesService;
+    final ShardRouting primary;
+    final ImmutableList<ShardRouting> primaryAsList;
+    final ImmutableList<ShardRouting> replicas;
+    final ImmutableList<ShardRouting> shards;
+    final ImmutableList<ShardRouting> activeShards;
+    final ImmutableList<ShardRouting> assignedShards;
 
-    @Inject
-    public MetaDataIndexAliasesService(Settings settings, ClusterService clusterService, IndicesService indicesService) {
-        super(settings);
-        this.clusterService = clusterService;
-        this.indicesService = indicesService;
+    /**
+     * The initializing list, including ones that are initializing on a target node because of relocation.
+     * If we can come up with a better variable name, it would be nice...
+     */
+    final ImmutableList<ShardRouting> allInitializingShards;
+
+    final AtomicInteger counter;
+
+    final boolean primaryAllocatedPostApi;
+
+    IndexShardRoutingTable(ShardId shardId, ImmutableList<ShardRouting> shards, boolean primaryAllocatedPostApi) {
+        this.shardId = shardId;
+        this.shards = shards;
+        this.primaryAllocatedPostApi = primaryAllocatedPostApi;
+        this.counter = new AtomicInteger(ThreadLocalRandom.current().nextInt(shards.size()));
+
+        ShardRouting primary = null;
+        ImmutableList.Builder<ShardRouting> replicas = ImmutableList.builder();
+        ImmutableList.Builder<ShardRouting> activeShards = ImmutableList.builder();
+        ImmutableList.Builder<ShardRouting> assignedShards = ImmutableList.builder();
+        ImmutableList.Builder<ShardRouting> allInitializingShards = ImmutableList.builder();
+
+        for (ShardRouting shard : shards) {
+            if (shard.primary()) {
+                primary = shard;
+            } else {
+                replicas.add(shard);
+            }
+            if (shard.active()) {
+                activeShards.add(shard);
+            }
+            if (shard.initializing()) {
+                allInitializingShards.add(shard);
+            }
+            if (shard.relocating()) {
+                // create the target initializing shard routing on the node the shard is relocating to
+                allInitializingShards.add(new ImmutableShardRouting(shard.index(), shard.id(), shard.relocatingNodeId(), shard.currentNodeId(), shard.primary(), ShardRoutingState.INITIALIZING, shard.version()));
+            }
+            if (shard.assignedToNode()) {
+                assignedShards.add(shard);
+            }
+        }
+
+        this.primary = primary;
+        if (primary != null) {
+            this.primaryAsList = ImmutableList.of(primary);
+        } else {
+            this.primaryAsList = ImmutableList.of();
+        }
+        this.replicas = replicas.build();
+        this.activeShards = activeShards.build();
+        this.assignedShards = assignedShards.build();
+        this.allInitializingShards = allInitializingShards.build();
     }
 
-    public void indicesAliases(final IndicesAliasesClusterStateUpdateRequest request, final ClusterStateUpdateListener listener) {
-        clusterService.submitStateUpdateTask("index-aliases", Priority.URGENT, new AckedClusterStateUpdateTask() {
-
-            @Override
-            public boolean mustAck(DiscoveryNode discoveryNode) {
-                return true;
+    /**
+     * Normalizes all shard routings to the same version.
+     */
+    public IndexShardRoutingTable normalizeVersions() {
+        if (shards.isEmpty()) {
+            return this;
+        }
+        if (shards.size() == 1) {
+            return this;
+        }
+        long highestVersion = shards.get(0).version();
+        boolean requiresNormalization = false;
+        for (int i = 1; i < shards.size(); i++) {
+            if (shards.get(i).version() != highestVersion) {
+                requiresNormalization = true;
             }
-
-            @Override
-            public void onAllNodesAcked(@Nullable Throwable t) {
-                listener.onResponse(new ClusterStateUpdateResponse(true));
+            if (shards.get(i).version() > highestVersion) {
+                highestVersion = shards.get(i).version();
             }
-
-            @Override
-            public void onAckTimeout() {
-                listener.onResponse(new ClusterStateUpdateResponse(false));
+        }
+        if (!requiresNormalization) {
+            return this;
+        }
+        List<ShardRouting> shardRoutings = new ArrayList<ShardRouting>(shards.size());
+        for (int i = 0; i < shards.size(); i++) {
+            if (shards.get(i).version() == highestVersion) {
+                shardRoutings.add(shards.get(i));
+            } else {
+                shardRoutings.add(new ImmutableShardRouting(shards.get(i), highestVersion));
             }
+        }
+        return new IndexShardRoutingTable(shardId, ImmutableList.copyOf(shardRoutings), primaryAllocatedPostApi);
+    }
 
-            @Override
-            public TimeValue ackTimeout() {
-                return request.ackTimeout();
+    /**
+     * Has this shard group primary shard been allocated post API creation. Will be set to
+     * <code>true</code> if it was created because of recovery action.
+     */
+    public boolean primaryAllocatedPostApi() {
+        return primaryAllocatedPostApi;
+    }
+
+    /**
+     * Returns the shards id
+     *
+     * @return id of the shard
+     */
+    public ShardId shardId() {
+        return shardId;
+    }
+
+    /**
+     * Returns the shards id
+     *
+     * @return id of the shard
+     */
+    public ShardId getShardId() {
+        return shardId();
+    }
+
+    @Override
+    public UnmodifiableIterator<ShardRouting> iterator() {
+        return shards.iterator();
+    }
+
+    /**
+     * Returns the number of this shards instances.
+     */
+    public int size() {
+        return shards.size();
+    }
+
+    /**
+     * Returns the number of this shards instances.
+     */
+    public int getSize() {
+        return size();
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of shards
+     *
+     * @return a {@link ImmutableList} of shards
+     */
+    public ImmutableList<ShardRouting> shards() {
+        return this.shards;
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of shards
+     *
+     * @return a {@link ImmutableList} of shards
+     */
+    public ImmutableList<ShardRouting> getShards() {
+        return shards();
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of active shards
+     *
+     * @return a {@link ImmutableList} of shards
+     */
+    public ImmutableList<ShardRouting> activeShards() {
+        return this.activeShards;
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of active shards
+     *
+     * @return a {@link ImmutableList} of shards
+     */
+    public ImmutableList<ShardRouting> getActiveShards() {
+        return activeShards();
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of assigned shards
+     *
+     * @return a {@link ImmutableList} of shards
+     */
+    public ImmutableList<ShardRouting> assignedShards() {
+        return this.assignedShards;
+    }
+
+    /**
+     * Returns a {@link ImmutableList} of assigned shards
+     *
+     * @return a {@link ImmutableList} of shards
+     */
+    public ImmutableList<ShardRouting> getAssignedShards() {
+        return this.assignedShards;
+    }
+
+    /**
+     * Returns the number of shards in a specific state
+     *
+     * @param state state of the shards to count
+     * @return number of shards in <code>state</code>
+     */
+    public int countWithState(ShardRoutingState state) {
+        int count = 0;
+        for (ShardRouting shard : this) {
+            if (state == shard.state()) {
+                count++;
             }
+        }
+        return count;
+    }
 
-            @Override
-            public TimeValue timeout() {
-                return request.masterNodeTimeout();
+    public ShardIterator shardsRandomIt() {
+        return new PlainShardIterator(shardId, shards, pickIndex());
+    }
+
+    public ShardIterator shardsIt() {
+        return new PlainShardIterator(shardId, shards);
+    }
+
+    public ShardIterator shardsIt(int index) {
+        return new PlainShardIterator(shardId, shards, index);
+    }
+
+    public ShardIterator activeShardsRandomIt() {
+        return new PlainShardIterator(shardId, activeShards, pickIndex());
+    }
+
+    public ShardIterator activeShardsIt() {
+        return new PlainShardIterator(shardId, activeShards);
+    }
+
+    public ShardIterator activeShardsIt(int index) {
+        return new PlainShardIterator(shardId, activeShards, index);
+    }
+
+    /**
+     * Returns an iterator over active and initializing shards. Making sure though that
+     * its random within the active shards, and initializing shards are the last to iterate through.
+     */
+    public ShardIterator activeInitializingShardsRandomIt() {
+        return activeInitializingShardsIt(pickIndex());
+    }
+
+    /**
+     * Returns an iterator over active and initializing shards. Making sure though that
+     * its random within the active shards, and initializing shards are the last to iterate through.
+     */
+    public ShardIterator activeInitializingShardsIt(int index) {
+        if (allInitializingShards.isEmpty()) {
+            return new PlainShardIterator(shardId, activeShards, index);
+        }
+        ArrayList<ShardRouting> ordered = new ArrayList<ShardRouting>(activeShards.size() + allInitializingShards.size());
+        addToListFromIndex(activeShards, ordered, index);
+        ordered.addAll(allInitializingShards);
+        return new PlainShardIterator(shardId, ordered);
+    }
+
+    public ShardIterator assignedShardsRandomIt() {
+        return new PlainShardIterator(shardId, assignedShards, pickIndex());
+    }
+
+    public ShardIterator assignedShardsIt() {
+        return new PlainShardIterator(shardId, assignedShards);
+    }
+
+    public ShardIterator assignedShardsIt(int index) {
+        return new PlainShardIterator(shardId, assignedShards, index);
+    }
+
+    /**
+     * Returns an iterator only on the primary shard.
+     */
+    public ShardIterator primaryShardIt() {
+        return new PlainShardIterator(shardId, primaryAsList);
+    }
+
+    public ShardIterator primaryActiveInitializingShardIt() {
+        if (!primaryAsList.isEmpty() && !primaryAsList.get(0).active() && !primaryAsList.get(0).initializing()) {
+            List<ShardRouting> primaryList = ImmutableList.of();
+            return new PlainShardIterator(shardId, primaryList);
+        }
+        return primaryShardIt();
+    }
+
+    public ShardIterator primaryFirstActiveInitializingShardsIt() {
+        ArrayList<ShardRouting> ordered = new ArrayList<ShardRouting>(activeShards.size() + allInitializingShards.size());
+        // fill it in a randomized fashion
+        int index = Math.abs(pickIndex());
+        for (int i = 0; i < activeShards.size(); i++) {
+            int loc = (index + i) % activeShards.size();
+            ShardRouting shardRouting = activeShards.get(loc);
+            ordered.add(shardRouting);
+            if (shardRouting.primary()) {
+                // switch, its the matching node id
+                ordered.set(i, ordered.get(0));
+                ordered.set(0, shardRouting);
             }
+        }
+        // no need to worry about primary first here..., its temporal
+        if (!allInitializingShards.isEmpty()) {
+            ordered.addAll(allInitializingShards);
+        }
+        return new PlainShardIterator(shardId, ordered);
+    }
 
-            @Override
-            public void onFailure(String source, Throwable t) {
-                listener.onFailure(t);
+    public ShardIterator onlyNodeActiveInitializingShardsIt(String nodeId) {
+        ArrayList<ShardRouting> ordered = new ArrayList<ShardRouting>(activeShards.size() + allInitializingShards.size());
+        // fill it in a randomized fashion
+        for (int i = 0; i < activeShards.size(); i++) {
+            ShardRouting shardRouting = activeShards.get(i);
+            if (nodeId.equals(shardRouting.currentNodeId())) {
+                ordered.add(shardRouting);
             }
+        }
+        for (int i = 0; i < allInitializingShards.size(); i++) {
+            ShardRouting shardRouting = allInitializingShards.get(i);
+            if (nodeId.equals(shardRouting.currentNodeId())) {
+                ordered.add(shardRouting);
+            }
+        }
+        return new PlainShardIterator(shardId, ordered);
+    }
 
-            @Override
-            public ClusterState execute(final ClusterState currentState) {
-                List<String> indicesToClose = Lists.newArrayList();
-                Map<String, IndexService> indices = Maps.newHashMap();
-                try {
-                    for (AliasAction aliasAction : request.actions()) {
-                        if (!Strings.hasText(aliasAction.alias()) || !Strings.hasText(aliasAction.index())) {
-                            throw new ElasticsearchIllegalArgumentException("Index name and alias name are required");
-                        }
-                        if (!currentState.metaData().hasIndex(aliasAction.index())) {
-                            throw new IndexMissingException(new Index(aliasAction.index()));
-                        }
-                        if (currentState.metaData().hasIndex(aliasAction.alias())) {
-                            throw new InvalidAliasNameException(new Index(aliasAction.index()), aliasAction.alias(), "an index exists with the same name as the alias");
-                        }
-                        if (aliasAction.indexRouting() != null && aliasAction.indexRouting().indexOf(',') != -1) {
-                            throw new ElasticsearchIllegalArgumentException("alias [" + aliasAction.alias() + "] has several routing values associated with it");
+    public ShardIterator preferNodeActiveInitializingShardsIt(String nodeId) {
+        ArrayList<ShardRouting> ordered = new ArrayList<ShardRouting>(activeShards.size() + allInitializingShards.size());
+        // fill it in a randomized fashion
+        int index = pickIndex();
+        for (int i = 0; i < activeShards.size(); i++) {
+            int loc = (index + i) % activeShards.size();
+            ShardRouting shardRouting = activeShards.get(loc);
+            ordered.add(shardRouting);
+            if (nodeId.equals(shardRouting.currentNodeId())) {
+                // switch, its the matching node id
+                ordered.set(i, ordered.get(0));
+                ordered.set(0, shardRouting);
+            }
+        }
+        if (!allInitializingShards.isEmpty()) {
+            ordered.addAll(allInitializingShards);
+        }
+        return new PlainShardIterator(shardId, ordered);
+    }
+
+    static class AttributesKey {
+
+        final String[] attributes;
+
+        AttributesKey(String[] attributes) {
+            this.attributes = attributes;
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(attributes);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return Arrays.equals(attributes, ((AttributesKey) obj).attributes);
+        }
+    }
+
+    static class AttributesRoutings {
+
+        public final ImmutableList<ShardRouting> withSameAttribute;
+        public final ImmutableList<ShardRouting> withoutSameAttribute;
+        public final int totalSize;
+
+        AttributesRoutings(ImmutableList<ShardRouting> withSameAttribute, ImmutableList<ShardRouting> withoutSameAttribute) {
+            this.withSameAttribute = withSameAttribute;
+            this.withoutSameAttribute = withoutSameAttribute;
+            this.totalSize = withoutSameAttribute.size() + withSameAttribute.size();
+        }
+    }
+
+    private volatile Map<AttributesKey, AttributesRoutings> activeShardsByAttributes = ImmutableMap.of();
+    private volatile Map<AttributesKey, AttributesRoutings> initializingShardsByAttributes = ImmutableMap.of();
+    private final Object shardsByAttributeMutex = new Object();
+
+    private AttributesRoutings getActiveAttribute(AttributesKey key, DiscoveryNodes nodes) {
+        AttributesRoutings shardRoutings = activeShardsByAttributes.get(key);
+        if (shardRoutings == null) {
+            synchronized (shardsByAttributeMutex) {
+                ArrayList<ShardRouting> from = new ArrayList<ShardRouting>(activeShards);
+                ArrayList<ShardRouting> to = new ArrayList<ShardRouting>();
+                for (String attribute : key.attributes) {
+                    String localAttributeValue = nodes.localNode().attributes().get(attribute);
+                    if (localAttributeValue == null) {
+                        continue;
+                    }
+                    for (Iterator<ShardRouting> iterator = from.iterator(); iterator.hasNext(); ) {
+                        ShardRouting fromShard = iterator.next();
+                        if (localAttributeValue.equals(nodes.get(fromShard.currentNodeId()).attributes().get(attribute))) {
+                            iterator.remove();
+                            to.add(fromShard);
                         }
                     }
+                }
 
-                    boolean changed = false;
-                    MetaData.Builder builder = MetaData.builder(currentState.metaData());
-                    for (AliasAction aliasAction : request.actions()) {
-                        IndexMetaData indexMetaData = builder.get(aliasAction.index());
-                        if (indexMetaData == null) {
-                            throw new IndexMissingException(new Index(aliasAction.index()));
-                        }
-                        // TODO: not copy (putAll)
-                        IndexMetaData.Builder indexMetaDataBuilder = IndexMetaData.builder(indexMetaData);
-                        if (aliasAction.actionType() == AliasAction.Type.ADD) {
-                            String filter = aliasAction.filter();
-                            if (Strings.hasLength(filter)) {
-                                // parse the filter, in order to validate it
-                                IndexService indexService = indices.get(indexMetaData.index());
-                                if (indexService == null) {
-                                    indexService = indicesService.indexService(indexMetaData.index());
-                                    if (indexService == null) {
-                                        // temporarily create the index and add mappings so we have can parse the filter
-                                        try {
-                                            indexService = indicesService.createIndex(indexMetaData.index(), indexMetaData.settings(), clusterService.localNode().id());
-                                            if (indexMetaData.mappings().containsKey(MapperService.DEFAULT_MAPPING)) {
-                                                indexService.mapperService().merge(MapperService.DEFAULT_MAPPING, indexMetaData.mappings().get(MapperService.DEFAULT_MAPPING).source(), false);
-                                            }
-                                            for (ObjectCursor<MappingMetaData> cursor : indexMetaData.mappings().values()) {
-                                                MappingMetaData mappingMetaData = cursor.value;
-                                                indexService.mapperService().merge(mappingMetaData.type(), mappingMetaData.source(), false);
-                                            }
-                                        } catch (Exception e) {
-                                            logger.warn("[{}] failed to temporary create in order to apply alias action", e, indexMetaData.index());
-                                            continue;
-                                        }
-                                        indicesToClose.add(indexMetaData.index());
-                                    }
-                                    indices.put(indexMetaData.index(), indexService);
-                                }
+                shardRoutings = new AttributesRoutings(ImmutableList.copyOf(to), ImmutableList.copyOf(from));
+                activeShardsByAttributes = MapBuilder.newMapBuilder(activeShardsByAttributes).put(key, shardRoutings).immutableMap();
+            }
+        }
+        return shardRoutings;
+    }
 
-                                // now, parse the filter
-                                IndexQueryParserService indexQueryParser = indexService.queryParserService();
-                                try {
-                                    XContentParser parser = XContentFactory.xContent(filter).createParser(filter);
-                                    try {
-                                        indexQueryParser.parseInnerFilter(parser);
-                                    } finally {
-                                        parser.close();
-                                    }
-                                } catch (Throwable e) {
-                                    throw new ElasticsearchIllegalArgumentException("failed to parse filter for [" + aliasAction.alias() + "]", e);
-                                }
-                            }
-                            AliasMetaData newAliasMd = AliasMetaData.newAliasMetaDataBuilder(
-                                    aliasAction.alias())
-                                    .filter(filter)
-                                    .indexRouting(aliasAction.indexRouting())
-                                    .searchRouting(aliasAction.searchRouting())
-                                    .build();
-                            // Check if this alias already exists
-                            AliasMetaData aliasMd = indexMetaData.aliases().get(aliasAction.alias());
-                            if (aliasMd != null && aliasMd.equals(newAliasMd)) {
-                                // It's the same alias - ignore it
-                                continue;
-                            }
-                            indexMetaDataBuilder.putAlias(newAliasMd);
-                        } else if (aliasAction.actionType() == AliasAction.Type.REMOVE) {
-                            if (!indexMetaData.aliases().containsKey(aliasAction.alias())) {
-                                // This alias doesn't exist - ignore
-                                continue;
-                            }
-                            indexMetaDataBuilder.removerAlias(aliasAction.alias());
-                        }
-                        changed = true;
-                        builder.put(indexMetaDataBuilder);
+    private AttributesRoutings getInitializingAttribute(AttributesKey key, DiscoveryNodes nodes) {
+        AttributesRoutings shardRoutings = initializingShardsByAttributes.get(key);
+        if (shardRoutings == null) {
+            synchronized (shardsByAttributeMutex) {
+                ArrayList<ShardRouting> from = new ArrayList<ShardRouting>(allInitializingShards);
+                ArrayList<ShardRouting> to = new ArrayList<ShardRouting>();
+                for (String attribute : key.attributes) {
+                    String localAttributeValue = nodes.localNode().attributes().get(attribute);
+                    if (localAttributeValue == null) {
+                        continue;
                     }
-
-                    if (changed) {
-                        ClusterState updatedState = ClusterState.builder(currentState).metaData(builder).build();
-                        // even though changes happened, they resulted in 0 actual changes to metadata
-                        // i.e. remove and add the same alias to the same index
-                        if (!updatedState.metaData().aliases().equals(currentState.metaData().aliases())) {
-                            return updatedState;
+                    for (Iterator<ShardRouting> iterator = from.iterator(); iterator.hasNext(); ) {
+                        ShardRouting fromShard = iterator.next();
+                        if (localAttributeValue.equals(nodes.get(fromShard.currentNodeId()).attributes().get(attribute))) {
+                            iterator.remove();
+                            to.add(fromShard);
                         }
                     }
-                    return currentState;
-                } finally {
-                    for (String index : indicesToClose) {
-                        indicesService.removeIndex(index, "created for alias processing");
+                }
+
+                shardRoutings = new AttributesRoutings(ImmutableList.copyOf(to), ImmutableList.copyOf(from));
+                initializingShardsByAttributes = MapBuilder.newMapBuilder(initializingShardsByAttributes).put(key, shardRoutings).immutableMap();
+            }
+        }
+        return shardRoutings;
+    }
+
+    public ShardIterator preferAttributesActiveInitializingShardsIt(String[] attributes, DiscoveryNodes nodes) {
+        return preferAttributesActiveInitializingShardsIt(attributes, nodes, pickIndex());
+    }
+
+    public ShardIterator preferAttributesActiveInitializingShardsIt(String[] attributes, DiscoveryNodes nodes, int index) {
+        AttributesKey key = new AttributesKey(attributes);
+        AttributesRoutings activeRoutings = getActiveAttribute(key, nodes);
+        AttributesRoutings initializingRoutings = getInitializingAttribute(key, nodes);
+
+        // we now randomize, once between the ones that have the same attributes, and once for the ones that don't
+        // we don't want to mix between the two!
+        ArrayList<ShardRouting> ordered = new ArrayList<ShardRouting>(activeRoutings.totalSize + initializingRoutings.totalSize);
+        index = Math.abs(index);
+        addToListFromIndex(activeRoutings.withSameAttribute, ordered, index);
+        addToListFromIndex(activeRoutings.withoutSameAttribute, ordered, index);
+        addToListFromIndex(initializingRoutings.withSameAttribute, ordered, index);
+        addToListFromIndex(initializingRoutings.withoutSameAttribute, ordered, index);
+        return new PlainShardIterator(shardId, ordered);
+    }
+
+    public ShardRouting primaryShard() {
+        return primary;
+    }
+
+    public List<ShardRouting> replicaShards() {
+        return this.replicas;
+    }
+
+    public List<ShardRouting> replicaShardsWithState(ShardRoutingState... states) {
+        List<ShardRouting> shards = newArrayList();
+        for (ShardRouting shardEntry : replicas) {
+            for (ShardRoutingState state : states) {
+                if (shardEntry.state() == state) {
+                    shards.add(shardEntry);
+                }
+            }
+        }
+        return shards;
+    }
+
+    public List<ShardRouting> shardsWithState(ShardRoutingState... states) {
+        List<ShardRouting> shards = newArrayList();
+        for (ShardRouting shardEntry : this) {
+            for (ShardRoutingState state : states) {
+                if (shardEntry.state() == state) {
+                    shards.add(shardEntry);
+                }
+            }
+        }
+        return shards;
+    }
+
+    /**
+     * Adds from list to list, starting from the given index (wrapping around if needed).
+     */
+    @SuppressWarnings("unchecked")
+    private void addToListFromIndex(List from, List to, int index) {
+        index = Math.abs(index);
+        for (int i = 0; i < from.size(); i++) {
+            int loc = (index + i) % from.size();
+            to.add(from.get(loc));
+        }
+    }
+
+    // TODO: we can move to random based on ThreadLocalRandom, or make it pluggable
+    private int pickIndex() {
+        return Math.abs(counter.incrementAndGet());
+    }
+
+    public static class Builder {
+
+        private ShardId shardId;
+
+        private final List<ShardRouting> shards;
+
+        private boolean primaryAllocatedPostApi;
+
+        public Builder(IndexShardRoutingTable indexShard) {
+            this.shardId = indexShard.shardId;
+            this.shards = newArrayList(indexShard.shards);
+            this.primaryAllocatedPostApi = indexShard.primaryAllocatedPostApi();
+        }
+
+        public Builder(ShardId shardId, boolean primaryAllocatedPostApi) {
+            this.shardId = shardId;
+            this.shards = newArrayList();
+            this.primaryAllocatedPostApi = primaryAllocatedPostApi;
+        }
+
+        public Builder addShard(ImmutableShardRouting shardEntry) {
+            for (ShardRouting shard : shards) {
+                // don't add two that map to the same node id
+                // we rely on the fact that a node does not have primary and backup of the same shard
+                if (shard.assignedToNode() && shardEntry.assignedToNode()
+                        && shard.currentNodeId().equals(shardEntry.currentNodeId())) {
+                    return this;
+                }
+            }
+            shards.add(shardEntry);
+            return this;
+        }
+
+        public Builder removeShard(ShardRouting shardEntry) {
+            shards.remove(shardEntry);
+            return this;
+        }
+
+        public IndexShardRoutingTable build() {
+            // we can automatically set allocatedPostApi to true if the primary is active
+            if (!primaryAllocatedPostApi) {
+                for (ShardRouting shardRouting : shards) {
+                    if (shardRouting.primary() && shardRouting.active()) {
+                        primaryAllocatedPostApi = true;
                     }
                 }
             }
+            return new IndexShardRoutingTable(shardId, ImmutableList.copyOf(shards), primaryAllocatedPostApi);
+        }
 
-            @Override
-            public void clusterStateProcessed(String source, ClusterState oldState, ClusterState newState) {
+        public static IndexShardRoutingTable readFrom(StreamInput in) throws IOException {
+            String index = in.readString();
+            return readFromThin(in, index);
+        }
 
+        public static IndexShardRoutingTable readFromThin(StreamInput in, String index) throws IOException {
+            int iShardId = in.readVInt();
+            boolean allocatedPostApi = in.readBoolean();
+            Builder builder = new Builder(new ShardId(index, iShardId), allocatedPostApi);
+
+            int size = in.readVInt();
+            for (int i = 0; i < size; i++) {
+                ImmutableShardRouting shard = ImmutableShardRouting.readShardRoutingEntry(in, index, iShardId);
+                builder.addShard(shard);
             }
-        });
+
+            return builder.build();
+        }
+
+        public static void writeTo(IndexShardRoutingTable indexShard, StreamOutput out) throws IOException {
+            out.writeString(indexShard.shardId().index().name());
+            writeToThin(indexShard, out);
+        }
+
+        public static void writeToThin(IndexShardRoutingTable indexShard, StreamOutput out) throws IOException {
+            out.writeVInt(indexShard.shardId.id());
+            out.writeBoolean(indexShard.primaryAllocatedPostApi());
+
+            out.writeVInt(indexShard.shards.size());
+            for (ShardRouting entry : indexShard) {
+                entry.writeToThin(out);
+            }
+        }
+
     }
 }

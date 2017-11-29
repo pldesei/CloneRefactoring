@@ -1,21 +1,13 @@
-(startLine=1306 endLine=1324 srcPath=/root/Projects/org.eclipse.emfFilter/881/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicExtendedMetaData.java)
-  protected List basicGetEnumerationFacet(EDataType eDataType)
+(startLine=386 endLine=396 srcPath=/root/Projects/org.eclipse.emfFilter/967/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EcoreFactoryImpl.java)
+  public String convertECharacterObjectToString(EDataType metaObject, Object instanceValue) 
   {
-    EAnnotation eAnnotation = getAnnotation(eDataType, false);
-    if (eAnnotation != null)
+    if (instanceValue instanceof Character)
     {
-      String enumerationLiteral = (String)eAnnotation.getDetails().get("enumeration");
-      if (enumerationLiteral != null)
-      {
-        List result = new ArrayList();
-        for (StringTokenizer stringTokenizer = new StringTokenizer(enumerationLiteral, " "); stringTokenizer.hasMoreTokens(); )
-        {
-          String enumeration = replace(replace(stringTokenizer.nextToken(), "%20", " "), "%25", "%");
-          result.add(enumeration);
-        }
-        return result;
-      }
+      int charInt = ((Character) instanceValue).charValue();
+      Integer value = new Integer(charInt);
+      return value.toString();
     }
-    return Collections.EMPTY_LIST;
+
+    return instanceValue == null ? null : instanceValue.toString();
   }
 

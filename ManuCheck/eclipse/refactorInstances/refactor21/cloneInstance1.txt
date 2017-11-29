@@ -1,32 +1,27 @@
-(startLine=789 endLine=818 srcPath=/root/Projects/eclipse.jdt.coreFilter/1589/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
-public int literalIndex(float key) {
-    //Retrieve the index from the cache
-    int index;
-    // lazy initialization for base type caches
-    // If it is null, initialize it, otherwise use it
-    if (floatCache == null) {
-        floatCache = new FloatCache(FLOAT_INITIAL_SIZE);
-    }
-    if ((index = floatCache.get(key)) < 0) {
-        index = floatCache.put(key, currentIndex++);
-        if (index > 0xFFFF){
-            this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
-        }
-        // Write the float constant entry into the constant pool
-        // First add the tag
-        writeU1(FloatTag);
-        // Then add the 4 bytes representing the float
-        int temp = java.lang.Float.floatToIntBits(key);
-        for (int i = 0; i < 4; i++) {
-            try {
-                poolContent[currentOffset++] = (byte) (temp >>> (24 - i * 8));
-            } catch (IndexOutOfBoundsException e) { //currentOffset has been ++ already (see the -1)
-                int length = poolContent.length;
-                System.arraycopy(poolContent, 0, (poolContent = new byte[length * 2 + CONSTANTPOOL_INITIAL_SIZE]), 0, length);
-                poolContent[currentOffset - 1] = (byte) (temp >>> (24 - i * 8));
+(startLine=292 endLine=316 srcPath=/root/Projects/eclipse.jdt.coreFilter/1607/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/BinaryMethod.java)
+protected void toStringInfo(int tab, StringBuffer buffer, Object info) {
+    buffer.append(this.tabString(tab));
+    if (info == null) {
+        buffer.append(getElementName());
+        toStringParameters(buffer);
+        buffer.append(" (not open)"); //$NON-NLS-1$
+    } else if (info == NO_INFO) {
+        buffer.append(getElementName());
+        toStringParameters(buffer);
+    } else {
+        try {
+            if (Flags.isStatic(this.getFlags())) {
+                buffer.append("static "); //$NON-NLS-1$
             }
+            if (!this.isConstructor()) {
+                buffer.append(Signature.toString(this.getReturnType()));
+                buffer.append(' ');
+            }
+            buffer.append(this.getElementName());
+            toStringParameters(buffer);
+        } catch (JavaModelException e) {
+            buffer.append("<JavaModelException in toString of " + getElementName()); //$NON-NLS-1$
         }
     }
-    return index;
 }
 

@@ -1,14 +1,10 @@
-(startLine=94 endLine=105 srcPath=/root/Projects/elasticsearchFilter/14/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedNumericSamplerAggregator.java)
-                    @Override
-                    public boolean advanceExact(int target) throws IOException {
-                        if (values.advanceExact(target)) {
-                            if (values.docValueCount() > 1) {
-                                throw new IllegalArgumentException(
-                                        "Sample diversifying key must be a single valued-field");
-                            }
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
+(startLine=53 endLine=60 srcPath=/root/Projects/elasticsearchFilter/263/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/PCallInvoke.java)
+    @Override
+    void extractVariables(Set<String> variables) {
+        prefix.extractVariables(variables);
+
+        for (AExpression argument : arguments) {
+            argument.extractVariables(variables);
+        }
+    }
 

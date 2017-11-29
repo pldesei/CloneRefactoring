@@ -1,26 +1,17 @@
-(startLine=1585 endLine=1609 srcPath=/root/Projects/eclipse.jdt.coreFilter/1483/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
-public int literalIndexForJavaLangDoubleTYPE() {
+(startLine=1687 endLine=1702 srcPath=/root/Projects/eclipse.jdt.coreFilter/1483/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndexForJavaLangFloat() {
     int index;
-    if ((index = wellKnownFields[JAVA_LANG_DOUBLE_TYPE_FIELD]) == 0) {
-        int nameAndTypeIndex;
-        int classIndex;
+    if ((index = wellKnownTypes[JAVA_LANG_FLOAT_TYPE]) == 0) {
+        int nameIndex;
         // The entry doesn't exit yet
-        classIndex = literalIndexForJavaLangDouble();
-        if ((nameAndTypeIndex = wellKnownFieldNameAndTypes[TYPE_JAVALANGCLASS_NAME_AND_TYPE]) == 0) {
-            int nameIndex = literalIndex(QualifiedNamesConstants.TYPE);
-            int typeIndex = literalIndex(QualifiedNamesConstants.JavaLangClassSignature);
-            nameAndTypeIndex = wellKnownFieldNameAndTypes[TYPE_JAVALANGCLASS_NAME_AND_TYPE] = currentIndex++;
-            writeU1(NameAndTypeTag);
-            writeU2(nameIndex);
-            writeU2(typeIndex);
-        }
-        index = wellKnownFields[JAVA_LANG_DOUBLE_TYPE_FIELD] = currentIndex++;
+        nameIndex = literalIndex(QualifiedNamesConstants.JavaLangFloatConstantPoolName);
+        index = wellKnownTypes[JAVA_LANG_FLOAT_TYPE] = currentIndex++;
         if (index > 0xFFFF){
             this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
         }
-        writeU1(FieldRefTag);
-        writeU2(classIndex);
-        writeU2(nameAndTypeIndex);
+        writeU1(ClassTag);
+        // Then add the 8 bytes representing the long
+        writeU2(nameIndex);
     }
     return index;
 }

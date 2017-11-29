@@ -1,18 +1,31 @@
-(startLine=5334 endLine=5349 srcPath=/root/Projects/eclipse.jdt.coreFilter/106/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
-public void testRemoveExternalLibFolder3() throws CoreException {
+(startLine=157 endLine=185 srcPath=/root/Projects/eclipse.jdt.coreFilter/511/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/TypeHierarchyNotificationTests.java)
+public void testAddCompilationUnit1() throws CoreException {
+    IJavaProject javaProject = getJavaProject("TypeHierarchyNotification");
+    ICompilationUnit cu = getCompilationUnit("TypeHierarchyNotification", "src", "p", "X.java");
+    IType type= cu.getType("X");
+    ITypeHierarchy h = type.newTypeHierarchy(javaProject, null);
+    h.addTypeHierarchyChangedListener(this);
+
+    // a cu with no types part of the hierarchy
+    IPackageFragment pkg = getPackageFragment("TypeHierarchyNotification", "src", "p");
+    ICompilationUnit newCU1 = pkg.createCompilationUnit(
+        "Z1.java", 
+        "package p;\n" +
+        "\n" +
+        "public class Z1 {\n" +
+        "\n" +
+        "    public static main(String[] args) {\n" +
+        "        System.out.println(\"HelloWorld\");\n" +
+        "    }\n" +
+        "}\n", 
+        false, 
+        null);
     try {
-        createExternalFolder("externalLib");
-        IJavaProject p = createJavaProject("P", new String[0], new String[] {getExternalResourcePath("externalLib")}, "");
-        waitForAutoBuild();
-        deleteExternalResource("externalLib");
-        refresh(p);
-        assertMarkers(
-            "Unexpected markers",
-            "Project \'P\' is missing required library: \'"+ getExternalPath() + "externalLib\'",
-            p);
+        assertCreation(newCU1);
+        assertTrue("Should not receive change", !this.changeReceived);
     } finally {
-        deleteExternalResource("externalLib");
-        deleteProject("P");
+        // cleanup    
+        h.removeTypeHierarchyChangedListener(this);
     }
-}
+}    
 

@@ -1,16 +1,14 @@
-(startLine=296 endLine=309 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/src/main/java/org/elasticsearch/index/search/geo/GeoDistance.java)
-        @Override public double calculate(double targetLatitude, double targetLongitude) {
-            // TODO: we might want to normalize longitude as we did in LatLng...
-            double longitudeDifference = targetLongitude - sourceLongitude;
-            double c = Math.toRadians(90D - targetLatitude);
-            double factor = (cosA * Math.cos(c)) + (sinA * Math.sin(c) * Math.cos(Math.toRadians(longitudeDifference)));
-
-            if (factor < -1D) {
-                return Math.PI * earthRadius;
-            } else if (factor >= 1D) {
-                return 0;
-            } else {
-                return Math.acos(factor) * earthRadius;
+(startLine=107 endLine=118 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/status/IndexStatus.java)
+    public SizeValue estimatedFlushableMemorySize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.estimatedFlushableMemorySize().bytes() != SizeValue.UNKNOWN.bytes()) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.estimatedFlushableMemorySize().bytes();
             }
         }
+        return new SizeValue(bytes);
+    }
 

@@ -1,10 +1,13 @@
-(startLine=140 endLine=147 srcPath=/root/Projects/elasticsearchFilter/1616/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollQueryThenFetchAction.java)
-                        @Override public void run() {
-                            for (Tuple<String, Long> target : scrollId.values()) {
-                                DiscoveryNode node = nodes.get(target.v1());
-                                if (node != null && nodes.localNodeId().equals(node.id())) {
-                                    executeQueryPhase(counter, node, target.v2());
-                                }
-                            }
-                        }
+(startLine=43 endLine=53 srcPath=/root/Projects/elasticsearchFilter/1778/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/CjkAnalyzerProvider.java)
+    @Inject public CjkAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = CJKAnalyzer.getDefaultStopSet();
+        }
+
+        analyzer = new CJKAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords);
+    }
 

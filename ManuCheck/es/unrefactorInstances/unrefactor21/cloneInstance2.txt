@@ -1,21 +1,28 @@
-(startLine=287 endLine=305 srcPath=/root/Projects/elasticsearchFilter/1059/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/multifield/MultiFieldMapper.java)
-    @Override public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
-        builder.startObject(name);
-        builder.field("type", CONTENT_TYPE);
-        if (pathType != Defaults.PATH_TYPE) {
-            builder.field("path", pathType.name().toLowerCase());
+(startLine=734 endLine=759 srcPath=/root/Projects/elasticsearchFilter/983/elasticsearch/src/main/java/jsr166y/ForkJoinTask.java)
+    public static void invokeAll(ForkJoinTask<?>... tasks) {
+        Throwable ex = null;
+        int last = tasks.length - 1;
+        for (int i = last; i >= 0; --i) {
+            ForkJoinTask<?> t = tasks[i];
+            if (t == null) {
+                if (ex == null)
+                    ex = new NullPointerException();
+            }
+            else if (i != 0)
+                t.fork();
+            else if (t.doInvoke() < NORMAL && ex == null)
+                ex = t.getException();
         }
-
-        builder.startObject("fields");
-        if (defaultMapper != null) {
-            defaultMapper.toXContent(builder, params);
+        for (int i = 1; i <= last; ++i) {
+            ForkJoinTask<?> t = tasks[i];
+            if (t != null) {
+                if (ex != null)
+                    t.cancel(false);
+                else if (t.doJoin() < NORMAL)
+                    ex = t.getException();
+            }
         }
-        for (Mapper mapper : mappers.values()) {
-            mapper.toXContent(builder, params);
-        }
-        builder.endObject();
-
-        builder.endObject();
-        return builder;
+        if (ex != null)
+            rethrow(ex);
     }
 

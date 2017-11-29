@@ -1,14 +1,13 @@
-(startLine=2259 endLine=2270 srcPath=/root/Projects/eclipse.jdt.coreFilter/272/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
-    public void test0100() throws JavaModelException {
-        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0100", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        char[] source = sourceUnit.getSource().toCharArray();
-        ASTNode result = runConversion(sourceUnit, false);
-        ASTNode node = getASTNode((CompilationUnit) result, 0, 0, 0);
-        assertNotNull("Expression should not be null", node); //$NON-NLS-1$
-        WhileStatement whileStatement = this.ast.newWhileStatement();
-        whileStatement.setExpression(this.ast.newBooleanLiteral(true));
-        whileStatement.setBody(this.ast.newEmptyStatement());
-        assertTrue("Both AST trees should be identical", whileStatement.subtreeMatch(new ASTMatcher(), node));        //$NON-NLS-1$
-        checkSourceRange(node, "while(true);", source);//$NON-NLS-1$
+(startLine=307 endLine=317 srcPath=/root/Projects/eclipse.jdt.coreFilter/283/eclipse.jdt.core/org.eclipse.jdt.compiler.apt/src/org/eclipse/jdt/internal/compiler/apt/model/Factory.java)
+    public DeclaredType newAnnotationType(ReferenceBinding binding) {
+        switch (binding.kind()) {
+            case Binding.WILDCARD_TYPE :
+                // JDT wildcard binding is a subclass of reference binding, but in JSR269 they're siblings
+                throw new IllegalArgumentException("A wildcard binding can't be turned into a DeclaredType"); //$NON-NLS-1$
+            case Binding.INTERSECTION_TYPE :
+                // JDT intersection binding is a subclass of reference binding, but in JSR269 they're siblings
+                throw new IllegalArgumentException("An intersection binding can't be turned into a DeclaredType"); //$NON-NLS-1$
+        }
+        return new DeclaredTypeImpl(_env, binding, ElementKind.ANNOTATION_TYPE);
     }
 

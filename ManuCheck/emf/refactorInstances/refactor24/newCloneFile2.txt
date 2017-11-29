@@ -2,9 +2,9 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DUImpl.java,v 1.1 2005/08/09 04:43:08 davidms Exp $
+ * $Id: CImpl.java,v 1.2 2005/07/08 02:16:32 davidms Exp $
  */
-package org.eclipse.emf.test.models.ref.unsettable.impl;
+package org.eclipse.emf.test.models.ref.impl;
 
 import java.util.Collection;
 
@@ -24,64 +24,43 @@ import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.emf.test.models.ref.unsettable.C4U;
-import org.eclipse.emf.test.models.ref.unsettable.CU;
-import org.eclipse.emf.test.models.ref.unsettable.DU;
-import org.eclipse.emf.test.models.ref.unsettable.EU;
-import org.eclipse.emf.test.models.ref.unsettable.URefPackage;
+import org.eclipse.emf.test.models.ref.C;
+import org.eclipse.emf.test.models.ref.C4;
+import org.eclipse.emf.test.models.ref.D;
+import org.eclipse.emf.test.models.ref.RefPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>DU</b></em>'.
+ * An implementation of the model object '<em><b>C</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.test.models.ref.unsettable.impl.DUImpl#getCu <em>Cu</em>}</li>
- *   <li>{@link org.eclipse.emf.test.models.ref.unsettable.impl.DUImpl#getC4u <em>C4u</em>}</li>
- *   <li>{@link org.eclipse.emf.test.models.ref.unsettable.impl.DUImpl#getEu <em>Eu</em>}</li>
+ *   <li>{@link org.eclipse.emf.test.models.ref.impl.CImpl#getD <em>D</em>}</li>
+ *   <li>{@link org.eclipse.emf.test.models.ref.impl.CImpl#getC4 <em>C4</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class DUImpl extends EObjectImpl implements DU
+public class CImpl extends EObjectImpl implements C
 {
   /**
-   * The cached value of the '{@link #getCu() <em>Cu</em>}' reference.
+   * The cached value of the '{@link #getD() <em>D</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getCu()
+   * @see #getD()
    * @generated
    * @ordered
    */
-  protected CU cu = null;
-
-  /**
-   * This is true if the Cu reference has been set.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  protected boolean cuESet = false;
-
-  /**
-   * The cached value of the '{@link #getEu() <em>Eu</em>}' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getEu()
-   * @generated
-   * @ordered
-   */
-  protected EList eu = null;
+  protected EList d = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected DUImpl()
+  protected CImpl()
   {
     super();
   }
@@ -93,7 +72,7 @@ public class DUImpl extends EObjectImpl implements DU
    */
   protected EClass eStaticClass()
   {
-    return URefPackage.eINSTANCE.getDU();
+    return RefPackage.eINSTANCE.getC();
   }
 
   /**
@@ -101,19 +80,13 @@ public class DUImpl extends EObjectImpl implements DU
    * <!-- end-user-doc -->
    * @generated
    */
-  public CU getCu()
+  public EList getD()
   {
-    if (cu != null && cu.eIsProxy())
+    if (d == null)
     {
-      CU oldCu = cu;
-      cu = (CU)eResolveProxy((InternalEObject)cu);
-      if (cu != oldCu)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, URefPackage.DU__CU, oldCu, cu));
-      }
+      d = new EObjectWithInverseResolvingEList(D.class, this, RefPackage.C__D, RefPackage.D__C);
     }
-    return cu;
+    return d;
   }
 
   /**
@@ -121,9 +94,10 @@ public class DUImpl extends EObjectImpl implements DU
    * <!-- end-user-doc -->
    * @generated
    */
-  public CU basicGetCu()
+  public C4 getC4()
   {
-    return cu;
+    if (eContainerFeatureID != RefPackage.C__C4) return null;
+    return (C4)eContainer;
   }
 
   /**
@@ -131,164 +105,22 @@ public class DUImpl extends EObjectImpl implements DU
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetCu(CU newCu, NotificationChain msgs)
+  public void setC4(C4 newC4)
   {
-    CU oldCu = cu;
-    cu = newCu;
-    boolean oldCuESet = cuESet;
-    cuESet = true;
-    if (eNotificationRequired())
+    if (newC4 != eContainer || (eContainerFeatureID != RefPackage.C__C4 && newC4 != null))
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, URefPackage.DU__CU, oldCu, newCu, !oldCuESet);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setCu(CU newCu)
-  {
-    if (newCu != cu)
-    {
-      NotificationChain msgs = null;
-      if (cu != null)
-        msgs = ((InternalEObject)cu).eInverseRemove(this, URefPackage.CU__DU, CU.class, msgs);
-      if (newCu != null)
-        msgs = ((InternalEObject)newCu).eInverseAdd(this, URefPackage.CU__DU, CU.class, msgs);
-      msgs = basicSetCu(newCu, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else
-        {
-      boolean oldCuESet = cuESet;
-      cuESet = true;
-      if (eNotificationRequired())
-        eNotify(new ENotificationImpl(this, Notification.SET, URefPackage.DU__CU, newCu, newCu, !oldCuESet));
-        }
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NotificationChain basicUnsetCu(NotificationChain msgs)
-  {
-    CU oldCu = cu;
-    cu = null;
-    boolean oldCuESet = cuESet;
-    cuESet = false;
-    if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.UNSET, URefPackage.DU__CU, oldCu, null, oldCuESet);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void unsetCu()
-  {
-    if (cu != null)
-    {
-      NotificationChain msgs = null;
-      msgs = ((InternalEObject)cu).eInverseRemove(this, URefPackage.CU__DU, CU.class, msgs);
-      msgs = basicUnsetCu(msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else
-        {
-      boolean oldCuESet = cuESet;
-      cuESet = false;
-      if (eNotificationRequired())
-        eNotify(new ENotificationImpl(this, Notification.UNSET, URefPackage.DU__CU, null, null, oldCuESet));
-        }
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean isSetCu()
-  {
-    return cuESet;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public C4U getC4u()
-  {
-    if (eContainerFeatureID != URefPackage.DU__C4U) return null;
-    return (C4U)eContainer;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setC4u(C4U newC4u)
-  {
-    if (newC4u != eContainer || (eContainerFeatureID != URefPackage.DU__C4U && newC4u != null))
-    {
-      if (EcoreUtil.isAncestor(this, newC4u))
+      if (EcoreUtil.isAncestor(this, newC4))
         throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
       NotificationChain msgs = null;
       if (eContainer != null)
         msgs = eBasicRemoveFromContainer(msgs);
-      if (newC4u != null)
-        msgs = ((InternalEObject)newC4u).eInverseAdd(this, URefPackage.C4U__DU, C4U.class, msgs);
-      msgs = eBasicSetContainer((InternalEObject)newC4u, URefPackage.DU__C4U, msgs);
+      if (newC4 != null)
+        msgs = ((InternalEObject)newC4).eInverseAdd(this, RefPackage.C4__C, C4.class, msgs);
+      msgs = eBasicSetContainer((InternalEObject)newC4, RefPackage.C__C4, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, URefPackage.DU__C4U, newC4u, newC4u));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList getEu()
-  {
-    if (eu == null)
-    {
-      eu = new EObjectWithInverseResolvingEList.Unsettable.ManyInverse(EU.class, this, URefPackage.DU__EU, URefPackage.EU__DU);
-    }
-    return eu;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void unsetEu()
-  {
-    ((InternalEList.Unsettable)getEu()).unset();
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean isSetEu()
-  {
-    return eu != null && ((InternalEList.Unsettable)eu).isSet();
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C__C4, newC4, newC4));
   }
 
   /**
@@ -302,16 +134,12 @@ public class DUImpl extends EObjectImpl implements DU
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case URefPackage.DU__CU:
-          if (cu != null)
-            msgs = ((InternalEObject)cu).eInverseRemove(this, URefPackage.CU__DU, CU.class, msgs);
-          return basicSetCu((CU)otherEnd, msgs);
-        case URefPackage.DU__C4U:
+        case RefPackage.C__D:
+          return ((InternalEList)getD()).basicAdd(otherEnd, msgs);
+        case RefPackage.C__C4:
           if (eContainer != null)
             msgs = eBasicRemoveFromContainer(msgs);
-          return eBasicSetContainer(otherEnd, URefPackage.DU__C4U, msgs);
-        case URefPackage.DU__EU:
-          return ((InternalEList)getEu()).basicAdd(otherEnd, msgs);
+          return eBasicSetContainer(otherEnd, RefPackage.C__C4, msgs);
         default:
           return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
       }
@@ -332,12 +160,10 @@ public class DUImpl extends EObjectImpl implements DU
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case URefPackage.DU__CU:
-          return basicUnsetCu(msgs);
-        case URefPackage.DU__C4U:
-          return eBasicSetContainer(null, URefPackage.DU__C4U, msgs);
-        case URefPackage.DU__EU:
-          return ((InternalEList)getEu()).basicRemove(otherEnd, msgs);
+        case RefPackage.C__D:
+          return ((InternalEList)getD()).basicRemove(otherEnd, msgs);
+        case RefPackage.C__C4:
+          return eBasicSetContainer(null, RefPackage.C__C4, msgs);
         default:
           return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
       }
@@ -356,8 +182,8 @@ public class DUImpl extends EObjectImpl implements DU
     {
       switch (eContainerFeatureID)
       {
-        case URefPackage.DU__C4U:
-          return eContainer.eInverseRemove(this, URefPackage.C4U__DU, C4U.class, msgs);
+        case RefPackage.C__C4:
+          return eContainer.eInverseRemove(this, RefPackage.C4__C, C4.class, msgs);
         default:
           return eDynamicBasicRemoveFromContainer(msgs);
       }
@@ -374,13 +200,10 @@ public class DUImpl extends EObjectImpl implements DU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.DU__CU:
-        if (resolve) return getCu();
-        return basicGetCu();
-      case URefPackage.DU__C4U:
-        return getC4u();
-      case URefPackage.DU__EU:
-        return getEu();
+      case RefPackage.C__D:
+        return getD();
+      case RefPackage.C__C4:
+        return getC4();
     }
     return eDynamicGet(eFeature, resolve);
   }
@@ -394,15 +217,12 @@ public class DUImpl extends EObjectImpl implements DU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.DU__CU:
-        setCu((CU)newValue);
+      case RefPackage.C__D:
+        getD().clear();
+        getD().addAll((Collection)newValue);
         return;
-      case URefPackage.DU__C4U:
-        setC4u((C4U)newValue);
-        return;
-      case URefPackage.DU__EU:
-        getEu().clear();
-        getEu().addAll((Collection)newValue);
+      case RefPackage.C__C4:
+        setC4((C4)newValue);
         return;
     }
     eDynamicSet(eFeature, newValue);
@@ -417,14 +237,11 @@ public class DUImpl extends EObjectImpl implements DU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.DU__CU:
-        unsetCu();
+      case RefPackage.C__D:
+        getD().clear();
         return;
-      case URefPackage.DU__C4U:
-        setC4u((C4U)null);
-        return;
-      case URefPackage.DU__EU:
-        unsetEu();
+      case RefPackage.C__C4:
+        setC4((C4)null);
         return;
     }
     eDynamicUnset(eFeature);
@@ -439,14 +256,12 @@ public class DUImpl extends EObjectImpl implements DU
   {
     switch (eDerivedStructuralFeatureID(eFeature))
     {
-      case URefPackage.DU__CU:
-        return isSetCu();
-      case URefPackage.DU__C4U:
-        return getC4u() != null;
-      case URefPackage.DU__EU:
-        return isSetEu();
+      case RefPackage.C__D:
+        return d != null && !d.isEmpty();
+      case RefPackage.C__C4:
+        return getC4() != null;
     }
     return eDynamicIsSet(eFeature);
   }
 
-} //DUImpl
+} //CImpl

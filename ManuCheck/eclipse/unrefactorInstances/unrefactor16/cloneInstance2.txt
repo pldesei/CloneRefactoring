@@ -1,31 +1,26 @@
-(startLine=1877 endLine=1905 srcPath=/root/Projects/eclipse.jdt.coreFilter/1196/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
-    public void test0084() throws JavaModelException {
-        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0084", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        char[] source = sourceUnit.getSource().toCharArray();
-        ASTNode result = runConversion(sourceUnit, false);
-        ASTNode node = getASTNode((CompilationUnit) result, 0, 0, 0);
-        assertNotNull("Expression should not be null", node); //$NON-NLS-1$
-        ForStatement forStatement = this.ast.newForStatement();
-        VariableDeclarationFragment variableDeclarationFragment = this.ast.newVariableDeclarationFragment();
-        variableDeclarationFragment.setName(this.ast.newSimpleName("i")); //$NON-NLS-1$
-        variableDeclarationFragment.setInitializer(this.ast.newNumberLiteral("0"));//$NON-NLS-1$
-
-        VariableDeclarationExpression variableDeclarationExpression = this.ast.newVariableDeclarationExpression(variableDeclarationFragment);
-        variableDeclarationExpression.setModifiers(Modifier.NONE);
-        variableDeclarationExpression.setType(this.ast.newPrimitiveType(PrimitiveType.INT));
-        
-        forStatement.initializers().add(variableDeclarationExpression);
-        PostfixExpression postfixExpression = this.ast.newPostfixExpression();
-        postfixExpression.setOperand(this.ast.newSimpleName("i"));//$NON-NLS-1$
-        postfixExpression.setOperator(PostfixExpression.Operator.INCREMENT);
-        forStatement.updaters().add(postfixExpression);
-        InfixExpression infixExpression = this.ast.newInfixExpression();
-        infixExpression.setLeftOperand(this.ast.newSimpleName("i")); //$NON-NLS-1$
-        infixExpression.setOperator(InfixExpression.Operator.LESS);
-        infixExpression.setRightOperand(this.ast.newNumberLiteral("10")); //$NON-NLS-1$
-        forStatement.setExpression(infixExpression);
-        forStatement.setBody(this.ast.newEmptyStatement());
-        assertTrue("Both AST trees should be identical", forStatement.subtreeMatch(new ASTMatcher(), node));        //$NON-NLS-1$
-        checkSourceRange(node, "for (int i = 0; i < 10; i++);", source); //$NON-NLS-1$
+(startLine=5806 endLine=5829 srcPath=/root/Projects/eclipse.jdt.coreFilter/98/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterAST3Test.java)
+    public void test0249() throws JavaModelException {
+        ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0249", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        ASTNode result = runConversion(AST.JLS3, sourceUnit, true);
+        assertNotNull("No compilation unit", result); //$NON-NLS-1$
+        assertTrue("result is not a compilation unit", result instanceof CompilationUnit); //$NON-NLS-1$
+        ASTNode node = getASTNode((CompilationUnit) result, 0, 2, 1);
+        assertTrue("Not an ExpressionStatement", node instanceof ExpressionStatement); //$NON-NLS-1$
+        ExpressionStatement expressionStatement = (ExpressionStatement) node;
+        Expression expression = expressionStatement.getExpression();
+        assertTrue("Not an assignment", expression instanceof Assignment); //$NON-NLS-1$
+        Assignment assignment = (Assignment) expression;
+        Expression leftHandSide = assignment.getLeftHandSide();
+        assertTrue("Not a qualified name", leftHandSide instanceof QualifiedName); //$NON-NLS-1$
+        QualifiedName qualifiedName = (QualifiedName) leftHandSide;
+        Name simpleName = qualifiedName.getName();
+        IBinding binding = simpleName.resolveBinding();
+        assertNotNull("no binding", binding); //$NON-NLS-1$
+        assertTrue("Not a IVariableBinding", binding instanceof IVariableBinding); //$NON-NLS-1$
+        IVariableBinding variableBinding = (IVariableBinding) binding;
+        assertEquals("Wrong name", "k", variableBinding.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("Wrong modifier", Modifier.STATIC, variableBinding.getModifiers()); //$NON-NLS-1$
+        assertEquals("Wrong type", "int", variableBinding.getType().getName()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("Wrong declaring class name", "j", variableBinding.getDeclaringClass().getName()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 

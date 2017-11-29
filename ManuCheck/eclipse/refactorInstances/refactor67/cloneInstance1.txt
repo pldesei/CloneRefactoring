@@ -1,13 +1,18 @@
-(startLine=595 endLine=605 srcPath=/root/Projects/eclipse.jdt.coreFilter/322/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CopyResourceElementsOperation.java)
-    private void updateReadOnlyPackageFragmentsForCopy(IContainer sourceFolder, IPackageFragmentRoot root, String[] newFragName) {
-        IContainer parentFolder = (IContainer) root.getResource();
-        for (int i = 0, length = newFragName.length; i <length; i++) {
-            String subFolderName = newFragName[i];
-            parentFolder = parentFolder.getFolder(new Path(subFolderName));
-            sourceFolder = sourceFolder.getFolder(new Path(subFolderName));
-            if (sourceFolder.exists() && Util.isReadOnly(sourceFolder)) {
-                Util.setReadOnly(parentFolder, true);
-            }
-        }
-    }
+(startLine=6474 endLine=6489 srcPath=/root/Projects/eclipse.jdt.coreFilter/411/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug124624_HM_old() throws CoreException {
+    workingCopies = new ICompilationUnit[1];
+    workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/Test.java",
+        "class HashMap {}\n" + 
+        "class HtmlMapper {}\n" + 
+        "class HashMapEntry {}\n" + 
+        "class HatMappage {}\n"
+    );
+    search("HM", IJavaSearchConstants.TYPE, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_CAMELCASE_MATCH);
+    assertSearchResults(
+        "src/Test.java HashMap [HashMap] EXACT_MATCH\n" + 
+        "src/Test.java HtmlMapper [HtmlMapper] EXACT_MATCH\n" + 
+        "src/Test.java HashMapEntry [HashMapEntry] EXACT_MATCH\n" + 
+        "src/Test.java HatMappage [HatMappage] EXACT_MATCH"
+    );
+}
 

@@ -1,21 +1,17 @@
-(startLine=237 endLine=255 srcPath=/root/Projects/org.eclipse.emfFilter/774/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EClassifierImpl.java)
-  public boolean eIsSet(EStructuralFeature eFeature)
+(startLine=129 endLine=143 srcPath=/root/Projects/org.eclipse.emfFilter/346/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/C4Impl.java)
+  public void setC(C newC)
   {
-    switch (eDerivedStructuralFeatureID(eFeature))
+    if (newC != c)
     {
-      case EcorePackage.ECLASSIFIER__EANNOTATIONS:
-        return eAnnotations != null && !eAnnotations.isEmpty();
-      case EcorePackage.ECLASSIFIER__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case EcorePackage.ECLASSIFIER__INSTANCE_CLASS_NAME:
-        return INSTANCE_CLASS_NAME_EDEFAULT == null ? instanceClassName != null : !INSTANCE_CLASS_NAME_EDEFAULT.equals(instanceClassName);
-      case EcorePackage.ECLASSIFIER__INSTANCE_CLASS:
-        return INSTANCE_CLASS_EDEFAULT == null ? getInstanceClass() != null : !INSTANCE_CLASS_EDEFAULT.equals(getInstanceClass());
-      case EcorePackage.ECLASSIFIER__DEFAULT_VALUE:
-        return DEFAULT_VALUE_EDEFAULT == null ? getDefaultValue() != null : !DEFAULT_VALUE_EDEFAULT.equals(getDefaultValue());
-      case EcorePackage.ECLASSIFIER__EPACKAGE:
-        return getEPackage() != null;
+      NotificationChain msgs = null;
+      if (c != null)
+        msgs = ((InternalEObject)c).eInverseRemove(this, RefPackage.C__C4, C.class, msgs);
+      if (newC != null)
+        msgs = ((InternalEObject)newC).eInverseAdd(this, RefPackage.C__C4, C.class, msgs);
+      msgs = basicSetC(newC, msgs);
+      if (msgs != null) msgs.dispatch();
     }
-    return eDynamicIsSet(eFeature);
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.C4__C, newC, newC));
   }
 

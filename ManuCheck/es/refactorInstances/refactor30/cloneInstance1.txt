@@ -1,29 +1,12 @@
-(startLine=616 endLine=642 srcPath=/root/Projects/elasticsearchFilter/1349/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
-    public void testVersioningIndexConflict() {
+(startLine=568 endLine=577 srcPath=/root/Projects/elasticsearchFilter/1349/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
+    public void testVersioningNewCreate() {
         ParsedDocument doc = new ParsedDocument("1", "1", "test", null, -1, -1, doc().add(uidField("1")).build(), Lucene.STANDARD_ANALYZER, B_1, false);
-        Engine.Index index = new Engine.Index(null, newUid("1"), doc);
-        engine.index(index);
-        assertThat(index.version(), equalTo(1l));
+        Engine.Create create = new Engine.Create(null, newUid("1"), doc);
+        engine.create(create);
+        assertThat(create.version(), equalTo(1l));
 
-        index = new Engine.Index(null, newUid("1"), doc);
-        engine.index(index);
-        assertThat(index.version(), equalTo(2l));
-
-        index = new Engine.Index(null, newUid("1"), doc).version(1l);
-        try {
-            engine.index(index);
-            assert false;
-        } catch (VersionConflictEngineException e) {
-            // all is well
-        }
-
-        // future versions should not work as well
-        index = new Engine.Index(null, newUid("1"), doc).version(3l);
-        try {
-            engine.index(index);
-            assert false;
-        } catch (VersionConflictEngineException e) {
-            // all is well
-        }
+        create = new Engine.Create(null, newUid("1"), doc).version(create.version()).origin(REPLICA);
+        replicaEngine.create(create);
+        assertThat(create.version(), equalTo(1l));
     }
 

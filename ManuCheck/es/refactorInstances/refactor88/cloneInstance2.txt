@@ -1,8 +1,14 @@
-(startLine=50 endLine=55 srcPath=/root/Projects/elasticsearchFilter/657/elasticsearch/src/main/java/org/elasticsearch/index/fielddata/fieldcomparator/FloatValuesComparatorSource.java)
-    public FieldComparator<?> newComparator(String fieldname, int numHits, int sortPos, boolean reversed) throws IOException {
-        assert fieldname.equals(indexFieldData.getFieldNames().indexName());
+(startLine=88 endLine=99 srcPath=/root/Projects/elasticsearchFilter/693/elasticsearch/src/test/java/org/elasticsearch/plugin/PluginManagerTests.java)
+    public void testLocalPluginInstallSiteFolder() throws Exception {
+        //When we have only a folder in top-level (no files either) but it's called _site, we make it work
+        //we can either remove the folder while extracting and then re-add it manually or just leave it as it is
+        String pluginName = "plugin-test";
+        URI uri = URI.create(PluginManagerTests.class.getResource("plugin_folder_site.zip").toString());
+        downloadAndExtract(pluginName, "file://" + uri.getPath());
 
-        final float dMissingValue = (Float) missingObject(missingValue, reversed);
-        return new FloatValuesComparator(indexFieldData, dMissingValue, numHits, sortMode);
+        String nodeName = internalCluster().startNode(SETTINGS);
+
+        assertPluginLoaded(pluginName);
+        assertPluginAvailable(pluginName);
     }
 

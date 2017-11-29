@@ -1,11 +1,17 @@
-(startLine=64 endLine=72 srcPath=/root/Projects/elasticsearchFilter/967/elasticsearch/src/main/java/org/elasticsearch/indices/InternalIndicesLifecycle.java)
-    public void beforeIndexCreated(Index index) {
-        for (Listener listener : listeners) {
-            try {
-                listener.beforeIndexCreated(index);
-            } catch (Throwable t) {
-                logger.warn("[{}] failed to invoke before index created callback", t, index.name());
+(startLine=55 endLine=69 srcPath=/root/Projects/elasticsearchFilter/1429/elasticsearch/src/main/java/org/elasticsearch/common/inject/internal/Annotations.java)
+    public static Class<? extends Annotation> findScopeAnnotation(Errors errors, Annotation[] annotations) {
+        Class<? extends Annotation> found = null;
+
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().isAnnotationPresent(ScopeAnnotation.class)) {
+                if (found != null) {
+                    errors.duplicateScopeAnnotations(found, annotation.annotationType());
+                } else {
+                    found = annotation.annotationType();
+                }
             }
         }
+
+        return found;
     }
 

@@ -1,49 +1,12 @@
-(startLine=46 endLine=92 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SWhile.java)
-    void analyze(Variables variables) {
-        variables.incrementScope();
-
-        condition.expected = Definition.BOOLEAN_TYPE;
-        condition.analyze(variables);
-        condition = condition.cast(variables);
-
-        boolean continuous = false;
-
-        if (condition.constant != null) {
-            continuous = (boolean)condition.constant;
-
-            if (!continuous) {
-                throw createError(new IllegalArgumentException("Extraneous while loop."));
-            }
-
-            if (block == null) {
-                throw createError(new IllegalArgumentException("While loop has no escape."));
-            }
-        }
-
-        if (block != null) {
-            block.beginLoop = true;
-            block.inLoop = true;
-
-            block.analyze(variables);
-
-            if (block.loopEscape && !block.anyContinue) {
-                throw createError(new IllegalArgumentException("Extraneous while loop."));
-            }
-
-            if (continuous && !block.anyBreak) {
-                methodEscape = true;
-                allEscape = true;
-            }
-
-            block.statementCount = Math.max(1, block.statementCount);
-        }
-
-        statementCount = 1;
-
-        if (maxLoopCounter > 0) {
-            loopCounterSlot = variables.getVariable(location, "#loop").slot;
-        }
-
-        variables.decrementScope();
+(startLine=99 endLine=108 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/KeepFilterFactoryTests.java)
+    public void testCaseSensitiveMapping() throws IOException {
+        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("my_case_sensitive_keep_filter");
+        assertThat(tokenFilter, instanceOf(KeepWordFilterFactory.class));
+        String source = "Hello small world";
+        String[] expected = new String[]{"Hello"};
+        Tokenizer tokenizer = new WhitespaceTokenizer();
+        tokenizer.setReader(new StringReader(source));
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected, new int[]{1});
     }
 

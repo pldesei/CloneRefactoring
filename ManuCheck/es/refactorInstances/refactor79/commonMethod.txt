@@ -1,21 +1,10 @@
-(startLine=456 endLine=474 srcPath=/root/Projects/elasticsearchFilter/940/elasticsearch/src/main/java/org/elasticsearch/cluster/routing/IndexShardRoutingTable.java)
-    private static ImmutableList<ShardRouting> collectAttributeShards(AttributesKey key, DiscoveryNodes nodes, ArrayList<ShardRouting> from) {
-        final ArrayList<ShardRouting> to = new ArrayList<ShardRouting>();
-        for (final String attribute : key.attributes) {
-            final String localAttributeValue = nodes.localNode().attributes().get(attribute);
-            if (localAttributeValue != null) {
-                for (Iterator<ShardRouting> iterator = from.iterator(); iterator.hasNext(); ) {
-                    ShardRouting fromShard = iterator.next();
-                    final DiscoveryNode discoveryNode = nodes.get(fromShard.currentNodeId());
-                    if (discoveryNode == null) {
-                        iterator.remove(); // node is not present anymore - ignore shard
-                    } else if (localAttributeValue.equals(discoveryNode.attributes().get(attribute))) {
-                        iterator.remove();
-                        to.add(fromShard);
-                    }
-                }
-            }
+(startLine=172 endLine=179 srcPath=/root/Projects/elasticsearchFilter/1012/elasticsearch/src/main/java/org/elasticsearch/index/query/IndicesQueryParser.java)
+    protected String[] getConcreteIndices(Collection<String> indices) {
+        String[] concreteIndices = indices.toArray(new String[indices.size()]);
+        if (clusterService != null) {
+            MetaData metaData = clusterService.state().metaData();
+            concreteIndices = metaData.concreteIndices(indices.toArray(new String[indices.size()]), IgnoreIndices.MISSING, true);
         }
-        return ImmutableList.copyOf(to);
+        return concreteIndices;
     }
 

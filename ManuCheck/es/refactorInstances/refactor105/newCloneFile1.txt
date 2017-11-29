@@ -17,106 +17,90 @@
  * under the License.
  */
 
-package org.elasticsearch.search.aggregations.bucket.sampler;
+package org.elasticsearch.painless.node;
 
-import org.apache.lucene.index.LeafReaderContext;
-import org.apache.lucene.index.NumericDocValues;
-import org.apache.lucene.search.DiversifiedTopDocsCollector;
-import org.apache.lucene.search.DiversifiedTopDocsCollector.ScoreDocKey;
-import org.apache.lucene.search.TopDocsCollector;
-import org.apache.lucene.util.BytesRef;
-import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.index.fielddata.SortedBinaryDocValues;
-import org.elasticsearch.search.aggregations.Aggregator;
-import org.elasticsearch.search.aggregations.AggregatorFactories;
-import org.elasticsearch.search.aggregations.bucket.DeferringBucketCollector;
-import org.elasticsearch.search.aggregations.pipeline.PipelineAggregator;
-import org.elasticsearch.search.aggregations.support.ValuesSource;
-import org.elasticsearch.search.internal.SearchContext;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import org.elasticsearch.painless.Definition;
+import org.elasticsearch.painless.Variables;
+import org.objectweb.asm.Label;
+import org.elasticsearch.painless.MethodWriter;
 
 /**
- * Alternative, faster implementation for converting String keys to longs but
- * with the potential for hash collisions.
+ * Represents a do-while loop.
  */
-public class DiversifiedBytesHashSamplerAggregator extends SamplerAggregator {
+public final class SDo extends AStatement {
 
-    private ValuesSource valuesSource;
-    private int maxDocsPerValue;
+    final AStatement block;
+    AExpression condition;
+    final int maxLoopCounter;
 
-    DiversifiedBytesHashSamplerAggregator(String name, int shardSize, AggregatorFactories factories,
-            SearchContext context, Aggregator parent, List<PipelineAggregator> pipelineAggregators, Map<String, Object> metaData,
-            ValuesSource valuesSource,
-            int maxDocsPerValue) throws IOException {
-        super(name, shardSize, factories, context, parent, pipelineAggregators, metaData);
-        this.valuesSource = valuesSource;
-        this.maxDocsPerValue = maxDocsPerValue;
+    public SDo(int line, String location, AStatement block, AExpression condition, int maxLoopCounter) {
+        super(line, location);
+
+        this.condition = condition;
+        this.block = block;
+        this.maxLoopCounter = maxLoopCounter;
     }
 
     @Override
-    public DeferringBucketCollector getDeferringCollector() {
-        bdd = new DiverseDocsDeferringCollector();
-        return bdd;
-    }
+    void analyze(Variables variables) {
+        variables.incrementScope();
 
-    /**
-     * A {@link DeferringBucketCollector} that identifies top scoring documents
-     * but de-duped by a key then passes only these on to nested collectors.
-     * This implementation is only for use with a single bucket aggregation.
-     */
-    class DiverseDocsDeferringCollector extends BestDocsDeferringCollector {
+        block.beginLoop = true;
+        block.inLoop = true;
 
-        DiverseDocsDeferringCollector() {
-            super(shardSize, context.bigArrays());
+        block.analyze(variables);
+
+        if (block.loopEscape && !block.anyContinue) {
+            throw new IllegalArgumentException(error("Extraneous do while loop."));
         }
 
+        condition.expected = Definition.BOOLEAN_TYPE;
+        condition.analyze(variables);
+        condition = condition.cast(variables);
 
-        @Override
-        protected TopDocsCollector<ScoreDocKey> createTopDocsCollector(int size) {
-            return new ValuesDiversifiedTopDocsCollector(size, maxDocsPerValue);
-        }
+        if (condition.constant != null) {
+            final boolean continuous = (boolean)condition.constant;
 
-        // This class extends the DiversifiedTopDocsCollector and provides
-        // a lookup from elasticsearch's ValuesSource
-        class ValuesDiversifiedTopDocsCollector extends DiversifiedTopDocsCollector {
-
-            private SortedBinaryDocValues values;
-
-            ValuesDiversifiedTopDocsCollector(int numHits, int maxHitsPerValue) {
-                super(numHits, maxHitsPerValue);
-
+            if (!continuous) {
+                throw new IllegalArgumentException(error("Extraneous do while loop."));
             }
 
-            @Override
-            protected NumericDocValues getKeys(LeafReaderContext context) {
-                try {
-                    values = valuesSource.bytesValues(context);
-                } catch (IOException e) {
-                    throw new ElasticsearchException("Error reading values", e);
-                }
-                return new NumericDocValues() {
-                    @Override
-                    public long get(int doc) {
-
-                        values.setDocument(doc);
-                        final int valuesCount = values.count();
-                        if (valuesCount > 1) {
-                            throw new IllegalArgumentException("Sample diversifying key must be a single valued-field");
-                        }
-                        if (valuesCount == 1) {
-                            final BytesRef bytes = values.valueAt(0);
-                            return bytes.hashCode();
-                        }
-                        return 0;
-                    }
-                };
+            if (!block.anyBreak) {
+                methodEscape = true;
+                allEscape = true;
             }
-
         }
 
+        statementCount = 1;
+
+        if (maxLoopCounter > 0) {
+            loopCounterSlot = variables.getVariable(location, "#loop").slot;
+        }
+
+        variables.decrementScope();
     }
 
+    @Override
+    void write(MethodWriter adapter) {
+        writeDebugInfo(adapter);
+        final Label start = new Label();
+        final Label begin = new Label();
+        final Label end = new Label();
+
+        adapter.mark(start);
+
+        block.continu = begin;
+        block.brake = end;
+        block.write(adapter);
+
+        adapter.mark(begin);
+
+        condition.fals = end;
+        condition.write(adapter);
+
+        adapter.writeLoopCounter(loopCounterSlot, Math.max(1, block.statementCount));
+
+        adapter.goTo(start);
+        adapter.mark(end);
+    }
 }

@@ -1,17 +1,57 @@
-(startLine=378 endLine=392 srcPath=/root/Projects/eclipse.jdt.coreFilter/705/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/ParserTest.java)
-public void test017() {
-    this.runNegativeTest(
-        new String[] {
-            "X.java",
-            "public class X {\n" + 
-            "    char c = '"
-        },
-        "----------\n" + 
-        "1. ERROR in X.java (at line 2)\n" + 
-        "    char c = \'\n" + 
-        "             ^\n" + 
-        "Invalid character constant\n" + 
-        "----------\n"
-    );
+(startLine=6263 endLine=6317 srcPath=/root/Projects/eclipse.jdt.coreFilter/314/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
+public void _testVB_2() {
+    String str = 
+        "package p; \n" + 
+        "public class VB {\n" + 
+        "    void foo() {\n" + 
+        "        new java.io.File(\"error\") {\n" + 
+        "            protected void runTest() {\n" + 
+        "                Vector v11111 = new Vector();\n" + 
+        "                v }\n" + 
+        "        }.\n" + 
+        "    }\n" + 
+        "}\n";
+
+    String testName = "<complete on anonymous type declaration>";
+    String completeBehind =
+        "new java.io.File(\"error\") {\n" + 
+        "            protected void runTest() {\n" + 
+        "                Vector v11111 = new Vector();\n" + 
+        "                v }\n" + 
+        "        }.";
+    String expectedCompletionNodeToString = 
+        "<CompleteOnMemberAccess:new java.io.File(\"error\") {\n" + 
+        "  protected void runTest() {\n" + 
+        "  }\n" +
+        "}.>";
+    String completionIdentifier = "";
+    String expectedReplacedSource =
+        "new java.io.File(\"error\") {\n" + 
+        "            protected void runTest() {\n" + 
+        "                Vector v11111 = new Vector();\n" + 
+        "                v }\n" + 
+        "        }.";
+    int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
+    String expectedUnitDisplayString =
+        "package p;\n" + 
+        "public class VB {\n" + 
+        "  public VB() {\n" + 
+        "  }\n" + 
+        "  void foo() {\n" + 
+        "    <CompleteOnMemberAccess:new java.io.File(\"error\") {\n" + 
+        "  protected void runTest() {\n" + 
+        "  }\n" +
+        "}.>;\n" + 
+        "  }\n" + 
+        "}\n";
+
+    checkMethodParse(
+        str.toCharArray(), 
+        cursorLocation, 
+        expectedCompletionNodeToString,
+        expectedUnitDisplayString,
+        completionIdentifier,
+        expectedReplacedSource,
+        testName); 
 }
 

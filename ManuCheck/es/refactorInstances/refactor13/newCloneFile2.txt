@@ -17,627 +17,572 @@
  * under the License.
  */
 
-package org.elasticsearch.search;
+package org.elasticsearch.discovery.zen;
 
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.TopDocs;
 import org.elasticsearch.ElasticSearchException;
-import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.ElasticSearchIllegalStateException;
+import org.elasticsearch.cluster.ClusterName;
 import org.elasticsearch.cluster.ClusterService;
-import org.elasticsearch.common.Nullable;
-import org.elasticsearch.common.Unicode;
-import org.elasticsearch.common.collect.ImmutableMap;
+import org.elasticsearch.cluster.ClusterState;
+import org.elasticsearch.cluster.ClusterStateUpdateTask;
+import org.elasticsearch.cluster.ProcessedClusterStateUpdateTask;
+import org.elasticsearch.cluster.block.ClusterBlocks;
+import org.elasticsearch.cluster.metadata.MetaData;
+import org.elasticsearch.cluster.node.DiscoveryNode;
+import org.elasticsearch.cluster.node.DiscoveryNodes;
+import org.elasticsearch.cluster.routing.RoutingTable;
+import org.elasticsearch.common.UUID;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
+import org.elasticsearch.common.component.Lifecycle;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.util.concurrent.ConcurrentCollections;
-import org.elasticsearch.common.util.concurrent.ConcurrentMapLong;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.index.Index;
-import org.elasticsearch.index.engine.Engine;
-import org.elasticsearch.index.search.stats.StatsGroupsParseElement;
-import org.elasticsearch.index.service.IndexService;
-import org.elasticsearch.index.shard.ShardId;
-import org.elasticsearch.index.shard.service.IndexShard;
-import org.elasticsearch.indices.IndicesLifecycle;
-import org.elasticsearch.indices.IndicesService;
-import org.elasticsearch.script.ScriptService;
-import org.elasticsearch.search.dfs.CachedDfSource;
-import org.elasticsearch.search.dfs.DfsPhase;
-import org.elasticsearch.search.dfs.DfsSearchResult;
-import org.elasticsearch.search.fetch.FetchPhase;
-import org.elasticsearch.search.fetch.FetchSearchRequest;
-import org.elasticsearch.search.fetch.FetchSearchResult;
-import org.elasticsearch.search.fetch.QueryFetchSearchResult;
-import org.elasticsearch.search.fetch.ScrollQueryFetchSearchResult;
-import org.elasticsearch.search.internal.InternalScrollSearchRequest;
-import org.elasticsearch.search.internal.InternalSearchRequest;
-import org.elasticsearch.search.internal.SearchContext;
-import org.elasticsearch.search.query.QueryPhase;
-import org.elasticsearch.search.query.QueryPhaseExecutionException;
-import org.elasticsearch.search.query.QuerySearchRequest;
-import org.elasticsearch.search.query.QuerySearchResult;
-import org.elasticsearch.search.query.ScrollQuerySearchResult;
+import org.elasticsearch.discovery.Discovery;
+import org.elasticsearch.discovery.InitialStateDiscoveryListener;
+import org.elasticsearch.discovery.zen.elect.ElectMasterService;
+import org.elasticsearch.discovery.zen.fd.MasterFaultDetection;
+import org.elasticsearch.discovery.zen.fd.NodesFaultDetection;
+import org.elasticsearch.discovery.zen.membership.MembershipAction;
+import org.elasticsearch.discovery.zen.ping.ZenPing;
+import org.elasticsearch.discovery.zen.ping.ZenPingService;
+import org.elasticsearch.discovery.zen.publish.PublishClusterStateAction;
 import org.elasticsearch.threadpool.ThreadPool;
+import org.elasticsearch.transport.TransportService;
 
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.elasticsearch.cluster.ClusterState.*;
+import static org.elasticsearch.cluster.node.DiscoveryNode.*;
+import static org.elasticsearch.cluster.node.DiscoveryNodes.*;
+import static org.elasticsearch.common.collect.Lists.*;
 import static org.elasticsearch.common.unit.TimeValue.*;
 
 /**
  * @author kimchy (shay.banon)
  */
-public class SearchService extends AbstractLifecycleComponent<SearchService> {
+public class ZenDiscovery extends AbstractLifecycleComponent<Discovery> implements Discovery, DiscoveryNodesProvider {
 
     private final ThreadPool threadPool;
 
+    private final TransportService transportService;
+
     private final ClusterService clusterService;
 
-    private final IndicesService indicesService;
+    private final ClusterName clusterName;
 
-    private final ScriptService scriptService;
+    private final ZenPingService pingService;
 
-    private final DfsPhase dfsPhase;
+    private final MasterFaultDetection masterFD;
 
-    private final QueryPhase queryPhase;
+    private final NodesFaultDetection nodesFD;
 
-    private final FetchPhase fetchPhase;
+    private final PublishClusterStateAction publishClusterState;
 
-
-    private final long defaultKeepAlive;
-
-    private final ScheduledFuture keepAliveReaper;
+    private final MembershipAction membership;
 
 
-    private final AtomicLong idGenerator = new AtomicLong();
+    private final TimeValue pingTimeout;
 
-    private final CleanContextOnIndicesLifecycleListener indicesLifecycleListener = new CleanContextOnIndicesLifecycleListener();
+    // a flag that should be used only for testing
+    private final boolean sendLeaveRequest;
 
-    private final ConcurrentMapLong<SearchContext> activeContexts = ConcurrentCollections.newConcurrentMapLong();
+    private final ElectMasterService electMaster;
 
-    private final ImmutableMap<String, SearchParseElement> elementParsers;
 
-    @Inject public SearchService(Settings settings, ClusterService clusterService, IndicesService indicesService, IndicesLifecycle indicesLifecycle, ThreadPool threadPool,
-                                 ScriptService scriptService, DfsPhase dfsPhase, QueryPhase queryPhase, FetchPhase fetchPhase) {
+    private DiscoveryNode localNode;
+
+    private final CopyOnWriteArrayList<InitialStateDiscoveryListener> initialStateListeners = new CopyOnWriteArrayList<InitialStateDiscoveryListener>();
+
+    private volatile boolean master = false;
+
+    private volatile DiscoveryNodes latestDiscoNodes;
+
+    private volatile Thread currentJoinThread;
+
+    private final AtomicBoolean initialStateSent = new AtomicBoolean();
+
+    @Inject public ZenDiscovery(Settings settings, ClusterName clusterName, ThreadPool threadPool,
+                                TransportService transportService, ClusterService clusterService,
+                                ZenPingService pingService) {
         super(settings);
+        this.clusterName = clusterName;
         this.threadPool = threadPool;
         this.clusterService = clusterService;
-        this.indicesService = indicesService;
-        this.scriptService = scriptService;
-        this.dfsPhase = dfsPhase;
-        this.queryPhase = queryPhase;
-        this.fetchPhase = fetchPhase;
+        this.transportService = transportService;
+        this.pingService = pingService;
 
-        TimeValue keepAliveInterval = componentSettings.getAsTime("keep_alive_interval", timeValueMinutes(1));
-        // we can have 5 minutes here, since we make sure to clean with search requests and when shard/index closes
-        this.defaultKeepAlive = componentSettings.getAsTime("default_keep_alive", timeValueMinutes(5)).millis();
+        // also support direct discovery.zen settings, for cases when it gets extended
+        this.pingTimeout = settings.getAsTime("discovery.zen.ping_timeout", componentSettings.getAsTime("ping_timeout", componentSettings.getAsTime("initial_ping_timeout", timeValueSeconds(3))));
+        this.sendLeaveRequest = componentSettings.getAsBoolean("send_leave_request", true);
 
-        Map<String, SearchParseElement> elementParsers = new HashMap<String, SearchParseElement>();
-        elementParsers.putAll(dfsPhase.parseElements());
-        elementParsers.putAll(queryPhase.parseElements());
-        elementParsers.putAll(fetchPhase.parseElements());
-        elementParsers.put("stats", new StatsGroupsParseElement());
-        this.elementParsers = ImmutableMap.copyOf(elementParsers);
-        indicesLifecycle.addListener(indicesLifecycleListener);
+        logger.debug("using ping_timeout [{}]", pingTimeout);
 
-        this.keepAliveReaper = threadPool.scheduleWithFixedDelay(new Reaper(), keepAliveInterval);
+        this.electMaster = new ElectMasterService(settings);
+
+        this.masterFD = new MasterFaultDetection(settings, threadPool, transportService, this);
+        this.masterFD.addListener(new MasterNodeFailureListener());
+
+        this.nodesFD = new NodesFaultDetection(settings, threadPool, transportService);
+        this.nodesFD.addListener(new NodeFailureListener());
+
+        this.publishClusterState = new PublishClusterStateAction(settings, transportService, this, new NewClusterStateListener());
+        this.pingService.setNodesProvider(this);
+        this.membership = new MembershipAction(settings, transportService, this, new MembershipListener());
     }
 
     @Override protected void doStart() throws ElasticSearchException {
+        Map<String, String> nodeAttributes = buildCommonNodesAttributes(settings);
+        // note, we rely on the fact that its a new id each time we start, see FD and "kill -9" handling
+        String nodeId = UUID.randomBase64UUID();
+        localNode = new DiscoveryNode(settings.get("name"), nodeId, transportService.boundAddress().publishAddress(), nodeAttributes);
+        latestDiscoNodes = new DiscoveryNodes.Builder().put(localNode).localNodeId(localNode.id()).build();
+        nodesFD.updateNodes(latestDiscoNodes);
+        pingService.start();
+
+        // do the join on a different thread, the DiscoveryService waits for 30s anyhow till it is discovered
+        asyncJoinCluster();
     }
 
     @Override protected void doStop() throws ElasticSearchException {
-        for (SearchContext context : activeContexts.values()) {
-            freeContext(context);
+        pingService.stop();
+        masterFD.stop("zen disco stop");
+        nodesFD.stop();
+        initialStateSent.set(false);
+        if (sendLeaveRequest) {
+            if (!master && latestDiscoNodes.masterNode() != null) {
+                try {
+                    membership.sendLeaveRequestBlocking(latestDiscoNodes.masterNode(), localNode, TimeValue.timeValueSeconds(1));
+                } catch (Exception e) {
+                    logger.debug("failed to send leave request to master [{}]", e, latestDiscoNodes.masterNode());
+                }
+            } else {
+                DiscoveryNode[] possibleMasters = electMaster.nextPossibleMasters(latestDiscoNodes.nodes().values(), 5);
+                for (DiscoveryNode possibleMaster : possibleMasters) {
+                    if (localNode.equals(possibleMaster)) {
+                        continue;
+                    }
+                    try {
+                        membership.sendLeaveRequest(latestDiscoNodes.masterNode(), possibleMaster);
+                    } catch (Exception e) {
+                        logger.debug("failed to send leave request from master [{}] to possible master [{}]", e, latestDiscoNodes.masterNode(), possibleMaster);
+                    }
+                }
+            }
         }
-        activeContexts.clear();
+        master = false;
+        if (currentJoinThread != null) {
+            try {
+                currentJoinThread.interrupt();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
     }
 
     @Override protected void doClose() throws ElasticSearchException {
-        keepAliveReaper.cancel(false);
-        indicesService.indicesLifecycle().removeListener(indicesLifecycleListener);
+        masterFD.close();
+        nodesFD.close();
+        publishClusterState.close();
+        membership.close();
+        pingService.close();
     }
 
-    public void releaseContextsForIndex(Index index) {
-        for (SearchContext context : activeContexts.values()) {
-            if (context.shardTarget().index().equals(index.name())) {
-                freeContext(context);
-            }
-        }
+    @Override public DiscoveryNode localNode() {
+        return localNode;
     }
 
-    public void releaseContextsForShard(ShardId shardId) {
-        for (SearchContext context : activeContexts.values()) {
-            if (context.shardTarget().index().equals(shardId.index().name()) && context.shardTarget().shardId() == shardId.id()) {
-                freeContext(context);
-            }
-        }
+    @Override public void addListener(InitialStateDiscoveryListener listener) {
+        this.initialStateListeners.add(listener);
     }
 
-    public DfsSearchResult executeDfsPhase(InternalSearchRequest request) throws ElasticSearchException {
-        SearchContext context = createContext(request);
-        activeContexts.put(context.id(), context);
-        try {
-            contextProcessing(context);
-            dfsPhase.execute(context);
-            contextProcessedSuccessfully(context);
-            return context.dfsResult();
-        } catch (RuntimeException e) {
-            logger.trace("Dfs phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
+    @Override public void removeListener(InitialStateDiscoveryListener listener) {
+        this.initialStateListeners.remove(listener);
     }
 
-    public QuerySearchResult executeScan(InternalSearchRequest request) throws ElasticSearchException {
-        SearchContext context = createContext(request);
-        assert context.searchType() == SearchType.SCAN;
-        context.searchType(SearchType.COUNT); // move to COUNT, and then, when scrolling, move to SCAN
-        activeContexts.put(context.id(), context);
-        assert context.searchType() == SearchType.COUNT;
-        try {
-            if (context.scroll() == null) {
-                throw new ElasticSearchException("Scroll must be provided when scanning...");
-            }
-            contextProcessing(context);
-            queryPhase.execute(context);
-            contextProcessedSuccessfully(context);
-            return context.queryResult();
-        } catch (RuntimeException e) {
-            logger.trace("Scan phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
+    @Override public String nodeDescription() {
+        return clusterName.value() + "/" + localNode.id();
     }
 
-    public ScrollQueryFetchSearchResult executeScan(InternalScrollSearchRequest request) throws ElasticSearchException {
-        SearchContext context = findContext(request.id());
-        contextProcessing(context);
-        try {
-            processScroll(request, context);
-            if (context.searchType() == SearchType.COUNT) {
-                // first scanning, reset the from to 0
-                context.searchType(SearchType.SCAN);
-                context.from(0);
-            }
-            queryPhase.execute(context);
-            shortcutDocIdsToLoadForScanning(context);
-            fetchPhase.execute(context);
-            if (context.scroll() == null || context.fetchResult().hits().hits().length < context.size()) {
-                freeContext(request.id());
-            } else {
-                contextProcessedSuccessfully(context);
-            }
-            return new ScrollQueryFetchSearchResult(new QueryFetchSearchResult(context.queryResult(), context.fetchResult()), context.shardTarget());
-        } catch (RuntimeException e) {
-            logger.trace("Scan phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
+    @Override public DiscoveryNodes nodes() {
+        DiscoveryNodes latestNodes = this.latestDiscoNodes;
+        if (latestNodes != null) {
+            return latestNodes;
         }
+        // have not decided yet, just send the local node
+        return newNodesBuilder().put(localNode).localNodeId(localNode.id()).build();
     }
 
-    public QuerySearchResult executeQueryPhase(InternalSearchRequest request) throws ElasticSearchException {
-        SearchContext context = createContext(request);
-        activeContexts.put(context.id(), context);
-        try {
-            context.indexShard().searchService().onPreQueryPhase(context);
-            long time = System.nanoTime();
-            contextProcessing(context);
-            queryPhase.execute(context);
-            if (context.searchType() == SearchType.COUNT) {
-                freeContext(context.id());
-            } else {
-                contextProcessedSuccessfully(context);
-            }
-            context.indexShard().searchService().onQueryPhase(context, System.nanoTime() - time);
-            return context.queryResult();
-        } catch (RuntimeException e) {
-            context.indexShard().searchService().onFailedQueryPhase(context);
-            logger.trace("Query phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
+    @Override public void publish(ClusterState clusterState) {
+        if (!master) {
+            throw new ElasticSearchIllegalStateException("Shouldn't publish state when not master");
         }
+        latestDiscoNodes = clusterState.nodes();
+        nodesFD.updateNodes(clusterState.nodes());
+        publishClusterState.publish(clusterState);
     }
 
-    public ScrollQuerySearchResult executeQueryPhase(InternalScrollSearchRequest request) throws ElasticSearchException {
-        SearchContext context = findContext(request.id());
-        try {
-            context.indexShard().searchService().onPreQueryPhase(context);
-            long time = System.nanoTime();
-            contextProcessing(context);
-            processScroll(request, context);
-            queryPhase.execute(context);
-            contextProcessedSuccessfully(context);
-            context.indexShard().searchService().onQueryPhase(context, System.nanoTime() - time);
-            return new ScrollQuerySearchResult(context.queryResult(), context.shardTarget());
-        } catch (RuntimeException e) {
-            context.indexShard().searchService().onFailedQueryPhase(context);
-            logger.trace("Query phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
-    }
-
-    public QuerySearchResult executeQueryPhase(QuerySearchRequest request) throws ElasticSearchException {
-        SearchContext context = findContext(request.id());
-        contextProcessing(context);
-        try {
-            context.searcher().dfSource(new CachedDfSource(request.dfs(), context.similarityService().defaultSearchSimilarity()));
-        } catch (IOException e) {
-            freeContext(context);
-            cleanContext(context);
-            throw new QueryPhaseExecutionException(context, "Failed to set aggregated df", e);
-        }
-        try {
-            context.indexShard().searchService().onPreQueryPhase(context);
-            long time = System.nanoTime();
-            queryPhase.execute(context);
-            contextProcessedSuccessfully(context);
-            context.indexShard().searchService().onQueryPhase(context, System.nanoTime() - time);
-            return context.queryResult();
-        } catch (RuntimeException e) {
-            context.indexShard().searchService().onFailedQueryPhase(context);
-            logger.trace("Query phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
-    }
-
-    public QueryFetchSearchResult executeFetchPhase(InternalSearchRequest request) throws ElasticSearchException {
-        SearchContext context = createContext(request);
-        activeContexts.put(context.id(), context);
-        contextProcessing(context);
-        try {
-            context.indexShard().searchService().onPreQueryPhase(context);
-            long time = System.nanoTime();
-            try {
-                queryPhase.execute(context);
-            } catch (RuntimeException e) {
-                context.indexShard().searchService().onFailedQueryPhase(context);
-                throw e;
-            }
-            long time2 = System.nanoTime();
-            context.indexShard().searchService().onQueryPhase(context, time2 - time);
-            context.indexShard().searchService().onPreFetchPhase(context);
-            try {
-                shortcutDocIdsToLoad(context);
-                fetchPhase.execute(context);
-                if (context.scroll() == null) {
-                    freeContext(context.id());
-                } else {
-                    contextProcessedSuccessfully(context);
+    private void asyncJoinCluster() {
+        threadPool.cached().execute(new Runnable() {
+            @Override public void run() {
+                currentJoinThread = Thread.currentThread();
+                try {
+                    innterJoinCluster();
+                } finally {
+                    currentJoinThread = null;
                 }
-            } catch (RuntimeException e) {
-                context.indexShard().searchService().onFailedFetchPhase(context);
-                throw e;
             }
-            context.indexShard().searchService().onFetchPhase(context, System.nanoTime() - time2);
-            return new QueryFetchSearchResult(context.queryResult(), context.fetchResult());
-        } catch (RuntimeException e) {
-            logger.trace("Fetch phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
+        });
     }
 
-    public QueryFetchSearchResult executeFetchPhase(QuerySearchRequest request) throws ElasticSearchException {
-        SearchContext context = findContext(request.id());
-        contextProcessing(context);
-        try {
-            context.searcher().dfSource(new CachedDfSource(request.dfs(), context.similarityService().defaultSearchSimilarity()));
-        } catch (IOException e) {
-            freeContext(context);
-            cleanContext(context);
-            throw new QueryPhaseExecutionException(context, "Failed to set aggregated df", e);
-        }
-        try {
-            context.indexShard().searchService().onPreQueryPhase(context);
-            long time = System.nanoTime();
-            try {
-                queryPhase.execute(context);
-            } catch (RuntimeException e) {
-                context.indexShard().searchService().onFailedQueryPhase(context);
-                throw e;
+    private void innterJoinCluster() {
+        boolean retry = true;
+        while (retry) {
+            if (lifecycle.stoppedOrClosed()) {
+                return;
             }
-            long time2 = System.nanoTime();
-            context.indexShard().searchService().onQueryPhase(context, time2 - time);
-            context.indexShard().searchService().onPreFetchPhase(context);
-            try {
-                shortcutDocIdsToLoad(context);
-                fetchPhase.execute(context);
-                if (context.scroll() == null) {
-                    freeContext(request.id());
-                } else {
-                    contextProcessedSuccessfully(context);
-                }
-            } catch (RuntimeException e) {
-                context.indexShard().searchService().onFailedFetchPhase(context);
-                throw e;
+            retry = false;
+            DiscoveryNode masterNode = findMaster();
+            if (masterNode == null) {
+                retry = true;
+                continue;
             }
-            context.indexShard().searchService().onFetchPhase(context, System.nanoTime() - time2);
-            return new QueryFetchSearchResult(context.queryResult(), context.fetchResult());
-        } catch (RuntimeException e) {
-            logger.trace("Fetch phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
-    }
-
-    public ScrollQueryFetchSearchResult executeFetchPhase(InternalScrollSearchRequest request) throws ElasticSearchException {
-        SearchContext context = findContext(request.id());
-        contextProcessing(context);
-        try {
-            processScroll(request, context);
-            context.indexShard().searchService().onPreQueryPhase(context);
-            long time = System.nanoTime();
-            try {
-                queryPhase.execute(context);
-            } catch (RuntimeException e) {
-                context.indexShard().searchService().onFailedQueryPhase(context);
-                throw e;
-            }
-            long time2 = System.nanoTime();
-            context.indexShard().searchService().onQueryPhase(context, time2 - time);
-            context.indexShard().searchService().onPreFetchPhase(context);
-            try {
-                shortcutDocIdsToLoad(context);
-                fetchPhase.execute(context);
-                if (context.scroll() == null) {
-                    freeContext(request.id());
-                } else {
-                    contextProcessedSuccessfully(context);
-                }
-            } catch (RuntimeException e) {
-                context.indexShard().searchService().onFailedFetchPhase(context);
-                throw e;
-            }
-            context.indexShard().searchService().onFetchPhase(context, System.nanoTime() - time2);
-            return new ScrollQueryFetchSearchResult(new QueryFetchSearchResult(context.queryResult(), context.fetchResult()), context.shardTarget());
-        } catch (RuntimeException e) {
-            logger.trace("Fetch phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
-    }
-
-    public FetchSearchResult executeFetchPhase(FetchSearchRequest request) throws ElasticSearchException {
-        SearchContext context = findContext(request.id());
-        contextProcessing(context);
-        try {
-            context.docIdsToLoad(request.docIds(), 0, request.docIdsSize());
-            context.indexShard().searchService().onPreFetchPhase(context);
-            long time = System.nanoTime();
-            fetchPhase.execute(context);
-            if (context.scroll() == null) {
-                freeContext(request.id());
-            } else {
-                contextProcessedSuccessfully(context);
-            }
-            context.indexShard().searchService().onFetchPhase(context, System.nanoTime() - time);
-            return context.fetchResult();
-        } catch (RuntimeException e) {
-            context.indexShard().searchService().onFailedFetchPhase(context);
-            logger.trace("Fetch phase failed", e);
-            freeContext(context);
-            throw e;
-        } finally {
-            cleanContext(context);
-        }
-    }
-
-    private SearchContext findContext(long id) throws SearchContextMissingException {
-        SearchContext context = activeContexts.get(id);
-        if (context == null) {
-            throw new SearchContextMissingException(id);
-        }
-        SearchContext.setCurrent(context);
-        return context;
-    }
-
-    private SearchContext createContext(InternalSearchRequest request) throws ElasticSearchException {
-        IndexService indexService = indicesService.indexServiceSafe(request.index());
-        IndexShard indexShard = indexService.shardSafe(request.shardId());
-
-        SearchShardTarget shardTarget = new SearchShardTarget(clusterService.localNode().id(), request.index(), request.shardId());
-
-        Engine.Searcher engineSearcher = indexShard.searcher();
-        SearchContext context = new SearchContext(idGenerator.incrementAndGet(), request, shardTarget, engineSearcher, indexService, indexShard, scriptService);
-        SearchContext.setCurrent(context);
-        try {
-            context.scroll(request.scroll());
-
-            parseSource(context, request.source(), request.sourceOffset(), request.sourceLength());
-            parseSource(context, request.extraSource(), request.extraSourceOffset(), request.extraSourceLength());
-
-            // if the from and size are still not set, default them
-            if (context.from() == -1) {
-                context.from(0);
-            }
-            if (context.size() == -1) {
-                context.size(10);
-            }
-
-            Filter aliasFilter = indexService.aliasesService().aliasFilter(request.filteringAliases());
-            context.aliasFilter(aliasFilter);
-
-            // pre process
-            dfsPhase.preProcess(context);
-            queryPhase.preProcess(context);
-            fetchPhase.preProcess(context);
-
-            // compute the context keep alive
-            long keepAlive = defaultKeepAlive;
-            if (request.scroll() != null && request.scroll().keepAlive() != null) {
-                keepAlive = request.scroll().keepAlive().millis();
-            }
-            context.keepAlive(keepAlive);
-        } catch (RuntimeException e) {
-            context.release();
-            throw e;
-        }
-
-        return context;
-    }
-
-    public void freeContext(long id) {
-        SearchContext context = activeContexts.remove(id);
-        if (context == null) {
-            return;
-        }
-        freeContext(context);
-    }
-
-    private void freeContext(SearchContext context) {
-        activeContexts.remove(context.id());
-        context.release();
-    }
-
-    private void contextProcessing(SearchContext context) {
-        // disable timeout while executing a search
-        context.accessed(-1);
-    }
-
-    private void contextProcessedSuccessfully(SearchContext context) {
-        context.accessed(threadPool.estimatedTimeInMillis());
-    }
-
-    private void cleanContext(SearchContext context) {
-        SearchContext.removeCurrent();
-    }
-
-    private void parseSource(SearchContext context, byte[] source, int offset, int length) throws SearchParseException {
-        // nothing to parse...
-        if (source == null || length == 0) {
-            return;
-        }
-        XContentParser parser = null;
-        try {
-            parser = XContentFactory.xContent(source, offset, length).createParser(source, offset, length);
-            XContentParser.Token token;
-            while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
-                if (token == XContentParser.Token.FIELD_NAME) {
-                    String fieldName = parser.currentName();
-                    parser.nextToken();
-                    SearchParseElement element = elementParsers.get(fieldName);
-                    if (element == null) {
-                        throw new SearchParseException(context, "No parser for element [" + fieldName + "]");
+            if (localNode.equals(masterNode)) {
+                this.master = true;
+                nodesFD.start(); // start the nodes FD
+                clusterService.submitStateUpdateTask("zen-disco-join (elected_as_master)", new ProcessedClusterStateUpdateTask() {
+                    @Override public ClusterState execute(ClusterState currentState) {
+                        DiscoveryNodes.Builder builder = new DiscoveryNodes.Builder()
+                                .localNodeId(localNode.id())
+                                .masterNodeId(localNode.id())
+                                        // put our local node
+                                .put(localNode);
+                        // update the fact that we are the master...
+                        latestDiscoNodes = builder.build();
+                        ClusterBlocks clusterBlocks = ClusterBlocks.builder().blocks(currentState.blocks()).removeGlobalBlock(NO_MASTER_BLOCK).build();
+                        return newClusterStateBuilder().state(currentState).nodes(builder).blocks(clusterBlocks).build();
                     }
-                    element.parse(parser, context);
-                } else if (token == null) {
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            String sSource = "_na_";
-            try {
-                sSource = Unicode.fromBytes(source, offset, length);
-            } catch (Throwable e1) {
-                // ignore
-            }
-            throw new SearchParseException(context, "Failed to parse source [" + sSource + "]", e);
-        } finally {
-            if (parser != null) {
-                parser.close();
-            }
-        }
-    }
 
-    private static final int[] EMPTY_DOC_IDS = new int[0];
-
-    /**
-     * Shortcut ids to load, we load only "from" and up to "size". The phase controller
-     * handles this as well since the result is always size * shards for Q_A_F
-     */
-    private void shortcutDocIdsToLoad(SearchContext context) {
-        TopDocs topDocs = context.queryResult().topDocs();
-        if (topDocs.scoreDocs.length < context.from()) {
-            // no more docs...
-            context.docIdsToLoad(EMPTY_DOC_IDS, 0, 0);
-            return;
-        }
-        int totalSize = context.from() + context.size();
-        int[] docIdsToLoad = new int[context.size()];
-        int counter = 0;
-        for (int i = context.from(); i < totalSize; i++) {
-            if (i < topDocs.scoreDocs.length) {
-                docIdsToLoad[counter] = topDocs.scoreDocs[i].doc;
+                    @Override public void clusterStateProcessed(ClusterState clusterState) {
+                        sendInitialStateEventIfNeeded();
+                    }
+                });
             } else {
-                break;
-            }
-            counter++;
-        }
-        context.docIdsToLoad(docIdsToLoad, 0, counter);
-    }
-
-    private void shortcutDocIdsToLoadForScanning(SearchContext context) {
-        TopDocs topDocs = context.queryResult().topDocs();
-        if (topDocs.scoreDocs.length == 0) {
-            // no more docs...
-            context.docIdsToLoad(EMPTY_DOC_IDS, 0, 0);
-            return;
-        }
-        int[] docIdsToLoad = new int[topDocs.scoreDocs.length];
-        for (int i = 0; i < docIdsToLoad.length; i++) {
-            docIdsToLoad[i] = topDocs.scoreDocs[i].doc;
-        }
-        context.docIdsToLoad(docIdsToLoad, 0, docIdsToLoad.length);
-    }
-
-    private void processScroll(InternalScrollSearchRequest request, SearchContext context) {
-        // process scroll
-        context.from(context.from() + context.size());
-        context.scroll(request.scroll());
-        // update the context keep alive based on the new scroll value
-        if (request.scroll() != null && request.scroll().keepAlive() != null) {
-            context.keepAlive(request.scroll().keepAlive().millis());
-        }
-    }
-
-    class CleanContextOnIndicesLifecycleListener extends IndicesLifecycle.Listener {
-
-        @Override public void beforeIndexClosed(IndexService indexService, boolean delete) {
-            releaseContextsForIndex(indexService.index());
-        }
-
-        @Override public void beforeIndexShardClosed(ShardId shardId, @Nullable IndexShard indexShard, boolean delete) {
-            releaseContextsForShard(shardId);
-        }
-    }
-
-    class Reaper implements Runnable {
-        @Override public void run() {
-            long time = threadPool.estimatedTimeInMillis();
-            for (SearchContext context : activeContexts.values()) {
-                if (context.lastAccessTime() == -1) { // its being processed or timeout is disabled
+                this.master = false;
+                try {
+                    // first, make sure we can connect to the master
+                    transportService.connectToNode(masterNode);
+                } catch (Exception e) {
+                    logger.warn("failed to connect to master [{}], retrying...", e, masterNode);
+                    retry = true;
                     continue;
                 }
-                if ((time - context.lastAccessTime() > context.keepAlive())) {
-                    freeContext(context);
+                // send join request
+                ClusterState clusterState;
+                try {
+                    clusterState = membership.sendJoinRequestBlocking(masterNode, localNode, pingTimeout);
+                } catch (Exception e) {
+                    if (e instanceof ElasticSearchException) {
+                        logger.info("failed to send join request to master [{}], reason [{}]", masterNode, ((ElasticSearchException) e).getDetailedMessage());
+                    } else {
+                        logger.info("failed to send join request to master [{}], reason [{}]", masterNode, e.getMessage());
+                    }
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("detailed failed reason", e);
+                    }
+                    // failed to send the join request, retry
+                    retry = true;
+                    continue;
                 }
+                masterFD.start(masterNode, "initial_join");
+
+                // we update the metadata once we managed to join, so we pre-create indices and so on (no shards allocation)
+                final MetaData metaData = clusterState.metaData();
+                // sync also the version with the version the master currently has, so the next update will be applied
+                final long version = clusterState.version();
+                clusterService.submitStateUpdateTask("zen-disco-join (detected master)", new ProcessedClusterStateUpdateTask() {
+                    @Override public ClusterState execute(ClusterState currentState) {
+                        ClusterBlocks clusterBlocks = ClusterBlocks.builder().blocks(currentState.blocks()).removeGlobalBlock(NO_MASTER_BLOCK).build();
+                        // make sure we have the local node id set, we might need it as a result of the new metadata
+                        DiscoveryNodes.Builder nodesBuilder = DiscoveryNodes.newNodesBuilder().putAll(currentState.nodes()).put(localNode).localNodeId(localNode.id());
+                        return newClusterStateBuilder().state(currentState).nodes(nodesBuilder).blocks(clusterBlocks).metaData(metaData).version(version).build();
+                    }
+
+                    @Override public void clusterStateProcessed(ClusterState clusterState) {
+                        // don't send initial state event, since we want to get the cluster state from the master that includes us first
+//                        sendInitialStateEventIfNeeded();
+                    }
+                });
+            }
+        }
+    }
+
+    private void handleNodeFailure(final DiscoveryNode node, String reason) {
+        if (lifecycleState() != Lifecycle.State.STARTED) {
+            // not started, ignore a node failure
+            return;
+        }
+        if (!master) {
+            // nothing to do here...
+            return;
+        }
+        clusterService.submitStateUpdateTask("zen-disco-node_failed(" + node + "), reason " + reason, new ProcessedClusterStateUpdateTask() {
+            @Override public ClusterState execute(ClusterState currentState) {
+                DiscoveryNodes.Builder builder = new DiscoveryNodes.Builder()
+                        .putAll(currentState.nodes())
+                        .remove(node.id());
+                latestDiscoNodes = builder.build();
+                return newClusterStateBuilder().state(currentState).nodes(latestDiscoNodes).build();
+            }
+
+            @Override public void clusterStateProcessed(ClusterState clusterState) {
+                sendInitialStateEventIfNeeded();
+            }
+        });
+    }
+
+    private void handleMasterGone(final DiscoveryNode masterNode, final String reason) {
+        if (lifecycleState() != Lifecycle.State.STARTED) {
+            // not started, ignore a master failure
+            return;
+        }
+        if (master) {
+            // we might get this on both a master telling us shutting down, and then the disconnect failure
+            return;
+        }
+
+        logger.info("master_left [{}], reason [{}]", masterNode, reason);
+
+        clusterService.submitStateUpdateTask("zen-disco-master_failed (" + masterNode + ")", new ProcessedClusterStateUpdateTask() {
+            @Override public ClusterState execute(ClusterState currentState) {
+                if (!masterNode.id().equals(currentState.nodes().masterNodeId())) {
+                    // master got switched on us, no need to send anything
+                    return currentState;
+                }
+
+                ClusterBlocks clusterBlocks = currentState.blocks();
+                MetaData metaData = currentState.metaData();
+                RoutingTable routingTable = currentState.routingTable();
+                List<DiscoveryNode> nodes = newArrayList(currentState.nodes().nodes().values());
+                nodes.remove(masterNode); // remove the master node from the list, it has failed
+                final DiscoveryNode electedMaster = electMaster.electMaster(nodes); // elect master
+                if (localNode.equals(electedMaster)) {
+                    master = true;
+                    masterFD.stop("got elected as new master since master left (reason = " + reason + ")");
+                    nodesFD.start();
+                    DiscoveryNodes.Builder builder = DiscoveryNodes.newNodesBuilder()
+                            .putAll(currentState.nodes())
+                                    // make sure the old master node, which has failed, is not part of the nodes we publish
+                            .remove(masterNode.id())
+                            .masterNodeId(localNode.id());
+                    latestDiscoNodes = builder.build();
+                    return newClusterStateBuilder().state(currentState).nodes(latestDiscoNodes).build();
+                } else {
+                    nodesFD.stop();
+                    DiscoveryNodes.Builder builder = DiscoveryNodes.newNodesBuilder()
+                            .putAll(currentState.nodes()).remove(masterNode.id());
+                    if (electedMaster != null) {
+                        builder.masterNodeId(electedMaster.id());
+                        masterFD.restart(electedMaster, "possible elected master since master left (reason = " + reason + ")");
+                    } else {
+                        logger.warn("master_left and no other node elected to become master, current nodes: {}", nodes);
+                        builder.masterNodeId(null);
+                        clusterBlocks = ClusterBlocks.builder().blocks(clusterBlocks).addGlobalBlock(NO_MASTER_BLOCK).build();
+                        // if this is a data node, clean the metadata and routing, since we want to recreate the indices and shards
+                        if (currentState.nodes().localNode().dataNode()) {
+                            metaData = MetaData.newMetaDataBuilder().build();
+                            routingTable = RoutingTable.newRoutingTableBuilder().build();
+                        }
+                        masterFD.stop("no master elected since master left (reason = " + reason + ")");
+                        asyncJoinCluster();
+                    }
+                    latestDiscoNodes = builder.build();
+                    return newClusterStateBuilder().state(currentState)
+                            .blocks(clusterBlocks)
+                            .nodes(latestDiscoNodes)
+                            .metaData(metaData)
+                            .routingTable(routingTable)
+                            .build();
+                }
+            }
+
+            @Override public void clusterStateProcessed(ClusterState clusterState) {
+                sendInitialStateEventIfNeeded();
+            }
+
+        });
+    }
+
+    void handleNewClusterStateFromMaster(final ClusterState newState) {
+        if (master) {
+            logger.warn("master should not receive new cluster state from [{}]", newState.nodes().masterNode());
+        } else {
+            if (newState.nodes().localNode() == null) {
+                logger.warn("received a cluster state from [{}] and not part of the cluster, should not happen", newState.nodes().masterNode());
+            } else {
+                clusterService.submitStateUpdateTask("zen-disco-receive(from master [" + newState.nodes().masterNode() + "])", new ProcessedClusterStateUpdateTask() {
+                    @Override public ClusterState execute(ClusterState currentState) {
+                        latestDiscoNodes = newState.nodes();
+
+                        // check to see that we monitor the correct master of the cluster
+                        if (masterFD.masterNode() == null || !masterFD.masterNode().equals(latestDiscoNodes.masterNode())) {
+                            masterFD.restart(latestDiscoNodes.masterNode(), "new cluster stare received and we monitor the wrong master [" + masterFD.masterNode() + "]");
+                        }
+
+                        ClusterState.Builder builder = ClusterState.builder().state(newState);
+                        // if the routing table did not change, use the original one
+                        if (newState.routingTable().version() == currentState.routingTable().version()) {
+                            builder.routingTable(currentState.routingTable());
+                        }
+                        // same for metadata
+                        if (newState.metaData().version() == currentState.metaData().version()) {
+                            builder.metaData(currentState.metaData());
+                        }
+
+                        return builder.build();
+                    }
+
+                    @Override public void clusterStateProcessed(ClusterState clusterState) {
+                        sendInitialStateEventIfNeeded();
+                    }
+                });
+            }
+        }
+    }
+
+    private void handleLeaveRequest(final DiscoveryNode node) {
+        if (master) {
+            clusterService.submitStateUpdateTask("zen-disco-node_left(" + node + ")", new ClusterStateUpdateTask() {
+                @Override public ClusterState execute(ClusterState currentState) {
+                    DiscoveryNodes.Builder builder = new DiscoveryNodes.Builder()
+                            .putAll(currentState.nodes())
+                            .remove(node.id());
+                    latestDiscoNodes = builder.build();
+                    return newClusterStateBuilder().state(currentState).nodes(latestDiscoNodes).build();
+                }
+            });
+        } else {
+            handleMasterGone(node, "shut_down");
+        }
+    }
+
+    private ClusterState handleJoinRequest(final DiscoveryNode node) {
+        if (!master) {
+            throw new ElasticSearchIllegalStateException("Node [" + localNode + "] not master for join request from [" + node + "]");
+        }
+
+        ClusterState state = clusterService.state();
+        if (!transportService.addressSupported(node.address().getClass())) {
+            // TODO, what should we do now? Maybe inform that node that its crap?
+            logger.warn("received a wrong address type from [{}], ignoring...", node);
+        } else {
+            // try and connect to the node, if it fails, we can raise an exception back to the client...
+            transportService.connectToNode(node);
+            state = clusterService.state();
+
+            clusterService.submitStateUpdateTask("zen-disco-receive(join from node[" + node + "])", new ClusterStateUpdateTask() {
+                @Override public ClusterState execute(ClusterState currentState) {
+                    if (currentState.nodes().nodeExists(node.id())) {
+                        // the node already exists in the cluster
+                        logger.warn("received a join request for an existing node [{}]", node);
+                        // still send a new cluster state, so it will be re published and possibly update the other node
+                        return ClusterState.builder().state(currentState).build();
+                    }
+                    return newClusterStateBuilder().state(currentState).nodes(currentState.nodes().newNode(node)).build();
+                }
+            });
+        }
+        return state;
+    }
+
+    private DiscoveryNode findMaster() {
+        ZenPing.PingResponse[] pingResponses = pingService.pingAndWait(pingTimeout);
+        if (pingResponses == null) {
+            return null;
+        }
+        if (logger.isDebugEnabled()) {
+            StringBuilder sb = new StringBuilder("ping responses:");
+            if (pingResponses.length == 0) {
+                sb.append(" {none}");
+            } else {
+                for (ZenPing.PingResponse pingResponse : pingResponses) {
+                    sb.append("\n\t--> ").append("target [").append(pingResponse.target()).append("], master [").append(pingResponse.master()).append("]");
+                }
+            }
+            logger.debug(sb.toString());
+        }
+        List<DiscoveryNode> pingMasters = newArrayList();
+        for (ZenPing.PingResponse pingResponse : pingResponses) {
+            if (pingResponse.master() != null) {
+                pingMasters.add(pingResponse.master());
+            }
+        }
+        if (pingMasters.isEmpty()) {
+            // lets tie break between discovered nodes
+            List<DiscoveryNode> possibleMasterNodes = newArrayList();
+            possibleMasterNodes.add(localNode);
+            for (ZenPing.PingResponse pingResponse : pingResponses) {
+                possibleMasterNodes.add(pingResponse.target());
+            }
+            DiscoveryNode electedMaster = electMaster.electMaster(possibleMasterNodes);
+            if (localNode.equals(electedMaster)) {
+                return localNode;
+            }
+        } else {
+            DiscoveryNode electedMaster = electMaster.electMaster(pingMasters);
+            if (electedMaster != null) {
+                return electedMaster;
+            }
+        }
+        return null;
+    }
+
+    private void sendInitialStateEventIfNeeded() {
+        if (initialStateSent.compareAndSet(false, true)) {
+            for (InitialStateDiscoveryListener listener : initialStateListeners) {
+                listener.initialStateProcessed();
+            }
+        }
+    }
+
+    private class NewClusterStateListener implements PublishClusterStateAction.NewClusterStateListener {
+        @Override public void onNewClusterState(ClusterState clusterState) {
+            handleNewClusterStateFromMaster(clusterState);
+        }
+    }
+
+    private class MembershipListener implements MembershipAction.MembershipListener {
+        @Override public ClusterState onJoin(DiscoveryNode node) {
+            return handleJoinRequest(node);
+        }
+
+        @Override public void onLeave(DiscoveryNode node) {
+            handleLeaveRequest(node);
+        }
+    }
+
+    private class NodeFailureListener implements NodesFaultDetection.Listener {
+
+        @Override public void onNodeFailure(DiscoveryNode node, String reason) {
+            handleNodeFailure(node, reason);
+        }
+    }
+
+    private class MasterNodeFailureListener implements MasterFaultDetection.Listener {
+
+        @Override public void onMasterFailure(DiscoveryNode masterNode, String reason) {
+            handleMasterGone(masterNode, reason);
+        }
+
+        @Override public void onDisconnectedFromMaster() {
+            // got disconnected from the master, send a join request
+            DiscoveryNode masterNode = latestDiscoNodes.masterNode();
+            try {
+                membership.sendJoinRequest(masterNode, localNode);
+            } catch (Exception e) {
+                logger.warn("failed to send join request on disconnection from master [{}]", masterNode);
             }
         }
     }

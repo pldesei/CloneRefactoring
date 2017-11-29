@@ -1,43 +1,12 @@
-(startLine=46 endLine=86 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDo.java)
-    void analyze(Variables variables) {
-        variables.incrementScope();
-
-        if (block == null) {
-            throw createError(new IllegalArgumentException("Extraneous do while loop."));
-        }
-
-        block.beginLoop = true;
-        block.inLoop = true;
-
-        block.analyze(variables);
-
-        if (block.loopEscape && !block.anyContinue) {
-            throw createError(new IllegalArgumentException("Extraneous do while loop."));
-        }
-
-        condition.expected = Definition.BOOLEAN_TYPE;
-        condition.analyze(variables);
-        condition = condition.cast(variables);
-
-        if (condition.constant != null) {
-            final boolean continuous = (boolean)condition.constant;
-
-            if (!continuous) {
-                throw createError(new IllegalArgumentException("Extraneous do while loop."));
-            }
-
-            if (!block.anyBreak) {
-                methodEscape = true;
-                allEscape = true;
-            }
-        }
-
-        statementCount = 1;
-
-        if (maxLoopCounter > 0) {
-            loopCounterSlot = variables.getVariable(location, "#loop").slot;
-        }
-
-        variables.decrementScope();
+(startLine=88 endLine=97 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/KeepFilterFactoryTests.java)
+    public void testCaseInsensitiveMapping() throws IOException {
+        AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("my_keep_filter");
+        assertThat(tokenFilter, instanceOf(KeepWordFilterFactory.class));
+        String source = "hello small world";
+        String[] expected = new String[]{"hello", "world"};
+        Tokenizer tokenizer = new WhitespaceTokenizer();
+        tokenizer.setReader(new StringReader(source));
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected, new int[]{1, 2});
     }
 

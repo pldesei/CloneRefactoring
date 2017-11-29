@@ -1,24 +1,11 @@
-(startLine=82 endLine=103 srcPath=/root/Projects/elasticsearchFilter/1893/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/cluster/DefaultClusterService.java)
-    @Override public ClusterService start() throws ElasticSearchException {
-        if (!lifecycle.moveToStarted()) {
-            return this;
-        }
-        this.updateTasksExecutor = newSingleThreadExecutor(daemonThreadFactory(settings, "clusterService#updateTask"));
-        scheduledFuture = threadPool.scheduleWithFixedDelay(new Runnable() {
-            @Override public void run() {
-                long timestamp = System.currentTimeMillis();
-                for (final TimeoutHolder holder : clusterStateTimeoutListeners) {
-                    if ((timestamp - holder.timestamp) > holder.timeout.millis()) {
-                        clusterStateTimeoutListeners.remove(holder);
-                        DefaultClusterService.this.threadPool.execute(new Runnable() {
-                            @Override public void run() {
-                                holder.listener.onTimeout(holder.timeout);
-                            }
-                        });
-                    }
-                }
-            }
-        }, timeoutInterval);
-        return this;
+(startLine=139 endLine=147 srcPath=/root/Projects/elasticsearchFilter/321/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/significant/GlobalOrdinalsSignificantTermsAggregator.java)
+    public SignificantStringTerms buildEmptyAggregation() {
+        // We need to account for the significance of a miss in our global stats - provide corpus size as context
+        ContextIndexSearcher searcher = context.searchContext().searcher();
+        IndexReader topReader = searcher.getIndexReader();
+        int supersetSize = topReader.numDocs();
+        return new SignificantStringTerms(0, supersetSize, name, bucketCountThresholds.getRequiredSize(),
+                bucketCountThresholds.getMinDocCount(), termsAggFactory.getSignificanceHeuristic(),
+                Collections.<InternalSignificantTerms.Bucket> emptyList(), pipelineAggregators(), metaData());
     }
 

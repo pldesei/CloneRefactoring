@@ -1,38 +1,9 @@
-(startLine=2648 endLine=2683 srcPath=/root/Projects/eclipse.jdt.coreFilter/2052/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionParserTest.java)
-public void testIC_1FMGUPR() {
-    String str = 
-            "package p; \n" + 
-            "/**\n" + 
-            " * 1FMGUPR\n" + 
-            " */\n" + 
-            "public class IC {\n" + 
-            "    void foo(){\n" + 
-            "        new String().toString().\n" + 
-            "    }\n" + 
-            "}\n";
-
-    String testName = "<complete on multiple method/field call>";
-    String completeBehind = "new String().toString().";
-    String expectedCompletionNodeToString = "<CompleteOnMemberAccess:new String().toString().>";
-    String completionIdentifier = "";
-    String expectedReplacedSource = "";
-    int cursorLocation = str.indexOf(completeBehind) + completeBehind.length() - 1;
-    String expectedUnitDisplayString =
-        "package p;\n" + 
-        "public class IC {\n" + 
-        "  public IC() {\n" + 
-        "  }\n" + 
-        "  void foo() {\n" + 
-        "    <CompleteOnMemberAccess:new String().toString().>;\n" + 
-        "  }\n" + 
-        "}\n";
-
-    checkMethodParse(
-        str.toCharArray(), 
-        cursorLocation, 
-        expectedCompletionNodeToString,
-        expectedUnitDisplayString,
-        completionIdentifier,
-        expectedReplacedSource,
-        testName); }
+(startLine=187 endLine=193 srcPath=/root/Projects/eclipse.jdt.coreFilter/665/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/MementoTests.java)
+public void testBinaryMethodMemento2() throws JavaModelException {
+    IType type = getClassFile("/P/lib/p/X.class").getType();
+    IMethod method = type.getMethod("bar", new String[] {});
+    assertMemento(
+        "=P/lib<p(X.class[X~bar",
+        method);
+}    
 

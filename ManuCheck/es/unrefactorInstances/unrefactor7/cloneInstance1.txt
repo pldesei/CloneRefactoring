@@ -1,11 +1,18 @@
-(startLine=50 endLine=58 srcPath=/root/Projects/elasticsearchFilter/456/elasticsearch/src/main/java/org/elasticsearch/index/analysis/compound/DictionaryCompoundWordTokenFilterFactory.java)
-    public TokenStream create(TokenStream tokenStream) {
-        if (version.onOrAfter(Version.LUCENE_4_4_0)) {
-            return new DictionaryCompoundWordTokenFilter(tokenStream, wordList, minWordSize, 
-                                                         minSubwordSize, maxSubwordSize, onlyLongestMatch);
-        } else {
-            return new Lucene43DictionaryCompoundWordTokenFilter(tokenStream, wordList, minWordSize,
-                                                                 minSubwordSize, maxSubwordSize, onlyLongestMatch);
-        }
+(startLine=1794 endLine=1809 srcPath=/root/Projects/elasticsearchFilter/678/elasticsearch/src/test/java/org/elasticsearch/percolator/PercolatorTests.java)
+    void initNestedIndexAndPercolation() throws IOException {
+        XContentBuilder mapping = XContentFactory.jsonBuilder();
+        mapping.startObject().startObject("properties").startObject("companyname").field("type", "string").endObject()
+                .startObject("employee").field("type", "nested").startObject("properties")
+                .startObject("name").field("type", "string").endObject().endObject().endObject().endObject()
+                .endObject();
+
+        assertAcked(client().admin().indices().prepareCreate("nestedindex").addMapping("company", mapping));
+        ensureGreen("nestedindex");
+
+        client().prepareIndex("nestedindex", PercolatorService.TYPE_NAME, "Q").setSource(jsonBuilder().startObject()
+                .field("query", QueryBuilders.nestedQuery("employee", QueryBuilders.matchQuery("employee.name", "virginia potts").operator(MatchQueryBuilder.Operator.AND)).scoreMode("avg")).endObject()).get();
+
+        refresh();
+
     }
 

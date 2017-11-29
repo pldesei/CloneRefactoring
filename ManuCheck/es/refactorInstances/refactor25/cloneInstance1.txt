@@ -1,11 +1,19 @@
-(startLine=112 endLine=120 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchDfsQueryThenFetchAction.java)
-                        @Override public void run() {
-                            for (final DfsSearchResult dfsResult : dfsResults) {
-                                DiscoveryNode node = nodes.get(dfsResult.shardTarget().nodeId());
-                                if (node.id().equals(nodes.localNodeId())) {
-                                    QuerySearchRequest querySearchRequest = new QuerySearchRequest(dfsResult.id(), dfs);
-                                    executeQuery(dfsResult, counter, querySearchRequest, node);
-                                }
-                            }
-                        }
+(startLine=105 endLine=121 srcPath=/root/Projects/elasticsearchFilter/1475/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/search/geo/GeoDistanceFilter.java)
+    @Override public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
+        DocSet boundingBoxDocSet = null;
+        if (boundingBoxFilter != null) {
+            DocIdSet docIdSet = boundingBoxFilter.getDocIdSet(reader);
+            if (docIdSet == null) {
+                return null;
+            }
+            boundingBoxDocSet = DocSets.convert(reader, docIdSet);
+        }
+        final GeoPointFieldData fieldData = (GeoPointFieldData) fieldDataCache.cache(GeoPointFieldDataType.TYPE, reader, fieldName);
+        GeoDistanceDocSet distDocSet = new GeoDistanceDocSet(reader.maxDoc(), fieldData, fixedSourceDistance, distanceBoundingCheck, distance);
+        if (boundingBoxDocSet == null) {
+            return distDocSet;
+        } else {
+            return new AndDocSet(ImmutableList.of(boundingBoxDocSet, distDocSet));
+        }
+    }
 

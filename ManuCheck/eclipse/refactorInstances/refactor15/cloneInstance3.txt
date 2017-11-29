@@ -1,10 +1,30 @@
-(startLine=99 endLine=106 srcPath=/root/Projects/eclipse.jdt.coreFilter/1847/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/Initializer.java)
-public IJavaElement getPrimaryElement(boolean checkOwner) {
-    if (checkOwner) {
-        CompilationUnit cu = (CompilationUnit)getAncestor(COMPILATION_UNIT);
-        if (cu.owner == DefaultWorkingCopyOwner.PRIMARY) return this;
+(startLine=756 endLine=783 srcPath=/root/Projects/eclipse.jdt.coreFilter/1847/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+    public String format(String string, int[] positions, Expression expression) {
+        // reset the scribe
+        this.scribe.reset(positions);
+        
+        long startTime = System.currentTimeMillis();
+
+        final char[] compilationUnitSource = string.toCharArray();
+        
+        this.scribe.scanner.setSource(compilationUnitSource);
+        this.localScanner.setSource(compilationUnitSource);
+        this.scribe.scannerEndPosition = compilationUnitSource.length;
+        this.scribe.scanner.resetTo(0, this.scribe.scannerEndPosition);
+        if (expression == null) {
+            return string;
+        }
+
+        this.lastLocalDeclarationSourceStart = -1;
+        try {
+            expression.traverse(this, null);
+            this.scribe.printLastComment();
+        } catch(AbortFormatting e){
+            return failedToFormat();
+        }
+        if (DEBUG){
+            System.out.println("Formatting time: " + (System.currentTimeMillis() - startTime));  //$NON-NLS-1$
+        }
+        return this.scribe.toString();
     }
-    IJavaElement parent = fParent.getPrimaryElement(false);
-    return ((IType)parent).getInitializer(this.occurrenceCount);
-}
 

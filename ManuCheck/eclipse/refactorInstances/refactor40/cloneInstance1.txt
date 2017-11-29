@@ -1,64 +1,19 @@
-(startLine=1451 endLine=1512 srcPath=/root/Projects/eclipse.jdt.coreFilter/1348/eclipse.jdt.core/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
-    public ICompilerRequestor getBatchRequestor() {
-        return new ICompilerRequestor() {
-            int lineDelta = 0;
-            public void acceptResult(CompilationResult compilationResult) {
-                if (compilationResult.lineSeparatorPositions != null) {
-                    int unitLineCount = compilationResult.lineSeparatorPositions.length;
-                    Main.this.lineCount += unitLineCount;
-                    this.lineDelta += unitLineCount;
-                    if (Main.this.showProgress
-                        && this.lineDelta > 2000) { // in -log mode, dump a dot every 2000 lines compiled
-                        Main.this.logger.printOut('.');
-                        this.lineDelta = 0;
-                    }
-                }
-                if (compilationResult.hasProblems() || compilationResult.hasTasks()) {
-                    IProblem[] problems = compilationResult.getAllProblems();
-                    int count = problems.length;
-                    int localErrorCount = 0;
-                    char[] unitSource = compilationResult.compilationUnit.getContents();
-                    for (int i = 0; i < count; i++) {
-                        if (problems[i] != null) {
-                            Main.this.globalProblemsCount++;
-                            if (localErrorCount == 0)
-                                Main.this.logger.printlnErr("----------"); //$NON-NLS-1$
-                            Main.this.logger.printErr(
-                                Main.this.globalProblemsCount
-                                    + ". "  //$NON-NLS-1$
-                                    + (problems[i].isError()
-                                        ? Main.bind("requestor.error")  //$NON-NLS-1$
-                                        : Main.bind("requestor.warning")));  //$NON-NLS-1$
-                            if (problems[i].isError()) {
-                                Main.this.globalErrorsCount++;
-                            } else {
-                                Main.this.globalWarningsCount++;
-                            }
-                            Main.this.logger.printErr(" "); //$NON-NLS-1$
-                            Main.this.logger.printErr(
-                                Main.bind("requestor.in", new String(problems[i].getOriginatingFileName()))); //$NON-NLS-1$
-                            try {
-                                Main.this.logger.printlnErr(
-                                    ((DefaultProblem) problems[i]).errorReportSource(unitSource));
-                                Main.this.logger.printlnErr(problems[i].getMessage());
-                            } catch (Exception e) {
-                                Main.this.logger.printlnErr(
-                                    Main.bind("requestor.notRetrieveErrorMessage", problems[i].toString())); //$NON-NLS-1$
-                            }
-                            Main.this.logger.printlnErr("----------"); //$NON-NLS-1$
-                            if (problems[i].isError())
-                                localErrorCount++;
-                        }
-                    }
-                    // exit?
-                    if (Main.this.systemExitWhenFinished && !Main.this.proceedOnError && (localErrorCount > 0)) {
-                        Main.this.printStats();
-                        Main.this.logger.flush();
-                        System.exit(-1);
-                    }
-                }
-                outputClassFiles(compilationResult);
-            }
-        };
+(startLine=120 endLine=136 srcPath=/root/Projects/eclipse.jdt.coreFilter/1351/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+    public void testMethod1() throws JavaModelException {
+        ASTNode node = buildAST(
+            "public class X<K, V> {\n" +
+            "  /*start*/void foo(int i, Object o, java.lang.String s, Class[] c, X<K, V> x) {\n" +
+            "  }/*end*/\n" +
+            "}"
+        );
+        IBinding binding = ((MethodDeclaration) node).resolveBinding();
+        assertNotNull("No binding", binding);
+        IJavaElement element = binding.getJavaElement();
+        assertElementEquals(
+            "Unexpected Java element",
+            "foo(int, Object, java.lang.String, Class[], X<K,V>) [in X [in [Working copy] X.java [in <default> [in <project root> [in P]]]]]",
+            element
+        );
+        assertTrue("Element should exist", element.exists());
     }
 

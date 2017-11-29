@@ -1,30 +1,36 @@
-(startLine=719 endLine=746 srcPath=/root/Projects/eclipse.jdt.coreFilter/367/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SourceType.java)
-public ITypeHierarchy newTypeHierarchy(IJavaProject project, WorkingCopyOwner owner, IProgressMonitor monitor) throws JavaModelException {
-    if (project == null) {
-        throw new IllegalArgumentException(Messages.hierarchy_nullProject); 
-    }
-    ICompilationUnit[] workingCopies = JavaModelManager.getJavaModelManager().getWorkingCopies(owner, true/*add primary working copies*/);
-    ICompilationUnit[] projectWCs = null;
-    if (workingCopies != null) {
-        int length = workingCopies.length;
-        projectWCs = new ICompilationUnit[length];
-        int index = 0;
-        for (int i = 0; i < length; i++) {
-            ICompilationUnit wc = workingCopies[i];
-            if (project.equals(wc.getJavaProject())) {
-                projectWCs[index++] = wc;
-            }
+(startLine=986 endLine=1019 srcPath=/root/Projects/eclipse.jdt.coreFilter/321/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SourceMapper.java)
+    public SourceRange getSourceRange(IJavaElement element) {
+        switch(element.getElementType()) {
+            case IJavaElement.METHOD :
+                if (((IMember) element).isBinary()) {
+                    IJavaElement[] el = getUnqualifiedMethodHandle((IMethod) element, false);
+                    if(el[1] != null && this.sourceRanges.get(el[0]) == null) {
+                        element = getUnqualifiedMethodHandle((IMethod) element, true)[0];
+                    } else {
+                        element = el[0];
+                    }
+                }
+                break;
+            case IJavaElement.TYPE_PARAMETER :
+                IJavaElement parent = element.getParent();
+                if (parent.getElementType() == IJavaElement.METHOD) {
+                    IMethod method = (IMethod) parent;
+                    if (method.isBinary()) {
+                        IJavaElement[] el = getUnqualifiedMethodHandle(method, false);
+                        if(el[1] != null && this.sourceRanges.get(el[0]) == null) {
+                            method = (IMethod) getUnqualifiedMethodHandle(method, true)[0];
+                        } else {
+                            method = (IMethod) el[0];
+                        }
+                        element = method.getTypeParameter(element.getElementName());
+                    }
+                }
         }
-        if (index != length) {
-            System.arraycopy(projectWCs, 0, projectWCs = new ICompilationUnit[index], 0, index);
+        SourceRange[] ranges = (SourceRange[]) this.sourceRanges.get(element);
+        if (ranges == null) {
+            return UNKNOWN_RANGE;
+        } else {
+            return ranges[0];
         }
     }
-    CreateTypeHierarchyOperation op= new CreateTypeHierarchyOperation(
-        this, 
-        projectWCs,
-        project, 
-        true);
-    op.runOperation(monitor);
-    return op.getResult();
-}
 

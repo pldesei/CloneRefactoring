@@ -1,11 +1,7 @@
-(startLine=160 endLine=168 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/DoubleFieldMapper.java)
-    private double parseValue(Object value) {
-        if (value instanceof Number) {
-            return ((Number) value).doubleValue();
-        }
-        if (value instanceof BytesRef) {
-            return Double.parseDouble(((BytesRef) value).utf8ToString());
-        }
-        return Double.parseDouble(value.toString());
+(startLine=118 endLine=122 srcPath=/root/Projects/elasticsearchFilter/1348/elasticsearch/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
+    private Document testDocument(String id) {
+        Document document = new Document();
+        document.add(new UidField("_uid", id, 0));
+        return document;
     }
 

@@ -1,106 +1,72 @@
-(startLine=56 endLine=159 srcPath=/root/Projects/elasticsearchFilter/776/elasticsearch/src/main/java/org/elasticsearch/index/query/HasChildFilterParser.java)
-    public Filter parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
-        XContentParser parser = parseContext.parser();
+(startLine=228 endLine=297 srcPath=/root/Projects/elasticsearchFilter/825/elasticsearch/src/main/java/org/elasticsearch/tribe/TribeService.java)
+        public void clusterChanged(final ClusterChangedEvent event) {
+            logger.debug("[{}] received cluster event, [{}]", tribeName, event.source());
+            clusterService.submitStateUpdateTask("cluster event from " + tribeName + ", " + event.source(), new ClusterStateUpdateTask() {
+                @Override
+                public ClusterState execute(ClusterState currentState) throws Exception {
+                    ClusterState tribeState = event.state();
+                    DiscoveryNodes.Builder nodes = DiscoveryNodes.builder(currentState.nodes());
+                    // -- merge nodes
+                    // go over existing nodes, and see if they need to be removed
+                    for (DiscoveryNode discoNode : currentState.nodes()) {
+                        String markedTribeName = discoNode.attributes().get(TRIBE_NAME);
+                        if (markedTribeName != null && markedTribeName.equals(tribeName)) {
+                            if (tribeState.nodes().get(discoNode.id()) == null) {
+                                logger.info("[{}] removing node [{}]", tribeName, discoNode);
+                                nodes.remove(discoNode.id());
+                            }
+                        }
+                    }
+                    // go over tribe nodes, and see if they need to be added
+                    for (DiscoveryNode tribe : tribeState.nodes()) {
+                        if (currentState.nodes().get(tribe.id()) == null) {
+                            // a new node, add it, but also add the tribe name to the attributes
+                            ImmutableMap<String, String> tribeAttr = MapBuilder.newMapBuilder(tribe.attributes()).put(TRIBE_NAME, tribeName).immutableMap();
+                            DiscoveryNode discoNode = new DiscoveryNode(tribe.name(), tribe.id(), tribe.getHostName(), tribe.getHostAddress(), tribe.address(), tribeAttr, tribe.version());
+                            logger.info("[{}] adding node [{}]", tribeName, discoNode);
+                            nodes.put(discoNode);
+                        }
+                    }
 
-        boolean queryFound = false;
-        boolean filterFound = false;
-        String childType = null;
-        int shortCircuitParentDocSet = 8192; // Tests show a cut of point between 8192 and 16384.
+                    // -- merge metadata
+                    MetaData.Builder metaData = MetaData.builder(currentState.metaData());
+                    RoutingTable.Builder routingTable = RoutingTable.builder(currentState.routingTable());
+                    // go over existing indices, and see if they need to be removed
+                    for (IndexMetaData index : currentState.metaData()) {
+                        String markedTribeName = index.settings().get(TRIBE_NAME);
+                        if (markedTribeName != null && markedTribeName.equals(tribeName)) {
+                            IndexMetaData tribeIndex = tribeState.metaData().index(index.index());
+                            if (tribeIndex == null) {
+                                logger.info("[{}] removing index [{}]", tribeName, index.index());
+                                metaData.remove(index.index());
+                                routingTable.remove(index.index());
+                            } else {
+                                // always make sure to update the metadata and routing table, in case
+                                // there are changes in them (new mapping, shards moving from initializing to started)
+                                routingTable.add(tribeState.routingTable().index(index.index()));
+                                Settings tribeSettings = ImmutableSettings.builder().put(tribeIndex.settings()).put(TRIBE_NAME, tribeName).build();
+                                metaData.put(IndexMetaData.builder(tribeIndex).settings(tribeSettings));
+                            }
+                        }
+                    }
+                    // go over tribe one, and see if they need to be added
+                    for (IndexMetaData tribeIndex : tribeState.metaData()) {
+                        if (!currentState.metaData().hasIndex(tribeIndex.index())) {
+                            // a new index, add it, and add the tribe name as a setting
+                            logger.info("[{}] adding index [{}]", tribeName, tribeIndex.index());
+                            Settings tribeSettings = ImmutableSettings.builder().put(tribeIndex.settings()).put(TRIBE_NAME, tribeName).build();
+                            metaData.put(IndexMetaData.builder(tribeIndex).settings(tribeSettings));
+                            routingTable.add(tribeState.routingTable().index(tribeIndex.index()));
+                        }
+                    }
 
-        String filterName = null;
-        String currentFieldName = null;
-        XContentParser.Token token;
-        XContentStructure.InnerQuery innerQuery = null;
-        XContentStructure.InnerFilter innerFilter = null;
-        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
-            if (token == XContentParser.Token.FIELD_NAME) {
-                currentFieldName = parser.currentName();
-            } else if (token == XContentParser.Token.START_OBJECT) {
-                // Usually, the query would be parsed here, but the child
-                // type may not have been extracted yet, so use the
-                // XContentStructure.<type> facade to parse if available,
-                // or delay parsing if not.
-                if ("query".equals(currentFieldName)) {
-                    innerQuery = new XContentStructure.InnerQuery(parseContext, childType == null ? null : new String[] {childType});
-                    queryFound = true;
-                } else if ("filter".equals(currentFieldName)) {
-                    innerFilter = new XContentStructure.InnerFilter(parseContext, childType == null ? null : new String[] {childType});
-                    filterFound = true;
-                } else {
-                    throw new QueryParsingException(parseContext.index(), "[has_child] filter does not support [" + currentFieldName + "]");
+                    return ClusterState.builder(currentState).nodes(nodes).metaData(metaData).routingTable(routingTable).build();
                 }
-            } else if (token.isValue()) {
-                if ("type".equals(currentFieldName) || "child_type".equals(currentFieldName) || "childType".equals(currentFieldName)) {
-                    childType = parser.text();
-                } else if ("_scope".equals(currentFieldName)) {
-                    throw new QueryParsingException(parseContext.index(), "the [_scope] support in [has_child] filter has been removed, use a filter as a facet_filter in the relevant global facet");
-                } else if ("_name".equals(currentFieldName)) {
-                    filterName = parser.text();
-                } else if ("_cache".equals(currentFieldName)) {
-                    // noop to be backwards compatible
-                } else if ("_cache_key".equals(currentFieldName) || "_cacheKey".equals(currentFieldName)) {
-                    // noop to be backwards compatible
-                } else if ("short_circuit_cutoff".equals(currentFieldName)) {
-                    shortCircuitParentDocSet = parser.intValue();
-                } else {
-                    throw new QueryParsingException(parseContext.index(), "[has_child] filter does not support [" + currentFieldName + "]");
+
+                @Override
+                public void onFailure(String source, Throwable t) {
+                    logger.warn("failed to process [{}]", t, source);
                 }
-            }
+            });
         }
-        if (!queryFound && !filterFound) {
-            throw new QueryParsingException(parseContext.index(), "[has_child] filter requires 'query' or 'filter' field");
-        }
-        if (childType == null) {
-            throw new QueryParsingException(parseContext.index(), "[has_child] filter requires 'type' field");
-        }
-
-        Query query;
-        if (queryFound) {
-            query = innerQuery.asQuery(childType);
-        } else {
-            query = innerFilter.asFilter(childType);
-        }
-
-        if (query == null) {
-            return null;
-        }
-
-        DocumentMapper childDocMapper = parseContext.mapperService().documentMapper(childType);
-        if (childDocMapper == null) {
-            throw new QueryParsingException(parseContext.index(), "No mapping for for type [" + childType + "]");
-        }
-        ParentFieldMapper parentFieldMapper = childDocMapper.parentFieldMapper();
-        if (!parentFieldMapper.active()) {
-            throw new QueryParsingException(parseContext.index(), "Type [" + childType + "] does not have parent mapping");
-        }
-        String parentType = parentFieldMapper.type();
-
-        // wrap the query with type query
-        query = new XFilteredQuery(query, parseContext.cacheFilter(childDocMapper.typeFilter(), null));
-
-        DocumentMapper parentDocMapper = parseContext.mapperService().documentMapper(parentType);
-        if (parentDocMapper == null) {
-            throw new QueryParsingException(parseContext.index(), "[has_child]  Type [" + childType + "] points to a non existent parent type [" + parentType + "]");
-        }
-
-        Filter nonNestedDocsFilter = null;
-        if (parentDocMapper.hasNestedObjects()) {
-            nonNestedDocsFilter = parseContext.cacheFilter(NonNestedDocsFilter.INSTANCE, null);
-        }
-
-        Filter parentFilter = parseContext.cacheFilter(parentDocMapper.typeFilter(), null);
-        ParentChildIndexFieldData parentChildIndexFieldData = parseContext.fieldData().getForField(parentFieldMapper);
-        Query childrenConstantScoreQuery = new ChildrenConstantScoreQuery(parentChildIndexFieldData, query, parentType, childType, parentFilter, shortCircuitParentDocSet, nonNestedDocsFilter);
-
-        if (filterName != null) {
-            parseContext.addNamedFilter(filterName, new CustomQueryWrappingFilter(childrenConstantScoreQuery));
-        }
-
-        boolean deleteByQuery = "delete_by_query".equals(SearchContext.current().source());
-        if (deleteByQuery) {
-            return new DeleteByQueryWrappingFilter(childrenConstantScoreQuery);
-        } else {
-            return new CustomQueryWrappingFilter(childrenConstantScoreQuery);
-        }
-    }
 

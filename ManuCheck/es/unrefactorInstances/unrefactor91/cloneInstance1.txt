@@ -1,24 +1,10 @@
-(startLine=104 endLine=125 srcPath=/root/Projects/elasticsearchFilter/1205/elasticsearch/src/main/java/org/elasticsearch/action/admin/indices/stats/TransportIndicesStatsAction.java)
-    protected IndicesStatsResponse newResponse(IndicesStatsRequest request, AtomicReferenceArray shardsResponses, ClusterState clusterState) {
-        int successfulShards = 0;
-        int failedShards = 0;
-        List<ShardOperationFailedException> shardFailures = null;
-        final List<ShardStats> shards = Lists.newArrayList();
-        for (int i = 0; i < shardsResponses.length(); i++) {
-            Object shardResponse = shardsResponses.get(i);
-            if (shardResponse == null) {
-                // simply ignore non active shards
-            } else if (shardResponse instanceof BroadcastShardOperationFailedException) {
-                failedShards++;
-                if (shardFailures == null) {
-                    shardFailures = newArrayList();
-                }
-                shardFailures.add(new DefaultShardOperationFailedException((BroadcastShardOperationFailedException) shardResponse));
-            } else {
-                shards.add((ShardStats) shardResponse);
-                successfulShards++;
-            }
+(startLine=147 endLine=154 srcPath=/root/Projects/elasticsearchFilter/558/elasticsearch/src/main/java/org/elasticsearch/common/breaker/MemoryCircuitBreaker.java)
+    public long addWithoutBreaking(long bytes) {
+        long u = used.addAndGet(bytes);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Adjusted breaker by [{}] bytes, now [{}]", bytes, u);
         }
-        return new IndicesStatsResponse(shards.toArray(new ShardStats[shards.size()]), clusterState, shardsResponses.length(), successfulShards, failedShards, shardFailures);
+        assert u >= 0 : "Used bytes: [" + u + "] must be >= 0";
+        return u;
     }
 

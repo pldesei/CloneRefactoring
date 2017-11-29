@@ -1,68 +1,19 @@
-(startLine=6106 endLine=6171 srcPath=/root/Projects/org.eclipse.emfFilter/991/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/xml/type/internal/RegEx.java)
-      final int getMaxLength() {
-          switch (this.type) {
-            case CONCAT:
-              int sum = 0;
-              for (int i = 0;  i < this.size();  i ++) {
-                  int d = this.getChild(i).getMaxLength();
-                  if (d < 0)  return -1;
-                  sum += d;
-              }
-              return sum;
-
-            case CONDITION:
-            case UNION:
-              if (this.size() == 0)
-                  return 0;
-              int ret = this.getChild(0).getMaxLength();
-              for (int i = 1;  ret >= 0 && i < this.size();  i ++) {
-                  int max = this.getChild(i).getMaxLength();
-                  if (max < 0) {                  // infinity
-                      ret = -1;
-                      break;
-                  }
-                  if (max > ret)  ret = max;
-              }
-              return ret;
-
-            case CLOSURE:
-            case NONGREEDYCLOSURE:
-              if (this.getMax() >= 0)
-                                                  // When this.child.getMaxLength() < 0,
-                                                  // this returns minus value
-                  return this.getMax() * this.getChild(0).getMaxLength();
-              return -1;
-
-            case EMPTY:
-            case ANCHOR:
-              return 0;
-
-            case CHAR:
-              return 1;
-            case DOT:
-            case RANGE:
-            case NRANGE:
-              return 2;
-
-            case INDEPENDENT:
-            case PAREN:
-            case MODIFIERGROUP:
-              return this.getChild(0).getMaxLength();
-
-            case BACKREFERENCE:
-              return -1;                          // ******
-
-            case STRING:
-              return this.getString().length();
-
-            case LOOKAHEAD:
-            case NEGATIVELOOKAHEAD:
-            case LOOKBEHIND:
-            case NEGATIVELOOKBEHIND:
-              return 0;                           // ***** Really?
-
-            default:
-              throw new RuntimeException("Token#getMaxLength(): Invalid Type: "+this.type);
-          }
+(startLine=909 endLine=925 srcPath=/root/Projects/org.eclipse.emfFilter/345/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/resource/impl/ResourceImpl.java)
+  protected void detachedHelper(EObject eObject)
+  {
+    Map<String, EObject> map = getIntrinsicIDToEObjectMap();
+    if (map != null)
+    {
+      String id = EcoreUtil.getID(eObject);
+      if (id != null)
+      {
+        map.remove(id);
       }
+    }
+
+    if (isTrackingModification())
+    {
+      eObject.eAdapters().remove(modificationTrackingAdapter);
+    }
+  }
 

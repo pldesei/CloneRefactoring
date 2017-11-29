@@ -1,12 +1,22 @@
-(startLine=431 endLine=440 srcPath=/root/Projects/eclipse.jdt.coreFilter/1270/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AbstractRegressionTest.java)
-    public static Test buildTestSuite(Class evaluationTestClass, String complianceLevel) {
-        TestSuite suite = new TestSuite(complianceLevel);
-        List tests = buildTestsList(evaluationTestClass);
-        for (int index=0, size=tests.size(); index<size; index++) {
-            suite.addTest((Test)tests.get(index));
-        }
-        TestSuite test = new TestSuite(evaluationTestClass.getName());
-        test.addTest(new RegressionTestSetup(suite, complianceLevel));
-        return test;
+(startLine=17721 endLine=17740 srcPath=/root/Projects/eclipse.jdt.coreFilter/529/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/GenericTypeTest.java)
+    public void test0580() {
+        this.runNegativeTest(
+            new String[] {
+                "X.java",
+                "public class X {\n" + 
+                "    void foo(Box<?> box) {\n" + 
+                "        int[] ints = box.get();\n" + 
+                "    }\n" + 
+                "}\n" + 
+                "class Box<T> {\n" + 
+                "    T get() { return null; }\n" + 
+                "}\n"
+            },
+            "----------\n" + 
+            "1. ERROR in X.java (at line 3)\n" + 
+            "    int[] ints = box.get();\n" + 
+            "                 ^^^^^^^^^\n" + 
+            "Type mismatch: cannot convert from capture#1-of ? to int[]\n" + 
+            "----------\n");
     }
 

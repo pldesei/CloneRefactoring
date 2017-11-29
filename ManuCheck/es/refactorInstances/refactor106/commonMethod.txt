@@ -1,7 +1,6 @@
-(startLine=111 endLine=123 srcPath=/root/Projects/elasticsearchFilter/14/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedMapSamplerAggregator.java)
+(startLine=94 endLine=105 srcPath=/root/Projects/elasticsearchFilter/14/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedNumericSamplerAggregator.java)
                     @Override
                     public boolean advanceExact(int target) throws IOException {
-                        docID = target;
                         if (values.advanceExact(target)) {
                             if (values.docValueCount() > 1) {
                                 throw new IllegalArgumentException(

@@ -1,31 +1,27 @@
-(startLine=698 endLine=727 srcPath=/root/Projects/eclipse.jdt.coreFilter/1077/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
-public int literalIndexForField(char[] declaringClass, char[] name, char[] signature) {
-    int index = getFromCache(declaringClass, name, signature);
-    if (index == -1) {
-        int classIndex;
-        if ((classIndex = classCache.get(declaringClass)) < 0) {
-            // The entry doesn't exit yet
-            int nameIndex = literalIndex(declaringClass);
-            classIndex = classCache.put(declaringClass, this.currentIndex++);
-            if (index > 0xFFFF){
-                this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
-            }
-            writeU1(ClassTag);
-            // Then add the 8 bytes representing the long
-            writeU2(nameIndex);
-        }
-        int nameAndTypeIndex = literalIndexForField(name, signature);
-        index = putInCache(declaringClass, name, signature, currentIndex++);
+(startLine=473 endLine=498 srcPath=/root/Projects/eclipse.jdt.coreFilter/1077/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndex(int key) {
+    //Retrieve the index from the cache
+    int index;
+    // lazy initialization for base type caches
+    // If it is null, initialize it, otherwise use it
+    if (intCache == null) {
+        intCache = new IntegerCache(INT_INITIAL_SIZE);
+    }
+    if ((index = intCache.get(key)) < 0) {
+        index = intCache.put(key, currentIndex++);
         if (index > 0xFFFF){
             this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
         }
-        // Write the interface method ref constant into the constant pool
+        // Write the integer constant entry into the constant pool
         // First add the tag
-        writeU1(FieldRefTag);
-        // Then write the class index
-        writeU2(classIndex);
-        // The write the nameAndType index
-        writeU2(nameAndTypeIndex);        
+        writeU1(IntegerTag);
+        // Then add the 4 bytes representing the int
+        if (currentOffset + 4 >= poolContent.length) {
+            resizePoolContents(4);
+        }
+        for (int i = 0; i < 4; i++) {
+            poolContent[currentOffset++] = (byte) (key >>> (24 - i * 8));
+        }
     }
     return index;
 }

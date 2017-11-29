@@ -1,11 +1,10 @@
-(startLine=112 endLine=120 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/action/support/AutoCreateIndexTests.java)
-    public void testAutoCreationMultiplePatternsNoWildcards() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "+test1,-index1").build();
+(startLine=122 endLine=129 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/action/support/AutoCreateIndexTests.java)
+    public void testAutoCreationMultipleIndexNames() {
+        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), "test1,test2").build();
         AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
         ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
         assertThat(autoCreateIndex.shouldAutoCreate("test1", clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
-        assertThat(autoCreateIndex.shouldAutoCreate("test" + randomAsciiOfLengthBetween(2, 5), clusterState), equalTo(false));
+        assertThat(autoCreateIndex.shouldAutoCreate("test2", clusterState), equalTo(true));
         assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
     }
 

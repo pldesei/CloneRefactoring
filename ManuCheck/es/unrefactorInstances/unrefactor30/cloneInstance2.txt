@@ -1,10 +1,57 @@
-(startLine=237 endLine=244 srcPath=/root/Projects/elasticsearchFilter/1991/elasticsearch/modules/elasticsearch/src/test/java/org/elasticsearch/index/query/json/SimpleJsonIndexQueryParserTests.java)
-    @Test public void testWildcardQuery() throws IOException {
-        IndexQueryParser queryParser = newQueryParser();
-        String query = copyToStringFromClasspath("/org/elasticsearch/index/query/json/wildcard.json");
-        Query parsedQuery = queryParser.parse(query);
-        assertThat(parsedQuery, instanceOf(WildcardQuery.class));
-        WildcardQuery wildcardQuery = (WildcardQuery) parsedQuery;
-        assertThat(wildcardQuery.getTerm(), equalTo(new Term("name.first", "sh*")));
-    }
+(startLine=290 endLine=344 srcPath=/root/Projects/elasticsearchFilter/1011/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/search/NumericRangeFieldDataFilter.java)
+            @Override public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
+                // we transform the floating point numbers to sortable integers
+                // using NumericUtils to easier find the next bigger/lower value
+                final float inclusiveLowerPoint, inclusiveUpperPoint;
+                if (lowerVal != null) {
+                    float f = lowerVal.floatValue();
+                    if (!includeUpper && f > 0.0f && Float.isInfinite(f))
+                        return DocSet.EMPTY_DOC_SET;
+                    int i = NumericUtils.floatToSortableInt(f);
+                    inclusiveLowerPoint = NumericUtils.sortableIntToFloat(includeLower ? i : (i + 1));
+                } else {
+                    inclusiveLowerPoint = Float.NEGATIVE_INFINITY;
+                }
+                if (upperVal != null) {
+                    float f = upperVal.floatValue();
+                    if (!includeUpper && f < 0.0f && Float.isInfinite(f))
+                        return DocSet.EMPTY_DOC_SET;
+                    int i = NumericUtils.floatToSortableInt(f);
+                    inclusiveUpperPoint = NumericUtils.sortableIntToFloat(includeUpper ? i : (i - 1));
+                } else {
+                    inclusiveUpperPoint = Float.POSITIVE_INFINITY;
+                }
+
+                if (inclusiveLowerPoint > inclusiveUpperPoint)
+                    return DocSet.EMPTY_DOC_SET;
+
+                final FloatFieldData fieldData = (FloatFieldData) this.fieldDataCache.cache(FieldDataType.DefaultTypes.FLOAT, reader, field);
+                return new GetDocSet(reader.maxDoc()) {
+
+                    @Override public boolean isCacheable() {
+                        // not cacheable for several reasons:
+                        // 1. It is only relevant when _cache is set to true, and then, we really want to create in mem bitset
+                        // 2. Its already fast without in mem bitset, since it works with field data
+                        return false;
+                    }
+
+                    @Override public boolean get(int doc) throws IOException {
+                        if (!fieldData.hasValue(doc)) {
+                            return false;
+                        }
+                        if (fieldData.multiValued()) {
+                            float[] values = fieldData.values(doc);
+                            for (float value : values) {
+                                if (value >= inclusiveLowerPoint && value <= inclusiveUpperPoint) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        } else {
+                            float value = fieldData.value(doc);
+                            return value >= inclusiveLowerPoint && value <= inclusiveUpperPoint;
+                        }
+                    }
+                };
+            }
 

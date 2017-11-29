@@ -1,14 +1,12 @@
-(startLine=2508 endLine=2519 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug86380_Method() throws CoreException {
-    this.resultCollector.showInsideDoc = true;
-    setUpBug86380();
-    ICompilationUnit unit = getCompilationUnit("JavaSearchBugs", "src", "b86380", "Annot.java");
-    IMethod[] methods = unit.getType("Annot").getMethods();
-    assertEquals("Invalid number of methods", 1, methods.length);
+(startLine=2355 endLine=2364 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug84727() throws CoreException {
+    this.resultCollector.showRule = true;
+    setUpBug84727();
+    IMethod[] methods = this.workingCopies[0].getType("A").getMethods();
+    assertEquals("Invalid number of methods", 2, methods.length);
     search(methods[0], REFERENCES);
     assertSearchResults(
-        "src/b86380/Test.java b86380.Test [12] EXACT_MATCH OUTSIDE_JAVADOC\n" +
-        "src/b86380/package-info.java [value] EXACT_MATCH OUTSIDE_JAVADOC"
+        "src/b84727/X.java void b84727.X.foo() [getXYZ(new ArrayList())] EXACT_MATCH"
     );
 }
 

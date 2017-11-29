@@ -1,37 +1,32 @@
-(startLine=1756 endLine=1790 srcPath=/root/Projects/org.eclipse.emfFilter/588/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/DelegatingFeatureMap.java)
-  public Object get(EStructuralFeature feature, boolean resolve)
+(startLine=101 endLine=130 srcPath=/root/Projects/org.eclipse.emfFilter/269/org.eclipse.emf/plugins/org.eclipse.emf.common.ui/src/org/eclipse/emf/common/ui/dialogs/WorkspaceResourceDialog.java)
+  public static IFile[] openFileSelection(
+    Shell parent,
+    String title,
+    String message,
+    boolean allowMultipleSelection,
+    Object[] initialSelection,
+    List<ViewerFilter> viewerFilters)
   {
-    if (isMany(feature))
-    {
-      return list(feature);
-    }
-    else
-    {
-      FeatureMapUtil.Validator validator = FeatureMapUtil.getValidator(owner.eClass(), feature);
-      int count = 0;
-      for (int i = 0, size = delegateSize(); i < size; ++i)
-      {
-        Entry entry = (Entry)delegateGet(i);
-        if (validator.isValid(entry.getEStructuralFeature()))
-        {
-          if (FeatureMapUtil.isFeatureMap(feature))
-          {
-            return entry;
-          }
-          else
-          {
-            Object value = entry.getValue();
-            if (value != null && resolve && isResolveProxies(feature))
-            {
-              value = resolveProxy(feature, i, count, value);
-            }
-            return value;
-          }
-        }
-        ++count;
-      }
+    WorkspaceResourceDialog dialog = new WorkspaceResourceDialog(parent, new WorkbenchLabelProvider(), new WorkbenchContentProvider());
+    dialog.setAllowMultiple(allowMultipleSelection);
+    dialog.setTitle(title != null ? title : CommonUIPlugin.INSTANCE.getString("_UI_FileSelection_title"));
+    dialog.setMessage(message);
 
-      return feature.getDefaultValue();
+    dialog.addFilter(dialog.createDefaultViewerFilter(true));
+    if (viewerFilters != null)
+    {
+      for (ViewerFilter viewerFilter : viewerFilters)
+      {
+        dialog.addFilter(viewerFilter);
+      }
     }
+
+    if (initialSelection != null)
+    {
+      dialog.setInitialSelections(initialSelection);
+    }
+
+    dialog.loadContents();
+    return dialog.open() == Window.OK ? dialog.getSelectedFiles() : new IFile [0];
   }
 

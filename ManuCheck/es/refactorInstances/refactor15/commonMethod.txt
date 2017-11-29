@@ -1,5 +1,6 @@
-(startLine=76 endLine=78 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
-    public void execute(SearchScrollRequest request, ParsedScrollId scrollId, ActionListener<SearchResponse> listener) {
-        new AsyncAction(request, scrollId, listener).start();
+(startLine=98 endLine=101 srcPath=/root/Projects/elasticsearchFilter/1474/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchCache.java)
+    public void releaseFetchResults(Map<SearchShardTarget, FetchSearchResult> fetchResults) {
+        fetchResults.clear();
+        cacheFetchResults.offer(fetchResults);
     }
 

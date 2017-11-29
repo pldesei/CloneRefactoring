@@ -1,59 +1,11 @@
-(startLine=304 endLine=360 srcPath=/root/Projects/eclipse.jdt.coreFilter/388/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Formatter/test187/A_in.java)
-    protected void createListFile() throws createListFileException {
-        PrintWriter tiffFileListFile = null;
-
-        String s;
-
-        // Must have pages to sort! 
-        if (_pages.length == 0) {
-            log.error("Internal Error: _tiffPage == null!");
-            throw new createListFileException("No pages found in the document!");
-        }
-
-        // Sort TIFF files into the correct page order
-        WssrdFileComparator fileComparator =
-            new WssrdFileComparator();
-        Arrays.sort(_pages, fileComparator);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Creating list file for C42PDF");
-        }
-
-        try {
-            File tiffFileList =
-                new File(_workingDir + File.separator + _fileList);
-
-            if (tiffFileList.exists()) {
-                tiffFileList.delete();
-            }
-
-            tiffFileListFile =
-                new PrintWriter(new BufferedWriter(new FileWriter(_workingDir +
-                                                                  File.separator +
-                                                                  _fileList)));
-
-            for (int i = 0; i < _pages.length; i++) {
-                s = _workingDir + File.separator + _pages[i];
-
-                if (log.isDebugEnabled()) {
-                    log.debug(s);
-                }
-
-                tiffFileListFile.println(s);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new createListFileException(e.toString());
-        } finally {
-            if (tiffFileListFile != null) {
-                tiffFileListFile.close();
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Finished Creating list file for C42PDF");
-            }
-
-            return;
-        }
-    }
+(startLine=291 endLine=299 srcPath=/root/Projects/eclipse.jdt.coreFilter/905/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/BinaryMethod.java)
+public String[] getTypeParameterSignatures() throws JavaModelException {
+    IBinaryMethod info = (IBinaryMethod) getElementInfo();
+    char[] genericSignature = info.getGenericSignature();
+    if (genericSignature == null) 
+        return CharOperation.NO_STRINGS;
+    char[] dotBasedSignature = CharOperation.replaceOnCopy(genericSignature, '/', '.');
+    char[][] typeParams = Signature.getTypeParameters(dotBasedSignature);
+    return CharOperation.toStrings(typeParams);
+}
 

@@ -1,13 +1,10 @@
-(startLine=42 endLine=52 srcPath=/root/Projects/elasticsearchFilter/1579/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/BrazilianAnalyzerProvider.java)
-    @Inject public BrazilianAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
-        super(index, indexSettings, name, settings);
-        Set<?> stopWords = Analysis.parseStopWords(settings, BrazilianAnalyzer.getDefaultStopSet());
-        String[] stemExclusion = settings.getAsArray("stem_exclusion");
-        if (stemExclusion.length > 0) {
-            this.stemExclusion = ImmutableSet.copyOf(Iterators.forArray(stemExclusion));
-        } else {
-            this.stemExclusion = ImmutableSet.of();
-        }
-        analyzer = new BrazilianAnalyzer(version, stopWords, this.stemExclusion);
-    }
+(startLine=140 endLine=147 srcPath=/root/Projects/elasticsearchFilter/1616/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
+                        @Override public void run() {
+                            for (Tuple<String, Long> target : scrollId.values()) {
+                                DiscoveryNode node = nodes.get(target.v1());
+                                if (node != null && nodes.localNodeId().equals(node.id())) {
+                                    executePhase(node, target.v2());
+                                }
+                            }
+                        }
 

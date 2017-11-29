@@ -1,13 +1,37 @@
-(startLine=1638 endLine=1648 srcPath=/root/Projects/eclipse.jdt.coreFilter/1209/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-    public void testBug84100d() throws CoreException {
-        resultCollector.showRule = true;
-        assertNotNull("Problem in tests processing", workingCopies);
-        assertEquals("Problem in tests processing", 2, workingCopies.length);
-        IMethod method = selectMethod(workingCopies[0], "foo", 4);
-        search(method, REFERENCES);
-        discard = false; // use working copy for next test
-        assertSearchResults(
-            "src/b84100/Z.java void b84100.Z.foo() [foo(3, \"\", \"\")] EXACT_MATCH"
-        );
+(startLine=406 endLine=440 srcPath=/root/Projects/eclipse.jdt.coreFilter/926/eclipse.jdt.core/org.eclipse.jdt.core.tests.performance/src/org/eclipse/jdt/core/tests/performance/FullSourceWorkspaceModelTests.java)
+public void testPerfNameLookupFindKnownSecondaryType() throws CoreException {
+    tagAsSummary("Model>NameLookup>Find>SecondaryType", false); // do NOT put in fingerprint
+
+    // Wait for indexing end
+    waitUntilIndexesReady();
+
+    // Warm up
+    String fullQualifiedName = BIG_PROJECT_TYPE_PATH.removeFileExtension().removeFirstSegments(2).removeLastSegments(1).toString();
+    fullQualifiedName = fullQualifiedName.replace('/', '.')+".TestSecondary";
+    if (WARMUP_COUNT > 0) {
+        for (int i=0; i<WARMUP_COUNT; i++) {
+            NameLookup nameLookup = BIG_PROJECT.newNameLookup(DefaultWorkingCopyOwner.PRIMARY);
+            IType type = nameLookup.findType(fullQualifiedName, false /*full match*/, NameLookup.ACCEPT_ALL);
+            if (LOG_VERSION.compareTo("v_623") > 0) {
+                assertNotNull("We should find type '"+fullQualifiedName+"' in project "+BIG_PROJECT_NAME, type);
+            }
+        }
     }
+
+    // Measures
+    resetCounters();
+    for (int i=0; i<MEASURES_COUNT; i++) {
+        runGc();
+        startMeasuring();
+        for (int n=0; n<ITERATIONS_COUNT; n++) {
+            NameLookup nameLookup = BIG_PROJECT.newNameLookup(DefaultWorkingCopyOwner.PRIMARY);
+            nameLookup.findType(fullQualifiedName, false /*full match*/, NameLookup.ACCEPT_ALL);
+        }
+        stopMeasuring();
+    }
+    
+    // Commit
+    commitMeasurements();
+    assertPerformance();
+}
 

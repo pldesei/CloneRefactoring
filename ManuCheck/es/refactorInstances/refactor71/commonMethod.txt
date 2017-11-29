@@ -1,10 +1,10 @@
-(startLine=226 endLine=235 srcPath=/root/Projects/elasticsearchFilter/1126/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
-        void onPhaseFailure(Throwable t, long searchId, int shardIndex) {
+(startLine=167 endLine=176 srcPath=/root/Projects/elasticsearchFilter/1126/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchQueryThenFetchAction.java)
+        void onFetchFailure(Throwable t, FetchSearchRequest fetchSearchRequest, int shardIndex, SearchShardTarget shardTarget, AtomicInteger counter) {
             if (logger.isDebugEnabled()) {
-                logger.debug("[{}] Failed to execute query phase", t, searchId);
+                logger.debug("[{}] Failed to execute fetch phase", t, fetchSearchRequest.id());
             }
-            addShardFailure(shardIndex, new ShardSearchFailure(t));
-            successfulOps.decrementAndGet();
+            this.addShardFailure(shardIndex, shardTarget, t);
+            successulOps.decrementAndGet();
             if (counter.decrementAndGet() == 0) {
                 finishHim();
             }

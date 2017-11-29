@@ -1,58 +1,30 @@
-(startLine=724 endLine=779 srcPath=/root/Projects/elasticsearchFilter/1196/elasticsearch/src/main/java/org/elasticsearch/common/xcontent/XContentBuilder.java)
-    public XContentBuilder field(String name, Object value) throws IOException {
-        if (value == null) {
-            nullField(name);
-            return this;
-        }
-        Class type = value.getClass();
-        if (type == String.class) {
-            field(name, (String) value);
-        } else if (type == Float.class) {
-            field(name, ((Float) value).floatValue());
-        } else if (type == Double.class) {
-            field(name, ((Double) value).doubleValue());
-        } else if (type == Integer.class) {
-            field(name, ((Integer) value).intValue());
-        } else if (type == Long.class) {
-            field(name, ((Long) value).longValue());
-        } else if (type == Short.class) {
-            field(name, ((Short) value).shortValue());
-        } else if (type == Byte.class) {
-            field(name, ((Byte) value).byteValue());
-        } else if (type == Boolean.class) {
-            field(name, ((Boolean) value).booleanValue());
-        } else if (value instanceof Date) {
-            field(name, (Date) value);
-        } else if (value instanceof Calendar) {
-            field(name, convertCalendar((Calendar) value));
-        } else if (type == byte[].class) {
-            field(name, (byte[]) value);
-        } else if (value instanceof ReadableInstant) {
-            field(name, (ReadableInstant) value);
-        } else if (value instanceof Map) {
-            //noinspection unchecked
-            field(name, (Map<String, Object>) value);
-        } else if (value instanceof Iterable) {
-            field(name, (Iterable) value);
-        } else if (value instanceof Object[]) {
-            field(name, (Object[]) value);
-        } else if (value instanceof int[]) {
-            field(name, (int[]) value);
-        } else if (value instanceof long[]) {
-            field(name, (long[]) value);
-        } else if (value instanceof float[]) {
-            field(name, (float[]) value);
-        } else if (value instanceof double[]) {
-            field(name, (double[]) value);
-        } else if (value instanceof BytesReference) {
-            field(name, (BytesReference) value);
-        } else if (value instanceof Text) {
-            field(name, (Text) value);
-        } else if (value instanceof ToXContent) {
-            field(name, (ToXContent) value);
+(startLine=96 endLine=123 srcPath=/root/Projects/elasticsearchFilter/1269/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/strings/TermsStringFacetExecutor.java)
+    public InternalFacet buildFacet(String facetName) {
+        if (facets.isEmpty()) {
+            CacheRecycler.pushObjectIntMap(facets);
+            return new InternalStringTermsFacet(facetName, comparatorType, size, ImmutableList.<InternalStringTermsFacet.TermEntry>of(), missing, total);
         } else {
-            field(name, value.toString());
+            if (size < EntryPriorityQueue.LIMIT) {
+                EntryPriorityQueue ordered = new EntryPriorityQueue(size, comparatorType.comparator());
+                for (TObjectIntIterator<HashedBytesRef> it = facets.iterator(); it.hasNext(); ) {
+                    it.advance();
+                    ordered.insertWithOverflow(new InternalStringTermsFacet.TermEntry(it.key().bytes, it.value()));
+                }
+                InternalStringTermsFacet.TermEntry[] list = new InternalStringTermsFacet.TermEntry[ordered.size()];
+                for (int i = ordered.size() - 1; i >= 0; i--) {
+                    list[i] = ((InternalStringTermsFacet.TermEntry) ordered.pop());
+                }
+                CacheRecycler.pushObjectIntMap(facets);
+                return new InternalStringTermsFacet(facetName, comparatorType, size, Arrays.asList(list), missing, total);
+            } else {
+                BoundedTreeSet<InternalStringTermsFacet.TermEntry> ordered = new BoundedTreeSet<InternalStringTermsFacet.TermEntry>(comparatorType.comparator(), size);
+                for (TObjectIntIterator<HashedBytesRef> it = facets.iterator(); it.hasNext(); ) {
+                    it.advance();
+                    ordered.add(new InternalStringTermsFacet.TermEntry(it.key().bytes, it.value()));
+                }
+                CacheRecycler.pushObjectIntMap(facets);
+                return new InternalStringTermsFacet(facetName, comparatorType, size, ordered, missing, total);
+            }
         }
-        return this;
     }
 

@@ -1,10 +1,16 @@
-(startLine=275 endLine=282 srcPath=/root/Projects/eclipse.jdt.coreFilter/1846/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/Scribe.java)
-    public TextEdit getRootEdit() {
-        MultiTextEdit edit = new MultiTextEdit(this.textRegionStart, this.textRegionEnd - this.textRegionStart + 1);
-        for (int i= 0, max = this.editsIndex; i < max; i++) {
-            OptimizedReplaceEdit currentEdit = edits[i];
-            edit.addChild(new ReplaceEdit(currentEdit.offset, currentEdit.length, currentEdit.replacement));
+(startLine=307 endLine=320 srcPath=/root/Projects/eclipse.jdt.coreFilter/1867/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/BinaryMethod.java)
+private void toStringParameters(StringBuffer buffer) {
+    buffer.append('(');
+    String[] parameters = this.getParameterTypes();
+    int length;
+    if (parameters != null && (length = parameters.length) > 0) {
+        for (int i = 0; i < length; i++) {
+            buffer.append(Signature.toString(parameters[i]));
+            if (i < length - 1) {
+                buffer.append(", "); //$NON-NLS-1$
+            }
         }
-        return edit;
     }
+    buffer.append(')');
+}
 

@@ -1,46 +1,23 @@
-(startLine=51 endLine=94 srcPath=/root/Projects/elasticsearchFilter/1399/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/rest/action/admin/cluster/settings/RestClusterUpdateSettingsAction.java)
-    @Override public void handleRequest(final RestRequest request, final RestChannel channel) {
-        final ClusterUpdateSettingsRequest clusterUpdateSettingsRequest = Requests.clusterUpdateSettingsRequest();
-
-        try {
-            XContentType xContentType = XContentFactory.xContentType(request.contentByteArray(), request.contentByteArrayOffset(), request.contentLength());
-            Map<String, Object> source = XContentFactory.xContent(xContentType)
-                    .createParser(request.contentByteArray(), request.contentByteArrayOffset(), request.contentLength()).mapAndClose();
-
-            if (source.containsKey("transient")) {
-                clusterUpdateSettingsRequest.transientSettings((Map) source.get("transient"));
-            }
-            if (source.containsKey("persistent")) {
-                clusterUpdateSettingsRequest.persistentSettings((Map) source.get("persistent"));
-            }
-        } catch (Exception e) {
-            try {
-                channel.sendResponse(new XContentThrowableRestResponse(request, e));
-            } catch (IOException e1) {
-                logger.warn("Failed to send response", e1);
-            }
-            return;
+(startLine=37 endLine=57 srcPath=/root/Projects/elasticsearchFilter/1372/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/transport/NetworkExceptionHelper.java)
+    public static boolean isCloseConnectionException(Throwable e) {
+        if (e instanceof ClosedChannelException) {
+            return true;
         }
-
-        client.admin().cluster().updateSettings(clusterUpdateSettingsRequest, new ActionListener<ClusterUpdateSettingsResponse>() {
-            @Override public void onResponse(ClusterUpdateSettingsResponse response) {
-                try {
-                    channel.sendResponse(new StringRestResponse(RestStatus.OK));
-                } catch (Exception e) {
-                    onFailure(e);
-                }
+        if (e.getMessage() != null) {
+            // UGLY!, this exception messages seems to represent closed connection 
+            if (e.getMessage().contains("Connection reset by peer")) {
+                return true;
             }
-
-            @Override public void onFailure(Throwable e) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("failed to handle cluster state", e);
-                }
-                try {
-                    channel.sendResponse(new XContentThrowableRestResponse(request, e));
-                } catch (IOException e1) {
-                    logger.error("Failed to send failure response", e1);
-                }
+            if (e.getMessage().contains("connection was aborted")) {
+                return true;
             }
-        });
+            if (e.getMessage().contains("forcibly closed")) {
+                return true;
+            }
+            if (e.getMessage().contains("Broken pipe")) {
+                return true;
+            }
+        }
+        return false;
     }
 

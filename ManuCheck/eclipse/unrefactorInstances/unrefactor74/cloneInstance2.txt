@@ -1,43 +1,15 @@
-(startLine=450 endLine=490 srcPath=/root/Projects/eclipse.jdt.coreFilter/1113/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/CompletionRecoveryTest.java)
-public void test10() {
-    this.runTestCheckMethodParse(
-        // compilationUnit:
-        "package pack;                                \n"+
-        "class A  {                                    \n"+
-        "                                            \n"+
-        "    public static void main(String[] argv    \n"+
-        "            new Member().f                    \n"+
-        "            ;                                \n"+
-        "    }                                        \n"+
-        "    class Member {                            \n"+
-        "        int foo()                            \n"+
-        "        }                                    \n"+
-        "    }                                        \n"+
-        "};                                            \n",
-        // completeBehind:
-        "argv",
-        // expectedCompletionNodeToString:
-        "<CompleteOnName:>",
-        // expectedUnitDisplayString:
-        "package pack;\n" + 
-        "class A {\n" + 
-        "  class Member {\n" + 
-        "    Member() {\n" + 
-        "    }\n" + 
-        "    int foo() {\n" + 
-        "    }\n" + 
-        "  }\n" + 
-        "  A() {\n" + 
-        "  }\n" + 
-        "  public static void main(<CompleteOnArgumentName:String[] argv>) {\n" + 
-        "  }\n" + 
-        "}\n",
-        // expectedCompletionIdentifier:
-        "",
-        // expectedReplacedSource:
-        "",
-        // test name
-        "<completion on argument name>"
-    );
-}
+(startLine=107 endLine=119 srcPath=/root/Projects/eclipse.jdt.coreFilter/1582/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchParticipantTests.java)
+    public void testScheduleDocumentIndexing2() throws CoreException {
+        try {
+            createJavaProject("P");
+            TestSearchParticipant participant = new TestSearchParticipant();
+            TestSearchDocument document = new TestSearchDocument("/P/X.test", participant);
+            participant.scheduleDocumentIndexing(document, getIndexLocation());
+            waitUntilIndexesReady();
+            assertTrue("Should have requested to index document", document.indexingRequested);
+        } finally {
+            deleteProject("P");
+            getIndexLocation().toFile().delete();
+        }
+    }
 

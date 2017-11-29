@@ -1,29 +1,36 @@
-(startLine=197 endLine=223 srcPath=/root/Projects/eclipse.jdt.coreFilter/376/eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTest_1_5.java)
-    public void test009() {
-        this.runNegativeTest(
-            new String[] {
-                "X.java",
-                    " /**\n" + 
-                    "  * Invalid type parameter reference\n" + 
-                    "  * @param <T> Type parameter 1\n" + 
-                    "  * @param <X> Type parameter 2\n" + 
-                    "  * @param <U> Type parameter 2\n" + 
-                    "  * @param <E> Type parameter 2\n" + 
-                    "  * @param <V> Type parameter 3\n" + 
-                    "  */\n" + 
-                    " public class X<T, U, V> {}"
-            },
-            "----------\n" + 
-                "1. ERROR in X.java (at line 4)\n" + 
-                "    * @param <X> Type parameter 2\n" + 
-                "              ^\n" + 
-                "Javadoc: Parameter X is not declared\n" + 
-                "----------\n" + 
-                "2. ERROR in X.java (at line 6)\n" + 
-                "    * @param <E> Type parameter 2\n" + 
-                "              ^\n" + 
-                "Javadoc: E cannot be resolved to a type\n" + 
-                "----------\n"
-        );
+(startLine=1600 endLine=1633 srcPath=/root/Projects/eclipse.jdt.coreFilter/2092/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void invalidField(NameReference nameRef, FieldBinding field) {
+    int flag = IProblem.UndefinedField;
+    switch (field.problemId()) {
+        case NotFound :
+            flag = IProblem.UndefinedField;
+            break;
+        case NotVisible :
+            flag = IProblem.NotVisibleField;
+            break;
+        case Ambiguous :
+            flag = IProblem.AmbiguousField;
+            break;
+        case NonStaticReferenceInStaticContext :
+            flag = IProblem.NonStaticFieldFromStaticInvocation;
+            break;
+        case NonStaticReferenceInConstructorInvocation :
+            flag = IProblem.InstanceFieldDuringConstructorInvocation;
+            break;
+        case InheritedNameHidesEnclosingName :
+            flag = IProblem.InheritedFieldHidesEnclosingName;
+            break;
+        case NoError : // 0
+        default :
+            needImplementation(); // want to fail to see why we were here...
+            break;
     }
+    String[] arguments = new String[] {new String(field.readableName())};
+    this.handle(
+        flag,
+        arguments,
+        arguments,
+        nameRef.sourceStart,
+        nameRef.sourceEnd);
+}
 

@@ -1,24 +1,15 @@
-(startLine=382 endLine=403 srcPath=/root/Projects/elasticsearchFilter/717/elasticsearch/src/main/java/org/elasticsearch/index/search/nested/NestedFieldComparatorSource.java)
-        public final void copy(int slot, int rootDoc) throws IOException {
-            if (rootDoc == 0 || rootDocuments == null || innerDocuments == null) {
-                copyMissing(wrappedComparator, slot);
-                return;
+(startLine=137 endLine=149 srcPath=/root/Projects/elasticsearchFilter/1052/elasticsearch/src/main/java/org/elasticsearch/common/inject/Injectors.java)
+    public static <T> Set<Provider<T>> getProvidersOf(Injector injector, Class<T> baseClass) {
+        Set<Provider<T>> answer = Sets.newHashSet();
+        Set<Entry<Key<?>, Binding<?>>> entries = injector.getBindings().entrySet();
+        for (Entry<Key<?>, Binding<?>> entry : entries) {
+            Key<?> key = entry.getKey();
+            Class<?> keyType = getKeyType(key);
+            if (keyType != null && baseClass.isAssignableFrom(keyType)) {
+                Binding<?> binding = entry.getValue();
+                answer.add((Provider<T>) binding.getProvider());
             }
-
-            final int prevRootDoc = rootDocuments.prevSetBit(rootDoc - 1);
-            int nestedDoc = innerDocuments.nextSetBit(prevRootDoc + 1);
-            if (nestedDoc >= rootDoc || nestedDoc == -1) {
-                copyMissing(wrappedComparator, slot);
-                return;
-            }
-            int counter = 1;
-            wrappedComparator.copy(slot, nestedDoc);
-            nestedDoc = innerDocuments.nextSetBit(nestedDoc + 1);
-            while (nestedDoc > prevRootDoc && nestedDoc < rootDoc) {
-                onNested(slot, nestedDoc);
-                nestedDoc = innerDocuments.nextSetBit(nestedDoc + 1);
-                counter++;
-            }
-            afterNested(slot, counter);
         }
+        return answer;
+    }
 

@@ -1,19 +1,12 @@
-(startLine=234 endLine=250 srcPath=/root/Projects/eclipse.jdt.coreFilter/605/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SortElementsOperation.java)
-            public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration) {
-                if (checkMalformedNodes(anonymousClassDeclaration)) {
-                    return true; // abort sorting of current element
+(startLine=250 endLine=259 srcPath=/root/Projects/eclipse.jdt.coreFilter/677/eclipse.jdt.core/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/UnresolvedReferenceNameFinder.java)
+    private void endVisitRemoved(int start, int end) {
+        for (int i = 0; i <= this.potentialVariableNamesPtr; i++) {
+            if (this.potentialVariableNames[i] != null) {
+                int nameStart = this.potentialVariableNameStarts[i];
+                if (start < nameStart && nameStart < end) {
+                    this.potentialVariableNames[i] = null;
                 }
-                ListRewrite listRewrite = rewriter.getListRewrite(anonymousClassDeclaration, AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY);
-                List bodyDeclarations = anonymousClassDeclaration.bodyDeclarations();
-                final int length = bodyDeclarations.size();
-                if (length > 1) {
-                    final List myCopy = new ArrayList();
-                    myCopy.addAll(bodyDeclarations);
-                    Collections.sort(myCopy, SortElementsOperation.this.comparator);
-                    for (int i = 0; i < length; i++) {
-                        listRewrite.replace((ASTNode) bodyDeclarations.get(i), rewriter.createMoveTarget((ASTNode) myCopy.get(i)), null);
-                    }
-                }
-                return true;
             }
+        }
+    }
 

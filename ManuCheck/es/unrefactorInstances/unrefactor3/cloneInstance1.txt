@@ -1,70 +1,23 @@
-(startLine=96 endLine=163 srcPath=/root/Projects/elasticsearchFilter/551/elasticsearch/src/test/java/org/elasticsearch/cluster/routing/allocation/AddIncrementallyTests.java)
-    public void testMinimalRelocations() {
-        ImmutableSettings.Builder settings = settingsBuilder();
-        settings.put(ClusterRebalanceAllocationDecider.CLUSTER_ROUTING_ALLOCATION_ALLOW_REBALANCE, ClusterRebalanceAllocationDecider.ClusterRebalanceType.ALWAYS.toString())
-                .put("cluster.routing.allocation.node_concurrent_recoveries", 2);
-        AllocationService service = createAllocationService(settings.build());
+(startLine=497 endLine=517 srcPath=/root/Projects/elasticsearchFilter/373/elasticsearch/src/test/java/org/elasticsearch/search/query/SearchQueryTests.java)
+    public void queryStringAnalyzedWildcard() throws Exception {
+        createIndex("test");
 
-        ClusterState clusterState = initCluster(service, 1, 3, 3, 1);
-        assertThat(clusterState.routingNodes().node("node0").shardsWithState(STARTED).size(), Matchers.equalTo(9));
-        assertThat(clusterState.routingNodes().unassigned().size(), Matchers.equalTo(9));
-        int nodeOffset = 1;
-        clusterState = addNodes(clusterState, service, 1, nodeOffset++);
-        assertThat(clusterState.routingNodes().node("node0").shardsWithState(STARTED).size(), Matchers.equalTo(9));
-        assertThat(clusterState.routingNodes().node("node1").shardsWithState(STARTED).size(), Matchers.equalTo(9));
-        assertThat(clusterState.routingNodes().unassigned().size(), Matchers.equalTo(0));
-        assertNumIndexShardsPerNode(clusterState, Matchers.equalTo(3));
+        client().prepareIndex("test", "type1", "1").setSource("field1", "value_1", "field2", "value_2").get();
+        refresh();
 
-        logger.info("now, start one more node, check that rebalancing will happen because we set it to always");
-        DiscoveryNodes.Builder nodes = DiscoveryNodes.builder(clusterState.nodes());
-        nodes.put(newNode("node2"));
-        clusterState = ClusterState.builder(clusterState).nodes(nodes.build()).build();
+        SearchResponse searchResponse = client().prepareSearch().setQuery(queryStringQuery("value*").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
 
-        RoutingTable routingTable = service.reroute(clusterState).routingTable();
-        clusterState = ClusterState.builder(clusterState).routingTable(routingTable).build();
-        RoutingNodes routingNodes = clusterState.routingNodes();
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("*ue*").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
 
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(INITIALIZING).size(), Matchers.equalTo(2));
-        assertThat(clusterState.routingNodes().node("node0").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(clusterState.routingNodes().node("node1").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("*ue_1").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
 
-        RoutingTable prev = routingTable;
-        routingTable = service.applyStartedShards(clusterState, routingNodes.shardsWithState(INITIALIZING)).routingTable();
-        clusterState = ClusterState.builder(clusterState).routingTable(routingTable).build();
-        routingNodes = clusterState.routingNodes();
-        assertThat(prev, Matchers.not(Matchers.sameInstance(routingTable)));
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(STARTED).size(), Matchers.equalTo(2));
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(INITIALIZING).size(), Matchers.equalTo(2));
-        assertThat(clusterState.routingNodes().node("node0").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(clusterState.routingNodes().node("node1").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(prev, Matchers.not(Matchers.sameInstance(routingTable)));
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("val*e_1").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
 
-        prev = routingTable;
-        routingTable = service.applyStartedShards(clusterState, routingNodes.shardsWithState(INITIALIZING)).routingTable();
-        clusterState = ClusterState.builder(clusterState).routingTable(routingTable).build();
-        routingNodes = clusterState.routingNodes();
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(STARTED).size(), Matchers.equalTo(4));
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(INITIALIZING).size(), Matchers.equalTo(2));
-        assertThat(clusterState.routingNodes().node("node0").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(clusterState.routingNodes().node("node1").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(prev, Matchers.not(Matchers.sameInstance(routingTable)));
-
-        prev = routingTable;
-        routingTable = service.applyStartedShards(clusterState, routingNodes.shardsWithState(INITIALIZING)).routingTable();
-        clusterState = ClusterState.builder(clusterState).routingTable(routingTable).build();
-        routingNodes = clusterState.routingNodes();
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(STARTED).size(), Matchers.equalTo(6));
-        assertThat(clusterState.routingNodes().node("node2").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(clusterState.routingNodes().node("node0").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(clusterState.routingNodes().node("node1").shardsWithState(INITIALIZING).size(), Matchers.equalTo(0));
-        assertThat(prev, Matchers.not(Matchers.sameInstance(routingTable)));
-
-        prev = routingTable;
-        routingTable = service.applyStartedShards(clusterState, routingNodes.shardsWithState(INITIALIZING)).routingTable();
-        clusterState = ClusterState.builder(clusterState).routingTable(routingTable).build();
-        routingNodes = clusterState.routingNodes();
-        assertThat(prev, Matchers.sameInstance(routingTable));
-        assertNumIndexShardsPerNode(clusterState, Matchers.equalTo(2));
-        logger.debug("ClusterState: {}", clusterState.getRoutingNodes().prettyPrint());
+        searchResponse = client().prepareSearch().setQuery(queryStringQuery("v?l*e?1").analyzeWildcard(true)).get();
+        assertHitCount(searchResponse, 1l);
     }
 

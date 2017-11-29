@@ -1,87 +1,68 @@
 /**
- * <copyright>
+ * <copyright> 
  *
  * Copyright (c) 2002-2004 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
+ * 
+ * Contributors: 
  *   IBM - Initial API and implementation
  *
  * </copyright>
  *
- * $Id: JParameterImpl.java,v 1.5 2005/11/23 18:09:54 emerks Exp $
+ * $Id: GenEnumLiteralImpl.java,v 1.9 2005/11/23 18:09:29 emerks Exp $
  */
-package org.eclipse.emf.java.impl;
+package org.eclipse.emf.codegen.ecore.genmodel.impl;
 
 
+import org.eclipse.emf.codegen.ecore.genmodel.GenEnum;
+import org.eclipse.emf.codegen.ecore.genmodel.GenEnumLiteral;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
+import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.java.JClass;
-import org.eclipse.emf.java.JMethod;
-import org.eclipse.emf.java.JParameter;
-import org.eclipse.emf.java.JavaPackage;
 
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>JParameter</b></em>'.
+ * An implementation of the model object '<em><b>Gen Enum Literal</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.java.impl.JParameterImpl#isFinal <em>Final</em>}</li>
- *   <li>{@link org.eclipse.emf.java.impl.JParameterImpl#getMethod <em>Method</em>}</li>
- *   <li>{@link org.eclipse.emf.java.impl.JParameterImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.eclipse.emf.codegen.ecore.genmodel.impl.GenEnumLiteralImpl#getGenEnum <em>Gen Enum</em>}</li>
+ *   <li>{@link org.eclipse.emf.codegen.ecore.genmodel.impl.GenEnumLiteralImpl#getEcoreEnumLiteral <em>Ecore Enum Literal</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class JParameterImpl extends JModelElementImpl implements JParameter
+public class GenEnumLiteralImpl extends GenBaseImpl implements GenEnumLiteral
 {
   /**
-   * The default value of the '{@link #isFinal() <em>Final</em>}' attribute.
+   * The cached value of the '{@link #getEcoreEnumLiteral() <em>Ecore Enum Literal</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isFinal()
+   * @see #getEcoreEnumLiteral()
    * @generated
    * @ordered
    */
-  protected static final boolean FINAL_EDEFAULT = false;
-
-  /**
-   * The cached value of the '{@link #isFinal() <em>Final</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isFinal()
-   * @generated
-   * @ordered
-   */
-  protected boolean final_ = FINAL_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getType()
-   * @generated
-   * @ordered
-   */
-  protected JClass type = null;
+  protected EEnumLiteral ecoreEnumLiteral = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
+   * @generated modifiable
    */
-  protected JParameterImpl()
+  protected GenEnumLiteralImpl() 
   {
     super();
   }
@@ -93,7 +74,7 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
    */
   protected EClass eStaticClass()
   {
-    return JavaPackage.Literals.JPARAMETER;
+    return GenModelPackage.Literals.GEN_ENUM_LITERAL;
   }
 
   /**
@@ -101,9 +82,10 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isFinal()
+  public GenEnum getGenEnum()
   {
-    return final_;
+    if (eContainerFeatureID != GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM) return null;
+    return (GenEnum)eContainer();
   }
 
   /**
@@ -111,46 +93,27 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setFinal(boolean newFinal)
+  public void setGenEnum(GenEnum newGenEnum)
   {
-    boolean oldFinal = final_;
-    final_ = newFinal;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JPARAMETER__FINAL, oldFinal, final_));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public JMethod getMethod()
-  {
-    if (eContainerFeatureID != JavaPackage.JPARAMETER__METHOD) return null;
-    return (JMethod)eContainer();
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setMethod(JMethod newMethod)
-  {
-    if (newMethod != eInternalContainer() || (eContainerFeatureID != JavaPackage.JPARAMETER__METHOD && newMethod != null))
+    if (newGenEnum != eInternalContainer() || (eContainerFeatureID != GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM && newGenEnum != null))
     {
-      if (EcoreUtil.isAncestor(this, newMethod))
+      if (EcoreUtil.isAncestor(this, newGenEnum))
         throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
       NotificationChain msgs = null;
       if (eInternalContainer() != null)
         msgs = eBasicRemoveFromContainer(msgs);
-      if (newMethod != null)
-        msgs = ((InternalEObject)newMethod).eInverseAdd(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
-      msgs = eBasicSetContainer((InternalEObject)newMethod, JavaPackage.JPARAMETER__METHOD, msgs);
+      if (newGenEnum != null)
+        msgs = ((InternalEObject)newGenEnum).eInverseAdd(this, GenModelPackage.GEN_ENUM__GEN_ENUM_LITERALS, GenEnum.class, msgs);
+      msgs = eBasicSetContainer((InternalEObject)newGenEnum, GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JPARAMETER__METHOD, newMethod, newMethod));
+      eNotify(new ENotificationImpl(this, Notification.SET, GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM, newGenEnum, newGenEnum));
+  }
+
+  public EModelElement getEcoreModelElement()
+  {
+    return getEcoreEnumLiteral();
   }
 
   /**
@@ -158,19 +121,19 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public JClass getType()
+  public EEnumLiteral getEcoreEnumLiteral()
   {
-    if (type != null && type.eIsProxy())
+    if (ecoreEnumLiteral != null && ecoreEnumLiteral.eIsProxy())
     {
-      InternalEObject oldType = (InternalEObject)type;
-      type = (JClass)eResolveProxy(oldType);
-      if (type != oldType)
+      InternalEObject oldEcoreEnumLiteral = (InternalEObject)ecoreEnumLiteral;
+      ecoreEnumLiteral = (EEnumLiteral)eResolveProxy(oldEcoreEnumLiteral);
+      if (ecoreEnumLiteral != oldEcoreEnumLiteral)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, JavaPackage.JPARAMETER__TYPE, oldType, type));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, GenModelPackage.GEN_ENUM_LITERAL__ECORE_ENUM_LITERAL, oldEcoreEnumLiteral, ecoreEnumLiteral));
       }
     }
-    return type;
+    return ecoreEnumLiteral;
   }
 
   /**
@@ -178,9 +141,9 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public JClass basicGetType()
+  public EEnumLiteral basicGetEcoreEnumLiteral()
   {
-    return type;
+    return ecoreEnumLiteral;
   }
 
   /**
@@ -188,12 +151,12 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setType(JClass newType)
+  public void setEcoreEnumLiteral(EEnumLiteral newEcoreEnumLiteral)
   {
-    JClass oldType = type;
-    type = newType;
+    EEnumLiteral oldEcoreEnumLiteral = ecoreEnumLiteral;
+    ecoreEnumLiteral = newEcoreEnumLiteral;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, JavaPackage.JPARAMETER__TYPE, oldType, type));
+      eNotify(new ENotificationImpl(this, Notification.SET, GenModelPackage.GEN_ENUM_LITERAL__ECORE_ENUM_LITERAL, oldEcoreEnumLiteral, ecoreEnumLiteral));
   }
 
   /**
@@ -207,10 +170,10 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case JavaPackage.JPARAMETER__METHOD:
+        case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
           if (eInternalContainer() != null)
             msgs = eBasicRemoveFromContainer(msgs);
-          return eBasicSetContainer(otherEnd, JavaPackage.JPARAMETER__METHOD, msgs);
+          return eBasicSetContainer(otherEnd, GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM, msgs);
         default:
           return eDynamicInverseAdd(otherEnd, featureID, baseClass, msgs);
       }
@@ -231,8 +194,8 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
     {
       switch (eDerivedStructuralFeatureID(featureID, baseClass))
       {
-        case JavaPackage.JPARAMETER__METHOD:
-          return eBasicSetContainer(null, JavaPackage.JPARAMETER__METHOD, msgs);
+        case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
+          return eBasicSetContainer(null, GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM, msgs);
         default:
           return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
       }
@@ -251,8 +214,8 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
     {
       switch (eContainerFeatureID)
       {
-        case JavaPackage.JPARAMETER__METHOD:
-          return eInternalContainer().eInverseRemove(this, JavaPackage.JMETHOD__PARAMETERS, JMethod.class, msgs);
+        case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
+          return eInternalContainer().eInverseRemove(this, GenModelPackage.GEN_ENUM__GEN_ENUM_LITERALS, GenEnum.class, msgs);
         default:
           return eDynamicBasicRemoveFromContainer(msgs);
       }
@@ -269,17 +232,11 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
   {
     switch (featureID)
     {
-      case JavaPackage.JPARAMETER__NAME:
-        return getName();
-      case JavaPackage.JPARAMETER__JNODE:
-        return getJNode();
-      case JavaPackage.JPARAMETER__FINAL:
-        return isFinal() ? Boolean.TRUE : Boolean.FALSE;
-      case JavaPackage.JPARAMETER__METHOD:
-        return getMethod();
-      case JavaPackage.JPARAMETER__TYPE:
-        if (resolve) return getType();
-        return basicGetType();
+      case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
+        return getGenEnum();
+      case GenModelPackage.GEN_ENUM_LITERAL__ECORE_ENUM_LITERAL:
+        if (resolve) return getEcoreEnumLiteral();
+        return basicGetEcoreEnumLiteral();
     }
     return eDynamicGet(featureID, resolve, coreType);
   }
@@ -293,20 +250,11 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
   {
     switch (featureID)
     {
-      case JavaPackage.JPARAMETER__NAME:
-        setName((String)newValue);
+      case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
+        setGenEnum((GenEnum)newValue);
         return;
-      case JavaPackage.JPARAMETER__JNODE:
-        setJNode((Object)newValue);
-        return;
-      case JavaPackage.JPARAMETER__FINAL:
-        setFinal(((Boolean)newValue).booleanValue());
-        return;
-      case JavaPackage.JPARAMETER__METHOD:
-        setMethod((JMethod)newValue);
-        return;
-      case JavaPackage.JPARAMETER__TYPE:
-        setType((JClass)newValue);
+      case GenModelPackage.GEN_ENUM_LITERAL__ECORE_ENUM_LITERAL:
+        setEcoreEnumLiteral((EEnumLiteral)newValue);
         return;
     }
     eDynamicSet(featureID, newValue);
@@ -321,20 +269,11 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
   {
     switch (featureID)
     {
-      case JavaPackage.JPARAMETER__NAME:
-        setName(NAME_EDEFAULT);
+      case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
+        setGenEnum((GenEnum)null);
         return;
-      case JavaPackage.JPARAMETER__JNODE:
-        setJNode(JNODE_EDEFAULT);
-        return;
-      case JavaPackage.JPARAMETER__FINAL:
-        setFinal(FINAL_EDEFAULT);
-        return;
-      case JavaPackage.JPARAMETER__METHOD:
-        setMethod((JMethod)null);
-        return;
-      case JavaPackage.JPARAMETER__TYPE:
-        setType((JClass)null);
+      case GenModelPackage.GEN_ENUM_LITERAL__ECORE_ENUM_LITERAL:
+        setEcoreEnumLiteral((EEnumLiteral)null);
         return;
     }
     eDynamicUnset(featureID);
@@ -349,34 +288,101 @@ public class JParameterImpl extends JModelElementImpl implements JParameter
   {
     switch (featureID)
     {
-      case JavaPackage.JPARAMETER__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case JavaPackage.JPARAMETER__JNODE:
-        return JNODE_EDEFAULT == null ? jNode != null : !JNODE_EDEFAULT.equals(jNode);
-      case JavaPackage.JPARAMETER__FINAL:
-        return final_ != FINAL_EDEFAULT;
-      case JavaPackage.JPARAMETER__METHOD:
-        return getMethod() != null;
-      case JavaPackage.JPARAMETER__TYPE:
-        return type != null;
+      case GenModelPackage.GEN_ENUM_LITERAL__GEN_ENUM:
+        return getGenEnum() != null;
+      case GenModelPackage.GEN_ENUM_LITERAL__ECORE_ENUM_LITERAL:
+        return ecoreEnumLiteral != null;
     }
     return eDynamicIsSet(featureID);
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public String toString()
+  public String getName()
   {
-    if (eIsProxy()) return super.toString();
-
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (final: ");
-    result.append(final_);
-    result.append(')');
-    return result.toString();
+    return getEcoreEnumLiteral().getName();
   }
 
-} //JParameterImpl
+  public String getCapName()
+  {
+    return capName(getName());
+  }
+  
+  public String getLiteral()
+  {
+    return getEcoreEnumLiteral().getLiteral();
+  }
+
+  public String getFormattedName()
+  {
+    return format(getCapName(), ' ', null, false, false);
+  }
+
+  public int getValue()
+  {
+    return getEcoreEnumLiteral().getValue();
+  }
+
+  public String getEnumLiteralID()
+  {
+    return format(getName(), '_', null, false, true).toUpperCase();
+  }
+
+  public GenPackage getGenPackage()
+  {
+    return getGenEnum().getGenPackage();
+  }
+
+  public String getEnumLiteralAccessorName()
+  {
+    return getGenEnum().getName() + "_" + getCapName();
+  }
+
+  public void initialize(EEnumLiteral eEnumLiteral)
+  {
+    setEcoreEnumLiteral(eEnumLiteral);
+  }
+
+  public String getModelInfo()
+  {
+    StringBuffer result = new StringBuffer();
+    if (!getEnumLiteralID().equals(getName()))
+    {
+      appendModelSetting(result, "name", getName());
+    }
+    if (!getName().equals(getLiteral()))
+    {
+      appendModelSetting(result, "literal", getLiteral());
+    }
+    appendAnnotationInfo(result, getEcoreEnumLiteral());
+    return result.toString().trim();
+  }
+
+  public boolean reconcile(GenEnumLiteral oldGenEnumLiteralVersion)
+  {
+    if (getEcoreEnumLiteral().getName().equals(oldGenEnumLiteralVersion.getEcoreEnumLiteral().getName()))
+    {
+      reconcileSettings(oldGenEnumLiteralVersion);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  protected void reconcileSettings(GenEnumLiteral oldGenEnumLiteralVersion)
+  {
+  }
+
+  public boolean reconcile()
+  {
+    EEnumLiteral eEnumLiteral = getEcoreEnumLiteral();
+    if (eEnumLiteral == null || eEnumLiteral.eIsProxy() || eEnumLiteral.eResource() == null)
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+  }
+}

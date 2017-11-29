@@ -1,90 +1,35 @@
-(startLine=1856 endLine=1943 srcPath=/root/Projects/eclipse.jdt.coreFilter/1966/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
-public void testCycleDetectionThroughContainers() throws CoreException {
-    
-    IJavaProject[] p = null;
-    try {
-
-        p = new IJavaProject[]{
-            this.createJavaProject("P0", new String[] {""}, ""),
-            this.createJavaProject("P1", new String[] {""}, ""),
-            this.createJavaProject("P2", new String[] {""}, ""),
-            this.createJavaProject("P3", new String[] {""}, ""),
-            this.createJavaProject("P4", new String[] {""}, ""),
-        };
-
-        IClasspathContainer[] containers = new IClasspathContainer[]{ 
-            new TestContainer(
-                new Path("container0/default"), 
-                new IClasspathEntry[]{ JavaCore.newProjectEntry(p[3].getPath()) }),
-            new TestContainer(
-                new Path("container1/default"), 
-                new IClasspathEntry[]{ JavaCore.newProjectEntry(p[1].getPath()) }),
-            new TestContainer(
-                new Path("container2/default"), 
-                new IClasspathEntry[]{ JavaCore.newProjectEntry(p[4].getPath()) }),
-        };
-
-        IClasspathEntry[][] extraEntries = new IClasspathEntry[][]{ 
-            { JavaCore.newProjectEntry(p[1].getPath()), JavaCore.newContainerEntry(containers[0].getPath()) },
-            { JavaCore.newProjectEntry(p[2].getPath()), JavaCore.newProjectEntry(p[3].getPath()) },
-            { JavaCore.newContainerEntry(containers[1].getPath()) }, 
-            { JavaCore.newContainerEntry(containers[2].getPath())}, 
-            { JavaCore.newProjectEntry(p[3].getPath()), JavaCore.newProjectEntry(p[0].getPath()) } 
-        }; 
-
-        int[][] expectedCycleParticipants = new int[][] {
-            { 0, 0, 0, 0, 0 }, // after setting CP p[0]
-            { 0, 0, 0, 0, 0 }, // after setting CP p[1]
-            { 0, 0, 0, 0, 0 }, // after setting CP p[2]
-            { 0, 0, 0, 0, 0 }, // after setting CP p[3]
-            { 1, 1, 1, 1, 1 }, // after setting CP p[4]
-        };
-        
-        for (int i = 0; i < p.length; i++){
-
-            // append project references            
-            IClasspathEntry[] oldClasspath = p[i].getRawClasspath();
-            IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries[i].length];
-            System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
-            for (int j = 0; j < extraEntries[i].length; j++){
-                newClasspath[oldClasspath.length+j] = extraEntries[i][j];
-            }            
-            // set classpath
-            p[i].setRawClasspath(newClasspath, null);
-
-            // update container paths
-            if (i == p.length - 1){
-                JavaCore.setClasspathContainer(
-                    containers[0].getPath(),
-                    new IJavaProject[]{ p[0] },
-                    new IClasspathContainer[] { containers[0] },
-                    null);
-
-                JavaCore.setClasspathContainer(
-                    containers[1].getPath(),
-                    new IJavaProject[]{ p[2] },
-                    new IClasspathContainer[] { containers[1] },
-                    null);
-
-                JavaCore.setClasspathContainer(
-                    containers[2].getPath(),
-                    new IJavaProject[]{ p[3] },
-                    new IClasspathContainer[] { containers[2] },
-                    null);
+(startLine=99 endLine=131 srcPath=/root/Projects/eclipse.jdt.coreFilter/2025/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/MovePackageFragmentRootOperation.java)
+    protected void updateReferringProjectClasspaths(IPath rootPath) throws JavaModelException {
+        IJavaModel model = this.getJavaModel();
+        IJavaProject[] projects = model.getJavaProjects();
+        for (int i = 0, length = projects.length; i < length; i++) {
+            IJavaProject project = projects[i];
+            IClasspathEntry[] classpath = project.getRawClasspath();
+            IClasspathEntry[] newClasspath = null;
+            int cpLength = classpath.length;
+            int newCPIndex = -1;
+            for (int j = 0; j < cpLength; j++) {
+                IClasspathEntry entry = classpath[j];
+                if (rootPath.equals(entry.getPath())) {
+                    if (newClasspath == null) {
+                        newClasspath = new IClasspathEntry[cpLength];
+                        System.arraycopy(classpath, 0, newClasspath, 0, j);
+                        newCPIndex = j;
+                    }
+                    if (this.destination.segment(0).equals(project.getElementName())) continue;
+                    if (entry.getEntryKind() != IClasspathEntry.CPE_SOURCE) { // library entry
+                        newClasspath[newCPIndex++] = copy(entry);
+                    } // else source folder is moved to another project: deletes its classpath entry
+                } else if (newClasspath != null) {
+                    newClasspath[newCPIndex++] = entry;
+                }
             }
-            
-            // check cycle markers
-            this.assertCycleMarkers(p[i], p, expectedCycleParticipants[i]);
-        }
-        //this.startDeltas();
-        
-    } finally {
-        //this.stopDeltas();
-        if (p != null){
-            for (int i = 0; i < p.length; i++){
-                this.deleteProject(p[i].getElementName());
+            if (newClasspath != null) {
+                if (newCPIndex < newClasspath.length) {
+                    System.arraycopy(newClasspath, 0, newClasspath = new IClasspathEntry[newCPIndex], 0, newCPIndex);
+                }
+                project.setRawClasspath(newClasspath, fMonitor);
             }
         }
     }
-}
 

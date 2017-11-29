@@ -1,11 +1,39 @@
-(startLine=236 endLine=247 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/SuperTypeReferencePattern.java)
+(startLine=202 endLine=241 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/TypeDeclarationPattern.java)
 protected StringBuffer print(StringBuffer output) {
-    output.append(
-        this.checkOnlySuperinterfaces
-            ? "SuperInterfaceReferencePattern: <" //$NON-NLS-1$
-            : "SuperTypeReferencePattern: <"); //$NON-NLS-1$
-    if (superSimpleName != null) 
-        output.append(superSimpleName);
+    switch (this.typeSuffix){
+        case CLASS_SUFFIX :
+            output.append("ClassDeclarationPattern: pkg<"); //$NON-NLS-1$
+            break;
+        case INTERFACE_SUFFIX :
+            output.append("InterfaceDeclarationPattern: pkg<"); //$NON-NLS-1$
+            break;
+        case ENUM_SUFFIX :
+            output.append("EnumDeclarationPattern: pkg<"); //$NON-NLS-1$
+            break;
+        case ANNOTATION_TYPE_SUFFIX :
+            output.append("AnnotationTypeDeclarationPattern: pkg<"); //$NON-NLS-1$
+            break;
+        default :
+            output.append("TypeDeclarationPattern: pkg<"); //$NON-NLS-1$
+            break;
+    }
+    if (pkg != null) 
+        output.append(pkg);
+    else
+        output.append("*"); //$NON-NLS-1$
+    output.append(">, enclosing<"); //$NON-NLS-1$
+    if (enclosingTypeNames != null) {
+        for (int i = 0; i < enclosingTypeNames.length; i++){
+            output.append(enclosingTypeNames[i]);
+            if (i < enclosingTypeNames.length - 1)
+                output.append('.');
+        }
+    } else {
+        output.append("*"); //$NON-NLS-1$
+    }
+    output.append(">, type<"); //$NON-NLS-1$
+    if (simpleName != null) 
+        output.append(simpleName);
     else
         output.append("*"); //$NON-NLS-1$
     output.append(">"); //$NON-NLS-1$

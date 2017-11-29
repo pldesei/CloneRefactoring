@@ -1,29 +1,47 @@
-(startLine=169 endLine=195 srcPath=/root/Projects/eclipse.jdt.coreFilter/2032/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/RecoveredMethod.java)
-public RecoveredElement add(Statement statement, int bracketBalance) {
-
-    /* do not consider a type starting passed the type end (if set)
-        it must be belonging to an enclosing type */
-    if (methodDeclaration.declarationSourceEnd != 0 
-        && statement.sourceStart > methodDeclaration.declarationSourceEnd){
-
-        if (this.parent == null) {
-            return this; // ignore
-        } else {
-            return this.parent.add(statement, bracketBalance);
-        }
+(startLine=80 endLine=124 srcPath=/root/Projects/eclipse.jdt.coreFilter/885/eclipse.jdt.core/org.eclipse.jdt.apt.tests/src/org/eclipse/jdt/apt/tests/ReadAnnotationTests2.java)
+    private void addAllSources()
+    {
+        IPath srcRoot = getSourcePath();
+        // SimpleAnnotation.java
+        env.addClass( 
+                srcRoot, 
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.SIMPLE_ANNOTATION_CLASS,
+                CodeExample.SIMPLE_ANNOTATION_CODE );
+        
+        // RTVisibleAnnotation.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.RTVISIBLE_CLASS,
+                CodeExample.RTVISIBLE_ANNOTATION_CODE);
+        
+        // RTInvisibleAnnotation.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.RTINVISIBLE_CLASS,
+                CodeExample.RTINVISIBLE_ANNOTATION_CODE);
+        
+        // package-info.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.PACKAGE_INFO_CLASS,
+                CodeExample.PACKAGE_INFO_CODE);
+        
+        // Color.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.COLOR_CLASS,
+                CodeExample.COLOR_CODE);
+        
+        // AnnotationTest.java
+        env.addClass(
+                srcRoot,
+                CodeExample.PACKAGE_QUESTION, 
+                CodeExample.ANNOTATION_TEST_CLASS,
+                CodeExample.ANNOTATION_TEST_CODE);
     }
-    if (methodBody == null){
-        Block block = new Block(0);
-        block.sourceStart = methodDeclaration.bodyStart;
-        RecoveredElement currentBlock = this.add(block, 1);
-        if (this.bracketBalance > 0){
-            for (int i = 0; i < this.bracketBalance - 1; i++){
-                currentBlock = currentBlock.add(new Block(0), 1);
-            }
-            this.bracketBalance = 1;
-        }
-        return currentBlock.add(statement, bracketBalance);
-    }
-    return methodBody.add(statement, bracketBalance, true);    
-}
 

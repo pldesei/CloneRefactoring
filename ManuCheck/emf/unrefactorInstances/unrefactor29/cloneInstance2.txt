@@ -1,19 +1,77 @@
-(startLine=198 endLine=214 srcPath=/root/Projects/org.eclipse.emfFilter/478/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/unsettable/impl/DUImpl.java)
-  public void unsetCu()
+(startLine=788 endLine=862 srcPath=/root/Projects/org.eclipse.emfFilter/353/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicExtendedMetaData.java)
+  protected EStructuralFeature getLocalElement(EClass eClass, String namespace, String name)
   {
-    if (cu != null)
+    EStructuralFeature result = null;
+    if (isFeatureKindSpecific())
     {
-      NotificationChain msgs = null;
-      msgs = ((InternalEObject)cu).eInverseRemove(this, URefPackage.CU__DU, CU.class, msgs);
-      msgs = basicUnsetCu(msgs);
-      if (msgs != null) msgs.dispatch();
+      List<EStructuralFeature> allElements = getAllElements(eClass);
+      for (int i = 0, size = allElements.size(); i < size; ++i)
+      {
+        EStructuralFeature eStructuralFeature = allElements.get(i);
+        if (name.equals(getName(eStructuralFeature)))
+        {
+          String featureNamespace = getNamespace(eStructuralFeature);
+          if (namespace == null) 
+          {
+            if (featureNamespace == null)
+            {
+              return eStructuralFeature;
+            }
+            else if (result == null)
+            {
+              result = eStructuralFeature;
+            }
+          }
+          else if (namespace.equals(featureNamespace))
+          {
+            return eStructuralFeature;
+          }
+          else if (featureNamespace == null && result == null)
+          {
+            result = eStructuralFeature;
+          }
+        }
+      }
     }
     else
     {
-      boolean oldCuESet = cuESet;
-      cuESet = false;
-      if (eNotificationRequired())
-        eNotify(new ENotificationImpl(this, Notification.UNSET, URefPackage.DU__CU, null, null, oldCuESet));
+      for (int i = 0, size = eClass.getFeatureCount(); i < size; ++i)
+      {
+        EStructuralFeature eStructuralFeature = eClass.getEStructuralFeature(i);
+        switch (getFeatureKind(eStructuralFeature))
+        {
+          case UNSPECIFIED_FEATURE:
+          case ELEMENT_FEATURE:
+          {
+            if (name.equals(getName(eStructuralFeature)))
+            {
+              String featureNamespace = getNamespace(eStructuralFeature);
+              if (namespace == null) 
+              {
+                if (featureNamespace == null)
+                {
+                  return eStructuralFeature;
+                }
+                else if (result == null)
+                {
+                  result = eStructuralFeature;
+                }
+              }
+              else if (namespace.equals(featureNamespace))
+              {
+                return eStructuralFeature;
+              }
+              else if (featureNamespace == null && result == null)
+              {
+                result = eStructuralFeature;
+              }
+            }
+            break;
+          }
+        }
+      }
     }
+
+    return isFeatureNamespaceMatchingLax() ? result : null;
   }
 

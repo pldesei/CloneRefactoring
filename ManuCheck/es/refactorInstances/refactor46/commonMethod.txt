@@ -1,11 +1,11 @@
-(startLine=224 endLine=232 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/core/DateFieldMapper.java)
-    private long parseValue(Object value) {
+(startLine=161 endLine=169 srcPath=/root/Projects/elasticsearchFilter/1332/elasticsearch/src/main/java/org/elasticsearch/index/mapper/internal/BoostFieldMapper.java)
+    private float parseValue(Object value) {
         if (value instanceof Number) {
-            return ((Number) value).longValue();
+            return ((Number) value).floatValue();
         }
         if (value instanceof BytesRef) {
-            return dateTimeFormatter.parser().parseMillis(((BytesRef) value).utf8ToString());
+            return Float.parseFloat(((BytesRef) value).utf8ToString());
         }
-        return dateTimeFormatter.parser().parseMillis(value.toString());
+        return Float.parseFloat(value.toString());
     }
 

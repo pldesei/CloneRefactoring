@@ -1,16 +1,50 @@
-(startLine=310 endLine=323 srcPath=/root/Projects/elasticsearchFilter/291/elasticsearch/plugins/repository-s3/src/test/java/org/elasticsearch/repositories/s3/AbstractS3SnapshotRestoreTest.java)
-    public void assertRepositoryInRemoteRegionIsRemote() {
-        Client client = client();
-        Settings bucketSettings = internalCluster().getInstance(Settings.class).getByPrefix("repositories.s3.remote-bucket.");
-        logger.info("-->  creating s3 repository with bucket[{}] and path [{}]", bucketSettings.get("bucket"), basePath);
-        client.admin().cluster().preparePutRepository("test-repo")
-        .setType("s3").setSettings(Settings.settingsBuilder()
-                .put("base_path", basePath)
-                .put("bucket", bucketSettings.get("bucket"))
-                // Below setting intentionally omitted to assert bucket is not available in default region.
-                //                        .put("region", privateBucketSettings.get("region"))
-                ).get();
+(startLine=168 endLine=215 srcPath=/root/Projects/elasticsearchFilter/1387/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/action/support/broadcast/TransportBroadcastOperationAction.java)
+        private void performOperation(final Iterator<ShardRouting> shardIt, boolean localAsync) {
+            final ShardRouting shard = shardIt.next();
+            if (!shard.active()) {
+                // as if we have a "problem", so we iterate to the next one and maintain counts
+                onOperation(shard, shardIt, null, false);
+            } else {
+                final ShardRequest shardRequest = newShardRequest(shard, request);
+                if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                    if (localAsync) {
+                        threadPool.execute(new Runnable() {
+                            @Override public void run() {
+                                try {
+                                    onOperation(shard, shardOperation(shardRequest), true);
+                                } catch (Exception e) {
+                                    onOperation(shard, shardIt, e, true);
+                                }
+                            }
+                        });
+                    } else {
+                        try {
+                            onOperation(shard, shardOperation(shardRequest), false);
+                        } catch (Exception e) {
+                            onOperation(shard, shardIt, e, false);
+                        }
+                    }
+                } else {
+                    Node node = nodes.get(shard.currentNodeId());
+                    transportService.sendRequest(node, transportShardAction(), shardRequest, new BaseTransportResponseHandler<ShardResponse>() {
+                        @Override public ShardResponse newInstance() {
+                            return newShardResponse();
+                        }
 
-        fail("repository verification should have raise an exception!");
-    }
+                        @Override public void handleResponse(ShardResponse response) {
+                            onOperation(shard, response, false);
+                        }
+
+                        @Override public void handleException(RemoteTransportException exp) {
+                            onOperation(shard, shardIt, exp, false);
+                        }
+
+                        @Override public boolean spawn() {
+                            // we never spawn here, we will span if needed in onOperation
+                            return false;
+                        }
+                    });
+                }
+            }
+        }
 

@@ -1,27 +1,41 @@
-(startLine=105 endLine=129 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/FieldPattern.java)
-protected StringBuffer print(StringBuffer output) {
-    if (this.findDeclarations) {
-        output.append(this.findReferences
-            ? "FieldCombinedPattern: " //$NON-NLS-1$
-            : "FieldDeclarationPattern: "); //$NON-NLS-1$
-    } else {
-        output.append("FieldReferencePattern: "); //$NON-NLS-1$
+(startLine=2045 endLine=2083 srcPath=/root/Projects/eclipse.jdt.coreFilter/1482/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+private void generateFieldAccess(byte opcode, int returnTypeSize, char[] declaringClass, char[] name, char[] signature) {
+    countLabels = 0;
+    switch(opcode) {
+        case OPC_getfield :
+            if (returnTypeSize == 2) {
+                stackDepth++;
+            }
+            break;
+        case OPC_getstatic :
+            if (returnTypeSize == 2) {
+                stackDepth += 2;
+            } else {
+                stackDepth++;
+            }
+            break;
+        case OPC_putfield :
+            if (returnTypeSize == 2) {
+                stackDepth -= 3;
+            } else {
+                stackDepth -= 2;
+            }
+            break;
+        case OPC_putstatic :
+            if (returnTypeSize == 2) {
+                stackDepth -= 2;
+            } else {
+                stackDepth--;
+            }
     }
-    if (declaringQualification != null) output.append(declaringQualification).append('.');
-    if (declaringSimpleName != null) 
-        output.append(declaringSimpleName).append('.');
-    else if (declaringQualification != null) output.append("*."); //$NON-NLS-1$
-    if (name == null) {
-        output.append("*"); //$NON-NLS-1$
-    } else {
-        output.append(name);
+    if (stackDepth > stackMax) {
+        stackMax = stackDepth;
     }
-    if (typeQualification != null) 
-        output.append(" --> ").append(typeQualification).append('.'); //$NON-NLS-1$
-    else if (typeSimpleName != null) output.append(" --> "); //$NON-NLS-1$
-    if (typeSimpleName != null) 
-        output.append(typeSimpleName);
-    else if (typeQualification != null) output.append("*"); //$NON-NLS-1$
-    return super.print(output);
+    if (classFileOffset + 2 >= bCodeStream.length) {
+        resizeByteArray();
+    }
+    position++;
+    bCodeStream[classFileOffset++] = opcode;
+    writeUnsignedShort(constantPool.literalIndexForField(declaringClass, name, signature));
 }
 

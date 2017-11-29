@@ -1,31 +1,26 @@
-(startLine=66 endLine=94 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/QualifiedTypeDeclarationPattern.java)
-protected StringBuffer print(StringBuffer output) {
-    switch (this.typeSuffix){
-        case CLASS_SUFFIX :
-            output.append("ClassDeclarationPattern: qualification<"); //$NON-NLS-1$
-            break;
-        case INTERFACE_SUFFIX :
-            output.append("InterfaceDeclarationPattern: qualification<"); //$NON-NLS-1$
-            break;
-        case ENUM_SUFFIX :
-            output.append("EnumDeclarationPattern: qualification<"); //$NON-NLS-1$
-            break;
-        case ANNOTATION_TYPE_SUFFIX :
-            output.append("AnnotationTypeDeclarationPattern: qualification<"); //$NON-NLS-1$
-            break;
-        default :
-            output.append("TypeDeclarationPattern: qualification<"); //$NON-NLS-1$
-            break;
+(startLine=73 endLine=96 srcPath=/root/Projects/eclipse.jdt.coreFilter/1425/eclipse.jdt.core/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/JavaSearchPattern.java)
+    protected StringBuffer print(StringBuffer output) {
+        output.append(", "); //$NON-NLS-1$
+        if (this.typeSignature != null) {
+            output.append("signature:\""); //$NON-NLS-1$
+            output.append(this.typeSignature);
+            output.append("\", "); //$NON-NLS-1$
+        }
+        switch(getMatchMode()) {
+            case R_EXACT_MATCH : 
+                output.append("exact match, "); //$NON-NLS-1$
+                break;
+            case R_PREFIX_MATCH :
+                output.append("prefix match, "); //$NON-NLS-1$
+                break;
+            case R_PATTERN_MATCH :
+                output.append("pattern match, "); //$NON-NLS-1$
+                break;
+        }
+        if (isCaseSensitive())
+            output.append("case sensitive"); //$NON-NLS-1$
+        else
+            output.append("case insensitive"); //$NON-NLS-1$
+        return output;
     }
-    if (this.qualification != null) 
-        output.append(this.qualification);
-    else
-        output.append("*"); //$NON-NLS-1$
-    output.append(">, type<"); //$NON-NLS-1$
-    if (simpleName != null) 
-        output.append(simpleName);
-    else
-        output.append("*"); //$NON-NLS-1$
-    return super.print(output);
-}
 

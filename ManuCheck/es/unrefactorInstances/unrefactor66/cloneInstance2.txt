@@ -1,8 +1,80 @@
-(startLine=53 endLine=58 srcPath=/root/Projects/elasticsearchFilter/1380/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/common/io/Streams.java)
-    public static long copy(File in, File out) throws IOException {
-        Preconditions.checkNotNull(in, "No input File specified");
-        Preconditions.checkNotNull(out, "No output File specified");
-        return copy(new BufferedInputStream(new FileInputStream(in)),
-                new BufferedOutputStream(new FileOutputStream(out)));
+(startLine=228 endLine=305 srcPath=/root/Projects/elasticsearchFilter/910/elasticsearch/modules/elasticsearch/src/main/java/org/elasticsearch/node/internal/InternalNode.java)
+    public void close() {
+        if (lifecycle.started()) {
+            stop();
+        }
+        if (!lifecycle.moveToClosed()) {
+            return;
+        }
+
+        ESLogger logger = Loggers.getLogger(Node.class, settings.get("name"));
+        logger.info("{{}}[{}]: closing ...", Version.full(), JvmInfo.jvmInfo().pid());
+
+        StopWatch stopWatch = new StopWatch("node_close");
+        stopWatch.start("http");
+        if (settings.getAsBoolean("http.enabled", true)) {
+            injector.getInstance(HttpServer.class).close();
+        }
+        stopWatch.stop().start("client");
+        injector.getInstance(Client.class).close();
+        stopWatch.stop().start("routing");
+        injector.getInstance(RoutingService.class).close();
+        stopWatch.stop().start("cluster");
+        injector.getInstance(ClusterService.class).close();
+        stopWatch.stop().start("discovery");
+        injector.getInstance(DiscoveryService.class).close();
+        stopWatch.stop().start("monitor");
+        injector.getInstance(MonitorService.class).close();
+        stopWatch.stop().start("gateway");
+        injector.getInstance(GatewayService.class).close();
+        stopWatch.stop().start("search");
+        injector.getInstance(SearchService.class).close();
+        stopWatch.stop().start("indexers");
+        injector.getInstance(RiversManager.class).close();
+        stopWatch.stop().start("indices_cluster");
+        injector.getInstance(IndicesClusterStateService.class).close();
+        stopWatch.stop().start("indices");
+        injector.getInstance(IndicesService.class).close();
+        stopWatch.stop().start("rest");
+        injector.getInstance(RestController.class).close();
+        stopWatch.stop().start("transport");
+        injector.getInstance(TransportService.class).close();
+        stopWatch.stop().start("http_client");
+
+        for (Class<? extends LifecycleComponent> plugin : pluginsService.services()) {
+            stopWatch.stop().start("plugin(" + plugin.getName() + ")");
+            injector.getInstance(plugin).close();
+        }
+
+        stopWatch.stop().start("node_cache");
+        injector.getInstance(NodeCache.class).close();
+
+        stopWatch.stop().start("timer");
+        injector.getInstance(TimerService.class).close();
+        stopWatch.stop().start("thread_pool");
+        injector.getInstance(ThreadPool.class).shutdown();
+        try {
+            injector.getInstance(ThreadPool.class).awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            // ignore
+        }
+        stopWatch.stop().start("thread_pool_force_shutdown");
+        try {
+            injector.getInstance(ThreadPool.class).shutdownNow();
+        } catch (Exception e) {
+            // ignore
+        }
+        stopWatch.stop();
+
+        ThreadLocals.clearReferencesThreadLocals();
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("Close times for each service:\n{}", stopWatch.prettyPrint());
+        }
+
+        injector.getInstance(NodeEnvironment.class).close();
+        Injectors.close(injector);
+
+        logger.info("{{}}[{}]: closed", Version.full(), JvmInfo.jvmInfo().pid());
     }
 

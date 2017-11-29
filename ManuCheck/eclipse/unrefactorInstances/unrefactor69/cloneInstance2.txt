@@ -1,16 +1,12 @@
-(startLine=329 endLine=342 srcPath=/root/Projects/eclipse.jdt.coreFilter/1716/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ExclusionPatternsTests.java)
-public void testIsOnClasspath2() throws CoreException {
-    this.setClasspath(new String[] {"/P/src", "**/A.java"});
-    this.createFolder("/P/src/p");
-    IFile file = this.createFile(
-        "/P/src/p/A.java",
-        "package p;\n" +
-        "public class A {\n" +
-        "}"
-    );
-    assertTrue("Resource should not be on classpath", !project.isOnClasspath(file));
+(startLine=872 endLine=881 srcPath=/root/Projects/eclipse.jdt.coreFilter/513/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchTests.java)
+public void testSearchPatternCreation28() {
+    IImportDeclaration importDecl = getCompilationUnit("/P/x/y/z/Foo.java").getImport("x.y.*");
+    SearchPattern searchPattern = createPattern(
+            importDecl, 
+            IJavaSearchConstants.DECLARATIONS);
     
-    ICompilationUnit cu = getCompilationUnit("/P/src/p/A.java");
-    assertTrue("CU should not be on classpath", !project.isOnClasspath(cu));
+    assertPattern(
+        "PackageDeclarationPattern: <x.y>, exact match, case sensitive, erasure only",
+        searchPattern);
 }
 

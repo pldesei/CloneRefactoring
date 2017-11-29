@@ -1,15 +1,43 @@
-(startLine=102 endLine=114 srcPath=/root/Projects/elasticsearchFilter/15/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedBytesHashSamplerAggregator.java)
-                    public long get(int doc) {
+(startLine=46 endLine=86 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SDo.java)
+    void analyze(Variables variables) {
+        variables.incrementScope();
 
-                        values.setDocument(doc);
-                        final int valuesCount = values.count();
-                        if (valuesCount > 1) {
-                            throw new IllegalArgumentException("Sample diversifying key must be a single valued-field");
-                        }
-                        if (valuesCount == 1) {
-                            final BytesRef bytes = values.valueAt(0);
-                            return bytes.hashCode();
-                        }
-                        return 0;
-                    }
+        if (block == null) {
+            throw createError(new IllegalArgumentException("Extraneous do while loop."));
+        }
+
+        block.beginLoop = true;
+        block.inLoop = true;
+
+        block.analyze(variables);
+
+        if (block.loopEscape && !block.anyContinue) {
+            throw createError(new IllegalArgumentException("Extraneous do while loop."));
+        }
+
+        condition.expected = Definition.BOOLEAN_TYPE;
+        condition.analyze(variables);
+        condition = condition.cast(variables);
+
+        if (condition.constant != null) {
+            final boolean continuous = (boolean)condition.constant;
+
+            if (!continuous) {
+                throw createError(new IllegalArgumentException("Extraneous do while loop."));
+            }
+
+            if (!block.anyBreak) {
+                methodEscape = true;
+                allEscape = true;
+            }
+        }
+
+        statementCount = 1;
+
+        if (maxLoopCounter > 0) {
+            loopCounterSlot = variables.getVariable(location, "#loop").slot;
+        }
+
+        variables.decrementScope();
+    }
 

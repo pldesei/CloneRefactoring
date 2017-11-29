@@ -1,48 +1,18 @@
-(startLine=1405 endLine=1450 srcPath=/root/Projects/eclipse.jdt.coreFilter/1046/eclipse.jdt.core/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor2.java)
-    public boolean visit(DoStatement node) {
-        this.scribe.printNextToken(TerminalTokens.TokenNamedo);
-        final int line = this.scribe.line;
-        
-        final Statement action = node.getBody();
-        if (action != null) {
-            switch(action.getNodeType()) {
-                case ASTNode.BLOCK :
-                    formatLeftCurlyBrace(line, this.preferences.brace_position_for_block);
-                    action.accept(this);
-                    break;
-                case ASTNode.EMPTY_STATEMENT :
-                    this.scribe.indent();
-                    action.accept(this);
-                    this.scribe.unIndent();
-                    break;
-                default:
-                    this.scribe.printNewLine();
-                    this.scribe.indent();
-                    action.accept(this);
-                    this.scribe.printNewLine();
-                    this.scribe.unIndent();
-            }
-        } else {
-            this.scribe.indent();
-            action.accept(this);
-            this.scribe.unIndent();
+(startLine=666 endLine=681 srcPath=/root/Projects/eclipse.jdt.coreFilter/1077/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+private int literalIndexForField(char[] name, char[] signature) {
+    int index = getFromNameAndTypeCache(name, signature);
+    if (index == -1) {
+        // The entry doesn't exit yet
+        int nameIndex = literalIndex(name);
+        int typeIndex = literalIndex(signature);
+        index = putInNameAndTypeCache(name, signature, currentIndex++);
+        if (index > 0xFFFF){
+            this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
         }
-        
-        if (this.preferences.insert_new_line_before_while_in_do_statement) {
-            this.scribe.printNewLine();
-        }
-        this.scribe.printNextToken(TerminalTokens.TokenNamewhile, this.preferences.insert_space_after_closing_brace_in_block);
-        this.scribe.printNextToken(TerminalTokens.TokenNameLPAREN, this.preferences.insert_space_before_opening_paren_in_while);
-        
-        if (this.preferences.insert_space_after_opening_paren_in_while) {
-            this.scribe.space();
-        }
-        
-        node.getExpression().accept(this);
-        
-        this.scribe.printNextToken(TerminalTokens.TokenNameRPAREN, this.preferences.insert_space_before_closing_paren_in_while);
-        this.scribe.printNextToken(TerminalTokens.TokenNameSEMICOLON, this.preferences.insert_space_before_semicolon);
-        this.scribe.printTrailingComment();
-        return false;
+        writeU1(NameAndTypeTag);
+        writeU2(nameIndex);
+        writeU2(typeIndex);
     }
+    return index;
+}
 

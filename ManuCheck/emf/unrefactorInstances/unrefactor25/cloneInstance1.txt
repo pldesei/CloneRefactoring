@@ -1,19 +1,16 @@
-(startLine=194 endLine=210 srcPath=/root/Projects/org.eclipse.emfFilter/384/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/BImpl.java)
-  public void setC2(C2 newC2)
+(startLine=206 endLine=219 srcPath=/root/Projects/org.eclipse.emfFilter/168/org.eclipse.emf/tests/org.eclipse.emf.test.common/src/org/eclipse/emf/test/models/ref/impl/AImpl.java)
+  public C getC()
   {
-    if (newC2 != eInternalContainer() || (eContainerFeatureID != RefPackage.B__C2 && newC2 != null))
+    if (c != null && c.eIsProxy())
     {
-      if (EcoreUtil.isAncestor(this, newC2))
-        throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-      NotificationChain msgs = null;
-      if (eInternalContainer() != null)
-        msgs = eBasicRemoveFromContainer(msgs);
-      if (newC2 != null)
-        msgs = ((InternalEObject)newC2).eInverseAdd(this, RefPackage.C2__B, C2.class, msgs);
-      msgs = basicSetC2(newC2, msgs);
-      if (msgs != null) msgs.dispatch();
+      InternalEObject oldC = (InternalEObject)c;
+      c = (C)eResolveProxy(oldC);
+      if (c != oldC)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefPackage.A__C, oldC, c));
+      }
     }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.B__C2, newC2, newC2));
+    return c;
   }
 

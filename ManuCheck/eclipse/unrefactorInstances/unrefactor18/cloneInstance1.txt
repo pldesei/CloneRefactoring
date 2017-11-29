@@ -1,12 +1,28 @@
-(startLine=36 endLine=45 srcPath=/root/Projects/eclipse.jdt.coreFilter/1996/eclipse.jdt.core/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/HashtableOfInt.java)
-public boolean containsKey(int key) {
-    int index = key % valueTable.length;
-    int currentKey;
-    while ((currentKey = keyTable[index]) != 0) {
-        if (currentKey == key)
-            return true;
-        index = (index + 1) % keyTable.length;
+(startLine=421 endLine=446 srcPath=/root/Projects/eclipse.jdt.coreFilter/506/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/workspace/Formatter/test492/Main_in.java)
+    private URL[] getBootPath(String base) throws IOException {
+        URL url = null;
+        if (base != null) {
+            url = new URL(base);
+        } else {
+            // search in the root location
+            url = new URL(getInstallLocation());
+            String path = url.getFile() + "plugins"; //$NON-NLS-1$
+            path = searchFor(framework, path);
+            if (path == null)
+                throw new RuntimeException("Could not find framework"); //$NON-NLS-1$
+            // add on any dev path elements
+            url = new URL(url.getProtocol(), url.getHost(), url.getPort(), path);
+        }
+        if (System.getProperty(PROP_FRAMEWORK) == null)
+            System.getProperties().put(PROP_FRAMEWORK, url.toExternalForm());
+        if (debug)
+            System.out.println("Framework located:\n    " + url.toExternalForm());
+        URL[] result = getDevPath(url);
+        if (debug) {
+            System.out.println("Framework classpath:"); //$NON-NLS-1$
+            for (int i = 0; i < result.length; i++)
+                System.out.println("    " + result[i].toExternalForm()); //$NON-NLS-1$
+        }
+        return result;
     }
-    return false;
-}
 

@@ -1,0 +1,25 @@
+(startLine=207 endLine=229 srcPath=/root/Projects/org.eclipse.emfFilter/774/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/impl/EEnumImpl.java)
+  public boolean eIsSet(EStructuralFeature eFeature)
+  {
+    switch (eDerivedStructuralFeatureID(eFeature))
+    {
+      case EcorePackage.EENUM__EANNOTATIONS:
+        return eAnnotations != null && !eAnnotations.isEmpty();
+      case EcorePackage.EENUM__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case EcorePackage.EENUM__INSTANCE_CLASS_NAME:
+        return INSTANCE_CLASS_NAME_EDEFAULT == null ? instanceClassName != null : !INSTANCE_CLASS_NAME_EDEFAULT.equals(instanceClassName);
+      case EcorePackage.EENUM__INSTANCE_CLASS:
+        return INSTANCE_CLASS_EDEFAULT == null ? getInstanceClass() != null : !INSTANCE_CLASS_EDEFAULT.equals(getInstanceClass());
+      case EcorePackage.EENUM__DEFAULT_VALUE:
+        return DEFAULT_VALUE_EDEFAULT == null ? getDefaultValue() != null : !DEFAULT_VALUE_EDEFAULT.equals(getDefaultValue());
+      case EcorePackage.EENUM__EPACKAGE:
+        return getEPackage() != null;
+      case EcorePackage.EENUM__SERIALIZABLE:
+        return ((eFlags & SERIALIZABLE_EFLAG) != 0) != SERIALIZABLE_EDEFAULT;
+      case EcorePackage.EENUM__ELITERALS:
+        return eLiterals != null && !eLiterals.isEmpty();
+    }
+    return eDynamicIsSet(eFeature);
+  }
+

@@ -1,23 +1,9 @@
-(startLine=497 endLine=517 srcPath=/root/Projects/elasticsearchFilter/373/elasticsearch/src/test/java/org/elasticsearch/search/query/SearchQueryTests.java)
-    public void queryStringAnalyzedWildcard() throws Exception {
-        createIndex("test");
-
-        client().prepareIndex("test", "type1", "1").setSource("field1", "value_1", "field2", "value_2").get();
-        refresh();
-
-        SearchResponse searchResponse = client().prepareSearch().setQuery(queryStringQuery("value*").analyzeWildcard(true)).get();
-        assertHitCount(searchResponse, 1l);
-
-        searchResponse = client().prepareSearch().setQuery(queryStringQuery("*ue*").analyzeWildcard(true)).get();
-        assertHitCount(searchResponse, 1l);
-
-        searchResponse = client().prepareSearch().setQuery(queryStringQuery("*ue_1").analyzeWildcard(true)).get();
-        assertHitCount(searchResponse, 1l);
-
-        searchResponse = client().prepareSearch().setQuery(queryStringQuery("val*e_1").analyzeWildcard(true)).get();
-        assertHitCount(searchResponse, 1l);
-
-        searchResponse = client().prepareSearch().setQuery(queryStringQuery("v?l*e?1").analyzeWildcard(true)).get();
-        assertHitCount(searchResponse, 1l);
+(startLine=50 endLine=56 srcPath=/root/Projects/elasticsearchFilter/1374/elasticsearch/src/main/java/org/elasticsearch/search/facet/histogram/unbounded/ScriptHistogramFacetCollector.java)
+    public ScriptHistogramFacetCollector(String facetName, String scriptLang, String keyScript, String valueScript, Map<String, Object> params, long interval, HistogramFacet.ComparatorType comparatorType, SearchContext context) {
+        super(facetName);
+        this.keyScript = context.scriptService().search(context.lookup(), scriptLang, keyScript, params);
+        this.valueScript = context.scriptService().search(context.lookup(), scriptLang, valueScript, params);
+        this.interval = interval > 0 ? interval : 0;
+        this.comparatorType = comparatorType;
     }
 

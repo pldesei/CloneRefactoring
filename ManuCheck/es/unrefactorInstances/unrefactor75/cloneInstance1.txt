@@ -1,18 +1,15 @@
-(startLine=91 endLine=106 srcPath=/root/Projects/elasticsearchFilter/242/elasticsearch/core/src/main/java/org/elasticsearch/common/xcontent/json/JsonXContentParser.java)
-    public Object objectText() throws IOException {
-        JsonToken currentToken = parser.getCurrentToken();
-        if (currentToken == JsonToken.VALUE_STRING) {
-            return text();
-        } else if (currentToken == JsonToken.VALUE_NUMBER_INT || currentToken == JsonToken.VALUE_NUMBER_FLOAT) {
-            return parser.getNumberValue();
-        } else if (currentToken == JsonToken.VALUE_TRUE) {
-            return Boolean.TRUE;
-        } else if (currentToken == JsonToken.VALUE_FALSE) {
-            return Boolean.FALSE;
-        } else if (currentToken == JsonToken.VALUE_NULL) {
-            return null;
-        } else {
-            return text();
-        }
+(startLine=59 endLine=71 srcPath=/root/Projects/elasticsearchFilter/1113/elasticsearch/src/main/java/org/elasticsearch/action/support/broadcast/TransportBroadcastOperationAction.java)
+    protected TransportBroadcastOperationAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, TransportService transportService) {
+        super(settings, threadPool);
+        this.clusterService = clusterService;
+        this.transportService = transportService;
+        this.threadPool = threadPool;
+
+        this.transportAction = transportAction();
+        this.transportShardAction = transportAction() + "/s";
+        this.executor = executor();
+
+        transportService.registerHandler(transportAction, new TransportHandler());
+        transportService.registerHandler(transportShardAction, new ShardTransportHandler());
     }
 

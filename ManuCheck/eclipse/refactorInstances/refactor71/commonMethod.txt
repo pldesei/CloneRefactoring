@@ -1,2 +1,7 @@
-(startLine=317 endLine=319 srcPath=/root/Projects/eclipse.jdt.coreFilter/150/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaSearchTests.java)
+(startLine=72 endLine=76 srcPath=/root/Projects/eclipse.jdt.coreFilter/321/eclipse.jdt.core/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/ClassFileWorkingCopy.java)
+public IResource resource(PackageFragmentRoot root) {
+    if (root.isArchive())
+        return root.resource(root);
+    return this.classFile.resource(root);
+}
 

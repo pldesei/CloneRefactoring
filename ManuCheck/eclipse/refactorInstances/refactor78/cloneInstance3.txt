@@ -1,11 +1,11 @@
-(startLine=2314 endLine=2322 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
-public void testBug84724d() throws CoreException {
+(startLine=2211 endLine=2219 srcPath=/root/Projects/eclipse.jdt.coreFilter/151/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug84100d() throws CoreException {
     this.resultCollector.showRule = true;
-    setUpBug84724();
-    IMethod method = selectMethod(this.workingCopies[0], "X", 5);
+    setUpBug84100();
+    IMethod method = selectMethod(this.workingCopies[0], "foo", 4);
     search(method, REFERENCES);
     assertSearchResults(
-        "src/b84724/Z.java void b84724.Z.foo() [new X(\"\", 3, \"\", \"\")] EXACT_MATCH"
+        "src/b84100/Z.java void b84100.Z.foo() [foo(3, \"\", \"\")] EXACT_MATCH"
     );
 }
 

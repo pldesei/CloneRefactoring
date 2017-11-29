@@ -1,12 +1,12 @@
-(startLine=88 endLine=97 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/KeepFilterFactoryTests.java)
-    public void testCaseInsensitiveMapping() throws IOException {
+(startLine=49 endLine=58 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/index/analysis/ShingleTokenFilterFactoryTests.java)
+    public void testInverseMapping() throws IOException {
         AnalysisService analysisService = AnalysisTestsHelper.createAnalysisServiceFromClassPath(createTempDir(), RESOURCE);
-        TokenFilterFactory tokenFilter = analysisService.tokenFilter("my_keep_filter");
-        assertThat(tokenFilter, instanceOf(KeepWordFilterFactory.class));
-        String source = "hello small world";
-        String[] expected = new String[]{"hello", "world"};
+        TokenFilterFactory tokenFilter = analysisService.tokenFilter("shingle_inverse");
+        assertThat(tokenFilter, instanceOf(ShingleTokenFilterFactory.class));
+        String source = "the quick brown fox";
+        String[] expected = new String[]{"the_quick_brown", "quick_brown_fox"};
         Tokenizer tokenizer = new WhitespaceTokenizer();
         tokenizer.setReader(new StringReader(source));
-        assertTokenStreamContents(tokenFilter.create(tokenizer), expected, new int[]{1, 2});
+        assertTokenStreamContents(tokenFilter.create(tokenizer), expected);
     }
 

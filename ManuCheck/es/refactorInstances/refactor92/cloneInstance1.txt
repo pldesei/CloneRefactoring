@@ -1,9 +1,13 @@
-(startLine=86 endLine=92 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/core/src/test/java/org/elasticsearch/action/support/AutoCreateIndexTests.java)
-    public void testAutoCreationPatternEnabled() {
-        Settings settings = Settings.builder().put(AutoCreateIndex.AUTO_CREATE_INDEX_SETTING.getKey(), randomFrom("+index*", "index*")).build();
-        AutoCreateIndex autoCreateIndex = new AutoCreateIndex(settings, new IndexNameExpressionResolver(settings));
-        ClusterState clusterState = ClusterState.builder(new ClusterName("test")).metaData(MetaData.builder()).build();
-        assertThat(autoCreateIndex.shouldAutoCreate("index" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(true));
-        assertThat(autoCreateIndex.shouldAutoCreate("does_not_match" + randomAsciiOfLengthBetween(1, 5), clusterState), equalTo(false));
+(startLine=91 endLine=101 srcPath=/root/Projects/elasticsearchFilter/266/elasticsearch/core/src/test/java/org/elasticsearch/common/network/NetworkAddressTests.java)
+    public void testRoundTripV4() throws Exception {
+        byte bytes[] = new byte[4];
+        Random random = random();
+        for (int i = 0; i < 10000; i++) {
+            random.nextBytes(bytes);
+            InetAddress expected = Inet4Address.getByAddress(bytes);
+            String formatted = NetworkAddress.formatAddress(expected);
+            InetAddress actual = InetAddress.getByName(formatted);
+            assertEquals(expected, actual);
+        }
     }
 

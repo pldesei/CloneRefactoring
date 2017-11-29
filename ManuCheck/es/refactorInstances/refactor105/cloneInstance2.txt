@@ -1,13 +1,49 @@
-(startLine=93 endLine=103 srcPath=/root/Projects/elasticsearchFilter/15/elasticsearch/core/src/main/java/org/elasticsearch/search/aggregations/bucket/sampler/DiversifiedNumericSamplerAggregator.java)
-                    public long get(int doc) {
-                        values.setDocument(doc);
-                        final int valuesCount = values.count();
-                        if (valuesCount > 1) {
-                            throw new IllegalArgumentException("Sample diversifying key must be a single valued-field");
-                        }
-                        if (valuesCount == 1) {
-                            return values.valueAt(0);
-                        }
-                        return Long.MIN_VALUE;
-                    }
+(startLine=46 endLine=92 srcPath=/root/Projects/elasticsearchFilter/264/elasticsearch/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SWhile.java)
+    void analyze(Variables variables) {
+        variables.incrementScope();
+
+        condition.expected = Definition.BOOLEAN_TYPE;
+        condition.analyze(variables);
+        condition = condition.cast(variables);
+
+        boolean continuous = false;
+
+        if (condition.constant != null) {
+            continuous = (boolean)condition.constant;
+
+            if (!continuous) {
+                throw createError(new IllegalArgumentException("Extraneous while loop."));
+            }
+
+            if (block == null) {
+                throw createError(new IllegalArgumentException("While loop has no escape."));
+            }
+        }
+
+        if (block != null) {
+            block.beginLoop = true;
+            block.inLoop = true;
+
+            block.analyze(variables);
+
+            if (block.loopEscape && !block.anyContinue) {
+                throw createError(new IllegalArgumentException("Extraneous while loop."));
+            }
+
+            if (continuous && !block.anyBreak) {
+                methodEscape = true;
+                allEscape = true;
+            }
+
+            block.statementCount = Math.max(1, block.statementCount);
+        }
+
+        statementCount = 1;
+
+        if (maxLoopCounter > 0) {
+            loopCounterSlot = variables.getVariable(location, "#loop").slot;
+        }
+
+        variables.decrementScope();
+    }
 

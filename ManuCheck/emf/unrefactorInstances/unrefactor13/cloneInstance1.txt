@@ -1,27 +1,38 @@
-(startLine=316 endLine=340 srcPath=/root/Projects/org.eclipse.emfFilter/302/org.eclipse.emf/plugins/org.eclipse.emf.common/src/org/eclipse/emf/common/util/BasicEList.java)
-  public boolean contains(Object object) 
+(startLine=1866 endLine=1901 srcPath=/root/Projects/org.eclipse.emfFilter/588/org.eclipse.emf/plugins/org.eclipse.emf.ecore/src/org/eclipse/emf/ecore/util/BasicFeatureMap.java)
+  public Object get(EStructuralFeature feature, boolean resolve)
   {
-    if (useEquals() && object != null)
+    Entry [] entries = (Entry[])data;
+    if (isMany(feature))
     {
-      for (int i = 0; i < size; ++i)
-      {
-        if (object.equals(data[i]))
-        {
-          return true;
-        }
-      }
+      return list(feature);
     }
     else
     {
+      FeatureMapUtil.Validator validator = FeatureMapUtil.getValidator(owner.eClass(), feature);
+      int count = 0;
       for (int i = 0; i < size; ++i)
       {
-        if (data[i] == object)
+        Entry entry = entries[i];
+        if (validator.isValid(entry.getEStructuralFeature()))
         {
-          return true;
+          if (FeatureMapUtil.isFeatureMap(feature))
+          {
+            return entry;
+          }
+          else
+          {
+            Object value = entry.getValue();
+            if (value != null && resolve && isResolveProxies(feature))
+            {
+              value = resolveProxy(feature, i, count, value);
+            }
+            return value;
+          }
         }
+        ++count;
       }
-    }
 
-    return false;
+      return feature.getDefaultValue();
+    }
   }
 

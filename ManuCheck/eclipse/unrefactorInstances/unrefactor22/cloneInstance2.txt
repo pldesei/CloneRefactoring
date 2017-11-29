@@ -1,32 +1,93 @@
-(startLine=3093 endLine=3122 srcPath=/root/Projects/eclipse.jdt.coreFilter/1245/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
-            public void run(IProgressMonitor monitor) throws CoreException {
-                if (!createProjectsFirst) {
-                    for (int i = 0; i < numberOfParticipants; i++){
-                        projectNames[i] = "P"+i;
-                        projects[i] = createJavaProject(projectNames[i], new String[]{""}, "");
-                        allProjectsInCycle[i] = 0;
-                    }        
+(startLine=101 endLine=191 srcPath=/root/Projects/eclipse.jdt.coreFilter/2025/eclipse.jdt.core/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CopyMoveResourcesTests.java)
+public void movePositive(IJavaElement[] elements, IJavaElement[] destinations, IJavaElement[] siblings, String[] names, boolean force, IProgressMonitor monitor) throws JavaModelException {
+    try {
+        startDeltas();
+        
+        // if forcing, ensure that a name collision exists
+        int i;
+        if (force) {
+            for (i = 0; i < elements.length; i++) {
+                IJavaElement e = elements[i];
+                IJavaElement collision = null;
+                if (names == null) {
+                    collision = generateHandle(e, null, destinations[i]);
+                } else {
+                    collision = generateHandle(e, names[i], destinations[i]);
                 }
-                for (int i = 0; i < numberOfParticipants; i++){
-                    IClasspathEntry[] extraEntries = new IClasspathEntry[useForwardReferences ? numberOfParticipants - i -1 : i];
-                    int index = 0;
-                    for (int j = useForwardReferences ? i+1 : 0; 
-                        useForwardReferences ? (j < numberOfParticipants) : (j < i); 
-                        j++){
-                        extraEntries[index++] = JavaCore.newProjectEntry(projects[j].getPath());
-                    }
-                    // append project references            
-                    IClasspathEntry[] oldClasspath = projects[i].getRawClasspath();
-                    IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries.length];
-                    System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
-                    for (int j = 0; j < extraEntries.length; j++){
-                        newClasspath[oldClasspath.length+j] = extraEntries[j];
-                    }            
-                    // set classpath
-                    long innerStart = System.currentTimeMillis(); // time spent in individual CP setting
-                    projects[i].setRawClasspath(newClasspath, null);
-                    time[0] += System.currentTimeMillis() - innerStart;
-                }
-                start[0] = System.currentTimeMillis(); // time spent in delta refresh
+                assertTrue("Collision does not exist", collision.exists());
             }
+        }
+    
+        // move
+        getJavaModel().move(elements, destinations, siblings, names, force, monitor);
+    
+        for (i = 0; i < elements.length; i++) {
+            IJavaElement element = elements[i];
+            IJavaElement moved = null;
+            if (names == null) {
+                moved = generateHandle(element, null, destinations[i]);
+            } else {
+                moved = generateHandle(element, names[i], destinations[i]);
+            }
+            // ensure the original element no longer exists, unless moving within the same container
+            if (!destinations[i].equals(element.getParent())) {
+                assertTrue("The original element must not exist", !element.exists());
+            }
+            assertTrue("Moved element should exist", moved.exists());
+    
+            IJavaElement container = destinations[i];
+            if (container.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
+                if (container.getElementName().equals("")) {
+                    // default package
+                    if (moved.getElementType() == IJavaElement.COMPILATION_UNIT) {
+                        IJavaElement[] children = ((ICompilationUnit) moved).getChildren();
+                        for (int j = 0; j < children.length; j++) {
+                            if (children[j].getElementType() == IJavaElement.PACKAGE_DECLARATION) {
+                                assertTrue("Should not find package decl", false);
+                            }
+                        }
+                    }
+                } else {
+                    IJavaElement[] children = ((ICompilationUnit) moved).getChildren();
+                    boolean found = false;
+                    for (int j = 0; j < children.length; j++) {
+                        if (children[j] instanceof IPackageDeclaration) {
+                            assertTrue("package declaration incorrect", ((IPackageDeclaration) children[j]).getElementName().equals(container.getElementName()));
+                            found = true;
+                            break;
+                        }
+                    }
+                    assertTrue("Did not find package decl", found);
+                }
+            }
+            IJavaElementDelta destDelta = null;
+            if (isMainType(element, destinations[i]) && names != null && names[i] != null) { //moved/renamed main type to same cu
+                destDelta = getDeltaFor(moved.getParent());
+                assertTrue("Renamed compilation unit as result of main type not added", destDelta != null && destDelta.getKind() == IJavaElementDelta.ADDED);
+                IJavaElementDelta[] deltas = destDelta.getAddedChildren();
+                assertTrue("Added children not correct for element copy", deltas[0].getElement().equals(moved));
+                assertTrue("flag should be F_MOVED_FROM", (deltas[0].getFlags() & IJavaElementDelta.F_MOVED_FROM) > 0);
+                assertTrue("moved from handle should be original", deltas[0].getMovedFromElement().equals(element));
+            } else {
+                destDelta = getDeltaFor(destinations[i], true);
+                assertTrue("Destination container not changed", destDelta != null && destDelta.getKind() == IJavaElementDelta.CHANGED);
+                IJavaElementDelta[] deltas = destDelta.getAddedChildren();
+                for (int j = 0; j < deltas.length - 1; j++) {
+                    // side effect packages added
+                    IJavaElement pkg = deltas[j].getElement();
+                    assertTrue("Side effect child should be a package fragment", pkg.getElementType() == IJavaElement.PACKAGE_FRAGMENT);
+                    assertTrue("Side effect child should be an enclosing package", element.getElementName().startsWith(pkg.getElementName()));
+                }
+                IJavaElementDelta pkgDelta = deltas[deltas.length - 1];
+                assertTrue("Added children not correct for element copy", pkgDelta.getElement().equals(moved));
+                assertTrue("flag should be F_MOVED_FROM", (pkgDelta.getFlags() & IJavaElementDelta.F_MOVED_FROM) > 0);
+                assertTrue("moved from handle shoud be original", pkgDelta.getMovedFromElement().equals(element));
+                IJavaElementDelta sourceDelta = getDeltaFor(element, true);
+                assertTrue("moved to handle should be original", sourceDelta.getMovedToElement().equals(moved));
+            }
+        }
+    } finally {
+        stopDeltas();
+    }
+}
 
