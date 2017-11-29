@@ -1,8 +1,0 @@
-(startLine=98 endLine=103 srcPath=/home/ubuntu/guavaFilter/44/guava/guava/src/com/google/common/collect/LinkedHashMultiset.java)
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-    stream.defaultReadObject();
-    int distinctElements = Serialization.readCount(stream);
-    setBackingMap(new LinkedHashMap<E, Count>());
-    Serialization.populateMultiset(this, stream, distinctElements);
-  }
-

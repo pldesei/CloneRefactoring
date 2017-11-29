@@ -1,9 +1,0 @@
-(startLine=49 endLine=55 srcPath=/home/ubuntu/guavaFilter/541/guava/guava-tests/benchmark/com/google/common/hash/MessageDigestCreationBenchmark.java)
-  @Benchmark int clone(int reps) throws Exception {
-    int retValue = 0;
-    for (int i = 0; i < reps; i++) {
-      retValue ^= ((MessageDigest) md.clone()).getDigestLength();
-    }
-    return retValue;
-  }
-

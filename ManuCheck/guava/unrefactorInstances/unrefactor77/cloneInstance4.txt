@@ -1,9 +1,0 @@
-(startLine=365 endLine=371 srcPath=/home/ubuntu/guavaFilter/35/guava/guava-tests/test/com/google/common/collect/SynchronizedNavigableMapTest.java)
-  public void testSubMap_K_B_K_B() {
-    NavigableMap<String, Integer> map = create();
-    NavigableMap<String, Integer> subMap = map.subMap("a", true, "b", false);
-    assertTrue(subMap instanceof SynchronizedNavigableMap);
-    assertSame(
-        mutex, ((SynchronizedNavigableMap<String, Integer>) subMap).mutex);
-  }
-

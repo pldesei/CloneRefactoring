@@ -1,8 +1,0 @@
-(startLine=32 endLine=37 srcPath=/home/ubuntu/luceneFilter/529/lucene/lucene/highlighter/src/test/org/apache/lucene/search/vectorhighlight/SingleFragListBuilderTest.java)
-  public void testShortFieldFragList() throws Exception {
-    SingleFragListBuilder sflb = new SingleFragListBuilder();
-    FieldFragList ffl = sflb.createFieldFragList( fpl(new TermQuery(new Term(F, "a")), "a b c d" ), 100 );
-    assertEquals( 1, ffl.getFragInfos().size() );
-    assertEquals( "subInfos=(a((0,1)))/1.0(0,2147483647)", ffl.getFragInfos().get( 0 ).toString() );
-  }
-

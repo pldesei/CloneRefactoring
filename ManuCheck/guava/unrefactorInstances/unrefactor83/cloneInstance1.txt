@@ -1,8 +1,0 @@
-(startLine=70 endLine=75 srcPath=/home/ubuntu/guavaFilter/427/guava/guava-tests/test/com/google/common/cache/ForwardingLoadingCacheTest.java)
-  public void testGetAll() throws ExecutionException {
-    expect(mock.getAll(ImmutableList.of("key"))).andReturn(ImmutableMap.of("key", Boolean.TRUE));
-    replay(mock);
-    assertEquals(ImmutableMap.of("key", Boolean.TRUE), forward.getAll(ImmutableList.of("key")));
-    verify(mock);
-  }
-

@@ -1,8 +1,0 @@
-(startLine=301 endLine=306 srcPath=/home/ubuntu/guavaFilter/35/guava/guava-tests/test/com/google/common/collect/SynchronizedNavigableMapTest.java)
-  public void testHeadMap_K() {
-    NavigableMap<String, Integer> map = create();
-    SortedMap<String, Integer> headMap = map.headMap("a");
-    assertTrue(headMap instanceof SynchronizedSortedMap);
-    assertSame(mutex, ((SynchronizedSortedMap<String, Integer>) headMap).mutex);
-  }
-
