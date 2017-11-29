@@ -1,0 +1,13 @@
+(startLine=1050 endLine=1060 srcPath=/home/ubuntu/luceneFilter/91/lucene/lucene/analysis/common/src/test/org/apache/lucene/analysis/shingle/ShingleFilterTest.java)
+  protected void shingleFilterTest(int minSize, int maxSize, Token[] tokensToShingle, 
+                                   Token[] tokensToCompare, int[] positionIncrements,
+                                   String[] types, boolean outputUnigrams, 
+                                   boolean outputUnigramsIfNoShingles)
+    throws IOException {
+    ShingleFilter filter 
+      = new ShingleFilter(new CannedTokenStream(tokensToShingle), minSize, maxSize);
+    filter.setOutputUnigrams(outputUnigrams);
+    filter.setOutputUnigramsIfNoShingles(outputUnigramsIfNoShingles);
+    shingleFilterTestCommon(filter, tokensToCompare, positionIncrements, types);
+  }
+

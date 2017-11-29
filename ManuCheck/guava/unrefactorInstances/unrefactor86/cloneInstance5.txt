@@ -1,0 +1,10 @@
+(startLine=343 endLine=350 srcPath=/home/ubuntu/guavaFilter/978/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
+    public void testBuilderPutNullKey() {
+      Builder<String, Integer> builder = new Builder<String, Integer>();
+      try {
+        builder.put(null, 1);
+        fail();
+      } catch (NullPointerException expected) {
+      }
+    }
+

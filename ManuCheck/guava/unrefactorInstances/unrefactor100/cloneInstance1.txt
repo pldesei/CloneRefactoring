@@ -1,0 +1,16 @@
+(startLine=81 endLine=94 srcPath=/home/ubuntu/guavaFilter/667/guava/guava-tests/test/com/google/common/io/ByteSinkTest.java)
+  public void testClosesOnErrors_copyingFromByteSourceThatThrows() {
+    for (TestOption option : EnumSet.of(OPEN_THROWS, READ_THROWS, CLOSE_THROWS)) {
+      TestByteSource failSource = new TestByteSource(new byte[10], option);
+      TestByteSink okSink = new TestByteSink();
+      try {
+        failSource.copyTo(okSink);
+        fail();
+      } catch (IOException expected) {}
+      // ensure stream was closed IF it was opened (depends on implementation whether or not it's
+      // opened at all if source.newInputStream() throws).
+      assertTrue("stream not closed when copying from source with option: " + option,
+          !okSink.wasStreamOpened() || okSink.wasStreamClosed());
+    }
+  }
+

@@ -1,0 +1,8 @@
+(startLine=315 endLine=320 srcPath=/home/ubuntu/guavaFilter/187/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
+        protected Map<String, String> create(Entry<String, String>[] entries) {
+          Map<String, String> map = Maps.newHashMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+

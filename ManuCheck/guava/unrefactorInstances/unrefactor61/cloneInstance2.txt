@@ -1,0 +1,8 @@
+(startLine=684 endLine=689 srcPath=/home/ubuntu/guavaFilter/855/guava/guava-tests/test/com/google/common/collect/ImmutableListTest.java)
+    public void testBuilderAdd_varargs() {
+      ImmutableList<String> list = new ImmutableList.Builder<String>()
+          .add("a", "b", "a", "c")
+          .build();
+      assertEquals(asList("a", "b", "a", "c"), list);
+    }
+

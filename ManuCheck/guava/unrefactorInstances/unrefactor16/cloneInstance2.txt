@@ -1,0 +1,12 @@
+(startLine=548 endLine=557 srcPath=/home/ubuntu/guavaFilter/939/guava/guava-tests/test/com/google/common/collect/IteratorsTest.java)
+  public void testCycleRemoveSameElementTwice() {
+    Iterator<String> cycle = Iterators.cycle("a", "b");
+    cycle.next();
+    cycle.remove();
+    try {
+      cycle.remove();
+      fail("no exception thrown");
+    } catch (IllegalStateException expected) {
+    }
+  }
+

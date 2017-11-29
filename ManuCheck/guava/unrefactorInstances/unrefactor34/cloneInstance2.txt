@@ -1,0 +1,9 @@
+(startLine=241 endLine=247 srcPath=/home/ubuntu/guavaFilter/769/guava/guava-tests/test/com/google/common/collect/SetsTest.java)
+          @Override public Set<String> create(String[] elements) {
+            Set<String> unfiltered = Sets.newLinkedHashSet();
+            unfiltered.add("yyy");
+            unfiltered.addAll(ImmutableList.copyOf(elements));
+            unfiltered.add("zzz");
+            return Sets.filter(unfiltered, Collections2Test.LENGTH_1);
+          }
+

@@ -1,0 +1,9 @@
+(startLine=534 endLine=540 srcPath=/home/ubuntu/guavaFilter/599/guava/guava-tests/test/com/google/common/collect/TreeRangeSetTest.java)
+  public void testRemoveAllFromAboveUpperBound() {
+    TreeRangeSet<Integer> rangeSet = TreeRangeSet.create();
+    rangeSet.add(Range.closed(3, 6));
+    rangeSet.remove(Range.closed(3, 7));
+    testInvariants(rangeSet);
+    ASSERT.that(rangeSet.asRanges()).isEmpty();
+  }
+

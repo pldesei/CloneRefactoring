@@ -1,0 +1,10 @@
+(startLine=660 endLine=667 srcPath=/home/ubuntu/guavaFilter/609/guava/guava-tests/test/com/google/common/collect/MultimapsTest.java)
+  public void testNewListMultimapSerialization() {
+    CountingSupplier<LinkedList<Integer>> factory = new ListSupplier();
+    Map<Color, Collection<Integer>> map = Maps.newTreeMap();
+    ListMultimap<Color, Integer> multimap = Multimaps.newListMultimap(map, factory);
+    multimap.putAll(Color.BLUE, asList(3, 1, 4, 1));
+    multimap.putAll(Color.RED, asList(2, 7, 1, 8));
+    SerializableTester.reserializeAndAssert(multimap);
+  }
+

@@ -1,0 +1,12 @@
+(startLine=228 endLine=237 srcPath=/home/ubuntu/luceneFilter/1142/lucene/solr/src/test/org/apache/solr/analysis/TestShingleFilterFactory.java)
+  public void testOutputUnigramsIfNoShingles() throws Exception {
+    Reader reader = new StringReader("test");
+    Map<String,String> args = new HashMap<String,String>();
+    args.put("outputUnigrams", "false");
+    args.put("outputUnigramsIfNoShingles", "true");
+    ShingleFilterFactory factory = new ShingleFilterFactory();
+    factory.init(args);
+    TokenStream stream = factory.create(new WhitespaceTokenizer(DEFAULT_VERSION, reader));
+    assertTokenStreamContents(stream, new String[] { "test" });
+  }
+

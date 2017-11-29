@@ -1,0 +1,9 @@
+(startLine=246 endLine=252 srcPath=/home/ubuntu/guavaFilter/37/guava/guava-tests/test/com/google/common/primitives/IntsTest.java)
+  public void testFromByteArrayFails() {
+    try {
+      Ints.fromByteArray(new byte[Ints.BYTES - 1]);
+      fail();
+    } catch (IllegalArgumentException expected) {
+    }
+  }
+

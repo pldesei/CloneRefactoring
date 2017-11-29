@@ -1,0 +1,11 @@
+(startLine=191 endLine=199 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/util/concurrent/FuturesGetCheckedTest.java)
+  public void testGetCheckedTimed_cancelled() throws TwoArgConstructorException {
+    SettableFuture<String> future = SettableFuture.create();
+    future.cancel(true);
+    try {
+      getChecked(future, TwoArgConstructorException.class, 0, SECONDS);
+      fail();
+    } catch (CancellationException expected) {
+    }
+  }
+

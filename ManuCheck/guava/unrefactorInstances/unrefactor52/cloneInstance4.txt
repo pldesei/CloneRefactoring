@@ -1,0 +1,9 @@
+(startLine=542 endLine=548 srcPath=/home/ubuntu/guavaFilter/599/guava/guava-tests/test/com/google/common/collect/TreeRangeSetTest.java)
+  public void testRemoveAllExtendingBothDirections() {
+    TreeRangeSet<Integer> rangeSet = TreeRangeSet.create();
+    rangeSet.add(Range.closed(3, 6));
+    rangeSet.remove(Range.closed(2, 7));
+    testInvariants(rangeSet);
+    ASSERT.that(rangeSet.asRanges()).isEmpty();
+  }
+

@@ -1,0 +1,8 @@
+(startLine=437 endLine=442 srcPath=/home/ubuntu/luceneFilter/310/lucene/solr/core/src/test/org/apache/solr/search/QueryEqualityTest.java)
+  public void testFuncMax() throws Exception {
+    assertFuncEquals("max(5,4,3,2,1)", "max(5, 4, 3, 2, 1)");
+    assertFuncEquals("max(foo_i,4)", "max(field('foo_i'), 4)");
+    assertFuncEquals("max(foo_i,sub(4,field('bar_i')))", 
+                     "max(field(foo_i), sub(4,bar_i))");
+  }
+

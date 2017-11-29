@@ -1,0 +1,23 @@
+(startLine=515 endLine=535 srcPath=/home/ubuntu/luceneFilter/1647/lucene/contrib/gdata-server/src/core/src/java/org/apache/lucene/gdata/storage/lucenestorage/StorageImplementation.java)
+    public String getAccountNameForFeedId(String feedId)
+            throws StorageException {
+        if (feedId == null)
+            throw new StorageException("feed-id must not be null");
+        ReferenceCounter<StorageQuery> query = null;
+        try {
+            query = this.controller.getStorageQuery();
+            String accountName = query.get().getAccountNameForFeedId(feedId);
+            if (accountName == null)
+                throw new StorageException("no feed for feedId " + feedId
+                        + " found");
+            return accountName;
+        } catch (IOException e) {
+            throw new StorageException("Can not access storage - "
+                    + e.getMessage(), e);
+        } finally {
+            if (query != null)
+                query.decrementRef();
+        }
+
+    }
+

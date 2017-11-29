@@ -1,0 +1,11 @@
+(startLine=348 endLine=356 srcPath=/home/ubuntu/guavaFilter/891/guava/guava-tests/test/com/google/common/base/ToStringHelperTest.java)
+  public void testToStringOmitNullValues_manyFieldsLastNull() {
+    String toTest = Objects.toStringHelper(new TestClass())
+        .omitNullValues()
+        .add("field1", "Hello")
+        .add("field2", "Googley")
+        .add("field3", null)
+        .toString();
+    assertEquals("TestClass{field1=Hello, field2=Googley}", toTest);
+  }
+

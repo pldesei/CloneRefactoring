@@ -1,0 +1,18 @@
+(startLine=113 endLine=128 srcPath=/home/ubuntu/luceneFilter/1318/lucene/src/java/org/apache/lucene/store/RAMOutputStream.java)
+  public void writeBytes(byte[] b, int offset, int len) throws IOException {
+    assert b != null;
+    while (len > 0) {
+      if (bufferPosition ==  bufferLength) {
+        currentBufferIndex++;
+        switchCurrentBuffer();
+      }
+
+      int remainInBuffer = currentBuffer.length - bufferPosition;
+      int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
+      System.arraycopy(b, offset, currentBuffer, bufferPosition, bytesToCopy);
+      offset += bytesToCopy;
+      len -= bytesToCopy;
+      bufferPosition += bytesToCopy;
+    }
+  }
+

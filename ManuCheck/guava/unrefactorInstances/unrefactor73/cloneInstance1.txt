@@ -1,0 +1,14 @@
+(startLine=281 endLine=292 srcPath=/home/ubuntu/guavaFilter/49/guava/guava-tests/test/com/google/common/hash/HashingTest.java)
+  public void testCombineOrdered_randomHashCodes() {
+    Random random = new Random(7);
+    List<HashCode> hashCodes = Lists.newArrayList();
+    for (int i = 0; i < 10; i++) {
+      hashCodes.add(HashCode.fromLong(random.nextLong()));
+    }
+    HashCode hashCode1 = Hashing.combineOrdered(hashCodes);
+    Collections.shuffle(hashCodes, random);
+    HashCode hashCode2 = Hashing.combineOrdered(hashCodes);
+
+    assertFalse(hashCode1.equals(hashCode2));
+  }
+

@@ -1,0 +1,17 @@
+(startLine=132 endLine=146 srcPath=/home/ubuntu/luceneFilter/149/lucene/lucene/facet/src/test/org/apache/lucene/facet/taxonomy/directory/TestDirectoryTaxonomyWriter.java)
+  public void testRollback() throws Exception {
+    // Verifies that if rollback is called, DTW is closed.
+    Directory dir = newDirectory();
+    DirectoryTaxonomyWriter dtw = new DirectoryTaxonomyWriter(dir);
+    dtw.addCategory(new CategoryPath("a"));
+    dtw.rollback();
+    try {
+      dtw.addCategory(new CategoryPath("a"));
+      fail("should not have succeeded to add a category following rollback.");
+    } catch (AlreadyClosedException e) {
+      // expected
+    }
+    
+    dir.close();
+  }
+

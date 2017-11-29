@@ -1,0 +1,18 @@
+(startLine=62 endLine=77 srcPath=/home/ubuntu/guavaFilter/241/guava/guava-tests/test/com/google/common/hash/HashingInputStreamTest.java)
+  public void testRead_putByteArray() throws Exception {
+    EasyMock.expect(hasher.putBytes(aryEq(testBytes), eq(0), eq(testBytes.length)))
+        .andReturn(hasher).once();
+    EasyMock.replay(hasher);
+    HashingInputStream in = new HashingInputStream(hashFunction, buffer);
+
+    byte[] buf = new byte[4];
+    int numOfByteRead = in.read(buf, 0, buf.length);
+    assertEquals(4, numOfByteRead);
+    for (int i = 0; i < testBytes.length; i++) {
+      assertEquals(testBytes[i], buf[i]);
+    }
+
+    EasyMock.verify(hashFunction);
+    EasyMock.verify(hasher);
+  }
+

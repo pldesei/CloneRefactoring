@@ -1,0 +1,10 @@
+(startLine=158 endLine=165 srcPath=/home/ubuntu/luceneFilter/507/lucene/lucene/queries/src/test/org/apache/lucene/queries/ChainedFilterTest.java)
+  public void testXOR() throws Exception {
+    ChainedFilter chain = getChainedFilter(
+      new Filter[]{dateFilter, bobFilter}, ChainedFilter.XOR);
+
+    TopDocs hits = searcher.search(query, chain, 1000);
+    assertEquals("XOR matches sue", MAX / 2, hits.totalHits);
+    assertEquals("sue", searcher.doc(hits.scoreDocs[0].doc).get("owner"));
+  }
+

@@ -1,0 +1,21 @@
+(startLine=63 endLine=81 srcPath=/home/ubuntu/luceneFilter/70/lucene/lucene/core/src/java/org/apache/lucene/store/SimpleFSDirectory.java)
+  public IndexInputSlicer createSlicer(final String name,
+      final IOContext context) throws IOException {
+    ensureOpen();
+    final File file = new File(getDirectory(), name);
+    final RandomAccessFile descriptor = new RandomAccessFile(file, "r");
+    return new IndexInputSlicer() {
+
+      @Override
+      public void close() throws IOException {
+        descriptor.close();
+      }
+
+      @Override
+      public IndexInput openSlice(String sliceDescription, long offset, long length) {
+        return new SimpleFSIndexInput("SimpleFSIndexInput(" + sliceDescription + " in path=\"" + file.getPath() + "\" slice=" + offset + ":" + (offset+length) + ")", descriptor, offset,
+            length, BufferedIndexInput.bufferSize(context));
+      }
+    };
+  }
+

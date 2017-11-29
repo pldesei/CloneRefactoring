@@ -1,0 +1,13 @@
+(startLine=248 endLine=258 srcPath=/home/ubuntu/guavaFilter/990/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
+    public void testBuilder() {
+      ImmutableMap<String, Integer> map = new Builder<String, Integer>()
+          .put("one", 1)
+          .put("two", 2)
+          .put("three", 3)
+          .put("four", 4)
+          .put("five", 5)
+          .build();
+      assertMapEquals(map,
+          "one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
+    }
+

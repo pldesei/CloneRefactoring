@@ -1,0 +1,55 @@
+(startLine=483 endLine=535 srcPath=/home/ubuntu/luceneFilter/297/lucene/lucene/analysis/common/src/java/org/tartarus/snowball/ext/PorterStemmer.java)
+                private boolean r_Step_4() {
+            int among_var;
+            int v_1;
+                    // (, line 91
+                    // [, line 92
+                    ket = cursor;
+                    // substring, line 92
+                    among_var = find_among_b(a_5, 19);
+                    if (among_var == 0)
+                    {
+                        return false;
+                    }
+                    // ], line 92
+                    bra = cursor;
+                    // call R2, line 92
+                    if (!r_R2())
+                    {
+                        return false;
+                    }
+                    switch(among_var) {
+                        case 0:
+                            return false;
+                        case 1:
+                            // (, line 95
+                            // delete, line 95
+                            slice_del();
+                            break;
+                        case 2:
+                            // (, line 96
+                            // or, line 96
+                            lab0: do {
+                                v_1 = limit - cursor;
+                                lab1: do {
+                                    // literal, line 96
+                                    if (!(eq_s_b(1, "s")))
+                                    {
+                                        break lab1;
+                                    }
+                                    break lab0;
+                                } while (false);
+                                cursor = limit - v_1;
+                                // literal, line 96
+                                if (!(eq_s_b(1, "t")))
+                                {
+                                    return false;
+                                }
+                            } while (false);
+                            // delete, line 96
+                            slice_del();
+                            break;
+                    }
+                    return true;
+                }
+

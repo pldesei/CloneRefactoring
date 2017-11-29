@@ -1,0 +1,8 @@
+(startLine=59 endLine=64 srcPath=/home/ubuntu/guavaFilter/1209/guava/guava/src/com/google/common/collect/ContiguousSet.java)
+  @Override public ImmutableSortedSet<C> subSet(C fromElement, C toElement) {
+    checkNotNull(fromElement);
+    checkNotNull(toElement);
+    checkArgument(comparator().compare(fromElement, toElement) <= 0);
+    return subSetImpl(fromElement, toElement);
+  }
+

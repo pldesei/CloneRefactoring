@@ -1,0 +1,11 @@
+(startLine=538 endLine=546 srcPath=/home/ubuntu/guavaFilter/939/guava/guava-tests/test/com/google/common/collect/IteratorsTest.java)
+  public void testCycleRemoveWithoutNext() {
+    Iterator<String> cycle = Iterators.cycle("a", "b");
+    assertTrue(cycle.hasNext());
+    try {
+      cycle.remove();
+      fail("no exception thrown");
+    } catch (IllegalStateException expected) {
+    }
+  }
+

@@ -1,0 +1,10 @@
+(startLine=114 endLine=121 srcPath=/home/ubuntu/guavaFilter/222/guava/guava-tests/test/com/google/common/graph/ImmutableSimpleUndirectedGraphTest.java)
+  public void addGraph_overlap() {
+    UndirectedGraph<Integer, String> graph = Graphs.createUndirected(undirectedGraph.config());
+    populateInputGraph(graph);
+    // Add an edge that is in 'graph' (overlap)
+    builder.addEdge(E12, N1, N2);
+    builder.addGraph(graph);
+    assertThat(builder.build()).isEqualTo(graph);
+  }
+

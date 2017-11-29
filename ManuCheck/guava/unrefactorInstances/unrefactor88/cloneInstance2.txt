@@ -1,0 +1,30 @@
+(startLine=107 endLine=134 srcPath=/home/ubuntu/guavaFilter/710/guava/guava-tests/test/com/google/common/collect/ForwardingSetTest.java)
+  public static Test suite() {
+    TestSuite suite = new TestSuite();
+    
+    suite.addTestSuite(ForwardingSetTest.class);
+    suite.addTest(
+        SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+          @Override protected Set<String> create(String[] elements) {
+            return new StandardImplForwardingSet<String>(
+                Sets.newLinkedHashSet(asList(elements)));
+          }
+        }).named(
+            "ForwardingSet[LinkedHashSet] with standard implementations")
+            .withFeatures(CollectionSize.ANY,
+                CollectionFeature.ALLOWS_NULL_VALUES,
+                CollectionFeature.GENERAL_PURPOSE).createTestSuite());
+    suite.addTest(
+        SetTestSuiteBuilder.using(new TestStringSetGenerator() {
+          @Override protected Set<String> create(String[] elements) {
+            return new StandardImplForwardingSet<String>(
+                MinimalSet.of(elements));
+          }
+        }).named(
+            "ForwardingSet[MinimalSet] with standard implementations")
+            .withFeatures(CollectionSize.ANY, 
+                CollectionFeature.ALLOWS_NULL_VALUES).createTestSuite());
+    
+    return suite;
+  }
+

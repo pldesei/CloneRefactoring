@@ -1,0 +1,8 @@
+(startLine=556 endLine=561 srcPath=/home/ubuntu/guavaFilter/278/guava/guava-tests/test/com/google/common/collect/ImmutableSortedSetTest.java)
+  public void testCopyOf_tailSet() {
+    SortedSet<String> set = of("e", "a", "f", "b", "d", "c");
+    SortedSet<String> tailset = set.tailSet("d");
+    SortedSet<String> copy = copyOf(tailset);
+    assertEquals(tailset, copy);
+  }
+

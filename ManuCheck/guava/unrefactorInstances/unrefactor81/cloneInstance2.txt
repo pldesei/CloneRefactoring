@@ -1,0 +1,11 @@
+(startLine=73 endLine=81 srcPath=/home/ubuntu/guavaFilter/585/guava/guava-tests/benchmark/com/google/common/hash/ChecksumBenchmark.java)
+  public byte timeAdler32Checksum(int reps) throws Exception {
+    byte result = 0x01;
+    for (int i = 0; i < reps; i++) {
+      Adler32 checksum = new Adler32();
+      checksum.update(testBytes);
+      result ^= checksum.getValue();
+    }
+    return result;
+  }
+

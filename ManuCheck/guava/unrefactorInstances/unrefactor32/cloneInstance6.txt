@@ -1,0 +1,17 @@
+(startLine=192 endLine=206 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/math/DoubleMathTest.java)
+  public void testRoundExactIntegralDoubleToLong() {
+    for (double d : INTEGRAL_DOUBLE_CANDIDATES) {
+      // every mode except UNNECESSARY
+      BigDecimal expected = new BigDecimal(d).setScale(0, UNNECESSARY);
+      boolean isInBounds = expected.compareTo(MAX_LONG_AS_BIG_DECIMAL) <= 0
+          & expected.compareTo(MIN_LONG_AS_BIG_DECIMAL) >= 0;
+
+      try {
+        assertEquals(expected.longValue(), DoubleMath.roundToLong(d, UNNECESSARY));
+        assertTrue(isInBounds);
+      } catch (ArithmeticException e) {
+        assertFalse(isInBounds);
+      }
+    }
+  }
+

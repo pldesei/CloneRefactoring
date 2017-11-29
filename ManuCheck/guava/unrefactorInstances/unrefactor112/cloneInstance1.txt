@@ -1,0 +1,11 @@
+(startLine=101 endLine=109 srcPath=/home/ubuntu/guavaFilter/920/guava/guava/src/com/google/common/collect/Queues.java)
+  public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue(
+      Iterable<? extends E> elements) {
+    if (elements instanceof Collection) {
+      return new ConcurrentLinkedQueue<E>(Collections2.cast(elements));
+    }
+    ConcurrentLinkedQueue<E> queue = new ConcurrentLinkedQueue<E>();
+    Iterables.addAll(queue, elements);
+    return queue;
+  }
+

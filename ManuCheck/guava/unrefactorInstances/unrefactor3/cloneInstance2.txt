@@ -1,0 +1,11 @@
+(startLine=228 endLine=236 srcPath=/home/ubuntu/guavaFilter/207/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
+  public <T> void testWhere_mapFromWildcardToParameterized() {
+    Type subType = new TypeCapture<TypedListKeyMap<T>>() {}.capture();
+    assertEquals(new TypeCapture<TypedListKeyMap<String>>() {}.capture(),
+        new TypeResolver()
+            .where(
+                new TypeCapture<Map<List<Integer>, T>>() {}.capture(),
+                new TypeCapture<Map<?, String>>() {}.capture())
+        .resolveType(subType));
+  }
+

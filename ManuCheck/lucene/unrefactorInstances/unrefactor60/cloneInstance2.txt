@@ -1,0 +1,24 @@
+(startLine=101 endLine=122 srcPath=/home/ubuntu/luceneFilter/475/lucene/lucene/core/src/java/org/apache/lucene/index/FrozenBufferedDeletes.java)
+      public Iterator<QueryAndLimit> iterator() {
+        return new Iterator<QueryAndLimit>() {
+          private int upto;
+
+          @Override
+          public boolean hasNext() {
+            return upto < queries.length;
+          }
+
+          @Override
+          public QueryAndLimit next() {
+            QueryAndLimit ret = new QueryAndLimit(queries[upto], queryLimits[upto]);
+            upto++;
+            return ret;
+          }
+
+          @Override
+          public void remove() {
+            throw new UnsupportedOperationException();
+          }
+        };
+      }
+

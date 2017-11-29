@@ -1,0 +1,18 @@
+(startLine=51 endLine=66 srcPath=/home/ubuntu/guavaFilter/244/guava/guava-tests/test/com/google/common/collect/ConstrainedMapTest.java)
+  public static Test suite() {
+    TestSuite suite = new TestSuite();
+    suite.addTest(MapTestSuiteBuilder
+        .using(new ConstrainedMapGenerator())
+        .named("Maps.constrainedMap[HashMap]")
+        .withFeatures(
+            CollectionSize.ANY,
+            MapFeature.ALLOWS_NULL_KEYS,
+            MapFeature.ALLOWS_NULL_VALUES,
+            MapFeature.ALLOWS_ANY_NULL_QUERIES,
+            MapFeature.GENERAL_PURPOSE, 
+            CollectionFeature.SUPPORTS_ITERATOR_REMOVE)
+        .createTestSuite());
+    suite.addTestSuite(ConstrainedMapTest.class);
+    return suite;
+  }
+

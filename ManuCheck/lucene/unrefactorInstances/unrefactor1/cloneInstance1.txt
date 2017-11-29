@@ -1,0 +1,13 @@
+(startLine=1484 endLine=1494 srcPath=/home/ubuntu/luceneFilter/389/lucene/lucene/highlighter/src/test/org/apache/lucene/search/highlight/HighlighterTest.java)
+      public boolean incrementToken() {
+        if(iter.hasNext()) {
+          Token token = iter.next();
+          clearAttributes();
+          termAtt.setEmpty().append(token);
+          posIncrAtt.setPositionIncrement(token.getPositionIncrement());
+          offsetAtt.setOffset(token.startOffset(), token.endOffset());
+          return true;
+        }
+        return false;
+      }
+

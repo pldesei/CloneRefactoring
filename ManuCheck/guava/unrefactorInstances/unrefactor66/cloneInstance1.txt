@@ -1,0 +1,9 @@
+(startLine=776 endLine=782 srcPath=/home/ubuntu/guavaFilter/1039/guava/guava-tests/test/com/google/common/collect/MultimapsTest.java)
+  public void testIndex_nullValue() {
+    List<Integer> values = Arrays.asList(1, null);
+    try {
+      Multimaps.index(values, Functions.identity());
+      fail();
+    } catch (NullPointerException e) {}
+  }
+

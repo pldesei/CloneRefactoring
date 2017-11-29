@@ -1,0 +1,17 @@
+(startLine=76 endLine=90 srcPath=/home/ubuntu/luceneFilter/60/lucene/lucene/core/src/java/org/apache/lucene/util/fst/ByteSequenceOutputs.java)
+  public BytesRef subtract(BytesRef output, BytesRef inc) {
+    assert output != null;
+    assert inc != null;
+    if (inc == NO_OUTPUT) {
+      // no prefix removed
+      return output;
+    } else if (inc.length == output.length) {
+      // entire output removed
+      return NO_OUTPUT;
+    } else {
+      assert inc.length < output.length: "inc.length=" + inc.length + " vs output.length=" + output.length;
+      assert inc.length > 0;
+      return new BytesRef(output.bytes, output.offset + inc.length, output.length-inc.length);
+    }
+  }
+

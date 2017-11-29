@@ -1,0 +1,9 @@
+(startLine=291 endLine=297 srcPath=/home/ubuntu/guavaFilter/777/guava/guava-tests/test/com/google/common/collect/ImmutableSortedMultisetTest.java)
+  public void testBuilderAddAllMultiset() {
+    Multiset<String> a = HashMultiset.create(asList("a", "b", "b"));
+    Multiset<String> b = HashMultiset.create(asList("c", "b"));
+    ImmutableSortedMultiset<String> multiset =
+        ImmutableSortedMultiset.<String>naturalOrder().addAll(a).addAll(b).build();
+    assertEquals(HashMultiset.create(asList("a", "b", "b", "b", "c")), multiset);
+  }
+

@@ -1,0 +1,8 @@
+(startLine=385 endLine=390 srcPath=/home/ubuntu/guavaFilter/86/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
+        protected BiMap<String, String> create(Entry<String, String>[] entries) {
+          BiMap<String, String> map = HashBiMap.create();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+

@@ -1,0 +1,30 @@
+(startLine=433 endLine=460 srcPath=/home/ubuntu/guavaFilter/77/guava/guava-tests/test/com/google/common/cache/LocalCacheAsMapTest.java)
+  public void testComputePartiallyCollectedKey() throws ExecutionException {
+    CacheBuilder<Object, Object> builder = createCacheBuilder().concurrencyLevel(1);
+    CountingLoader loader = new CountingLoader();
+    LocalCacheAsMap<Object, Object> map = makeComputingMap(builder, loader);
+    Segment<Object, Object> segment = map.segments[0];
+    AtomicReferenceArray<ReferenceEntry<Object, Object>> table = segment.table;
+    assertEquals(0, loader.getCount());
+
+    Object key = new Object();
+    int hash = map.hash(key);
+    Object value = new Object();
+    int index = hash & (table.length() - 1);
+
+    DummyEntry<Object, Object> entry = DummyEntry.create(key, hash, null);
+    DummyValueReference<Object, Object> valueRef = DummyValueReference.create(value, entry);
+    entry.setValueReference(valueRef);
+    table.set(index, entry);
+    segment.count++;
+
+    assertSame(value, map.getOrLoad(key));
+    assertEquals(0, loader.getCount());
+    assertEquals(1, segment.count);
+
+    entry.clearKey();
+    assertNotSame(value, map.getOrLoad(key));
+    assertEquals(1, loader.getCount());
+    assertEquals(2, segment.count);
+  }
+

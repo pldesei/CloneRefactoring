@@ -1,0 +1,10 @@
+(startLine=710 endLine=717 srcPath=/home/ubuntu/guavaFilter/383/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public Iterator<Entry<R, Map<C, V>>> iterator() {
+        return Maps.asMapEntryIterator(backingMap.keySet(), new Function<R, Map<C, V>>() {
+          @Override
+          public Map<C, V> apply(R rowKey) {
+            return row(rowKey);
+          }
+        });
+      }
+

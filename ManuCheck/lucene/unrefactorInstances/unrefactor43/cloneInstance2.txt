@@ -1,0 +1,15 @@
+(startLine=161 endLine=173 srcPath=/home/ubuntu/luceneFilter/149/lucene/lucene/facet/src/test/org/apache/lucene/facet/taxonomy/directory/TestDirectoryTaxonomyWriter.java)
+  public void testEnsureOpen() throws Exception {
+    // verifies that an exception is thrown if DTW was closed
+    Directory dir = newDirectory();
+    DirectoryTaxonomyWriter dtw = new DirectoryTaxonomyWriter(dir);
+    dtw.close();
+    try {
+      dtw.addCategory(new CategoryPath("a"));
+      fail("should not have succeeded to add a category following close.");
+    } catch (AlreadyClosedException e) {
+      // expected
+    }
+    dir.close();
+  }
+

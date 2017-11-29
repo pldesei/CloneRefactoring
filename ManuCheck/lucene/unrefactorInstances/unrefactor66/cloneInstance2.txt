@@ -1,0 +1,10 @@
+(startLine=388 endLine=395 srcPath=/home/ubuntu/luceneFilter/8/lucene/solr/core/src/test/org/apache/solr/update/DocumentBuilderTest.java)
+  public void testDocumentBoostOmitNorms() throws Exception {
+    XmlDoc xml = new XmlDoc();
+    xml.xml = "<doc boost=\"3.0\">"
+        + "<field name=\"id\">2</field>"
+        + "<field name=\"title_stringNoNorms\">mytitle</field>"
+        + "</doc>";
+    assertNull(h.validateUpdate(add(xml, new String[0])));
+  }
+

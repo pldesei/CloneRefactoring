@@ -1,0 +1,16 @@
+(startLine=1055 endLine=1068 srcPath=/home/ubuntu/guavaFilter/280/guava/guava-tests/test/com/google/common/collect/IteratorsTest.java)
+  public void testPaddedPartition_view() {
+    List<Integer> list = asList(1, 2);
+    Iterator<List<Integer>> partitions
+        = Iterators.paddedPartition(list.iterator(), 1);
+
+    // Changes before the PaddedPartition is retrieved are reflected
+    list.set(0, 3);
+    List<Integer> first = partitions.next();
+
+    // Changes after are not
+    list.set(0, 4);
+
+    assertEquals(ImmutableList.of(3), first);
+  }
+

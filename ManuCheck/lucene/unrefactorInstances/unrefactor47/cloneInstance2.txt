@@ -1,0 +1,34 @@
+(startLine=190 endLine=221 srcPath=/home/ubuntu/luceneFilter/604/lucene/lucene/analysis/common/src/java/org/tartarus/snowball/ext/KpStemmer.java)
+        private boolean r_VX() {
+            int v_1;
+            int v_2;
+            // test, line 36
+            v_1 = limit - cursor;
+            // (, line 36
+            // next, line 36
+            if (cursor <= limit_backward)
+            {
+                return false;
+            }
+            cursor--;
+            // or, line 36
+            lab0: do {
+                v_2 = limit - cursor;
+                lab1: do {
+                    if (!(in_grouping_b(g_v, 97, 121)))
+                    {
+                        break lab1;
+                    }
+                    break lab0;
+                } while (false);
+                cursor = limit - v_2;
+                // literal, line 36
+                if (!(eq_s_b(2, "ij")))
+                {
+                    return false;
+                }
+            } while (false);
+            cursor = limit - v_1;
+            return true;
+        }
+

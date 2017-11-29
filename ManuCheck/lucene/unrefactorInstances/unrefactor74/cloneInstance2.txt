@@ -1,0 +1,14 @@
+(startLine=102 endLine=113 srcPath=/home/ubuntu/luceneFilter/1486/lucene/src/test/org/apache/lucene/search/TestBooleanOr.java)
+	public void testParenthesisMust2() throws IOException {
+		BooleanQuery q3 = new BooleanQuery();
+		q3.add(new BooleanClause(t1, BooleanClause.Occur.SHOULD));
+		q3.add(new BooleanClause(t2, BooleanClause.Occur.SHOULD));
+		BooleanQuery q4 = new BooleanQuery();
+		q4.add(new BooleanClause(c1, BooleanClause.Occur.SHOULD));
+		q4.add(new BooleanClause(c2, BooleanClause.Occur.SHOULD));
+		BooleanQuery q2 = new BooleanQuery();
+		q2.add(q3, BooleanClause.Occur.SHOULD);
+		q2.add(q4, BooleanClause.Occur.MUST);
+		assertEquals(1, search(q2));
+	}
+

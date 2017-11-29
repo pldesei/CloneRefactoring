@@ -1,0 +1,18 @@
+(startLine=1954 endLine=1969 srcPath=/home/ubuntu/guavaFilter/484/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testMakeChecked_listenersRunOnCancel() throws Exception {
+    SettableFuture<String> future = SettableFuture.create();
+
+    CheckedFuture<String, TestException> checked = Futures.makeChecked(
+        future, new Function<Exception, TestException>() {
+          @Override public TestException apply(Exception from) {
+            throw new NullPointerException();
+          }
+    });
+
+    ListenableFutureTester tester = new ListenableFutureTester(checked);
+    tester.setUp();
+    future.cancel(true); // argument is ignored
+    tester.testCancelledFuture();
+    tester.tearDown();
+  }
+

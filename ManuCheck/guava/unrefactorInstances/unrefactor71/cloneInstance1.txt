@@ -1,0 +1,8 @@
+(startLine=161 endLine=166 srcPath=/home/ubuntu/guavaFilter/59/guava/guava-tests/test/com/google/common/collect/MapsTransformValuesUnmodifiableIteratorTest.java)
+  public void testTransformIdentityFunctionEquality() {
+    Map<String, Integer> underlying = ImmutableMap.of("a", 1);
+    Map<String, Integer> map = Maps.transformValues(
+        underlying, Functions.<Integer>identity());
+    assertMapsEqual(underlying, map);
+  }
+

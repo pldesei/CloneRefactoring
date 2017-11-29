@@ -1,0 +1,18 @@
+(startLine=1502 endLine=1517 srcPath=/home/ubuntu/luceneFilter/16/lucene/lucene/codecs/src/java/org/apache/lucene/codecs/memory/DirectPostingsFormat.java)
+    public int nextDoc() {
+      upto++;
+      if (liveDocs == null) {
+        if (upto < postings.length) {
+          return postings[upto];
+        }
+      } else {
+        while (upto < postings.length) {
+          if (liveDocs.get(postings[upto])) {
+            return postings[upto];
+          }
+          upto++;
+        }
+      }
+      return NO_MORE_DOCS;
+    }
+

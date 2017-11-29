@@ -1,0 +1,16 @@
+(startLine=184 endLine=197 srcPath=/home/ubuntu/luceneFilter/1298/lucene/src/test/org/apache/lucene/index/TestNorms.java)
+  private void verifyIndex(Directory dir) throws IOException {
+    IndexReader ir = IndexReader.open(dir, false);
+    for (int i = 0; i < NUM_FIELDS; i++) {
+      String field = "f"+i;
+      byte b[] = ir.norms(field);
+      assertEquals("number of norms mismatches",numDocNorms,b.length);
+      ArrayList<Float> storedNorms = (i==1 ? modifiedNorms : norms);
+      for (int j = 0; j < b.length; j++) {
+        float norm = similarityOne.decodeNormValue(b[j]);
+        float norm1 = storedNorms.get(j).floatValue();
+        assertEquals("stored norm value of "+field+" for doc "+j+" is "+norm+" - a mismatch!", norm, norm1, 0.000001);
+      }
+    }
+  }
+

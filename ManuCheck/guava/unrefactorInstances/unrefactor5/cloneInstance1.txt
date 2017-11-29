@@ -1,0 +1,11 @@
+(startLine=830 endLine=838 srcPath=/home/ubuntu/guavaFilter/163/guava/guava-tests/test/com/google/common/util/concurrent/JSR166TestCase.java)
+        public final void run() {
+            try {
+                realRun();
+                threadShouldThrow(exceptionClass.getSimpleName());
+            } catch (Throwable t) {
+                if (! exceptionClass.isInstance(t))
+                    threadUnexpectedException(t);
+            }
+        }
+

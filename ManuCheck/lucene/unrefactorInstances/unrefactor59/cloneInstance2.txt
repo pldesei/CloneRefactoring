@@ -1,0 +1,40 @@
+(startLine=44 endLine=81 srcPath=/home/ubuntu/luceneFilter/696/lucene/modules/queries/src/java/org/apache/lucene/queries/function/valuesource/DoubleConstValueSource.java)
+  public FunctionValues getValues(Map context, AtomicReaderContext readerContext) throws IOException {
+    return new DoubleDocValues(this) {
+      @Override
+      public float floatVal(int doc) {
+        return fv;
+      }
+
+      @Override
+      public int intVal(int doc) {
+        return (int) lv;
+      }
+
+      @Override
+      public long longVal(int doc) {
+        return lv;
+      }
+
+      @Override
+      public double doubleVal(int doc) {
+        return constant;
+      }
+
+      @Override
+      public String strVal(int doc) {
+        return Double.toString(constant);
+      }
+
+      @Override
+      public Object objectVal(int doc) {
+        return constant;
+      }
+
+      @Override
+      public String toString(int doc) {
+        return description();
+      }
+    };
+  }
+

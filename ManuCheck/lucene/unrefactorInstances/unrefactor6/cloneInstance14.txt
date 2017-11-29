@@ -1,0 +1,13 @@
+(startLine=48 endLine=58 srcPath=/home/ubuntu/luceneFilter/1142/lucene/solr/src/test/org/apache/solr/analysis/TestNGramFilters.java)
+  public void testNGramTokenizer2() throws Exception {
+    Reader reader = new StringReader("test");
+    Map<String,String> args = new HashMap<String,String>();
+    args.put("minGramSize", "2");
+    args.put("maxGramSize", "3");
+    NGramTokenizerFactory factory = new NGramTokenizerFactory();
+    factory.init(args);
+    Tokenizer stream = factory.create(reader);
+    assertTokenStreamContents(stream, 
+        new String[] { "te", "es", "st", "tes", "est" });
+  }
+

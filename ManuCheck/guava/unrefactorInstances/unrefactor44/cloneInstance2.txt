@@ -1,0 +1,24 @@
+(startLine=142 endLine=163 srcPath=/home/ubuntu/guavaFilter/166/guava/guava-testlib/test/com/google/common/testing/EquivalenceTesterTest.java)
+  public void testTest_inequivalence() {
+    Object group1Item1 = new TestObject(1, 1);
+    Object group2Item1 = new TestObject(2, 1);
+
+    equivalenceMock.expectEquivalent(group1Item1, group2Item1);
+    equivalenceMock.expectDistinct(group2Item1, group1Item1);
+
+    equivalenceMock.expectHash(group1Item1, 1);
+    equivalenceMock.expectHash(group2Item1, 2);
+
+    equivalenceMock.replay();
+
+    try {
+      tester.addEquivalenceGroup(group1Item1).addEquivalenceGroup(group2Item1).test();
+    } catch (AssertionFailedError expected) {
+      assertThat(expected.getMessage()).contains(
+          "TestObject{group=1, item=1} [group 1, item 1] must not be equivalent to "
+          + "TestObject{group=2, item=1} [group 2, item 1]");
+      return;
+    }
+    fail();
+  }
+

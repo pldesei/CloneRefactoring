@@ -1,0 +1,10 @@
+(startLine=114 endLine=121 srcPath=/home/ubuntu/guavaFilter/227/guava/guava/src/com/google/common/primitives/Primitives.java)
+  public static <T> Class<T> wrap(Class<T> type) {
+    checkNotNull(type);
+
+    // cast is safe: long.class and Long.class are both of type Class<Long>
+    @SuppressWarnings("unchecked")
+    Class<T> wrapped = (Class<T>) PRIMITIVE_TO_WRAPPER_TYPE.get(type);
+    return (wrapped == null) ? type : wrapped;
+  }
+

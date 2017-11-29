@@ -1,0 +1,19 @@
+(startLine=156 endLine=172 srcPath=/home/ubuntu/luceneFilter/192/lucene/solr/core/src/test/org/apache/solr/TestTrie.java)
+  public void testTrieLongRangeSearch() throws Exception {
+    for (long i = Integer.MAX_VALUE, c = 0; i < (long) Integer.MAX_VALUE + 10l; i++) {
+      assertU(adoc("id", String.valueOf(c++), "tlong", String.valueOf(i)));
+    }
+    assertU(commit());
+    String fq = "tlong:[" + Integer.MAX_VALUE + " TO " + (5l + Integer.MAX_VALUE) + "]";
+    SolrQueryRequest req = req("q", "*:*", "fq", fq);
+    assertQ("Range filter must match only 5 documents", req, "//*[@numFound='6']");
+    assertQ("Range filter tlong:[* to *] must match 10 documents", req("q", "*:*", "fq", "tlong:[* TO *]"), "//*[@numFound='10']");
+
+    // Sorting
+    assertQ("Sort descending does not work correctly on tlong fields", req("q", "*:*", "sort", "tlong desc"), "//*[@numFound='10']", "//long[@name='tlong'][.='2147483656']");
+    assertQ("Sort ascending does not work correctly on tlong fields", req("q", "*:*", "sort", "tlong asc"), "//*[@numFound='10']", "//long[@name='tlong'][.='2147483647']");
+
+    // Function queries
+    assertQ("Function queries does not work correctly on tlong fields", req("q", "_val_:\"sum(tlong,1.0)\""), "//*[@numFound='10']", "//long[@name='tlong'][.='2147483656']");
+  }
+

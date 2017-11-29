@@ -1,0 +1,8 @@
+(startLine=242 endLine=247 srcPath=/home/ubuntu/luceneFilter/976/lucene/lucene/src/test/org/apache/lucene/search/TestExplanations.java)
+  public Query reqB(Query q) throws Exception {
+    BooleanQuery bq = new BooleanQuery(true);
+    bq.add(q, BooleanClause.Occur.MUST);
+    bq.add(new TermQuery(new Term(FIELD,"w1")), BooleanClause.Occur.SHOULD);
+    return bq;
+  }
+

@@ -1,0 +1,19 @@
+(startLine=274 endLine=290 srcPath=/home/ubuntu/luceneFilter/752/lucene/solr/contrib/extraction/src/test/org/apache/solr/handler/extraction/ExtractingRequestHandlerTest.java)
+  public void testPlainTextSpecifyingResourceName() throws Exception {
+    ExtractingRequestHandler handler = (ExtractingRequestHandler) h.getCore().getRequestHandler("/update/extract");
+    assertTrue("handler is null and it shouldn't be", handler != null);
+
+    // Load plain text specifying filename
+    loadLocal("extraction/version_control.txt", "fmap.created", "extractedDate", "fmap.producer", "extractedProducer",
+            "fmap.creator", "extractedCreator", "fmap.Keywords", "extractedKeywords",
+            "fmap.Author", "extractedAuthor",
+            "literal.id", "one",
+            "fmap.language", "extractedLanguage",
+            "fmap.content", "extractedContent",
+            ExtractingParams.RESOURCE_NAME, "extraction/version_control.txt"
+    );
+    assertQ(req("extractedContent:Apache"), "//*[@numFound='0']");
+    assertU(commit());
+    assertQ(req("extractedContent:Apache"), "//*[@numFound='1']");
+  }
+

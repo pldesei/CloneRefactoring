@@ -1,0 +1,9 @@
+(startLine=89 endLine=95 srcPath=/home/ubuntu/guavaFilter/137/guava/guava-testlib/src/com/google/common/collect/testing/google/MultimapGetTester.java)
+  public void testPropagatesAddToMultimap() {
+    Collection<V> result = multimap().get(k0());
+    assertTrue(result.add(v3()));
+    assertTrue(multimap().containsKey(k0()));
+    assertEquals(getNumElements() + 1, multimap().size());
+    assertTrue(multimap().containsEntry(k0(), v3()));
+  }
+

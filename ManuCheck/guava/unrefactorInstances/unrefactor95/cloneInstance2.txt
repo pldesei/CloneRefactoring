@@ -1,0 +1,16 @@
+(startLine=130 endLine=143 srcPath=/home/ubuntu/guavaFilter/772/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testImmediateFailedFuture_cancellationException() throws Exception {
+    CancellationException exception = new CancellationException();
+    ListenableFuture<String> future =
+        Futures.immediateFailedFuture(exception);
+
+    try {
+      future.get(0L, TimeUnit.MILLISECONDS);
+      fail("This call was supposed to throw an ExecutionException");
+    } catch (ExecutionException expected) {
+      // This is good and expected
+      assertSame(exception, expected.getCause());
+      assertFalse(future.isCancelled());
+    }
+  }
+

@@ -1,0 +1,18 @@
+(startLine=93 endLine=108 srcPath=/home/ubuntu/luceneFilter/1675/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testWriter() throws IOException {
+    TermVectorsWriter writer = new TermVectorsWriter(dir, seg, fieldInfos);
+    writer.openDocument();
+    assertTrue(writer.isDocumentOpen() == true);
+    writeField(writer, testFields[0]);
+    writer.closeDocument();
+    writer.close();
+    assertTrue(writer.isDocumentOpen() == false);
+    //Check to see the files were created
+    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVD_EXTENSION));
+    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVX_EXTENSION));
+    //Now read it back in
+    TermVectorsReader reader = new TermVectorsReader(dir, seg, fieldInfos);
+    assertTrue(reader != null);
+    checkTermVector(reader, 0, testFields[0]);
+  }
+

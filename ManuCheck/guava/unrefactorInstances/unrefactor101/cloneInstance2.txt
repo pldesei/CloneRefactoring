@@ -1,0 +1,11 @@
+(startLine=119 endLine=127 srcPath=/home/ubuntu/guavaFilter/795/guava/guava-testlib/src/com/google/common/collect/testing/testers/CollectionRemoveAllTester.java)
+  public void testRemoveAll_unsupportedNonePresent() {
+    try {
+      assertFalse("removeAll(disjointCollection) should return false or throw "
+          + "UnsupportedOperationException",
+        collection.removeAll(MinimalCollection.of(samples.e3)));
+    } catch (UnsupportedOperationException tolerated) {
+    }
+    expectUnchanged();
+  }
+

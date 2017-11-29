@@ -1,0 +1,9 @@
+(startLine=239 endLine=245 srcPath=/home/ubuntu/guavaFilter/37/guava/guava-tests/test/com/google/common/primitives/CharsTest.java)
+  public void testFromByteArrayFails() {
+    try {
+      Chars.fromByteArray(new byte[Chars.BYTES - 1]);
+      fail();
+    } catch (IllegalArgumentException expected) {
+    }
+  }
+

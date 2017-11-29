@@ -1,0 +1,47 @@
+(startLine=295 endLine=339 srcPath=/home/ubuntu/luceneFilter/1376/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/PorterStemmer.java)
+        private boolean r_Step_1c() {
+            int v_1;
+            // (, line 51
+            // [, line 52
+            ket = cursor;
+            // or, line 52
+            lab0: do {
+                v_1 = limit - cursor;
+                lab1: do {
+                    // literal, line 52
+                    if (!(eq_s_b(1, "y")))
+                    {
+                        break lab1;
+                    }
+                    break lab0;
+                } while (false);
+                cursor = limit - v_1;
+                // literal, line 52
+                if (!(eq_s_b(1, "Y")))
+                {
+                    return false;
+                }
+            } while (false);
+            // ], line 52
+            bra = cursor;
+            // gopast, line 53
+            golab2: while(true)
+            {
+                lab3: do {
+                    if (!(in_grouping_b(g_v, 97, 121)))
+                    {
+                        break lab3;
+                    }
+                    break golab2;
+                } while (false);
+                if (cursor <= limit_backward)
+                {
+                    return false;
+                }
+                cursor--;
+            }
+            // <-, line 54
+            slice_from("i");
+            return true;
+        }
+

@@ -1,0 +1,9 @@
+(startLine=180 endLine=186 srcPath=/home/ubuntu/luceneFilter/747/lucene/lucene/src/test/org/apache/lucene/index/TestOmitNorms.java)
+  private void assertNoNrm(Directory dir) throws Throwable {
+    final String[] files = dir.listAll();
+    for (int i = 0; i < files.length; i++) {
+      // TODO: this relies upon filenames
+      assertFalse(files[i].endsWith(".nrm") || files[i].endsWith(".len"));
+    }
+  }
+

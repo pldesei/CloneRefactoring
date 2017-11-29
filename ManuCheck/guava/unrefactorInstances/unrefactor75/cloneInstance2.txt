@@ -1,0 +1,14 @@
+(startLine=209 endLine=220 srcPath=/home/ubuntu/guavaFilter/1106/guava/guava-tests/test/com/google/common/primitives/FloatsTest.java)
+  public void testMin() {
+    assertEquals(LEAST, Floats.min(LEAST));
+    assertEquals(GREATEST, Floats.min(GREATEST));
+    assertEquals((float) 0, Floats.min(
+        (float) 8, (float) 6, (float) 7,
+        (float) 5, (float) 3, (float) 0, (float) 9));
+
+    assertEquals(-0f, Floats.min(-0f, 0f));
+    assertEquals(-0f, Floats.min(0f, -0f));
+    assertEquals(LEAST, Floats.min(NUMBERS));
+    assertTrue(Float.isNaN(Floats.min(VALUES)));
+  }
+

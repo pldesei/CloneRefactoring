@@ -1,0 +1,19 @@
+(startLine=79 endLine=95 srcPath=/home/ubuntu/luceneFilter/206/lucene/lucene/core/src/java/org/apache/lucene/util/packed/BulkOperationPacked18.java)
+  public void decode(byte[] blocks, int blocksOffset, int[] values, int valuesOffset, int iterations) {
+    for (int i = 0; i < iterations; ++i) {
+      final int byte0 = blocks[blocksOffset++] & 0xFF;
+      final int byte1 = blocks[blocksOffset++] & 0xFF;
+      final int byte2 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = (byte0 << 10) | (byte1 << 2) | (byte2 >>> 6);
+      final int byte3 = blocks[blocksOffset++] & 0xFF;
+      final int byte4 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte2 & 63) << 12) | (byte3 << 4) | (byte4 >>> 4);
+      final int byte5 = blocks[blocksOffset++] & 0xFF;
+      final int byte6 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte4 & 15) << 14) | (byte5 << 6) | (byte6 >>> 2);
+      final int byte7 = blocks[blocksOffset++] & 0xFF;
+      final int byte8 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte6 & 3) << 16) | (byte7 << 8) | byte8;
+    }
+  }
+

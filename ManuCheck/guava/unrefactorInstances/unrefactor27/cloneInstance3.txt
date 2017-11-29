@@ -1,0 +1,15 @@
+(startLine=212 endLine=224 srcPath=/home/ubuntu/guavaFilter/120/guava/guava-tests/test/com/google/common/collect/RangeTest.java)
+  public void testAtLeast() {
+    Range<Integer> range = Range.atLeast(6);
+    assertFalse(range.contains(5));
+    assertTrue(range.contains(6));
+    assertTrue(range.contains(Integer.MAX_VALUE));
+    assertTrue(range.hasLowerBound());
+    assertEquals(6, (int) range.lowerEndpoint());
+    assertEquals(CLOSED, range.lowerBoundType());
+    assertUnboundedAbove(range);
+    assertFalse(range.isEmpty());
+    assertEquals("[6..+\u221e)", range.toString());
+    reserializeAndAssert(range);
+  }
+

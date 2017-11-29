@@ -1,0 +1,19 @@
+(startLine=298 endLine=314 srcPath=/home/ubuntu/guavaFilter/1042/guava/guava-tests/test/com/google/common/collect/SetOperationsTest.java)
+    public void testDifference() {
+      Set<String> friends = Sets.newHashSet("Tom", "Joe", "Dave");
+      Set<String> enemies = Sets.newHashSet("Dick", "Harry", "Tom");
+
+      Set<String> goodFriends = Sets.difference(friends, enemies);
+      assertEquals(2, goodFriends.size());
+
+      ImmutableSet<String> immut
+          = Sets.difference(friends, enemies).immutableCopy();
+      HashSet<String> mut
+          = Sets.difference(friends, enemies).copyInto(new HashSet<String>());
+
+      enemies.add("Dave");
+      assertEquals(1, goodFriends.size());
+      assertEquals(2, immut.size());
+      assertEquals(2, mut.size());
+    }
+

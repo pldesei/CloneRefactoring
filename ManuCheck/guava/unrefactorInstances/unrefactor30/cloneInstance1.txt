@@ -1,0 +1,17 @@
+(startLine=56 endLine=70 srcPath=/home/ubuntu/guavaFilter/720/guava/guava-tests/test/com/google/common/util/concurrent/AbstractIdleServiceTest.java)
+    public void testStart_failed() throws Exception {
+      final Exception exception = new Exception("deliberate");
+      AbstractIdleService service = new DefaultService() {
+        @Override protected void startUp() throws Exception {
+          throw exception;
+        }
+      };
+      try {
+        service.startAndWait();
+        fail();
+      } catch (RuntimeException e) {
+        assertSame(exception, e.getCause());
+      }
+      assertEquals(Service.State.FAILED, service.state());
+    }
+

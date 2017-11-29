@@ -1,0 +1,9 @@
+(startLine=315 endLine=321 srcPath=/home/ubuntu/guavaFilter/288/guava/guava/src/com/google/common/collect/ImmutableRangeMap.java)
+  public boolean equals(@Nullable Object o) {
+    if (o instanceof RangeMap) {
+      RangeMap<?, ?> rangeMap = (RangeMap<?, ?>) o;
+      return asMapOfRanges().equals(rangeMap.asMapOfRanges());
+    }
+    return false;
+  }
+

@@ -1,0 +1,12 @@
+(startLine=229 endLine=238 srcPath=/home/ubuntu/guavaFilter/1022/guava/guava-tests/test/com/google/common/collect/MapsTest.java)
+  public void testTreeMapDerived() {
+    TreeMap<Derived, Integer> map = Maps.newTreeMap();
+    assertEquals(Collections.emptyMap(), map);
+    map.put(new Derived("foo"), 1);
+    map.put(new Derived("bar"), 2);
+    ASSERT.that(map.keySet()).hasContentsInOrder(
+        new Derived("bar"), new Derived("foo"));
+    ASSERT.that(map.values()).hasContentsInOrder(2, 1);
+    assertNull(map.comparator());
+  }
+

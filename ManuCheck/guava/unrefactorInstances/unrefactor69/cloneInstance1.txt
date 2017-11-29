@@ -1,0 +1,13 @@
+(startLine=1127 endLine=1137 srcPath=/home/ubuntu/guavaFilter/1020/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public boolean removeAll(Collection<?> c) {
+        checkNotNull(c);
+        boolean changed = false;
+        for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
+          if (c.contains(column(columnKey))) {
+            removeColumn(columnKey);
+            changed = true;
+          }
+        }
+        return changed;
+      }
+

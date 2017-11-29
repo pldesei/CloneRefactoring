@@ -1,0 +1,8 @@
+(startLine=107 endLine=112 srcPath=/home/ubuntu/guavaFilter/442/guava/guava-tests/test/com/google/common/cache/ForwardingCacheTest.java)
+  public void testAsMap() {
+    expect(mock.asMap()).andReturn(null);
+    replay(mock);
+    assertNull(forward.asMap());
+    verify(mock);
+  }
+

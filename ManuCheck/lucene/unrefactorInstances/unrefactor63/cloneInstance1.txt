@@ -1,0 +1,8 @@
+(startLine=41 endLine=46 srcPath=/home/ubuntu/luceneFilter/529/lucene/lucene/highlighter/src/test/org/apache/lucene/search/vectorhighlight/SimpleFragListBuilderTest.java)
+  public void testSmallerFragSizeThanTermQuery() throws Exception {
+    SimpleFragListBuilder sflb = new SimpleFragListBuilder();
+    FieldFragList ffl = sflb.createFieldFragList( fpl(new TermQuery(new Term(F, "abcdefghijklmnopqrs")), "abcdefghijklmnopqrs" ), sflb.minFragCharSize );
+    assertEquals( 1, ffl.getFragInfos().size() );
+    assertEquals( "subInfos=(abcdefghijklmnopqrs((0,19)))/1.0(0,19)", ffl.getFragInfos().get( 0 ).toString() );
+  }
+

@@ -1,0 +1,10 @@
+(startLine=92 endLine=99 srcPath=/home/ubuntu/luceneFilter/1252/lucene/solr/src/java/org/apache/solr/analysis/BaseTokenStreamFactory.java)
+  protected boolean getBoolean(String name, boolean defaultVal, boolean useDefault) {
+    String s = args.get(name);
+    if (s==null) {
+      if (useDefault) return defaultVal;
+      throw new RuntimeException("Configuration Error: missing parameter '" + name + "'");
+    }
+    return Boolean.parseBoolean(s);
+  }
+

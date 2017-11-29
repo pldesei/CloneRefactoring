@@ -1,0 +1,12 @@
+(startLine=58 endLine=67 srcPath=/home/ubuntu/luceneFilter/269/lucene/solr/core/src/java/org/apache/solr/spelling/SpellingResult.java)
+  public void add(Token token, List<String> suggestions) {
+    LinkedHashMap<String, Integer> map = this.suggestions.get(token);
+    if (map == null ) {
+      map = new LinkedHashMap<String, Integer>();
+      this.suggestions.put(token, map);
+    }
+    for (String suggestion : suggestions) {
+      map.put(suggestion, NO_FREQUENCY_INFO);
+    }
+  }
+

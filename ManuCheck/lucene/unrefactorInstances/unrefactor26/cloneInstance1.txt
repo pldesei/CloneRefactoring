@@ -1,0 +1,23 @@
+(startLine=36 endLine=56 srcPath=/home/ubuntu/luceneFilter/336/lucene/lucene/analysis/common/src/test/org/apache/lucene/analysis/payloads/TestDelimitedPayloadTokenFilterFactory.java)
+  public void testEncoder() throws Exception {
+    Map<String,String> args = new HashMap<String, String>();
+    args.put(DelimitedPayloadTokenFilterFactory.ENCODER_ATTR, "float");
+    DelimitedPayloadTokenFilterFactory factory = new DelimitedPayloadTokenFilterFactory();
+    factory.init(args);
+    ResourceLoader loader = new StringMockResourceLoader("solr/collection1");
+    factory.inform(loader);
+
+    TokenStream input = new MockTokenizer(new StringReader("the|0.1 quick|0.1 red|0.1"), MockTokenizer.WHITESPACE, false);
+    DelimitedPayloadTokenFilter tf = factory.create(input);
+    tf.reset();
+    while (tf.incrementToken()){
+      PayloadAttribute payAttr = tf.getAttribute(PayloadAttribute.class);
+      assertTrue("payAttr is null and it shouldn't be", payAttr != null);
+      byte[] payData = payAttr.getPayload().bytes;
+      assertTrue("payData is null and it shouldn't be", payData != null);
+      assertTrue("payData is null and it shouldn't be", payData != null);
+      float payFloat = PayloadHelper.decodeFloat(payData);
+      assertTrue(payFloat + " does not equal: " + 0.1f, payFloat == 0.1f);
+    }
+  }
+

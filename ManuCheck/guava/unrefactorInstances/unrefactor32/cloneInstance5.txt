@@ -1,0 +1,18 @@
+(startLine=175 endLine=190 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/math/DoubleMathTest.java)
+  public void testRoundFractionalDoubleToLong() {
+    for (double d : FRACTIONAL_DOUBLE_CANDIDATES) {
+      for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
+        BigDecimal expected = new BigDecimal(d).setScale(0, mode);
+        boolean isInBounds = expected.compareTo(MAX_LONG_AS_BIG_DECIMAL) <= 0
+            & expected.compareTo(MIN_LONG_AS_BIG_DECIMAL) >= 0;
+
+        try {
+          assertEquals(expected.longValue(), DoubleMath.roundToLong(d, mode));
+          assertTrue(isInBounds);
+        } catch (ArithmeticException e) {
+          assertFalse(isInBounds);
+        }
+      }
+    }
+  }
+

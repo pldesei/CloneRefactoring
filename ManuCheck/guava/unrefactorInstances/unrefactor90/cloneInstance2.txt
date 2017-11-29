@@ -1,0 +1,11 @@
+(startLine=201 endLine=209 srcPath=/home/ubuntu/guavaFilter/868/guava/guava-testlib/src/com/google/common/collect/testing/google/MultisetWritesTester.java)
+  public void testEntrySet_removeAll_present() {
+    assertTrue(
+        "multiset.entrySet.removeAll(presentEntry) returned false",
+        getMultiset().entrySet().removeAll(
+            Collections.singleton(Multisets.immutableEntry(samples.e0, 1))));
+    assertFalse(
+        "multiset contains element after removing its entry",
+        getMultiset().contains(samples.e0));
+  }
+

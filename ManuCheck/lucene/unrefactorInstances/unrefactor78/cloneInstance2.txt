@@ -1,0 +1,35 @@
+(startLine=249 endLine=281 srcPath=/home/ubuntu/luceneFilter/206/lucene/lucene/core/src/java/org/apache/lucene/util/packed/BulkOperationPacked21.java)
+  public void decode(byte[] blocks, int blocksOffset, long[] values, int valuesOffset, int iterations) {
+    for (int i = 0; i < iterations; ++i) {
+      final long byte0 = blocks[blocksOffset++] & 0xFF;
+      final long byte1 = blocks[blocksOffset++] & 0xFF;
+      final long byte2 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = (byte0 << 13) | (byte1 << 5) | (byte2 >>> 3);
+      final long byte3 = blocks[blocksOffset++] & 0xFF;
+      final long byte4 = blocks[blocksOffset++] & 0xFF;
+      final long byte5 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte2 & 7) << 18) | (byte3 << 10) | (byte4 << 2) | (byte5 >>> 6);
+      final long byte6 = blocks[blocksOffset++] & 0xFF;
+      final long byte7 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte5 & 63) << 15) | (byte6 << 7) | (byte7 >>> 1);
+      final long byte8 = blocks[blocksOffset++] & 0xFF;
+      final long byte9 = blocks[blocksOffset++] & 0xFF;
+      final long byte10 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte7 & 1) << 20) | (byte8 << 12) | (byte9 << 4) | (byte10 >>> 4);
+      final long byte11 = blocks[blocksOffset++] & 0xFF;
+      final long byte12 = blocks[blocksOffset++] & 0xFF;
+      final long byte13 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte10 & 15) << 17) | (byte11 << 9) | (byte12 << 1) | (byte13 >>> 7);
+      final long byte14 = blocks[blocksOffset++] & 0xFF;
+      final long byte15 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte13 & 127) << 14) | (byte14 << 6) | (byte15 >>> 2);
+      final long byte16 = blocks[blocksOffset++] & 0xFF;
+      final long byte17 = blocks[blocksOffset++] & 0xFF;
+      final long byte18 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte15 & 3) << 19) | (byte16 << 11) | (byte17 << 3) | (byte18 >>> 5);
+      final long byte19 = blocks[blocksOffset++] & 0xFF;
+      final long byte20 = blocks[blocksOffset++] & 0xFF;
+      values[valuesOffset++] = ((byte18 & 31) << 16) | (byte19 << 8) | byte20;
+    }
+  }
+

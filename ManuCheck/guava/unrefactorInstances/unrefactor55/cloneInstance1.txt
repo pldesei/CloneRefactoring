@@ -1,0 +1,9 @@
+(startLine=464 endLine=470 srcPath=/home/ubuntu/guavaFilter/485/guava/guava-tests/test/com/google/common/collect/TreeRangeMapTest.java)
+  private void putModel(Map<Integer, Integer> model, Range<Integer> range, int value) {
+    for (int i = MIN_BOUND - 1; i <= MAX_BOUND + 1; i++) {
+      if (range.contains(i)) {
+        model.put(i, value);
+      }
+    }
+  }
+

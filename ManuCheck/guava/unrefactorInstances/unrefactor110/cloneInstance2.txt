@@ -1,0 +1,20 @@
+(startLine=90 endLine=107 srcPath=/home/ubuntu/guavaFilter/239/guava/guava-tests/test/com/google/common/primitives/ShortsTest.java)
+  public void testCompare() {
+    for (short x : VALUES) {
+      for (short y : VALUES) {
+        // Only compare the sign of the result of compareTo().
+        int expected = Short.valueOf(x).compareTo(y);
+        int actual = Shorts.compare(x, y);
+        if (expected == 0) {
+          assertEquals(x + ", " + y, expected, actual);
+        } else if (expected < 0) {
+          assertTrue(x + ", " + y + " (expected: " + expected + ", actual" + actual + ")",
+              actual < 0);
+        } else {
+          assertTrue(x + ", " + y + " (expected: " + expected + ", actual" + actual + ")",
+              actual > 0);
+        }
+      }
+    }
+  }
+

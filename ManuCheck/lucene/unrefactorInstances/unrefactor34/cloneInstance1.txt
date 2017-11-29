@@ -1,0 +1,21 @@
+(startLine=87 endLine=105 srcPath=/home/ubuntu/luceneFilter/70/lucene/lucene/core/src/java/org/apache/lucene/store/NIOFSDirectory.java)
+  public IndexInputSlicer createSlicer(final String name,
+      final IOContext context) throws IOException {
+    ensureOpen();
+    final File path = new File(getDirectory(), name);
+    final FileChannel descriptor = FileChannel.open(path.toPath(), StandardOpenOption.READ);
+    return new Directory.IndexInputSlicer() {
+
+      @Override
+      public void close() throws IOException {
+        descriptor.close();
+      }
+
+      @Override
+      public IndexInput openSlice(String sliceDescription, long offset, long length) {
+        return new NIOFSIndexInput("NIOFSIndexInput(" + sliceDescription + " in path=\"" + path + "\" slice=" + offset + ":" + (offset+length) + ")", descriptor, offset,
+            length, BufferedIndexInput.bufferSize(context));
+      }
+    };
+  }
+

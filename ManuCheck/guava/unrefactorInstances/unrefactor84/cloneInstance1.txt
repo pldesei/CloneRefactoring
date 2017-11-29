@@ -1,0 +1,13 @@
+(startLine=53 endLine=63 srcPath=/home/ubuntu/guavaFilter/989/guava/guava-tests/test/com/google/common/io/MultiInputStreamTest.java)
+      public InputStream getInput() throws IOException {
+        if (counter[0]++ != 0) {
+          throw new IllegalStateException("More than one supplier open");
+        }
+        return new FilterInputStream(supplier.getInput()) {
+          @Override public void close() throws IOException {
+            super.close();
+            counter[0]--;
+          }
+        };
+      }
+

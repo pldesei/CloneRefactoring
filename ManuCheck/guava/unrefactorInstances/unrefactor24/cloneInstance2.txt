@@ -1,0 +1,9 @@
+(startLine=390 endLine=396 srcPath=/home/ubuntu/guavaFilter/1103/guava/guava-tests/test/com/google/common/collect/MultimapCollectionTest.java)
+          @Override protected SortedSet<String> create(String[] elements) {
+            TreeMultimap<String, Integer> multimap =
+                TreeMultimap.create(Ordering.natural().nullsFirst(),
+                    Ordering.natural().nullsLast());
+            populateMultimapForKeySet(multimap, elements);
+            return multimap.keySet();
+          }
+

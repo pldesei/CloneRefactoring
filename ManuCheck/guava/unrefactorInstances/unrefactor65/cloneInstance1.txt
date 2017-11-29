@@ -1,0 +1,11 @@
+(startLine=744 endLine=752 srcPath=/home/ubuntu/guavaFilter/213/guava/guava-tests/test/com/google/common/reflect/TypeTokenTest.java)
+  public void testAssignableClassToType() {
+    TypeToken<List<String>> tokenL = new TypeToken<List<String>>() {};
+    assertTrue(tokenL.isSupertypeOf(StringList.class));
+    assertFalse(tokenL.isSupertypeOf(List.class));
+
+    TypeToken<First<String>> tokenF = new TypeToken<First<String>>() {};
+    assertTrue(tokenF.isSupertypeOf(ConcreteIS.class));
+    assertFalse(tokenF.isSupertypeOf(ConcreteSI.class));
+  }
+

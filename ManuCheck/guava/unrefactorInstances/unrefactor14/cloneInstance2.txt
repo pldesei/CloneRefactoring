@@ -1,0 +1,10 @@
+(startLine=574 endLine=581 srcPath=/home/ubuntu/guavaFilter/287/guava/guava/src/com/google/common/collect/ImmutableMultimap.java)
+  UnmodifiableIterator<Entry<K, V>> entryIterator() {
+    return new Itr<Entry<K, V>>() {
+      @Override
+      Entry<K, V> output(K key, V value) {
+        return Maps.immutableEntry(key, value);
+      }
+    };
+  }
+

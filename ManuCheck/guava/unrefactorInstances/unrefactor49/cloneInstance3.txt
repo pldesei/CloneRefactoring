@@ -1,0 +1,12 @@
+(startLine=297 endLine=306 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
+  public void testManualServiceFailWhileStopping() throws Exception {
+    ManualSwitchedService service = new ManualSwitchedService();
+    RecordingListener listener = RecordingListener.record(service);
+    service.start();
+    service.notifyStarted();
+    service.stop();
+    service.notifyFailed(EXCEPTION);
+    assertEquals(ImmutableList.of(State.STARTING, State.RUNNING, State.STOPPING, State.FAILED),
+        listener.getStateHistory());
+  }
+

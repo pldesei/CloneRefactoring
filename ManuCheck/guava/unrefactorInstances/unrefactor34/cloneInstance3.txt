@@ -1,0 +1,9 @@
+(startLine=258 endLine=264 srcPath=/home/ubuntu/guavaFilter/769/guava/guava-tests/test/com/google/common/collect/SetsTest.java)
+          @Override public NavigableSet<String> create(String[] elements) {
+            NavigableSet<String> unfiltered = Sets.newTreeSet();
+            unfiltered.add("yyy");
+            unfiltered.addAll(ImmutableList.copyOf(elements));
+            unfiltered.add("zzz");
+            return Sets.filter(unfiltered, Collections2Test.LENGTH_1);
+          }
+

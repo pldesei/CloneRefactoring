@@ -1,0 +1,8 @@
+(startLine=123 endLine=128 srcPath=/home/ubuntu/luceneFilter/579/lucene/lucene/grouping/src/test/org/apache/lucene/search/grouping/AllGroupsCollectorTest.java)
+  private void addGroupField(Document doc, String groupField, String value, boolean canUseIDV) {
+    doc.add(new Field(groupField, value, TextField.TYPE_STORED));
+    if (canUseIDV) {
+      doc.add(new SortedBytesDocValuesField(groupField, new BytesRef(value)));
+    }
+  }
+

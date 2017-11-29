@@ -1,0 +1,11 @@
+(startLine=57 endLine=65 srcPath=/home/ubuntu/guavaFilter/371/guava/guava-tests/benchmark/com/google/common/hash/ChecksumBenchmark.java)
+  @Benchmark byte crc32Checksum(int reps) throws Exception {
+    byte result = 0x01;
+    for (int i = 0; i < reps; i++) {
+      CRC32 checksum = new CRC32();
+      checksum.update(testBytes);
+      result ^= checksum.getValue();
+    }
+    return result;
+  }
+

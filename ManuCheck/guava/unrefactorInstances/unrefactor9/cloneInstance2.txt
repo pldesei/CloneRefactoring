@@ -1,0 +1,26 @@
+(startLine=585 endLine=608 srcPath=/home/ubuntu/guavaFilter/156/guava/guava-tests/test/com/google/common/util/concurrent/GeneratedMonitorTest.java)
+  private void runWaitTest() {
+    assertFalse(Thread.currentThread().isInterrupted());
+    assertFalse(monitor.isOccupiedByCurrentThread());
+    monitor.enter();
+    try {
+      assertTrue(monitor.isOccupiedByCurrentThread());
+
+      doWaitScenarioSetUp();
+
+      boolean interruptedBeforeCall = Thread.currentThread().isInterrupted();
+      Outcome actualOutcome = doCall();
+      boolean occupiedAfterCall = monitor.isOccupiedByCurrentThread();
+      boolean interruptedAfterCall = Thread.currentThread().isInterrupted();
+
+      assertEquals(expectedOutcome, actualOutcome);
+      assertTrue(occupiedAfterCall);
+      assertEquals(interruptedBeforeCall && expectedOutcome != Outcome.INTERRUPT,
+          interruptedAfterCall);
+    } finally {
+      guard.setSatisfied(true);
+      monitor.leave();
+      assertFalse(monitor.isOccupiedByCurrentThread());
+    }
+  }
+

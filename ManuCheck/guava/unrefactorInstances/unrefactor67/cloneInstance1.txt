@@ -1,0 +1,10 @@
+(startLine=328 endLine=335 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/collect/ImmutableListTest.java)
+    public void testCopyOf_iteratorContainingNull() {
+      Iterator<String> iterator = asList("a", null, "b").iterator();
+      try {
+        ImmutableList.copyOf(iterator);
+        fail();
+      } catch (NullPointerException expected) {
+      }
+    }
+

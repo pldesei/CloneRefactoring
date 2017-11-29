@@ -1,0 +1,40 @@
+(startLine=305 endLine=342 srcPath=/home/ubuntu/luceneFilter/423/lucene/lucene/test-framework/src/java/org/apache/lucene/index/RandomIndexWriter.java)
+  public <T extends IndexableField> void updateDocument(Term t, final IndexDocument doc) throws IOException {
+    if (doDocValues) {
+      randomPerDocFieldValues((Document) doc);
+    }
+    if (r.nextInt(5) == 3) {
+      w.updateDocuments(t, new Iterable<IndexDocument>() {
+
+        @Override
+        public Iterator<IndexDocument> iterator() {
+          return new Iterator<IndexDocument>() {
+            boolean done;
+            
+            @Override
+            public boolean hasNext() {
+              return !done;
+            }
+
+            @Override
+            public void remove() {
+              throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public IndexDocument next() {
+              if (done) {
+                throw new IllegalStateException();
+              }
+              done = true;
+              return doc;
+            }
+          };
+        }
+        });
+    } else {
+      w.updateDocument(t, doc);
+    }
+    maybeCommit();
+  }
+

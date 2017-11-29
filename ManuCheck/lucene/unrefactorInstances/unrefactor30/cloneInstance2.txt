@@ -1,0 +1,14 @@
+(startLine=65 endLine=76 srcPath=/home/ubuntu/luceneFilter/376/lucene/solr/core/src/test/org/apache/solr/analysis/TestCharFilters.java)
+  public void testIndexAnalysis() {
+    assertQ("Index analysis: ",
+       req("fl", "id", "q", "content2:aab", "sort", "id asc"),
+                "//*[@numFound='1']",
+                "//result/doc[1]/int[@name='id'][.=3]"
+    );
+    assertQ("Index analysis: ",
+        req("fl", "id", "q", "content2:aabaa", "sort", "id asc"),
+                 "//*[@numFound='1']",
+                 "//result/doc[1]/int[@name='id'][.=4]"
+    );
+  }
+

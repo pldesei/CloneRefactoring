@@ -1,0 +1,17 @@
+(startLine=90 endLine=104 srcPath=/home/ubuntu/luceneFilter/891/lucene/lucene/src/java/org/apache/lucene/search/spans/SpanPositionCheckQuery.java)
+  public Query rewrite(IndexReader reader) throws IOException {
+    SpanPositionCheckQuery clone = null;
+
+    SpanQuery rewritten = (SpanQuery) match.rewrite(reader);
+    if (rewritten != match) {
+      clone = (SpanPositionCheckQuery) this.clone();
+      clone.match = rewritten;
+    }
+
+    if (clone != null) {
+      return clone;                        // some clauses rewrote
+    } else {
+      return this;                         // no clauses rewrote
+    }
+  }
+

@@ -1,0 +1,51 @@
+(startLine=530 endLine=578 srcPath=/home/ubuntu/luceneFilter/1376/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/PorterStemmer.java)
+        private boolean r_Step_5a() {
+            int v_1;
+            int v_2;
+            // (, line 100
+            // [, line 101
+            ket = cursor;
+            // literal, line 101
+            if (!(eq_s_b(1, "e")))
+            {
+                return false;
+            }
+            // ], line 101
+            bra = cursor;
+            // or, line 102
+            lab0: do {
+                v_1 = limit - cursor;
+                lab1: do {
+                    // call R2, line 102
+                    if (!r_R2())
+                    {
+                        break lab1;
+                    }
+                    break lab0;
+                } while (false);
+                cursor = limit - v_1;
+                // (, line 102
+                // call R1, line 102
+                if (!r_R1())
+                {
+                    return false;
+                }
+                // not, line 102
+                {
+                    v_2 = limit - cursor;
+                    lab2: do {
+                        // call shortv, line 102
+                        if (!r_shortv())
+                        {
+                            break lab2;
+                        }
+                        return false;
+                    } while (false);
+                    cursor = limit - v_2;
+                }
+            } while (false);
+            // delete, line 103
+            slice_del();
+            return true;
+        }
+

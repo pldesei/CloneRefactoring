@@ -1,0 +1,12 @@
+(startLine=2296 endLine=2305 srcPath=/home/ubuntu/guavaFilter/371/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testSuccessfulAsList_emptyList() throws Exception {
+    SingleCallListener listener = new SingleCallListener();
+    listener.expectCall();
+    List<ListenableFuture<String>> futures = ImmutableList.of();
+    ListenableFuture<List<String>> compound = Futures.successfulAsList(futures);
+    compound.addListener(listener, directExecutor());
+    assertTrue(compound.isDone());
+    assertTrue(compound.get().isEmpty());
+    assertTrue(listener.wasCalled());
+  }
+

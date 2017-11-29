@@ -1,0 +1,15 @@
+(startLine=184 endLine=196 srcPath=/home/ubuntu/guavaFilter/120/guava/guava-tests/test/com/google/common/collect/RangeTest.java)
+  public void testLessThan() {
+    Range<Integer> range = Range.lessThan(5);
+    assertTrue(range.contains(Integer.MIN_VALUE));
+    assertTrue(range.contains(4));
+    assertFalse(range.contains(5));
+    assertUnboundedBelow(range);
+    assertTrue(range.hasUpperBound());
+    assertEquals(5, (int) range.upperEndpoint());
+    assertEquals(OPEN, range.upperBoundType());
+    assertFalse(range.isEmpty());
+    assertEquals("(-\u221e..5)", range.toString());
+    reserializeAndAssert(range);
+  }
+

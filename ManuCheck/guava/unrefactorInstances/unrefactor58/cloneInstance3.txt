@@ -1,0 +1,18 @@
+(startLine=458 endLine=473 srcPath=/home/ubuntu/guavaFilter/817/guava/guava-tests/test/com/google/common/util/concurrent/AbstractListeningExecutorServiceTest.java)
+    public void testTimedInvokeAny3() throws Exception {
+        ExecutorService e = new DirectExecutorService();
+        List<Callable<Integer>> l = new ArrayList<Callable<Integer>>();
+        l.add(new Callable<Integer>() {
+            public Integer call() {
+                throw new ArithmeticException("/ by zero");
+            }});
+        l.add(null);
+        try {
+            e.invokeAny(l, MEDIUM_DELAY_MS, MILLISECONDS);
+            shouldThrow();
+        } catch (NullPointerException success) {
+        } finally {
+            joinPool(e);
+        }
+    }
+

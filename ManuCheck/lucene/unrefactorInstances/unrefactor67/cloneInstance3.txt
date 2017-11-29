@@ -1,0 +1,115 @@
+(startLine=1426 endLine=1538 srcPath=/home/ubuntu/luceneFilter/47/lucene/lucene/test-framework/src/java/org/apache/lucene/index/BasePostingsFormatTestCase.java)
+                  public void write(Fields fields) throws IOException {
+                    fieldsConsumer.write(fields);
+
+                    boolean isMerge = state.context.context == IOContext.Context.MERGE;
+
+                    // We only use one thread for flushing
+                    // in this test:
+                    assert isMerge || Thread.currentThread() == mainThread;
+
+                    // We iterate the provided TermsEnum
+                    // twice, so we excercise this new freedom
+                    // with the inverted API; if
+                    // addOnSecondPass is true, we add up
+                    // term stats on the 2nd iteration:
+                    boolean addOnSecondPass = random().nextBoolean();
+
+                    //System.out.println("write isMerge=" + isMerge + " 2ndPass=" + addOnSecondPass);
+
+                    // Gather our own stats:
+                    Terms terms = fields.terms("body");
+                    assert terms != null;
+
+                    TermsEnum termsEnum = terms.iterator(null);
+                    DocsEnum docs = null;
+                    while(termsEnum.next() != null) {
+                      BytesRef term = termsEnum.term();
+                      if (random().nextBoolean()) {
+                        docs = termsEnum.docs(null, docs, DocsEnum.FLAG_FREQS);
+                      } else if (docs instanceof DocsAndPositionsEnum) {
+                        docs = termsEnum.docsAndPositions(null, (DocsAndPositionsEnum) docs, 0);
+                      } else {
+                        docs = termsEnum.docsAndPositions(null, null, 0);
+                      }
+                      int docFreq = 0;
+                      long totalTermFreq = 0;
+                      while (docs.nextDoc() != DocsEnum.NO_MORE_DOCS) {
+                        docFreq++;
+                        totalTermFreq += docs.freq();
+                        if (docs instanceof DocsAndPositionsEnum) {
+                          DocsAndPositionsEnum posEnum = (DocsAndPositionsEnum) docs;
+                          int limit = _TestUtil.nextInt(random(), 1, docs.freq());
+                          for(int i=0;i<limit;i++) {
+                            posEnum.nextPosition();
+                          }
+                        }
+                      }
+
+                      String termString = term.utf8ToString();
+
+                      // During merge we should only see terms
+                      // we had already seen during a
+                      // previous flush:
+                      assertTrue(isMerge==false || termFreqs.containsKey(termString));
+
+                      if (isMerge == false) {
+                        if (addOnSecondPass == false) {
+                          TermFreqs tf = termFreqs.get(termString);
+                          if (tf == null) {
+                            tf = new TermFreqs();
+                            termFreqs.put(termString, tf);
+                          }
+                          tf.docFreq += docFreq;
+                          tf.totalTermFreq += totalTermFreq;
+                          sumDocFreq.addAndGet(docFreq);
+                          sumTotalTermFreq.addAndGet(totalTermFreq);
+                        } else if (termFreqs.containsKey(termString) == false) {
+                          // Add placeholder (2nd pass will
+                          // set its counts):
+                          termFreqs.put(termString, new TermFreqs());
+                        }
+                      }
+                    }
+
+                    // Also test seeking the TermsEnum:
+                    for(String term : termFreqs.keySet()) {
+                      if (termsEnum.seekExact(new BytesRef(term))) {
+                        if (random().nextBoolean()) {
+                          docs = termsEnum.docs(null, docs, DocsEnum.FLAG_FREQS);
+                        } else if (docs instanceof DocsAndPositionsEnum) {
+                          docs = termsEnum.docsAndPositions(null, (DocsAndPositionsEnum) docs, 0);
+                        } else {
+                          docs = termsEnum.docsAndPositions(null, null, 0);
+                        }
+
+                        int docFreq = 0;
+                        long totalTermFreq = 0;
+                        while (docs.nextDoc() != DocsEnum.NO_MORE_DOCS) {
+                          docFreq++;
+                          totalTermFreq += docs.freq();
+                          if (docs instanceof DocsAndPositionsEnum) {
+                            DocsAndPositionsEnum posEnum = (DocsAndPositionsEnum) docs;
+                            int limit = _TestUtil.nextInt(random(), 1, docs.freq());
+                            for(int i=0;i<limit;i++) {
+                              posEnum.nextPosition();
+                            }
+                          }
+                        }
+
+                        if (isMerge == false && addOnSecondPass) {
+                          TermFreqs tf = termFreqs.get(term);
+                          assert tf != null;
+                          tf.docFreq += docFreq;
+                          tf.totalTermFreq += totalTermFreq;
+                          sumDocFreq.addAndGet(docFreq);
+                          sumTotalTermFreq.addAndGet(totalTermFreq);
+                        }
+
+                        //System.out.println("  term=" + term + " docFreq=" + docFreq + " ttDF=" + termToDocFreq.get(term));
+                        assertTrue(docFreq <= termFreqs.get(term).docFreq);
+                        assertTrue(totalTermFreq <= termFreqs.get(term).totalTermFreq);
+                      }
+                    }
+                  }
+

@@ -1,0 +1,32 @@
+(startLine=124 endLine=153 srcPath=/home/ubuntu/luceneFilter/561/lucene/lucene/core/src/java/org/apache/lucene/store/ByteArrayDataInput.java)
+  public long readVLong() {
+    byte b = bytes[pos++];
+    if (b >= 0) return b;
+    long i = b & 0x7FL;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 7;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 14;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 21;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 28;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 35;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 42;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 49;
+    if (b >= 0) return i;
+    b = bytes[pos++];
+    i |= (b & 0x7FL) << 56;
+    if (b >= 0) return i;
+    throw new RuntimeException("Invalid vLong detected (negative values disallowed)");
+  }
+

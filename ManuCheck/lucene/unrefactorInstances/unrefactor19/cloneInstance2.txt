@@ -1,0 +1,15 @@
+(startLine=91 endLine=103 srcPath=/home/ubuntu/luceneFilter/1541/lucene/contrib/surround/src/java/org/apache/lucene/queryParser/surround/query/ComposedQuery.java)
+  protected void prefixToString(StringBuffer r) {
+    Iterator sqi = getSubQueriesIterator();
+    r.append(getOperatorName()); /* prefix operator */
+    r.append(getBracketOpen());
+    if (sqi.hasNext()) {
+      r.append(sqi.next().toString());
+      while (sqi.hasNext()) {
+        r.append(getPrefixSeparator());
+        r.append(sqi.next().toString());
+      }
+    }
+    r.append(getBracketClose());
+  }
+

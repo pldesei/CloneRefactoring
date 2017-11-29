@@ -1,0 +1,23 @@
+(startLine=992 endLine=1012 srcPath=/home/ubuntu/luceneFilter/543/lucene/lucene/benchmark/src/test/org/apache/lucene/benchmark/byTask/TestPerfTasksLogic.java)
+  private String[] getCollatorConfig(String localeParam, 
+      String collationParam) {
+    String algLines[] = {
+        "# ----- properties ",
+        "content.source=org.apache.lucene.benchmark.byTask.feeds.LineDocSource",
+        "docs.file=" + getReuters20LinesFile(),
+        "content.source.log.step=3",
+        "content.source.forever=false",
+        "directory=RAMDirectory",
+        "# ----- alg ",
+        "{ \"Rounds\"",
+        "  ResetSystemErase",
+        "  NewLocale(" + localeParam + ")",
+        "  NewCollationAnalyzer(" + collationParam + ")",
+        "  CreateIndex",
+        "  { \"AddDocs\"  AddDoc > : * ",
+        "  NewRound",
+        "} : 1",
+    };
+    return algLines;
+  }
+

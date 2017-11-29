@@ -1,0 +1,12 @@
+(startLine=958 endLine=967 srcPath=/home/ubuntu/guavaFilter/6/guava/android/guava-tests/test/com/google/common/collect/ImmutableSortedSetTest.java)
+  public void testTailSetExclusive() {
+    String[] strings = NUMBER_NAMES.toArray(new String[0]);
+    ImmutableSortedSet<String> set = ImmutableSortedSet.copyOf(strings);
+    Arrays.sort(strings);
+    for (int i = 0; i < strings.length; i++) {
+      assertThat(set.tailSet(strings[i], false))
+          .containsExactlyElementsIn(sortedNumberNames(i + 1, strings.length))
+          .inOrder();
+    }
+  }
+

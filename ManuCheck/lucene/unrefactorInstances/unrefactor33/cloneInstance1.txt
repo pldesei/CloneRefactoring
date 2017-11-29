@@ -1,0 +1,8 @@
+(startLine=334 endLine=339 srcPath=/home/ubuntu/luceneFilter/369/lucene/lucene/test-framework/src/java/org/apache/lucene/index/AssertingAtomicReader.java)
+    public int startOffset() throws IOException {
+      assert state != DocsEnumState.START : "startOffset() called before nextDoc()/advance()";
+      assert state != DocsEnumState.FINISHED : "startOffset() called after NO_MORE_DOCS";
+      assert positionCount > 0 : "startOffset() called before nextPosition()!";
+      return super.startOffset();
+    }
+

@@ -1,0 +1,16 @@
+(startLine=202 endLine=215 srcPath=/home/ubuntu/luceneFilter/812/lucene/solr/core/src/test/org/apache/solr/handler/TestReplicationHandler.java)
+  private NamedList<Object> getIndexVersion(SolrServer s) throws Exception {
+    
+    ModifiableSolrParams params = new ModifiableSolrParams();
+    params.set("command","indexversion");
+    params.set("qt","/replication");
+    QueryRequest req = new QueryRequest(params);
+
+    NamedList<Object> res = s.request(req);
+
+    assertNotNull("null response from server", res);
+
+
+    return res;
+  }
+

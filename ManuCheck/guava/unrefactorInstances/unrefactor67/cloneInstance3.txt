@@ -1,0 +1,9 @@
+(startLine=265 endLine=271 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/collect/ImmutableSortedMultisetTest.java)
+  public void testCopyOf_iteratorContainingNull() {
+    Iterator<String> iterator = asList("a", null, "b").iterator();
+    try {
+      ImmutableSortedMultiset.copyOf(iterator);
+      fail();
+    } catch (NullPointerException expected) {}
+  }
+

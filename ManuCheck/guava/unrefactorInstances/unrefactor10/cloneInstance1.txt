@@ -1,0 +1,17 @@
+(startLine=350 endLine=364 srcPath=/home/ubuntu/guavaFilter/180/guava/guava-tests/test/com/google/common/base/PreconditionsTest.java)
+  public void testAllOverloads_checkArgument() throws Exception {
+    for (ImmutableList<Class<?>> sig : allSignatures(boolean.class)) {
+      Method checkArgumentMethod =
+          Preconditions.class.getMethod("checkArgument", sig.toArray(new Class<?>[] {}));
+      checkArgumentMethod.invoke(null /* static method */, getParametersForSignature(true, sig));
+
+      Object[] failingParams = getParametersForSignature(false, sig);
+      try {
+        checkArgumentMethod.invoke(null /* static method */, failingParams);
+        fail();
+      } catch (InvocationTargetException ite) {
+        assertFailureCause(ite.getCause(), IllegalArgumentException.class, failingParams);
+      }
+    }
+  }
+

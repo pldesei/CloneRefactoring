@@ -1,0 +1,11 @@
+(startLine=479 endLine=487 srcPath=/home/ubuntu/guavaFilter/1154/guava/guava/src/com/google/common/cache/CacheBuilder.java)
+  public CacheBuilder<K, V> expireAfterAccess(long duration, TimeUnit unit) {
+    checkExpiration(duration, unit);
+    this.expireAfterAccessNanos = unit.toNanos(duration);
+    if (duration == 0 && this.nullRemovalCause == null) {
+      // SIZE trumps EXPIRED
+      this.nullRemovalCause = RemovalCause.EXPIRED;
+    }
+    return this;
+  }
+

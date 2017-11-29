@@ -1,0 +1,15 @@
+(startLine=270 endLine=282 srcPath=/home/ubuntu/guavaFilter/75/guava/guava-tests/test/com/google/common/util/concurrent/AtomicDoubleArrayTest.java)
+  public void testAddAndGet() {
+    AtomicDoubleArray aa = new AtomicDoubleArray(SIZE);
+    for (int i : new int[] { 0, SIZE - 1}) {
+      for (double x : VALUES) {
+        for (double y : VALUES) {
+          aa.set(i, x);
+          double z = aa.addAndGet(i, y);
+          assertBitEquals(x + y, z);
+          assertBitEquals(x + y, aa.get(i));
+        }
+      }
+    }
+  }
+

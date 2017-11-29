@@ -1,0 +1,8 @@
+(startLine=682 endLine=687 srcPath=/home/ubuntu/guavaFilter/1209/guava/guava/src/com/google/common/collect/ImmutableSortedSet.java)
+  public ImmutableSortedSet<E> subSet(E fromElement, E toElement) {
+    checkNotNull(fromElement);
+    checkNotNull(toElement);
+    checkArgument(comparator.compare(fromElement, toElement) <= 0);
+    return subSetImpl(fromElement, toElement);
+  }
+

@@ -1,0 +1,13 @@
+(startLine=47 endLine=57 srcPath=/home/ubuntu/luceneFilter/406/lucene/solr/contrib/dataimporthandler/src/java/org/apache/solr/handler/dataimport/BinContentStreamDataSource.java)
+  public InputStream getData(String query) {
+     contentStream = context.getDocBuilder().getReqParams().getContentStream();
+    if (contentStream == null)
+      throw new DataImportHandlerException(SEVERE, "No stream available. The request has no body");
+    try {
+      return in = contentStream.getStream();
+    } catch (IOException e) {
+      DataImportHandlerException.wrapAndThrow(SEVERE, e);
+      return null;
+    }
+  }
+

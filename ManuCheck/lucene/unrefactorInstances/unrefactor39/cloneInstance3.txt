@@ -1,0 +1,53 @@
+(startLine=305 endLine=355 srcPath=/home/ubuntu/luceneFilter/1389/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/NorwegianStemmer.java)
+        public boolean stem() {
+            int v_1;
+            int v_2;
+            int v_3;
+            int v_4;
+            // (, line 72
+            // do, line 74
+            v_1 = cursor;
+            lab0: do {
+                // call mark_regions, line 74
+                if (!r_mark_regions())
+                {
+                    break lab0;
+                }
+            } while (false);
+            cursor = v_1;
+            // backwards, line 75
+            limit_backward = cursor; cursor = limit;
+            // (, line 75
+            // do, line 76
+            v_2 = limit - cursor;
+            lab1: do {
+                // call main_suffix, line 76
+                if (!r_main_suffix())
+                {
+                    break lab1;
+                }
+            } while (false);
+            cursor = limit - v_2;
+            // do, line 77
+            v_3 = limit - cursor;
+            lab2: do {
+                // call consonant_pair, line 77
+                if (!r_consonant_pair())
+                {
+                    break lab2;
+                }
+            } while (false);
+            cursor = limit - v_3;
+            // do, line 78
+            v_4 = limit - cursor;
+            lab3: do {
+                // call other_suffix, line 78
+                if (!r_other_suffix())
+                {
+                    break lab3;
+                }
+            } while (false);
+            cursor = limit - v_4;
+            cursor = limit_backward;            return true;
+        }
+

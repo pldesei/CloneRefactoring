@@ -1,0 +1,8 @@
+(startLine=431 endLine=436 srcPath=/home/ubuntu/luceneFilter/310/lucene/solr/core/src/test/org/apache/solr/search/QueryEqualityTest.java)
+  public void testFuncMin() throws Exception {
+    assertFuncEquals("min(5,4,3,2,1)", "min(5, 4, 3, 2, 1)");
+    assertFuncEquals("min(foo_i,4)", "min(field('foo_i'), 4)");
+    assertFuncEquals("min(foo_i,sub(4,field('bar_i')))", 
+                     "min(field(foo_i), sub(4,bar_i))");
+  }
+

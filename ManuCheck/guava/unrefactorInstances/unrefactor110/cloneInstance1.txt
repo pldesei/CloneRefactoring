@@ -1,0 +1,20 @@
+(startLine=78 endLine=95 srcPath=/home/ubuntu/guavaFilter/239/guava/guava-tests/test/com/google/common/primitives/SignedBytesTest.java)
+  public void testCompare() {
+    for (byte x : VALUES) {
+      for (byte y : VALUES) {
+        // Only compare the sign of the result of compareTo().
+        int expected = Byte.valueOf(x).compareTo(y);
+        int actual = SignedBytes.compare(x, y);
+        if (expected == 0) {
+          assertEquals(x + ", " + y, expected, actual);
+        } else if (expected < 0) {
+          assertTrue(x + ", " + y + " (expected: " + expected + ", actual" + actual + ")",
+              actual < 0);
+        } else {
+          assertTrue(x + ", " + y + " (expected: " + expected + ", actual" + actual + ")",
+              actual > 0);
+        }
+      }
+    }
+  }
+

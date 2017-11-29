@@ -1,0 +1,20 @@
+(startLine=126 endLine=143 srcPath=/home/ubuntu/luceneFilter/1675/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testMultipleFields() throws IOException {
+    TermVectorsWriter writer = new TermVectorsWriter(dir, seg, fieldInfos);
+    writeDocument(writer, testFields.length);
+
+    writer.close();
+
+    assertTrue(writer.isDocumentOpen() == false);
+    //Check to see the files were created
+    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVD_EXTENSION));
+    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVX_EXTENSION));
+    //Now read it back in
+    TermVectorsReader reader = new TermVectorsReader(dir, seg, fieldInfos);
+    assertTrue(reader != null);
+
+    for (int j = 0; j < testFields.length; j++) {
+      checkTermVector(reader, 0, testFields[j]);
+    }
+  }
+

@@ -1,0 +1,11 @@
+(startLine=125 endLine=133 srcPath=/home/ubuntu/guavaFilter/432/guava/guava-testlib/src/com/google/common/collect/testing/testers/SortedMapNavigationTester.java)
+  public void testTailMap() {
+    List<Entry<K, V>> entries = Helpers.copyToList(getSubjectGenerator().getSampleElements(
+        getSubjectGenerator().getCollectionSize().getNumElements()));
+    Collections.sort(entries, Helpers.<K, V>entryComparator(navigableMap.comparator()));
+    for (int i = 0; i < entries.size(); i++) {
+      assertThat(navigableMap.tailMap(entries.get(i).getKey()).entrySet())
+          .iteratesAs(entries.subList(i, entries.size()));
+    }
+  }
+

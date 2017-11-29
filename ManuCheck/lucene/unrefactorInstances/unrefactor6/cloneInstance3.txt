@@ -1,0 +1,13 @@
+(startLine=62 endLine=72 srcPath=/home/ubuntu/luceneFilter/1142/lucene/solr/src/test/org/apache/solr/analysis/TestShingleFilterFactory.java)
+  public void testMaxShingleSize() throws Exception {
+    Reader reader = new StringReader("this is a test");
+    Map<String,String> args = new HashMap<String,String>();
+    args.put("maxShingleSize", "3");
+    ShingleFilterFactory factory = new ShingleFilterFactory();
+    factory.init(args);
+    TokenStream stream = factory.create(new WhitespaceTokenizer(DEFAULT_VERSION, reader));
+    assertTokenStreamContents(stream, 
+        new String[] {"this", "this is", "this is a", "is",
+        "is a", "is a test", "a", "a test", "test"});
+  }
+

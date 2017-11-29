@@ -1,0 +1,33 @@
+(startLine=144 endLine=174 srcPath=/home/ubuntu/luceneFilter/1013/lucene/solr/src/common/org/apache/solr/common/cloud/ZkStateReader.java)
+        public void run() {
+          log.info("Updating cloud state from ZooKeeper...");
+          synchronized (getUpdateLock()) {
+            cloudStateUpdateScheduled = false;
+            CloudState cloudState;
+            try {
+              cloudState = CloudState.buildCloudState(zkClient,
+                  ZkStateReader.this.cloudState, onlyLiveNodes);
+            } catch (KeeperException e) {
+              if(e.code() == KeeperException.Code.SESSIONEXPIRED || e.code() == KeeperException.Code.CONNECTIONLOSS) {
+                log.warn("ZooKeeper watch triggered, but Solr cannot talk to ZK");
+                return;
+              }
+              log.error("", e);
+              throw new ZooKeeperException(
+                  SolrException.ErrorCode.SERVER_ERROR, "", e);
+            } catch (InterruptedException e) {
+              // Restore the interrupted status
+              Thread.currentThread().interrupt();
+              log.error("", e);
+              throw new ZooKeeperException(
+                  SolrException.ErrorCode.SERVER_ERROR, "", e);
+            } catch (IOException e) {
+              log.error("", e);
+              throw new ZooKeeperException(
+                  SolrException.ErrorCode.SERVER_ERROR, "", e);
+            }
+            // update volatile
+            ZkStateReader.this.cloudState = cloudState;
+          }
+        }
+

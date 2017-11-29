@@ -1,0 +1,8 @@
+(startLine=442 endLine=447 srcPath=/home/ubuntu/guavaFilter/187/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
+        protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+          SortedMap<String, String> map = new NonNavigableSortedMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+

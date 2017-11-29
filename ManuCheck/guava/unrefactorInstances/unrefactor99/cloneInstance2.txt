@@ -1,0 +1,30 @@
+(startLine=410 endLine=437 srcPath=/home/ubuntu/guavaFilter/449/guava/guava-tests/test/com/google/common/collect/ConcurrentHashMultisetTest.java)
+  private void testLogicalKeyEquality(
+      MapMakerInternalMap.Strength keyStrength) {
+
+    MapMaker mapMaker = new MapMaker()
+        .setKeyStrength(keyStrength)
+        .keyEquivalence(Equivalence.equals());
+
+    ConcurrentHashMultiset<String> multiset =
+        ConcurrentHashMultiset.create(mapMaker);
+
+    String s1 = new String("a");
+    String s2 = new String("a");
+    assertEquals(s1, s2); // Stating the obvious.
+
+    multiset.add(s1);
+    assertTrue(multiset.contains(s1));
+    assertTrue(multiset.contains(s2));
+    assertEquals(1, multiset.count(s1));
+    assertEquals(1, multiset.count(s2));
+
+    multiset.add(s2, 3);
+    assertEquals(4, multiset.count(s1));
+    assertEquals(4, multiset.count(s2));
+
+    multiset.remove(s1);
+    assertEquals(3, multiset.count(s1));
+    assertEquals(3, multiset.count(s2));
+  }
+

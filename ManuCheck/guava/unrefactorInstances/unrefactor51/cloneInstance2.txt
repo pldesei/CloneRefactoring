@@ -1,0 +1,11 @@
+(startLine=368 endLine=376 srcPath=/home/ubuntu/guavaFilter/739/guava/guava-tests/test/com/google/common/reflect/TypeTokenTest.java)
+  public void testAssertSubtypeBeforeSupertype_duplicate() {
+    try {
+      assertSubtypeBeforeSupertype(
+          ImmutableList.of(String.class, String.class));
+    } catch (AssertionError expected) {
+      return;
+    }
+    fail();
+  }
+

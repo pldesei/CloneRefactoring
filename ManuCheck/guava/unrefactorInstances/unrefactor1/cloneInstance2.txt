@@ -1,0 +1,8 @@
+(startLine=250 endLine=255 srcPath=/home/ubuntu/guavaFilter/193/guava/guava-tests/test/com/google/common/util/concurrent/JdkFutureAdaptersTest.java)
+  public void testAdapters_nullChecks() throws Exception {
+    new ClassSanityTester()
+        .forAllPublicStaticMethods(JdkFutureAdapters.class)
+        .thatReturn(Future.class)
+        .testNulls();
+  }
+

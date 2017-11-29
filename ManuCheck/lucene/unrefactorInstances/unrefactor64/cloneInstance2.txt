@@ -1,0 +1,39 @@
+(startLine=139 endLine=175 srcPath=/home/ubuntu/luceneFilter/289/lucene/lucene/core/src/java/org/apache/lucene/index/SlowCompositeReaderWrapper.java)
+  public SortedSetDocValues getSortedSetDocValues(String field) throws IOException {
+    ensureOpen();
+    OrdinalMap map = null;
+    synchronized (cachedOrdMaps) {
+      map = cachedOrdMaps.get(field);
+      if (map == null) {
+        // uncached, or not a multi dv
+        SortedSetDocValues dv = MultiDocValues.getSortedSetValues(in, field);
+        if (dv instanceof MultiSortedSetDocValues) {
+          map = ((MultiSortedSetDocValues)dv).mapping;
+          if (map.owner == getCoreCacheKey()) {
+            cachedOrdMaps.put(field, map);
+          }
+        }
+        return dv;
+      }
+    }
+    // cached ordinal map
+    if (getFieldInfos().fieldInfo(field).getDocValuesType() != DocValuesType.SORTED_SET) {
+      return null;
+    }
+    assert map != null;
+    int size = in.leaves().size();
+    final SortedSetDocValues[] values = new SortedSetDocValues[size];
+    final int[] starts = new int[size+1];
+    for (int i = 0; i < size; i++) {
+      AtomicReaderContext context = in.leaves().get(i);
+      SortedSetDocValues v = context.reader().getSortedSetDocValues(field);
+      if (v == null) {
+        v = SortedSetDocValues.EMPTY;
+      }
+      values[i] = v;
+      starts[i] = context.docBase;
+    }
+    starts[size] = maxDoc();
+    return new MultiSortedSetDocValues(values, starts, map);
+  }
+

@@ -1,0 +1,16 @@
+(startLine=112 endLine=125 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/math/DoubleMathTest.java)
+  public void testRoundExactIntegralDoubleToInt() {
+    for (double d : INTEGRAL_DOUBLE_CANDIDATES) {
+      BigDecimal expected = new BigDecimal(d).setScale(0, UNNECESSARY);
+      boolean isInBounds = expected.compareTo(MAX_INT_AS_BIG_DECIMAL) <= 0
+          & expected.compareTo(MIN_INT_AS_BIG_DECIMAL) >= 0;
+
+      try {
+        assertEquals(expected.intValue(), DoubleMath.roundToInt(d, UNNECESSARY));
+        assertTrue(isInBounds);
+      } catch (ArithmeticException e) {
+        assertFalse(isInBounds);
+      }
+    }
+  }
+

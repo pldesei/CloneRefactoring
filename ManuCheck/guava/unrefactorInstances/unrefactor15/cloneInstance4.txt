@@ -1,0 +1,16 @@
+(startLine=464 endLine=477 srcPath=/home/ubuntu/guavaFilter/767/guava/guava-tests/test/com/google/common/math/LongMathTest.java)
+  public void testCheckedAdd() {
+    for (long a : ALL_INTEGER_CANDIDATES) {
+      for (long b : ALL_INTEGER_CANDIDATES) {
+        BigInteger expectedResult = valueOf(a).add(valueOf(b));
+        boolean expectedSuccess = fitsInLong(expectedResult);
+        try {
+          assertEquals(a + b, LongMath.checkedAdd(a, b));
+          assertTrue(expectedSuccess);
+        } catch (ArithmeticException e) {
+          assertFalse(expectedSuccess);
+        }
+      }
+    }
+  }
+

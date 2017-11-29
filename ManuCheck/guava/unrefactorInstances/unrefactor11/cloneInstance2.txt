@@ -1,0 +1,44 @@
+(startLine=402 endLine=443 srcPath=/home/ubuntu/guavaFilter/1094/guava/guava/src/com/google/common/collect/ImmutableSetMultimap.java)
+  private void readObject(ObjectInputStream stream)
+      throws IOException, ClassNotFoundException {
+    stream.defaultReadObject();
+    int keyCount = stream.readInt();
+    if (keyCount < 0) {
+      throw new InvalidObjectException("Invalid key count " + keyCount);
+    }
+    ImmutableMap.Builder<Object, ImmutableSet<Object>> builder
+        = ImmutableMap.builder();
+    int tmpSize = 0;
+
+    for (int i = 0; i < keyCount; i++) {
+      Object key = stream.readObject();
+      int valueCount = stream.readInt();
+      if (valueCount <= 0) {
+        throw new InvalidObjectException("Invalid value count " + valueCount);
+      }
+
+      Object[] array = new Object[valueCount];
+      for (int j = 0; j < valueCount; j++) {
+        array[j] = stream.readObject();
+      }
+      ImmutableSet<Object> valueSet = ImmutableSet.copyOf(array);
+      if (valueSet.size() != array.length) {
+        throw new InvalidObjectException(
+            "Duplicate key-value pairs exist for key " + key);
+      }
+      builder.put(key, valueSet);
+      tmpSize += valueCount;
+    }
+
+    ImmutableMap<Object, ImmutableSet<Object>> tmpMap;
+    try {
+      tmpMap = builder.build();
+    } catch (IllegalArgumentException e) {
+      throw (InvalidObjectException)
+          new InvalidObjectException(e.getMessage()).initCause(e);
+    }
+
+    FieldSettersHolder.MAP_FIELD_SETTER.set(this, tmpMap);
+    FieldSettersHolder.SIZE_FIELD_SETTER.set(this, tmpSize);
+  }
+

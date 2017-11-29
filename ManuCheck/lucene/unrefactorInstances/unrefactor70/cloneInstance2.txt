@@ -1,0 +1,15 @@
+(startLine=94 endLine=106 srcPath=/home/ubuntu/luceneFilter/632/lucene/solr/solrj/src/java/org/apache/solr/client/solrj/request/UpdateRequestExt.java)
+  public UpdateRequestExt add(final SolrInputDocument doc, int commitWithin,
+      boolean overwrite) {
+    if (documents == null) {
+      documents = new ArrayList<SolrDoc>(2);
+    }
+    SolrDoc solrDoc = new SolrDoc();
+    solrDoc.document = doc;
+    solrDoc.commitWithin = commitWithin;
+    solrDoc.overwrite = overwrite;
+    documents.add(solrDoc);
+    
+    return this;
+  }
+

@@ -1,0 +1,10 @@
+(startLine=132 endLine=139 srcPath=/home/ubuntu/guavaFilter/227/guava/guava/src/com/google/common/primitives/Primitives.java)
+  public static <T> Class<T> unwrap(Class<T> type) {
+    checkNotNull(type);
+
+    // cast is safe: long.class and Long.class are both of type Class<Long>
+    @SuppressWarnings("unchecked")
+    Class<T> unwrapped = (Class<T>) WRAPPER_TO_PRIMITIVE_TYPE.get(type);
+    return (unwrapped == null) ? type : unwrapped;
+  }
+

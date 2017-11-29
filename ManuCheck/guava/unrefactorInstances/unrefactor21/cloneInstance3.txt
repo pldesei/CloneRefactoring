@@ -1,0 +1,8 @@
+(startLine=193 endLine=198 srcPath=/home/ubuntu/guavaFilter/420/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
+  public <T> void testWhere_mapFromConcreteParameterizedType() {
+    try {
+      new TypeResolver().where(new TypeCapture<List<String>>() {}.capture(), aTypeVariable());
+     fail();
+    } catch (IllegalArgumentException expected) {}
+  }
+

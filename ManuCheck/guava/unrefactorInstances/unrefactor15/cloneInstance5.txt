@@ -1,0 +1,16 @@
+(startLine=480 endLine=493 srcPath=/home/ubuntu/guavaFilter/767/guava/guava-tests/test/com/google/common/math/LongMathTest.java)
+  public void testCheckedSubtract() {
+    for (long a : ALL_INTEGER_CANDIDATES) {
+      for (long b : ALL_INTEGER_CANDIDATES) {
+        BigInteger expectedResult = valueOf(a).subtract(valueOf(b));
+        boolean expectedSuccess = fitsInLong(expectedResult);
+        try {
+          assertEquals(a - b, LongMath.checkedSubtract(a, b));
+          assertTrue(expectedSuccess);
+        } catch (ArithmeticException e) {
+          assertFalse(expectedSuccess);
+        }
+      }
+    }
+  }
+

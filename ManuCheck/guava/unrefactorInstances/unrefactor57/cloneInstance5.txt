@@ -1,0 +1,18 @@
+(startLine=183 endLine=198 srcPath=/home/ubuntu/guavaFilter/973/guava/guava-tests/test/com/google/common/util/concurrent/AtomicLongMapTest.java)
+  public void testAddAndGet() {
+    AtomicLongMap<String> map = AtomicLongMap.create();
+    String key = "key";
+    long addend = random.nextInt(MAX_ADDEND);
+    for (int i = 0; i < ITERATIONS; i++) {
+      long before = map.get(key);
+      long result = map.addAndGet(key, addend);
+      long after = map.get(key);
+      assertEquals(before + addend, after);
+      assertEquals(after, result);
+      addend = after;
+    }
+    assertEquals(1, map.size());
+    assertTrue(!map.isEmpty());
+    assertTrue(map.containsKey(key));
+  }
+

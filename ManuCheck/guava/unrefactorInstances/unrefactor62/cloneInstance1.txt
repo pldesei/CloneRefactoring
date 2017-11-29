@@ -1,0 +1,12 @@
+(startLine=925 endLine=934 srcPath=/home/ubuntu/guavaFilter/6/guava/android/guava-tests/test/com/google/common/collect/ImmutableSortedSetTest.java)
+  public void testHeadSetInclusive() {
+    String[] strings = NUMBER_NAMES.toArray(new String[0]);
+    ImmutableSortedSet<String> set = ImmutableSortedSet.copyOf(strings);
+    Arrays.sort(strings);
+    for (int i = 0; i < strings.length; i++) {
+      assertThat(set.headSet(strings[i], true))
+          .containsExactlyElementsIn(sortedNumberNames(0, i + 1))
+          .inOrder();
+    }
+  }
+

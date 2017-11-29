@@ -1,0 +1,10 @@
+(startLine=1239 endLine=1246 srcPath=/home/ubuntu/guavaFilter/287/guava/guava/src/com/google/common/collect/AbstractMapBasedMultimap.java)
+  Iterator<Map.Entry<K, V>> entryIterator() {
+    return new Itr<Map.Entry<K, V>>() {
+      @Override
+      Entry<K, V> output(K key, V value) {
+        return Maps.immutableEntry(key, value);
+      }
+    };
+  }
+

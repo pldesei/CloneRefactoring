@@ -1,0 +1,10 @@
+(startLine=70 endLine=77 srcPath=/home/ubuntu/guavaFilter/255/guava/guava-tests/test/com/google/common/collect/GeneralRangeTest.java)
+  public void testCreateEmptyRangeOpenClosedSucceeds() {
+    for (Integer i : IN_ORDER_VALUES) {
+      GeneralRange<Integer> range = GeneralRange.range(ORDERING, i, OPEN, i, CLOSED);
+      for (Integer j : IN_ORDER_VALUES) {
+        assertFalse(range.contains(j));
+      }
+    }
+  }
+

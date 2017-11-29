@@ -1,0 +1,8 @@
+(startLine=136 endLine=141 srcPath=/home/ubuntu/guavaFilter/420/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
+  public <T> void testWhere_incompatibleGenericArrayMapping() {
+    try {
+      new TypeResolver().where(new TypeCapture<T[]>() {}.capture(), String.class);
+      fail();
+    } catch (IllegalArgumentException expected) {}
+  }
+

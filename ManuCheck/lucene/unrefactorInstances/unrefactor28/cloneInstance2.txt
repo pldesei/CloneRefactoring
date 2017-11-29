@@ -1,0 +1,17 @@
+(startLine=175 endLine=189 srcPath=/home/ubuntu/luceneFilter/521/lucene/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/writercache/cl2o/CompactLabelToOrdinal.java)
+  public int getOrdinal(CategoryPath label, int prefixLen) {
+    if (label == null) {
+      return LabelToOrdinal.InvalidOrdinal;
+    }
+
+    int hash = CompactLabelToOrdinal.stringHashCode(label, prefixLen);
+    for (int i = 0; i < this.hashArrays.length; i++) {
+      int ord = getOrdinal(this.hashArrays[i], label, prefixLen, hash);
+      if (ord != Collision) {
+        return ord;
+      }
+    }
+
+    return this.collisionMap.get(label, prefixLen, hash);
+  }
+

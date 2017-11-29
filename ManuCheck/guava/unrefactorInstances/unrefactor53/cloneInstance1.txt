@@ -1,0 +1,15 @@
+(startLine=62 endLine=74 srcPath=/home/ubuntu/guavaFilter/1080/guava/guava-tests/test/com/google/common/primitives/BytesTest.java)
+  public void testIndexOf() {
+    assertEquals(-1, Bytes.indexOf(EMPTY, (byte) 1));
+    assertEquals(-1, Bytes.indexOf(ARRAY1, (byte) 2));
+    assertEquals(-1, Bytes.indexOf(ARRAY234, (byte) 1));
+    assertEquals(0, Bytes.indexOf(
+        new byte[] {(byte) -1}, (byte) -1));
+    assertEquals(0, Bytes.indexOf(ARRAY234, (byte) 2));
+    assertEquals(1, Bytes.indexOf(ARRAY234, (byte) 3));
+    assertEquals(2, Bytes.indexOf(ARRAY234, (byte) 4));
+    assertEquals(1, Bytes.indexOf(
+        new byte[] { (byte) 2, (byte) 3, (byte) 2, (byte) 3 },
+        (byte) 3));
+  }
+

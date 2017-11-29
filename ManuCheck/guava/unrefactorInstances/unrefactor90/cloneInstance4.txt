@@ -1,0 +1,11 @@
+(startLine=245 endLine=253 srcPath=/home/ubuntu/guavaFilter/868/guava/guava-testlib/src/com/google/common/collect/testing/google/MultisetWritesTester.java)
+  public void testEntrySet_retainAll_missing() {
+    assertTrue(
+        "multiset.entrySet.retainAll(missingEntry) returned true",
+        getMultiset().entrySet().retainAll(
+            Collections.singleton(Multisets.immutableEntry(samples.e0, 2))));
+    assertFalse(
+        "multiset contains element after retaining a different entry",
+        getMultiset().contains(samples.e0));
+  }
+

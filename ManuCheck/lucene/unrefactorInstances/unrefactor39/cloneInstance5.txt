@@ -1,0 +1,52 @@
+(startLine=785 endLine=834 srcPath=/home/ubuntu/luceneFilter/1389/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/DutchStemmer.java)
+        public boolean stem() {
+            int v_1;
+            int v_2;
+            int v_3;
+            int v_4;
+            // (, line 157
+            // do, line 159
+            v_1 = cursor;
+            lab0: do {
+                // call prelude, line 159
+                if (!r_prelude())
+                {
+                    break lab0;
+                }
+            } while (false);
+            cursor = v_1;
+            // do, line 160
+            v_2 = cursor;
+            lab1: do {
+                // call mark_regions, line 160
+                if (!r_mark_regions())
+                {
+                    break lab1;
+                }
+            } while (false);
+            cursor = v_2;
+            // backwards, line 161
+            limit_backward = cursor; cursor = limit;
+            // do, line 162
+            v_3 = limit - cursor;
+            lab2: do {
+                // call standard_suffix, line 162
+                if (!r_standard_suffix())
+                {
+                    break lab2;
+                }
+            } while (false);
+            cursor = limit - v_3;
+            cursor = limit_backward;            // do, line 163
+            v_4 = cursor;
+            lab3: do {
+                // call postlude, line 163
+                if (!r_postlude())
+                {
+                    break lab3;
+                }
+            } while (false);
+            cursor = v_4;
+            return true;
+        }
+
