@@ -19,29 +19,50 @@
 
 package org.elasticsearch.action.admin.indices.status;
 
-import org.elasticsearch.common.collect.Maps;
-import org.elasticsearch.common.unit.ByteSizeValue;
-import org.elasticsearch.index.flush.FlushStats;
-import org.elasticsearch.index.merge.MergeStats;
-import org.elasticsearch.index.refresh.RefreshStats;
+import com.google.common.collect.Maps;
+import org.elasticsearch.util.SizeValue;
+import org.elasticsearch.util.settings.Settings;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.elasticsearch.common.collect.Lists.*;
+import static com.google.common.collect.Lists.*;
 
 /**
- * @author kimchy (shay.banon)
+ * @author kimchy (Shay Banon)
  */
 public class IndexStatus implements Iterable<IndexShardStatus> {
+
+    public static class Docs {
+        public static final Docs UNKNOWN = new Docs();
+
+        int numDocs = -1;
+        int maxDoc = -1;
+        int deletedDocs = -1;
+
+        public int numDocs() {
+            return numDocs;
+        }
+
+        public int maxDoc() {
+            return maxDoc;
+        }
+
+        public int deletedDocs() {
+            return deletedDocs;
+        }
+    }
 
     private final String index;
 
     private final Map<Integer, IndexShardStatus> indexShards;
 
-    IndexStatus(String index, ShardStatus[] shards) {
+    private final Settings settings;
+
+    IndexStatus(String index, Settings settings, ShardStatus[] shards) {
         this.index = index;
+        this.settings = settings;
 
         Map<Integer, List<ShardStatus>> tmpIndexShards = Maps.newHashMap();
         for (ShardStatus shard : shards) {
@@ -62,72 +83,38 @@ public class IndexStatus implements Iterable<IndexShardStatus> {
         return this.index;
     }
 
-    public String getIndex() {
-        return index();
-    }
-
-    /**
-     * A shard id to index shard status map (note, index shard status is the replication shard group that maps
-     * to the shard id).
-     */
     public Map<Integer, IndexShardStatus> shards() {
         return this.indexShards;
     }
 
-    public Map<Integer, IndexShardStatus> getShards() {
-        return shards();
+    public Settings settings() {
+        return this.settings;
     }
 
-    /**
-     * Returns only the primary shards store size in bytes.
-     */
-    public ByteSizeValue primaryStoreSize() {
+    public SizeValue storeSize() {
         long bytes = -1;
         for (IndexShardStatus shard : this) {
-            if (shard.primaryStoreSize() != null) {
-                if (bytes == -1) {
-                    bytes = 0;
-                }
-                bytes += shard.primaryStoreSize().bytes();
-            }
-        }
-        if (bytes == -1) {
-            return null;
-        }
-        return new ByteSizeValue(bytes);
-    }
-
-    /**
-     * Returns only the primary shards store size in bytes.
-     */
-    public ByteSizeValue getPrimaryStoreSize() {
-        return primaryStoreSize();
-    }
-
-    /**
-     * Returns the full store size in bytes, of both primaries and replicas.
-     */
-    public ByteSizeValue storeSize() {
-        long bytes = -1;
-        for (IndexShardStatus shard : this) {
-            if (shard.storeSize() != null) {
+            if (shard.storeSize().bytes() != SizeValue.UNKNOWN.bytes()) {
                 if (bytes == -1) {
                     bytes = 0;
                 }
                 bytes += shard.storeSize().bytes();
             }
         }
-        if (bytes == -1) {
-            return null;
-        }
-        return new ByteSizeValue(bytes);
+        return new SizeValue(bytes);
     }
 
-    /**
-     * Returns the full store size in bytes, of both primaries and replicas.
-     */
-    public ByteSizeValue getStoreSize() {
-        return storeSize();
+    public SizeValue estimatedFlushableMemorySize() {
+        long bytes = -1;
+        for (IndexShardStatus shard : this) {
+            if (shard.estimatedFlushableMemorySize().bytes() != SizeValue.UNKNOWN.bytes()) {
+                if (bytes == -1) {
+                    bytes = 0;
+                }
+                bytes += shard.estimatedFlushableMemorySize().bytes();
+            }
+        }
+        return new SizeValue(bytes);
     }
 
     public long translogOperations() {
@@ -143,76 +130,29 @@ public class IndexStatus implements Iterable<IndexShardStatus> {
         return translogOperations;
     }
 
-    public long getTranslogOperations() {
-        return translogOperations();
-    }
-
-    private transient DocsStatus docs;
-
-    public DocsStatus docs() {
-        if (docs != null) {
-            return docs;
-        }
-        DocsStatus docs = null;
+    public Docs docs() {
+        Docs docs = new Docs();
         for (IndexShardStatus shard : this) {
-            if (shard.docs() == null) {
-                continue;
+            if (shard.docs().numDocs() != -1) {
+                if (docs.numDocs == -1) {
+                    docs.numDocs = 0;
+                }
+                docs.numDocs += shard.docs().numDocs();
             }
-            if (docs == null) {
-                docs = new DocsStatus();
+            if (shard.docs().maxDoc() != -1) {
+                if (docs.maxDoc == -1) {
+                    docs.maxDoc = 0;
+                }
+                docs.maxDoc += shard.docs().maxDoc();
             }
-            docs.numDocs += shard.docs().numDocs();
-            docs.maxDoc += shard.docs().maxDoc();
-            docs.deletedDocs += shard.docs().deletedDocs();
+            if (shard.docs().deletedDocs() != -1) {
+                if (docs.deletedDocs == -1) {
+                    docs.deletedDocs = 0;
+                }
+                docs.deletedDocs += shard.docs().deletedDocs();
+            }
         }
-        this.docs = docs;
         return docs;
-    }
-
-    public DocsStatus getDocs() {
-        return docs();
-    }
-
-    /**
-     * Total merges of this index.
-     */
-    public MergeStats mergeStats() {
-        MergeStats mergeStats = new MergeStats();
-        for (IndexShardStatus shard : this) {
-            mergeStats.add(shard.mergeStats());
-        }
-        return mergeStats;
-    }
-
-    /**
-     * Total merges of this index.
-     */
-    public MergeStats getMergeStats() {
-        return this.mergeStats();
-    }
-
-    public RefreshStats refreshStats() {
-        RefreshStats refreshStats = new RefreshStats();
-        for (IndexShardStatus shard : this) {
-            refreshStats.add(shard.refreshStats());
-        }
-        return refreshStats;
-    }
-
-    public RefreshStats getRefreshStats() {
-        return refreshStats();
-    }
-
-    public FlushStats flushStats() {
-        FlushStats flushStats = new FlushStats();
-        for (IndexShardStatus shard : this) {
-            flushStats.add(shard.flushStats());
-        }
-        return flushStats;
-    }
-
-    public FlushStats getFlushStats() {
-        return flushStats();
     }
 
     @Override public Iterator<IndexShardStatus> iterator() {

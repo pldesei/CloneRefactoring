@@ -19,19 +19,36 @@
 
 package org.elasticsearch.action.admin.indices.status;
 
-import org.elasticsearch.common.collect.Iterators;
-import org.elasticsearch.common.unit.ByteSizeValue;
-import org.elasticsearch.index.flush.FlushStats;
-import org.elasticsearch.index.merge.MergeStats;
-import org.elasticsearch.index.refresh.RefreshStats;
+import com.google.common.collect.Iterators;
 import org.elasticsearch.index.shard.ShardId;
+import org.elasticsearch.util.SizeValue;
 
 import java.util.Iterator;
 
 /**
- * @author kimchy (shay.banon)
+ * @author kimchy (Shay Banon)
  */
 public class IndexShardStatus implements Iterable<ShardStatus> {
+
+    public static class Docs {
+        public static final Docs UNKNOWN = new Docs();
+
+        int numDocs = -1;
+        int maxDoc = -1;
+        int deletedDocs = -1;
+
+        public int numDocs() {
+            return numDocs;
+        }
+
+        public int maxDoc() {
+            return maxDoc;
+        }
+
+        public int deletedDocs() {
+            return deletedDocs;
+        }
+    }
 
     private final ShardId shardId;
 
@@ -46,76 +63,34 @@ public class IndexShardStatus implements Iterable<ShardStatus> {
         return this.shardId;
     }
 
-    public ShardId getShardId() {
-        return shardId();
-    }
-
     public ShardStatus[] shards() {
         return this.shards;
     }
 
-    public ShardStatus[] getShards() {
-        return shards();
-    }
-
-    public ShardStatus getAt(int position) {
-        return shards[position];
-    }
-
-    /**
-     * Returns only the primary shards store size in bytes.
-     */
-    public ByteSizeValue primaryStoreSize() {
+    public SizeValue storeSize() {
         long bytes = -1;
         for (ShardStatus shard : shards()) {
-            if (!shard.shardRouting().primary()) {
-                // only sum docs for the primaries
-                continue;
-            }
-            if (shard.storeSize() != null) {
+            if (shard.storeSize().bytes() != SizeValue.UNKNOWN.bytes()) {
                 if (bytes == -1) {
                     bytes = 0;
                 }
                 bytes += shard.storeSize().bytes();
             }
         }
-        if (bytes == -1) {
-            return null;
-        }
-        return new ByteSizeValue(bytes);
+        return new SizeValue(bytes);
     }
 
-    /**
-     * Returns only the primary shards store size in bytes.
-     */
-    public ByteSizeValue getPrimaryStoreSize() {
-        return primaryStoreSize();
-    }
-
-    /**
-     * Returns the full store size in bytes, of both primaries and replicas.
-     */
-    public ByteSizeValue storeSize() {
+    public SizeValue estimatedFlushableMemorySize() {
         long bytes = -1;
         for (ShardStatus shard : shards()) {
-            if (shard.storeSize() != null) {
+            if (shard.estimatedFlushableMemorySize().bytes() != SizeValue.UNKNOWN.bytes()) {
                 if (bytes == -1) {
                     bytes = 0;
                 }
-                bytes += shard.storeSize().bytes();
+                bytes += shard.estimatedFlushableMemorySize().bytes();
             }
         }
-        if (bytes == -1) {
-            return null;
-        }
-        return new ByteSizeValue(bytes);
-    }
-
-    /**
-     * Returns the full store size in bytes, of both primaries and replicas.
-     */
-    public ByteSizeValue getStoreSize() {
-        return storeSize();
+        return new SizeValue(bytes);
     }
 
     public long translogOperations() {
@@ -131,80 +106,33 @@ public class IndexShardStatus implements Iterable<ShardStatus> {
         return translogOperations;
     }
 
-    public long getTranslogOperations() {
-        return translogOperations();
-    }
-
-    private transient DocsStatus docs;
-
-    public DocsStatus docs() {
-        if (docs != null) {
-            return docs;
-        }
-        DocsStatus docs = null;
+    public Docs docs() {
+        Docs docs = new Docs();
         for (ShardStatus shard : shards()) {
             if (!shard.shardRouting().primary()) {
                 // only sum docs for the primaries
                 continue;
             }
-            if (shard.docs() == null) {
-                continue;
+            if (shard.docs().numDocs() != -1) {
+                if (docs.numDocs == -1) {
+                    docs.numDocs = 0;
+                }
+                docs.numDocs += shard.docs().numDocs();
             }
-            if (docs == null) {
-                docs = new DocsStatus();
+            if (shard.docs().maxDoc() != -1) {
+                if (docs.maxDoc == -1) {
+                    docs.maxDoc = 0;
+                }
+                docs.maxDoc += shard.docs().maxDoc();
             }
-            docs.numDocs += shard.docs().numDocs();
-            docs.maxDoc += shard.docs().maxDoc();
-            docs.deletedDocs += shard.docs().deletedDocs();
+            if (shard.docs().deletedDocs() != -1) {
+                if (docs.deletedDocs == -1) {
+                    docs.deletedDocs = 0;
+                }
+                docs.deletedDocs += shard.docs().deletedDocs();
+            }
         }
-        this.docs = docs;
-        return this.docs;
-    }
-
-    public DocsStatus getDocs() {
-        return docs();
-    }
-
-    /**
-     * Total merges of this shard replication group.
-     */
-    public MergeStats mergeStats() {
-        MergeStats mergeStats = new MergeStats();
-        for (ShardStatus shard : shards) {
-            mergeStats.add(shard.mergeStats());
-        }
-        return mergeStats;
-    }
-
-    /**
-     * Total merges of this shard replication group.
-     */
-    public MergeStats getMergeStats() {
-        return this.mergeStats();
-    }
-
-    public RefreshStats refreshStats() {
-        RefreshStats refreshStats = new RefreshStats();
-        for (ShardStatus shard : shards) {
-            refreshStats.add(shard.refreshStats());
-        }
-        return refreshStats;
-    }
-
-    public RefreshStats getRefreshStats() {
-        return refreshStats();
-    }
-
-    public FlushStats flushStats() {
-        FlushStats flushStats = new FlushStats();
-        for (ShardStatus shard : shards) {
-            flushStats.add(shard.flushStats);
-        }
-        return flushStats;
-    }
-
-    public FlushStats getFlushStats() {
-        return flushStats();
+        return docs;
     }
 
     @Override public Iterator<ShardStatus> iterator() {

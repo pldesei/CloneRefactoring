@@ -19,14 +19,14 @@
 
 package org.elasticsearch.action.search.type;
 
+import com.google.inject.Inject;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.cluster.ClusterService;
-import org.elasticsearch.cluster.node.DiscoveryNode;
+import org.elasticsearch.cluster.node.Node;
 import org.elasticsearch.cluster.routing.ShardRouting;
-import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.indices.IndicesService;
 import org.elasticsearch.search.SearchShardTarget;
 import org.elasticsearch.search.action.SearchServiceListener;
 import org.elasticsearch.search.action.SearchServiceTransportAction;
@@ -35,19 +35,20 @@ import org.elasticsearch.search.fetch.QueryFetchSearchResult;
 import org.elasticsearch.search.internal.InternalSearchRequest;
 import org.elasticsearch.search.internal.InternalSearchResponse;
 import org.elasticsearch.threadpool.ThreadPool;
+import org.elasticsearch.util.settings.Settings;
 
 import java.util.Map;
 
 import static org.elasticsearch.action.search.type.TransportSearchHelper.*;
 
 /**
- * @author kimchy (shay.banon)
+ * @author kimchy (Shay Banon)
  */
 public class TransportSearchQueryAndFetchAction extends TransportSearchTypeAction {
 
-    @Inject public TransportSearchQueryAndFetchAction(Settings settings, ThreadPool threadPool, ClusterService clusterService,
+    @Inject public TransportSearchQueryAndFetchAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, IndicesService indicesService,
                                                       TransportSearchCache transportSearchCache, SearchServiceTransportAction searchService, SearchPhaseController searchPhaseController) {
-        super(settings, threadPool, clusterService, transportSearchCache, searchService, searchPhaseController);
+        super(settings, threadPool, clusterService, indicesService, transportSearchCache, searchService, searchPhaseController);
     }
 
     @Override protected void doExecute(SearchRequest searchRequest, ActionListener<SearchResponse> listener) {
@@ -56,18 +57,14 @@ public class TransportSearchQueryAndFetchAction extends TransportSearchTypeActio
 
     private class AsyncAction extends BaseAsyncAction<QueryFetchSearchResult> {
 
-        private final Map<SearchShardTarget, QueryFetchSearchResult> queryFetchResults = searchCache.obtainQueryFetchResults();
+        private final Map<SearchShardTarget, QueryFetchSearchResult> queryFetchResults = transportSearchCache.obtainQueryFetchResults();
 
 
         private AsyncAction(SearchRequest request, ActionListener<SearchResponse> listener) {
             super(request, listener);
         }
 
-        @Override protected String firstPhaseName() {
-            return "query_fetch";
-        }
-
-        @Override protected void sendExecuteFirstPhase(DiscoveryNode node, InternalSearchRequest request, SearchServiceListener<QueryFetchSearchResult> listener) {
+        @Override protected void sendExecuteFirstPhase(Node node, InternalSearchRequest request, SearchServiceListener<QueryFetchSearchResult> listener) {
             searchService.sendExecuteFetch(node, request, listener);
         }
 
@@ -75,15 +72,24 @@ public class TransportSearchQueryAndFetchAction extends TransportSearchTypeActio
             queryFetchResults.put(result.shardTarget(), result);
         }
 
-        @Override protected void moveToSecondPhase() throws Exception {
+        @Override protected void moveToSecondPhase() {
             sortedShardList = searchPhaseController.sortDocs(queryFetchResults.values());
             final InternalSearchResponse internalResponse = searchPhaseController.merge(sortedShardList, queryFetchResults, queryFetchResults);
-            String scrollId = null;
+            String scrollIdX = null;
             if (request.scroll() != null) {
-                scrollId = buildScrollId(request.searchType(), queryFetchResults.values(), null);
+                scrollIdX = buildScrollId(request.searchType(), queryFetchResults.values());
             }
-            listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get(), buildTookInMillis(), buildShardFailures()));
-            searchCache.releaseQueryFetchResults(queryFetchResults);
+            final String scrollId = scrollIdX;
+            transportSearchCache.releaseQueryFetchResults(queryFetchResults);
+            if (request.listenerThreaded()) {
+                threadPool.execute(new Runnable() {
+                    @Override public void run() {
+                        listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get()));
+                    }
+                });
+            } else {
+                listener.onResponse(new SearchResponse(internalResponse, scrollId, expectedSuccessfulOps, successulOps.get()));
+            }
         }
     }
 }
