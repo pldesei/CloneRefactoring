@@ -1,0 +1,16 @@
+(startLine=394 endLine=407 srcPath=/home/ubuntu/antFilter/676/ant/src/main/org/apache/tools/ant/taskdefs/optional/ejb/WebsphereDeploymentTool.java)
+    protected DescriptorHandler getDescriptorHandler(File srcDir) {
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
+        // register all the DTDs, both the ones that are known and
+        // any supplied by the user
+        handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
+
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
+
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
+
+        return handler;
+    }
+

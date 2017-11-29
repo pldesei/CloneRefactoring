@@ -1,0 +1,18 @@
+(startLine=581 endLine=596 srcPath=/home/ubuntu/antFilter/314/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    public void setIncludes(String[] includes) {
+        if (includes == null) {
+            this.includes = null;
+        } else {
+            this.includes = new String[includes.length];
+            for (int i = 0; i < includes.length; i++) {
+                String pattern;
+                pattern = includes[i].replace('/', File.separatorChar).replace(
+                        '\\', File.separatorChar);
+                if (pattern.endsWith(File.separator)) {
+                    pattern += "**";
+                }
+                this.includes[i] = pattern;
+            }
+        }
+    }
+

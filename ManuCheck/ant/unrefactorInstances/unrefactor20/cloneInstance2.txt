@@ -1,0 +1,15 @@
+(startLine=106 endLine=118 srcPath=/home/ubuntu/antFilter/446/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/script/ScriptDefTest.java)
+    public void testNestedByClassName() {
+        executeTarget("nestedbyclassname");
+        // get the fileset and its basedir
+        Project project = getProject();
+        FileSet fileset = (FileSet) project.getReference("testfileset");
+        File baseDir = fileset.getDir(project);
+        String log = getLog();
+        assertTrue("Expecting attribute value to be printed", 
+            log.indexOf("Attribute attr1 = test") != -1);
+            
+        assertTrue("Expecting nested element value to be printed", 
+            log.indexOf("Fileset basedir = " + baseDir.getAbsolutePath()) != -1);
+    }
+

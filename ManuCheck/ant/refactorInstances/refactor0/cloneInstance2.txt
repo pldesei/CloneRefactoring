@@ -1,0 +1,8 @@
+(startLine=409 endLine=414 srcPath=/home/ubuntu/antFilter/968/ant/proposal/sandbox/junit/src/main/org/apache/tools/ant/taskdefs/optional/junit/remote/TestRunner.java)
+    public void addFailure(Test test, Throwable t) {
+        log("Adding failure for test: " + test);
+        String testName = test.toString();
+        String trace = StringUtils.getStackTrace(t);
+        writer.notifyTestFailed(TestRunListener.STATUS_FAILURE, testName, trace);
+    }
+

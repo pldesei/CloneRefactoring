@@ -1,0 +1,39 @@
+(startLine=45 endLine=81 srcPath=/home/ubuntu/antFilter/337/ant/src/main/org/apache/tools/ant/util/regexp/RegexpFactory.java)
+    public Regexp newRegexp(Project p) throws BuildException {
+        String systemDefault = null;
+        if (p == null) {
+            systemDefault = System.getProperty("ant.regexp.regexpimpl");
+        } else {
+            systemDefault = p.getProperty("ant.regexp.regexpimpl");
+        }
+
+        if (systemDefault != null) {
+            return createRegexpInstance(systemDefault);
+            // XXX     should we silently catch possible exceptions and try to
+            //         load a different implementation?
+        }
+
+        try {
+            testAvailability("java.util.regex.Matcher");
+            return createRegexpInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
+        } catch (BuildException be) {
+            // ignore
+        }
+
+        try {
+            testAvailability("org.apache.oro.text.regex.Pattern");
+            return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaOroRegexp");
+        } catch (BuildException be) {
+            // ignore
+        }
+
+        try {
+            testAvailability("org.apache.regexp.RE");
+            return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaRegexpRegexp");
+        } catch (BuildException be) {
+            // ignore
+        }
+
+        throw new BuildException("No supported regular expression matcher found");
+    }
+

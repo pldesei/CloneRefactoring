@@ -1,0 +1,39 @@
+(startLine=82 endLine=118 srcPath=/home/ubuntu/antFilter/517/ant/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSSADD.java)
+    public void execute() throws BuildException {
+        Commandline commandLine = new Commandline();
+        int result = 0;
+
+         // first off, make sure that we've got a command and a localPath ...
+        if (getLocalPath() == null) {
+            String msg = "localPath attribute must be set!";
+            throw new BuildException(msg, getLocation());
+        }
+
+        // now look for illegal combinations of things ...
+
+        // build the command line from what we got the format is
+        // ss Add VSS items [-B] [-C] [-D-] [-H] [-I-] [-K] [-N] [-O] [-R] [-W] [-Y] [-?]
+        // as specified in the SS.EXE help
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_ADD);
+
+        // VSS items
+        commandLine.createArgument().setValue(getLocalPath());        
+        // -I- or -I-Y or -I-N
+        getAutoresponse(commandLine);
+        // -R
+        getRecursiveCommand(commandLine);
+        // -W
+        getWritableCommand(commandLine);
+        // -Y
+        getLoginCommand(commandLine);
+        // -C
+        commandLine.createArgument().setValue("-C" + getComment());
+
+        result = run(commandLine);
+        if (result != 0) {
+            String msg = "Failed executing: " + commandLine.toString();
+            throw new BuildException(msg, getLocation());
+        }
+    }
+

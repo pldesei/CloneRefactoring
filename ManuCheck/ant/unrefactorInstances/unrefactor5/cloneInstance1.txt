@@ -1,0 +1,8 @@
+(startLine=100 endLine=105 srcPath=/home/ubuntu/antFilter/16/ant/src/tests/junit/org/apache/tools/ant/taskdefs/UntarTest.java)
+    private void testLogoExtraction(String target) throws java.io.IOException {
+        buildRule.executeTarget(target);
+        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
+                FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif")));
+
+    }
+

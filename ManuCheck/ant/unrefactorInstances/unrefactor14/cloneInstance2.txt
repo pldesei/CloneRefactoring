@@ -1,0 +1,12 @@
+(startLine=1729 endLine=1738 srcPath=/home/ubuntu/antFilter/447/ant/src/main/org/apache/tools/ant/Project.java)
+    public void fireBuildFinished(Throwable exception) {
+        BuildEvent event = new BuildEvent(this);
+        event.setException(exception);
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.buildFinished(event);
+        }
+    }
+

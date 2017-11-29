@@ -1,0 +1,33 @@
+(startLine=112 endLine=142 srcPath=/home/ubuntu/antFilter/705/ant/src/main/org/apache/tools/ant/filters/PrefixLines.java)
+    public final int read() throws IOException {
+        if (!getInitialized()) {
+            initialize();
+            setInitialized(true);
+        }
+
+        int ch = -1;
+
+        if (queuedData != null && queuedData.length() == 0) {
+            queuedData = null;
+        }
+
+        if (queuedData != null) {
+            ch = queuedData.charAt(0);
+            queuedData = queuedData.substring(1);
+            if (queuedData.length() == 0) {
+                queuedData = null;
+            }
+        } else {
+            queuedData = readLine();
+            if (queuedData == null) {
+                ch = -1;
+            } else {
+                if (prefix != null) {
+                    queuedData = prefix + queuedData;
+                }
+                return read();
+            }
+        }
+        return ch;
+    }
+

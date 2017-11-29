@@ -1,0 +1,26 @@
+(startLine=115 endLine=138 srcPath=/home/ubuntu/antFilter/251/ant/src/main/org/apache/tools/ant/taskdefs/Ear.java)
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+                           int mode)
+        throws IOException {
+        // If the file being added is META-INF/application.xml, we
+        // warn if it's not the one specified in the "appxml"
+        // attribute - or if it's being added twice, meaning the same
+        // file is specified by the "appxml" attribute and in a
+        // <fileset> element.
+        if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
+            if (deploymentDescriptor == null
+                || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
+                || descriptorAdded) {
+                log("Warning: selected " + archiveType
+                    + " files include a META-INF/application.xml which will"
+                    + " be ignored (please use appxml attribute to "
+                    + archiveType + " task)", Project.MSG_WARN);
+            } else {
+                super.zipFile(file, zOut, vPath, mode);
+                descriptorAdded = true;
+            }
+        } else {
+            super.zipFile(file, zOut, vPath, mode);
+        }
+    }
+

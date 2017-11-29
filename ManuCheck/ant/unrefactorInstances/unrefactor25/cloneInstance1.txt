@@ -1,0 +1,15 @@
+(startLine=93 endLine=105 srcPath=/home/ubuntu/antFilter/940/ant/src/main/org/apache/tools/ant/taskdefs/War.java)
+    public void setWebxml(File descr) {
+        deploymentDescriptor = descr; 
+        if (!deploymentDescriptor.exists()) {
+            throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
+        }
+
+        // Create a ZipFileSet for this file, and pass it up.
+        ZipFileSet fs = new ZipFileSet();
+        fs.setDir(new File(deploymentDescriptor.getParent()));
+        fs.setIncludes(deploymentDescriptor.getName());
+        fs.setFullpath("WEB-INF/web.xml");
+        super.addFileset(fs);
+    }
+

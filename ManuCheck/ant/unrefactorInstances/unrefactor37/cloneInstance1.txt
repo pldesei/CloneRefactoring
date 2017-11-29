@@ -1,0 +1,10 @@
+(startLine=102 endLine=109 srcPath=/home/ubuntu/antFilter/1062/ant/src/testcases/org/apache/tools/ant/taskdefs/JavaTest.java)
+    public void testJarAndClassName() { 
+        try {
+            java.setJar( new File("test.jar") );
+            java.setClassname("test.class.Name");
+            fail("Should not be able to set both classname AND jar");
+        } catch (BuildException e){
+        }
+    }
+

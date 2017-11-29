@@ -1,0 +1,10 @@
+(startLine=45 endLine=52 srcPath=/home/ubuntu/antFilter/256/ant/src/testcases/org/apache/tools/ant/util/DateUtilsTest.java)
+    public void testDateTimeISO(){
+        TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.set(2002,1,23,10,11,12);
+        String text = DateUtils.format(cal.getTime(),
+                DateUtils.ISO8601_DATETIME_PATTERN);
+        assertEquals("2002-02-23T09:11:12", text);
+    }
+

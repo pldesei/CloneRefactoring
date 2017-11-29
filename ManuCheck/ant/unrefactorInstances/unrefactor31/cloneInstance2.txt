@@ -1,0 +1,9 @@
+(startLine=87 endLine=93 srcPath=/home/ubuntu/antFilter/662/ant/src/testcases/org/apache/tools/ant/taskdefs/BZip2Test.java)
+    public void testDateCheck(){
+        executeTarget("testDateCheck");
+        String log = getLog();
+        assertTrue(
+            "Expecting message ending with 'asf-logo.gif.bz2 is up to date.' but got '" + log + "'",
+            log.endsWith("asf-logo.gif.bz2 is up to date."));
+    }
+

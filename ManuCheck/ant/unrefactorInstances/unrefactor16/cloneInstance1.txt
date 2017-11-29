@@ -1,0 +1,25 @@
+(startLine=348 endLine=370 srcPath=/home/ubuntu/antFilter/169/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+    public Hashtable getTaskDefinitions() {
+        synchronized (taskClassDefinitions) {
+            synchronized (antTypeTable) {
+                if (rebuildTaskClassDefinitions) {
+                    taskClassDefinitions.clear();
+                    for (Iterator i = antTypeTable.keySet().iterator();
+                         i.hasNext();) {
+                        String name = (String) i.next();
+                        Class clazz = antTypeTable.getExposedClass(name);
+                        if (clazz == null) {
+                            continue;
+                        }
+                        if (Task.class.isAssignableFrom(clazz)) {
+                            taskClassDefinitions.put(
+                                name, antTypeTable.getTypeClass(name));
+                        }
+                    }
+                    rebuildTaskClassDefinitions = false;
+                }
+            }
+        }
+        return taskClassDefinitions;
+    }
+

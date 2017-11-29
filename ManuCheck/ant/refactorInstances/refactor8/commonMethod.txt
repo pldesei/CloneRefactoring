@@ -1,0 +1,29 @@
+(startLine=699 endLine=725 srcPath=/home/ubuntu/antFilter/561/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/TreeBasedTask.java)
+        UnmatchedFileMap init(java.io.File localFolder, Folder remoteFolder) {
+            if (!localFolder.exists()) {
+                return this;
+            }
+
+            String[] localFiles = localFolder.list();
+    
+            for (int i=0; i < localFiles.length; i++) {
+                String fn = localFiles[i];
+                java.io.File localFile = 
+                    new java.io.File(localFolder, localFiles[i]).getAbsoluteFile();
+                
+                log("adding " + localFile + " to UnmatchedFileMap",
+                    Project.MSG_DEBUG);
+    
+                if (localFile.isDirectory()) {
+                    this.put(localFile, new Folder( remoteFolder, fn, fn));
+                } 
+                else {
+                    com.starbase.starteam.File remoteFile = 
+                        new com.starbase.starteam.File(remoteFolder);
+                    remoteFile.setName(fn);
+                    this.put(localFile, remoteFile);
+                }
+            }
+            return this;
+        }
+

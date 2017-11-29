@@ -1,0 +1,13 @@
+(startLine=123 endLine=133 srcPath=/home/ubuntu/antFilter/822/ant/proposal/mutant/src/java/antlibs/ant1compat/org/apache/tools/ant/ProjectHelper.java)
+    public static String replaceProperties(Project project, String value,
+                                           Hashtable keys) {
+        try {
+            AntContext context = project.getContext();
+            DataService dataService
+                 = (DataService)context.getCoreService(DataService.class);
+            return dataService.replacePropertyRefs(value, keys);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+

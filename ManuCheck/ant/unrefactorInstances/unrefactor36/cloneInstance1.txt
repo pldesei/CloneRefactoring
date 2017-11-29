@@ -1,0 +1,13 @@
+(startLine=455 endLine=465 srcPath=/home/ubuntu/antFilter/79/ant/src/main/org/apache/tools/ant/Target.java)
+    private boolean testIfAllows() {
+        if ("".equals(ifCondition)) {
+            return true;
+        }
+        PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
+        Object o = propertyHelper.parseProperties(ifCondition);
+        if (o instanceof Boolean) {
+            return ((Boolean) o).booleanValue();
+        }
+        return propertyHelper.getProperty(String.valueOf(o)) != null;
+    }
+

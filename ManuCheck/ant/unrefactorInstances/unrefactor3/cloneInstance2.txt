@@ -1,0 +1,17 @@
+(startLine=1286 endLine=1300 srcPath=/home/ubuntu/antFilter/139/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    protected boolean isExcluded(String name) {
+        ensureNonPatternSetsReady();
+
+        if (isCaseSensitive()
+            ? excludeNonPatterns.contains(name)
+            : excludeNonPatterns.contains(name.toUpperCase())) {
+            return true;
+        }
+        for (int i = 0; i < excludePatterns.length; i++) {
+            if (matchPath(excludePatterns[i], name, isCaseSensitive())) {
+                return true;
+            }
+        }
+        return false;
+    }
+

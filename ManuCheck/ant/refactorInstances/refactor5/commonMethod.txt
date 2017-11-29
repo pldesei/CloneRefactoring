@@ -1,0 +1,82 @@
+(startLine=400 endLine=479 srcPath=/home/ubuntu/antFilter/561/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/StarTeamCheckout.java)
+    private void processFile(com.starbase.starteam.File eachFile, 
+                             java.io.File targetFolder )
+    throws IOException 
+    {
+        String filename = eachFile.getName();
+
+        java.io.File localFile = new java.io.File(targetFolder, filename);
+
+        // If the file doesn't pass the include/exclude tests, skip it.
+        if (!shouldProcess(filename)) {
+            log("Excluding " + getFullRepositoryPath(eachFile), 
+                Project.MSG_INFO);
+                return;
+        }
+
+        if (this.isUsingRevisionLabel()) {
+            boolean success = eachFile.checkoutByLabelID(
+                localFile,
+                getIDofLabelInUse(),
+                this.lockStatus,
+                !this.useRepositoryTimeStamp,
+                true,
+                false);
+            if (success) {
+                log("Checked out " + describeCheckout(eachFile, localFile));
+            }
+        }
+        else {
+            boolean checkout = true;
+
+            // Just a note: StarTeam has a status for NEW which implies
+            // that there is an item  on your local machine that is not
+            // in the repository.  These are the items that show up as
+            // NOT IN VIEW in the Starteam GUI.
+            // One would think that we would want to perhaps checkin the
+            // NEW items (not in all cases! - Steve Cohen 15 Dec 2001)
+            // Unfortunately, the sdk doesn't really work, and we can't
+            // actually see  anything with a status of NEW. That is why
+            // we can just check out  everything here without worrying
+            // about losing anything.
+
+            int fileStatus = (eachFile.getStatus());
+
+            // We try to update the status once to give StarTeam
+            // another chance.
+
+            if (fileStatus == Status.MERGE || 
+                fileStatus == Status.UNKNOWN) 
+            {
+                eachFile.updateStatus(true, true);
+                fileStatus = (eachFile.getStatus());
+            }
+
+            log(eachFile.toString() + " has status of " + 
+                Status.name(fileStatus), Project.MSG_DEBUG);
+
+
+            switch (fileStatus) {
+            case Status.OUTOFDATE:
+            case Status.MISSING:
+                log("Checking out: " + describeCheckout(eachFile));
+                break;
+            default:
+                if (isForced()) {
+                    log("Forced checkout of " 
+                        + describeCheckout(eachFile) 
+                        + " over status " + Status.name(fileStatus));
+                } else {
+                    log("Skipping: " + getFullRepositoryPath(eachFile) + 
+                        " - status: " + Status.name(fileStatus));
+                    checkout = false;
+                }
+            }
+
+            if (checkout) {
+                eachFile.checkout(this.lockStatus, 
+                                 !this.useRepositoryTimeStamp, true, true);
+            }
+        }
+    }
+

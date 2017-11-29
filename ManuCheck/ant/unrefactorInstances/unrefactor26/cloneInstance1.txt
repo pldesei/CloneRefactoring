@@ -1,0 +1,17 @@
+(startLine=114 endLine=128 srcPath=/home/ubuntu/antFilter/148/ant/src/tests/junit/org/apache/tools/ant/taskdefs/ExecTaskTest.java)
+    public void testRedirect4() throws IOException {
+        executeTarget("redirect4");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+        String expectedErr = getProject().getProperty("ant.file") + " err\n";
+
+        assertEquals("unexpected output",
+            expectedOut, getFileString("redirect.out"));
+        assertPropertyEquals("redirect.out", expectedOut.trim());
+        assertEquals("unexpected error output",
+            expectedErr, getFileString("redirect.err"));
+        assertPropertyEquals("redirect.err", expectedErr.trim());
+    }
+

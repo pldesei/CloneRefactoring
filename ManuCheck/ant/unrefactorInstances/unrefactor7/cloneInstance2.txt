@@ -1,0 +1,8 @@
+(startLine=80 endLine=85 srcPath=/home/ubuntu/antFilter/853/ant/src/testcases/org/apache/tools/ant/taskdefs/BUnzip2Test.java)
+    public void testRealTest() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("realTest");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
+                                           project.resolveFile("asf-logo-huge.tar")));
+    }
+

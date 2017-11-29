@@ -1,0 +1,17 @@
+(startLine=480 endLine=494 srcPath=/home/ubuntu/antFilter/175/ant/proposal/embed/src/java/org/apache/tools/ant/PropertyHelper.java)
+    public Hashtable getProperties() {
+        Hashtable propertiesCopy = new Hashtable();
+
+        Enumeration e = properties.keys();
+        while (e.hasMoreElements()) {
+            Object name = e.nextElement();
+            Object value = properties.get(name);
+            propertiesCopy.put(name, value);
+        }
+
+        // There is a better way to save the context. This shouldn't
+        // delegate to next, it's for backward compat only.
+
+        return propertiesCopy;
+    }
+

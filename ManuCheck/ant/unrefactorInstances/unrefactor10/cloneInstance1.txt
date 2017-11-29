@@ -1,0 +1,14 @@
+(startLine=391 endLine=402 srcPath=/home/ubuntu/antFilter/676/ant/src/main/org/apache/tools/ant/taskdefs/optional/ejb/GenericDeploymentTool.java)
+    protected DescriptorHandler getDescriptorHandler(File srcDir) {
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
+
+        registerKnownDTDs(handler);
+
+        // register any DTDs supplied by the user
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
+        return handler;
+    }
+

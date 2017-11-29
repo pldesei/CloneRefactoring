@@ -1,0 +1,16 @@
+(startLine=83 endLine=96 srcPath=/home/ubuntu/antFilter/83/ant/proposal/sandbox/httptasks/src/main/org/apache/tools/ant/taskdefs/optional/http/HttpDigestAuth.java)
+    public void setAuthenticationHeader(URLConnection requestConnection,
+            URLConnection responseConnection,
+            String username, String password)
+            throws BuildException {
+
+        if (username != null) {
+            password = username == null ? "" : password;
+            String encodeStr = username + ":" + password;
+            Base64Encode encoder = new Base64Encode();
+            char[] encodedPass = encoder.encodeBase64(encodeStr.getBytes());
+            String authStr = "BASIC " + new String(encodedPass);
+            requestConnection.setRequestProperty("Authorization", authStr);
+            }
+        }
+

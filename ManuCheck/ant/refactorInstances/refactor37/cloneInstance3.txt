@@ -1,0 +1,14 @@
+(startLine=141 endLine=152 srcPath=/home/ubuntu/antFilter/4/ant/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitReportTest.java)
+    public void testWithStyleFromDir() throws Exception {
+        buildRule.executeTarget("testWithStyleFromDir");
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
+    }
+

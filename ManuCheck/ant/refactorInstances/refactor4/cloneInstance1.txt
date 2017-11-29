@@ -1,0 +1,78 @@
+(startLine=202 endLine=277 srcPath=/home/ubuntu/antFilter/562/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/StarTeamCheckin.java)
+    protected void visit(Folder starteamFolder, java.io.File targetFolder)
+            throws BuildException {
+        try {
+            Hashtable localFiles = listLocalFiles(targetFolder);
+
+            // If we have been told to create the working folders
+            // For all Files in this folder, we need to check
+            // if there have been modifications.
+
+            Item[] files = starteamFolder.getItems("File");
+            for (int i = 0; i < files.length; i++) {
+                File eachFile = (File) files[i];
+                String filename = eachFile.getName();
+                java.io.File localFile =
+                        new java.io.File(targetFolder, filename);
+
+                delistLocalFile(localFiles, localFile);
+
+                // If the file doesn't pass the include/exclude tests, skip it.
+                if (!shouldProcess(filename)) {
+                    log("Skipping " + eachFile.toString(), Project.MSG_INFO);
+                    continue;
+                }
+
+
+                // If forced is not set then we may save ourselves some work by
+                // looking at the status flag.
+                // Otherwise, we care nothing about these statuses.
+
+                if (!isForced()) {
+                    int fileStatus = (eachFile.getStatus());
+
+                    // We try to update the status once to give StarTeam
+                    // another chance.
+                    if (fileStatus == Status.MERGE
+                            || fileStatus == Status.UNKNOWN) {
+                        eachFile.updateStatus(true, true);
+                        fileStatus = (eachFile.getStatus());
+                    }
+                    if (fileStatus == Status.CURRENT) {
+                        log("Not processing " + eachFile.toString()
+                                + " as it is current.",
+                                Project.MSG_INFO);
+                        continue;
+                    }
+                }
+
+                // Check in anything else.
+
+                log("Checking In: " + (localFile.toString()), Project.MSG_INFO);
+                eachFile.checkinFrom(localFile, this.comment,
+                        this.lockStatus,
+                        true, true, true);
+            }
+
+            // Now we recursively call this method on all sub folders in this
+            // folder unless recursive attribute is off.
+            Folder[] subFolders = starteamFolder.getSubFolders();
+            for (int i = 0; i < subFolders.length; i++) {
+                java.io.File targetSubfolder =
+                        new java.io.File(targetFolder, subFolders[i].getName());
+                delistLocalFile(localFiles, targetSubfolder);
+
+                if (isRecursive()) {
+                    visit(subFolders[i], targetSubfolder);
+                }
+            }
+            if (this.addUncontrolled) {
+                addUncontrolledItems(localFiles, starteamFolder);
+            }
+
+
+        } catch (IOException e) {
+            throw new BuildException(e);
+        }
+    }
+

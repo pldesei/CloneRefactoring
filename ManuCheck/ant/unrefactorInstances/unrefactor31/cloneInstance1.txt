@@ -1,0 +1,9 @@
+(startLine=98 endLine=104 srcPath=/home/ubuntu/antFilter/662/ant/src/testcases/org/apache/tools/ant/taskdefs/GzipTest.java)
+    public void testDateCheck(){
+        executeTarget("testDateCheck");
+        String log = getLog();
+        assertTrue(
+            "Expecting message ending with 'asf-logo.gif.gz is up to date.' but got '" + log + "'",
+            log.endsWith("asf-logo.gif.gz is up to date."));
+    }
+

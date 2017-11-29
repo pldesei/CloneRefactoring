@@ -1,0 +1,24 @@
+(startLine=84 endLine=105 srcPath=/home/ubuntu/antFilter/83/ant/proposal/sandbox/httptasks/src/main/org/apache/tools/ant/taskdefs/optional/http/HttpBasicAuth.java)
+    public void setAuthenticationHeader(URLConnection requestConnection,
+            URLConnection responseConnection,
+            String username, String password)
+            throws BuildException {
+
+        if (username != null) {
+            password = username == null ? "" : password;
+            String encodeStr = username + ":" + password;
+            char[] encodedPass;
+            String encodedPassStr;
+            
+            Base64Encode encoder = new Base64Encode();
+            encodedPass = encoder.encodeBase64(encodeStr.getBytes());
+            encodedPassStr= new String(encodedPass);
+            /* this uses the get task
+            Get.Base64Converter converter= new Get.Base64Converter();
+            encodedPassStr = converter.encode(encodeStr);
+            */
+            String authStr = "BASIC " +encodedPassStr;
+            requestConnection.setRequestProperty("Authorization", authStr);
+            }
+        }
+

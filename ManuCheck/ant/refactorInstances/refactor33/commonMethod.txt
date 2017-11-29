@@ -1,0 +1,10 @@
+(startLine=745 endLine=752 srcPath=/home/ubuntu/antFilter/241/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+    private ClassLoader getClassLoader(ClassLoader classLoader) {
+        String buildSysclasspath = project.getProperty(MagicNames.BUILD_SYSCLASSPATH);
+        if (project.getCoreLoader() != null
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(buildSysclasspath))) {
+            classLoader = project.getCoreLoader();
+        }
+        return classLoader;
+    }
+

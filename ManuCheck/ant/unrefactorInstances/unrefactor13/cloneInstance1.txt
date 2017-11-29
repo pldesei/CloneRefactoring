@@ -1,0 +1,14 @@
+(startLine=372 endLine=383 srcPath=/home/ubuntu/antFilter/268/ant/src/main/org/apache/tools/ant/taskdefs/optional/net/TelnetTask.java)
+        public void sendString(String s, boolean echoString) {
+            OutputStream os = this.getOutputStream();
+            try {
+                os.write((s + "\n").getBytes());
+                if (echoString) {
+                    log(s, Project.MSG_INFO);
+                }
+                os.flush();
+            } catch (Exception e) {
+                throw new BuildException(e, getLocation());
+            }
+        }
+

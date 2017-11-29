@@ -1,0 +1,15 @@
+(startLine=80 endLine=92 srcPath=/home/ubuntu/antFilter/446/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/script/ScriptDefTest.java)
+    public void testSimple() {
+        executeTarget("simple");
+        // get the fileset and its basedir
+        Project project = getProject();
+        FileSet fileset = (FileSet) project.getReference("testfileset");
+        File baseDir = fileset.getDir(project);
+        String log = getLog();
+        assertTrue("Expecting attribute value printed", 
+            log.indexOf("Attribute attr1 = test") != -1);
+            
+        assertTrue("Expecting nested element value printed", 
+            log.indexOf("Fileset basedir = " + baseDir.getAbsolutePath()) != -1);
+    }
+

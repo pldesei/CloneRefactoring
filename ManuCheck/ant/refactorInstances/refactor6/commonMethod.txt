@@ -1,0 +1,33 @@
+(startLine=374 endLine=404 srcPath=/home/ubuntu/antFilter/561/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/StarTeamCheckin.java)
+        void processUncontrolledItems() throws BuildException {
+            if (this.isActive()) {
+                Enumeration e = this.keys();
+                while (e.hasMoreElements()) {
+                    java.io.File local = (java.io.File) e.nextElement();
+                    Item remoteItem = (Item) this.get(local);
+                    remoteItem.update();
+    
+                    // once we find a folder that isn't in the repository, 
+                    // we know we can add it.
+                    if (local.isDirectory()) {
+                        Folder folder = (Folder) remoteItem;
+                        log("Added uncontrolled folder " 
+                            + folder.getFolderHierarchy()
+                            + " from " + local.getAbsoluteFile());
+                        if (isRecursive()) {
+                            UnmatchedFileMap submap = 
+                                new CheckinMap().init(local, folder);
+                            submap.processUncontrolledItems();
+                        }
+                    } else {
+                        com.starbase.starteam.File remoteFile =
+                            (com.starbase.starteam.File) remoteItem;
+                        log("Added uncontrolled file " 
+                            + TreeBasedTask.getFullRepositoryPath(remoteFile)
+                            + " from " + local.getAbsoluteFile());
+    
+                    }
+                }
+            }
+        }
+

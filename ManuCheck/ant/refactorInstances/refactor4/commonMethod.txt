@@ -1,0 +1,47 @@
+(startLine=313 endLine=357 srcPath=/home/ubuntu/antFilter/561/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/StarTeamCheckin.java)
+    private void processFile(com.starbase.starteam.File eachFile, 
+                             java.io.File targetFolder )
+    throws IOException 
+    {
+        String filename = eachFile.getName();
+
+        // If the file doesn't pass the include/exclude tests, skip it.
+        if (!shouldProcess(filename)) {
+            log("Excluding " + getFullRepositoryPath(eachFile));
+                return;
+        }
+
+        boolean checkin = true;
+        int fileStatus = (eachFile.getStatus());
+
+        // We try to update the status once to give StarTeam
+        // another chance.
+
+        if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
+            eachFile.updateStatus(true, true);
+            fileStatus = (eachFile.getStatus());
+        }
+
+        if (fileStatus == Status.MODIFIED) {
+            log("Checking in: " + describeCheckin(eachFile));
+        } 
+        else if (fileStatus == Status.MISSING) {
+            log("Local file missing: " + describeCheckin(eachFile));
+            checkin = false;
+        }
+        else {
+            if (isForced()) {
+                log("Forced checkin of " + describeCheckin(eachFile) + 
+                    " over status " + Status.name(fileStatus));
+            } else {
+                log("Skipping: " + getFullRepositoryPath(eachFile) + 
+                    " - status: " + Status.name(fileStatus));
+                checkin = false;
+            }
+        }
+        if (checkin) {
+            eachFile.checkin(this.comment, this.lockStatus, 
+                             this.isForced(), true, true);
+        }
+    }
+

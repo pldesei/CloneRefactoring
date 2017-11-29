@@ -1,0 +1,13 @@
+(startLine=121 endLine=131 srcPath=/home/ubuntu/antFilter/551/ant/src/testcases/org/apache/tools/ant/IncludeTest.java)
+    public void testParseErrorInIncluded() {
+        try {
+            configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
+            fail("should have caused a parser exception");
+        } catch (BuildException e) {
+            assertTrue(e.getLocation().toString() 
+                       + " should refer to included_file.xml",
+                       e.getLocation().toString()
+                       .indexOf("included_file.xml:") > -1);
+        }
+    }
+

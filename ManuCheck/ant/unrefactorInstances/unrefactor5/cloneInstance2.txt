@@ -1,0 +1,7 @@
+(startLine=76 endLine=80 srcPath=/home/ubuntu/antFilter/16/ant/src/tests/junit/org/apache/tools/ant/taskdefs/GUnzipTest.java)
+    private void testRealTest(String target) throws java.io.IOException {
+        buildRule.executeTarget(target);
+        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
+                FileUtilities.getFileContents(buildRule.getProject().resolveFile("asf-logo.gif")));
+    }
+

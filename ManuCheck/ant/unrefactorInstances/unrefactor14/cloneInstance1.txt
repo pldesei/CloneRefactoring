@@ -1,0 +1,11 @@
+(startLine=1713 endLine=1721 srcPath=/home/ubuntu/antFilter/447/ant/src/main/org/apache/tools/ant/Project.java)
+    public void fireBuildStarted() {
+        BuildEvent event = new BuildEvent(this);
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.buildStarted(event);
+        }
+    }
+

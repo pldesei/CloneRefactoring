@@ -1,0 +1,16 @@
+(startLine=160 endLine=173 srcPath=/home/ubuntu/antFilter/940/ant/src/testcases/org/apache/tools/ant/taskdefs/AntTest.java)
+    public void testReferenceInheritance() {
+        Path p = Path.systemClasspath;
+        p.setProject(project);
+        project.addReference("path", p);
+        project.addReference("no-override", p);
+        testReference("testInherit", new String[] {"path", "path"},
+                      new boolean[] {true, true}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {true, false}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {false, false}, null);
+    }
+

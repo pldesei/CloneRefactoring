@@ -1,0 +1,33 @@
+(startLine=328 endLine=358 srcPath=/home/ubuntu/antFilter/460/ant/src/main/org/apache/tools/ant/taskdefs/optional/net/TelnetTask.java)
+        public void waitForString(String s, Integer timeout) {
+            InputStream is = this.getInputStream();
+            try {
+                StringBuffer sb = new StringBuffer();
+                if (timeout == null || timeout.intValue() == 0) {
+                    while (sb.toString().indexOf(s) == -1) {
+                        sb.append((char) is.read());
+                    }
+                } else {
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.add(Calendar.SECOND, timeout.intValue());
+                    while (sb.toString().indexOf(s) == -1) {
+                        while (Calendar.getInstance().before(endTime) &&
+                               is.available() == 0) {
+                            Thread.sleep(250);
+                        }
+                        if (is.available() == 0) {
+                            throw new BuildException(
+                                "Response timed-out waiting for \"" + s + '\"',
+                                getLocation());
+                        }
+                        sb.append((char) is.read());
+                    }
+                }
+                log(sb.toString(), Project.MSG_INFO);
+            } catch (BuildException be) {
+                throw be;
+            } catch (Exception e) {
+                throw new BuildException(e, getLocation());
+            }
+        }
+

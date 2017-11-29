@@ -1,0 +1,10 @@
+(startLine=124 endLine=131 srcPath=/home/ubuntu/antFilter/480/ant/src/testcases/org/apache/tools/ant/filters/DynamicFilterTest.java)
+    private void expectFileContains(String name, String contains)
+        throws IOException
+    {
+        String content = getFileString(name);
+        assertTrue(
+            "expecting file " + name + " to contain " + contains +
+            " but got " + content, content.indexOf(contains) > -1);
+    }
+

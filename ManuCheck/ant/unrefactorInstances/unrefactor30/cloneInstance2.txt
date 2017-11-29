@@ -1,0 +1,16 @@
+(startLine=530 endLine=543 srcPath=/home/ubuntu/antFilter/77/ant/src/main/org/apache/tools/ant/Main.java)
+    private int handleArgInputHandler(String[] args, int pos) {
+        if (inputHandlerClassname != null) {
+            throw new BuildException("Only one input handler class may "
+                                     + "be specified.");
+        }
+        try {
+            inputHandlerClassname = args[++pos];
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            throw new BuildException("You must specify a classname when"
+                                     + " using the -inputhandler"
+                                     + " argument");
+        }
+        return pos;
+    }
+
