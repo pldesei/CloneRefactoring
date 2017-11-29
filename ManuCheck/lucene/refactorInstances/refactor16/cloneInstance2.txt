@@ -1,0 +1,43 @@
+(startLine=106 endLine=146 srcPath=/home/ubuntu/luceneFilter/1415/lucene/contrib/analyzers/common/src/test/org/apache/lucene/analysis/ru/TestRussianAnalyzer.java)
+    public void testKOI8() throws IOException
+    {
+        //System.out.println(new java.util.Date());
+        RussianAnalyzer ra = new RussianAnalyzer(RussianCharsets.KOI8);
+        // KOI8
+        inWordsKOI8 = new InputStreamReader(new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/testKOI8.txt")), "iso-8859-1");
+
+        sampleKOI8 = new InputStreamReader(new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/resKOI8.htm")), "iso-8859-1");
+
+        TokenStream in = ra.tokenStream("all", inWordsKOI8);
+        RussianLetterTokenizer sample =
+            new RussianLetterTokenizer(
+                sampleKOI8,
+                RussianCharsets.KOI8);
+
+        final Token reusableToken = new Token();
+        final Token reusableSampleToken = new Token();
+        Token nextToken;
+        Token nextSampleToken;
+        for (;;)
+        {
+            nextToken = in.next(reusableToken);
+
+            if (nextToken == null)
+            {
+                break;
+            }
+
+            nextSampleToken = sample.next(reusableSampleToken);
+            assertEquals(
+                "KOI8",
+                nextToken.term(),
+                nextSampleToken == null
+                ? null
+                : nextSampleToken.term());
+
+        }
+
+        inWordsKOI8.close();
+        sampleKOI8.close();
+    }
+

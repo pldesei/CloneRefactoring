@@ -1,0 +1,37 @@
+(startLine=478 endLine=512 srcPath=/home/ubuntu/luceneFilter/1269/lucene/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+    protected Object createValue(IndexReader reader, Entry entry)
+        throws IOException {
+      String field = entry.field;
+      FieldCache.LongParser parser = (FieldCache.LongParser) entry.custom;
+      if (parser == null) {
+        try {
+          return wrapper.getLongs(reader, field, DEFAULT_LONG_PARSER);
+        } catch (NumberFormatException ne) {
+          return wrapper.getLongs(reader, field, NUMERIC_UTILS_LONG_PARSER);      
+        }
+      }
+      long[] retArray = null;
+      TermDocs termDocs = reader.termDocs();
+      TermEnum termEnum = reader.terms (new Term(field));
+      try {
+        do {
+          Term term = termEnum.term();
+          if (term==null || term.field() != field) break;
+          long termval = parser.parseLong(term.text());
+          if (retArray == null) // late init
+            retArray = new long[reader.maxDoc()];
+          termDocs.seek (termEnum);
+          while (termDocs.next()) {
+            retArray[termDocs.doc()] = termval;
+          }
+        } while (termEnum.next());
+      } catch (StopFillCacheException stop) {
+      } finally {
+        termDocs.close();
+        termEnum.close();
+      }
+      if (retArray == null) // no values
+        retArray = new long[reader.maxDoc()];
+      return retArray;
+    }
+

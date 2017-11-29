@@ -1,0 +1,12 @@
+(startLine=118 endLine=127 srcPath=/home/ubuntu/luceneFilter/1415/lucene/contrib/analyzers/common/src/test/org/apache/lucene/analysis/ar/TestArabicStemFilter.java)
+  private void check(final String input, final String expected) throws IOException {
+    ArabicLetterTokenizer tokenStream  = new ArabicLetterTokenizer(new StringReader(input));
+    ArabicStemFilter filter = new ArabicStemFilter(tokenStream);
+    final Token reusableToken = new Token();
+    Token nextToken = filter.next(reusableToken);
+    if (nextToken == null)
+      fail();
+    assertEquals(expected, nextToken.term());
+    filter.close();
+  }
+

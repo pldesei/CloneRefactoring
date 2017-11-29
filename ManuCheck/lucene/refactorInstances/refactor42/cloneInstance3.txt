@@ -1,0 +1,14 @@
+(startLine=40 endLine=51 srcPath=/home/ubuntu/luceneFilter/409/lucene/lucene/core/src/java/org/apache/lucene/util/packed/Direct16.java)
+  Direct16(DataInput in, int valueCount) throws IOException {
+    this(valueCount);
+    for (int i = 0; i < valueCount; ++i) {
+      values[i] = in.readShort();
+    }
+    final int mod = valueCount % 4;
+    if (mod != 0) {
+      for (int i = mod; i < 4; ++i) {
+        in.readShort();
+      }
+    }
+  }
+

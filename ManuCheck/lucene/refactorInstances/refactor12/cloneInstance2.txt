@@ -1,0 +1,19 @@
+(startLine=93 endLine=109 srcPath=/home/ubuntu/luceneFilter/1415/lucene/contrib/analyzers/common/src/test/org/apache/lucene/analysis/ngram/NGramTokenFilterTest.java)
+    public void testNgrams() throws Exception {
+      NGramTokenFilter filter = new NGramTokenFilter(input, 1, 3);
+      final Token reusableToken = new Token();
+        for (Token nextToken = filter.next(reusableToken); nextToken != null; nextToken = filter.next(reusableToken)) {
+            tokens.add(nextToken.toString());
+//          System.out.println(token.term());
+//          System.out.println(token);
+//          Thread.sleep(1000);
+        }
+
+        assertEquals(12, tokens.size());
+        ArrayList exp = new ArrayList();
+        exp.add("(a,0,1)"); exp.add("(b,1,2)"); exp.add("(c,2,3)"); exp.add("(d,3,4)"); exp.add("(e,4,5)");
+        exp.add("(ab,0,2)"); exp.add("(bc,1,3)"); exp.add("(cd,2,4)"); exp.add("(de,3,5)");
+        exp.add("(abc,0,3)"); exp.add("(bcd,1,4)"); exp.add("(cde,2,5)");
+        assertEquals(exp, tokens);
+    }
+

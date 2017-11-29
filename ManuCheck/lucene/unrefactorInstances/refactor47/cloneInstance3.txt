@@ -1,0 +1,8 @@
+(startLine=190 endLine=195 srcPath=/home/ubuntu/luceneFilter/1446/lucene/src/test/org/apache/lucene/search/TestSimpleExplanations.java)
+  public void testMPQ3() throws Exception {
+    MultiPhraseQuery q = new MultiPhraseQuery();
+    q.add(ta(new String[] {"w1","xx"}));
+    q.add(ta(new String[] {"w2","w3"}));
+    qtest(q, new int[] { 0,1,2,3 });
+  }
+

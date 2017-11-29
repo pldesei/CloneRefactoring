@@ -1,0 +1,8 @@
+(startLine=83 endLine=88 srcPath=/home/ubuntu/luceneFilter/1452/lucene/src/java/org/apache/lucene/util/DocIdBitSet.java)
+    public int advance(int target) {
+      int d = bitSet.nextSetBit(target);
+      // -1 returned by BitSet.nextSetBit() when exhausted
+      docId = d == -1 ? NO_MORE_DOCS : d;
+      return docId;
+    }
+

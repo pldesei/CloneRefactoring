@@ -1,0 +1,21 @@
+(startLine=126 endLine=144 srcPath=/home/ubuntu/luceneFilter/216/lucene/solr/core/src/test/org/apache/solr/cloud/ShardSplitTest.java)
+      public void run() {
+        for (int i = 101; i < 201; i++) {
+          try {
+            indexr("id", i);
+
+            // todo - hook in custom hashing
+            byte[] bytes = String.valueOf(i).getBytes("UTF-8");
+            int hash = Hash.murmurhash3_x86_32(bytes, 0, bytes.length, 0);
+            for (int i2 = 0; i2 < ranges.size(); i2++) {
+              DocRouter.Range range = ranges.get(i2);
+              if (range.includes(hash))
+                docCounts[i2]++;
+            }
+            Thread.sleep(100);
+          } catch (Exception e) {
+            log.error("Exception while adding doc", e);
+          }
+        }
+      }
+

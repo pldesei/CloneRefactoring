@@ -1,0 +1,11 @@
+(startLine=89 endLine=97 srcPath=/home/ubuntu/luceneFilter/218/lucene/lucene/core/src/java/org/apache/lucene/search/DisjunctionMaxScorer.java)
+  private void afterNext() throws IOException {
+    doc = subScorers[0].docID();
+    if (doc != NO_MORE_DOCS) {
+      scoreSum = scoreMax = subScorers[0].score();
+      freq = 1;
+      scoreAll(1);
+      scoreAll(2);
+    }
+  }
+

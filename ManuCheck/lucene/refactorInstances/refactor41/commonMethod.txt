@@ -1,0 +1,7 @@
+(startLine=161 endLine=165 srcPath=/home/ubuntu/luceneFilter/408/lucene/lucene/core/src/java/org/apache/lucene/util/packed/PackedInts.java)
+    public long byteCount(int packedIntsVersion, int valueCount, int bitsPerValue) {
+      assert bitsPerValue >= 0 && bitsPerValue <= 64 : bitsPerValue;
+      // assume long-aligned
+      return 8L * longCount(packedIntsVersion, valueCount, bitsPerValue);
+    }
+

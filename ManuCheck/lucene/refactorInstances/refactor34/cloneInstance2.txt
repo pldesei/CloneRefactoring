@@ -1,0 +1,15 @@
+(startLine=81 endLine=93 srcPath=/home/ubuntu/luceneFilter/612/lucene/lucene/core/src/test/org/apache/lucene/util/TestOpenBitSet.java)
+  void doPrevSetBitLong(BitSet a, OpenBitSet b) {
+    int aa = a.size() + random.nextInt(100);
+    int bb = aa;
+    do {
+      // aa = a.prevSetBit(aa-1);
+      aa--;
+      while ((aa >= 0) && (! a.get(aa))) {
+      	aa--;
+      }
+      bb = (int) b.prevSetBit((long) (bb-1));
+      assertEquals(aa,bb);
+    } while (aa>=0);
+  }
+

@@ -1,0 +1,30 @@
+(startLine=224 endLine=251 srcPath=/home/ubuntu/luceneFilter/786/lucene/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testEndOffsetPositionStandardEmptyField() throws Exception {
+    Directory dir = newDirectory();
+    IndexWriter w = new IndexWriter(dir, newIndexWriterConfig( 
+        TEST_VERSION_CURRENT, new MockAnalyzer(random)));
+    Document doc = new Document();
+    FieldType customType = new FieldType(TextField.TYPE_UNSTORED);
+    customType.setStoreTermVectors(true);
+    customType.setStoreTermVectorPositions(true);
+    customType.setStoreTermVectorOffsets(true);
+    Field f = newField("field", "", customType);
+    Field f2 = newField("field", "crunch man", customType);
+    doc.add(f);
+    doc.add(f2);
+    w.addDocument(doc);
+    w.close();
+
+    IndexReader r = IndexReader.open(dir, true);
+    TermPositionVector tpv = ((TermPositionVector) r.getTermFreqVector(0, "field"));
+    TermVectorOffsetInfo[] termOffsets = tpv.getOffsets(0);
+    assertEquals(1, termOffsets.length);
+    assertEquals(1, termOffsets[0].getStartOffset());
+    assertEquals(7, termOffsets[0].getEndOffset());
+    termOffsets = tpv.getOffsets(1);
+    assertEquals(8, termOffsets[0].getStartOffset());
+    assertEquals(11, termOffsets[0].getEndOffset());
+    r.close();
+    dir.close();
+  }
+

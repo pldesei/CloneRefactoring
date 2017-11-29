@@ -1,0 +1,21 @@
+(startLine=128 endLine=146 srcPath=/home/ubuntu/luceneFilter/953/lucene/lucene/src/test/org/apache/lucene/util/TestArrayUtil.java)
+  public void testQuickSort() {
+    int num = (TEST_NIGHTLY ? 500 : 50) * RANDOM_MULTIPLIER;
+    for (int i = 0; i < num; i++) {
+      Integer[] a1 = createRandomArray(1000), a2 = a1.clone();
+      ArrayUtil.quickSort(a1);
+      Arrays.sort(a2);
+      assertArrayEquals(a2, a1);
+      
+      a1 = createRandomArray(1000);
+      a2 = a1.clone();
+      ArrayUtil.quickSort(a1, Collections.reverseOrder());
+      Arrays.sort(a2, Collections.reverseOrder());
+      assertArrayEquals(a2, a1);
+      // reverse back, so we can test that completely backwards sorted array (worst case) is working:
+      ArrayUtil.quickSort(a1);
+      Arrays.sort(a2);
+      assertArrayEquals(a2, a1);
+    }
+  }
+

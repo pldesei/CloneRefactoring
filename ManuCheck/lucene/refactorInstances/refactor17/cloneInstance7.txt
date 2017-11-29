@@ -1,0 +1,9 @@
+(startLine=107 endLine=113 srcPath=/home/ubuntu/luceneFilter/1396/lucene/src/test/org/apache/lucene/analysis/TestMappingCharFilter.java)
+  public void test3to1() throws Exception {
+    CharStream cs = new MappingCharFilter( normMap, CharReader.get( new StringReader( "bbb" ) ) );
+    TokenStream ts = new WhitespaceTokenizer( cs );
+    List real = getTokens( ts );
+    List expect = tokens( "b,1,0,3" );
+    assertTokEqualOff( expect, real );
+  }
+

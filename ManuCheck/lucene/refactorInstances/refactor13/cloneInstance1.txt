@@ -1,0 +1,12 @@
+(startLine=95 endLine=104 srcPath=/home/ubuntu/luceneFilter/1415/lucene/contrib/analyzers/common/src/test/org/apache/lucene/analysis/ar/TestArabicNormalizationFilter.java)
+  private void check(final String input, final String expected) throws IOException {
+    ArabicLetterTokenizer tokenStream = new ArabicLetterTokenizer(new StringReader(input));
+    ArabicNormalizationFilter filter = new ArabicNormalizationFilter(tokenStream);
+    final Token reusableToken = new Token();
+    Token nextToken = filter.next(reusableToken);
+    if (nextToken == null)
+      fail();
+    assertEquals(expected, nextToken.term());
+    filter.close();
+  }
+
