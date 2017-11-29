@@ -6,7 +6,8 @@
             this.excludes = new String[excludes.length];
             for (int i = 0; i < excludes.length; i++) {
                 String pattern;
-                pattern = excludes[i].replace('/', File.separatorChar).replace(
+                pattern = excludes[i].replace('/', 
+File.separatorChar).replace(
                         '\\', File.separatorChar);
                 if (pattern.endsWith(File.separator)) {
                     pattern += "**";

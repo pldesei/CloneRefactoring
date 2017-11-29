@@ -26,7 +26,6 @@
 
         commandline = sosCheckin.buildCmdLine();
         String[] sGeneratedCmdLine = commandline.getCommandline();
-
         int i = 0;
         while (i < sTestCmdLine.length) {
             try {
@@ -35,7 +34,7 @@
                                 sGeneratedCmdLine[i]);
                 i++;
             } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("CheckInFile missing arg");
+               fail("CheckInFile missing arg");
             }
 
         }
