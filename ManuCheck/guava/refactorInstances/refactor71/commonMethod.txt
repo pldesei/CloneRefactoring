@@ -1,0 +1,12 @@
+(startLine=60 endLine=69 srcPath=/home/ubuntu/guavaFilter/118/guava/guava-tests/test/com/google/common/graph/NetworkEquivalenceTest.java)
+  private static MutableNetwork<Integer, String> createNetwork(EdgeType edgeType) {
+    switch (edgeType) {
+      case UNDIRECTED:
+        return NetworkBuilder.undirected().allowsSelfLoops(true).build();
+      case DIRECTED:
+        return NetworkBuilder.directed().allowsSelfLoops(true).build();
+      default:
+        throw new IllegalStateException("Unexpected edge type: " + edgeType);
+    }
+  }
+

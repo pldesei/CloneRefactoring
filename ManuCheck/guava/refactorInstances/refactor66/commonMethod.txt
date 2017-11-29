@@ -1,0 +1,13 @@
+(startLine=805 endLine=815 srcPath=/home/ubuntu/guavaFilter/203/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  private static MutableNetwork<Integer, String> buildUndirectedTestNetwork() {
+    MutableNetwork<Integer, String> undirectedGraph =
+        NetworkBuilder.undirected().allowsParallelEdges(true).build();
+    undirectedGraph.addEdge(E11, N1, N1);
+    undirectedGraph.addEdge(E12, N1, N2);
+    undirectedGraph.addEdge(E11_A, N1, N1);
+    undirectedGraph.addEdge(E12_A, N1, N2);
+    undirectedGraph.addEdge(E21, N2, N1);
+
+    return undirectedGraph;
+  }
+

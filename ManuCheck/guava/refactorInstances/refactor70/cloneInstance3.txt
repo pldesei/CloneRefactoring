@@ -1,0 +1,40 @@
+(startLine=500 endLine=537 srcPath=/home/ubuntu/guavaFilter/163/guava/guava-tests/test/com/google/common/collect/MapMakerInternalMapTest.java)
+  public void testSegmentRemove() {
+    MapMakerInternalMap<Object, Object> map = makeMap(createMapMaker().concurrencyLevel(1));
+    Segment<Object, Object> segment = map.segments[0];
+
+    Object key = new Object();
+    int hash = map.hash(key);
+    Object oldValue = new Object();
+    AtomicReferenceArray<ReferenceEntry<Object, Object>> table = segment.table;
+    int index = hash & (table.length() - 1);
+
+    DummyEntry<Object, Object> entry = DummyEntry.create(key, hash, null);
+    DummyValueReference<Object, Object> oldValueRef = DummyValueReference.create(oldValue, entry);
+    entry.setValueReference(oldValueRef);
+
+    // no entry
+    assertEquals(0, segment.count);
+    assertNull(segment.remove(key, hash));
+    assertEquals(0, segment.count);
+
+    // same key
+    table.set(index, entry);
+    segment.count++;
+    assertEquals(1, segment.count);
+    assertSame(oldValue, segment.get(key, hash));
+    assertSame(oldValue, segment.remove(key, hash));
+    assertEquals(0, segment.count);
+    assertNull(segment.get(key, hash));
+
+    // cleared
+    table.set(index, entry);
+    segment.count++;
+    assertEquals(1, segment.count);
+    assertSame(oldValue, segment.get(key, hash));
+    oldValueRef.clear(null);
+    assertNull(segment.remove(key, hash));
+    assertEquals(0, segment.count);
+    assertNull(segment.get(key, hash));
+  }
+

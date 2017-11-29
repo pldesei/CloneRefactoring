@@ -1,0 +1,12 @@
+(startLine=117 endLine=126 srcPath=/home/ubuntu/guavaFilter/692/guava/guava/src/com/google/common/collect/Collections2.java)
+  static boolean safeRemove(Collection<?> collection, Object object) {
+    checkNotNull(collection);
+    try {
+      return collection.remove(object);
+    } catch (ClassCastException e) {
+      return false;
+    } catch (NullPointerException e) {
+      return false;
+    }
+  }
+

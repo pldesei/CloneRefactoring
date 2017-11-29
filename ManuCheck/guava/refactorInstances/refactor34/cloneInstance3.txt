@@ -1,0 +1,22 @@
+(startLine=160 endLine=179 srcPath=/home/ubuntu/guavaFilter/250/guava/guava/src/com/google/common/graph/IncidenceSetUndirectedGraph.java)
+  public Set<N> adjacentNodes(final Object node) {
+    checkNotNull(node, "node");
+    final Set<E> incidentEdges = nodeToIncidentEdges.get(node);
+    checkArgument(incidentEdges != null, NODE_NOT_IN_GRAPH, node);
+    return new SetView<N>() {
+      @Override
+      public boolean isEmpty() {
+        return incidentEdges.isEmpty();
+      }
+
+      @Override
+      Set<N> elements() {
+        Set<N> nodes = Sets.newLinkedHashSetWithExpectedSize(incidentEdges.size());
+        for (E edge : incidentEdges) {
+          nodes.add(oppositeNode(IncidenceSetUndirectedGraph.this, edge, node));
+        }
+        return nodes;
+      }
+    };
+  }
+

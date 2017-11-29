@@ -1,0 +1,12 @@
+(startLine=73 endLine=82 srcPath=/home/ubuntu/guavaFilter/214/guava/guava-tests/test/com/google/common/graph/GraphEqualsTest.java)
+  private static GraphType oppositeType(GraphType graphType) {
+    switch (graphType) {
+      case UNDIRECTED:
+        return GraphType.DIRECTED;
+      case DIRECTED:
+        return GraphType.UNDIRECTED;
+      default:
+        throw new IllegalStateException("Unexpected graph type: " + graphType);
+    }
+  }
+

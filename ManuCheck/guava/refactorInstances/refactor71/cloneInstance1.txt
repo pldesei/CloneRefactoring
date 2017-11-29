@@ -1,0 +1,10 @@
+(startLine=105 endLine=112 srcPath=/home/ubuntu/guavaFilter/119/guava/guava-tests/test/com/google/common/graph/NetworkEquivalenceTest.java)
+  public void equivalent_directedVsUndirected() {
+    graph.addEdge(N1, N2, E12);
+
+    MutableNetwork<Integer, String> g2 = createGraph(oppositeType(graphType));
+    g2.addEdge(N1, N2, E12);
+
+    assertThat(Graphs.equivalent(graph, g2)).isFalse();
+  }
+

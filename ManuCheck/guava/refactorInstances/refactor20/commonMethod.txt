@@ -1,0 +1,5 @@
+(startLine=2019 endLine=2021 srcPath=/home/ubuntu/guavaFilter/650/guava/guava/src/com/google/common/collect/Maps.java)
+  static <V> Predicate<Entry<?, V>> valuePredicateOnEntries(Predicate<? super V> valuePredicate) {
+    return compose(valuePredicate, Maps.<V>valueFunction());
+  }
+
