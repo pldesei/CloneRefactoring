@@ -1,10 +1,17 @@
-(startLine=45 endLine=52 srcPath=/home/ubuntu/antFilter/256/ant/src/testcases/org/apache/tools/ant/util/DateUtilsTest.java)
-    public void testDateTimeISO(){
-        TimeZone timeZone = TimeZone.getTimeZone("GMT+1");
-        Calendar cal = Calendar.getInstance(timeZone);
-        cal.set(2002,1,23,10,11,12);
-        String text = DateUtils.format(cal.getTime(),
-                DateUtils.ISO8601_DATETIME_PATTERN);
-        assertEquals("2002-02-23T09:11:12", text);
+(startLine=187 endLine=201 srcPath=/home/ubuntu/antFilter/15/ant/src/main/org/apache/tools/ant/filters/HeadFilter.java)
+    private void initialize() {
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (LINES_KEY.equals(params[i].getName())) {
+                    lines = Long.parseLong(params[i].getValue());
+                    continue;
+                }
+                if (SKIP_KEY.equals(params[i].getName())) {
+                    skip = Long.parseLong(params[i].getValue());
+                    continue;
+                }
+            }
+        }
     }
 

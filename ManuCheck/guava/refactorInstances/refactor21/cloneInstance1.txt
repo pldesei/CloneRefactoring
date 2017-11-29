@@ -1,13 +1,12 @@
-(startLine=919 endLine=929 srcPath=/home/ubuntu/guavaFilter/649/guava/guava/src/com/google/common/collect/Sets.java)
-    public E pollFirst() {
-      Iterator<E> unfilteredIterator = unfiltered().iterator();
-      while (unfilteredIterator.hasNext()) {
-        E e = unfilteredIterator.next();
-        if (predicate.apply(e)) {
-          unfilteredIterator.remove();
-          return e;
-        }
+(startLine=692 endLine=701 srcPath=/home/ubuntu/guavaFilter/651/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public boolean removeAll(final Collection<?> c) {
+        checkNotNull(c);
+        Predicate<Entry<R, V>> predicate = new Predicate<Entry<R, V>>() {
+          @Override
+          public boolean apply(Entry<R, V> entry) {
+            return c.contains(entry.getValue());
+          }
+        };
+        return removePredicate(predicate);
       }
-      return null;
-    }
 

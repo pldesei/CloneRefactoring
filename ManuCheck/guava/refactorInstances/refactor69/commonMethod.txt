@@ -1,14 +1,5 @@
-(startLine=2036 endLine=2047 srcPath=/home/ubuntu/guavaFilter/162/guava/guava/src/com/google/common/collect/MapMakerInternalMap.java)
-    @Override
-    public void setWeakValueReferenceForTesting(
-        InternalEntry<K, V, ?> e,
-        WeakValueReference<K, V, ? extends InternalEntry<K, V, ?>> valueReference) {
-      WeakKeyWeakValueEntry<K, V> entry = castForTesting(e);
-      @SuppressWarnings("unchecked")
-      WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>> newValueReference =
-          (WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>>) valueReference;
-      WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>> previous = entry.valueReference;
-      entry.valueReference = newValueReference;
-      previous.clear();
-    }
+(startLine=182 endLine=184 srcPath=/home/ubuntu/guavaFilter/184/guava/guava/src/com/google/common/graph/Graphs.java)
+  public static <N> void copyNodes(Graph<N> src, MutableNetwork<N, ?> dest) {
+    copyNodesInternal(src, dest, Predicates.alwaysTrue());
+  }
 

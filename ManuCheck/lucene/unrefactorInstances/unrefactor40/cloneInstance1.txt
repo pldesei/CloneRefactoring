@@ -1,29 +1,52 @@
-(startLine=410 endLine=436 srcPath=/home/ubuntu/luceneFilter/840/lucene/solr/core/src/java/org/apache/solr/util/ConcurrentLRUCache.java)
-  public Map<K, V> getOldestAccessedItems(int n) {
-    Map<K, V> result = new LinkedHashMap<K, V>();
-    if (n <= 0)
-      return result;
-    TreeSet<CacheEntry<K,V>> tree = new TreeSet<CacheEntry<K,V>>();
-    markAndSweepLock.lock();
-    try {
-      for (Map.Entry<Object, CacheEntry<K,V>> entry : map.entrySet()) {
-        CacheEntry<K,V> ce = entry.getValue();
-        ce.lastAccessedCopy = ce.lastAccessed;
-        if (tree.size() < n) {
-          tree.add(ce);
-        } else {
-          if (ce.lastAccessedCopy < tree.first().lastAccessedCopy) {
-            tree.remove(tree.first());
-            tree.add(ce);
-          }
+(startLine=636 endLine=685 srcPath=/home/ubuntu/luceneFilter/1389/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/GermanStemmer.java)
+        public boolean stem() {
+            int v_1;
+            int v_2;
+            int v_3;
+            int v_4;
+            // (, line 124
+            // do, line 125
+            v_1 = cursor;
+            lab0: do {
+                // call prelude, line 125
+                if (!r_prelude())
+                {
+                    break lab0;
+                }
+            } while (false);
+            cursor = v_1;
+            // do, line 126
+            v_2 = cursor;
+            lab1: do {
+                // call mark_regions, line 126
+                if (!r_mark_regions())
+                {
+                    break lab1;
+                }
+            } while (false);
+            cursor = v_2;
+            // backwards, line 127
+            limit_backward = cursor; cursor = limit;
+            // do, line 128
+            v_3 = limit - cursor;
+            lab2: do {
+                // call standard_suffix, line 128
+                if (!r_standard_suffix())
+                {
+                    break lab2;
+                }
+            } while (false);
+            cursor = limit - v_3;
+            cursor = limit_backward;            // do, line 129
+            v_4 = cursor;
+            lab3: do {
+                // call postlude, line 129
+                if (!r_postlude())
+                {
+                    break lab3;
+                }
+            } while (false);
+            cursor = v_4;
+            return true;
         }
-      }
-    } finally {
-      markAndSweepLock.unlock();
-    }
-    for (CacheEntry<K,V> e : tree) {
-      result.put(e.key, e.value);
-    }
-    return result;
-  }
 

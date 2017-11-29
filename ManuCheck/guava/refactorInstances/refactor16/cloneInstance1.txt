@@ -1,11 +1,12 @@
-(startLine=311 endLine=319 srcPath=/home/ubuntu/guavaFilter/679/guava/guava/src/com/google/common/collect/HashBiMap.java)
-  public V remove(@Nullable Object key) {
-    BiEntry<K, V> entry = seekByKey(key, hash(key));
-    if (entry == null) {
-      return null;
-    } else {
-      delete(entry);
-      return entry.value;
-    }
-  }
+(startLine=471 endLine=480 srcPath=/home/ubuntu/guavaFilter/693/guava/guava/src/com/google/common/collect/ConcurrentHashMultiset.java)
+      public boolean contains(@Nullable Object object) {
+        if (object == null) {
+          return false;
+        }
+        try {
+          return delegate.contains(object);
+        } catch (ClassCastException e) {
+          return false;
+        }
+      }
 

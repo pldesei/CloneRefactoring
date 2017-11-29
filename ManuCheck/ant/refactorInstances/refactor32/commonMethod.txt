@@ -1,10 +1,9 @@
-(startLine=657 endLine=664 srcPath=/home/ubuntu/antFilter/313/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
-    private static String normalizePattern(String p) {
-        String pattern = p.replace('/', File.separatorChar)
-            .replace('\\', File.separatorChar);
-        if (pattern.endsWith(File.separator)) {
-            pattern += "**";
+(startLine=1514 endLine=1520 srcPath=/home/ubuntu/antFilter/318/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    private synchronized void ensureNonPatternSetsReady() {
+        if (!areNonPatternSetsReady) {
+            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
+            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
+            areNonPatternSetsReady = true;
         }
-        return pattern;
     }
 

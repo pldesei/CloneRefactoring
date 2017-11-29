@@ -1,20 +1,17 @@
-(startLine=153 endLine=170 srcPath=/home/ubuntu/luceneFilter/216/lucene/solr/core/src/test/org/apache/solr/cloud/ChaosMonkeyShardSplitTest.java)
-        public void run() {
-          for (int i = 101; i < 201; i++) {
-            try {
-              indexr("id", i);
-              
-              // todo - hook in custom hashing
-              byte[] bytes = String.valueOf(i).getBytes("UTF-8");
-              int hash = Hash.murmurhash3_x86_32(bytes, 0, bytes.length, 0);
-              for (int i2 = 0; i2 < ranges.size(); i2++) {
-                DocRouter.Range range = ranges.get(i2);
-                if (range.includes(hash)) docCounts[i2]++;
-              }
-              Thread.sleep(100);
-            } catch (Exception e) {
-              log.error("Exception while adding doc", e);
-            }
-          }
+(startLine=57 endLine=71 srcPath=/home/ubuntu/luceneFilter/219/lucene/lucene/core/src/java/org/apache/lucene/search/DisjunctionMaxScorer.java)
+  public int nextDoc() throws IOException {
+    if (numScorers == 0) return doc = NO_MORE_DOCS;
+    while (subScorers[0].docID() == doc) {
+      if (subScorers[0].nextDoc() != NO_MORE_DOCS) {
+        heapAdjust(0);
+      } else {
+        heapRemoveRoot();
+        if (numScorers == 0) {
+          return doc = NO_MORE_DOCS;
         }
+      }
+    }
+    
+    return doc = subScorers[0].docID();
+  }
 

@@ -1,27 +1,47 @@
-(startLine=190 endLine=214 srcPath=/home/ubuntu/luceneFilter/1013/lucene/solr/src/common/org/apache/solr/common/cloud/ZkStateReader.java)
-          public void process(WatchedEvent event) {
-            log.info("Detected changed ShardId in collection:" + collection);
-            try {
-              makeShardsWatches(collection, false);
-              updateCloudState(false);
-            } catch (KeeperException e) {
-              if(e.code() == KeeperException.Code.SESSIONEXPIRED || e.code() == KeeperException.Code.CONNECTIONLOSS) {
-                log.warn("ZooKeeper watch triggered, but Solr cannot talk to ZK");
-                return;
+(startLine=273 endLine=317 srcPath=/home/ubuntu/luceneFilter/986/lucene/solr/src/java/org/apache/solr/search/DocSet.java)
+      public DocIdSet getDocIdSet(AtomicReaderContext context) throws IOException {
+        IndexReader reader = context.reader;
+
+        if (context.isTopLevel) {
+          return bs;
+        }
+
+        final int base = context.docBase;
+        final int maxDoc = reader.maxDoc();
+        final int max = base + maxDoc;   // one past the max doc in this segment.
+
+        return new DocIdSet() {
+          @Override
+          public DocIdSetIterator iterator() throws IOException {
+            return new DocIdSetIterator() {
+              int pos=base-1;
+              int adjustedDoc=-1;
+
+              @Override
+              public int docID() {
+                return adjustedDoc;
               }
-              log.error("", e);
-              throw new ZooKeeperException(
-                  SolrException.ErrorCode.SERVER_ERROR, "", e);
-            } catch (InterruptedException e) {
-              // Restore the interrupted status
-              Thread.currentThread().interrupt();
-              log.error("", e);
-              throw new ZooKeeperException(
-                  SolrException.ErrorCode.SERVER_ERROR, "", e);
-            } catch (IOException e) {
-              log.error("", e);
-              throw new ZooKeeperException(
-                  SolrException.ErrorCode.SERVER_ERROR, "", e);
-            }
+
+              @Override
+              public int nextDoc() throws IOException {
+                pos = bs.nextSetBit(pos+1);
+                return adjustedDoc = (pos>=0 && pos<max) ? pos-base : NO_MORE_DOCS;
+              }
+
+              @Override
+              public int advance(int target) throws IOException {
+                if (target==NO_MORE_DOCS) return adjustedDoc=NO_MORE_DOCS;
+                pos = bs.nextSetBit(target+base);
+                return adjustedDoc = (pos>=0 && pos<max) ? pos-base : NO_MORE_DOCS;
+              }
+            };
           }
+
+          @Override
+          public boolean isCacheable() {
+            return true;
+          }
+
+        };
+      }
 

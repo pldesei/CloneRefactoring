@@ -1,11 +1,13 @@
-(startLine=423 endLine=431 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/AbstractService.java)
-  private void stopping(final State from) {
-    for (final ListenerExecutorPair pair : listeners) {
-      queuedListeners.add(new Runnable() {
-        @Override public void run() {
-          pair.listener.stopping(from);
+(startLine=919 endLine=929 srcPath=/home/ubuntu/guavaFilter/649/guava/guava/src/com/google/common/collect/Sets.java)
+    public E pollFirst() {
+      Iterator<E> unfilteredIterator = unfiltered().iterator();
+      while (unfilteredIterator.hasNext()) {
+        E e = unfilteredIterator.next();
+        if (predicate.apply(e)) {
+          unfilteredIterator.remove();
+          return e;
         }
-      }, pair.executor);
+      }
+      return null;
     }
-  }
 

@@ -1,17 +1,15 @@
-(startLine=219 endLine=233 srcPath=/home/ubuntu/antFilter/148/ant/src/tests/junit/org/apache/tools/ant/taskdefs/ExecTaskTest.java)
-    private void testRedirector5or6(String target) throws IOException {
-        executeTarget(target);
-        if (getProject().getProperty("test.can.run") == null) {
-            return;
+(startLine=93 endLine=105 srcPath=/home/ubuntu/antFilter/940/ant/src/main/org/apache/tools/ant/taskdefs/Ear.java)
+    public void setAppxml(File descr) {
+        deploymentDescriptor = descr; 
+        if (!deploymentDescriptor.exists()) {
+            throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
         }
-        String expectedOut = getProject().getProperty("ant.file") + " out\n";
-        String expectedErr = getProject().getProperty("ant.file") + " err\n";
 
-        assertEquals("unexpected output", expectedOut,
-            getFileString("redirector.out"));
-        assertPropertyEquals("redirector.out", expectedOut.trim());
-        assertEquals("unexpected error output", expectedErr,
-            getFileString("redirector.err"));
-        assertPropertyEquals("redirector.err", expectedErr.trim());
+        // Create a ZipFileSet for this file, and pass it up.
+        ZipFileSet fs = new ZipFileSet();
+        fs.setDir(new File(deploymentDescriptor.getParent()));
+        fs.setIncludes(deploymentDescriptor.getName());
+        fs.setFullpath("META-INF/application.xml");
+        super.addFileset(fs);
     }
 

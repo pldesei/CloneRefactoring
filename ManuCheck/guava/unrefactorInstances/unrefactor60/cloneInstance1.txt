@@ -1,11 +1,16 @@
-(startLine=77 endLine=85 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/util/concurrent/FuturesGetCheckedTest.java)
-  public void testGetCheckedUntimed_cancelled() throws TwoArgConstructorException {
-    SettableFuture<String> future = SettableFuture.create();
-    future.cancel(true);
-    try {
-      getChecked(future, TwoArgConstructorException.class);
-      fail();
-    } catch (CancellationException expected) {
-    }
+(startLine=982 endLine=995 srcPath=/home/ubuntu/guavaFilter/280/guava/guava-tests/test/com/google/common/collect/IteratorsTest.java)
+  public void testPartition_view() {
+    List<Integer> list = asList(1, 2);
+    Iterator<List<Integer>> partitions
+        = Iterators.partition(list.iterator(), 1);
+
+    // Changes before the partition is retrieved are reflected
+    list.set(0, 3);
+    List<Integer> first = partitions.next();
+
+    // Changes after are not
+    list.set(0, 4);
+
+    assertEquals(ImmutableList.of(3), first);
   }
 

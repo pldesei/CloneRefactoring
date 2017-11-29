@@ -1,10 +1,11 @@
-(startLine=73 endLine=80 srcPath=/home/ubuntu/guavaFilter/230/guava/guava-testlib/src/com/google/common/collect/testing/testers/ConcurrentMapPutIfAbsentTester.java)
-  public void testPutIfAbsent_unsupportedPresentExistingValue() {
+(startLine=538 endLine=546 srcPath=/home/ubuntu/guavaFilter/939/guava/guava-tests/test/com/google/common/collect/IteratorsTest.java)
+  public void testCycleRemoveWithoutNext() {
+    Iterator<String> cycle = Iterators.cycle("a", "b");
+    assertTrue(cycle.hasNext());
     try {
-      assertEquals("putIfAbsent(present, existingValue) should return present or throw",
-          v0(), putIfAbsent(e0()));
-    } catch (UnsupportedOperationException tolerated) {
+      cycle.remove();
+      fail("no exception thrown");
+    } catch (IllegalStateException expected) {
     }
-    expectUnchanged();
   }
 

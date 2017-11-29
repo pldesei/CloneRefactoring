@@ -1,9 +1,9 @@
-(startLine=278 endLine=284 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/collect/ImmutableMultisetTest.java)
-  public void testCopyOf_iteratorContainingNull() {
-    Iterator<String> iterator = asList("a", null, "b").iterator();
+(startLine=784 endLine=790 srcPath=/home/ubuntu/guavaFilter/1039/guava/guava-tests/test/com/google/common/collect/MultimapsTest.java)
+  public void testIndex_nullKey() {
+    List<Integer> values = Arrays.asList(1, 2);
     try {
-      ImmutableMultiset.copyOf(iterator);
+      Multimaps.index(values, Functions.constant(null));
       fail();
-    } catch (NullPointerException expected) {}
+    } catch (NullPointerException e) {}
   }
 

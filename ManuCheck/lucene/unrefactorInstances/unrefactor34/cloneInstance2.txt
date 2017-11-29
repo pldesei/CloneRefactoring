@@ -1,21 +1,8 @@
-(startLine=63 endLine=81 srcPath=/home/ubuntu/luceneFilter/70/lucene/lucene/core/src/java/org/apache/lucene/store/SimpleFSDirectory.java)
-  public IndexInputSlicer createSlicer(final String name,
-      final IOContext context) throws IOException {
-    ensureOpen();
-    final File file = new File(getDirectory(), name);
-    final RandomAccessFile descriptor = new RandomAccessFile(file, "r");
-    return new IndexInputSlicer() {
-
-      @Override
-      public void close() throws IOException {
-        descriptor.close();
-      }
-
-      @Override
-      public IndexInput openSlice(String sliceDescription, long offset, long length) {
-        return new SimpleFSIndexInput("SimpleFSIndexInput(" + sliceDescription + " in path=\"" + file.getPath() + "\" slice=" + offset + ":" + (offset+length) + ")", descriptor, offset,
-            length, BufferedIndexInput.bufferSize(context));
-      }
-    };
-  }
+(startLine=342 endLine=347 srcPath=/home/ubuntu/luceneFilter/369/lucene/lucene/test-framework/src/java/org/apache/lucene/index/AssertingAtomicReader.java)
+    public int endOffset() throws IOException {
+      assert state != DocsEnumState.START : "endOffset() called before nextDoc()/advance()";
+      assert state != DocsEnumState.FINISHED : "endOffset() called after NO_MORE_DOCS";
+      assert positionCount > 0 : "endOffset() called before nextPosition()!";
+      return super.endOffset();
+    }
 

@@ -1,23 +1,17 @@
-(startLine=51 endLine=71 srcPath=/home/ubuntu/antFilter/162/ant/src/tests/junit/org/apache/tools/ant/types/selectors/DependSelectorTest.java)
-    public void testValidate() {
-        DependSelector s = (DependSelector)getInstance();
-        try {
-            s.createMapper();
-            s.createMapper();
-            fail("DependSelector allowed more than one nested mapper.");
-        } catch (BuildException be1) {
-            assertEquals("Cannot define more than one mapper",
-                    be1.getMessage());
-        }
+(startLine=1186 endLine=1200 srcPath=/home/ubuntu/antFilter/139/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    protected boolean isIncluded(String name) {
+        ensureNonPatternSetsReady();
 
-        s = (DependSelector)getInstance();
-        try {
-            s.isSelected(basedir,filenames[0],files[0]);
-            fail("DependSelector did not check for required fields");
-        } catch (BuildException be2) {
-            assertEquals("The targetdir attribute is required.",
-                    be2.getMessage());
+        if (isCaseSensitive()
+            ? includeNonPatterns.contains(name)
+            : includeNonPatterns.contains(name.toUpperCase())) {
+            return true;
         }
-
+        for (int i = 0; i < includePatterns.length; i++) {
+            if (matchPath(includePatterns[i], name, isCaseSensitive())) {
+                return true;
+            }
+        }
+        return false;
     }
 

@@ -1,17 +1,23 @@
-(startLine=84 endLine=98 srcPath=/home/ubuntu/guavaFilter/973/guava/guava-tests/test/com/google/common/util/concurrent/AtomicLongMapTest.java)
-  public void testGetAndIncrement() {
-    AtomicLongMap<String> map = AtomicLongMap.create();
-    String key = "key";
-    for (int i = 0; i < ITERATIONS; i++) {
-      long before = map.get(key);
-      long result = map.getAndIncrement(key);
-      long after = map.get(key);
-      assertEquals(before + 1, after);
-      assertEquals(before, result);
-    }
-    assertEquals(1, map.size());
-    assertTrue(!map.isEmpty());
-    assertTrue(map.containsKey(key));
-    assertEquals(ITERATIONS, (int) map.get(key));
+(startLine=60 endLine=80 srcPath=/home/ubuntu/guavaFilter/139/guava/guava-tests/test/com/google/common/collect/LinkedHashMultisetTest.java)
+  private static TestStringMultisetGenerator linkedHashMultisetGenerator() {
+    return new TestStringMultisetGenerator() {
+      @Override protected Multiset<String> create(String[] elements) {
+        return LinkedHashMultiset.create(asList(elements));
+      }
+
+      @Override
+      public List<String> order(List<String> insertionOrder) {
+        List<String> order = Lists.newArrayList();
+        for (String s : insertionOrder) {
+          int index = order.indexOf(s);
+          if (index == -1) {
+            order.add(s);
+          } else {
+            order.add(index, s);
+          }
+        }
+        return order;
+      }
+    };
   }
 

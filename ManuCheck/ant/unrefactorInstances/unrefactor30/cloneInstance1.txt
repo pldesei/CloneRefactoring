@@ -1,15 +1,10 @@
-(startLine=515 endLine=527 srcPath=/home/ubuntu/antFilter/77/ant/src/main/org/apache/tools/ant/Main.java)
-    private int handleArgLogger(String[] args, int pos) {
-        if (loggerClassname != null) {
-            throw new BuildException(
-                "Only one logger class may be specified.");
-        }
-        try {
-            loggerClassname = args[++pos];
-        } catch (ArrayIndexOutOfBoundsException aioobe) {
-            throw new BuildException(
-                "You must specify a classname when using the -logger argument");
-        }
-        return pos;
+(startLine=124 endLine=131 srcPath=/home/ubuntu/antFilter/480/ant/src/testcases/org/apache/tools/ant/filters/DynamicFilterTest.java)
+    private void expectFileContains(String name, String contains)
+        throws IOException
+    {
+        String content = getFileString(name);
+        assertTrue(
+            "expecting file " + name + " to contain " + contains +
+            " but got " + content, content.indexOf(contains) > -1);
     }
 

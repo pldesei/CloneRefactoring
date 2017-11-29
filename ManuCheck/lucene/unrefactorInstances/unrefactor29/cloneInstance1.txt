@@ -1,30 +1,17 @@
-(startLine=47 endLine=74 srcPath=/home/ubuntu/luceneFilter/96/lucene/lucene/facet/src/java/org/apache/lucene/facet/associations/SumIntAssociationFacetsAggregator.java)
-  public void aggregate(MatchingDocs matchingDocs, CategoryListParams clp, FacetArrays facetArrays) throws IOException {
-    BinaryDocValues dv = matchingDocs.context.reader().getBinaryDocValues(clp.field + CategoryIntAssociation.ASSOCIATION_LIST_ID);
-    if (dv == null) {
-      return; // no int associations in this reader
+(startLine=158 endLine=172 srcPath=/home/ubuntu/luceneFilter/521/lucene/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/writercache/cl2o/CompactLabelToOrdinal.java)
+  public int getOrdinal(CategoryPath label) {
+    if (label == null) {
+      return LabelToOrdinal.InvalidOrdinal;
     }
-    
-    final int length = matchingDocs.bits.length();
-    final int[] values = facetArrays.getIntArray();
-    int doc = 0;
-    while (doc < length && (doc = matchingDocs.bits.nextSetBit(doc)) != -1) {
-      dv.get(doc, bytes);
-      if (bytes.length > 0) {
-        // aggreate association values for ordinals
-        int bytesUpto = bytes.offset + bytes.length;
-        int pos = bytes.offset;
-        while (pos < bytesUpto) {
-          int ordinal = ((bytes.bytes[pos++] & 0xFF) << 24) | ((bytes.bytes[pos++] & 0xFF) << 16)
-              | ((bytes.bytes[pos++] & 0xFF) <<  8) | (bytes.bytes[pos++] & 0xFF);
-          
-          int value = ((bytes.bytes[pos++] & 0xFF) << 24) | ((bytes.bytes[pos++] & 0xFF) << 16)
-              | ((bytes.bytes[pos++] & 0xFF) <<  8) | (bytes.bytes[pos++] & 0xFF);
-          
-          values[ordinal] += value;
-        }
+
+    int hash = CompactLabelToOrdinal.stringHashCode(label);
+    for (int i = 0; i < this.hashArrays.length; i++) {
+      int ord = getOrdinal(this.hashArrays[i], label, hash);
+      if (ord != Collision) {
+        return ord;
       }
-      ++doc;
     }
+
+    return this.collisionMap.get(label, hash);
   }
 

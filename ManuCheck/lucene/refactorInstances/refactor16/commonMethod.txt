@@ -1,11 +1,13 @@
-(startLine=54 endLine=65 srcPath=/home/ubuntu/luceneFilter/1414/lucene/contrib/analyzers/common/src/java/org/apache/lucene/analysis/ru/RussianStemFilter.java)
+(startLine=46 endLine=59 srcPath=/home/ubuntu/luceneFilter/1414/lucene/contrib/analyzers/common/src/java/org/apache/lucene/analysis/ru/RussianLowerCaseFilter.java)
     public final boolean incrementToken() throws IOException
     {
       if (input.incrementToken()) {
-        String term = termAtt.term();
-        String s = stemmer.stem(term);
-        if (s != null && !s.equals(term))
-          termAtt.setTermBuffer(s);
+        char[] chArray = termAtt.termBuffer();
+        int chLen = termAtt.termLength();
+        for (int i = 0; i < chLen; i++)
+        {
+          chArray[i] = RussianCharsets.toLowerCase(chArray[i], charset);
+        }
         return true;
       } else {
         return false;

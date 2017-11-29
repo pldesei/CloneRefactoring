@@ -1,46 +1,8 @@
-(startLine=128 endLine=171 srcPath=/home/ubuntu/antFilter/848/ant/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/LineContains.java)
-    public final int read() throws IOException {
-        if (!initialized) {
-            initialize();
-            initialized = true;
-        }
-
-        int ch = -1;
-
-        if (line != null) {
-            ch = line.charAt(0);
-            if (line.length() == 1) {
-                line = null;
-            } else {
-                line = line.substring(1);
-            }
-        } else {
-            ch = in.read();
-            while (ch != -1) {
-                if (line == null) {
-                    line = "";
-                }
-                line = line + (char) ch;
-                if (ch == '\n') {
-                    break;
-                }
-                ch = in.read();
-            }
-
-            if (line != null) {
-                int containsSize = contains.size();
-                for (int i = 0; i < containsSize; i++) {
-                    String containsStr = (String) contains.elementAt(i);
-                    if (line.indexOf(containsStr) == -1) {
-                        line = null;
-                        break;
-                    }
-                }
-
-                return read();
-            }
-        }
-
-        return ch;
+(startLine=409 endLine=414 srcPath=/home/ubuntu/antFilter/968/ant/proposal/sandbox/junit/src/main/org/apache/tools/ant/taskdefs/optional/junit/remote/TestRunner.java)
+    public void addFailure(Test test, Throwable t) {
+        log("Adding failure for test: " + test);
+        String testName = test.toString();
+        String trace = StringUtils.getStackTrace(t);
+        writer.notifyTestFailed(TestRunListener.STATUS_FAILURE, testName, trace);
     }
 

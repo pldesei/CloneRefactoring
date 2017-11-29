@@ -1,21 +1,19 @@
-(startLine=125 endLine=143 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphEqualsTest.java)
-  public void equals_selfLoop_directedVsUndirected() {
-    graph.addEdge(E11, N1, N1);
+(startLine=275 endLine=291 srcPath=/home/ubuntu/guavaFilter/230/guava/guava/src/com/google/common/graph/ImmutableUndirectedGraph.java)
+    public Builder<N, E> addGraph(UndirectedGraph<N, E> graph) {
+      checkArgument(
+          undirectedGraph.config().compatibleWith(graph.config()),
+          "GraphConfigs for input and for graph being built are not compatible: input: %s, "
+              + "this graph: %s",
+          graph.config(),
+          undirectedGraph.config());
 
-    Graph<Integer, String> g2;
-    switch (graphType) {
-      case UNDIRECTED:
-        g2 = Graphs.createDirected();
-        break;
-      case DIRECTED:
-        g2 = Graphs.createUndirected();
-        break;
-      default:
-        throw new IllegalStateException("Unexpected graph type: " + graphType);
+      for (N node : graph.nodes()) {
+        undirectedGraph.addNode(node);
+      }
+      for (E edge : graph.edges()) {
+        Graphs.addEdge(undirectedGraph, edge, graph.incidentNodes(edge));
+      }
+
+      return this;
     }
-
-    g2.addEdge(E11, N1, N1);
-
-    new EqualsTester().addEqualityGroup(graph, g2).testEquals();
-  }
 

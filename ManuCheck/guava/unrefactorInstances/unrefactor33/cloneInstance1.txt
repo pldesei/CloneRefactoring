@@ -1,12 +1,18 @@
-(startLine=1567 endLine=1576 srcPath=/home/ubuntu/guavaFilter/371/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
-  public void testAllAsList_emptyList() throws Exception {
-    SingleCallListener listener = new SingleCallListener();
-    listener.expectCall();
-    List<ListenableFuture<String>> futures = ImmutableList.of();
-    ListenableFuture<List<String>> compound = Futures.allAsList(futures);
-    compound.addListener(listener, directExecutor());
-    assertTrue(compound.isDone());
-    assertTrue(compound.get().isEmpty());
-    assertTrue(listener.wasCalled());
+(startLine=78 endLine=93 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/math/DoubleMathTest.java)
+  public void testRoundIntegralDoubleToInt() {
+    for (double d : INTEGRAL_DOUBLE_CANDIDATES) {
+      for (RoundingMode mode : ALL_SAFE_ROUNDING_MODES) {
+        BigDecimal expected = new BigDecimal(d).setScale(0, mode);
+        boolean isInBounds = expected.compareTo(MAX_INT_AS_BIG_DECIMAL) <= 0
+            & expected.compareTo(MIN_INT_AS_BIG_DECIMAL) >= 0;
+
+        try {
+          assertEquals(expected.intValue(), DoubleMath.roundToInt(d, mode));
+          assertTrue(isInBounds);
+        } catch (ArithmeticException e) {
+          assertFalse(isInBounds);
+        }
+      }
+    }
   }
 

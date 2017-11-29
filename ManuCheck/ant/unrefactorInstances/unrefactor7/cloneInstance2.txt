@@ -1,8 +1,20 @@
-(startLine=80 endLine=85 srcPath=/home/ubuntu/antFilter/853/ant/src/testcases/org/apache/tools/ant/taskdefs/BUnzip2Test.java)
-    public void testRealTest() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
-        executeTarget("realTest");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
-                                           project.resolveFile("asf-logo-huge.tar")));
+(startLine=156 endLine=173 srcPath=/home/ubuntu/antFilter/164/ant/src/main/org/apache/tools/zip/ExtraFieldUtils.java)
+    public static byte[] mergeCentralDirectoryData(ZipExtraField[] data) {
+        int sum = 4 * data.length;
+        for (int i = 0; i < data.length; i++) {
+            sum += data[i].getCentralDirectoryLength().getValue();
+        }
+        byte[] result = new byte[sum];
+        int start = 0;
+        for (int i = 0; i < data.length; i++) {
+            System.arraycopy(data[i].getHeaderId().getBytes(),
+                             0, result, start, 2);
+            System.arraycopy(data[i].getCentralDirectoryLength().getBytes(),
+                             0, result, start + 2, 2);
+            byte[] local = data[i].getCentralDirectoryData();
+            System.arraycopy(local, 0, result, start + 4, local.length);
+            start += (local.length + 4);
+        }
+        return result;
     }
 

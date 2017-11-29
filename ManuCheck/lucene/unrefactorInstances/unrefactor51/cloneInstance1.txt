@@ -1,54 +1,33 @@
-(startLine=268 endLine=319 srcPath=/home/ubuntu/luceneFilter/986/lucene/solr/src/java/org/apache/solr/search/DocSet.java)
-  public Filter getTopFilter() {
-    final OpenBitSet bs = getBits();
-
-    return new Filter() {
-      @Override
-      public DocIdSet getDocIdSet(AtomicReaderContext context) throws IOException {
-        IndexReader reader = context.reader;
-
-        if (context.isTopLevel) {
-          return bs;
+(startLine=755 endLine=785 srcPath=/home/ubuntu/luceneFilter/424/lucene/lucene/core/src/java/org/apache/lucene/codecs/lucene40/Lucene40PostingsReader.java)
+    public int nextDoc() throws IOException {
+      // if (DEBUG) System.out.println("SPR.nextDoc seg=" + segment + " freqIn.fp=" + freqIn.getFilePointer());
+      while(true) {
+        if (ord == limit) {
+          // if (DEBUG) System.out.println("  return END");
+          return doc = NO_MORE_DOCS;
         }
 
-        final int base = context.docBase;
-        final int maxDoc = reader.maxDoc();
-        final int max = base + maxDoc;   // one past the max doc in this segment.
+        ord++;
 
-        return new DocIdSet() {
-          @Override
-          public DocIdSetIterator iterator() throws IOException {
-            return new DocIdSetIterator() {
-              int pos=base-1;
-              int adjustedDoc=-1;
+        // Decode next doc/freq pair
+        final int code = freqIn.readVInt();
 
-              @Override
-              public int docID() {
-                return adjustedDoc;
-              }
+        accum += code >>> 1;              // shift off low bit
+        if ((code & 1) != 0) {          // if low bit is set
+          freq = 1;                     // freq is one
+        } else {
+          freq = freqIn.readVInt();     // else read freq
+        }
+        posPendingCount += freq;
 
-              @Override
-              public int nextDoc() throws IOException {
-                pos = bs.nextSetBit(pos+1);
-                return adjustedDoc = (pos>=0 && pos<max) ? pos-base : NO_MORE_DOCS;
-              }
-
-              @Override
-              public int advance(int target) throws IOException {
-                if (target==NO_MORE_DOCS) return adjustedDoc=NO_MORE_DOCS;
-                pos = bs.nextSetBit(target+base);
-                return adjustedDoc = (pos>=0 && pos<max) ? pos-base : NO_MORE_DOCS;
-              }
-            };
-          }
-
-          @Override
-          public boolean isCacheable() {
-            return true;
-          }
-
-        };
+        if (liveDocs == null || liveDocs.get(accum)) {
+          break;
+        }
       }
-    };
-  }
+
+      position = 0;
+
+      // if (DEBUG) System.out.println("  return doc=" + doc);
+      return (doc = accum);
+    }
 

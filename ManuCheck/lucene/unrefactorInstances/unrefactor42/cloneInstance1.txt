@@ -1,26 +1,16 @@
-(startLine=92 endLine=115 srcPath=/home/ubuntu/luceneFilter/632/lucene/modules/queries/src/java/org/apache/lucene/queries/function/valuesource/TermFreqValueSource.java)
-      public int intVal(int doc) {
-        try {
-          if (doc < lastDocRequested) {
-            // out-of-order access.... reset
-            reset();
-          }
-          lastDocRequested = doc;
-
-          if (atDoc < doc) {
-            atDoc = docs.advance(doc);
-          }
-
-          if (atDoc > doc) {
-            // term doesn't match this document... either because we hit the
-            // end, or because the next doc is after this doc.
-            return 0;
-          }
-
-          // a match!
-          return docs.freq();
-        } catch (IOException e) {
-          throw new RuntimeException("caught exception in function "+description()+" : doc="+doc, e);
-        }
+(startLine=281 endLine=294 srcPath=/home/ubuntu/luceneFilter/1298/lucene/src/test/org/apache/lucene/index/TestIndexReaderCloneNorms.java)
+  private void verifyIndex(IndexReader ir) throws IOException {
+    for (int i = 0; i < NUM_FIELDS; i++) {
+      String field = "f" + i;
+      byte b[] = ir.norms(field);
+      assertEquals("number of norms mismatches", numDocNorms, b.length);
+      ArrayList<Float> storedNorms = (i == 1 ? modifiedNorms : norms);
+      for (int j = 0; j < b.length; j++) {
+        float norm = Similarity.getDefault().decodeNormValue(b[j]);
+        float norm1 =  storedNorms.get(j).floatValue();
+        assertEquals("stored norm value of " + field + " for doc " + j + " is "
+            + norm + " - a mismatch!", norm, norm1, 0.000001);
       }
+    }
+  }
 

@@ -1,76 +1,39 @@
-(startLine=182 endLine=255 srcPath=/home/ubuntu/antFilter/515/ant/src/main/org/apache/tools/ant/taskdefs/optional/sos/SOSCheckin.java)
-    protected Commandline buildCmdLine() {
-        commandLine = new Commandline();
-        // Get the path to the soscmd(.exe)
-        commandLine.setExecutable(getSosCommand());
-        // If we find a "file" attribute then act on a file otherwise act on a project
-        if (getFilename() != null) {
-            // add -command CheckInFile to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
-            commandLine.createArgument().setValue(SOSCmd.COMMAND_CHECKIN_FILE);
-            // add -file xxxxx to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_FILE);
-            commandLine.createArgument().setValue(getFilename());
-        } else {
-            // add -command CheckInProject to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
-            commandLine.createArgument().setValue(SOSCmd.COMMAND_CHECKIN_PROJECT);
-            // look for a recursive option
-            commandLine.createArgument().setValue(getRecursive());
-        }
-        // SOS server address is required
-        if (getSosServerPath() == null) {
-            throw new BuildException("sosserverpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
-        commandLine.createArgument().setValue(getSosServerPath());
-        // Login info is required
-        if (getUsername() == null) {
-            throw new BuildException("username attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
-        commandLine.createArgument().setValue(getUsername());
-        // The SOS class knows that the SOS server needs the password flag,
-        // even if there is no password ,so we send a " "
-        commandLine.createArgument().setValue(SOSCmd.FLAG_PASSWORD);
-        commandLine.createArgument().setValue(getPassword());
-        // VSS Info is required
-        if (getVssServerPath() == null) {
-            throw new BuildException("vssserverpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
-        commandLine.createArgument().setValue(getVssServerPath());
-        // VSS project is required
-        if (getProjectPath() == null) {
-            throw new BuildException("projectpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
-        commandLine.createArgument().setValue(getProjectPath());
+(startLine=82 endLine=118 srcPath=/home/ubuntu/antFilter/517/ant/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSSADD.java)
+    public void execute() throws BuildException {
+        Commandline commandLine = new Commandline();
+        int result = 0;
 
-        // The following options are optional.
+         // first off, make sure that we've got a command and a localPath ...
+        if (getLocalPath() == null) {
+            String msg = "localPath attribute must be set!";
+            throw new BuildException(msg, getLocation());
+        }
 
-        // -verbose
-        commandLine.createArgument().setValue(getVerbose());
-        // Disable Compression
-        commandLine.createArgument().setValue(getNoCompress());
-        // Path to the SourceOffSite home directory /home/user/.sos
-        if (getSosHome() == null) {
-            // If -soshome was not specified then we can look for nocache
-            commandLine.createArgument().setValue(getNoCache());
-        } else {
-            commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_HOME);
-            commandLine.createArgument().setValue(getSosHome());
+        // now look for illegal combinations of things ...
+
+        // build the command line from what we got the format is
+        // ss Add VSS items [-B] [-C] [-D-] [-H] [-I-] [-K] [-N] [-O] [-R] [-W] [-Y] [-?]
+        // as specified in the SS.EXE help
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_ADD);
+
+        // VSS items
+        commandLine.createArgument().setValue(getLocalPath());        
+        // -I- or -I-Y or -I-N
+        getAutoresponse(commandLine);
+        // -R
+        getRecursiveCommand(commandLine);
+        // -W
+        getWritableCommand(commandLine);
+        // -Y
+        getLoginCommand(commandLine);
+        // -C
+        commandLine.createArgument().setValue("-C" + getComment());
+
+        result = run(commandLine);
+        if (result != 0) {
+            String msg = "Failed executing: " + commandLine.toString();
+            throw new BuildException(msg, getLocation());
         }
-        // If a working directory was specified then add it to the command line
-        if (getLocalPath() != null) {
-            commandLine.createArgument().setValue(SOSCmd.FLAG_WORKING_DIR);
-            commandLine.createArgument().setValue(getLocalPath());
-        }
-        // Look for a comment
-        if (getComment() != null) {
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMENT);
-            commandLine.createArgument().setValue(getComment());
-        }
-        return commandLine;
     }
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,190 +51,111 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.sos;
+
+package org.apache.tools.ant.taskdefs.optional.vss;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 
 /**
- * Retrieves a read-only copy of the specified project or file
- * from Visual SourceSafe via a SourceOffSite server.
- * <p>
- * The following attributes are interpretted:
- * <table border="1">
- *    <tbody>
- *      <tr>
- *         <th>Attribute</th>
- *         <th>Values</th>
- *         <th>Required</th>
- *       </tr>
- *       <tr>
- *         <td>soscmddir</td>
- *         <td>Directory which contains soscmd(.exe) <br>
- *         soscmd(.exe) must be in the path if this is not specified</td>
- *         <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>vssserverpath</td>
- *          <td>path to the srcsafe.ini  - eg. \\server\vss\srcsafe.ini</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>sosserverpath</td>
- *          <td>address and port of the SOS server  - eg. 192.168.0.1:8888</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>projectpath</td>
- *          <td>SourceSafe project path</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>file</td>
- *          <td>Filename to act upon<br>
- *              If no file is specified then act upon the project</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>username</td>
- *          <td>SourceSafe username</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>password</td>
- *          <td>SourceSafe password</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>localpath</td>
- *          <td>Override the working directory and get to the specified path</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>soshome</td>
- *          <td>The path to the SourceOffSite home directory</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>nocompression</td>
- *          <td>true or false - disable compression</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>recursive</td>
- *          <td>true or false - Only works with the GetProject command</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>version</td>
- *          <td>a version number to get - Only works with the GetFile command</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>label</td>
- *          <td>a label version to get - Only works with the GetProject command</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>nocache</td>
- *          <td>true or false - Only needed if SOSHOME is set as an enviroment variable</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>verbose</td>
- *         <td>true or false - Status messages are displayed</td>
- *        <td>No</td>
- *      </tr>
+ * Performs CheckOut commands to Microsoft Visual SourceSafe.
+ * <p>If you specify two or more attributes from version, date and
+ * label only one will be used in the order version, date, label.</p>
  *
- * @author    Jesse Stockall
+ * @author Martin Poeschl
+ * @author Jesse Stockall
+ *
+ * @ant.task name="vsscheckout" category="scm"
  */
-
-public class SOSGet extends SOS {
-
-    /**
-     * Set the Filename to act upon; optional.
-     * If no file is specified then the tasks
-     * act upon the project
-     *
-     * @param  filename  The new file value
-     */
-    public final void setFile(String filename) {
-        super.setInternalFilename(filename);
-    }
+public class MSVSSCHECKOUT extends MSVSS {
 
     /**
-     * Flag to recursively apply the action; optional, default false
-     *
-     * @param  recursive  True for recursive operation.
-     */
-    public void setRecursive(boolean recursive) {
-        super.setInternalRecursive(recursive);
-    }
-
-    /**
-     * Set the version number to get -
-     * only works with SOSGet on a file; optional.
-     *
-     * @param  version  The new version value
-     */
-    public void setVersion(String version) {
-        super.setInternalVersion(version);
-    }
-
-    /**
-     * Set the labeled version to operate on in SourceSafe
-     *
-     * @param  label  The new label value
-     */
-    public void setLabel(String label) {
-        super.setInternalLabel(label);
-    }
-
-    /**
-     * Build the command line <br>
-     *
-     * GetFile required parameters: -server -name -password -database -project -file<br>
-     * GetFile optional parameters: -workdir -revision -verbose -nocache -nocompression -soshome<br>
-     *
-     * GetProject required parameters: -server -name -password -database -project<br>
-     * GetProject optional parameters: -label -workdir -recursive -verbose -nocache
-     * -nocompression -soshome<br>
-     *
-     * @return    Commandline the generated command to be executed
+     * Builds a command line to execute ss.
+     * @return     The constructed commandline.
      */
     protected Commandline buildCmdLine() {
-        commandLine = new Commandline();
+        Commandline commandLine = new Commandline();
 
-        // If we find a "file" attribute then act on a file otherwise act on a project
-        if (getFilename() != null) {
-            // add -command GetFile to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
-            commandLine.createArgument().setValue(SOSCmd.COMMAND_GET_FILE);
-            // add -file xxxxx to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_FILE);
-            commandLine.createArgument().setValue(getFilename());
-            // look for a version attribute
-            if (getVersion() != null) {
-                //add -revision xxxxx to the commandline
-                commandLine.createArgument().setValue(SOSCmd.FLAG_VERSION);
-                commandLine.createArgument().setValue(getVersion());
-            }
-        } else {
-            // add -command GetProject to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
-            commandLine.createArgument().setValue(SOSCmd.COMMAND_GET_PROJECT);
-            // look for a recursive option
-            commandLine.createArgument().setValue(getRecursive());
-            // look for a label option
-            if (getLabel() != null) {
-                commandLine.createArgument().setValue(SOSCmd.FLAG_LABEL);
-                commandLine.createArgument().setValue(getLabel());
-            }
+        // first off, make sure that we've got a command and a vssdir ...
+        if (getVsspath() == null) {
+            String msg = "vsspath attribute must be set!";
+            throw new BuildException(msg, getLocation());
         }
 
-        getRequiredAttributes();
-        getOptionalAttributes();
+        // build the command line from what we got the format is
+        // ss Checkout VSS items [-G] [-C] [-H] [-I-] [-N] [-O] [-R] [-V] [-Y] [-?]
+        // as specified in the SS.EXE help
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_CHECKOUT);
+
+        // VSS items
+        commandLine.createArgument().setValue(getVsspath());
+        // -GL
+        commandLine.createArgument().setValue(getLocalpath());
+        // -I- or -I-Y or -I-N
+        commandLine.createArgument().setValue(getAutoresponse());
+        // -R
+        commandLine.createArgument().setValue(getRecursive());
+        // -V
+        commandLine.createArgument().setValue(getVersion());
+        // -Y
+        commandLine.createArgument().setValue(getLogin());
 
         return commandLine;
+    }
+
+    /**
+     * Set the local path; optional.
+     * <p>
+     * This is the path to override the project
+     * working directory.
+     * @param   localPath   The path on disk.
+     */
+    public void setLocalpath(Path localPath) {
+        m_LocalPath = localPath.toString();
+    }
+
+    /**
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
+     * @param recursive  The boolean value for recursive.
+     */
+    public void setRecursive(boolean recursive) {
+        m_Recursive = recursive;
+    }
+
+    /**
+     * Sets the stored version string.; optional.
+     * @param  version The version to checkout.
+     */
+    public void setVersion(String version) {
+        m_Version = version;
+    }
+
+    /**
+     * Sets the stored date string.; optional.
+     * @param  date The date to checkout.
+     */
+    public void setDate(String date) {
+        m_Date = date;
+    }
+
+    /**
+     * Sets the label to apply in SourceSafe.; optional.
+     * @param  label The label to apply.
+     */
+    public void setLabel(String label) {
+        m_Label = label;
+    }
+
+    /**
+     * Sets the autoresponce behaviour.; optional.
+     * <p>
+     * Valid options are Y and N.
+     * @param response The auto response value.
+     */
+    public void setAutoresponse(String response){
+        m_AutoResponse = response;
     }
 }

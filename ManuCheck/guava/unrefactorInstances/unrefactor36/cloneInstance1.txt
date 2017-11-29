@@ -1,8 +1,8 @@
-(startLine=298 endLine=303 srcPath=/home/ubuntu/guavaFilter/187/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
-        protected Map<String, String> create(Entry<String, String>[] entries) {
-          Map<String, String> map = Maps.newHashMap();
-          putEntries(map, entries);
-          map.putAll(ENTRIES_TO_FILTER);
-          return Maps.filterKeys(map, FILTER_KEYS);
-        }
+(startLine=218 endLine=223 srcPath=/home/ubuntu/guavaFilter/287/guava/guava-tests/test/com/google/common/reflect/ElementTest.java)
+    static Element field(String name) throws Exception {
+      Element element = new Element(A.class.getDeclaredField(name));
+      assertEquals(name, element.getName());
+      assertEquals(A.class, element.getDeclaringClass());
+      return element;
+    }
 

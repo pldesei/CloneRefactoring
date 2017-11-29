@@ -1,7 +1,10 @@
-(startLine=161 endLine=165 srcPath=/home/ubuntu/luceneFilter/408/lucene/lucene/core/src/java/org/apache/lucene/util/packed/PackedInts.java)
-    public long byteCount(int packedIntsVersion, int valueCount, int bitsPerValue) {
-      assert bitsPerValue >= 0 && bitsPerValue <= 64 : bitsPerValue;
-      // assume long-aligned
-      return 8L * longCount(packedIntsVersion, valueCount, bitsPerValue);
+(startLine=120 endLine=127 srcPath=/home/ubuntu/luceneFilter/534/lucene/lucene/core/src/java/org/apache/lucene/util/packed/PackedInts.java)
+    public static Format byId(int id) {
+      for (Format format : Format.values()) {
+        if (format.getId() == id) {
+          return format;
+        }
+      }
+      throw new IllegalArgumentException("Unknown format id: " + id);
     }
 

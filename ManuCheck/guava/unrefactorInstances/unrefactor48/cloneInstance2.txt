@@ -1,14 +1,8 @@
-(startLine=111 endLine=122 srcPath=/home/ubuntu/guavaFilter/861/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTransformAsyncFunctionTest.java)
-  public void testFutureCancellableBeforeOutputCompletion() throws Exception {
-    inputFuture.set(SLOW_OUTPUT_VALID_INPUT_DATA);
-    assertTrue(resultFuture.cancel(true));
-    assertTrue(resultFuture.isCancelled());
-    assertFalse(inputFuture.isCancelled());
-    assertTrue(outputFuture.isCancelled());
-    try {
-      resultFuture.get();
-      fail("Result future is cancelled and should have thrown a"
-          + " CancellationException");
-    } catch (CancellationException expected) {}
+(startLine=119 endLine=124 srcPath=/home/ubuntu/guavaFilter/442/guava/guava-tests/test/com/google/common/cache/ForwardingLoadingCacheTest.java)
+  public void testAsMap() {
+    expect(mock.asMap()).andReturn(null);
+    replay(mock);
+    assertNull(forward.asMap());
+    verify(mock);
   }
 

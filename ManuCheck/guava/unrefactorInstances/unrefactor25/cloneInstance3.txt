@@ -1,15 +1,9 @@
-(startLine=639 endLine=651 srcPath=/home/ubuntu/guavaFilter/990/guava/guava-tests/test/com/google/common/collect/ImmutableSortedMapTest.java)
-    public void testBuilderReverseOrder() {
-      ImmutableSortedMap<String, Integer> map
-          = ImmutableSortedMap.<String, Integer>reverseOrder()
-              .put("one", 1)
-              .put("two", 2)
-              .put("three", 3)
-              .put("four", 4)
-              .put("five", 5)
-              .build();
-      assertMapEquals(map,
-          "two", 2, "three", 3, "one", 1, "four", 4, "five", 5);
-      assertEquals(Ordering.natural().reverse(), map.comparator());
-    }
+(startLine=482 endLine=488 srcPath=/home/ubuntu/guavaFilter/1103/guava/guava-tests/test/com/google/common/collect/MultimapCollectionTest.java)
+          @Override public Collection<String> create(String[] elements) {
+            Multimap<Integer, String> multimap
+                = TreeMultimap.create(Ordering.natural().nullsFirst(),
+                    Ordering.natural().nullsLast());
+            populateMultimapForValues(multimap, elements);
+            return multimap.values();
+          }
 

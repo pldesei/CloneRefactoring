@@ -1,46 +1,11 @@
-(startLine=55 endLine=98 srcPath=/home/ubuntu/guavaFilter/432/guava/guava/src/com/google/common/collect/RegularImmutableBiMap.java)
-  RegularImmutableBiMap(int n, TerminalEntry<?, ?>[] entriesToAdd) {
-    int tableSize = Hashing.closedTableSize(n, MAX_LOAD_FACTOR);
-    this.mask = tableSize - 1;
-    ImmutableMapEntry<K, V>[] keyTable = createEntryArray(tableSize);
-    ImmutableMapEntry<K, V>[] valueTable = createEntryArray(tableSize);
-    ImmutableMapEntry<K, V>[] entries = createEntryArray(n);
-    int hashCode = 0;
-    
-    for (int i = 0; i < n; i++) {
-      @SuppressWarnings("unchecked")
-      TerminalEntry<K, V> entry = (TerminalEntry<K, V>) entriesToAdd[i];
-      K key = entry.getKey();
-      V value = entry.getValue();
-      
-      int keyHash = key.hashCode();
-      int valueHash = value.hashCode();
-      int keyBucket = Hashing.smear(keyHash) & mask;
-      int valueBucket = Hashing.smear(valueHash) & mask;
-      
-      ImmutableMapEntry<K, V> nextInKeyBucket = keyTable[keyBucket];
-      for (ImmutableMapEntry<K, V> keyEntry = nextInKeyBucket; keyEntry != null;
-           keyEntry = keyEntry.getNextInKeyBucket()) {
-        checkNoConflict(!key.equals(keyEntry.getKey()), "key", entry, keyEntry);
-      }
-      ImmutableMapEntry<K, V> nextInValueBucket = valueTable[valueBucket];
-      for (ImmutableMapEntry<K, V> valueEntry = nextInValueBucket; valueEntry != null;
-           valueEntry = valueEntry.getNextInValueBucket()) {
-        checkNoConflict(!value.equals(valueEntry.getValue()), "value", entry, valueEntry);
-      }
-      ImmutableMapEntry<K, V> newEntry =
-          (nextInKeyBucket == null && nextInValueBucket == null)
-          ? entry
-          : new NonTerminalBiMapEntry<K, V>(entry, nextInKeyBucket, nextInValueBucket);
-      keyTable[keyBucket] = newEntry;
-      valueTable[valueBucket] = newEntry;
-      entries[i] = newEntry;
-      hashCode += keyHash ^ valueHash;
+(startLine=401 endLine=409 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/AbstractService.java)
+  private void starting() {
+    for (final ListenerExecutorPair pair : listeners) {
+      queuedListeners.add(new Runnable() {
+        @Override public void run() {
+          pair.listener.starting();
+        }
+      }, pair.executor);
     }
-    
-    this.keyTable = keyTable;
-    this.valueTable = valueTable;
-    this.entries = entries;
-    this.hashCode = hashCode;
   }
 

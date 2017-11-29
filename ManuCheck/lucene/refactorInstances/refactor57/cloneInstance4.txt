@@ -1,25 +1,13 @@
-(startLine=168 endLine=190 srcPath=/home/ubuntu/luceneFilter/86/lucene/lucene/core/src/java/org/apache/lucene/util/IOUtils.java)
-  public static void close(Iterable<? extends Closeable> objects) throws IOException {
-    Throwable th = null;
-
-    for (Closeable object : objects) {
-      try {
-        if (object != null) {
-          object.close();
-        }
-      } catch (Throwable t) {
-        addSuppressed(th, t);
-        if (th == null) {
-          th = t;
-        }
-      }
-    }
-
-    if (th != null) {
-      if (th instanceof IOException) throw (IOException) th;
-      if (th instanceof RuntimeException) throw (RuntimeException) th;
-      if (th instanceof Error) throw (Error) th;
-      throw new RuntimeException(th);
-    }
+(startLine=322 endLine=332 srcPath=/home/ubuntu/luceneFilter/112/lucene/solr/core/src/test/org/apache/solr/schema/DocValuesMissingTest.java)
+  public void testLongMissingFacet() throws Exception {
+    assertU(adoc("id", "0")); // missing
+    assertU(adoc("id", "1")); // missing
+    assertU(adoc("id", "2", "longdv", "-1"));
+    assertU(adoc("id", "3", "longdv", "4"));
+    assertU(commit());
+    assertQ(req("q", "*:*", "facet", "true", "facet.field", "longdv", "facet.mincount", "1", "facet.missing", "true"),
+        "//lst[@name='facet_fields']/lst[@name='longdv']/int[@name='-1'][.=1]",
+        "//lst[@name='facet_fields']/lst[@name='longdv']/int[@name='4'][.=1]",
+        "//lst[@name='facet_fields']/lst[@name='longdv']/int[.=2]");
   }
 

@@ -1,8 +1,46 @@
-(startLine=224 endLine=229 srcPath=/home/ubuntu/luceneFilter/976/lucene/lucene/src/test/org/apache/lucene/search/TestExplanations.java)
-  public Query optB(Query q) throws Exception {
-    BooleanQuery bq = new BooleanQuery(true);
-    bq.add(q, BooleanClause.Occur.SHOULD);
-    bq.add(new TermQuery(new Term("NEVER","MATCH")), BooleanClause.Occur.MUST_NOT);
-    return bq;
-  }
+(startLine=196 endLine=239 srcPath=/home/ubuntu/luceneFilter/764/lucene/modules/analysis/common/src/java/org/tartarus/snowball/ext/DanishStemmer.java)
+        private boolean r_consonant_pair() {
+            int v_1;
+            int v_2;
+            int v_3;
+            // (, line 54
+            // test, line 55
+            v_1 = limit - cursor;
+            // (, line 55
+            // setlimit, line 56
+            v_2 = limit - cursor;
+            // tomark, line 56
+            if (cursor < I_p1)
+            {
+                return false;
+            }
+            cursor = I_p1;
+            v_3 = limit_backward;
+            limit_backward = cursor;
+            cursor = limit - v_2;
+            // (, line 56
+            // [, line 56
+            ket = cursor;
+            // substring, line 56
+            if (find_among_b(a_1, 4) == 0)
+            {
+                limit_backward = v_3;
+                return false;
+            }
+            // ], line 56
+            bra = cursor;
+            limit_backward = v_3;
+            cursor = limit - v_1;
+            // next, line 62
+            if (cursor <= limit_backward)
+            {
+                return false;
+            }
+            cursor--;
+            // ], line 62
+            bra = cursor;
+            // delete, line 62
+            slice_del();
+            return true;
+        }
 

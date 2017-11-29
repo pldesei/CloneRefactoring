@@ -1,10 +1,10 @@
-(startLine=54 endLine=61 srcPath=/home/ubuntu/luceneFilter/1252/lucene/solr/src/java/org/apache/solr/analysis/BaseCharFilterFactory.java)
-  protected int getInt(String name, int defaultVal, boolean useDefault) {
-    String s = args.get(name);
-    if (s==null) {
-      if (useDefault) return defaultVal;
-      throw new RuntimeException("Configuration Error: missing parameter '" + name + "'");
-    }
-    return Integer.parseInt(s);
+(startLine=149 endLine=156 srcPath=/home/ubuntu/luceneFilter/507/lucene/lucene/queries/src/test/org/apache/lucene/queries/ChainedFilterTest.java)
+  public void testAND() throws Exception {
+    ChainedFilter chain = getChainedFilter(
+      new Filter[] {dateFilter, bobFilter}, ChainedFilter.AND);
+
+    TopDocs hits = searcher.search(query, chain, 1000);
+    assertEquals("AND matches just bob", MAX / 2, hits.totalHits);
+    assertEquals("bob", searcher.doc(hits.scoreDocs[0].doc).get("owner"));
   }
 

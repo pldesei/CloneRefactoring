@@ -1,9 +1,9 @@
-(startLine=98 endLine=104 srcPath=/home/ubuntu/guavaFilter/137/guava/guava-testlib/src/com/google/common/collect/testing/google/MultimapGetTester.java)
-  public void testPropagatesAddAllToMultimap() {
-    Collection<V> result = multimap().get(k0());
-    assertTrue(result.addAll(Collections.singletonList(v3())));
-    assertTrue(multimap().containsKey(k0()));
-    assertEquals(getNumElements() + 1, multimap().size());
-    assertTrue(multimap().containsEntry(k0(), v3()));
-  }
+(startLine=588 endLine=594 srcPath=/home/ubuntu/guavaFilter/215/guava/guava/src/com/google/common/collect/Collections2.java)
+    public boolean contains(@Nullable Object obj) {
+      if (obj instanceof List) {
+        List<?> list = (List<?>) obj;
+        return isPermutation(inputList, list);
+      }
+      return false;
+    }
 

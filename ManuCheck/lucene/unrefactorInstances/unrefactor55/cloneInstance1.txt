@@ -1,10 +1,11 @@
-(startLine=149 endLine=156 srcPath=/home/ubuntu/luceneFilter/507/lucene/lucene/queries/src/test/org/apache/lucene/queries/ChainedFilterTest.java)
-  public void testAND() throws Exception {
-    ChainedFilter chain = getChainedFilter(
-      new Filter[] {dateFilter, bobFilter}, ChainedFilter.AND);
-
-    TopDocs hits = searcher.search(query, chain, 1000);
-    assertEquals("AND matches just bob", MAX / 2, hits.totalHits);
-    assertEquals("bob", searcher.doc(hits.scoreDocs[0].doc).get("owner"));
-  }
+(startLine=77 endLine=85 srcPath=/home/ubuntu/luceneFilter/20/lucene/lucene/test-framework/src/java/org/apache/lucene/codecs/asserting/AssertingDocValuesFormat.java)
+    public void addNumericField(FieldInfo field, Iterable<Number> values) throws IOException {
+      int count = 0;
+      for (Number v : values) {
+        count++;
+      }
+      assert count == maxDoc;
+      checkIterator(values.iterator(), maxDoc, true);
+      in.addNumericField(field, values);
+    }
 

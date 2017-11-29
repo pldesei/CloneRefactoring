@@ -1,9 +1,16 @@
-(startLine=464 endLine=470 srcPath=/home/ubuntu/guavaFilter/485/guava/guava-tests/test/com/google/common/collect/TreeRangeMapTest.java)
-  private void putModel(Map<Integer, Integer> model, Range<Integer> range, int value) {
-    for (int i = MIN_BOUND - 1; i <= MAX_BOUND + 1; i++) {
-      if (range.contains(i)) {
-        model.put(i, value);
-      }
+(startLine=368 endLine=381 srcPath=/home/ubuntu/guavaFilter/1071/guava/guava-tests/test/com/google/common/collect/ImmutableSortedMapTest.java)
+    public void testBuilderReuse() {
+      Builder<String, Integer> builder = ImmutableSortedMap.naturalOrder();
+      ImmutableSortedMap<String, Integer> mapOne = builder
+          .put("one", 1)
+          .put("two", 2)
+          .build();
+      ImmutableSortedMap<String, Integer> mapTwo = builder
+          .put("three", 3)
+          .put("four", 4)
+          .build();
+
+      assertMapEquals(mapOne, "one", 1, "two", 2);
+      assertMapEquals(mapTwo, "four", 4, "one", 1, "three", 3, "two", 2);
     }
-  }
 

@@ -1,8 +1,10 @@
-(startLine=76 endLine=81 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphPropertiesTest.java)
-  public void isCyclic_twoParallelEdges() {
+(startLine=127 endLine=134 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphPropertiesTest.java)
+  public void isCyclic_cyclicMultigraph() {
     DirectedGraph<Integer, String> directedGraph = Graphs.createDirected(config().multigraph());
     directedGraph.addEdge(E12, N1, N2);
     directedGraph.addEdge(E12_A, N1, N2);
-    assertThat(isCyclic(directedGraph)).isFalse();
+    directedGraph.addEdge(E23, N2, N3);
+    directedGraph.addEdge(E31, N3, N1);
+    assertThat(isCyclic(directedGraph)).isTrue();
   }
 

@@ -1,10 +1,58 @@
-(startLine=1239 endLine=1246 srcPath=/home/ubuntu/guavaFilter/287/guava/guava/src/com/google/common/collect/AbstractMapBasedMultimap.java)
-  Iterator<Map.Entry<K, V>> entryIterator() {
-    return new Itr<Map.Entry<K, V>>() {
-      @Override
-      Entry<K, V> output(K key, V value) {
-        return Maps.immutableEntry(key, value);
-      }
-    };
+(startLine=2477 endLine=2532 srcPath=/home/ubuntu/guavaFilter/114/guava/guava-tests/test/com/google/common/cache/LocalCacheTest.java)
+  public void testSerializationProxyLoading() {
+    CacheLoader<Object, Object> loader = new SerializableCacheLoader();
+    RemovalListener<Object, Object> listener = new SerializableRemovalListener<Object, Object>();
+    SerializableWeigher<Object, Object> weigher = new SerializableWeigher<Object, Object>();
+    Ticker ticker = new SerializableTicker();
+    @SuppressWarnings("unchecked") // createMock
+    LocalLoadingCache<Object, Object> one = (LocalLoadingCache) CacheBuilder.newBuilder()
+        .weakKeys()
+        .softValues()
+        .expireAfterAccess(123, SECONDS)
+        .expireAfterWrite(456, MINUTES)
+        .maximumWeight(789)
+        .weigher(weigher)
+        .concurrencyLevel(12)
+        .removalListener(listener)
+        .ticker(ticker)
+        .build(loader);
+    // add a non-serializable entry
+    one.getUnchecked(new Object());
+    assertEquals(1, one.size());
+    assertFalse(one.asMap().isEmpty());
+    LocalLoadingCache<Object, Object> two = SerializableTester.reserialize(one);
+    assertEquals(0, two.size());
+    assertTrue(two.asMap().isEmpty());
+
+    LocalCache<Object, Object> localCacheOne = one.localCache;
+    LocalCache<Object, Object> localCacheTwo = two.localCache;
+
+    assertEquals(localCacheOne.keyStrength, localCacheTwo.keyStrength);
+    assertEquals(localCacheOne.keyStrength, localCacheTwo.keyStrength);
+    assertEquals(localCacheOne.valueEquivalence, localCacheTwo.valueEquivalence);
+    assertEquals(localCacheOne.valueEquivalence, localCacheTwo.valueEquivalence);
+    assertEquals(localCacheOne.maxWeight, localCacheTwo.maxWeight);
+    assertEquals(localCacheOne.weigher, localCacheTwo.weigher);
+    assertEquals(localCacheOne.expireAfterAccessNanos, localCacheTwo.expireAfterAccessNanos);
+    assertEquals(localCacheOne.expireAfterWriteNanos, localCacheTwo.expireAfterWriteNanos);
+    assertEquals(localCacheOne.refreshNanos, localCacheTwo.refreshNanos);
+    assertEquals(localCacheOne.removalListener, localCacheTwo.removalListener);
+    assertEquals(localCacheOne.ticker, localCacheTwo.ticker);
+
+    // serialize the reconstituted version to be sure we haven't lost the ability to reserialize
+    LocalLoadingCache<Object, Object> three = SerializableTester.reserialize(two);
+    LocalCache<Object, Object> localCacheThree = three.localCache;
+
+    assertEquals(localCacheTwo.defaultLoader, localCacheThree.defaultLoader);
+    assertEquals(localCacheTwo.keyStrength, localCacheThree.keyStrength);
+    assertEquals(localCacheTwo.keyStrength, localCacheThree.keyStrength);
+    assertEquals(localCacheTwo.valueEquivalence, localCacheThree.valueEquivalence);
+    assertEquals(localCacheTwo.valueEquivalence, localCacheThree.valueEquivalence);
+    assertEquals(localCacheTwo.maxWeight, localCacheThree.maxWeight);
+    assertEquals(localCacheTwo.weigher, localCacheThree.weigher);
+    assertEquals(localCacheTwo.expireAfterAccessNanos, localCacheThree.expireAfterAccessNanos);
+    assertEquals(localCacheTwo.expireAfterWriteNanos, localCacheThree.expireAfterWriteNanos);
+    assertEquals(localCacheTwo.removalListener, localCacheThree.removalListener);
+    assertEquals(localCacheTwo.ticker, localCacheThree.ticker);
   }
 

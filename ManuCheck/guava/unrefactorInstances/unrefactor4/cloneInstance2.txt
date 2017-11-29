@@ -1,14 +1,11 @@
-(startLine=136 endLine=147 srcPath=/home/ubuntu/guavaFilter/1045/guava/guava-tests/test/com/google/common/collect/LinkedListMultimapTest.java)
-  public void testLinkedGetInsert() {
-    ListMultimap<String, Integer> map = create();
-    map.put("bar", 1);
-    List<Integer> foos = map.get("foo");
-    foos.add(2);
-    foos.add(0, 3);
-    map.put("bar", 4);
-    map.put("foo", 5);
-    assertEquals("{bar=[1, 4], foo=[3, 2, 5]}", map.toString());
-    assertEquals("[bar=1, foo=3, foo=2, bar=4, foo=5]",
-        map.entries().toString());
+(startLine=228 endLine=236 srcPath=/home/ubuntu/guavaFilter/207/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
+  public <T> void testWhere_mapFromWildcardToParameterized() {
+    Type subType = new TypeCapture<TypedListKeyMap<T>>() {}.capture();
+    assertEquals(new TypeCapture<TypedListKeyMap<String>>() {}.capture(),
+        new TypeResolver()
+            .where(
+                new TypeCapture<Map<List<Integer>, T>>() {}.capture(),
+                new TypeCapture<Map<?, String>>() {}.capture())
+        .resolveType(subType));
   }
 

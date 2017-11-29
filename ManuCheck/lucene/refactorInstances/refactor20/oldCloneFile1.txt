@@ -17,68 +17,72 @@
 
 package org.apache.solr.analysis;
 
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.solr.common.ResourceLoader;
 import org.apache.solr.common.util.StrUtils;
 import org.apache.solr.util.plugin.ResourceLoaderAware;
-import org.tartarus.snowball.SnowballProgram;
+import org.apache.lucene.analysis.StopFilter;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.CharArraySet;
 
-import java.io.IOException;
-import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.io.File;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @version $Id$
- *
- * @deprecated Use SnowballPorterFilterFactory with language="English" instead
+ * @since solr 1.3
  */
-public class EnglishPorterFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
-  public static final String PROTECTED_TOKENS = "protected";
+public class KeepWordFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
 
+  private CharArraySet words;
+  private boolean ignoreCase;
+
+  @SuppressWarnings("unchecked")
   public void inform(ResourceLoader loader) {
-    String wordFiles = args.get(PROTECTED_TOKENS);
+    String wordFiles = args.get("words");
+    ignoreCase = getBoolean("ignoreCase", false);
     if (wordFiles != null) {
       try {
-        File protectedWordFiles = new File(wordFiles);
-        if (protectedWordFiles.exists()) {
-          List<String> wlist = loader.getLines(wordFiles);
-          //This cast is safe in Lucene
-          protectedWords = new CharArraySet(wlist, false);//No need to go through StopFilter as before, since it just uses a List internally
-        } else  {
-          List<String> files = StrUtils.splitFileNames(wordFiles);
-          for (String file : files) {
-            List<String> wlist = loader.getLines(file.trim());
-            if (protectedWords == null)
-              protectedWords = new CharArraySet(wlist, false);
-            else
-              protectedWords.addAll(wlist);
-          }
+        List<String> files = StrUtils.splitFileNames(wordFiles);
+        if (words == null && files.size() > 0){
+          words = new CharArraySet(files.size() * 10, ignoreCase);
         }
-      } catch (IOException e) {
+        for (String file : files) {
+          List<String> wlist = loader.getLines(file.trim());
+          //TODO: once StopFilter.makeStopSet(List) method is available, switch to using that so we can avoid a toArray() call
+          words.addAll(StopFilter.makeStopSet((String[]) wlist.toArray(new String[0]), ignoreCase));
+        }
+      }
+      catch (IOException e) {
         throw new RuntimeException(e);
       }
     }
   }
 
-  private CharArraySet protectedWords = null;
-
-  public EnglishPorterFilter create(TokenStream input) {
-    return new EnglishPorterFilter(input, protectedWords);
+  /**
+   * Set the keep word list.
+   * NOTE: if ignoreCase==true, the words are expected to be lowercase
+   */
+  public void setWords(Set<String> words) {
+    this.words = new CharArraySet(words, ignoreCase);
   }
 
-}
+  public void setIgnoreCase(boolean ignoreCase) {
+    this.ignoreCase = ignoreCase;
+  }
 
+  public KeepWordFilter create(TokenStream input) {
+    return new KeepWordFilter(input, (Set)words, ignoreCase);
+  }
 
-/**
- * English Porter2 filter that doesn't use reflection to
- * adapt lucene to the snowball stemmer code.
- */
-@Deprecated
-class EnglishPorterFilter extends SnowballPorterFilter {
-  public EnglishPorterFilter(TokenStream source, CharArraySet protWords) {
-    super(source, new org.tartarus.snowball.ext.EnglishStemmer(), protWords);
+  public CharArraySet getWords() {
+    return words;
+  }
+
+  public boolean isIgnoreCase() {
+    return ignoreCase;
   }
 }

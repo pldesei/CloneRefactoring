@@ -1,17 +1,24 @@
-(startLine=99 endLine=113 srcPath=/home/ubuntu/antFilter/1203/ant/src/testcases/org/apache/tools/ant/util/GlobPatternMapperTest.java)
-    public void testPrefixOnly() {
-        GlobPatternMapper m = new GlobPatternMapper();
-        m.setFrom("foo*");
-        m.setTo("plonk*");
-        assertNull("Shouldn\'t match foo*", m.mapFileName("bar.baz"));
-        String[] result = m.mapFileName("foo.bar");
-        assertNotNull("Should match foo*", result);
-        assertEquals("only one result for foo.bar", 1, result.length);
-        assertEquals("plonk.bar", result[0]);
+(startLine=103 endLine=124 srcPath=/home/ubuntu/antFilter/281/ant/src/main/org/apache/tools/ant/filters/TailFilter.java)
+    public int read() throws IOException {
+        if (!getInitialized()) {
+            initialize();
+            setInitialized(true);
+        }
 
-        // Try a silly case
-        m.setTo("*foo");
-        result = m.mapFileName("foo.bar");
-        assertEquals(".barfoo", result[0]);
+        while (line == null || line.length() == 0) {
+            line = lineTokenizer.getToken(in);
+            line = tailFilter(line);
+            if (line == null) {
+                return -1;
+            }
+            linePos = 0;
+        }
+
+        int ch = line.charAt(linePos);
+        linePos++;
+        if (linePos == line.length()) {
+            line = null;
+        }
+        return ch;
     }
 

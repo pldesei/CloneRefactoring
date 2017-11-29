@@ -1,11 +1,13 @@
-(startLine=1183 endLine=1191 srcPath=/home/ubuntu/guavaFilter/156/guava/guava/src/com/google/common/base/Preconditions.java)
-  private static String badElementIndex(int index, int size, String desc) {
-    if (index < 0) {
-      return format("%s (%s) must not be negative", desc, index);
-    } else if (size < 0) {
-      throw new IllegalArgumentException("negative size: " + size);
-    } else { // index >= size
-      return format("%s (%s) must be less than size (%s)", desc, index, size);
+(startLine=248 endLine=258 srcPath=/home/ubuntu/guavaFilter/990/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
+    public void testBuilder() {
+      ImmutableMap<String, Integer> map = new Builder<String, Integer>()
+          .put("one", 1)
+          .put("two", 2)
+          .put("three", 3)
+          .put("four", 4)
+          .put("five", 5)
+          .build();
+      assertMapEquals(map,
+          "one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
     }
-  }
 

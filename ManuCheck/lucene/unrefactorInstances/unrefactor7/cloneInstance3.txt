@@ -1,19 +1,13 @@
-(startLine=160 endLine=176 srcPath=/home/ubuntu/luceneFilter/795/lucene/solr/core/src/test/org/apache/solr/analysis/TestUAX29URLEmailTokenizerFactory.java)
-  public void testMaxTokenLength() throws Exception {
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0 ; i < 100 ; ++i) {
-      builder.append("abcdefg"); // 7 * 100 = 700 char "word"
-    }
-    String longWord = builder.toString();
-    String content = "one two three " + longWord + " four five six";
-    Reader reader = new StringReader(content);
+(startLine=62 endLine=72 srcPath=/home/ubuntu/luceneFilter/1142/lucene/solr/src/test/org/apache/solr/analysis/TestShingleFilterFactory.java)
+  public void testMaxShingleSize() throws Exception {
+    Reader reader = new StringReader("this is a test");
     Map<String,String> args = new HashMap<String,String>();
-    args.put("luceneMatchVersion", DEFAULT_VERSION_PARAM.get("luceneMatchVersion"));
-    args.put("maxTokenLength", "1000");
-    UAX29URLEmailTokenizerFactory factory = new UAX29URLEmailTokenizerFactory();
+    args.put("maxShingleSize", "3");
+    ShingleFilterFactory factory = new ShingleFilterFactory();
     factory.init(args);
-    Tokenizer stream = factory.create(reader);
+    TokenStream stream = factory.create(new WhitespaceTokenizer(DEFAULT_VERSION, reader));
     assertTokenStreamContents(stream, 
-        new String[] {"one", "two", "three", longWord, "four", "five", "six" });
+        new String[] {"this", "this is", "this is a", "is",
+        "is a", "is a test", "a", "a test", "test"});
   }
 

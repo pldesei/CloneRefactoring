@@ -1,49 +1,49 @@
-(startLine=644 endLine=690 srcPath=/home/ubuntu/luceneFilter/1376/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/EnglishStemmer.java)
-        private boolean r_Step_1c() {
-            int v_1;
-            int v_2;
-            // (, line 93
-            // [, line 94
-            ket = cursor;
-            // or, line 94
-            lab0: do {
-                v_1 = limit - cursor;
-                lab1: do {
-                    // literal, line 94
-                    if (!(eq_s_b(1, "y")))
-                    {
-                        break lab1;
-                    }
-                    break lab0;
-                } while (false);
-                cursor = limit - v_1;
-                // literal, line 94
-                if (!(eq_s_b(1, "Y")))
-                {
-                    return false;
-                }
-            } while (false);
-            // ], line 94
-            bra = cursor;
-            if (!(out_grouping_b(g_v, 97, 121)))
-            {
-                return false;
-            }
-            // not, line 95
-            {
-                v_2 = limit - cursor;
-                lab2: do {
-                    // atlimit, line 95
-                    if (cursor > limit_backward)
-                    {
-                        break lab2;
-                    }
-                    return false;
-                } while (false);
-                cursor = limit - v_2;
-            }
-            // <-, line 96
-            slice_from("i");
-            return true;
-        }
+(startLine=57 endLine=103 srcPath=/home/ubuntu/luceneFilter/1025/lucene/lucene/src/test/org/apache/lucene/search/TestComplexExplanations.java)
+  public void test1() throws Exception {
+    
+    BooleanQuery q = new BooleanQuery();
+    
+    q.add(qp.parse("\"w1 w2\"~1"), Occur.MUST);
+    q.add(snear(st("w2"),
+                sor("w5","zz"),
+                4, true),
+          Occur.SHOULD);
+    q.add(snear(sf("w3",2), st("w2"), st("w3"), 5, true),
+          Occur.SHOULD);
+    
+    Query t = new FilteredQuery(qp.parse("xx"),
+                                new ItemizedFilter(new int[] {1,3}));
+    t.setBoost(1000);
+    q.add(t, Occur.SHOULD);
+    
+    t = new ConstantScoreQuery(new ItemizedFilter(new int[] {0,2}));
+    t.setBoost(30);
+    q.add(t, Occur.SHOULD);
+    
+    DisjunctionMaxQuery dm = new DisjunctionMaxQuery(0.2f);
+    dm.add(snear(st("w2"),
+                 sor("w5","zz"),
+                 4, true));
+    dm.add(qp.parse("QQ"));
+    dm.add(qp.parse("xx yy -zz"));
+    dm.add(qp.parse("-xx -w1"));
+
+    DisjunctionMaxQuery dm2 = new DisjunctionMaxQuery(0.5f);
+    dm2.add(qp.parse("w1"));
+    dm2.add(qp.parse("w2"));
+    dm2.add(qp.parse("w3"));
+    dm.add(dm2);
+
+    q.add(dm, Occur.SHOULD);
+
+    BooleanQuery b = new BooleanQuery();
+    b.setMinimumNumberShouldMatch(2);
+    b.add(snear("w1","w2",1,true), Occur.SHOULD);
+    b.add(snear("w2","w3",1,true), Occur.SHOULD);
+    b.add(snear("w1","w3",3,true), Occur.SHOULD);
+
+    q.add(b, Occur.SHOULD);
+    
+    qtest(q, new int[] { 0,1,2 });
+  }
 

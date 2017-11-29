@@ -1,9 +1,15 @@
-(startLine=98 endLine=104 srcPath=/home/ubuntu/antFilter/662/ant/src/testcases/org/apache/tools/ant/taskdefs/GzipTest.java)
-    public void testDateCheck(){
-        executeTarget("testDateCheck");
-        String log = getLog();
-        assertTrue(
-            "Expecting message ending with 'asf-logo.gif.gz is up to date.' but got '" + log + "'",
-            log.endsWith("asf-logo.gif.gz is up to date."));
+(startLine=515 endLine=527 srcPath=/home/ubuntu/antFilter/77/ant/src/main/org/apache/tools/ant/Main.java)
+    private int handleArgLogger(String[] args, int pos) {
+        if (loggerClassname != null) {
+            throw new BuildException(
+                "Only one logger class may be specified.");
+        }
+        try {
+            loggerClassname = args[++pos];
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            throw new BuildException(
+                "You must specify a classname when using the -logger argument");
+        }
+        return pos;
     }
 

@@ -1,30 +1,10 @@
-(startLine=754 endLine=781 srcPath=/home/ubuntu/antFilter/197/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
-    private static synchronized Properties getDefaultDefinitions(boolean type)
-        throws BuildException {
-        int idx = type ? 1 : 0;
-        if (defaultDefinitions[idx] == null) {
-            String resource = type
-                ? MagicNames.TYPEDEFS_PROPERTIES_RESOURCE
-                : MagicNames.TASKDEF_PROPERTIES_RESOURCE;
-            String errorString = type
-                ? ERROR_NO_TYPE_LIST_LOAD
-                : ERROR_NO_TASK_LIST_LOAD;
-            InputStream in = null;
-            try {
-                in = ComponentHelper.class.getResourceAsStream(
-                    resource);
-                if (in == null) {
-                    throw new BuildException(errorString);
-                }
-                Properties p = new Properties();
-                p.load(in);
-                defaultDefinitions[idx] = p;
-            } catch (IOException e) {
-                throw new BuildException(errorString, e);
-            } finally {
-                FileUtils.close(in);
-            }
+(startLine=745 endLine=752 srcPath=/home/ubuntu/antFilter/241/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+    private ClassLoader getClassLoader(ClassLoader classLoader) {
+        String buildSysclasspath = project.getProperty(MagicNames.BUILD_SYSCLASSPATH);
+        if (project.getCoreLoader() != null
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(buildSysclasspath))) {
+            classLoader = project.getCoreLoader();
         }
-        return defaultDefinitions[idx];
+        return classLoader;
     }
 

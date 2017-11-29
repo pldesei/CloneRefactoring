@@ -1,14 +1,5 @@
-(startLine=168 endLine=179 srcPath=/home/ubuntu/antFilter/847/ant/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/BaseFilterReader.java)
-    protected final String readLine() throws IOException {
-        int ch = in.read();
-        String line = (ch == -1) ? null : "";
-        while (ch != -1) {
-            line += (char) ch;
-            if (ch == '\n') {
-                break;
-            }
-            ch = in.read();
-        }
-        return line;
+(startLine=374 endLine=376 srcPath=/home/ubuntu/antFilter/967/ant/proposal/sandbox/junit/src/main/org/apache/tools/ant/taskdefs/optional/junit/remote/TestRunner.java)
+    protected void fireEvent(TestRunEvent evt){
+        messenger.writeEvent(evt);
     }
 

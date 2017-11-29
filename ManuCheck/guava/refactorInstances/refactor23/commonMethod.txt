@@ -1,7 +1,15 @@
-(startLine=52 endLine=56 srcPath=/home/ubuntu/guavaFilter/469/guava/guava/src/com/google/common/util/concurrent/ListenerCallQueue.java)
-    void enqueueOn(Iterable<ListenerCallQueue<L>> queues) {
-      for (ListenerCallQueue<L> queue : queues) {
-        queue.add(this);
+(startLine=234 endLine=246 srcPath=/home/ubuntu/guavaFilter/648/guava/guava-gwt/src-super/com/google/common/collect/super/com/google/common/collect/Iterables.java)
+  @Nullable
+  static <T> T removeFirstMatching(Iterable<T> removeFrom, Predicate<? super T> predicate) {
+    checkNotNull(predicate);
+    Iterator<T> iterator = removeFrom.iterator();
+    while (iterator.hasNext()) {
+      T next = iterator.next();
+      if (predicate.apply(next)) {
+        iterator.remove();
+        return next;
       }
     }
+    return null;
+  }
 

@@ -1,264 +1,434 @@
 /*
- *  The Apache Software License, Version 1.1
+ * The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2002 The Apache Software Foundation.  All rights
- *  reserved.
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * reserved.
  *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  *
- *  1. Redistributions of source code must retain the above copyright
- *  notice, this list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- *  2. Redistributions in binary form must reproduce the above copyright
- *  notice, this list of conditions and the following disclaimer in
- *  the documentation and/or other materials provided with the
- *  distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- *  3. The end-user documentation included with the redistribution, if
- *  any, must include the following acknowlegement:
- *  "This product includes software developed by the
- *  Apache Software Foundation (http://www.apache.org/)."
- *  Alternately, this acknowlegement may appear in the software itself,
- *  if and wherever such third-party acknowlegements normally appear.
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- *  4. The names "The Jakarta Project", "Ant", and "Apache Software
- *  Foundation" must not be used to endorse or promote products derived
- *  from this software without prior written permission. For written
- *  permission, please contact apache@apache.org.
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
- *  5. Products derived from this software may not be called "Apache"
- *  nor may "Apache" appear in their names without prior written
- *  permission of the Apache Group.
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- *  ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- *  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- *  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- *  SUCH DAMAGE.
- *  ====================================================================
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
  *
- *  This software consists of voluntary contributions made by many
- *  individuals on behalf of the Apache Software Foundation.  For more
- *  information on the Apache Software Foundation, please see
- *  <http://www.apache.org/>.
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.filters;
+package org.apache.tools.ant.taskdefs.optional.junit.remote;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestListener;
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
+
+import org.apache.tools.ant.taskdefs.optional.junit.JUnitHelper;
+import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
- * This is a line comment stripper reader
+ * TestRunner for running tests and send results to a remote server.
  *
- * Example:
- * =======
+ * <i>
+ * This code is based on the code from Erich Gamma made for the
+ * JUnit plugin for <a href="http://www.eclipse.org">Eclipse</a> and is
+ * merged with code originating from Ant 1.4.x.
+ * </i>
  *
- * &lt;striplinecomments&gt;
- *   &lt;comment value=&quot;#&quot;/&gt;
- *   &lt;comment value=&quot;--&quot;/&gt;
- *   &lt;comment value=&quot;REM &quot;/&gt;
- *   &lt;comment value=&quot;rem &quot;/&gt;
- *   &lt;comment value=&quot;//&quot;/&gt;
- * &lt;/striplinecomments&gt;
- *
- * Or:
- *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
- *    &lt;param type=&quot;comment&quot; value="#&quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;REM &quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;rem &quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;//&quot;/&gt;
- * &lt;/filterreader&gt;
- *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public final class StripLineComments
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
-{
-    /** The type that param recognizes to set the comments. */
-    private static final String COMMENTS_KEY = "comment";
+public class TestRunner implements TestListener {
 
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
+    /** host to connect to */
+    private String host = "127.0.0.1";
 
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized = false;
+    /** port to connect to */
+    private int port = -1;
 
-    /** Vector that holds comments. */
-    private Vector comments = new Vector();
+    private boolean debug = false;
 
-    /** The line that has been read ahead. */
-    private String line = null;
+    /** the list of test class names to run */
+    private Vector testClassNames = new Vector();
 
-    /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
-     */
-    public StripLineComments() {
-        super();
+    /** result of the current test */
+    private TestResult testResult;
+
+    /** client socket to communicate with the server */
+    private Socket clientSocket;
+
+    /** writer to send message to the server */
+    private MessageWriter writer;
+
+    /** reader to listen for a shutdown from the server */
+    private BufferedReader reader;
+
+    /** bean constructor */
+    public TestRunner() {
     }
 
     /**
-     * Create a new filtered reader.
-     *
-     * @param in  a Reader object providing the underlying stream.
+     * Set the debug mode.
+     * @param debug true to set to debug mode otherwise false.
      */
-    public StripLineComments(final Reader in) {
-        super(in);
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**
-     * Read in line by line; Ignore line if it
-     * begins with a comment string.
+     * Set the port to connect to the server
+     * @param port a valid port number.
      */
-    public final int read() throws IOException {
-        if (!getInitialized()) {
-            initialize();
-            setInitialized(true);
-        }
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-        int ch = -1;
+    /**
+     * Set the hostname of the server
+     * @param host the hostname or ip of the server
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-        if (line != null) {
-            ch = line.charAt(0);
-            if (line.length() == 1) {
-                line = null;
-            } else {
-                line = line.substring(1);
-            }
-        } else {
-            ch = in.read();
-            while (ch != -1) {
-                if (line == null) {
-                    line = "";
-                }
-                line = line + (char) ch;
-                if (ch == '\n') {
-                    break;
-                }
-                ch = in.read();
-            }
+    /**
+     * Add a test class name to be executed by this runner.
+     * @param classname the class name of the test to run.
+     */
+    public void addTestClassName(String classname) {
+        testClassNames.addElement(classname);
+    }
 
-            if (line != null) {
-                int commentsSize = comments.size();
-                for (int i = 0; i < commentsSize; i++) {
-                    String comment = (String) comments.elementAt(i);
-                    if (line.startsWith(comment)) {
-                        line = null;
-                        break;
+    /**
+     * Thread listener for a shutdown from the server
+     * Note that it will stop any running test.
+     */
+    private class StopThread extends Thread {
+        public void run() {
+            try {
+                String line = null;
+                if ((line = reader.readLine()) != null) {
+                    if (line.startsWith(MessageIds.TEST_STOP)) {
+                        TestRunner.this.stop();
                     }
                 }
-                return read();
+            } catch (Exception e) {
+                TestRunner.this.stop();
             }
         }
-
-        return ch;
     }
 
     /**
-     * Add the Comment element.
+     * Entry point for command line.
+     * Usage:
+     * <pre>
+     * TestRunner -classnames <classnames> -port <port> -host <host> -debug
+     * -file
+     * -classnames <list of whitespace separated classnames to run>
+     * -port       <port to connect to>
+     * -host       <host to connect to>
+     * -debug      to run in debug mode
+     * </pre>
      */
-    public final void addConfiguredComment(final Comment comment) {
-        comments.addElement(comment.getValue());
+    public static void main(String[] args) throws Exception {
+        TestRunner testRunServer = new TestRunner();
+        testRunServer.init(args);
+        testRunServer.run();
     }
 
     /**
-     * Set the comments vector.
+     * Parses the arguments of command line.
+     * testClassNames, host, port, listeners and debug mode are set
+     * @see  #main(String[])
      */
-    private void setComments(final Vector comments) {
-        this.comments = comments;
-    }
-
-    /**
-     * Get the comments vector.
-     */
-    private final Vector getComments() {
-        return comments;
-    }
-
-    /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
-     * Create a new StripLineComments object using the passed in
-     * Reader for instantiation.
-     */
-    public final Reader chain(final Reader rdr) {
-        StripLineComments newFilter = new StripLineComments(rdr);
-        newFilter.setComments(getComments());
-        newFilter.setInitialized(true);
-        return newFilter;
-    }
-
-    /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
-     * Comments set using the param element.
-     */
-    private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (COMMENTS_KEY.equals(parameters[i].getType())) {
-                    comments.addElement(parameters[i].getValue());
+    protected void init(String[] args) throws Exception {
+        for (int i = 0; i < args.length; i++) {
+            if ("-file".equalsIgnoreCase(args[i])) {
+                // @fixme if you mix file and other options it will be a mess,
+                // not important right now.
+                FileInputStream fis = new FileInputStream(args[++i]);
+                Properties props = new Properties();
+                props.load(fis);
+                fis.close();
+                init(props);
+            }
+            if ("-classnames".equalsIgnoreCase(args[i])) {
+                for (int j = ++i; j < args.length; j++) {
+                    if (args[j].startsWith("-"))
+                        break;
+                    addTestClassName(args[j]);
                 }
             }
+            if ("-port".equalsIgnoreCase(args[i])) {
+                setPort(Integer.parseInt(args[++i]));
+            }
+            if ("-host".equalsIgnoreCase(args[i])) {
+                setHost(args[++i]);
+            }
+            if ("-debug".equalsIgnoreCase(args[i])) {
+                setDebug(true);
+            }
         }
     }
 
     /**
-     * The class that holds a comment.
+     * Initialize the TestRunner from properties.
+     * @param the properties containing configuration data.
+     * @see #init(String[])
      */
-    public static class Comment {
+    protected void init(Properties props) {
+        if (props.getProperty("debug") != null) {
+            setDebug(true);
+        }
+        String port = props.getProperty("port");
+        if (port != null) {
+            setPort(Integer.parseInt(port));
+        }
+        String host = props.getProperty("host");
+        if (host != null) {
+            setHost(host);
+        }
+        String classnames = props.getProperty("classnames");
+        if (classnames != null) {
+            StringTokenizer st = new StringTokenizer(classnames);
+            while (st.hasMoreTokens()) {
+                addTestClassName(st.nextToken());
+            }
+        }
+    }
 
-        /** The comment*/
-        private String value;
+    public final void run() throws Exception {
+        if (testClassNames.size() == 0) {
+            throw new IllegalArgumentException("No TestCase specified");
+        }
+        connect();
 
-        /**
-         * Set the comment.
-         */
-        public final void setValue(String comment) {
-            value = comment;
+        testResult = new TestResult();
+        testResult.addListener(this);
+        runTests();
+
+        testResult.removeListener(this);
+        if (testResult != null) {
+            testResult.stop();
+            testResult = null;
+        }
+    }
+
+    /**
+     * Transform all classnames into instantiated <tt>Test</tt>.
+     * @throws Exception a generic exception that can be thrown while
+     * instantiating a test case.
+     */
+    protected Test[] getSuites() throws Exception {
+        final int count = testClassNames.size();
+        log("Extracting testcases from " + count + " classnames...");
+        final Vector suites = new Vector(count);
+        for (int i = 0; i < count; i++) {
+            String classname = (String) testClassNames.elementAt(i);
+            try {
+                Test test = JUnitHelper.getTest(null, classname);
+                if (test != null) {
+                    suites.addElement(test);
+                }
+            } catch (Exception e) {
+                // notify log error instead ?
+                log("Could not get Test instance from " + classname);
+                log(e);
+            }
+        }
+        log("Extracted " + suites.size() + " testcases.");
+        Test[] array = new Test[suites.size()];
+        suites.copyInto(array);
+        return array;
+    }
+
+    /**
+     * @param testClassNames String array of full qualified class names of test classes
+     */
+    private void runTests() throws Exception {
+
+        Test[] suites = getSuites();
+
+        // count all testMethods and inform TestRunListeners
+        int count = countTests(suites);
+        log("Total tests to run: " + count);
+        writer.notifyTestRunStarted(count);
+
+        // send system properties to know for the JVM status
+        writer.notifySystemProperties();
+
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < suites.length; i++) {
+            if (suites[i] instanceof TestCase) {
+                suites[i] = new TestSuite(suites[i].getClass().getName());
+            }
+            log("running suite: " + suites[i]);
+            suites[i].run(testResult);
         }
 
-        /**
-         * Get the comment.
-         */
-        public final String getValue() {
-            return value;
+        // inform TestRunListeners of test end
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        if (testResult == null || testResult.shouldStop()) {
+            writer.notifyTestRunStopped(elapsedTime);
+        } else {
+            writer.notifyTestRunEnded(elapsedTime);
+        }
+        log("Finished after " + elapsedTime + "ms");
+        shutDown();
+    }
+
+    /** count the number of test methods in all tests */
+    private final int countTests(Test[] tests) {
+        int count = 0;
+        for (int i = 0; i < tests.length; i++) {
+            count = count + tests[i].countTestCases();
+        }
+        return count;
+    }
+
+    protected void stop() {
+        if (testResult != null) {
+            testResult.stop();
+        }
+    }
+
+    /**
+     * connect to the specified host and port.
+     * @throws IOException if any error occurs during connection.
+     */
+    protected void connect() throws IOException {
+        log("Connecting to " + host + " on port " + port + "...");
+        clientSocket = new Socket(host, port);
+        writer = new MessageWriter(clientSocket.getOutputStream());
+        reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        new StopThread().start();
+    }
+
+
+    protected void shutDown() {
+
+        if (writer != null) {
+            writer.close();
+            writer = null;
+        }
+
+        try {
+            if (reader != null) {
+                reader.close();
+                reader = null;
+            }
+        } catch (IOException e) {
+            log(e);
+        }
+
+        try {
+            if (clientSocket != null) {
+                clientSocket.close();
+                clientSocket = null;
+            }
+        } catch (IOException e) {
+            log(e);
+        }
+    }
+
+
+// -------- JUnit TestListener implementation
+
+
+    public void startTest(Test test) {
+        String testName = test.toString();
+        log("starting test: " + test);
+        writer.notifyTestStarted(testName);
+    }
+
+    public void addError(Test test, Throwable t) {
+        log("Adding error for test: " + test);
+        String testName = test.toString();
+        String trace = StringUtils.getStackTrace(t);
+        writer.notifyTestFailed(TestRunListener.STATUS_ERROR, testName, trace);
+    }
+
+    /**
+     * this implementation is for JUnit &lt; 3.4
+     * @see addFailure(Test, Throwable)
+     */
+    public void addFailure(Test test, AssertionFailedError afe) {
+        addFailure(test, (Throwable) afe);
+    }
+
+    /**
+     * This implementation is for JUnit &lt;= 3.4
+     * @see addFailure(Test, AssertionFailedError)
+     */
+    public void addFailure(Test test, Throwable t) {
+        log("Adding failure for test: " + test);
+        String testName = test.toString();
+        String trace = StringUtils.getStackTrace(t);
+        writer.notifyTestFailed(TestRunListener.STATUS_FAILURE, testName, trace);
+    }
+
+    public void endTest(Test test) {
+        log("Ending test: " + test);
+        String testName = test.toString();
+        writer.notifyTestEnded(testName);
+    }
+
+    public void log(String msg) {
+        if (debug) {
+            System.out.println(msg);
+        }
+    }
+
+    public void log(Throwable t) {
+        if (debug) {
+            t.printStackTrace();
         }
     }
 }
+

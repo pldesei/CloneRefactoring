@@ -1,13 +1,9 @@
-(startLine=154 endLine=164 srcPath=/home/ubuntu/guavaFilter/705/guava/guava/src/com/google/common/io/CharSource.java)
-  public @Nullable String readFirstLine() throws IOException {
-    Closer closer = Closer.create();
-    try {
-      BufferedReader reader = closer.add(openBufferedStream());
-      return reader.readLine();
-    } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
-    } finally {
-      closer.close();
-    }
-  }
+(startLine=79 endLine=85 srcPath=/home/ubuntu/guavaFilter/751/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
+          protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+            SafeTreeMap<String, String> map = new SafeTreeMap<String, String>();
+            for (Entry<String, String> entry : entries) {
+              map.put(entry.getKey(), entry.getValue());
+            }
+            return SerializableTester.reserialize(Maps.unmodifiableNavigableMap(map));
+          }
 

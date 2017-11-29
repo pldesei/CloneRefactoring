@@ -1,17 +1,11 @@
-(startLine=186 endLine=200 srcPath=/home/ubuntu/luceneFilter/812/lucene/solr/core/src/test/org/apache/solr/handler/TestReplicationHandler.java)
-  private NamedList<Object> getCommits(SolrServer s) throws Exception {
-    
+(startLine=1030 endLine=1038 srcPath=/home/ubuntu/luceneFilter/91/lucene/lucene/analysis/common/src/test/org/apache/lucene/analysis/shingle/ShingleFilterTest.java)
+  protected void shingleFilterTest(int maxSize, Token[] tokensToShingle, Token[] tokensToCompare,
+                                   int[] positionIncrements, String[] types,
+                                   boolean outputUnigrams)
+    throws IOException {
 
-    ModifiableSolrParams params = new ModifiableSolrParams();
-    params.set("command","commits");
-    params.set("qt","/replication");
-    QueryRequest req = new QueryRequest(params);
-
-    NamedList<Object> res = s.request(req);
-
-    assertNotNull("null response from server", res);
-
-
-    return res;
+    ShingleFilter filter = new ShingleFilter(new CannedTokenStream(tokensToShingle), maxSize);
+    filter.setOutputUnigrams(outputUnigrams);
+    shingleFilterTestCommon(filter, tokensToCompare, positionIncrements, types);
   }
 

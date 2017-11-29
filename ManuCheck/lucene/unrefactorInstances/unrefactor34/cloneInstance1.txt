@@ -1,21 +1,8 @@
-(startLine=87 endLine=105 srcPath=/home/ubuntu/luceneFilter/70/lucene/lucene/core/src/java/org/apache/lucene/store/NIOFSDirectory.java)
-  public IndexInputSlicer createSlicer(final String name,
-      final IOContext context) throws IOException {
-    ensureOpen();
-    final File path = new File(getDirectory(), name);
-    final FileChannel descriptor = FileChannel.open(path.toPath(), StandardOpenOption.READ);
-    return new Directory.IndexInputSlicer() {
-
-      @Override
-      public void close() throws IOException {
-        descriptor.close();
-      }
-
-      @Override
-      public IndexInput openSlice(String sliceDescription, long offset, long length) {
-        return new NIOFSIndexInput("NIOFSIndexInput(" + sliceDescription + " in path=\"" + path + "\" slice=" + offset + ":" + (offset+length) + ")", descriptor, offset,
-            length, BufferedIndexInput.bufferSize(context));
-      }
-    };
-  }
+(startLine=334 endLine=339 srcPath=/home/ubuntu/luceneFilter/369/lucene/lucene/test-framework/src/java/org/apache/lucene/index/AssertingAtomicReader.java)
+    public int startOffset() throws IOException {
+      assert state != DocsEnumState.START : "startOffset() called before nextDoc()/advance()";
+      assert state != DocsEnumState.FINISHED : "startOffset() called after NO_MORE_DOCS";
+      assert positionCount > 0 : "startOffset() called before nextPosition()!";
+      return super.startOffset();
+    }
 

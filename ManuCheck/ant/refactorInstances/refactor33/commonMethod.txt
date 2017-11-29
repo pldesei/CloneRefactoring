@@ -1,10 +1,10 @@
-(startLine=745 endLine=752 srcPath=/home/ubuntu/antFilter/241/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
-    private ClassLoader getClassLoader(ClassLoader classLoader) {
-        String buildSysclasspath = project.getProperty(MagicNames.BUILD_SYSCLASSPATH);
-        if (project.getCoreLoader() != null
-            && !(BUILD_SYSCLASSPATH_ONLY.equals(buildSysclasspath))) {
-            classLoader = project.getCoreLoader();
+(startLine=657 endLine=664 srcPath=/home/ubuntu/antFilter/313/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    private static String normalizePattern(String p) {
+        String pattern = p.replace('/', File.separatorChar)
+            .replace('\\', File.separatorChar);
+        if (pattern.endsWith(File.separator)) {
+            pattern += "**";
         }
-        return classLoader;
+        return pattern;
     }
 

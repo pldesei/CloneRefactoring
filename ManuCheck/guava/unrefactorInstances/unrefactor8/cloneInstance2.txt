@@ -1,19 +1,15 @@
-(startLine=318 endLine=334 srcPath=/home/ubuntu/guavaFilter/100/guava/guava-tests/test/com/google/common/collect/ImmutableTableTest.java)
-  public void testBuilder_orderColumnsBy_sparse() {
-    ImmutableTable.Builder<Character, Integer, String> builder
-        = ImmutableTable.builder();
-    builder.orderColumnsBy(Ordering.natural());
-    builder.put('x', 2, "foo");
-    builder.put('r', 1, "bar");
-    builder.put('c', 3, "baz");
-    builder.put('b', 7, "cat");
-    builder.put('e', 5, "dog");
-    builder.put('c', 0, "axe");
-    builder.put('e', 3, "tub");
-    builder.put('r', 4, "foo");
-    builder.put('x', 5, "bar");
-    Table<Character, Integer, String> table = builder.build();
-    assertThat(table.columnKeySet()).containsExactly(0, 1, 2, 3, 4, 5, 7).inOrder();
-    assertThat(table.row('c').keySet()).containsExactly(0, 3).inOrder();
+(startLine=364 endLine=376 srcPath=/home/ubuntu/guavaFilter/519/guava/guava-tests/test/com/google/common/collect/ForwardingMapTest.java)
+  public void testToStringWithNullValues() throws Exception {
+    Map<String, String> hashmap = Maps.newHashMap();
+    hashmap.put("foo", "bar");
+    hashmap.put("baz", null);
+
+    StandardImplForwardingMap<String, String> forwardingMap =
+        new StandardImplForwardingMap<String, String>(
+            Maps.<String, String>newHashMap());
+    forwardingMap.put("foo", "bar");
+    forwardingMap.put("baz", null);
+
+    assertEquals(hashmap.toString(), forwardingMap.toString());
   }
 

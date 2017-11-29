@@ -1,14 +1,17 @@
-(startLine=112 endLine=123 srcPath=/home/ubuntu/antFilter/4/ant/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitReportTest.java)
-    public void testSpecialSignsInSrcPath() throws Exception {
-        buildRule.executeTarget("testSpecialSignsInSrcPath");
-        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
-        // tests one the file object
-        assertTrue("No index.html present. Not generated?", reportFile.exists() );
-        assertTrue("Cant read the report file.", reportFile.canRead() );
-        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
-        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
-        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
-        InputStream reportStream = reportUrl.openStream();
-        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
+(startLine=116 endLine=130 srcPath=/home/ubuntu/antFilter/41/ant/src/main/org/apache/tools/ant/taskdefs/launcher/CommandLauncher.java)
+    public static CommandLauncher getShellLauncher(Project project) {
+        CommandLauncher launcher = null;
+        if(project != null) {
+            launcher = (CommandLauncher) project
+                .getReference(ANT_SHELL_LAUNCHER_REF_ID);
+        }
+        if (launcher == null) {
+            launcher = getSystemLauncher(ANT_SHELL_LAUNCHER_REF_ID);
+        }
+        if (launcher == null) {
+            launcher = shellLauncher;
+        }
+
+        return launcher;
     }
 

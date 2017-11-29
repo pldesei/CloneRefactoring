@@ -1,18 +1,8 @@
-(startLine=370 endLine=385 srcPath=/home/ubuntu/luceneFilter/289/lucene/lucene/core/src/java/org/apache/lucene/search/FieldComparator.java)
-    public int compareDocToValue(int doc, Double valueObj) {
-      final double value = valueObj.doubleValue();
-      double docValue = currentReaderValues.get(doc);
-      // Test for docValue == 0 to save Bits.get method call for
-      // the common case (doc has value and value is non-zero):
-      if (docsWithField != null && docValue == 0 && !docsWithField.get(doc)) {
-        docValue = missingValue;
-      }
-      if (docValue < value) {
-        return -1;
-      } else if (docValue > value) {
-        return 1;
-      } else {
-        return 0;
-      }
+(startLine=123 endLine=128 srcPath=/home/ubuntu/luceneFilter/579/lucene/lucene/grouping/src/test/org/apache/lucene/search/grouping/AllGroupsCollectorTest.java)
+  private void addGroupField(Document doc, String groupField, String value, boolean canUseIDV) {
+    doc.add(new Field(groupField, value, TextField.TYPE_STORED));
+    if (canUseIDV) {
+      doc.add(new SortedBytesDocValuesField(groupField, new BytesRef(value)));
     }
+  }
 

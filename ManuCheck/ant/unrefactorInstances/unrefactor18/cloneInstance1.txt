@@ -1,17 +1,14 @@
-(startLine=480 endLine=494 srcPath=/home/ubuntu/antFilter/175/ant/proposal/embed/src/java/org/apache/tools/ant/PropertyHelper.java)
-    public Hashtable getProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = properties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        // There is a better way to save the context. This shouldn't
-        // delegate to next, it's for backward compat only.
-
-        return propertiesCopy;
+(startLine=112 endLine=123 srcPath=/home/ubuntu/antFilter/8/ant/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitReportTest.java)
+    public void testSpecialSignsInSrcPath() throws Exception {
+        buildRule.executeTarget("testSpecialSignsInSrcPath");
+        File reportFile = new File(buildRule.getOutputDir(), "html/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 

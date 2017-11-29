@@ -1,8 +1,10 @@
-(startLine=344 endLine=349 srcPath=/home/ubuntu/guavaFilter/249/guava/guava/src/com/google/common/graph/IncidenceSetDirectedGraph.java)
-  private DirectedIncidentNodes<N> checkedEndpoints(Object edge) {
-    checkNotNull(edge, "edge");
-    DirectedIncidentNodes<N> endpoints = edgeToIncidentNodes.get(edge);
-    checkArgument(endpoints != null, EDGE_NOT_IN_GRAPH, edge);
-    return endpoints;
+(startLine=617 endLine=624 srcPath=/home/ubuntu/guavaFilter/383/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  private static <V> FutureFallback<V> unexpectedFallback() {
+    return new FutureFallback<V>() {
+      @Override
+      public ListenableFuture<V> create(Throwable t) throws Exception {
+        throw new AssertionError("Unexpected fallback", t);
+      }
+    };
   }
 

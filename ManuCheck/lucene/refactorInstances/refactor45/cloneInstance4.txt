@@ -1,17 +1,17 @@
-(startLine=830 endLine=894 srcPath=/home/ubuntu/luceneFilter/314/lucene/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+(startLine=653 endLine=719 srcPath=/home/ubuntu/luceneFilter/314/lucene/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
     protected Object createValue(AtomicReader reader, Entry entryKey, boolean setDocsWithField)
         throws IOException {
       String field = entryKey.field;
-      FieldCache.DoubleParser parser = (FieldCache.DoubleParser) entryKey.custom;
+      FloatParser parser = (FloatParser) entryKey.custom;
       if (parser == null) {
         try {
-          return wrapper.getDoubles(reader, field, DEFAULT_DOUBLE_PARSER, setDocsWithField);
+          return wrapper.getFloats(reader, field, DEFAULT_FLOAT_PARSER, setDocsWithField);
         } catch (NumberFormatException ne) {
-          return wrapper.getDoubles(reader, field, NUMERIC_UTILS_DOUBLE_PARSER, setDocsWithField);
+          return wrapper.getFloats(reader, field, NUMERIC_UTILS_FLOAT_PARSER, setDocsWithField);
         }
       }
       final int maxDoc = reader.maxDoc();
-      double[] retArray = null;
+      float[] retArray = null;
 
       Terms terms = reader.terms(field);
       FixedBitSet docsWithField = null;
@@ -33,12 +33,12 @@
           if (term == null) {
             break;
           }
-          final double termval = parser.parseDouble(term);
+          final float termval = parser.parseFloat(term);
           if (retArray == null) {
             // late init so numeric fields don't double allocate
-            retArray = new double[maxDoc];
+            retArray = new float[maxDoc];
           }
-
+          
           docs = termsEnum.docs(null, docs, DocsEnum.FLAG_NONE);
           while (true) {
             final int docID = docs.nextDoc();
@@ -56,8 +56,10 @@
           }
         }
       }
-      if (retArray == null) { // no values
-        retArray = new double[maxDoc];
+
+      if (retArray == null) {
+        // no values
+        retArray = new float[maxDoc];
       }
       if (setDocsWithField) {
         wrapper.setDocsWithField(reader, field, docsWithField);

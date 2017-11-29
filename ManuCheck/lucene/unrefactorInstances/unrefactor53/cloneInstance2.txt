@@ -1,8 +1,27 @@
-(startLine=437 endLine=442 srcPath=/home/ubuntu/luceneFilter/310/lucene/solr/core/src/test/org/apache/solr/search/QueryEqualityTest.java)
-  public void testFuncMax() throws Exception {
-    assertFuncEquals("max(5,4,3,2,1)", "max(5, 4, 3, 2, 1)");
-    assertFuncEquals("max(foo_i,4)", "max(field('foo_i'), 4)");
-    assertFuncEquals("max(foo_i,sub(4,field('bar_i')))", 
-                     "max(field(foo_i), sub(4,bar_i))");
-  }
+(startLine=190 endLine=214 srcPath=/home/ubuntu/luceneFilter/1013/lucene/solr/src/common/org/apache/solr/common/cloud/ZkStateReader.java)
+          public void process(WatchedEvent event) {
+            log.info("Detected changed ShardId in collection:" + collection);
+            try {
+              makeShardsWatches(collection, false);
+              updateCloudState(false);
+            } catch (KeeperException e) {
+              if(e.code() == KeeperException.Code.SESSIONEXPIRED || e.code() == KeeperException.Code.CONNECTIONLOSS) {
+                log.warn("ZooKeeper watch triggered, but Solr cannot talk to ZK");
+                return;
+              }
+              log.error("", e);
+              throw new ZooKeeperException(
+                  SolrException.ErrorCode.SERVER_ERROR, "", e);
+            } catch (InterruptedException e) {
+              // Restore the interrupted status
+              Thread.currentThread().interrupt();
+              log.error("", e);
+              throw new ZooKeeperException(
+                  SolrException.ErrorCode.SERVER_ERROR, "", e);
+            } catch (IOException e) {
+              log.error("", e);
+              throw new ZooKeeperException(
+                  SolrException.ErrorCode.SERVER_ERROR, "", e);
+            }
+          }
 

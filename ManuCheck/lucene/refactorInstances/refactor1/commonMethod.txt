@@ -1,20 +1,17 @@
-(startLine=303 endLine=320 srcPath=/home/ubuntu/luceneFilter/1570/lucene/src/java/org/apache/lucene/index/TermVectorsReader.java)
-  final private long[] readTvfPointers(int fieldCount) throws IOException {
-    // Compute position in the tvf file
-    long position;
-    if (format >= FORMAT_VERSION2)
-      position = tvx.readLong();
-    else
-      position = tvd.readVLong();
+(startLine=285 endLine=299 srcPath=/home/ubuntu/luceneFilter/1570/lucene/src/java/org/apache/lucene/index/TermVectorsReader.java)
+  final private String[] readFields(int fieldCount) throws IOException {
+    int number = 0;
+    String[] fields = new String[fieldCount];
 
-    long[] tvfPointers = new long[fieldCount];
-    tvfPointers[0] = position;
+    for (int i = 0; i < fieldCount; i++) {
+      if (format >= FORMAT_VERSION)
+        number = tvd.readVInt();
+      else
+        number += tvd.readVInt();
 
-    for (int i = 1; i < fieldCount; i++) {
-      position += tvd.readVLong();
-      tvfPointers[i] = position;
+      fields[i] = fieldInfos.fieldName(number);
     }
 
-    return tvfPointers;
+    return fields;
   }
 

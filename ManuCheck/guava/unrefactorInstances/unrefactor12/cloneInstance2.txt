@@ -1,8 +1,44 @@
-(startLine=556 endLine=561 srcPath=/home/ubuntu/guavaFilter/278/guava/guava-tests/test/com/google/common/collect/ImmutableSortedSetTest.java)
-  public void testCopyOf_tailSet() {
-    SortedSet<String> set = of("e", "a", "f", "b", "d", "c");
-    SortedSet<String> tailset = set.tailSet("d");
-    SortedSet<String> copy = copyOf(tailset);
-    assertEquals(tailset, copy);
+(startLine=402 endLine=443 srcPath=/home/ubuntu/guavaFilter/1094/guava/guava/src/com/google/common/collect/ImmutableSetMultimap.java)
+  private void readObject(ObjectInputStream stream)
+      throws IOException, ClassNotFoundException {
+    stream.defaultReadObject();
+    int keyCount = stream.readInt();
+    if (keyCount < 0) {
+      throw new InvalidObjectException("Invalid key count " + keyCount);
+    }
+    ImmutableMap.Builder<Object, ImmutableSet<Object>> builder
+        = ImmutableMap.builder();
+    int tmpSize = 0;
+
+    for (int i = 0; i < keyCount; i++) {
+      Object key = stream.readObject();
+      int valueCount = stream.readInt();
+      if (valueCount <= 0) {
+        throw new InvalidObjectException("Invalid value count " + valueCount);
+      }
+
+      Object[] array = new Object[valueCount];
+      for (int j = 0; j < valueCount; j++) {
+        array[j] = stream.readObject();
+      }
+      ImmutableSet<Object> valueSet = ImmutableSet.copyOf(array);
+      if (valueSet.size() != array.length) {
+        throw new InvalidObjectException(
+            "Duplicate key-value pairs exist for key " + key);
+      }
+      builder.put(key, valueSet);
+      tmpSize += valueCount;
+    }
+
+    ImmutableMap<Object, ImmutableSet<Object>> tmpMap;
+    try {
+      tmpMap = builder.build();
+    } catch (IllegalArgumentException e) {
+      throw (InvalidObjectException)
+          new InvalidObjectException(e.getMessage()).initCause(e);
+    }
+
+    FieldSettersHolder.MAP_FIELD_SETTER.set(this, tmpMap);
+    FieldSettersHolder.SIZE_FIELD_SETTER.set(this, tmpSize);
   }
 

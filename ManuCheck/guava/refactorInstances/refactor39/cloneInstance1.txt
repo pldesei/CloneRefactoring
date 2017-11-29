@@ -1,23 +1,8 @@
-(startLine=220 endLine=240 srcPath=/home/ubuntu/guavaFilter/246/guava/guava/src/com/google/common/graph/IncidenceSetDirectedGraph.java)
-  public Set<N> predecessors(Object node) {
+(startLine=190 endLine=195 srcPath=/home/ubuntu/guavaFilter/250/guava/guava/src/com/google/common/graph/ImmutableDirectedGraph.java)
+  public Set<E> inEdges(Object node) {
     checkNotNull(node, "node");
     DirectedIncidentEdges<E> incidentEdges = nodeToIncidentEdges.get(node);
     checkArgument(incidentEdges != null, NODE_NOT_IN_GRAPH, node);
-    final Set<E> inEdges = incidentEdges.inEdges();
-    return new SetView<N>() {
-      @Override
-      public boolean isEmpty() {
-        return inEdges.isEmpty();
-      }
-
-      @Override
-      Set<N> elements() {
-        Set<N> nodes = Sets.newLinkedHashSet();
-        for (E edge : inEdges) {
-          nodes.add(source(edge));
-        }
-        return nodes;
-      }
-    };
+    return incidentEdges.inEdges();
   }
 

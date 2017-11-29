@@ -1,21 +1,16 @@
-(startLine=24 endLine=42 srcPath=/home/ubuntu/antFilter/1286/ant/proposal/myrmidon/src/java/org/apache/ant/modules/core/RegisterDataType.java)
-    protected void registerResource( final String name, 
-                                     final String classname, 
-                                     final URL url )
-        throws AntException, RegistryException 
-    {
-        if( null == classname )
-        {
-            try { m_engine.getTskDeployer().deployDataType( name, url.toString(), url ); }
-            catch( final DeploymentException de )
-            {
-                throw new AntException( "Failed deploying " + name + " from " + url, de );
-            }
-        }
-        else
-        {
-            final DefaultLocator locator = new DefaultLocator( classname, url );
-            m_engine.getDataTypeEngine().getRegistry().register( name, locator ); 
-        }
+(startLine=160 endLine=173 srcPath=/home/ubuntu/antFilter/940/ant/src/testcases/org/apache/tools/ant/taskdefs/AntTest.java)
+    public void testReferenceInheritance() {
+        Path p = Path.systemClasspath;
+        p.setProject(project);
+        project.addReference("path", p);
+        project.addReference("no-override", p);
+        testReference("testInherit", new String[] {"path", "path"},
+                      new boolean[] {true, true}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {true, false}, p);
+        testReference("testInherit", 
+                      new String[] {"no-override", "no-override"},
+                      new boolean[] {false, false}, null);
     }
 

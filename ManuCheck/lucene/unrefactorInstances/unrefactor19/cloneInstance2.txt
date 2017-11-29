@@ -1,15 +1,17 @@
-(startLine=91 endLine=103 srcPath=/home/ubuntu/luceneFilter/1541/lucene/contrib/surround/src/java/org/apache/lucene/queryParser/surround/query/ComposedQuery.java)
-  protected void prefixToString(StringBuffer r) {
-    Iterator sqi = getSubQueriesIterator();
-    r.append(getOperatorName()); /* prefix operator */
-    r.append(getBracketOpen());
-    if (sqi.hasNext()) {
-      r.append(sqi.next().toString());
-      while (sqi.hasNext()) {
-        r.append(getPrefixSeparator());
-        r.append(sqi.next().toString());
+(startLine=72 endLine=86 srcPath=/home/ubuntu/luceneFilter/1318/lucene/src/java/org/apache/lucene/store/RAMInputStream.java)
+  public void readBytes(byte[] b, int offset, int len) throws IOException {
+    while (len > 0) {
+      if (bufferPosition >= bufferLength) {
+        currentBufferIndex++;
+        switchCurrentBuffer(true);
       }
+
+      int remainInBuffer = bufferLength - bufferPosition;
+      int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
+      System.arraycopy(currentBuffer, bufferPosition, b, offset, bytesToCopy);
+      offset += bytesToCopy;
+      len -= bytesToCopy;
+      bufferPosition += bytesToCopy;
     }
-    r.append(getBracketClose());
   }
 

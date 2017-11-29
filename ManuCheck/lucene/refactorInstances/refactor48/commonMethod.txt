@@ -1,19 +1,14 @@
-(startLine=181 endLine=197 srcPath=/home/ubuntu/luceneFilter/215/lucene/solr/core/src/test/org/apache/solr/cloud/ShardSplitTest.java)
-  protected void splitShard(String shardId) throws SolrServerException, IOException {
-    ModifiableSolrParams params = new ModifiableSolrParams();
-    params.set("action", CollectionParams.CollectionAction.SPLITSHARD.toString());
-    params.set("collection", "collection1");
-    params.set("shard", shardId);
-    SolrRequest request = new QueryRequest(params);
-    request.setPath("/admin/collections");
+(startLine=199 endLine=210 srcPath=/home/ubuntu/luceneFilter/215/lucene/solr/core/src/test/org/apache/solr/cloud/ShardSplitTest.java)
+  protected void indexAndUpdateCount(List<DocRouter.Range> ranges, int[] docCounts, int id) throws Exception {
+    indexr("id", id);
 
-    String baseUrl = ((HttpSolrServer) shardToJetty.get(SHARD1).get(0).client.solrClient)
-        .getBaseURL();
-    baseUrl = baseUrl.substring(0, baseUrl.length() - "collection1".length());
-
-    HttpSolrServer baseServer = new HttpSolrServer(baseUrl);
-    baseServer.setConnectionTimeout(15000);
-    baseServer.setSoTimeout((int) (CollectionsHandler.DEFAULT_ZK_TIMEOUT * 5));
-    baseServer.request(request);
+    // todo - hook in custom hashing
+    byte[] bytes = String.valueOf(id).getBytes("UTF-8");
+    int hash = Hash.murmurhash3_x86_32(bytes, 0, bytes.length, 0);
+    for (int i = 0; i < ranges.size(); i++) {
+      DocRouter.Range range = ranges.get(i);
+      if (range.includes(hash))
+        docCounts[i]++;
+    }
   }
 

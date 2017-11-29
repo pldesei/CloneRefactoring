@@ -1,23 +1,17 @@
-(startLine=51 endLine=71 srcPath=/home/ubuntu/antFilter/162/ant/src/tests/junit/org/apache/tools/ant/types/selectors/PresentSelectorTest.java)
-    public void testValidate() {
-        PresentSelector s = (PresentSelector)getInstance();
-        try {
-            s.createMapper();
-            s.createMapper();
-            fail("PresentSelector allowed more than one nested mapper.");
-        } catch (BuildException be1) {
-            assertEquals("Cannot define more than one mapper",
-                    be1.getMessage());
-        }
+(startLine=1286 endLine=1300 srcPath=/home/ubuntu/antFilter/139/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    protected boolean isExcluded(String name) {
+        ensureNonPatternSetsReady();
 
-        s = (PresentSelector)getInstance();
-        try {
-            s.isSelected(basedir,filenames[0],files[0]);
-            fail("PresentSelector did not check for required fields");
-        } catch (BuildException be2) {
-            assertEquals("The targetdir attribute is required.",
-                    be2.getMessage());
+        if (isCaseSensitive()
+            ? excludeNonPatterns.contains(name)
+            : excludeNonPatterns.contains(name.toUpperCase())) {
+            return true;
         }
-
+        for (int i = 0; i < excludePatterns.length; i++) {
+            if (matchPath(excludePatterns[i], name, isCaseSensitive())) {
+                return true;
+            }
+        }
+        return false;
     }
 

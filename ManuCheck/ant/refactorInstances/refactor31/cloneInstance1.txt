@@ -1,23 +1,24 @@
-(startLine=1013 endLine=1033 srcPath=/home/ubuntu/antFilter/319/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
-    protected boolean isIncluded(String name) {
-        if (!areNonPatternSetsReady) {
-            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
-            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
-            areNonPatternSetsReady = true;
+(startLine=155 endLine=176 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecTaskTest.java)
+    public void testRedirect5or6(String target) {
+        executeTarget(target);
+        if (getProject().getProperty("wc.can.run") == null) {
+            return;
         }
 
-        if ((isCaseSensitive() && includeNonPatterns.contains(name))
-            ||
-            (!isCaseSensitive() 
-             && includeNonPatterns.contains(name.toUpperCase()))) {
-                return true;
-        }
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
 
-        for (int i = 0; i < includePatterns.length; i++) {
-            if (matchPath(includePatterns[i], name, isCaseSensitive())) {
-                return true;
-            }
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
         }
-        return false;
+        assertEquals("unexpected output", "3", actualOut.trim());
+        assertEquals(getProject().getProperty("redirect.out").trim(), "3");
+        assertEquals("unexpected error output", null, actualErr);
+        assertPropertyEquals("redirect.err", "");
     }
 

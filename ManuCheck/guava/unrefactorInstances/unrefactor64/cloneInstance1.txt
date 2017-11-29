@@ -1,9 +1,10 @@
-(startLine=764 endLine=770 srcPath=/home/ubuntu/guavaFilter/742/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
-  public void testDereference_resultCancelsInner() throws Exception {
-    ListenableFuture<Foo> inner = SettableFuture.create();
-    ListenableFuture<ListenableFuture<Foo>> outer = Futures.immediateFuture(inner);
-    ListenableFuture<Foo> dereferenced = Futures.dereference(outer);
-    dereferenced.cancel(true);
-    assertTrue(inner.isCancelled());
+(startLine=90 endLine=97 srcPath=/home/ubuntu/guavaFilter/670/guava/guava-tests/test/com/google/common/collect/ArrayTableTest.java)
+  @Override public void testContainsColumn() {
+    table = create("foo", 1, 'a', "bar", 1, 'b', "foo", 3, 'c');
+    assertTrue(table.containsColumn(1));
+    assertTrue(table.containsColumn(3));
+    assertTrue(table.containsColumn(2));
+    assertFalse(table.containsColumn(-1));
+    assertFalse(table.containsColumn(null));
   }
 

@@ -1,19 +1,12 @@
-(startLine=75 endLine=91 srcPath=/home/ubuntu/luceneFilter/795/lucene/solr/core/src/test/org/apache/solr/analysis/TestStandardFactories.java)
-  public void testClassicTokenizerMaxTokenLength() throws Exception {
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0 ; i < 100 ; ++i) {
-      builder.append("abcdefg"); // 7 * 100 = 700 char "word"
-    }
-    String longWord = builder.toString();
-    String content = "one two three " + longWord + " four five six";
-    Reader reader = new StringReader(content);
+(startLine=48 endLine=57 srcPath=/home/ubuntu/luceneFilter/1142/lucene/solr/src/test/org/apache/solr/analysis/TestShingleFilterFactory.java)
+  public void testNoUnigrams() throws Exception {
+    Reader reader = new StringReader("this is a test");
     Map<String,String> args = new HashMap<String,String>();
-    args.put("luceneMatchVersion", DEFAULT_VERSION_PARAM.get("luceneMatchVersion"));
-    args.put("maxTokenLength", "1000");
-    ClassicTokenizerFactory factory = new ClassicTokenizerFactory();
+    args.put("outputUnigrams", "false");
+    ShingleFilterFactory factory = new ShingleFilterFactory();
     factory.init(args);
-    Tokenizer stream = factory.create(reader);
-    assertTokenStreamContents(stream, 
-        new String[] {"one", "two", "three", longWord, "four", "five", "six" });
+    TokenStream stream = factory.create(new WhitespaceTokenizer(DEFAULT_VERSION, reader));
+    assertTokenStreamContents(stream,
+        new String[] {"this is", "is a", "a test"});
   }
 

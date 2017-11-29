@@ -1,12 +1,14 @@
-(startLine=60 endLine=69 srcPath=/home/ubuntu/guavaFilter/118/guava/guava-tests/test/com/google/common/graph/NetworkEquivalenceTest.java)
-  private static MutableNetwork<Integer, String> createNetwork(EdgeType edgeType) {
-    switch (edgeType) {
-      case UNDIRECTED:
-        return NetworkBuilder.undirected().allowsSelfLoops(true).build();
-      case DIRECTED:
-        return NetworkBuilder.directed().allowsSelfLoops(true).build();
-      default:
-        throw new IllegalStateException("Unexpected edge type: " + edgeType);
+(startLine=2036 endLine=2047 srcPath=/home/ubuntu/guavaFilter/162/guava/guava/src/com/google/common/collect/MapMakerInternalMap.java)
+    @Override
+    public void setWeakValueReferenceForTesting(
+        InternalEntry<K, V, ?> e,
+        WeakValueReference<K, V, ? extends InternalEntry<K, V, ?>> valueReference) {
+      WeakKeyWeakValueEntry<K, V> entry = castForTesting(e);
+      @SuppressWarnings("unchecked")
+      WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>> newValueReference =
+          (WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>>) valueReference;
+      WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>> previous = entry.valueReference;
+      entry.valueReference = newValueReference;
+      previous.clear();
     }
-  }
 

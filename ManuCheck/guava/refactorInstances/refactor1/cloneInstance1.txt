@@ -1,78 +1,21 @@
-(startLine=492 endLine=567 srcPath=/home/ubuntu/guavaFilter/1061/guava/guava-tests/test/com/google/common/cache/CacheLoadingTest.java)
-  public void testLoadError() throws ExecutionException {
-    Error e = new Error();
-    CacheLoader<Object, Object> loader = errorLoader(e);
-    LoadingCache<Object, Object> cache = CacheBuilder.newBuilder().build(loader);
-    CacheStats stats = cache.stats();
-    assertEquals(0, stats.missCount());
-    assertEquals(0, stats.loadSuccessCount());
-    assertEquals(0, stats.loadExceptionCount());
-    assertEquals(0, stats.hitCount());
-
+(startLine=1021 endLine=1039 srcPath=/home/ubuntu/guavaFilter/1133/guava/guava/src/com/google/common/util/concurrent/Futures.java)
+  public static <V, X extends Exception> V get(
+      Future<V> future, Class<X> exceptionClass) throws X {
+    checkNotNull(future);
+    checkArgument(!RuntimeException.class.isAssignableFrom(exceptionClass),
+        "Futures.get exception type (%s) must not be a RuntimeException",
+        exceptionClass);
     try {
-      cache.get(new Object());
-      fail();
-    } catch (ExecutionError expected) {
-      assertSame(e, expected.getCause());
+      return future.get();
+    } catch (InterruptedException e) {
+      currentThread().interrupt();
+      throw newWithCause(exceptionClass, e);
+    } catch (CancellationException e) {
+      throw e;
+    } catch (ExecutionException e) {
+      throw newWithCause(exceptionClass, e.getCause());
+    } catch (RuntimeException e) {
+      throw newWithCause(exceptionClass, e);
     }
-    stats = cache.stats();
-    assertEquals(1, stats.missCount());
-    assertEquals(0, stats.loadSuccessCount());
-    assertEquals(1, stats.loadExceptionCount());
-    assertEquals(0, stats.hitCount());
-
-    try {
-      cache.getUnchecked(new Object());
-      fail();
-    } catch (ExecutionError expected) {
-      assertSame(e, expected.getCause());
-    }
-    stats = cache.stats();
-    assertEquals(2, stats.missCount());
-    assertEquals(0, stats.loadSuccessCount());
-    assertEquals(2, stats.loadExceptionCount());
-    assertEquals(0, stats.hitCount());
-
-    try {
-      cache.refresh(new Object());
-      fail();
-    } catch (ExecutionError expected) {
-      assertSame(e, expected.getCause());
-    }
-    stats = cache.stats();
-    assertEquals(2, stats.missCount());
-    assertEquals(0, stats.loadSuccessCount());
-    assertEquals(3, stats.loadExceptionCount());
-    assertEquals(0, stats.hitCount());
-
-    final Error callableError = new Error();
-    try {
-      cache.get(new Object(), new Callable<Object>() {
-        @Override
-        public Object call() {
-          throw callableError;
-        }
-      });
-      fail();
-    } catch (ExecutionError expected) {
-      assertSame(callableError, expected.getCause());
-    }
-    stats = cache.stats();
-    assertEquals(3, stats.missCount());
-    assertEquals(0, stats.loadSuccessCount());
-    assertEquals(4, stats.loadExceptionCount());
-    assertEquals(0, stats.hitCount());
-
-    try {
-      cache.getAll(asList(new Object()));
-      fail();
-    } catch (ExecutionError expected) {
-      assertSame(e, expected.getCause());
-    }
-    stats = cache.stats();
-    assertEquals(4, stats.missCount());
-    assertEquals(0, stats.loadSuccessCount());
-    assertEquals(5, stats.loadExceptionCount());
-    assertEquals(0, stats.hitCount());
   }
 

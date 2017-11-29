@@ -1,0 +1,30 @@
+(startLine=134 endLine=161 srcPath=/home/ubuntu/luceneFilter/786/lucene/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testEndOffsetPositionWithCachingTokenFilter() throws Exception {
+    Directory dir = newDirectory();
+    Analyzer analyzer = new MockAnalyzer(random);
+    IndexWriter w = new IndexWriter(dir, newIndexWriterConfig( TEST_VERSION_CURRENT, analyzer));
+    Document doc = new Document();
+    TokenStream stream = analyzer.tokenStream("field", new StringReader("abcd   "));
+    stream.reset(); // TODO: wierd to reset before wrapping with CachingTokenFilter... correct?
+    stream = new CachingTokenFilter(stream);
+    FieldType customType = new FieldType(TextField.TYPE_UNSTORED);
+    customType.setStoreTermVectors(true);
+    customType.setStoreTermVectorPositions(true);
+    customType.setStoreTermVectorOffsets(true);
+    Field f = new Field("field", stream, customType);
+    doc.add(f);
+    doc.add(f);
+    w.addDocument(doc);
+    w.close();
+
+    IndexReader r = IndexReader.open(dir, true);
+    TermVectorOffsetInfo[] termOffsets = ((TermPositionVector) r.getTermFreqVector(0, "field")).getOffsets(0);
+    assertEquals(2, termOffsets.length);
+    assertEquals(0, termOffsets[0].getStartOffset());
+    assertEquals(4, termOffsets[0].getEndOffset());
+    assertEquals(8, termOffsets[1].getStartOffset());
+    assertEquals(12, termOffsets[1].getEndOffset());
+    r.close();
+    dir.close();
+  }
+

@@ -1,12 +1,8 @@
-(startLine=196 endLine=205 srcPath=/home/ubuntu/luceneFilter/20/lucene/lucene/test-framework/src/java/org/apache/lucene/codecs/asserting/AssertingDocValuesFormat.java)
-    public void addNumericField(FieldInfo field, Iterable<Number> values) throws IOException {
-      int count = 0;
-      for (Number v : values) {
-        assert v != null;
-        count++;
-      }
-      assert count == maxDoc;
-      checkIterator(values.iterator(), maxDoc, false);
-      in.addNumericField(field, values);
-    }
+(startLine=437 endLine=442 srcPath=/home/ubuntu/luceneFilter/310/lucene/solr/core/src/test/org/apache/solr/search/QueryEqualityTest.java)
+  public void testFuncMax() throws Exception {
+    assertFuncEquals("max(5,4,3,2,1)", "max(5, 4, 3, 2, 1)");
+    assertFuncEquals("max(foo_i,4)", "max(field('foo_i'), 4)");
+    assertFuncEquals("max(foo_i,sub(4,field('bar_i')))", 
+                     "max(field(foo_i), sub(4,bar_i))");
+  }
 

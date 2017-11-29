@@ -1,12 +1,11 @@
-(startLine=692 endLine=701 srcPath=/home/ubuntu/guavaFilter/651/guava/guava/src/com/google/common/collect/StandardTable.java)
-      @Override public boolean removeAll(final Collection<?> c) {
-        checkNotNull(c);
-        Predicate<Entry<R, V>> predicate = new Predicate<Entry<R, V>>() {
-          @Override
-          public boolean apply(Entry<R, V> entry) {
-            return c.contains(entry.getValue());
-          }
-        };
-        return removePredicate(predicate);
+(startLine=407 endLine=415 srcPath=/home/ubuntu/guavaFilter/678/guava/guava/src/com/google/common/collect/HashBiMap.java)
+    public boolean remove(@Nullable Object o) {
+      BiEntry<K, V> entry = seekByKey(o, Hashing.smearedHash(o));
+      if (entry == null) {
+        return false;
+      } else {
+        delete(entry);
+        return true;
       }
+    }
 

@@ -1,17 +1,46 @@
-(startLine=113 endLine=127 srcPath=/home/ubuntu/antFilter/707/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/depend/DependTest.java)
-    public void testClosure() {
-        Project project = getProject();
-        executeTarget("testclosure");
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (int i = 0; i < scannedFiles.length; ++i) {
-            files.put(scannedFiles[i], scannedFiles[i]);
+(startLine=128 endLine=171 srcPath=/home/ubuntu/antFilter/848/ant/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/LineContains.java)
+    public final int read() throws IOException {
+        if (!initialized) {
+            initialize();
+            initialized = true;
         }
-        assertEquals("Depend did not leave correct number of files", 1, 
-            files.size());
-        assertTrue("Result did not contain D.class", 
-            files.containsKey("D.class"));
+
+        int ch = -1;
+
+        if (line != null) {
+            ch = line.charAt(0);
+            if (line.length() == 1) {
+                line = null;
+            } else {
+                line = line.substring(1);
+            }
+        } else {
+            ch = in.read();
+            while (ch != -1) {
+                if (line == null) {
+                    line = "";
+                }
+                line = line + (char) ch;
+                if (ch == '\n') {
+                    break;
+                }
+                ch = in.read();
+            }
+
+            if (line != null) {
+                int containsSize = contains.size();
+                for (int i = 0; i < containsSize; i++) {
+                    String containsStr = (String) contains.elementAt(i);
+                    if (line.indexOf(containsStr) == -1) {
+                        line = null;
+                        break;
+                    }
+                }
+
+                return read();
+            }
+        }
+
+        return ch;
     }
 

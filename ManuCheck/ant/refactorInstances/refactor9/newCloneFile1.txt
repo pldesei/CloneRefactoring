@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,189 +51,359 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.taskdefs.optional.starteam;
 
-package org.apache.tools.ant.taskdefs.optional.vss;
-
-import java.io.File;
+import com.starbase.starteam.File;
+import com.starbase.starteam.Folder;
+import com.starbase.starteam.Item;
+import com.starbase.starteam.Status;
+import com.starbase.starteam.TypeNames;
+import com.starbase.starteam.View;
+import com.starbase.starteam.ViewConfiguration;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.Project;
 
 /**
- * Perform Get commands to Microsoft Visual SourceSafe.
- * <p>
- * The following attributes are interpreted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *      <td>login</td>
- *      <td>username,password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vsspath</td>
- *      <td>SourceSafe path</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>localpath</td>
- *      <td>Override the working directory and get to the specified path</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>writable</td>
- *      <td>true or false</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>recursive</td>
- *      <td>true or false</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>version</td>
- *      <td>a version number to get</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>date</td>
- *      <td>a date stamp to get at</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>label</td>
- *      <td>a label to get for</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>quiet</td>
- *      <td>suppress output (off by default)</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>autoresponse</td>
- *      <td>What to respond with (sets the -I option). By default, -I- is
- *      used; values of Y or N will be appended to this.</td>
- *      <td>No</td>
- *   </tr>
- * </table>
- * <p>Note that only one of version, date or label should be specified</p>
+ * Checks files into a StarTeam project.  
+ * Optionally adds files and in the local tree that
+ * are not managed by the repository to its control.
+ * Created: Sat Dec 15 20:26:07 2001
  *
- * @author Craig Cottingham
- * @author Andrew Everitt
- * @author Jesse Stockall
+ * @author <a href="mailto:scohen@localhost.localdomain">Steve Cohen</a>
+ * @version 1.0
  *
- * @ant.task name="vssget" category="scm"
+ * @ant.task name="stcheckin" category="scm" product="Starteam"
  */
-public class MSVSSGET extends MSVSS {
+public class StarTeamCheckin extends TreeBasedTask {
+
+    public StarTeamCheckin() {
+        // we want this to have a false default, unlike for Checkin.
+        setRecursive(false);
+    }
+
+    private boolean createFolders = true;
 
     /**
-     * Builds a command line to execute ss.
-     * @return     The constructed commandline.
+     * The comment which will be stored with the checkin.
      */
-    Commandline buildCmdLine() {
-        Commandline commandLine = new Commandline();
+    private String comment = null;
 
-        // build the command line from what we got the format is
-        // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
-        // as specified in the SS.EXE help
-        commandLine.setExecutable(getSSCommand());
-        commandLine.createArgument().setValue(COMMAND_GET);
+    /**
+     * holder for the add Uncontrolled attribute.  If true, all
+     * local files not in StarTeam will be added to the repository.
+     */
+    private boolean addUncontrolled = false;
 
-        if (getVsspath() == null) {
-            throw new BuildException("vsspath attribute must be set!", getLocation());
+    /**
+     * Sets the value of createFolders
+     *
+     * @param argCreateFolders Value to assign to this.createFolders
+     */
+    public void setCreateFolders(boolean argCreateFolders) {
+        this.createFolders = argCreateFolders;
+    }
+
+
+    /**
+     * Get the comment attribute for this operation
+     * @return value of comment.
+     */
+    public String getComment() {
+        return this.comment;
+    }
+
+    /**
+     * Optional checkin comment to be saved with the file.
+     * @param comment  Value to assign to comment.
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
+     * Get the value of addUncontrolled.
+     * @return value of addUncontrolled.
+     */
+    public boolean isAddUncontrolled() {
+        return this.addUncontrolled;
+    }
+
+    /**
+     * if true, any files or folders NOT in StarTeam will be 
+     * added to the repository.  Defaults to "false".
+     * @param addUncontrolled  Value to assign to addUncontrolled.
+     */
+    public void setAddUncontrolled(boolean addUncontrolled) {
+        this.addUncontrolled = addUncontrolled;
+    }
+
+    /**
+     * This attribute tells whether unlocked files on checkin (so that
+     * other users may access them) checkout or to leave the checkout status
+     * alone (default).
+     * @see #setUnlocked(boolean)
+     */
+    private int lockStatus = Item.LockType.UNCHANGED;
+
+    /**
+     * Set to do an unlocked checkout; optional, default is false;
+     * If true, file will be unlocked so that other users may
+     * change it.  If false, lock status will not change.     
+     * @param v  true means do an unlocked checkout
+     *           false means leave status alone.
+     */
+    public void setUnlocked(boolean v) {
+        if (v) {
+            this.lockStatus = Item.LockType.UNLOCKED;
+        } else {
+            this.lockStatus = Item.LockType.UNCHANGED;
         }
-        commandLine.createArgument().setValue(getVsspath());
-
-        // -GL
-        commandLine.createArgument().setValue(getLocalpath());
-        // -I- or -I-Y or -I-N
-        commandLine.createArgument().setValue(getAutoresponse());
-        // -O-
-        commandLine.createArgument().setValue(getQuiet());
-        // -R
-        commandLine.createArgument().setValue(getRecursive());
-        // -V
-        commandLine.createArgument().setValue(getVersion());
-        // -W
-        commandLine.createArgument().setValue(getWritable());
-        // -Y
-        commandLine.createArgument().setValue(getLogin());
-
-        return commandLine;
     }
 
     /**
-     * Set the local path; optional.
-     * <p>
-     * This is the path to override the project
-     * working directory.
-     * @param   localPath   The path on disk.
+     * Override of base-class abstract function creates an
+     * appropriately configured view.  For checkins this is
+     * always the current or "tip" view.
+     *
+     * @param raw the unconfigured <code>View</code>
+     * @return the snapshot <code>View</code> appropriately configured.
      */
-    public void setLocalpath(Path localPath) {
-        m_LocalPath = localPath.toString();
+    protected View createSnapshotView(View raw) {
+        return new View(raw, ViewConfiguration.createTip());
     }
 
     /**
-     * Flag to tell the task to recurse down the tree;
-     * optional, default false.
-     * @param recursive  The boolean value for recursive.
+     * Implements base-class abstract function to define tests for
+     * any preconditons required by the task.
+     *
+     * @exception BuildException thrown if both rootLocalFolder 
+     * and viewRootLocalFolder are defined
      */
-    public final void setRecursive(boolean recursive) {
-        m_Recursive = recursive;
+    protected void testPreconditions() throws BuildException {
+    }
+    /**
+     * Implements base-class abstract function to emit to the log an 
+     * entry describing the parameters that will be used by this operation.
+     *
+     * @param starteamrootFolder
+     *               root folder in StarTeam for the operation
+     * @param targetrootFolder
+     *               root local folder for the operation 
+     * (whether specified by the user or not).
+     */
+    protected void logOperationDescription(
+        Folder starteamrootFolder, java.io.File targetrootFolder) 
+    {
+        log((this.isRecursive() ? "Recursive" : "Non-recursive")
+            +" Checkin from" 
+            + (null == getRootLocalFolder() ? " (default): " : ": ") 
+            + targetrootFolder.getAbsolutePath());
+        
+        log("Checking in to: " + starteamrootFolder.getFolderHierarchy());
+        logIncludes();
+        logExcludes();
+
+        if (this.lockStatus == Item.LockType.UNLOCKED) {
+            log("  Items will be checked in unlocked.");
+        } 
+        else {
+            log("  Items will be checked in with no change in lock status.");
+        }
+
+        if (this.isForced()) {
+            log("  Items will be checked in in accordance with repository status and regardless of lock status.");
+        } 
+        else {
+            log("  Items will be checked in regardless of repository status only if locked." );
+        }
+
+
     }
 
     /**
-     * Sets/clears quiet mode; optional, default false.
-     * @param   quiet The boolean value for quiet.
+     * Implements base-class abstract function to perform the checkout
+     * operation on the files in each folder of the tree.
+     *
+     * @param starteamFolder the StarTeam folder to which files
+     *                       will be checked in
+     * @param localFolder local folder from which files will be checked in
+     * @exception BuildException if any error occurs
      */
-    public final void setQuiet (boolean quiet) {
-        m_Quiet = quiet;
+    protected void visit(Folder starteamFolder, java.io.File targetFolder)
+            throws BuildException 
+    {
+        try {
+            if (null != getRootLocalFolder()) {
+                starteamFolder.setAlternatePathFragment(
+                    targetFolder.getAbsolutePath());
+            }
+
+            Folder[] foldersList = starteamFolder.getSubFolders();
+            Item[] stFiles = starteamFolder.getItems(getTypeNames().FILE);
+            
+            // note, it's important to scan the items BEFORE we make the
+            // UnmatchedFileMap because that creates a bunch of NEW
+            // folders and files (unattached to repository) and we
+            // don't want to include those in our traversal.
+
+            UnmatchedFileMap ufm = 
+                new CheckinMap().init(
+                    targetFolder.getAbsoluteFile(), starteamFolder);
+
+
+            for (int i = 0, size = foldersList.length; i < size; i++) {
+                Folder stFolder = foldersList[i];
+                java.io.File subfolder = 
+                    new java.io.File(targetFolder, stFolder.getName());
+
+                ufm.removeControlledItem(subfolder);
+
+                if (isRecursive()) {
+                    visit(stFolder, subfolder);
+                }
+            }
+
+           
+            for (int i = 0, size = stFiles.length; i < size; i++) {
+                com.starbase.starteam.File stFile = 
+                    (com.starbase.starteam.File) stFiles[i];
+                processFile( stFile, targetFolder);
+                
+                ufm.removeControlledItem(
+                    new java.io.File(targetFolder, stFile.getName()));
+            }
+
+            if (this.addUncontrolled) {
+                ufm.processUncontrolledItems();
+            }
+
+        } catch (IOException e) {
+            throw new BuildException(e);
+        }
+
     }
 
     /**
-     * Sets behaviour, unset the READ-ONLY flag on files retrieved from VSS.; optional
-     * @param   argWritable The boolean value for writable.
+     * provides a string showing from and to full paths for logging
+     * 
+     * @param remotefile the Star Team file being processed.
+     * 
+     * @return a string showing from and to full paths
      */
-    public final void setWritable(boolean argWritable) {
-        m_Writable = argWritable;
+    private String describeCheckin(com.starbase.starteam.File remotefile)
+    {
+        StringBuffer sb = new StringBuffer();
+        sb.append(remotefile.getFullName())
+          .append(" --> ")
+          .append(getFullRepositoryPath(remotefile));
+        return sb.toString();
     }
 
     /**
-     * Sets the stored version string.; optional.
-     * @param  version The version to get.
+     * Processes (checks-out) <code>stFiles</code>files from StarTeam folder.
+     *
+     * @param eachFile repository file to process
+     * @param targetFolder a java.io.File (Folder) to work
+     * @throws IOException when StarTeam API fails to work with files
      */
-    public void setVersion(String version) {
-        m_Version = version;
+    private void processFile(com.starbase.starteam.File eachFile, 
+                             java.io.File targetFolder )
+    throws IOException 
+    {
+        String filename = eachFile.getName();
+
+        // If the file doesn't pass the include/exclude tests, skip it.
+        if (!shouldProcess(filename)) {
+            log("Excluding " + getFullRepositoryPath(eachFile));
+                return;
+        }
+
+        boolean checkin = true;
+        int fileStatus = (eachFile.getStatus());
+
+        // We try to update the status once to give StarTeam
+        // another chance.
+
+        if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
+            eachFile.updateStatus(true, true);
+            fileStatus = (eachFile.getStatus());
+        }
+
+        if (fileStatus == Status.MODIFIED) {
+            log("Checking in: " + describeCheckin(eachFile));
+        } 
+        else if (fileStatus == Status.MISSING) {
+            log("Local file missing: " + describeCheckin(eachFile));
+            checkin = false;
+        }
+        else {
+            if (isForced()) {
+                log("Forced checkin of " + describeCheckin(eachFile) + 
+                    " over status " + Status.name(fileStatus));
+            } else {
+                log("Skipping: " + getFullRepositoryPath(eachFile) + 
+                    " - status: " + Status.name(fileStatus));
+                checkin = false;
+            }
+        }
+        if (checkin) {
+            eachFile.checkin(this.comment, this.lockStatus, 
+                             this.isForced(), true, true);
+        }
     }
 
     /**
-     * Sets the stored date string.; optional.
-     * @param  date The date to checkout.
+     * handles the deletion of uncontrolled items
      */
-    public void setDate(String date) {
-        m_Date = date;
+    private class CheckinMap extends UnmatchedFileMap {
+        protected boolean isActive() {
+            return StarTeamCheckin.this.addUncontrolled;
+        }
+
+    
+        /**
+         * This override adds all its members to the repository.  It is assumed 
+         * that this method will not be called until all the items in the 
+         * corresponding folder have been processed, and that the internal map
+         * will contain only uncontrolled items.
+         */
+        void processUncontrolledItems() throws BuildException {
+            if (this.isActive()) {
+                Enumeration e = this.keys();
+                while (e.hasMoreElements()) {
+                    java.io.File local = (java.io.File) e.nextElement();
+                    Item remoteItem = (Item) this.get(local);
+                    remoteItem.update();
+    
+                    // once we find a folder that isn't in the repository, 
+                    // we know we can add it.
+                    if (local.isDirectory()) {
+                        Folder folder = (Folder) remoteItem;
+                        log("Added uncontrolled folder " 
+                            + folder.getFolderHierarchy()
+                            + " from " + local.getAbsoluteFile());
+                        if (isRecursive()) {
+                            UnmatchedFileMap submap = 
+                                new CheckinMap().init(local, folder);
+                            submap.processUncontrolledItems();
+                        }
+                    } else {
+                        com.starbase.starteam.File remoteFile =
+                            (com.starbase.starteam.File) remoteItem;
+                        log("Added uncontrolled file " 
+                            + TreeBasedTask.getFullRepositoryPath(remoteFile)
+                            + " from " + local.getAbsoluteFile());
+    
+                    }
+                }
+            }
+        }
     }
 
-    /**
-     * Sets the label to apply in SourceSafe.; optional.
-     * @param  label The label to apply.
-     */
-    public void setLabel(String label) {
-        m_Label = label;
-    }
-
-    /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
-     * @param response The auto response value.
-     */
-    public void setAutoresponse(String response){
-        m_AutoResponse = response;
-    }
 }
+
+

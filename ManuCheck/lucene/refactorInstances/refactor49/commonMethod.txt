@@ -1,9 +1,19 @@
-(startLine=1284 endLine=1290 srcPath=/home/ubuntu/luceneFilter/176/lucene/lucene/core/src/java/org/apache/lucene/util/packed/PackedInts.java)
-  static int numBlocks(long size, int blockSize) {
-    final int numBlocks = (int) (size / blockSize) + (size % blockSize == 0 ? 0 : 1);
-    if ((long) numBlocks * blockSize < size) {
-      throw new IllegalArgumentException("size is too large for this block size");
-    }
-    return numBlocks;
+(startLine=181 endLine=197 srcPath=/home/ubuntu/luceneFilter/215/lucene/solr/core/src/test/org/apache/solr/cloud/ShardSplitTest.java)
+  protected void splitShard(String shardId) throws SolrServerException, IOException {
+    ModifiableSolrParams params = new ModifiableSolrParams();
+    params.set("action", CollectionParams.CollectionAction.SPLITSHARD.toString());
+    params.set("collection", "collection1");
+    params.set("shard", shardId);
+    SolrRequest request = new QueryRequest(params);
+    request.setPath("/admin/collections");
+
+    String baseUrl = ((HttpSolrServer) shardToJetty.get(SHARD1).get(0).client.solrClient)
+        .getBaseURL();
+    baseUrl = baseUrl.substring(0, baseUrl.length() - "collection1".length());
+
+    HttpSolrServer baseServer = new HttpSolrServer(baseUrl);
+    baseServer.setConnectionTimeout(15000);
+    baseServer.setSoTimeout((int) (CollectionsHandler.DEFAULT_ZK_TIMEOUT * 5));
+    baseServer.request(request);
   }
 

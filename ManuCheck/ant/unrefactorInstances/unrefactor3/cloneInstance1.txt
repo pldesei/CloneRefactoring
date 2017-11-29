@@ -1,17 +1,12 @@
-(startLine=1186 endLine=1200 srcPath=/home/ubuntu/antFilter/139/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
-    protected boolean isIncluded(String name) {
-        ensureNonPatternSetsReady();
-
-        if (isCaseSensitive()
-            ? includeNonPatterns.contains(name)
-            : includeNonPatterns.contains(name.toUpperCase())) {
-            return true;
+(startLine=95 endLine=104 srcPath=/home/ubuntu/antFilter/486/ant/src/testcases/org/apache/tools/ant/IncludeTest.java)
+    public void testParseErrorInIncluding() {
+        try {
+            configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
+            fail("should have caused a parser exception");
+        } catch (BuildException e) {
+            assertTrue(e.getLocation().toString() 
+                       + " should refer to build.xml",
+                       e.getLocation().toString().indexOf("build.xml:") > -1);
         }
-        for (int i = 0; i < includePatterns.length; i++) {
-            if (matchPath(includePatterns[i], name, isCaseSensitive())) {
-                return true;
-            }
-        }
-        return false;
     }
 

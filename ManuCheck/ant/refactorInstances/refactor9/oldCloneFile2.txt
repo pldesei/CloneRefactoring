@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,173 +51,307 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.taskdefs.optional.starteam;
 
-package org.apache.tools.ant.taskdefs.optional.vss;
-
+import com.starbase.starteam.File;
+import com.starbase.starteam.Folder;
+import com.starbase.starteam.Item;
+import com.starbase.starteam.Status;
+import com.starbase.starteam.View;
+import com.starbase.starteam.ViewConfiguration;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.Project;
 
 /**
- * Performs Add commands to Microsoft Visual SourceSafe.
- * Based on the VSS Checkin code by Martin Poeschl
+ * Checks out files from a StarTeam project.
+ * It also creates all working directories on the
+ * local directory if appropriate. Ant Usage:
+ * <pre>
+ * &lt;taskdef name="starteamcheckout"
+ * classname="org.apache.tools.ant.taskdefs.StarTeamCheckout"/&gt;
+ * &lt;starteamcheckout username="BuildMaster" password="ant" starteamFolder="Source"
+ * starteamurl="servername:portnum/project/view"
+ * createworkingdirectories="true"/&gt;
+ * </pre>
  *
- * @author Nigel Magnay
- * @ant.task name="vssadd" category="scm"
+ * @author Christopher Charlier, ThoughtWorks, Inc. 2001
+ * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
+ * @author Jason Pettiss
+ * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
+ * @version 1.1
+ * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+ *
+ * @ant.task name="stcheckout" category="scm"
  */
-public class MSVSSADD extends MSVSS {
-
-    private String m_LocalPath = null;
-    private boolean m_Recursive = false;
-    private boolean m_Writable = false;
-    private String m_AutoResponse = null;
-    private String m_Comment = "-";
+public class StarTeamCheckout extends TreeBasedTask {
 
     /**
-     * Executes the task.
-     * <p>
-     * Builds a command line to execute ss and then calls Exec's run method
-     * to execute the command line.
+     * holder for the createDirs attribute
      */
-    public void execute() throws BuildException {
-        Commandline commandLine = new Commandline();
-        int result = 0;
+    private boolean createDirs = true;
 
-         // first off, make sure that we've got a command and a localPath ...
-        if (getLocalPath() == null) {
-            String msg = "localPath attribute must be set!";
-            throw new BuildException(msg, getLocation());
-        }
+    /**
+     * holder for the deleteUncontrolled attribute.  If true,
+     * all local files not in StarTeam will be deleted.
+     */
+    private boolean deleteUncontrolled = true;
 
-        // now look for illegal combinations of things ...
+    /**
+     * flag (defaults to true) to create all directories
+     * that are in the Starteam repository even if they are empty.
+     *
+     * @param value  the value to set the attribute to.
+     */
+    public void setCreateWorkingDirs(boolean value) {
+        this.createDirs = value;
+    }
 
-        // build the command line from what we got the format is
-        // ss Add VSS items [-B] [-C] [-D-] [-H] [-I-] [-K] [-N] [-O] [-R] [-W] [-Y] [-?]
-        // as specified in the SS.EXE help
-        commandLine.setExecutable(getSSCommand());
-        commandLine.createArgument().setValue(COMMAND_ADD);
+    /**
+     * Whether or not all local files <i>not<i> in StarTeam should be deleted.
+     * Optional, defaults to <code>true</code>.
+     * @param value  the value to set the attribute to.
+     */
+    public void setDeleteUncontrolled(boolean value) {
+        this.deleteUncontrolled = value;
+    }
 
-        // VSS items
-        commandLine.createArgument().setValue(getLocalPath());        
-        // -I- or -I-Y or -I-N
-        getAutoresponse(commandLine);
-        // -R
-        getRecursiveCommand(commandLine);
-        // -W
-        getWritableCommand(commandLine);
-        // -Y
-        getLoginCommand(commandLine);
-        // -C
-        commandLine.createArgument().setValue("-C" + getComment());
+    /**
+     * Sets the label StarTeam is to use for checkout; defaults to the most recent file.
+     * The label must exist in starteam or an exception will be thrown. 
+     * @param label the label to be used
+     */
+    public void setLabel(String label) {
+        _setLabel(label);
+    }
 
-        result = run(commandLine);
-        if (result != 0) {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
+    /**
+     * This attribute tells whether to do a locked checkout, an unlocked
+     * checkout or to leave the checkout status alone (default).  A locked
+     * checkout locks all other users out from making changes.  An unlocked
+     * checkout reverts all local files to their previous repository status
+     * and removes the lock.
+     * @see #setLocked(boolean)
+     * @see #setUnlocked(boolean)
+     */
+    private int lockStatus = Item.LockType.UNCHANGED;
+
+    /**
+     * Set to do a locked checkout; optional default is false. 
+     * @param v  True to do a locked checkout, false to checkout without
+     *           changing status/.
+     * @exception BuildException if both locked and unlocked are set true
+     */
+    public void setLocked(boolean v) throws BuildException {
+        setLockStatus(v, Item.LockType.EXCLUSIVE);
+    }
+
+
+    /**
+     * Set to do an unlocked checkout. Default is false;
+     * @param v  True to do an unlocked checkout, false to checkout without
+     *           changing status.
+     * @exception BuildException if both locked and unlocked are set true
+     */
+    public void setUnlocked(boolean v) throws BuildException {
+        setLockStatus(v, Item.LockType.UNLOCKED);
+    }
+
+    private void setLockStatus(boolean v, int newStatus)
+            throws BuildException {
+        if (v) {
+            if (this.lockStatus == Item.LockType.UNCHANGED) {
+                this.lockStatus = newStatus;
+            } else if (this.lockStatus != newStatus) {
+                throw new BuildException(
+                        "Error: cannot set locked and unlocked both true.");
+            }
         }
     }
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Override of base-class abstract function creates an
+     * appropriately configured view for checkouts - either
+     * the current view or a view from this.label.
+     *
+     * @param raw the unconfigured <code>View</code>
+     * @return the snapshot <code>View</code> appropriately configured.
      */
-    public void setRecursive(boolean recursive) {
-        m_Recursive = recursive;
-    }
+    protected View createSnapshotView(View raw) {
 
-    /**
-     * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
-     */
-    public void getRecursiveCommand(Commandline cmd) {
-        if (!m_Recursive) {
-            return;
+        int labelID = getLabelID(raw);
+
+        // if a label has been supplied, use it to configure the view
+        // otherwise use current view
+        if (labelID >= 0) {
+            return new View(raw, ViewConfiguration.createFromLabel(labelID));
         } else {
-            cmd.createArgument().setValue(FLAG_RECURSION);
+            return new View(raw, ViewConfiguration.createTip());
         }
     }
 
     /**
-     * Whether or not to leave added files writable.
-     * Default is <code>false</code>.
+     * Implements base-class abstract function to define tests for
+     * any preconditons required by the task
+     *
+     * @exception BuildException not thrown in this implementation
      */
-    public final void setWritable(boolean argWritable) {
-        m_Writable = argWritable;
-    }
-
-    /**
-     * The 'make writable' command if the attribute was <code>true</code>, 
-     * otherwise an empty string.
-     */
-    public void getWritableCommand(Commandline cmd) {
-        if (!m_Writable) {
-            return;
-        } else {
-            cmd.createArgument().setValue(FLAG_WRITABLE);
+    protected void testPreconditions() throws BuildException {
+        if (null != getRootLocalFolder() && !isForced()) {
+            log("Warning: rootLocalFolder specified, but forcing off.",
+                    Project.MSG_WARN);
         }
     }
 
     /**
-     * What to respond with (sets the -I option). By default, -I- is
-     * used; values of Y or N will be appended to this.
-     */      
-    public void setAutoresponse(String response){
-        if (response.equals("") || response.equals("null")) {
-            m_AutoResponse = null;
-        } else {
-            m_AutoResponse = response;
+     * Implements base-class abstract function to perform the checkout
+     * operation on the files in each folder of the tree.
+     *
+     * @param starteamFolder the StarTeam folder from which files to be
+     *                       checked out
+     * @param targetFolder the local mapping of rootStarteamFolder
+     * @exception BuildException if any error occurs
+     */
+    protected void visit(Folder starteamFolder, java.io.File targetFolder)
+            throws BuildException {
+        try {
+            Hashtable localFiles = listLocalFiles(targetFolder);
+
+            // If we have been told to create the working folders
+            if (createDirs) {
+                // Create if it doesn't exist
+                if (!targetFolder.exists()) {
+                    targetFolder.mkdir();
+                }
+            }
+            // For all Files in this folder, we need to check
+            // if there have been modifications.
+
+            Item[] files = starteamFolder.getItems("File");
+            for (int i = 0; i < files.length; i++) {
+                File eachFile = (File) files[i];
+                String filename = eachFile.getName();
+                java.io.File localFile =
+                        new java.io.File(targetFolder, filename);
+
+                delistLocalFile(localFiles, localFile);
+
+                // If the file doesn't pass the include/exclude tests, skip it.
+                if (!shouldProcess(filename)) {
+                    log("Skipping " + eachFile.toString(), Project.MSG_INFO);
+                    continue;
+                }
+
+
+                // If forced is not set then we may save ourselves some work by
+                // looking at the status flag.
+                // Otherwise, we care nothing about these statuses.
+
+                if (!isForced()) {
+                    int fileStatus = (eachFile.getStatus());
+
+                    // We try to update the status once to give StarTeam
+                    // another chance.
+                    if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
+                        eachFile.updateStatus(true, true);
+                        fileStatus = (eachFile.getStatus());
+                    }
+                    if (fileStatus == Status.CURRENT) {
+                        log("Not processing " + eachFile.toString()
+                                + " as it is current.",
+                                Project.MSG_INFO);
+                        continue;
+                    }
+                }
+
+
+                // Check out anything else.
+                // Just a note: StarTeam has a status for NEW which implies
+                // that there is an item  on your local machine that is not
+                // in the repository.  These are the items that show up as
+                // NOT IN VIEW in the Starteam GUI.
+                // One would think that we would want to perhaps checkin the
+                // NEW items (not in all cases! - Steve Cohen 15 Dec 2001)
+                // Unfortunately, the sdk doesn't really work, and we can't
+                // actually see  anything with a status of NEW. That is why
+                // we can just check out  everything here without worrying
+                // about losing anything.
+
+                log("Checking Out: " + (localFile.toString()), Project.MSG_INFO);
+                eachFile.checkoutTo(localFile, this.lockStatus,
+                        true, true, true);
+            }
+
+            // Now we recursively call this method on all sub folders in this
+            // folder unless recursive attribute is off.
+            Folder[] subFolders = starteamFolder.getSubFolders();
+            for (int i = 0; i < subFolders.length; i++) {
+                java.io.File targetSubfolder =
+                        new java.io.File(targetFolder, subFolders[i].getName());
+                delistLocalFile(localFiles, targetSubfolder);
+                if (isRecursive()) {
+                    visit(subFolders[i], targetSubfolder);
+                }
+            }
+
+            if (this.deleteUncontrolled) {
+                deleteUncontrolledItems(localFiles);
+            }
+
+        } catch (IOException e) {
+            throw new BuildException(e);
+        }
+    }
+
+
+    /**
+     * Deletes everything on the local machine that is not in the repository.
+     *
+     * @param localFiles the list of filenames whose elements are to be deleted
+     */
+    private void deleteUncontrolledItems(Hashtable localFiles) {
+        try {
+            Enumeration e = localFiles.keys();
+            while (e.hasMoreElements()) {
+                java.io.File file =
+                        new java.io.File(e.nextElement().toString());
+                delete(file);
+            }
+        } catch (SecurityException e) {
+            log("Error deleting file: " + e, Project.MSG_ERR);
         }
     }
 
     /**
-     * Checks the value set for the autoResponse.
-     * if it equals "Y" then we return -I-Y
-     * if it equals "N" then we return -I-N
-     * otherwise we return -I
+     * Deletes the file from the local drive.
+     * @param file the file or directory to delete.
+     * @return true if the file was successfully deleted otherwise false.
      */
-    public void getAutoresponse(Commandline cmd) {
-
-        if (m_AutoResponse == null) {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
-
-        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
-        } else {
-            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
-        } // end of else
-
-    }
-
-    /**
-     * Sets the comment to apply; optional.
-     * <p>
-     * If this is null or empty, it will be replaced with "-" which
-     * is what SourceSafe uses for an empty comment.
-     */
-    public void setComment(String comment) {
-        if (comment.equals("") || comment.equals("null")) {
-            m_Comment = "-";
-        } else {
-            m_Comment = comment;
+    private boolean delete(java.io.File file) {
+        // If the current file is a Directory, we need to delete all
+        // of its children as well.
+        if (file.isDirectory()) {
+            java.io.File[] children = file.listFiles();
+            for (int i = 0; i < children.length; i++) {
+                delete(children[i]);
+            }
         }
+
+        log("Deleting: " + file.getAbsolutePath(), Project.MSG_INFO);
+        return file.delete();
     }
 
-    /**
-     * Gets the comment to be applied.
-     * @return the comment to be applied.
-     */
-    public String getComment() {
-        return m_Comment;
-    }
 
-    /**
-     * Set the local path.
-     */
-    public void setLocalpath(Path localPath) {
-        m_LocalPath = localPath.toString();
-    }
-
-    public String getLocalPath() {
-        return m_LocalPath;
-    }
 }
+
+
+
+
+
+
+
+
+
+

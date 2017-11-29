@@ -1,12 +1,8 @@
-(startLine=446 endLine=455 srcPath=/home/ubuntu/guavaFilter/906/guava/guava-tests/test/com/google/common/collect/ArrayTableTest.java)
-  public void testColumnPutIllegal() {
-    table = create("foo", 1, 'a', "bar", 1, 'b', "foo", 3, 'c');
-    Map<String, Character> map = table.column(3);
-    try {
-      map.put("dog", 'd');
-      fail();
-    } catch (IllegalArgumentException expected) {
-      assertEquals("Row dog not in [foo, bar, cat]", expected.getMessage());
-    }
-  }
+(startLine=315 endLine=320 srcPath=/home/ubuntu/guavaFilter/187/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
+        protected Map<String, String> create(Entry<String, String>[] entries) {
+          Map<String, String> map = Maps.newHashMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
 

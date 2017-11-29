@@ -1,86 +1,38 @@
-(startLine=260 endLine=343 srcPath=/home/ubuntu/luceneFilter/1196/lucene/lucene/src/java/org/apache/lucene/index/DocumentsWriter.java)
-      public Boolean process(Iterator<DocumentsWriterPerThread> threadsIterator) throws IOException {
-        boolean anythingFlushed = false;
-        
-        if (flushDeletes) {
-          synchronized (indexWriter) {
-            if (applyDeletes(indexWriter.segmentInfos)) {
-              indexWriter.checkpoint();
-            }
-          }
+(startLine=423 endLine=458 srcPath=/home/ubuntu/luceneFilter/1269/lucene/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+    protected Object createValue(IndexReader reader, Entry entryKey)
+        throws IOException {
+      Entry entry = entryKey;
+      String field = entry.field;
+      FloatParser parser = (FloatParser) entry.custom;
+      if (parser == null) {
+        try {
+          return wrapper.getFloats(reader, field, DEFAULT_FLOAT_PARSER);
+        } catch (NumberFormatException ne) {
+          return wrapper.getFloats(reader, field, NUMERIC_UTILS_FLOAT_PARSER);      
         }
-
-        while (threadsIterator.hasNext()) {
-          boolean perThreadFlushDocStores = flushDocStores;
-          DocumentsWriterPerThread perThread = threadsIterator.next();
-          final int numDocs = perThread.getNumDocsInRAM();
-          
-          // Always flush docs if there are any
-          boolean flushDocs = numDocs > 0;
-          
-          String docStoreSegment = perThread.getDocStoreSegment();
-          if (docStoreSegment == null) {
-            perThreadFlushDocStores = false;
+    }
+      float[] retArray = null;
+      TermDocs termDocs = reader.termDocs();
+      TermEnum termEnum = reader.terms (new Term (field));
+      try {
+        do {
+          Term term = termEnum.term();
+          if (term==null || term.field() != field) break;
+          float termval = parser.parseFloat(term.text());
+          if (retArray == null) // late init
+            retArray = new float[reader.maxDoc()];
+          termDocs.seek (termEnum);
+          while (termDocs.next()) {
+            retArray[termDocs.doc()] = termval;
           }
-          int docStoreOffset = perThread.getDocStoreOffset();
-          boolean docStoreIsCompoundFile = false;
-          if (perThreadFlushDocStores
-              && (!flushDocs || !perThread.getSegment().equals(perThread.getDocStoreSegment()))) {
-            // We must separately flush the doc store
-            if (infoStream != null) {
-              message("  flush shared docStore segment " + docStoreSegment);
-            }
-            docStoreIsCompoundFile = flushDocStores(perThread);
-            flushDocStores(perThread);
-            perThreadFlushDocStores = false;
-          }
-
-          String segment = perThread.getSegment();
-
-          // If we are flushing docs, segment must not be null:
-          assert segment != null || !flushDocs;
-    
-          if (flushDocs) {
-            SegmentInfo newSegment = perThread.flush(perThreadFlushDocStores);
-            
-            if (newSegment != null) {
-              anythingFlushed = true;
-              
-              if (0 == docStoreOffset && perThreadFlushDocStores) {
-                // This means we are flushing private doc stores
-                // with this segment, so it will not be shared
-                // with other segments
-                assert docStoreSegment != null;
-                assert docStoreSegment.equals(segment);
-                docStoreOffset = -1;
-                docStoreSegment = null;
-                docStoreIsCompoundFile = false;
-              }
-              newSegment.setDocStore(docStoreOffset, docStoreSegment, docStoreIsCompoundFile);
-              
-              IndexWriter.setDiagnostics(newSegment, "flush");
-              finishFlushedSegment(newSegment, perThread);
-            }
-          }
-        }
-
-        if (anythingFlushed) {
-          clearThreadBindings();
-
-          sequenceIDLock.lock();
-          try {
-            flushedSequenceID = sequenceID;
-          } finally {
-            sequenceIDLock.unlock();
-          }
-          numDocsInRAM.set(0);
-        }
-        
-        if (flushDeletes) {
-          deletesInRAM.clear();
-        }
-
-
-        return anythingFlushed;
+        } while (termEnum.next());
+      } catch (StopFillCacheException stop) {
+      } finally {
+        termDocs.close();
+        termEnum.close();
       }
+      if (retArray == null) // no values
+        retArray = new float[reader.maxDoc()];
+      return retArray;
+    }
 

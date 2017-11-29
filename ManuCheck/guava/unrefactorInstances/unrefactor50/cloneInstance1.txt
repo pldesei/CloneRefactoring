@@ -1,11 +1,9 @@
-(startLine=319 endLine=327 srcPath=/home/ubuntu/guavaFilter/418/guava/guava-tests/benchmark/com/google/common/util/concurrent/MonitorBasedArrayBlockingQueue.java)
-    public E take() throws InterruptedException {
-        final Monitor monitor = this.monitor;
-        monitor.enterWhen(notEmpty);
-        try {
-            return extract();
-        } finally {
-            monitor.leave();
-        }
-    }
+(startLine=279 endLine=285 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
+  public void testManualServiceFailWhileStarting() throws Exception {
+    ManualSwitchedService service = new ManualSwitchedService();
+    RecordingListener listener = RecordingListener.record(service);
+    service.start();
+    service.notifyFailed(EXCEPTION);
+    assertEquals(ImmutableList.of(State.STARTING, State.FAILED), listener.getStateHistory());
+  }
 

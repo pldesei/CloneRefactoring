@@ -1,10 +1,10 @@
-(startLine=79 endLine=86 srcPath=/home/ubuntu/luceneFilter/1252/lucene/solr/src/java/org/apache/solr/analysis/BaseTokenStreamFactory.java)
-  protected int getInt(String name, int defaultVal, boolean useDefault) {
-    String s = args.get(name);
-    if (s==null) {
-      if (useDefault) return defaultVal;
-      throw new RuntimeException("Configuration Error: missing parameter '" + name + "'");
-    }
-    return Integer.parseInt(s);
+(startLine=158 endLine=165 srcPath=/home/ubuntu/luceneFilter/507/lucene/lucene/queries/src/test/org/apache/lucene/queries/ChainedFilterTest.java)
+  public void testXOR() throws Exception {
+    ChainedFilter chain = getChainedFilter(
+      new Filter[]{dateFilter, bobFilter}, ChainedFilter.XOR);
+
+    TopDocs hits = searcher.search(query, chain, 1000);
+    assertEquals("XOR matches sue", MAX / 2, hits.totalHits);
+    assertEquals("sue", searcher.doc(hits.scoreDocs[0].doc).get("owner"));
   }
 

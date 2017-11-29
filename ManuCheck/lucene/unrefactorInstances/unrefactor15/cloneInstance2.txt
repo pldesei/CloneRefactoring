@@ -1,23 +1,18 @@
-(startLine=515 endLine=535 srcPath=/home/ubuntu/luceneFilter/1647/lucene/contrib/gdata-server/src/core/src/java/org/apache/lucene/gdata/storage/lucenestorage/StorageImplementation.java)
-    public String getAccountNameForFeedId(String feedId)
-            throws StorageException {
-        if (feedId == null)
-            throw new StorageException("feed-id must not be null");
-        ReferenceCounter<StorageQuery> query = null;
-        try {
-            query = this.controller.getStorageQuery();
-            String accountName = query.get().getAccountNameForFeedId(feedId);
-            if (accountName == null)
-                throw new StorageException("no feed for feedId " + feedId
-                        + " found");
-            return accountName;
-        } catch (IOException e) {
-            throw new StorageException("Can not access storage - "
-                    + e.getMessage(), e);
-        } finally {
-            if (query != null)
-                query.decrementRef();
-        }
-
+(startLine=467 endLine=482 srcPath=/home/ubuntu/luceneFilter/289/lucene/lucene/core/src/java/org/apache/lucene/search/FieldComparator.java)
+    public int compareDocToValue(int doc, Float valueObj) {
+      final float value = valueObj.floatValue();
+      float docValue = currentReaderValues.get(doc);
+      // Test for docValue == 0 to save Bits.get method call for
+      // the common case (doc has value and value is non-zero):
+      if (docsWithField != null && docValue == 0 && !docsWithField.get(doc)) {
+        docValue = missingValue;
+      }
+      if (docValue < value) {
+        return -1;
+      } else if (docValue > value) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
 

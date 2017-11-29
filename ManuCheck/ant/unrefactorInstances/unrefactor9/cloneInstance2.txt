@@ -1,63 +1,14 @@
-(startLine=365 endLine=425 srcPath=/home/ubuntu/antFilter/576/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
-    public void testCheckinExceptions() {
-        boolean buildEx = false;
+(startLine=128 endLine=139 srcPath=/home/ubuntu/antFilter/649/ant/src/testcases/org/apache/tools/ant/taskdefs/CVSPassTest.java)
+    public void testPassFileMultipleEntry() throws Exception { 
+        executeTarget("test5");
+        File f = new File(getProjectDir(), "testpassfile.tmp");
 
-        // Set up a sosCheckin task
-        sosCheckin.setProject(project);
-        // No options set - SosServerPath should fail
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException SosServerPath", buildEx);
-        buildEx = false;
+        assertTrue( "Passfile "+f+" not created", f.exists());
 
-        // Set SosServerPath - Username should fail
-        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException Username", buildEx);
-        buildEx = false;
-
-        // Set Username - VssServerPath should fail
-        sosCheckin.setUsername(SOS_USERNAME);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException VssServerPath", buildEx);
-        buildEx = false;
-
-        // Set VssServerPath - ProjectPath should fail
-        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException ProjectPath", buildEx);
-
-        // Set ProjectPath - All required options set
-        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-            buildEx = true;
-        } catch (BuildException be) {
-            buildEx = false;
-        }
-        assertTrue("CheckinException All required options set", buildEx);
+        assertEquals(
+            JAKARTA_URL+ EOL+
+            XML_URL+ EOL+
+            TIGRIS_URL+ EOL,
+            readFile(f));
     }
 

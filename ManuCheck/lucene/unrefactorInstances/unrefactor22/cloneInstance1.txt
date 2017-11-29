@@ -1,19 +1,10 @@
-(startLine=91 endLine=107 srcPath=/home/ubuntu/luceneFilter/956/lucene/lucene/src/java/org/apache/lucene/util/fst/IntSequenceOutputs.java)
-  public IntsRef add(IntsRef prefix, IntsRef output) {
-    assert prefix != null;
-    assert output != null;
-    if (prefix == NO_OUTPUT) {
-      return output;
-    } else if (output == NO_OUTPUT) {
-      return prefix;
-    } else {
-      assert prefix.length > 0;
-      assert output.length > 0;
-      IntsRef result = new IntsRef(prefix.length + output.length);
-      System.arraycopy(prefix.ints, prefix.offset, result.ints, 0, prefix.length);
-      System.arraycopy(output.ints, output.offset, result.ints, prefix.length, output.length);
-      result.length = prefix.length + output.length;
-      return result;
-    }
+(startLine=232 endLine=239 srcPath=/home/ubuntu/luceneFilter/1039/lucene/lucene/src/java/org/apache/lucene/util/ArrayUtil.java)
+  public static short[] grow(short[] array, int minSize) {
+    if (array.length < minSize) {
+      short[] newArray = new short[oversize(minSize, RamUsageEstimator.NUM_BYTES_SHORT)];
+      System.arraycopy(array, 0, newArray, 0, array.length);
+      return newArray;
+    } else
+      return array;
   }
 

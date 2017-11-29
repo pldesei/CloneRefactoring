@@ -1,7 +1,7 @@
-(startLine=561 endLine=565 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
-  static void putEntries(Map<String, String> map, Entry<String, String>[] entries) {
-    for (Entry<String, String> entry : entries) {
-       map.put(entry.getKey(), entry.getValue());
-     }
-  }
+(startLine=622 endLine=626 srcPath=/home/ubuntu/guavaFilter/880/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
+    static RecordingListener record(Service service) {
+      RecordingListener listener = new RecordingListener(service);
+      service.addListener(listener, MoreExecutors.sameThreadExecutor());
+      return listener;
+    }
 

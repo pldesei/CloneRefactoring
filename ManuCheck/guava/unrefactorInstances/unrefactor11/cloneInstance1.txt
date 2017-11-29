@@ -1,39 +1,17 @@
-(startLine=305 endLine=341 srcPath=/home/ubuntu/guavaFilter/1094/guava/guava/src/com/google/common/collect/ImmutableListMultimap.java)
-  private void readObject(ObjectInputStream stream)
-      throws IOException, ClassNotFoundException {
-    stream.defaultReadObject();
-    int keyCount = stream.readInt();
-    if (keyCount < 0) {
-      throw new InvalidObjectException("Invalid key count " + keyCount);
-    }
-    ImmutableMap.Builder<Object, ImmutableList<Object>> builder
-        = ImmutableMap.builder();
-    int tmpSize = 0;
+(startLine=350 endLine=364 srcPath=/home/ubuntu/guavaFilter/180/guava/guava-tests/test/com/google/common/base/PreconditionsTest.java)
+  public void testAllOverloads_checkArgument() throws Exception {
+    for (ImmutableList<Class<?>> sig : allSignatures(boolean.class)) {
+      Method checkArgumentMethod =
+          Preconditions.class.getMethod("checkArgument", sig.toArray(new Class<?>[] {}));
+      checkArgumentMethod.invoke(null /* static method */, getParametersForSignature(true, sig));
 
-    for (int i = 0; i < keyCount; i++) {
-      Object key = stream.readObject();
-      int valueCount = stream.readInt();
-      if (valueCount <= 0) {
-        throw new InvalidObjectException("Invalid value count " + valueCount);
+      Object[] failingParams = getParametersForSignature(false, sig);
+      try {
+        checkArgumentMethod.invoke(null /* static method */, failingParams);
+        fail();
+      } catch (InvocationTargetException ite) {
+        assertFailureCause(ite.getCause(), IllegalArgumentException.class, failingParams);
       }
-
-      Object[] array = new Object[valueCount];
-      for (int j = 0; j < valueCount; j++) {
-        array[j] = stream.readObject();
-      }
-      builder.put(key, ImmutableList.copyOf(array));
-      tmpSize += valueCount;
     }
-
-    ImmutableMap<Object, ImmutableList<Object>> tmpMap;
-    try {
-      tmpMap = builder.build();
-    } catch (IllegalArgumentException e) {
-      throw (InvalidObjectException)
-          new InvalidObjectException(e.getMessage()).initCause(e);
-    }
-
-    FieldSettersHolder.MAP_FIELD_SETTER.set(this, tmpMap);
-    FieldSettersHolder.SIZE_FIELD_SETTER.set(this, tmpSize);
   }
 

@@ -1,14 +1,30 @@
-(startLine=46 endLine=57 srcPath=/home/ubuntu/luceneFilter/376/lucene/solr/core/src/test/org/apache/solr/analysis/TestCharFilters.java)
-  public void testQueryAnalysis() {
-    assertQ("Query analysis: ",
-       req("fl", "id", "q", "content:ab", "sort", "id asc"),
-                "//*[@numFound='1']",
-                "//result/doc[1]/int[@name='id'][.=1]"
-    );
-    assertQ("Query analysis: ",
-        req("fl", "id", "q", "content:aba", "sort", "id asc"),
-                 "//*[@numFound='1']",
-                 "//result/doc[1]/int[@name='id'][.=2]"
-    );
+(startLine=47 endLine=74 srcPath=/home/ubuntu/luceneFilter/96/lucene/lucene/facet/src/java/org/apache/lucene/facet/associations/SumIntAssociationFacetsAggregator.java)
+  public void aggregate(MatchingDocs matchingDocs, CategoryListParams clp, FacetArrays facetArrays) throws IOException {
+    BinaryDocValues dv = matchingDocs.context.reader().getBinaryDocValues(clp.field + CategoryIntAssociation.ASSOCIATION_LIST_ID);
+    if (dv == null) {
+      return; // no int associations in this reader
+    }
+    
+    final int length = matchingDocs.bits.length();
+    final int[] values = facetArrays.getIntArray();
+    int doc = 0;
+    while (doc < length && (doc = matchingDocs.bits.nextSetBit(doc)) != -1) {
+      dv.get(doc, bytes);
+      if (bytes.length > 0) {
+        // aggreate association values for ordinals
+        int bytesUpto = bytes.offset + bytes.length;
+        int pos = bytes.offset;
+        while (pos < bytesUpto) {
+          int ordinal = ((bytes.bytes[pos++] & 0xFF) << 24) | ((bytes.bytes[pos++] & 0xFF) << 16)
+              | ((bytes.bytes[pos++] & 0xFF) <<  8) | (bytes.bytes[pos++] & 0xFF);
+          
+          int value = ((bytes.bytes[pos++] & 0xFF) << 24) | ((bytes.bytes[pos++] & 0xFF) << 16)
+              | ((bytes.bytes[pos++] & 0xFF) <<  8) | (bytes.bytes[pos++] & 0xFF);
+          
+          values[ordinal] += value;
+        }
+      }
+      ++doc;
+    }
   }
 

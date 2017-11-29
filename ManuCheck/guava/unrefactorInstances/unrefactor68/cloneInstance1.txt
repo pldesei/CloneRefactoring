@@ -1,19 +1,10 @@
-(startLine=280 endLine=296 srcPath=/home/ubuntu/guavaFilter/1042/guava/guava-tests/test/com/google/common/collect/SetOperationsTest.java)
-    public void testIntersection() {
-      Set<String> friends = Sets.newHashSet("Tom", "Joe", "Dave");
-      Set<String> enemies = Sets.newHashSet("Dick", "Harry", "Tom");
-
-      Set<String> frenemies = Sets.intersection(friends, enemies);
-      assertEquals(1, frenemies.size());
-
-      ImmutableSet<String> immut
-          = Sets.intersection(friends, enemies).immutableCopy();
-      HashSet<String> mut
-          = Sets.intersection(friends, enemies).copyInto(new HashSet<String>());
-
-      enemies.add("Joe");
-      assertEquals(2, frenemies.size());
-      assertEquals(1, immut.size());
-      assertEquals(1, mut.size());
+(startLine=328 endLine=335 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/collect/ImmutableListTest.java)
+    public void testCopyOf_iteratorContainingNull() {
+      Iterator<String> iterator = asList("a", null, "b").iterator();
+      try {
+        ImmutableList.copyOf(iterator);
+        fail();
+      } catch (NullPointerException expected) {
+      }
     }
 

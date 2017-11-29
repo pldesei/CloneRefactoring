@@ -1,12 +1,8 @@
-(startLine=231 endLine=240 srcPath=/home/ubuntu/luceneFilter/1419/lucene/src/test/org/apache/lucene/analysis/TestTeeTokenFilter.java)
-    public Token next(final Token reusableToken) throws IOException {
-      Token nextToken = null;
-      for (nextToken = input.next(reusableToken);
-           nextToken != null && count % modCount != 0;
-           nextToken = input.next(reusableToken)) {
-        count++;
-      }
-      count++;
-      return nextToken;
+(startLine=83 endLine=88 srcPath=/home/ubuntu/luceneFilter/1452/lucene/src/java/org/apache/lucene/util/DocIdBitSet.java)
+    public int advance(int target) {
+      int d = bitSet.nextSetBit(target);
+      // -1 returned by BitSet.nextSetBit() when exhausted
+      docId = d == -1 ? NO_MORE_DOCS : d;
+      return docId;
     }
 

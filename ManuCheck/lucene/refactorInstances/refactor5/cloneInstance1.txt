@@ -1,11 +1,15 @@
-(startLine=69 endLine=77 srcPath=/home/ubuntu/luceneFilter/1420/lucene/src/test/org/apache/lucene/analysis/TestTeeTokenFilter.java)
-      public void add(AttributeSource a) throws IOException {
-        TermAttribute termAtt = null;
-        if (a.hasAttribute(TermAttribute.class)) {
-          termAtt = (TermAttribute) a.getAttribute(TermAttribute.class);
-        }
-        if (termAtt != null && termAtt.term().equalsIgnoreCase("The")) {
-          super.add(a);
-        }
-      }
+(startLine=53 endLine=65 srcPath=/home/ubuntu/luceneFilter/1453/lucene/src/test/org/apache/lucene/util/TestOpenBitSet.java)
+  void doIterate1(BitSet a, OpenBitSet b) {
+    int aa=-1,bb=-1;
+    OpenBitSetIterator iterator = new OpenBitSetIterator(b);
+    do {
+      aa = a.nextSetBit(aa+1);
+      if (rand.nextBoolean())
+        iterator.next();
+      else
+        iterator.skipTo(bb+1);
+      bb = iterator.doc();
+      assertEquals(aa,bb);
+    } while (aa>=0);
+  }
 

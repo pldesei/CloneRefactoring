@@ -1,10 +1,13 @@
-(startLine=61 endLine=68 srcPath=/home/ubuntu/guavaFilter/255/guava/guava-tests/test/com/google/common/collect/GeneralRangeTest.java)
-  public void testCreateEmptyRangeClosedOpenSucceeds() {
-    for (Integer i : IN_ORDER_VALUES) {
-      GeneralRange<Integer> range = GeneralRange.range(ORDERING, i, CLOSED, i, OPEN);
-      for (Integer j : IN_ORDER_VALUES) {
-        assertFalse(range.contains(j));
+(startLine=1127 endLine=1137 srcPath=/home/ubuntu/guavaFilter/1020/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public boolean removeAll(Collection<?> c) {
+        checkNotNull(c);
+        boolean changed = false;
+        for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
+          if (c.contains(column(columnKey))) {
+            removeColumn(columnKey);
+            changed = true;
+          }
+        }
+        return changed;
       }
-    }
-  }
 

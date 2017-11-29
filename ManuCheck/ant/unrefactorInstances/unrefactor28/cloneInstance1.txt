@@ -1,29 +1,12 @@
-(startLine=719 endLine=745 srcPath=/home/ubuntu/antFilter/479/ant/src/main/org/apache/tools/ant/taskdefs/Execute.java)
-        public Process exec(Project project, String[] cmd, String[] env,
-                            File workingDir) throws IOException {
-            File commandDir = workingDir;
-            if (workingDir == null) {
-                if (project != null) {
-                    commandDir = project.getBaseDir();
-                } else {
-                    return exec(project, cmd, env);
-                }
-            }
-
-            // Use cmd.exe to change to the specified drive and
-            // directory before running the command
-            final int preCmdLength = 7;
-            final String cmdDir = commandDir.getAbsolutePath();
-            String[] newcmd = new String[cmd.length + preCmdLength];
-            newcmd[0] = "cmd";
-            newcmd[1] = "/c";
-            newcmd[2] = cmdDir.substring(0, 2);
-            newcmd[3] = "&&";
-            newcmd[4] = "cd";
-            newcmd[5] = cmdDir.substring(2);
-            newcmd[6] = "&&";
-            System.arraycopy(cmd, 0, newcmd, preCmdLength, cmd.length);
-
-            return exec(project, newcmd, env);
+(startLine=95 endLine=104 srcPath=/home/ubuntu/antFilter/551/ant/src/testcases/org/apache/tools/ant/IncludeTest.java)
+    public void testParseErrorInIncluding() {
+        try {
+            configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
+            fail("should have caused a parser exception");
+        } catch (BuildException e) {
+            assertTrue(e.getLocation().toString() 
+                       + " should refer to build.xml",
+                       e.getLocation().toString().indexOf("build.xml:") > -1);
         }
+    }
 

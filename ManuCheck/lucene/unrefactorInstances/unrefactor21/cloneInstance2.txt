@@ -1,10 +1,19 @@
-(startLine=245 endLine=252 srcPath=/home/ubuntu/luceneFilter/1039/lucene/lucene/src/java/org/apache/lucene/util/ArrayUtil.java)
-  public static float[] grow(float[] array, int minSize) {
-    if (array.length < minSize) {
-      float[] newArray = new float[oversize(minSize, RamUsageEstimator.NUM_BYTES_FLOAT)];
-      System.arraycopy(array, 0, newArray, 0, array.length);
-      return newArray;
-    } else
-      return array;
+(startLine=44 endLine=60 srcPath=/home/ubuntu/luceneFilter/1234/lucene/lucene/src/test/org/apache/lucene/util/TestNumericUtils.java)
+  public void testIntConversionAndOrdering() throws Exception {
+    // generate a series of encoded ints, each numerical one bigger than the one before
+    BytesRef last=null, act=new BytesRef(NumericUtils.BUF_SIZE_INT);
+    for (int i=-100000; i<100000; i++) {
+      NumericUtils.intToPrefixCoded(i, 0, act);
+      if (last!=null) {
+        // test if smaller
+        assertTrue("actual bigger than last (BytesRef)", BytesRef.getUTF8SortedAsUTF16Comparator().compare(last, act) < 0 );
+        assertTrue("actual bigger than last (as String)", last.utf8ToString().compareTo(act.utf8ToString()) < 0 );
+      }
+      // test is back and forward conversion works
+      assertEquals("forward and back conversion should generate same int", i, NumericUtils.prefixCodedToInt(act));
+      // next step
+      last=act;
+      act = new BytesRef(NumericUtils.BUF_SIZE_INT);
+    }
   }
 

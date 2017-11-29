@@ -1,13 +1,8 @@
-(startLine=1535 endLine=1545 srcPath=/home/ubuntu/luceneFilter/389/lucene/lucene/highlighter/src/test/org/apache/lucene/search/highlight/HighlighterTest.java)
-      public boolean incrementToken() {
-        if(iter.hasNext()) {
-          Token token = iter.next();
-          clearAttributes();
-          termAtt.setEmpty().append(token);
-          posIncrAtt.setPositionIncrement(token.getPositionIncrement());
-          offsetAtt.setOffset(token.startOffset(), token.endOffset());
-          return true;
-        }
-        return false;
-      }
+(startLine=184 endLine=189 srcPath=/home/ubuntu/luceneFilter/1446/lucene/src/test/org/apache/lucene/search/TestSimpleExplanations.java)
+  public void testMPQ2() throws Exception {
+    MultiPhraseQuery q = new MultiPhraseQuery();
+    q.add(ta(new String[] {"w1"}));
+    q.add(ta(new String[] {"w2","w3"}));
+    qtest(q, new int[] { 0,1,3 });
+  }
 

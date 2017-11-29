@@ -1,16 +1,14 @@
-(startLine=1240 endLine=1253 srcPath=/home/ubuntu/luceneFilter/1453/lucene/src/java/org/apache/lucene/index/SegmentReader.java)
-  static SegmentReader getOnlySegmentReader(IndexReader reader) {
-    if (reader instanceof SegmentReader)
-      return (SegmentReader) reader;
-
-    if (reader instanceof DirectoryReader) {
-      IndexReader[] subReaders = reader.getSequentialSubReaders();
-      if (subReaders.length != 1)
-        throw new IllegalArgumentException(reader + " has " + subReaders.length + " segments instead of exactly one");
-
-      return (SegmentReader) subReaders[0];
-    }
-
-    throw new IllegalArgumentException(reader + " is not a SegmentReader or a single-segment DirectoryReader");
-  }
+(startLine=1019 endLine=1030 srcPath=/home/ubuntu/luceneFilter/1486/lucene/src/java/org/apache/lucene/queryParser/QueryParserTokenManager.java)
+private static final boolean jjCanMove_1(int hiByte, int i1, int i2, long l1, long l2)
+{
+   switch(hiByte)
+   {
+      case 0:
+         return ((jjbitVec3[i2] & l2) != 0L);
+      default :
+         if ((jjbitVec1[i1] & l1) != 0L)
+            return true;
+         return false;
+   }
+}
 

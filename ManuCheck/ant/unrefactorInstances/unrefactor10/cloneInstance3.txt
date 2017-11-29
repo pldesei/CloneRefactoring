@@ -1,16 +1,63 @@
-(startLine=410 endLine=423 srcPath=/home/ubuntu/antFilter/676/ant/src/main/org/apache/tools/ant/taskdefs/optional/ejb/WebsphereDeploymentTool.java)
-    protected DescriptorHandler getWebsphereDescriptorHandler(final File srcDir) {
-        DescriptorHandler handler =
-            new DescriptorHandler(getTask(), srcDir) {
-                protected void processElement() {
-                }
-            };
+(startLine=521 endLine=581 srcPath=/home/ubuntu/antFilter/576/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
+    public void testCheckoutExceptions() {
+        boolean buildEx = false;
 
-        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
-
-            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        // Set up a sosCheckout task
+        sosCheckout.setProject(project);
+        // No options set - SosServerPath should fail
+        try {
+            commandline = sosCheckout.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
+                buildEx = true;
+            }
         }
-        return handler;
+        assertTrue("CheckoutException SosServerPath", buildEx);
+        buildEx = false;
+
+        // Set SosServerPath - Username should fail
+        sosCheckout.setSosServerPath(SOS_SERVER_PATH);
+        try {
+            commandline = sosCheckout.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
+                buildEx = true;
+            }
+        }
+        assertTrue("CheckoutException Username", buildEx);
+        buildEx = false;
+
+        // Set Username - VssServerPath should fail
+        sosCheckout.setUsername(SOS_USERNAME);
+        try {
+            commandline = sosCheckout.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
+                buildEx = true;
+            }
+        }
+        assertTrue("CheckoutException VssServerPath", buildEx);
+        buildEx = false;
+
+        // Set VssServerPath - ProjectPath should fail
+        sosCheckout.setVssServerPath(VSS_SERVER_PATH);
+        try {
+            commandline = sosCheckout.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
+                buildEx = true;
+            }
+        }
+        assertTrue("CheckoutException ProjectPath", buildEx);
+
+        // Set ProjectPath - All required options set
+        sosCheckout.setProjectPath(VSS_PROJECT_PATH);
+        try {
+            commandline = sosCheckout.buildCmdLine();
+            buildEx = true;
+        } catch (BuildException be) {
+            buildEx = false;
+        }
+        assertTrue("CheckoutException All required options set", buildEx);
     }
 

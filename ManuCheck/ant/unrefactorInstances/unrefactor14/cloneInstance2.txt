@@ -1,12 +1,14 @@
-(startLine=1729 endLine=1738 srcPath=/home/ubuntu/antFilter/447/ant/src/main/org/apache/tools/ant/Project.java)
-    public void fireBuildFinished(Throwable exception) {
-        BuildEvent event = new BuildEvent(this);
-        event.setException(exception);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
-            listener.buildFinished(event);
+(startLine=233 endLine=244 srcPath=/home/ubuntu/antFilter/268/ant/src/main/org/apache/tools/ant/taskdefs/optional/net/RExecTask.java)
+        public void sendString(String s, boolean echoString) {
+            OutputStream os = this.getOutputStream();
+            try {
+                os.write((s + "\n").getBytes());
+                if (echoString) {
+                    log(s, Project.MSG_INFO);
+                }
+                os.flush();
+            } catch (Exception e) {
+                throw new BuildException(e, getLocation());
+            }
         }
-    }
 

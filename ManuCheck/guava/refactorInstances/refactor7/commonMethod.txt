@@ -1,7 +1,10 @@
-(startLine=561 endLine=565 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
-  static void putEntries(Map<String, String> map, Entry<String, String>[] entries) {
-    for (Entry<String, String> entry : entries) {
-       map.put(entry.getKey(), entry.getValue());
-     }
+(startLine=310 endLine=317 srcPath=/home/ubuntu/guavaFilter/750/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
+  static TestSuite filterSuite() {
+    TestSuite suite = new TestSuite("Filter");
+    suite.addTest(filterMapSuite());
+    suite.addTest(filterBiMapSuite());
+    suite.addTest(filterSortedMapSuite());
+    suite.addTest(filterNavigableMapSuite());
+    return suite;
   }
 

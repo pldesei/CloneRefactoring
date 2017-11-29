@@ -1,14 +1,14 @@
-(startLine=500 endLine=511 srcPath=/home/ubuntu/antFilter/175/ant/proposal/embed/src/java/org/apache/tools/ant/PropertyHelper.java)
-    public Hashtable getUserProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = userProperties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        return propertiesCopy;
+(startLine=126 endLine=137 srcPath=/home/ubuntu/antFilter/8/ant/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitReportTest.java)
+    public void testSpecialSignsInHtmlPath() throws Exception {
+        buildRule.executeTarget("testSpecialSignsInHtmlPath");
+        File reportFile = new File(buildRule.getOutputDir(), "html# $%\u00A7&-!report/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
     }
 

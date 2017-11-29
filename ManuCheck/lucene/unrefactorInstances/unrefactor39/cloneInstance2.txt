@@ -1,64 +1,8 @@
-(startLine=359 endLine=420 srcPath=/home/ubuntu/luceneFilter/1389/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/DanishStemmer.java)
-        public boolean stem() {
-            int v_1;
-            int v_2;
-            int v_3;
-            int v_4;
-            int v_5;
-            // (, line 82
-            // do, line 84
-            v_1 = cursor;
-            lab0: do {
-                // call mark_regions, line 84
-                if (!r_mark_regions())
-                {
-                    break lab0;
-                }
-            } while (false);
-            cursor = v_1;
-            // backwards, line 85
-            limit_backward = cursor; cursor = limit;
-            // (, line 85
-            // do, line 86
-            v_2 = limit - cursor;
-            lab1: do {
-                // call main_suffix, line 86
-                if (!r_main_suffix())
-                {
-                    break lab1;
-                }
-            } while (false);
-            cursor = limit - v_2;
-            // do, line 87
-            v_3 = limit - cursor;
-            lab2: do {
-                // call consonant_pair, line 87
-                if (!r_consonant_pair())
-                {
-                    break lab2;
-                }
-            } while (false);
-            cursor = limit - v_3;
-            // do, line 88
-            v_4 = limit - cursor;
-            lab3: do {
-                // call other_suffix, line 88
-                if (!r_other_suffix())
-                {
-                    break lab3;
-                }
-            } while (false);
-            cursor = limit - v_4;
-            // do, line 89
-            v_5 = limit - cursor;
-            lab4: do {
-                // call undouble, line 89
-                if (!r_undouble())
-                {
-                    break lab4;
-                }
-            } while (false);
-            cursor = limit - v_5;
-            cursor = limit_backward;            return true;
-        }
+(startLine=242 endLine=247 srcPath=/home/ubuntu/luceneFilter/976/lucene/lucene/src/test/org/apache/lucene/search/TestExplanations.java)
+  public Query reqB(Query q) throws Exception {
+    BooleanQuery bq = new BooleanQuery(true);
+    bq.add(q, BooleanClause.Occur.MUST);
+    bq.add(new TermQuery(new Term(FIELD,"w1")), BooleanClause.Occur.SHOULD);
+    return bq;
+  }
 

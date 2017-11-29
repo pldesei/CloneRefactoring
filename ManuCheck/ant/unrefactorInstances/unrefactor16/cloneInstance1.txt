@@ -1,25 +1,28 @@
-(startLine=348 endLine=370 srcPath=/home/ubuntu/antFilter/169/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
-    public Hashtable getTaskDefinitions() {
-        synchronized (taskClassDefinitions) {
-            synchronized (antTypeTable) {
-                if (rebuildTaskClassDefinitions) {
-                    taskClassDefinitions.clear();
-                    for (Iterator i = antTypeTable.keySet().iterator();
-                         i.hasNext();) {
-                        String name = (String) i.next();
-                        Class clazz = antTypeTable.getExposedClass(name);
-                        if (clazz == null) {
-                            continue;
-                        }
-                        if (Task.class.isAssignableFrom(clazz)) {
-                            taskClassDefinitions.put(
-                                name, antTypeTable.getTypeClass(name));
-                        }
-                    }
-                    rebuildTaskClassDefinitions = false;
-                }
+(startLine=104 endLine=129 srcPath=/home/ubuntu/antFilter/705/ant/src/main/org/apache/tools/ant/filters/ExpandProperties.java)
+    public final int read() throws IOException {
+
+        int ch = -1;
+
+        if (queuedData != null && queuedData.length() == 0) {
+            queuedData = null;
+        }
+
+        if (queuedData != null) {
+            ch = queuedData.charAt(0);
+            queuedData = queuedData.substring(1);
+            if (queuedData.length() == 0) {
+                queuedData = null;
+            }
+        } else {
+            queuedData = readFully();
+            if (queuedData == null) {
+                ch = -1;
+            } else {
+                Project project = getProject();
+                queuedData = project.replaceProperties(queuedData);
+                return read();
             }
         }
-        return taskClassDefinitions;
+        return ch;
     }
 

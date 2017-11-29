@@ -1,20 +1,23 @@
-(startLine=126 endLine=143 srcPath=/home/ubuntu/luceneFilter/1675/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
-  public void testMultipleFields() throws IOException {
-    TermVectorsWriter writer = new TermVectorsWriter(dir, seg, fieldInfos);
-    writeDocument(writer, testFields.length);
+(startLine=58 endLine=78 srcPath=/home/ubuntu/luceneFilter/336/lucene/lucene/analysis/common/src/test/org/apache/lucene/analysis/payloads/TestDelimitedPayloadTokenFilterFactory.java)
+  public void testDelim() throws Exception {
+    Map<String,String> args = new HashMap<String, String>();
+    args.put(DelimitedPayloadTokenFilterFactory.ENCODER_ATTR, FloatEncoder.class.getName());
+    args.put(DelimitedPayloadTokenFilterFactory.DELIMITER_ATTR, "*");
+    DelimitedPayloadTokenFilterFactory factory = new DelimitedPayloadTokenFilterFactory();
+    factory.init(args);
+    ResourceLoader loader = new StringMockResourceLoader("solr/collection1");
+    factory.inform(loader);
 
-    writer.close();
-
-    assertTrue(writer.isDocumentOpen() == false);
-    //Check to see the files were created
-    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVD_EXTENSION));
-    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVX_EXTENSION));
-    //Now read it back in
-    TermVectorsReader reader = new TermVectorsReader(dir, seg, fieldInfos);
-    assertTrue(reader != null);
-
-    for (int j = 0; j < testFields.length; j++) {
-      checkTermVector(reader, 0, testFields[j]);
+    TokenStream input = new MockTokenizer(new StringReader("the*0.1 quick*0.1 red*0.1"), MockTokenizer.WHITESPACE, false);
+    DelimitedPayloadTokenFilter tf = factory.create(input);
+    tf.reset();
+    while (tf.incrementToken()){
+      PayloadAttribute payAttr = tf.getAttribute(PayloadAttribute.class);
+      assertTrue("payAttr is null and it shouldn't be", payAttr != null);
+      byte[] payData = payAttr.getPayload().bytes;
+      assertTrue("payData is null and it shouldn't be", payData != null);
+      float payFloat = PayloadHelper.decodeFloat(payData);
+      assertTrue(payFloat + " does not equal: " + 0.1f, payFloat == 0.1f);
     }
   }
 

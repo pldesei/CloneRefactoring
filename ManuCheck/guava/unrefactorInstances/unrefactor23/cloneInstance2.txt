@@ -1,18 +1,11 @@
-(startLine=79 endLine=94 srcPath=/home/ubuntu/guavaFilter/241/guava/guava-tests/test/com/google/common/hash/HashingInputStreamTest.java)
-  public void testRead_putByteArrayAtPos() throws Exception {
-    EasyMock.expect(hasher.putBytes(aryEq(Arrays.copyOfRange(testBytes, 0, 3)), eq(0), eq(3)))
-        .andReturn(hasher).once();
-    EasyMock.replay(hasher);
-    HashingInputStream in = new HashingInputStream(hashFunction, buffer);
-
-    byte[] buf = new byte[3];
-    int numOfByteRead = in.read(buf, 0, 3);
-    assertEquals(3, numOfByteRead);
-    for (int i = 0; i < numOfByteRead; i++) {
-      assertEquals(testBytes[i], buf[i]);
+(startLine=479 endLine=487 srcPath=/home/ubuntu/guavaFilter/1154/guava/guava/src/com/google/common/cache/CacheBuilder.java)
+  public CacheBuilder<K, V> expireAfterAccess(long duration, TimeUnit unit) {
+    checkExpiration(duration, unit);
+    this.expireAfterAccessNanos = unit.toNanos(duration);
+    if (duration == 0 && this.nullRemovalCause == null) {
+      // SIZE trumps EXPIRED
+      this.nullRemovalCause = RemovalCause.EXPIRED;
     }
-
-    EasyMock.verify(hashFunction);
-    EasyMock.verify(hasher);
+    return this;
   }
 

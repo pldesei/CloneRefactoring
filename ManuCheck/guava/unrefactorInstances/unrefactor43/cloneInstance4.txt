@@ -1,15 +1,11 @@
-(startLine=267 endLine=279 srcPath=/home/ubuntu/guavaFilter/843/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
-    public void testBuilder_withImmutableEntryAndNullContents() {
-      Builder<String, Integer> builder = new Builder<String, Integer>();
-      try {
-        builder.put(Maps.immutableEntry("one", (Integer) null));
-        fail();
-      } catch (NullPointerException expected) {
-      }
-      try {
-        builder.put(Maps.immutableEntry((String) null, 1));
-        fail();
-      } catch (NullPointerException expected) {
-      }
-    }
+(startLine=723 endLine=731 srcPath=/home/ubuntu/guavaFilter/609/guava/guava-tests/test/com/google/common/collect/MultimapsTest.java)
+  public void testNewSortedSetMultimapSerialization() {
+    CountingSupplier<TreeSet<Integer>> factory = new SortedSetSupplier();
+    Map<Color, Collection<Integer>> map = Maps.newEnumMap(Color.class);
+    SortedSetMultimap<Color, Integer> multimap = Multimaps.newSortedSetMultimap(map, factory);
+    multimap.putAll(Color.BLUE, asList(3, 1, 4));
+    multimap.putAll(Color.RED, asList(2, 7, 1, 8));
+    SerializableTester.reserializeAndAssert(multimap);
+    assertEquals(INT_COMPARATOR, multimap.valueComparator());
+  }
 

@@ -1,29 +1,45 @@
-(startLine=699 endLine=725 srcPath=/home/ubuntu/antFilter/561/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/TreeBasedTask.java)
-        UnmatchedFileMap init(java.io.File localFolder, Folder remoteFolder) {
-            if (!localFolder.exists()) {
-                return this;
-            }
-
-            String[] localFiles = localFolder.list();
-    
-            for (int i=0; i < localFiles.length; i++) {
-                String fn = localFiles[i];
-                java.io.File localFile = 
-                    new java.io.File(localFolder, localFiles[i]).getAbsoluteFile();
+(startLine=274 endLine=316 srcPath=/home/ubuntu/antFilter/561/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/StarTeamList.java)
+        void processUncontrolledItems() throws BuildException{
+            if (this.isActive()) {
+                Enumeration e = this.keys();
                 
-                log("adding " + localFile + " to UnmatchedFileMap",
-                    Project.MSG_DEBUG);
-    
-                if (localFile.isDirectory()) {
-                    this.put(localFile, new Folder( remoteFolder, fn, fn));
-                } 
-                else {
-                    com.starbase.starteam.File remoteFile = 
-                        new com.starbase.starteam.File(remoteFolder);
-                    remoteFile.setName(fn);
-                    this.put(localFile, remoteFile);
+                // handle the files so they appear first
+                while (e.hasMoreElements()) {
+                    java.io.File local = (java.io.File) e.nextElement();
+                    Item remoteItem = (Item) this.get(local);
+
+                    // once we find a folder that isn't in the repository, 
+                    // we know we can add it.
+                    if (local.isFile()) {
+                        com.starbase.starteam.File remoteFile =
+                            (com.starbase.starteam.File) remoteItem;
+                        try {
+                            list(remoteFile, local);
+                        } catch (IOException ie) {
+                            throw new BuildException("IOError in stlist",ie);
+                        }
+                    }
+                }
+                // now do it again for the directories so they appear last.
+                e = this.keys();
+                while (e.hasMoreElements()) {
+                    java.io.File local = (java.io.File) e.nextElement();
+                    Item remoteItem = (Item) this.get(local);
+
+                    // once we find a folder that isn't in the repository, 
+                    // we know we can add it.
+                    if (local.isDirectory()) {
+                        Folder folder = (Folder) remoteItem;
+                        if (isRecursive()) {
+                            log("Listing uncontrolled folder " 
+                                + folder.getFolderHierarchy()
+                                + " from " + local.getAbsoluteFile());
+                            UnmatchedFileMap submap = 
+                                new UnmatchedListingMap().init(local, folder);
+                            submap.processUncontrolledItems();
+                        }
+                    }
                 }
             }
-            return this;
         }
 

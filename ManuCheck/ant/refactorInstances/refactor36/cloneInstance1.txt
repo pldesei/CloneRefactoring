@@ -1,17 +1,11 @@
-(startLine=116 endLine=130 srcPath=/home/ubuntu/antFilter/41/ant/src/main/org/apache/tools/ant/taskdefs/launcher/CommandLauncher.java)
-    public static CommandLauncher getShellLauncher(Project project) {
-        CommandLauncher launcher = null;
-        if(project != null) {
-            launcher = (CommandLauncher) project
-                .getReference(ANT_SHELL_LAUNCHER_REF_ID);
-        }
-        if (launcher == null) {
-            launcher = getSystemLauncher(ANT_SHELL_LAUNCHER_REF_ID);
-        }
-        if (launcher == null) {
-            launcher = shellLauncher;
-        }
-
-        return launcher;
+(startLine=585 endLine=593 srcPath=/home/ubuntu/antFilter/46/ant/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
+    protected boolean assumeJava14() {
+        return "javac1.4".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4));
     }
 

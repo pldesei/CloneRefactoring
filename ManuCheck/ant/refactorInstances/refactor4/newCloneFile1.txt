@@ -51,359 +51,326 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.starteam;
+package org.apache.tools.ant.taskdefs.optional.sos;
 
-import com.starbase.starteam.File;
-import com.starbase.starteam.Folder;
-import com.starbase.starteam.Item;
-import com.starbase.starteam.Status;
-import com.starbase.starteam.TypeNames;
-import com.starbase.starteam.View;
-import com.starbase.starteam.ViewConfiguration;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Checks files into a StarTeam project.  
- * Optionally adds files and in the local tree that
- * are not managed by the repository to its control.
- * Created: Sat Dec 15 20:26:07 2001
+ *  Testcase to ensure that command line generation and required attributes are
+ *  correct.
  *
- * @author <a href="mailto:scohen@localhost.localdomain">Steve Cohen</a>
- * @version 1.0
- *
- * @ant.task name="stcheckin" category="scm" product="Starteam"
+ * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
  */
-public class StarTeamCheckin extends TreeBasedTask {
+public class SOSTest extends BuildFileTest {
 
-    public StarTeamCheckin() {
-        // we want this to have a false default, unlike for Checkin.
-        setRecursive(false);
-    }
+    private Project project;
+    private Commandline commandline;
 
-    private boolean createFolders = true;
-
-    /**
-     * The comment which will be stored with the checkin.
-     */
-    private String comment = null;
-
-    /**
-     * holder for the add Uncontrolled attribute.  If true, all
-     * local files not in StarTeam will be added to the repository.
-     */
-    private boolean addUncontrolled = false;
+    private static final String VSS_SERVER_PATH = "\\\\server\\vss\\srcsafe.ini";
+    private static final String VSS_PROJECT_PATH = "/SourceRoot/Project";
+    private static final String DS_VSS_PROJECT_PATH = "$/SourceRoot/Project";
+    private static final String SOS_SERVER_PATH = "192.168.0.1:8888";
+    private static final String SOS_USERNAME = "ant";
+    private static final String SOS_PASSWORD = "rocks";
+    private static final String LOCAL_PATH = "testdir";
+    private static final String SRC_FILE = "Class1.java";
+    private static final String SRC_LABEL = "label1";
+    private static final String SRC_COMMENT = "I fixed a bug";
+    private static final String SOS_HOME = "/home/user/.sos";
+    private static final String VERSION = "007";
 
     /**
-     * Sets the value of createFolders
+     *  Constructor for the SOSTest object
      *
-     * @param argCreateFolders Value to assign to this.createFolders
+     * @param  s  Test name
      */
-    public void setCreateFolders(boolean argCreateFolders) {
-        this.createFolders = argCreateFolders;
-    }
-
-
-    /**
-     * Get the comment attribute for this operation
-     * @return value of comment.
-     */
-    public String getComment() {
-        return this.comment;
+    public SOSTest(String s) {
+        super(s);
     }
 
     /**
-     * Optional checkin comment to be saved with the file.
-     * @param comment  Value to assign to comment.
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    /**
-     * Get the value of addUncontrolled.
-     * @return value of addUncontrolled.
-     */
-    public boolean isAddUncontrolled() {
-        return this.addUncontrolled;
-    }
-
-    /**
-     * if true, any files or folders NOT in StarTeam will be 
-     * added to the repository.  Defaults to "false".
-     * @param addUncontrolled  Value to assign to addUncontrolled.
-     */
-    public void setAddUncontrolled(boolean addUncontrolled) {
-        this.addUncontrolled = addUncontrolled;
-    }
-
-    /**
-     * This attribute tells whether unlocked files on checkin (so that
-     * other users may access them) checkout or to leave the checkout status
-     * alone (default).
-     * @see #setUnlocked(boolean)
-     */
-    private int lockStatus = Item.LockType.UNCHANGED;
-
-    /**
-     * Set to do an unlocked checkout; optional, default is false;
-     * If true, file will be unlocked so that other users may
-     * change it.  If false, lock status will not change.     
-     * @param v  true means do an unlocked checkout
-     *           false means leave status alone.
-     */
-    public void setUnlocked(boolean v) {
-        if (v) {
-            this.lockStatus = Item.LockType.UNLOCKED;
-        } else {
-            this.lockStatus = Item.LockType.UNCHANGED;
-        }
-    }
-
-    /**
-     * Override of base-class abstract function creates an
-     * appropriately configured view.  For checkins this is
-     * always the current or "tip" view.
+     *  The JUnit setup method
      *
-     * @param raw the unconfigured <code>View</code>
-     * @return the snapshot <code>View</code> appropriately configured.
+     * @throws  Exception
      */
-    protected View createSnapshotView(View raw) {
-        return new View(raw, ViewConfiguration.createTip());
+    protected void setUp()
+        throws Exception {
+        project = new Project();
+        project.setBasedir(".");
     }
 
     /**
-     * Implements base-class abstract function to define tests for
-     * any preconditons required by the task.
+     *  The teardown method for JUnit
      *
-     * @exception BuildException thrown if both rootLocalFolder 
-     * and viewRootLocalFolder are defined
+     * @throws  Exception
      */
-    protected void testPreconditions() throws BuildException {
+    protected void tearDown()
+        throws Exception {
+        File file = new File(project.getBaseDir(), LOCAL_PATH);
+        if (file.exists()) {
+            file.delete();
+        }
     }
+
+    /**  Test SOSGetFile flags & commandline generation  */
+    public void testGetFileFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "GetFile", "-file",
+                SRC_FILE, "-revision", "007", "-server", SOS_SERVER_PATH, "-name",
+                SOS_USERNAME, "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH,
+                "-project", DS_VSS_PROJECT_PATH, "-verbose", "-nocompress",
+                "-nocache", "-workdir", project.getBaseDir().getAbsolutePath()
+                 + File.separator + LOCAL_PATH};
+
+        // Set up a SOSGet task
+        SOSGet sosGet = new SOSGet();
+        sosGet.setProject(project);
+        sosGet.setVssServerPath(VSS_SERVER_PATH);
+        sosGet.setSosServerPath(SOS_SERVER_PATH);
+        sosGet.setProjectPath(VSS_PROJECT_PATH);
+        sosGet.setFile(SRC_FILE);
+        sosGet.setUsername(SOS_USERNAME);
+        sosGet.setPassword(SOS_PASSWORD);
+        sosGet.setVersion(VERSION);
+        sosGet.setLocalPath(new Path(project, LOCAL_PATH));
+        sosGet.setNoCache(true);
+        sosGet.setNoCompress(true);
+        sosGet.setVerbose(true);
+        sosGet.setRecursive(true);
+
+        commandline = sosGet.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Test SOSGetProject flags & commandline generation  */
+    public void testGetProjectFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "GetProject", "-recursive",
+                "-label", SRC_LABEL, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", "", "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+                project.getBaseDir().getAbsolutePath()};
+
+        // Set up a SOSGet task
+        SOSGet sosGet = new SOSGet();
+        sosGet.setProject(project);
+        sosGet.setVssServerPath(VSS_SERVER_PATH);
+        sosGet.setSosServerPath(SOS_SERVER_PATH);
+        sosGet.setProjectPath(DS_VSS_PROJECT_PATH);
+        sosGet.setLabel(SRC_LABEL);
+        sosGet.setUsername(SOS_USERNAME);
+        sosGet.setSosHome(SOS_HOME);
+        sosGet.setNoCache(true);
+        sosGet.setNoCompress(false);
+        sosGet.setVerbose(false);
+        sosGet.setRecursive(true);
+
+        commandline = sosGet.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Tests SOSGet required attributes.  */
+    public void testGetExceptions() {
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("sosget.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("sosget.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("sosget.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("sosget.4", "some cause", "projectpath attribute must be set!");
+    }
+
+    /**  Test CheckInFile option flags  */
+    public void testCheckinFileFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckInFile", "-file",
+                SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
+                "-workdir", project.getBaseDir().getAbsolutePath() + File.separator
+                 + LOCAL_PATH, "-log", SRC_COMMENT};
+
+        // Set up a SOSCheckin task
+        SOSCheckin sosCheckin = new SOSCheckin();
+        sosCheckin.setProject(project);
+        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
+        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
+        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
+        sosCheckin.setFile(SRC_FILE);
+        sosCheckin.setComment(SRC_COMMENT);
+        sosCheckin.setUsername(SOS_USERNAME);
+        sosCheckin.setPassword(SOS_PASSWORD);
+        sosCheckin.setLocalPath(new Path(project, LOCAL_PATH));
+        sosCheckin.setNoCache(true);
+        sosCheckin.setNoCompress(true);
+        sosCheckin.setVerbose(true);
+        sosCheckin.setRecursive(true);
+
+        commandline = sosCheckin.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Test CheckInProject option flags  */
+    public void testCheckinProjectFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckInProject",
+                "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", "", "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+                project.getBaseDir().getAbsolutePath(), "-log", SRC_COMMENT,};
+
+        // Set up a SOSCheckin task
+        SOSCheckin sosCheckin = new SOSCheckin();
+        sosCheckin.setProject(project);
+        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
+        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
+        sosCheckin.setProjectPath(DS_VSS_PROJECT_PATH);
+        sosCheckin.setComment(SRC_COMMENT);
+        sosCheckin.setUsername(SOS_USERNAME);
+        sosCheckin.setSosHome(SOS_HOME);
+        sosCheckin.setNoCache(true);
+        sosCheckin.setNoCompress(false);
+        sosCheckin.setVerbose(false);
+        sosCheckin.setRecursive(true);
+
+        commandline = sosCheckin.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Test SOSCheckIn required attributes.  */
+    public void testCheckinExceptions() {
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("soscheckin.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("soscheckin.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.4", "some cause", "projectpath attribute must be set!");
+    }
+
+    /**  Test CheckOutFile option flags  */
+    public void testCheckoutFileFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckOutFile", "-file",
+                SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
+                "-workdir", project.getBaseDir().getAbsolutePath()
+                 + File.separator + LOCAL_PATH};
+
+        // Set up a SOSCheckout task
+        SOSCheckout sosCheckout = new SOSCheckout();
+        sosCheckout.setProject(project);
+        sosCheckout.setVssServerPath(VSS_SERVER_PATH);
+        sosCheckout.setSosServerPath(SOS_SERVER_PATH);
+        sosCheckout.setProjectPath(DS_VSS_PROJECT_PATH);
+        sosCheckout.setFile(SRC_FILE);
+        sosCheckout.setUsername(SOS_USERNAME);
+        sosCheckout.setPassword(SOS_PASSWORD);
+        sosCheckout.setLocalPath(new Path(project, LOCAL_PATH));
+        sosCheckout.setNoCache(true);
+        sosCheckout.setNoCompress(true);
+        sosCheckout.setVerbose(true);
+        sosCheckout.setRecursive(true);
+
+        commandline = sosCheckout.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Test CheckOutProject option flags  */
+    public void testCheckoutProjectFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckOutProject",
+                "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", "", "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+                project.getBaseDir().getAbsolutePath()};
+
+        // Set up a sosCheckout task
+        SOSCheckout sosCheckout = new SOSCheckout();
+        sosCheckout.setProject(project);
+        sosCheckout.setVssServerPath(VSS_SERVER_PATH);
+        sosCheckout.setSosServerPath(SOS_SERVER_PATH);
+        sosCheckout.setProjectPath(VSS_PROJECT_PATH);
+        sosCheckout.setUsername(SOS_USERNAME);
+        sosCheckout.setSosHome(SOS_HOME);
+        sosCheckout.setNoCache(true);
+        sosCheckout.setNoCompress(false);
+        sosCheckout.setVerbose(false);
+        sosCheckout.setRecursive(true);
+
+        commandline = sosCheckout.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Test SOSCheckout required attributes.  */
+    public void testCheckoutExceptions() {
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("soscheckout.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("soscheckout.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.4", "some cause", "projectpath attribute must be set!");
+    }
+
+    /**  Test Label option flags  */
+    public void testLabelFlags() {
+        String[] sTestCmdLine = {"soscmd", "-command", "AddLabel", "-server",
+                SOS_SERVER_PATH, "-name", SOS_USERNAME, "-password", "", "-database",
+                VSS_SERVER_PATH, "-project", DS_VSS_PROJECT_PATH, "-label",
+                SRC_LABEL, "-verbose", "-log", SRC_COMMENT};
+
+        // Set up a sosCheckout task
+        SOSLabel sosLabel = new SOSLabel();
+        sosLabel.setVssServerPath(VSS_SERVER_PATH);
+        sosLabel.setSosServerPath(SOS_SERVER_PATH);
+        sosLabel.setProjectPath(DS_VSS_PROJECT_PATH);
+        sosLabel.setUsername(SOS_USERNAME);
+        sosLabel.setSosHome(SOS_HOME);
+        sosLabel.setComment(SRC_COMMENT);
+        sosLabel.setLabel(SRC_LABEL);
+        sosLabel.setNoCache(true);
+        sosLabel.setNoCompress(false);
+        sosLabel.setVerbose(true);
+
+        commandline = sosLabel.buildCmdLine();
+
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
+
+    /**  Test SOSLabel required attributes.  */
+    public void testLabelExceptions() {
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("soslabel.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soslabel.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("soslabel.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soslabel.4", "some cause", "projectpath attribute must be set!");
+        expectSpecificBuildException("soslabel.5", "some cause", "label attribute must be set!");
+    }
+
     /**
-     * Implements base-class abstract function to emit to the log an 
-     * entry describing the parameters that will be used by this operation.
+     *  Iterate through the generated command line comparing it to reference
+     *  one.
      *
-     * @param starteamrootFolder
-     *               root folder in StarTeam for the operation
-     * @param targetrootFolder
-     *               root local folder for the operation 
-     * (whether specified by the user or not).
+     * @param  sTestCmdLine       The reference command line;
+     * @param  sGeneratedCmdLine  The generated command line;
      */
-    protected void logOperationDescription(
-        Folder starteamrootFolder, java.io.File targetrootFolder) 
-    {
-        log((this.isRecursive() ? "Recursive" : "Non-recursive")
-            +" Checkin from" 
-            + (null == getRootLocalFolder() ? " (default): " : ": ") 
-            + targetrootFolder.getAbsolutePath());
-        
-        log("Checking in to: " + starteamrootFolder.getFolderHierarchy());
-        logIncludes();
-        logExcludes();
-
-        if (this.lockStatus == Item.LockType.UNLOCKED) {
-            log("  Items will be checked in unlocked.");
-        } 
-        else {
-            log("  Items will be checked in with no change in lock status.");
-        }
-
-        if (this.isForced()) {
-            log("  Items will be checked in in accordance with repository status and regardless of lock status.");
-        } 
-        else {
-            log("  Items will be checked in regardless of repository status only if locked." );
-        }
-
-
-    }
-
-    /**
-     * Implements base-class abstract function to perform the checkout
-     * operation on the files in each folder of the tree.
-     *
-     * @param starteamFolder the StarTeam folder to which files
-     *                       will be checked in
-     * @param localFolder local folder from which files will be checked in
-     * @exception BuildException if any error occurs
-     */
-    protected void visit(Folder starteamFolder, java.io.File targetFolder)
-            throws BuildException 
-    {
-        try {
-            if (null != getRootLocalFolder()) {
-                starteamFolder.setAlternatePathFragment(
-                    targetFolder.getAbsolutePath());
-            }
-
-            Folder[] foldersList = starteamFolder.getSubFolders();
-            Item[] stFiles = starteamFolder.getItems(getTypeNames().FILE);
-            
-            // note, it's important to scan the items BEFORE we make the
-            // UnmatchedFileMap because that creates a bunch of NEW
-            // folders and files (unattached to repository) and we
-            // don't want to include those in our traversal.
-
-            UnmatchedFileMap ufm = 
-                new CheckinMap().init(
-                    targetFolder.getAbsoluteFile(), starteamFolder);
-
-
-            for (int i = 0, size = foldersList.length; i < size; i++) {
-                Folder stFolder = foldersList[i];
-                java.io.File subfolder = 
-                    new java.io.File(targetFolder, stFolder.getName());
-
-                ufm.removeControlledItem(subfolder);
-
-                if (isRecursive()) {
-                    visit(stFolder, subfolder);
-                }
-            }
-
-           
-            for (int i = 0, size = stFiles.length; i < size; i++) {
-                com.starbase.starteam.File stFile = 
-                    (com.starbase.starteam.File) stFiles[i];
-                processFile( stFile, targetFolder);
-                
-                ufm.removeControlledItem(
-                    new java.io.File(targetFolder, stFile.getName()));
-            }
-
-            if (this.addUncontrolled) {
-                ufm.processUncontrolledItems();
-            }
-
-        } catch (IOException e) {
-            throw new BuildException(e);
-        }
-
-    }
-
-    /**
-     * provides a string showing from and to full paths for logging
-     * 
-     * @param remotefile the Star Team file being processed.
-     * 
-     * @return a string showing from and to full paths
-     */
-    private String describeCheckin(com.starbase.starteam.File remotefile)
-    {
-        StringBuffer sb = new StringBuffer();
-        sb.append(remotefile.getFullName())
-          .append(" --> ")
-          .append(getFullRepositoryPath(remotefile));
-        return sb.toString();
-    }
-
-    /**
-     * Processes (checks-out) <code>stFiles</code>files from StarTeam folder.
-     *
-     * @param eachFile repository file to process
-     * @param targetFolder a java.io.File (Folder) to work
-     * @throws IOException when StarTeam API fails to work with files
-     */
-    private void processFile(com.starbase.starteam.File eachFile, 
-                             java.io.File targetFolder )
-    throws IOException 
-    {
-        String filename = eachFile.getName();
-
-        // If the file doesn't pass the include/exclude tests, skip it.
-        if (!shouldProcess(filename)) {
-            log("Excluding " + getFullRepositoryPath(eachFile));
-                return;
-        }
-
-        boolean checkin = true;
-        int fileStatus = (eachFile.getStatus());
-
-        // We try to update the status once to give StarTeam
-        // another chance.
-
-        if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
-            eachFile.updateStatus(true, true);
-            fileStatus = (eachFile.getStatus());
-        }
-
-        if (fileStatus == Status.MODIFIED) {
-            log("Checking in: " + describeCheckin(eachFile));
-        } 
-        else if (fileStatus == Status.MISSING) {
-            log("Local file missing: " + describeCheckin(eachFile));
-            checkin = false;
-        }
-        else {
-            if (isForced()) {
-                log("Forced checkin of " + describeCheckin(eachFile) + 
-                    " over status " + Status.name(fileStatus));
-            } else {
-                log("Skipping: " + getFullRepositoryPath(eachFile) + 
-                    " - status: " + Status.name(fileStatus));
-                checkin = false;
-            }
-        }
-        if (checkin) {
-            eachFile.checkin(this.comment, this.lockStatus, 
-                             this.isForced(), true, true);
-        }
-    }
-
-    /**
-     * handles the deletion of uncontrolled items
-     */
-    private class CheckinMap extends UnmatchedFileMap {
-        protected boolean isActive() {
-            return StarTeamCheckin.this.addUncontrolled;
-        }
-
-    
-        /**
-         * This override adds all its members to the repository.  It is assumed 
-         * that this method will not be called until all the items in the 
-         * corresponding folder have been processed, and that the internal map
-         * will contain only uncontrolled items.
-         */
-        void processUncontrolledItems() throws BuildException {
-            if (this.isActive()) {
-                Enumeration e = this.keys();
-                while (e.hasMoreElements()) {
-                    java.io.File local = (java.io.File) e.nextElement();
-                    Item remoteItem = (Item) this.get(local);
-                    remoteItem.update();
-    
-                    // once we find a folder that isn't in the repository, 
-                    // we know we can add it.
-                    if (local.isDirectory()) {
-                        Folder folder = (Folder) remoteItem;
-                        log("Added uncontrolled folder " 
-                            + folder.getFolderHierarchy()
-                            + " from " + local.getAbsoluteFile());
-                        if (isRecursive()) {
-                            UnmatchedFileMap submap = 
-                                new CheckinMap().init(local, folder);
-                            submap.processUncontrolledItems();
-                        }
-                    } else {
-                        com.starbase.starteam.File remoteFile =
-                            (com.starbase.starteam.File) remoteItem;
-                        log("Added uncontrolled file " 
-                            + TreeBasedTask.getFullRepositoryPath(remoteFile)
-                            + " from " + local.getAbsoluteFile());
-    
-                    }
-                }
+    private void checkCommandLines(String[] sTestCmdLine, String[] sGeneratedCmdLine) {
+        int length = sTestCmdLine.length;
+        for (int i = 0; i < length; i++) {
+            try {
+                assertEquals("arg # " + String.valueOf(i),
+                        sTestCmdLine[i],
+                        sGeneratedCmdLine[i]);
+            } catch (ArrayIndexOutOfBoundsException aioob) {
+                fail("missing arg " + sTestCmdLine[i]);
             }
         }
+        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
+            // We have extra elements
+            fail("extra args");
+        }
     }
-
 }
-
-

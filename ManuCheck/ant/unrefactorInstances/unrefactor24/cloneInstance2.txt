@@ -1,16 +1,13 @@
-(startLine=83 endLine=96 srcPath=/home/ubuntu/antFilter/83/ant/proposal/sandbox/httptasks/src/main/org/apache/tools/ant/taskdefs/optional/http/HttpDigestAuth.java)
-    public void setAuthenticationHeader(URLConnection requestConnection,
-            URLConnection responseConnection,
-            String username, String password)
-            throws BuildException {
-
-        if (username != null) {
-            password = username == null ? "" : password;
-            String encodeStr = username + ":" + password;
-            Base64Encode encoder = new Base64Encode();
-            char[] encodedPass = encoder.encodeBase64(encodeStr.getBytes());
-            String authStr = "BASIC " + new String(encodedPass);
-            requestConnection.setRequestProperty("Authorization", authStr);
-            }
+(startLine=123 endLine=133 srcPath=/home/ubuntu/antFilter/822/ant/proposal/mutant/src/java/antlibs/ant1compat/org/apache/tools/ant/ProjectHelper.java)
+    public static String replaceProperties(Project project, String value,
+                                           Hashtable keys) {
+        try {
+            AntContext context = project.getContext();
+            DataService dataService
+                 = (DataService)context.getCoreService(DataService.class);
+            return dataService.replacePropertyRefs(value, keys);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
         }
+    }
 

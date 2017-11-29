@@ -1,11 +1,10 @@
-(startLine=428 endLine=436 srcPath=/home/ubuntu/guavaFilter/164/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
-    public void testBuilderPutNullKeyFailsAtomically() {
-      Builder<String, Integer> builder = new Builder<String, Integer>();
-      try {
-        builder.put(null, 1);
-        fail();
-      } catch (NullPointerException expected) {}
-      builder.put("foo", 2);
-      assertMapEquals(builder.build(), "foo", 2);
+(startLine=73 endLine=80 srcPath=/home/ubuntu/guavaFilter/230/guava/guava-testlib/src/com/google/common/collect/testing/testers/ConcurrentMapPutIfAbsentTester.java)
+  public void testPutIfAbsent_unsupportedPresentExistingValue() {
+    try {
+      assertEquals("putIfAbsent(present, existingValue) should return present or throw",
+          v0(), putIfAbsent(e0()));
+    } catch (UnsupportedOperationException tolerated) {
     }
+    expectUnchanged();
+  }
 

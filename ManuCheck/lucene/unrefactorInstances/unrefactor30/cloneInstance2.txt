@@ -1,14 +1,30 @@
-(startLine=65 endLine=76 srcPath=/home/ubuntu/luceneFilter/376/lucene/solr/core/src/test/org/apache/solr/analysis/TestCharFilters.java)
-  public void testIndexAnalysis() {
-    assertQ("Index analysis: ",
-       req("fl", "id", "q", "content2:aab", "sort", "id asc"),
-                "//*[@numFound='1']",
-                "//result/doc[1]/int[@name='id'][.=3]"
-    );
-    assertQ("Index analysis: ",
-        req("fl", "id", "q", "content2:aabaa", "sort", "id asc"),
-                 "//*[@numFound='1']",
-                 "//result/doc[1]/int[@name='id'][.=4]"
-    );
+(startLine=48 endLine=75 srcPath=/home/ubuntu/luceneFilter/96/lucene/lucene/facet/src/java/org/apache/lucene/facet/associations/SumFloatAssociationFacetsAggregator.java)
+  public void aggregate(MatchingDocs matchingDocs, CategoryListParams clp, FacetArrays facetArrays) throws IOException {
+    BinaryDocValues dv = matchingDocs.context.reader().getBinaryDocValues(clp.field + CategoryFloatAssociation.ASSOCIATION_LIST_ID);
+    if (dv == null) {
+      return; // no float associations in this reader
+    }
+    
+    final int length = matchingDocs.bits.length();
+    final float[] values = facetArrays.getFloatArray();
+    int doc = 0;
+    while (doc < length && (doc = matchingDocs.bits.nextSetBit(doc)) != -1) {
+      dv.get(doc, bytes);
+      if (bytes.length > 0) {
+        // aggreate float association values for ordinals
+        int bytesUpto = bytes.offset + bytes.length;
+        int pos = bytes.offset;
+        while (pos < bytesUpto) {
+          int ordinal = ((bytes.bytes[pos++] & 0xFF) << 24) | ((bytes.bytes[pos++] & 0xFF) << 16)
+              | ((bytes.bytes[pos++] & 0xFF) <<  8) | (bytes.bytes[pos++] & 0xFF);
+          
+          int value = ((bytes.bytes[pos++] & 0xFF) << 24) | ((bytes.bytes[pos++] & 0xFF) << 16)
+              | ((bytes.bytes[pos++] & 0xFF) <<  8) | (bytes.bytes[pos++] & 0xFF);
+          
+          values[ordinal] += Float.intBitsToFloat(value);
+        }
+      }
+      ++doc;
+    }
   }
 

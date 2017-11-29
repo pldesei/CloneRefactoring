@@ -1,13 +1,18 @@
-(startLine=408 endLine=459 srcPath=/home/ubuntu/luceneFilter/314/lucene/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+(startLine=830 endLine=894 srcPath=/home/ubuntu/luceneFilter/314/lucene/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
     protected Object createValue(AtomicReader reader, Entry entryKey, boolean setDocsWithField)
         throws IOException {
       String field = entryKey.field;
-      ShortParser parser = (ShortParser) entryKey.custom;
+      FieldCache.DoubleParser parser = (FieldCache.DoubleParser) entryKey.custom;
       if (parser == null) {
-        return wrapper.getShorts(reader, field, FieldCache.DEFAULT_SHORT_PARSER, setDocsWithField);
+        try {
+          return wrapper.getDoubles(reader, field, DEFAULT_DOUBLE_PARSER, setDocsWithField);
+        } catch (NumberFormatException ne) {
+          return wrapper.getDoubles(reader, field, NUMERIC_UTILS_DOUBLE_PARSER, setDocsWithField);
+        }
       }
       final int maxDoc = reader.maxDoc();
-      final short[] retArray = new short[maxDoc];
+      double[] retArray = null;
+
       Terms terms = reader.terms(field);
       FixedBitSet docsWithField = null;
       if (terms != null) {
@@ -28,7 +33,12 @@
           if (term == null) {
             break;
           }
-          final short termval = parser.parseShort(term);
+          final double termval = parser.parseDouble(term);
+          if (retArray == null) {
+            // late init so numeric fields don't double allocate
+            retArray = new double[maxDoc];
+          }
+
           docs = termsEnum.docs(null, docs, DocsEnum.FLAG_NONE);
           while (true) {
             final int docID = docs.nextDoc();
@@ -45,6 +55,9 @@
             }
           }
         }
+      }
+      if (retArray == null) { // no values
+        retArray = new double[maxDoc];
       }
       if (setDocsWithField) {
         wrapper.setDocsWithField(reader, field, docsWithField);

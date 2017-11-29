@@ -1,15 +1,24 @@
-(startLine=93 endLine=105 srcPath=/home/ubuntu/antFilter/940/ant/src/main/org/apache/tools/ant/taskdefs/War.java)
-    public void setWebxml(File descr) {
-        deploymentDescriptor = descr; 
-        if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
-        }
+(startLine=84 endLine=105 srcPath=/home/ubuntu/antFilter/83/ant/proposal/sandbox/httptasks/src/main/org/apache/tools/ant/taskdefs/optional/http/HttpBasicAuth.java)
+    public void setAuthenticationHeader(URLConnection requestConnection,
+            URLConnection responseConnection,
+            String username, String password)
+            throws BuildException {
 
-        // Create a ZipFileSet for this file, and pass it up.
-        ZipFileSet fs = new ZipFileSet();
-        fs.setDir(new File(deploymentDescriptor.getParent()));
-        fs.setIncludes(deploymentDescriptor.getName());
-        fs.setFullpath("WEB-INF/web.xml");
-        super.addFileset(fs);
-    }
+        if (username != null) {
+            password = username == null ? "" : password;
+            String encodeStr = username + ":" + password;
+            char[] encodedPass;
+            String encodedPassStr;
+            
+            Base64Encode encoder = new Base64Encode();
+            encodedPass = encoder.encodeBase64(encodeStr.getBytes());
+            encodedPassStr= new String(encodedPass);
+            /* this uses the get task
+            Get.Base64Converter converter= new Get.Base64Converter();
+            encodedPassStr = converter.encode(encodeStr);
+            */
+            String authStr = "BASIC " +encodedPassStr;
+            requestConnection.setRequestProperty("Authorization", authStr);
+            }
+        }
 

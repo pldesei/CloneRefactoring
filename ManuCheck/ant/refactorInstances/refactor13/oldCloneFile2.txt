@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright  2000-2004 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,250 +15,206 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildFileTest;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.GregorianCalendar;
-
-import junit.framework.ComparisonFailure;
+import java.io.File;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.util.Properties;
 
 /**
+ * Tests the EchoProperties task.
+ *
+ * @created   17-Jan-2002
+ * @since     Ant 1.5
  */
-public class ExecuteOnTest extends BuildFileTest {
-    private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
-    private static final String BUILD_FILE = BUILD_PATH + "apply.xml";
+public class EchoPropertiesTest extends BuildFileTest {
 
-    public ExecuteOnTest(String name) {
+    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
+    private static final String GOOD_OUTFILE = "test.properties";
+    private static final String GOOD_OUTFILE_XML = "test.xml";
+    private static final String PREFIX_OUTFILE = "test-prefix.properties";
+    private static final String TEST_VALUE = "isSet";
+    private static final String BAD_OUTFILE = ".";
+
+    public EchoPropertiesTest(String name) {
         super(name);
     }
 
+
     public void setUp() {
-        configureProject(BUILD_FILE);
+        configureProject(TASKDEFS_DIR + "echoproperties.xml");
+        project.setProperty( "test.property", TEST_VALUE );
     }
+
 
     public void tearDown() {
         executeTarget("cleanup");
     }
 
-    public void testNoRedirect() {
-        executeTarget("no-redirect");
-        if (getProject().getProperty("test.can.run") == null) {
-            return;
-        }
 
-        String log = getLog();
-        File x = getProject().resolveFile("x");
-        File y = getProject().resolveFile("y");
-        File z = getProject().resolveFile("z");
-        int xout = log.indexOf(x + " out");
-        int yout = log.indexOf(y + " out");
-        int zout = log.indexOf(z + " out");
-        int xerr = log.indexOf(x + " err");
-        int yerr = log.indexOf(y + " err");
-        int zerr = log.indexOf(z + " err");
-        assertFalse("xout < 0", xout < 0);
-        assertFalse("yout < 0", yout < 0);
-        assertFalse("zout < 0", zout < 0);
-        assertFalse("xerr < 0", xerr < 0);
-        assertFalse("yerr < 0", yerr < 0);
-        assertFalse("zerr < 0", zerr < 0);
-        assertFalse("yout < xout", yout < xout);
-        assertFalse("zout < yout", zout < yout);
-        assertFalse("yerr < xerr", yerr < xerr);
-        assertFalse("zerr < yerr", zerr < yerr);
+    public void testEchoToLog() {
+        expectLogContaining("testEchoToLog", "test.property="+TEST_VALUE);
     }
 
-    public void testRedirect1() {
-        executeTarget("redirect1");
-        if (getProject().getProperty("test.can.run") == null) {
-            return;
-        }
-        String actualOut = null;
+
+    public void testReadBadFile() {
+        expectBuildExceptionContaining( "testReadBadFile",
+            "srcfile is a directory", "srcfile is a directory!" );
+    }
+
+
+    public void testReadBadFileFail() {
+        expectBuildExceptionContaining( "testReadBadFile",
+            "srcfile is a directory", "srcfile is a directory!" );
+    }
+
+
+    public void testReadBadFileNoFail() {
+        expectLog( "testReadBadFileNoFail", "srcfile is a directory!" );
+    }
+
+
+    public void testEchoToBadFile() {
+        expectBuildExceptionContaining( "testEchoToBadFile",
+            "destfile is a directory", "destfile is a directory!" );
+    }
+
+
+    public void testEchoToBadFileFail() {
+        expectBuildExceptionContaining( "testEchoToBadFileFail",
+            "destfile is a directory", "destfile is a directory!" );
+    }
+
+
+    public void testEchoToBadFileNoFail() {
+        expectLog( "testEchoToBadFileNoFail", "destfile is a directory!");
+    }
+
+
+    public void testEchoToGoodFile() throws Exception {
+        executeTarget( "testEchoToGoodFile" );
+        assertGoodFile();
+    }
+
+
+    public void testEchoToGoodFileXml() throws Exception {
+        executeTarget( "testEchoToGoodFileXml" );
+
+        // read in the file
+        File f = createRelativeFile( GOOD_OUTFILE_XML );
+        FileReader fr = new FileReader( f );
         try {
-            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.out")));
-        } catch (IOException eyeOhEx) {
+            BufferedReader br = new BufferedReader( fr );
+            String read = null;
+            while ( (read = br.readLine()) != null) {
+                if (read.indexOf("<property name=\"test.property\" value=\""+TEST_VALUE+"\"></property>") >= 0) {
+                    // found the property we set - it's good.
+                    return;
+                }
+            }
+            fail( "did not encounter set property in generated file." );
+        } finally {
+            try {
+                fr.close();
+            } catch(IOException e) {}
         }
-        File x = getProject().resolveFile("x");
-        File y = getProject().resolveFile("y");
-        File z = getProject().resolveFile("z");
-        int xout = actualOut.indexOf(x + " out");
-        int yout = actualOut.indexOf(y + " out");
-        int zout = actualOut.indexOf(z + " out");
-        int xerr = actualOut.indexOf(x + " err");
-        int yerr = actualOut.indexOf(y + " err");
-        int zerr = actualOut.indexOf(z + " err");
-        assertFalse("xout < 0", xout < 0);
-        assertFalse("yout < 0", yout < 0);
-        assertFalse("zout < 0", zout < 0);
-        assertFalse("xerr < 0", xerr < 0);
-        assertFalse("yerr < 0", yerr < 0);
-        assertFalse("zerr < 0", zerr < 0);
-        assertFalse("yout < xout", yout < xout);
-        assertFalse("zout < yout", zout < yout);
-        assertFalse("yerr < xerr", yerr < xerr);
-        assertFalse("zerr < yerr", zerr < yerr);
     }
 
-    public void testRedirect2() {
-        executeTarget("redirect2");
-        if (getProject().getProperty("test.can.run") == null) {
-            return;
+
+    public void testEchoToGoodFileFail() throws Exception {
+        executeTarget( "testEchoToGoodFileFail" );
+        assertGoodFile();
+    }
+
+
+    public void testEchoToGoodFileNoFail() throws Exception {
+        executeTarget( "testEchoToGoodFileNoFail" );
+        assertGoodFile();
+    }
+
+
+    public void testEchoPrefix() throws Exception {
+        executeTarget( "testEchoPrefix" );
+        Properties props=loadPropFile(PREFIX_OUTFILE);
+//        props.list(System.out);
+        assertEquals("prefix didn't include 'a.set' property","true",props.getProperty("a.set"));
+        assertNull("prefix failed to filter out property 'b.set'",
+                   props.getProperty("b.set"));
+    }
+
+    public void testEchoPrefixAsPropertyset() throws Exception {
+        executeTarget( "testEchoPrefixAsPropertyset" );
+        Properties props=loadPropFile(PREFIX_OUTFILE);
+        assertEquals("prefix didn't include 'a.set' property","true",props.getProperty("a.set"));
+        assertNull("prefix failed to filter out property 'b.set'",
+                   props.getProperty("b.set"));
+    }
+
+    protected Properties loadPropFile(String relativeFilename)
+            throws IOException {
+        File f = createRelativeFile( relativeFilename );
+        Properties props=new Properties();
+        InputStream in=null;
+        try  {
+            in=new BufferedInputStream(new FileInputStream(f));
+            props.load(in);
+        } finally {
+            if(in!=null) {
+                try { in.close(); } catch(IOException e) {}
+            }
         }
-        String actualOut = null;
-        String actualErr = null;
+        return props;
+    }
+
+    protected void assertGoodFile() throws Exception {
+        File f = createRelativeFile( GOOD_OUTFILE );
+        assertTrue(
+            "Did not create "+f.getAbsolutePath(),
+            f.exists() );
+        Properties props=loadPropFile(GOOD_OUTFILE);
+        props.list(System.out);
+        assertEquals("test property not found ",
+                     TEST_VALUE, props.getProperty("test.property"));
+/*
+        // read in the file
+        FileReader fr = new FileReader( f );
         try {
-            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.out")));
-            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.err")));
-        } catch (IOException eyeOhEx) {
+            BufferedReader br = new BufferedReader( fr );
+            String read = null;
+            while ( (read = br.readLine()) != null)
+            {
+                if (read.indexOf("test.property" + TEST_VALUE) >= 0)
+                {
+                    // found the property we set - it's good.
+                    return;
+                }
+            }
+            fail( "did not encounter set property in generated file." );
+        } finally {
+            try { fr.close(); } catch(IOException e) {}
         }
-        File x = getProject().resolveFile("x");
-        File y = getProject().resolveFile("y");
-        File z = getProject().resolveFile("z");
-        int xout = actualOut.indexOf(x + " out");
-        int yout = actualOut.indexOf(y + " out");
-        int zout = actualOut.indexOf(z + " out");
-        int xerr = actualErr.indexOf(x + " err");
-        int yerr = actualErr.indexOf(y + " err");
-        int zerr = actualErr.indexOf(z + " err");
-        assertFalse("xout < 0", xout < 0);
-        assertFalse("yout < 0", yout < 0);
-        assertFalse("zout < 0", zout < 0);
-        assertFalse("xerr < 0", xerr < 0);
-        assertFalse("yerr < 0", yerr < 0);
-        assertFalse("zerr < 0", zerr < 0);
-        assertFalse("yout < xout", yout < xout);
-        assertFalse("zout < yout", zout < yout);
-        assertFalse("yerr < xerr", yerr < xerr);
-        assertFalse("zerr < yerr", zerr < yerr);
+*/
     }
 
-    public void testRedirect3() {
-        executeTarget("redirect3");
-        if (getProject().getProperty("test.can.run") == null) {
-            return;
-        }
-        String actualOut = null;
-        try {
-            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.out")));
-        } catch (IOException eyeOhEx) {
-        }
-        File x = getProject().resolveFile("x");
-        File y = getProject().resolveFile("y");
-        File z = getProject().resolveFile("z");
-        int xout = actualOut.indexOf(x + " out");
-        int yout = actualOut.indexOf(y + " out");
-        int zout = actualOut.indexOf(z + " out");
-        int xerr = getLog().indexOf(x + " err");
-        int yerr = getLog().indexOf(y + " err");
-        int zerr = getLog().indexOf(z + " err");
-        assertFalse("xout < 0", xout < 0);
-        assertFalse("yout < 0", yout < 0);
-        assertFalse("zout < 0", zout < 0);
-        assertFalse("xerr < 0", xerr < 0);
-        assertFalse("yerr < 0", yerr < 0);
-        assertFalse("zerr < 0", zerr < 0);
-        assertFalse("yout < xout", yout < xout);
-        assertFalse("zout < yout", zout < yout);
-        assertFalse("yerr < xerr", yerr < xerr);
-        assertFalse("zerr < yerr", zerr < yerr);
-        assertPropertyEquals("redirect.out", x + " out");
+
+    protected String toAbsolute( String filename ) {
+        return createRelativeFile( filename ).getAbsolutePath();
     }
 
-    public void testRedirect4() {
-        executeTarget("redirect4");
-        if (getProject().getProperty("test.can.run") == null) {
-            return;
-        }
-        String actualOut = null;
-        String actualErr = null;
-        try {
-            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.out")));
-            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.err")));
-        } catch (IOException eyeOhEx) {
-        }
-        File x = getProject().resolveFile("x");
-        File y = getProject().resolveFile("y");
-        File z = getProject().resolveFile("z");
-        int xout = actualOut.indexOf(x + " out");
-        int yout = actualOut.indexOf(y + " out");
-        int zout = actualOut.indexOf(z + " out");
-        int xerr = actualErr.indexOf(x + " err");
-        int yerr = actualErr.indexOf(y + " err");
-        int zerr = actualErr.indexOf(z + " err");
-        assertFalse("xout < 0", xout < 0);
-        assertFalse("yout < 0", yout < 0);
-        assertFalse("zout < 0", zout < 0);
-        assertFalse("xerr < 0", xerr < 0);
-        assertFalse("yerr < 0", yerr < 0);
-        assertFalse("zerr < 0", zerr < 0);
-        assertFalse("yout < xout", yout < xout);
-        assertFalse("zout < yout", zout < yout);
-        assertFalse("yerr < xerr", yerr < xerr);
-        assertFalse("zerr < yerr", zerr < yerr);
-        assertPropertyEquals("redirect.out", x + " out");
-        assertPropertyEquals("redirect.err", x + " err");
-    }
 
-    public void testRedirect5() {
-        testRedirect5or6("redirect5");
-    }
-
-    public void testRedirect6() {
-        testRedirect5or6("redirect6");
-    }
-
-    private void testRedirect5or6(String target) {
-        executeTarget(target);
-        if (getProject().getProperty("sed.can.run") == null) {
-            return;
+    protected File createRelativeFile( String filename ) {
+        if (filename.equals( "." )) {
+            return getProjectDir();
         }
-        String actualOut = null;
-        String actualErr = null;
-        try {
-            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.out")));
-            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.err")));
-        } catch (IOException eyeOhEx) {
-        }
-        assertPropertyEquals("redirect.out", "blah y z");
-        assertPropertyEquals("redirect.err", "");
-        assertEquals("unexpected content in redirect.out",
-            "blah y z\nx blah z\nx y blah\n", actualOut);
-        assertEquals("unexpected content in redirect.err", null, actualErr);
+        // else
+        return new File( getProjectDir(), filename );
     }
-
-    public void testRedirect7() {
-        executeTarget("redirect7");
-        if (getProject().getProperty("sed.can.run") == null) {
-            return;
-        }
-        String actualOut = null;
-        String actualErr = null;
-        try {
-            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.out")));
-            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
-                getProject().resolveFile("redirect.err")));
-        } catch (IOException eyeOhEx) {
-        }
-        assertPropertyEquals("redirect.out", "blah y z");
-        assertPropertyUnset("redirect.err");
-        assertEquals("unexpected content in redirect.out",
-            "x y blah\n", actualOut);
-        assertEquals("unexpected content in redirect.err", null, actualErr);
-    }
-
 }
+

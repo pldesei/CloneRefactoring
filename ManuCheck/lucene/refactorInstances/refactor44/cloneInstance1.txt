@@ -1,54 +1,41 @@
-(startLine=408 endLine=459 srcPath=/home/ubuntu/luceneFilter/314/lucene/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
-    protected Object createValue(AtomicReader reader, Entry entryKey, boolean setDocsWithField)
-        throws IOException {
-      String field = entryKey.field;
-      ShortParser parser = (ShortParser) entryKey.custom;
-      if (parser == null) {
-        return wrapper.getShorts(reader, field, FieldCache.DEFAULT_SHORT_PARSER, setDocsWithField);
-      }
-      final int maxDoc = reader.maxDoc();
-      final short[] retArray = new short[maxDoc];
-      Terms terms = reader.terms(field);
-      FixedBitSet docsWithField = null;
-      if (terms != null) {
-        if (setDocsWithField) {
-          final int termsDocCount = terms.getDocCount();
-          assert termsDocCount <= maxDoc;
-          if (termsDocCount == maxDoc) {
-            // Fast case: all docs have this field:
-            wrapper.setDocsWithField(reader, field, new Bits.MatchAllBits(maxDoc));
-            setDocsWithField = false;
-          }
-        }
-        final TermsEnum termsEnum = parser.termsEnum(terms);
-        assert termsEnum != null : "TermsEnum must not be null";
-        DocsEnum docs = null;
-        while(true) {
-          final BytesRef term = termsEnum.next();
-          if (term == null) {
-            break;
-          }
-          final short termval = parser.parseShort(term);
-          docs = termsEnum.docs(null, docs, DocsEnum.FLAG_NONE);
-          while (true) {
-            final int docID = docs.nextDoc();
-            if (docID == DocIdSetIterator.NO_MORE_DOCS) {
-              break;
-            }
-            retArray[docID] = termval;
-            if (setDocsWithField) {
-              if (docsWithField == null) {
-                // Lazy init
-                docsWithField = new FixedBitSet(maxDoc);
-              }
-              docsWithField.set(docID);
-            }
-          }
-        }
-      }
-      if (setDocsWithField) {
-        wrapper.setDocsWithField(reader, field, docsWithField);
-      }
-      return retArray;
-    }
+(startLine=67 endLine=105 srcPath=/home/ubuntu/luceneFilter/337/lucene/lucene/facet/src/test/org/apache/lucene/facet/search/TestMultipleCategoryLists.java)
+  public void testDefault() throws Exception {
+    Directory[][] dirs = getDirs();
+    // create and open an index writer
+    RandomIndexWriter iw = new RandomIndexWriter(random(), dirs[0][0], newIndexWriterConfig(
+        TEST_VERSION_CURRENT, new MockAnalyzer(random(), MockTokenizer.WHITESPACE, false)));
+    // create and open a taxonomy writer
+    TaxonomyWriter tw = new DirectoryTaxonomyWriter(dirs[0][1], OpenMode.CREATE);
+
+    /**
+     * Configure with no custom counting lists
+     */
+    PerDimensionIndexingParams iParams = new PerDimensionIndexingParams(Collections.<CategoryPath, CategoryListParams>emptyMap());
+
+    seedIndex(iw, tw, iParams);
+
+    IndexReader ir = iw.getReader();
+    tw.commit();
+
+    // prepare index reader and taxonomy.
+    TaxonomyReader tr = new DirectoryTaxonomyReader(dirs[0][1]);
+
+    // prepare searcher to search against
+    IndexSearcher searcher = newSearcher(ir);
+
+    FacetsCollector facetsCollector = performSearch(iParams, tr, ir,
+        searcher);
+
+    // Obtain facets results and hand-test them
+    assertCorrectResults(facetsCollector);
+
+    DocsEnum td = _TestUtil.docs(random(), ir, "$facets", new BytesRef("$fulltree$"), MultiFields.getLiveDocs(ir), null, DocsEnum.FLAG_NONE);
+    assertTrue(td.nextDoc() != DocIdSetIterator.NO_MORE_DOCS);
+
+    tr.close();
+    ir.close();
+    iw.close();
+    tw.close();
+    IOUtils.close(dirs[0]);
+  }
 

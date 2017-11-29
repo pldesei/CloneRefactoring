@@ -1,19 +1,14 @@
-(startLine=53 endLine=69 srcPath=/home/ubuntu/antFilter/280/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteWatchdogTest.java)
-    private static String getTestClassPath(){
-        String classpath = System.getProperty("build.tests");
-        if (classpath == null) {
-            System.err.println("WARNING: 'build.tests' property is not available !");
-            classpath = System.getProperty("java.class.path");
+(startLine=500 endLine=511 srcPath=/home/ubuntu/antFilter/175/ant/proposal/embed/src/java/org/apache/tools/ant/PropertyHelper.java)
+    public Hashtable getUserProperties() {
+        Hashtable propertiesCopy = new Hashtable();
+
+        Enumeration e = userProperties.keys();
+        while (e.hasMoreElements()) {
+            Object name = e.nextElement();
+            Object value = properties.get(name);
+            propertiesCopy.put(name, value);
         }
 
-        // JDK 1.1 needs classes.zip in -classpath argument
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            classpath +=   File.pathSeparator
-                + System.getProperty("java.home")
-                + File.separator + "lib"
-                + File.separator + "classes.zip";
-        }
-
-        return classpath;
+        return propertiesCopy;
     }
 

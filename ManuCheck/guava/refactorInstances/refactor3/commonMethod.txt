@@ -1,10 +1,12 @@
-(startLine=1446 endLine=1453 srcPath=/home/ubuntu/guavaFilter/891/guava/guava-tests/test/com/google/common/collect/MapsTest.java)
-  private static <K, V> SortedMap<K, V> sortedNotNavigable(
-      final SortedMap<K, V> map) {
-    return new ForwardingSortedMap<K, V>() {
-      @Override protected SortedMap<K, V> delegate() {
-        return map;
-      }
-    };
+(startLine=238 endLine=247 srcPath=/home/ubuntu/guavaFilter/918/guava/guava/src/com/google/common/collect/RegularImmutableSortedSet.java)
+  ImmutableSortedSet<E> getSubSet(int newFromIndex, int newToIndex) {
+    if (newFromIndex == 0 && newToIndex == size()) {
+      return this;
+    } else if (newFromIndex < newToIndex) {
+      return new RegularImmutableSortedSet<E>(
+          elements.subList(newFromIndex, newToIndex), comparator);
+    } else {
+      return emptySet(comparator);
+    }
   }
 

@@ -1,12 +1,12 @@
-(startLine=3431 endLine=3440 srcPath=/home/ubuntu/guavaFilter/692/guava/guava/src/com/google/common/collect/Maps.java)
-  static <V> V safeRemove(Map<?, V> map, Object key) {
-    checkNotNull(map);
+(startLine=117 endLine=126 srcPath=/home/ubuntu/guavaFilter/692/guava/guava/src/com/google/common/collect/Collections2.java)
+  static boolean safeRemove(Collection<?> collection, Object object) {
+    checkNotNull(collection);
     try {
-      return map.remove(key);
+      return collection.remove(object);
     } catch (ClassCastException e) {
-      return null;
+      return false;
     } catch (NullPointerException e) {
-      return null;
+      return false;
     }
   }
 

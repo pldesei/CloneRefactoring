@@ -1,14 +1,11 @@
-(startLine=99 endLine=110 srcPath=/home/ubuntu/luceneFilter/111/lucene/solr/core/src/test/org/apache/solr/schema/DocValuesMissingTest.java)
-  private void checkSortMissingFunction(final String field,
-                                        final String low,
-                                        final String high) {
-    assertU(adoc("id", "0")); // missing
-    assertU(adoc("id", "1", field, low));
-    assertU(adoc("id", "2", field, high));
-    assertU(commit());
-    assertQ(req("q", "*:*", "fl", "e:exists("+field+")", "sort", "id asc"),
-            "//result/doc[1]/bool[@name='e'][.='false']",
-            "//result/doc[2]/bool[@name='e'][.='true']",
-            "//result/doc[3]/bool[@name='e'][.='true']");
+(startLine=99 endLine=107 srcPath=/home/ubuntu/luceneFilter/159/lucene/solr/core/src/test/org/apache/solr/core/SolrCoreCheckLockOnStartupTest.java)
+  private boolean checkForCoreInitException(Class<? extends Exception> clazz) {
+    for (Map.Entry<String, Exception> entry : h.getCoreContainer().getCoreInitFailures().entrySet()) {
+      for (Throwable t = entry.getValue(); t != null; t = t.getCause()) {
+        if (clazz.isInstance(t))
+          return true;
+      }
+    }
+    return false;
   }
 

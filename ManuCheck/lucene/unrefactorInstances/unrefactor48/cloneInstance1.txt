@@ -1,45 +1,28 @@
-(startLine=163 endLine=205 srcPath=/home/ubuntu/luceneFilter/423/lucene/lucene/test-framework/src/java/org/apache/lucene/index/RandomIndexWriter.java)
-  public <T extends IndexableField> void addDocument(final IndexDocument doc, Analyzer a) throws IOException {
-    if (doDocValues && doc instanceof Document) {
-      randomPerDocFieldValues((Document) doc);
-    }
-    if (r.nextInt(5) == 3) {
-      // TODO: maybe, we should simply buffer up added docs
-      // (but we need to clone them), and only when
-      // getReader, commit, etc. are called, we do an
-      // addDocuments?  Would be better testing.
-      w.addDocuments(new Iterable<IndexDocument>() {
-
-        @Override
-        public Iterator<IndexDocument> iterator() {
-          return new Iterator<IndexDocument>() {
-            boolean done;
-            
-            @Override
-            public boolean hasNext() {
-              return !done;
-            }
-
-            @Override
-            public void remove() {
-              throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public IndexDocument next() {
-              if (done) {
-                throw new IllegalStateException();
-              }
-              done = true;
-              return doc;
-            }
-          };
+(startLine=163 endLine=188 srcPath=/home/ubuntu/luceneFilter/604/lucene/lucene/analysis/common/src/java/org/tartarus/snowball/ext/KpStemmer.java)
+        private boolean r_V() {
+            int v_1;
+            int v_2;
+            // test, line 35
+            v_1 = limit - cursor;
+            // (, line 35
+            // or, line 35
+            lab0: do {
+                v_2 = limit - cursor;
+                lab1: do {
+                    if (!(in_grouping_b(g_v, 97, 121)))
+                    {
+                        break lab1;
+                    }
+                    break lab0;
+                } while (false);
+                cursor = limit - v_2;
+                // literal, line 35
+                if (!(eq_s_b(2, "ij")))
+                {
+                    return false;
+                }
+            } while (false);
+            cursor = limit - v_1;
+            return true;
         }
-        }, a);
-    } else {
-      w.addDocument(doc, a);
-    }
-    
-    maybeCommit();
-  }
 

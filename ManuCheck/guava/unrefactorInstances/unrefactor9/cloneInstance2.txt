@@ -1,26 +1,19 @@
-(startLine=585 endLine=608 srcPath=/home/ubuntu/guavaFilter/156/guava/guava-tests/test/com/google/common/util/concurrent/GeneratedMonitorTest.java)
-  private void runWaitTest() {
-    assertFalse(Thread.currentThread().isInterrupted());
-    assertFalse(monitor.isOccupiedByCurrentThread());
-    monitor.enter();
-    try {
-      assertTrue(monitor.isOccupiedByCurrentThread());
-
-      doWaitScenarioSetUp();
-
-      boolean interruptedBeforeCall = Thread.currentThread().isInterrupted();
-      Outcome actualOutcome = doCall();
-      boolean occupiedAfterCall = monitor.isOccupiedByCurrentThread();
-      boolean interruptedAfterCall = Thread.currentThread().isInterrupted();
-
-      assertEquals(expectedOutcome, actualOutcome);
-      assertTrue(occupiedAfterCall);
-      assertEquals(interruptedBeforeCall && expectedOutcome != Outcome.INTERRUPT,
-          interruptedAfterCall);
-    } finally {
-      guard.setSatisfied(true);
-      monitor.leave();
-      assertFalse(monitor.isOccupiedByCurrentThread());
-    }
+(startLine=318 endLine=334 srcPath=/home/ubuntu/guavaFilter/100/guava/guava-tests/test/com/google/common/collect/ImmutableTableTest.java)
+  public void testBuilder_orderColumnsBy_sparse() {
+    ImmutableTable.Builder<Character, Integer, String> builder
+        = ImmutableTable.builder();
+    builder.orderColumnsBy(Ordering.natural());
+    builder.put('x', 2, "foo");
+    builder.put('r', 1, "bar");
+    builder.put('c', 3, "baz");
+    builder.put('b', 7, "cat");
+    builder.put('e', 5, "dog");
+    builder.put('c', 0, "axe");
+    builder.put('e', 3, "tub");
+    builder.put('r', 4, "foo");
+    builder.put('x', 5, "bar");
+    Table<Character, Integer, String> table = builder.build();
+    assertThat(table.columnKeySet()).containsExactly(0, 1, 2, 3, 4, 5, 7).inOrder();
+    assertThat(table.row('c').keySet()).containsExactly(0, 3).inOrder();
   }
 

@@ -1,18 +1,13 @@
-(startLine=72 endLine=87 srcPath=/home/ubuntu/guavaFilter/720/guava/guava-tests/test/com/google/common/util/concurrent/AbstractIdleServiceTest.java)
-    public void testStop_failed() throws Exception {
-      final Exception exception = new Exception("deliberate");
-      AbstractIdleService service = new DefaultService() {
-        @Override protected void shutDown() throws Exception {
-          throw exception;
+(startLine=1103 endLine=1113 srcPath=/home/ubuntu/guavaFilter/756/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public boolean retainAll(Collection<?> c) {
+        checkNotNull(c);
+        boolean changed = false;
+        for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
+          if (!c.contains(column(columnKey))) {
+            removeColumn(columnKey);
+            changed = true;
+          }
         }
-      };
-      service.startAndWait();
-      try {
-        service.stopAndWait();
-        fail();
-      } catch (RuntimeException e) {
-        assertSame(exception, e.getCause());
+        return changed;
       }
-      assertEquals(Service.State.FAILED, service.state());
-    }
 

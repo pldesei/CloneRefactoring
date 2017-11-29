@@ -1,30 +1,26 @@
-(startLine=271 endLine=298 srcPath=/home/ubuntu/luceneFilter/1269/lucene/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
-    protected Object createValue(IndexReader reader, Entry entryKey)
-        throws IOException {
-      Entry entry = entryKey;
-      String field = entry.field;
-      ByteParser parser = (ByteParser) entry.custom;
-      if (parser == null) {
-        return wrapper.getBytes(reader, field, FieldCache.DEFAULT_BYTE_PARSER);
-      }
-      final byte[] retArray = new byte[reader.maxDoc()];
-      TermDocs termDocs = reader.termDocs();
-      TermEnum termEnum = reader.terms (new Term (field));
+(startLine=41 endLine=64 srcPath=/home/ubuntu/luceneFilter/1272/lucene/solr/src/java/org/apache/solr/analysis/EnglishPorterFilterFactory.java)
+  public void inform(ResourceLoader loader) {
+    String wordFiles = args.get(PROTECTED_TOKENS);
+    if (wordFiles != null) {
       try {
-        do {
-          Term term = termEnum.term();
-          if (term==null || term.field() != field) break;
-          byte termval = parser.parseByte(term.text());
-          termDocs.seek (termEnum);
-          while (termDocs.next()) {
-            retArray[termDocs.doc()] = termval;
+        File protectedWordFiles = new File(wordFiles);
+        if (protectedWordFiles.exists()) {
+          List<String> wlist = loader.getLines(wordFiles);
+          //This cast is safe in Lucene
+          protectedWords = new CharArraySet(wlist, false);//No need to go through StopFilter as before, since it just uses a List internally
+        } else  {
+          List<String> files = StrUtils.splitFileNames(wordFiles);
+          for (String file : files) {
+            List<String> wlist = loader.getLines(file.trim());
+            if (protectedWords == null)
+              protectedWords = new CharArraySet(wlist, false);
+            else
+              protectedWords.addAll(wlist);
           }
-        } while (termEnum.next());
-      } catch (StopFillCacheException stop) {
-      } finally {
-        termDocs.close();
-        termEnum.close();
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
       }
-      return retArray;
     }
+  }
 

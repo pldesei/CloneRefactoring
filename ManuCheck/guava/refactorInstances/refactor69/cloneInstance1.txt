@@ -1,32 +1,21 @@
-(startLine=422 endLine=451 srcPath=/home/ubuntu/guavaFilter/163/guava/guava-tests/test/com/google/common/collect/MapMakerInternalMapTest.java)
-  public void testSegmentPut() {
-    MapMakerInternalMap<Object, Object> map = makeMap(createMapMaker().concurrencyLevel(1));
-    Segment<Object, Object> segment = map.segments[0];
-    // TODO(fry): check recency ordering
+(startLine=438 endLine=456 srcPath=/home/ubuntu/guavaFilter/185/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  public void mergeNodesFrom_directedGraph() {
+    MutableGraph<Integer> directedGraph = buildDirectedTestGraph();
+    directedGraph.addNode(N3);
 
-    Object key = new Object();
-    int hash = map.hash(key);
-    Object oldValue = new Object();
-    Object newValue = new Object();
+    MutableGraph<Integer> actualGraph = GraphBuilder.directed().build();
+    // prepopulate actualGraph to make sure that existing elements don't interfere with the merging
+    actualGraph.addNode(N4);
+    actualGraph.addNode(N2);
 
-    // no entry
-    assertEquals(0, segment.count);
-    assertNull(segment.put(key, hash, oldValue, false));
-    assertEquals(1, segment.count);
+    mergeNodesFrom(directedGraph, actualGraph);
 
-    // same key
-    assertSame(oldValue, segment.put(key, hash, newValue, false));
-    assertEquals(1, segment.count);
-    assertSame(newValue, segment.get(key, hash));
+    MutableGraph<Integer> expectedGraph = GraphBuilder.directed().build();
+    expectedGraph.addNode(N1);
+    expectedGraph.addNode(N2);
+    expectedGraph.addNode(N3);
+    expectedGraph.addNode(N4);
 
-    // cleared
-    ReferenceEntry<Object, Object> entry = segment.getEntry(key, hash);
-    DummyValueReference<Object, Object> oldValueRef = DummyValueReference.create(oldValue, entry);
-    entry.setValueReference(oldValueRef);
-    assertSame(oldValue, segment.get(key, hash));
-    oldValueRef.clear(null);
-    assertNull(segment.put(key, hash, newValue, false));
-    assertEquals(1, segment.count);
-    assertSame(newValue, segment.get(key, hash));
+    assertThat(actualGraph).isEqualTo(expectedGraph);
   }
 

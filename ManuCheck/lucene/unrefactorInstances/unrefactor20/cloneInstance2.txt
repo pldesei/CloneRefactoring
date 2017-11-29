@@ -1,19 +1,15 @@
-(startLine=44 endLine=60 srcPath=/home/ubuntu/luceneFilter/1234/lucene/lucene/src/test/org/apache/lucene/util/TestNumericUtils.java)
-  public void testIntConversionAndOrdering() throws Exception {
-    // generate a series of encoded ints, each numerical one bigger than the one before
-    BytesRef last=null, act=new BytesRef(NumericUtils.BUF_SIZE_INT);
-    for (int i=-100000; i<100000; i++) {
-      NumericUtils.intToPrefixCoded(i, 0, act);
-      if (last!=null) {
-        // test if smaller
-        assertTrue("actual bigger than last (BytesRef)", BytesRef.getUTF8SortedAsUTF16Comparator().compare(last, act) < 0 );
-        assertTrue("actual bigger than last (as String)", last.utf8ToString().compareTo(act.utf8ToString()) < 0 );
+(startLine=91 endLine=103 srcPath=/home/ubuntu/luceneFilter/1541/lucene/contrib/surround/src/java/org/apache/lucene/queryParser/surround/query/ComposedQuery.java)
+  protected void prefixToString(StringBuffer r) {
+    Iterator sqi = getSubQueriesIterator();
+    r.append(getOperatorName()); /* prefix operator */
+    r.append(getBracketOpen());
+    if (sqi.hasNext()) {
+      r.append(sqi.next().toString());
+      while (sqi.hasNext()) {
+        r.append(getPrefixSeparator());
+        r.append(sqi.next().toString());
       }
-      // test is back and forward conversion works
-      assertEquals("forward and back conversion should generate same int", i, NumericUtils.prefixCodedToInt(act));
-      // next step
-      last=act;
-      act = new BytesRef(NumericUtils.BUF_SIZE_INT);
     }
+    r.append(getBracketClose());
   }
 

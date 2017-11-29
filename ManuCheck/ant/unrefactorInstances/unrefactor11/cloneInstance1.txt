@@ -1,16 +1,14 @@
-(startLine=160 endLine=173 srcPath=/home/ubuntu/antFilter/940/ant/src/testcases/org/apache/tools/ant/taskdefs/AntTest.java)
-    public void testReferenceInheritance() {
-        Path p = Path.systemClasspath;
-        p.setProject(project);
-        project.addReference("path", p);
-        project.addReference("no-override", p);
-        testReference("testInherit", new String[] {"path", "path"},
-                      new boolean[] {true, true}, p);
-        testReference("testInherit", 
-                      new String[] {"no-override", "no-override"},
-                      new boolean[] {true, false}, p);
-        testReference("testInherit", 
-                      new String[] {"no-override", "no-override"},
-                      new boolean[] {false, false}, null);
+(startLine=391 endLine=402 srcPath=/home/ubuntu/antFilter/676/ant/src/main/org/apache/tools/ant/taskdefs/optional/ejb/GenericDeploymentTool.java)
+    protected DescriptorHandler getDescriptorHandler(File srcDir) {
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
+
+        registerKnownDTDs(handler);
+
+        // register any DTDs supplied by the user
+        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
+            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        }
+        return handler;
     }
 

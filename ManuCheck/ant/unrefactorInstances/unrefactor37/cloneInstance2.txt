@@ -1,10 +1,13 @@
-(startLine=111 endLine=118 srcPath=/home/ubuntu/antFilter/1062/ant/src/testcases/org/apache/tools/ant/taskdefs/JavaTest.java)
-    public void testClassnameAndJar() { 
-        try {
-            java.setClassname("test.class.Name");
-            java.setJar( new File("test.jar") );
-            fail("Should not be able to set both classname AND jar");
-        } catch (BuildException e){
+(startLine=476 endLine=486 srcPath=/home/ubuntu/antFilter/79/ant/src/main/org/apache/tools/ant/Target.java)
+    private boolean testUnlessAllows() {
+        if ("".equals(unlessCondition)) {
+            return true;
         }
+        PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(getProject());
+        Object o = propertyHelper.parseProperties(unlessCondition);
+        if (o instanceof Boolean) {
+            return !((Boolean) o).booleanValue();
+        }
+        return propertyHelper.getProperty(String.valueOf(o)) == null;
     }
 

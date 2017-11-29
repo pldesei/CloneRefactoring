@@ -1,9 +1,12 @@
-(startLine=219 endLine=225 srcPath=/home/ubuntu/guavaFilter/769/guava/guava-tests/test/com/google/common/collect/SetsTest.java)
-          @Override public Set<String> create(String[] elements) {
-            Set<String> unfiltered = Sets.newLinkedHashSet();
-            unfiltered.add("yyy");
-            unfiltered.addAll(Arrays.asList(elements));
-            unfiltered.add("zzz");
-            return Sets.filter(unfiltered, Collections2Test.NOT_YYY_ZZZ);
-          }
+(startLine=1567 endLine=1576 srcPath=/home/ubuntu/guavaFilter/371/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testAllAsList_emptyList() throws Exception {
+    SingleCallListener listener = new SingleCallListener();
+    listener.expectCall();
+    List<ListenableFuture<String>> futures = ImmutableList.of();
+    ListenableFuture<List<String>> compound = Futures.allAsList(futures);
+    compound.addListener(listener, directExecutor());
+    assertTrue(compound.isDone());
+    assertTrue(compound.get().isEmpty());
+    assertTrue(listener.wasCalled());
+  }
 

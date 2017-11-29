@@ -1,7 +1,10 @@
-(startLine=622 endLine=626 srcPath=/home/ubuntu/guavaFilter/880/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
-    static RecordingListener record(Service service) {
-      RecordingListener listener = new RecordingListener(service);
-      service.addListener(listener, MoreExecutors.sameThreadExecutor());
-      return listener;
-    }
+(startLine=1446 endLine=1453 srcPath=/home/ubuntu/guavaFilter/891/guava/guava-tests/test/com/google/common/collect/MapsTest.java)
+  private static <K, V> SortedMap<K, V> sortedNotNavigable(
+      final SortedMap<K, V> map) {
+    return new ForwardingSortedMap<K, V>() {
+      @Override protected SortedMap<K, V> delegate() {
+        return map;
+      }
+    };
+  }
 

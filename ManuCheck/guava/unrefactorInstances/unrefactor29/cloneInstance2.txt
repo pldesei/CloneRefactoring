@@ -1,13 +1,10 @@
-(startLine=1103 endLine=1113 srcPath=/home/ubuntu/guavaFilter/756/guava/guava/src/com/google/common/collect/StandardTable.java)
-      @Override public boolean retainAll(Collection<?> c) {
-        checkNotNull(c);
-        boolean changed = false;
-        for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
-          if (!c.contains(column(columnKey))) {
-            removeColumn(columnKey);
-            changed = true;
+(startLine=781 endLine=788 srcPath=/home/ubuntu/guavaFilter/383/guava/guava/src/com/google/common/collect/StandardTable.java)
+      @Override public Iterator<Entry<C, Map<R, V>>> iterator() {
+        return Maps.asMapEntryIterator(columnKeySet(), new Function<C, Map<R, V>>() {
+          @Override
+          public Map<R, V> apply(C columnKey) {
+            return column(columnKey);
           }
-        }
-        return changed;
+        });
       }
 

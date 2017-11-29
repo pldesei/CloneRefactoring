@@ -1,8 +1,11 @@
-(startLine=295 endLine=300 srcPath=/home/ubuntu/guavaFilter/86/guava/guava-tests/test/com/google/common/collect/MapsCollectionTest.java)
-        protected Map<String, String> create(Entry<String, String>[] entries) {
-          Map<String, String> map = Maps.newHashMap();
-          putEntries(map, entries);
-          map.putAll(ENTRIES_TO_FILTER);
-          return Maps.filterKeys(map, FILTER_KEYS);
+(startLine=830 endLine=838 srcPath=/home/ubuntu/guavaFilter/163/guava/guava-tests/test/com/google/common/util/concurrent/JSR166TestCase.java)
+        public final void run() {
+            try {
+                realRun();
+                threadShouldThrow(exceptionClass.getSimpleName());
+            } catch (Throwable t) {
+                if (! exceptionClass.isInstance(t))
+                    threadUnexpectedException(t);
+            }
         }
 

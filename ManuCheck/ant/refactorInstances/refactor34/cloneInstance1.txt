@@ -1,7 +1,10 @@
-(startLine=715 endLine=746 srcPath=/home/ubuntu/antFilter/198/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+(startLine=706 endLine=746 srcPath=/home/ubuntu/antFilter/242/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
     private void initTasks() {
         ClassLoader classLoader = null;
-        classLoader = getClassLoader(classLoader);
+        if (project.getCoreLoader() != null
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
+            classLoader = project.getCoreLoader();
+        }
         String dataDefs = MagicNames.TASKDEF_PROPERTIES_RESOURCE;
 
         InputStream in = null;
@@ -28,7 +31,13 @@
         } catch (IOException ex) {
             throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
         } finally {
-            FileUtils.close(in);
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception ignore) {
+                    // Ignore
+                }
+            }
         }
     }
 

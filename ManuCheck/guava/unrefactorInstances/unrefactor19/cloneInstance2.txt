@@ -1,10 +1,11 @@
-(startLine=132 endLine=139 srcPath=/home/ubuntu/guavaFilter/227/guava/guava/src/com/google/common/primitives/Primitives.java)
-  public static <T> Class<T> unwrap(Class<T> type) {
-    checkNotNull(type);
-
-    // cast is safe: long.class and Long.class are both of type Class<Long>
-    @SuppressWarnings("unchecked")
-    Class<T> unwrapped = (Class<T>) WRAPPER_TO_PRIMITIVE_TYPE.get(type);
-    return (unwrapped == null) ? type : unwrapped;
-  }
+(startLine=438 endLine=446 srcPath=/home/ubuntu/guavaFilter/164/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
+    public void testBuilderPutImmutableEntryWithNullKeyFailsAtomically() {
+      Builder<String, Integer> builder = new Builder<String, Integer>();
+      try {
+        builder.put(Maps.immutableEntry((String) null, 1));
+        fail();
+      } catch (NullPointerException expected) {}
+      builder.put("foo", 2);
+      assertMapEquals(builder.build(), "foo", 2);
+    }
 

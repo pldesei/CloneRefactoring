@@ -1,12 +1,50 @@
-(startLine=48 endLine=57 srcPath=/home/ubuntu/luceneFilter/1142/lucene/solr/src/test/org/apache/solr/analysis/TestShingleFilterFactory.java)
-  public void testNoUnigrams() throws Exception {
-    Reader reader = new StringReader("this is a test");
-    Map<String,String> args = new HashMap<String,String>();
-    args.put("outputUnigrams", "false");
-    ShingleFilterFactory factory = new ShingleFilterFactory();
-    factory.init(args);
-    TokenStream stream = factory.create(new WhitespaceTokenizer(DEFAULT_VERSION, reader));
-    assertTokenStreamContents(stream,
-        new String[] {"this is", "is a", "a test"});
-  }
+(startLine=277 endLine=324 srcPath=/home/ubuntu/luceneFilter/297/lucene/lucene/analysis/common/src/java/org/tartarus/snowball/ext/RussianStemmer.java)
+                private boolean r_perfective_gerund() {
+            int among_var;
+            int v_1;
+                    // (, line 71
+                    // [, line 72
+                    ket = cursor;
+                    // substring, line 72
+                    among_var = find_among_b(a_0, 9);
+                    if (among_var == 0)
+                    {
+                        return false;
+                    }
+                    // ], line 72
+                    bra = cursor;
+                    switch(among_var) {
+                        case 0:
+                            return false;
+                        case 1:
+                            // (, line 76
+                            // or, line 76
+                            lab0: do {
+                                v_1 = limit - cursor;
+                                lab1: do {
+                                    // literal, line 76
+                                    if (!(eq_s_b(1, "\u0430")))
+                                    {
+                                        break lab1;
+                                    }
+                                    break lab0;
+                                } while (false);
+                                cursor = limit - v_1;
+                                // literal, line 76
+                                if (!(eq_s_b(1, "\u044F")))
+                                {
+                                    return false;
+                                }
+                            } while (false);
+                            // delete, line 76
+                            slice_del();
+                            break;
+                        case 2:
+                            // (, line 83
+                            // delete, line 83
+                            slice_del();
+                            break;
+                    }
+                    return true;
+                }
 

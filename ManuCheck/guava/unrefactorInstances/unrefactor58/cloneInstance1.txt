@@ -1,19 +1,17 @@
-(startLine=301 endLine=317 srcPath=/home/ubuntu/guavaFilter/817/guava/guava-tests/test/com/google/common/util/concurrent/MoreExecutorsTest.java)
-  public void testInvokeAnyImpl_nullElement() throws Exception {
-    ListeningExecutorService e = sameThreadExecutor();
-    List<Callable<Integer>> l = new ArrayList<Callable<Integer>>();
-    l.add(new Callable<Integer>() {
-      @Override public Integer call() {
-          throw new ArithmeticException("/ by zero");
-      }
-    });
-    l.add(null);
-    try {
-      invokeAnyImpl(e, l, false, 0);
-      shouldThrow();
-    } catch (NullPointerException success) {
-    } finally {
-      joinPool(e);
+(startLine=51 endLine=65 srcPath=/home/ubuntu/guavaFilter/973/guava/guava-tests/test/com/google/common/util/concurrent/AtomicLongMapTest.java)
+  public void testIncrementAndGet() {
+    AtomicLongMap<String> map = AtomicLongMap.create();
+    String key = "key";
+    for (int i = 0; i < ITERATIONS; i++) {
+      long before = map.get(key);
+      long result = map.incrementAndGet(key);
+      long after = map.get(key);
+      assertEquals(before + 1, after);
+      assertEquals(after, result);
     }
+    assertEquals(1, map.size());
+    assertTrue(!map.isEmpty());
+    assertTrue(map.containsKey(key));
+    assertEquals(ITERATIONS, (int) map.get(key));
   }
 

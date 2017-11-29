@@ -1,9 +1,16 @@
-(startLine=472 endLine=478 srcPath=/home/ubuntu/guavaFilter/485/guava/guava-tests/test/com/google/common/collect/TreeRangeMapTest.java)
-  private void removeModel(Map<Integer, Integer> model, Range<Integer> range) {
-    for (int i = MIN_BOUND - 1; i <= MAX_BOUND + 1; i++) {
-      if (range.contains(i)) {
-        model.remove(i);
-      }
+(startLine=331 endLine=344 srcPath=/home/ubuntu/guavaFilter/1071/guava/guava-tests/test/com/google/common/collect/ImmutableMapTest.java)
+    public void testBuilderReuse() {
+      Builder<String, Integer> builder = new Builder<String, Integer>();
+      ImmutableMap<String, Integer> mapOne = builder
+          .put("one", 1)
+          .put("two", 2)
+          .build();
+      ImmutableMap<String, Integer> mapTwo = builder
+          .put("three", 3)
+          .put("four", 4)
+          .build();
+
+      assertMapEquals(mapOne, "one", 1, "two", 2);
+      assertMapEquals(mapTwo, "one", 1, "two", 2, "three", 3, "four", 4);
     }
-  }
 

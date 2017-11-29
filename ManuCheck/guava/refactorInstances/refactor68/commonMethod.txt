@@ -1,5 +1,13 @@
-(startLine=182 endLine=184 srcPath=/home/ubuntu/guavaFilter/184/guava/guava/src/com/google/common/graph/Graphs.java)
-  public static <N> void copyNodes(Graph<N> src, MutableNetwork<N, ?> dest) {
-    copyNodesInternal(src, dest, Predicates.alwaysTrue());
+(startLine=793 endLine=803 srcPath=/home/ubuntu/guavaFilter/203/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  private static MutableNetwork<Integer, String> buildDirectedTestNetwork() {
+    MutableNetwork<Integer, String> directedGraph =
+        NetworkBuilder.directed().allowsParallelEdges(true).build();
+    directedGraph.addEdge(E11, N1, N1);
+    directedGraph.addEdge(E12, N1, N2);
+    directedGraph.addEdge(E11_A, N1, N1);
+    directedGraph.addEdge(E12_A, N1, N2);
+    directedGraph.addEdge(E21, N2, N1);
+
+    return directedGraph;
   }
 

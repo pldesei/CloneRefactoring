@@ -1,17 +1,20 @@
-(startLine=175 endLine=189 srcPath=/home/ubuntu/luceneFilter/521/lucene/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/writercache/cl2o/CompactLabelToOrdinal.java)
-  public int getOrdinal(CategoryPath label, int prefixLen) {
-    if (label == null) {
-      return LabelToOrdinal.InvalidOrdinal;
-    }
+(startLine=126 endLine=143 srcPath=/home/ubuntu/luceneFilter/1675/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testMultipleFields() throws IOException {
+    TermVectorsWriter writer = new TermVectorsWriter(dir, seg, fieldInfos);
+    writeDocument(writer, testFields.length);
 
-    int hash = CompactLabelToOrdinal.stringHashCode(label, prefixLen);
-    for (int i = 0; i < this.hashArrays.length; i++) {
-      int ord = getOrdinal(this.hashArrays[i], label, prefixLen, hash);
-      if (ord != Collision) {
-        return ord;
-      }
-    }
+    writer.close();
 
-    return this.collisionMap.get(label, prefixLen, hash);
+    assertTrue(writer.isDocumentOpen() == false);
+    //Check to see the files were created
+    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVD_EXTENSION));
+    assertTrue(dir.fileExists(seg + TermVectorsWriter.TVX_EXTENSION));
+    //Now read it back in
+    TermVectorsReader reader = new TermVectorsReader(dir, seg, fieldInfos);
+    assertTrue(reader != null);
+
+    for (int j = 0; j < testFields.length; j++) {
+      checkTermVector(reader, 0, testFields[j]);
+    }
   }
 

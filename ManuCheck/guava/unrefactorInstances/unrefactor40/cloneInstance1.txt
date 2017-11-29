@@ -1,9 +1,8 @@
-(startLine=473 endLine=479 srcPath=/home/ubuntu/guavaFilter/215/guava/guava/src/com/google/common/collect/Collections2.java)
-    public boolean contains(@Nullable Object obj) {
-      if (obj instanceof List) {
-        List<?> list = (List<?>) obj;
-        return isPermutation(inputList, list);
-      }
-      return false;
-    }
+(startLine=59 endLine=64 srcPath=/home/ubuntu/guavaFilter/1209/guava/guava/src/com/google/common/collect/ContiguousSet.java)
+  @Override public ImmutableSortedSet<C> subSet(C fromElement, C toElement) {
+    checkNotNull(fromElement);
+    checkNotNull(toElement);
+    checkArgument(comparator().compare(fromElement, toElement) <= 0);
+    return subSetImpl(fromElement, toElement);
+  }
 

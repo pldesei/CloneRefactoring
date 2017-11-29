@@ -1,23 +1,22 @@
-(startLine=1087 endLine=1107 srcPath=/home/ubuntu/antFilter/319/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
-    protected boolean isExcluded(String name) {
-        if (!areNonPatternSetsReady) {
-            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
-            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
-            areNonPatternSetsReady = true;
+(startLine=85 endLine=104 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecTaskTest.java)
+    public void testRedirect2() {
+        executeTarget("redirect2");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
         }
-        
-        if ((isCaseSensitive() && excludeNonPatterns.contains(name))
-            ||
-            (!isCaseSensitive() 
-             && excludeNonPatterns.contains(name.toUpperCase()))) {
-                return true;
-        }
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+        String expectedErr = getProject().getProperty("ant.file") + " err\n";
 
-        for (int i = 0; i < excludePatterns.length; i++) {
-            if (matchPath(excludePatterns[i], name, isCaseSensitive())) {
-                return true;
-            }
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
         }
-        return false;
+        assertEquals("unexpected output", expectedOut, actualOut);
+        assertEquals("unexpected error output", expectedErr, actualErr);
     }
 

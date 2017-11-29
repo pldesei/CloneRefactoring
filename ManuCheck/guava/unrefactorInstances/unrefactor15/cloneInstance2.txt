@@ -1,16 +1,10 @@
-(startLine=405 endLine=418 srcPath=/home/ubuntu/guavaFilter/767/guava/guava-tests/test/com/google/common/math/IntMathTest.java)
-  public void testCheckedSubtract() {
-    for (int a : ALL_INTEGER_CANDIDATES) {
-      for (int b : ALL_INTEGER_CANDIDATES) {
-        BigInteger expectedResult = valueOf(a).subtract(valueOf(b));
-        boolean expectedSuccess = fitsInInt(expectedResult);
-        try {
-          assertEquals(a - b, IntMath.checkedSubtract(a, b));
-          assertTrue(expectedSuccess);
-        } catch (ArithmeticException e) {
-          assertFalse(expectedSuccess);
-        }
+(startLine=574 endLine=581 srcPath=/home/ubuntu/guavaFilter/287/guava/guava/src/com/google/common/collect/ImmutableMultimap.java)
+  UnmodifiableIterator<Entry<K, V>> entryIterator() {
+    return new Itr<Entry<K, V>>() {
+      @Override
+      Entry<K, V> output(K key, V value) {
+        return Maps.immutableEntry(key, value);
       }
-    }
+    };
   }
 

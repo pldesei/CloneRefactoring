@@ -1,15 +1,11 @@
-(startLine=198 endLine=210 srcPath=/home/ubuntu/guavaFilter/120/guava/guava-tests/test/com/google/common/collect/RangeTest.java)
-  public void testGreaterThan() {
-    Range<Integer> range = Range.greaterThan(5);
-    assertFalse(range.contains(5));
-    assertTrue(range.contains(6));
-    assertTrue(range.contains(Integer.MAX_VALUE));
-    assertTrue(range.hasLowerBound());
-    assertEquals(5, (int) range.lowerEndpoint());
-    assertEquals(OPEN, range.lowerBoundType());
-    assertUnboundedAbove(range);
-    assertFalse(range.isEmpty());
-    assertEquals("(5..+\u221e)", range.toString());
-    reserializeAndAssert(range);
+(startLine=1228 endLine=1236 srcPath=/home/ubuntu/guavaFilter/156/guava/guava/src/com/google/common/base/Preconditions.java)
+  private static String badPositionIndex(int index, int size, String desc) {
+    if (index < 0) {
+      return format("%s (%s) must not be negative", desc, index);
+    } else if (size < 0) {
+      throw new IllegalArgumentException("negative size: " + size);
+    } else { // index > size
+      return format("%s (%s) must not be greater than size (%s)", desc, index, size);
+    }
   }
 

@@ -1,7 +1,10 @@
-(startLine=760 endLine=795 srcPath=/home/ubuntu/antFilter/198/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+(startLine=751 endLine=789 srcPath=/home/ubuntu/antFilter/242/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
     private void initTypes() {
         ClassLoader classLoader = null;
-        classLoader = getClassLoader(classLoader);
+        if (project.getCoreLoader() != null
+            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
+            classLoader = project.getCoreLoader();
+        }
         String dataDefs = MagicNames.TYPEDEFS_PROPERTIES_RESOURCE;
 
         InputStream in = null;

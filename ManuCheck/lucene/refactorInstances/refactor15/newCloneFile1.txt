@@ -1,4 +1,4 @@
-package org.apache.lucene.analysis.ru;
+package org.apache.lucene.analysis.ar;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,175 +17,83 @@ package org.apache.lucene.analysis.ru;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringReader;
 
 import junit.framework.TestCase;
 
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 
 /**
- * Test case for RussianAnalyzer.
+ * Test the Arabic Normalization Filter
  *
- *
- * @version   $Id$
  */
+public class TestArabicNormalizationFilter extends TestCase {
 
-public class TestRussianAnalyzer extends TestCase
-{
-    private InputStreamReader inWords;
+  public void testAlifMadda() throws IOException {
+    check("آجن", "اجن");
+  }
+  
+  public void testAlifHamzaAbove() throws IOException {
+    check("أحمد", "احمد");
+  }
+  
+  public void testAlifHamzaBelow() throws IOException {
+    check("إعاذ", "اعاذ");
+  }
+  
+  public void testAlifMaksura() throws IOException {
+    check("بنى", "بني");
+  }
 
-    private InputStreamReader sampleUnicode;
-
-    private Reader inWordsKOI8;
-
-    private Reader sampleKOI8;
-
-    private Reader inWords1251;
-
-    private Reader sample1251;
-
-    private File dataDir;
-
-    protected void setUp() throws Exception
-    {
-      dataDir = new File(System.getProperty("dataDir", "./bin"));
-    }
-
-    public void testUnicode() throws IOException
-    {
-        RussianAnalyzer ra = new RussianAnalyzer(RussianCharsets.UnicodeRussian);
-        inWords =
-            new InputStreamReader(
-                new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/testUTF8.txt")),
-                "UTF-8");
-
-        sampleUnicode =
-            new InputStreamReader(
-                new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/resUTF8.htm")),
-                "UTF-8");
-
-        TokenStream in = ra.tokenStream("all", inWords);
-
-        RussianLetterTokenizer sample =
-            new RussianLetterTokenizer(
-                sampleUnicode,
-                RussianCharsets.UnicodeRussian);
-
-        TermAttribute text = (TermAttribute) in.getAttribute(TermAttribute.class);
-        TermAttribute sampleText = (TermAttribute) sample.getAttribute(TermAttribute.class);
-
-        for (;;)
-        {
-          if (in.incrementToken() == false)
-            break;
-
-            boolean nextSampleToken = sample.incrementToken();
-            assertEquals(
-                "Unicode",
-                text.term(),
-                nextSampleToken == false
-                ? null
-                : sampleText.term());
-        }
-
-        inWords.close();
-        sampleUnicode.close();
-    }
-
-    public void testKOI8() throws IOException
-    {
-        //System.out.println(new java.util.Date());
-        RussianAnalyzer ra = new RussianAnalyzer(RussianCharsets.KOI8);
-        // KOI8
-        inWordsKOI8 = new InputStreamReader(new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/testKOI8.txt")), "iso-8859-1");
-
-        sampleKOI8 = new InputStreamReader(new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/resKOI8.htm")), "iso-8859-1");
-
-        TokenStream in = ra.tokenStream("all", inWordsKOI8);
-        RussianLetterTokenizer sample =
-            new RussianLetterTokenizer(
-                sampleKOI8,
-                RussianCharsets.KOI8);
-
-        TermAttribute text = (TermAttribute) in.getAttribute(TermAttribute.class);
-        TermAttribute sampleText = (TermAttribute) sample.getAttribute(TermAttribute.class);
-
-        for (;;)
-        {
-          if (in.incrementToken() == false)
-            break;
-
-            boolean nextSampleToken = sample.incrementToken();
-            assertEquals(
-                "KOI8",
-                text.term(),
-                nextSampleToken == false
-                ? null
-                : sampleText.term());
-        }
-        inWordsKOI8.close();
-        sampleKOI8.close();
-    }
-
-    public void test1251() throws IOException
-    {
-        // 1251
-        inWords1251 = new InputStreamReader(new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/test1251.txt")), "iso-8859-1");
-
-        sample1251 = new InputStreamReader(new FileInputStream(new File(dataDir, "/org/apache/lucene/analysis/ru/res1251.htm")), "iso-8859-1");
-
-        RussianAnalyzer ra = new RussianAnalyzer(RussianCharsets.CP1251);
-        TokenStream in = ra.tokenStream("", inWords1251);
-        RussianLetterTokenizer sample =
-            new RussianLetterTokenizer(
-                sample1251,
-                RussianCharsets.CP1251);
-
-        TermAttribute text = (TermAttribute) in.getAttribute(TermAttribute.class);
-        TermAttribute sampleText = (TermAttribute) sample.getAttribute(TermAttribute.class);
-
-        for (;;)
-        {
-          if (in.incrementToken() == false)
-            break;
-
-            boolean nextSampleToken = sample.incrementToken();
-            assertEquals(
-                "1251",
-                text.term(),
-                nextSampleToken == false
-                ? null
-                : sampleText.term());
-        }
-
-        inWords1251.close();
-        sample1251.close();
-    }
+  public void testTehMarbuta() throws IOException {
+    check("فاطمة", "فاطمه");
+  }
+  
+  public void testTatweel() throws IOException {
+    check("روبرـــــت", "روبرت");
+  }
+  
+  public void testFatha() throws IOException {
+    check("مَبنا", "مبنا");
+  }
+  
+  public void testKasra() throws IOException {
+    check("علِي", "علي");
+  }
+  
+  public void testDamma() throws IOException {
+    check("بُوات", "بوات");
+  }
+  
+  public void testFathatan() throws IOException {
+    check("ولداً", "ولدا");
+  }
+  
+  public void testKasratan() throws IOException {
+    check("ولدٍ", "ولد");
+  }
+  
+  public void testDammatan() throws IOException {
+    check("ولدٌ", "ولد");
+  }  
+  
+  public void testSukun() throws IOException {
+    check("نلْسون", "نلسون");
+  }
+  
+  public void testShaddah() throws IOException {
+    check("هتميّ", "هتمي");
+  }  
+  
+  private void check(final String input, final String expected) throws IOException {
+    ArabicLetterTokenizer tokenStream = new ArabicLetterTokenizer(new StringReader(input));
+    ArabicNormalizationFilter filter = new ArabicNormalizationFilter(tokenStream);
+    TermAttribute termAtt = (TermAttribute) filter.getAttribute(TermAttribute.class);
     
-    public void testDigitsInRussianCharset() 
-    {
-        Reader reader = new StringReader("text 1000");
-        RussianAnalyzer ra = new RussianAnalyzer();
-        TokenStream stream = ra.tokenStream("", reader);
-
-        TermAttribute termText = (TermAttribute) stream.getAttribute(TermAttribute.class);
-        try {
-            assertTrue(stream.incrementToken());
-            assertEquals("text", termText.term());
-            assertTrue(stream.incrementToken());
-            assertEquals("RussianAnalyzer's tokenizer skips numbers from input text", "1000", termText.term());
-            assertFalse(stream.incrementToken());
-        }
-        catch (IOException e)
-        {
-            fail("unexpected IOException");
-        }
-    }
+    assertTrue(filter.incrementToken());
+    assertEquals(expected, termAtt.term());
+    filter.close();
+  }
 
 }

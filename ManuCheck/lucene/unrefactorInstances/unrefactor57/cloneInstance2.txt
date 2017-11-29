@@ -1,18 +1,10 @@
-(startLine=175 endLine=190 srcPath=/home/ubuntu/luceneFilter/192/lucene/solr/core/src/test/org/apache/solr/TestTrie.java)
-  public void testTrieDoubleRangeSearch() throws Exception {
-    for (long i = Integer.MAX_VALUE, c = 0; i < (long) Integer.MAX_VALUE + 10l; i++) {
-      assertU(adoc("id", String.valueOf(c++), "tdouble", String.valueOf(i * 2.33d)));
+(startLine=79 endLine=86 srcPath=/home/ubuntu/luceneFilter/1252/lucene/solr/src/java/org/apache/solr/analysis/BaseTokenStreamFactory.java)
+  protected int getInt(String name, int defaultVal, boolean useDefault) {
+    String s = args.get(name);
+    if (s==null) {
+      if (useDefault) return defaultVal;
+      throw new RuntimeException("Configuration Error: missing parameter '" + name + "'");
     }
-    assertU(commit());
-    String fq = "tdouble:[" + Integer.MAX_VALUE * 2.33d + " TO " + (5l + Integer.MAX_VALUE) * 2.33d + "]";
-    assertQ("Range filter must match only 5 documents", req("q", "*:*", "fq", fq), "//*[@numFound='6']");
-    assertQ("Range filter tdouble:[* to *] must match 10 documents", req("q", "*:*", "fq", "tdouble:[* TO *]"), "//*[@numFound='10']");
-
-    // Sorting
-    assertQ("Sort descending does not work correctly on tdouble fields", req("q", "*:*", "sort", "tdouble desc"), "//*[@numFound='10']", "//double[@name='tdouble'][.='5.0036369184800005E9']");
-    assertQ("Sort ascending does not work correctly on tdouble fields", req("q", "*:*", "sort", "tdouble asc"), "//*[@numFound='10']", "//double[@name='tdouble'][.='5.00363689751E9']");
-
-    // Function queries
-    assertQ("Function queries does not work correctly on tdouble fields", req("q", "_val_:\"sum(tdouble,1.0)\""), "//*[@numFound='10']", "//double[@name='tdouble'][.='5.0036369184800005E9']");
+    return Integer.parseInt(s);
   }
 

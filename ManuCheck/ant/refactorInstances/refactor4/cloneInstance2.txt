@@ -1,92 +1,47 @@
-(startLine=217 endLine=306 srcPath=/home/ubuntu/antFilter/562/ant/src/main/org/apache/tools/ant/taskdefs/optional/starteam/StarTeamCheckout.java)
-    protected void visit(Folder starteamFolder, java.io.File targetFolder)
-            throws BuildException {
-        try {
-            Hashtable localFiles = listLocalFiles(targetFolder);
+(startLine=272 endLine=316 srcPath=/home/ubuntu/antFilter/572/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
+    public void testCheckinFileFlags() {
+        String[] sTestCmdLine = { "soscmd", "-command", "CheckInFile", "-file",
+            SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+            "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
+            "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
+            "-workdir", project.getBaseDir().getAbsolutePath() + File.separator
+            + LOCAL_PATH, "-log", SRC_COMMENT };
 
-            // If we have been told to create the working folders
-            if (createDirs) {
-                // Create if it doesn't exist
-                if (!targetFolder.exists()) {
-                    targetFolder.mkdir();
-                }
-            }
-            // For all Files in this folder, we need to check
-            // if there have been modifications.
+        Path path = new Path(project, LOCAL_PATH);
 
-            Item[] files = starteamFolder.getItems("File");
-            for (int i = 0; i < files.length; i++) {
-                File eachFile = (File) files[i];
-                String filename = eachFile.getName();
-                java.io.File localFile =
-                        new java.io.File(targetFolder, filename);
+        // Set up a SOSCheckin task
+        sosCheckin.setProject(project);
+        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
+        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
+        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
+        sosCheckin.setFile(SRC_FILE);
+        sosCheckin.setComment(SRC_COMMENT);
+        sosCheckin.setUsername(SOS_USERNAME);
+        sosCheckin.setPassword(SOS_PASSWORD);
+        sosCheckin.setLocalPath(path);
+        sosCheckin.setNoCache(true);
+        sosCheckin.setNoCompress(true);
+        sosCheckin.setVerbose(true);
+        sosCheckin.setRecursive(true);
 
-                delistLocalFile(localFiles, localFile);
+        commandline = sosCheckin.buildCmdLine();
+        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-                // If the file doesn't pass the include/exclude tests, skip it.
-                if (!shouldProcess(filename)) {
-                    log("Skipping " + eachFile.toString(), Project.MSG_INFO);
-                    continue;
-                }
-
-
-                // If forced is not set then we may save ourselves some work by
-                // looking at the status flag.
-                // Otherwise, we care nothing about these statuses.
-
-                if (!isForced()) {
-                    int fileStatus = (eachFile.getStatus());
-
-                    // We try to update the status once to give StarTeam
-                    // another chance.
-                    if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
-                        eachFile.updateStatus(true, true);
-                        fileStatus = (eachFile.getStatus());
-                    }
-                    if (fileStatus == Status.CURRENT) {
-                        log("Not processing " + eachFile.toString()
-                                + " as it is current.",
-                                Project.MSG_INFO);
-                        continue;
-                    }
-                }
-
-
-                // Check out anything else.
-                // Just a note: StarTeam has a status for NEW which implies
-                // that there is an item  on your local machine that is not
-                // in the repository.  These are the items that show up as
-                // NOT IN VIEW in the Starteam GUI.
-                // One would think that we would want to perhaps checkin the
-                // NEW items (not in all cases! - Steve Cohen 15 Dec 2001)
-                // Unfortunately, the sdk doesn't really work, and we can't
-                // actually see  anything with a status of NEW. That is why
-                // we can just check out  everything here without worrying
-                // about losing anything.
-
-                log("Checking Out: " + (localFile.toString()), Project.MSG_INFO);
-                eachFile.checkoutTo(localFile, this.lockStatus,
-                        true, true, true);
+        int i = 0;
+        while (i < sTestCmdLine.length) {
+            try {
+                assertEquals("CheckInFile arg # " + String.valueOf(i),
+                                sTestCmdLine[i],
+                                sGeneratedCmdLine[i]);
+                i++;
+            } catch (ArrayIndexOutOfBoundsException aioob) {
+                fail("CheckInFile missing arg");
             }
 
-            // Now we recursively call this method on all sub folders in this
-            // folder unless recursive attribute is off.
-            Folder[] subFolders = starteamFolder.getSubFolders();
-            for (int i = 0; i < subFolders.length; i++) {
-                java.io.File targetSubfolder =
-                        new java.io.File(targetFolder, subFolders[i].getName());
-                delistLocalFile(localFiles, targetSubfolder);
-                if (isRecursive()) {
-                    visit(subFolders[i], targetSubfolder);
-                }
-            }
-
-            if (this.deleteUncontrolled) {
-                deleteUncontrolledItems(localFiles);
-            }
-
-        } catch (IOException e) {
-            throw new BuildException(e);
+        }
+        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
+            // We have extra elements
+            fail("CheckInFile extra args");
         }
     }
 

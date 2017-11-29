@@ -13,180 +13,627 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.google.common.collect;
 
-package com.google.common.io;
-
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.testing.Helpers.mapEntry;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.testing.Helpers;
+import com.google.common.collect.testing.MapTestSuiteBuilder;
+import com.google.common.collect.testing.NavigableMapTestSuiteBuilder;
+import com.google.common.collect.testing.SafeTreeMap;
+import com.google.common.collect.testing.SampleElements;
+import com.google.common.collect.testing.SortedMapTestSuiteBuilder;
+import com.google.common.collect.testing.TestMapGenerator;
+import com.google.common.collect.testing.TestStringMapGenerator;
+import com.google.common.collect.testing.TestStringSortedMapGenerator;
+import com.google.common.collect.testing.features.CollectionSize;
+import com.google.common.collect.testing.features.MapFeature;
+import com.google.common.collect.testing.google.BiMapRemoveTester;
+import com.google.common.collect.testing.google.BiMapTestSuiteBuilder;
+import com.google.common.collect.testing.google.TestStringBiMapGenerator;
+import com.google.common.collect.testing.testers.CollectionIteratorTester;
+import com.google.common.testing.SerializableTester;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.nio.charset.Charset;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 import javax.annotation.Nullable;
 
 /**
- * A readable source of characters, such as a text file. Unlike a {@link Reader}, a
- * {@code CharSource} is not an open, stateful stream of characters that can be read and closed.
- * Instead, it is an immutable <i>supplier</i> of {@code InputStream} instances.
+ * Test suites for wrappers in {@code Maps}.
  *
- * <p>{@code CharSource} provides two kinds of methods:
- * <ul>
- *   <li><b>Methods that return a reader:</b> These methods should return a <i>new</i>, independent
- *   instance each time they are called. The caller is responsible for ensuring that the returned
- *   reader is closed.
- *   <li><b>Convenience methods:</b> These are implementations of common operations that are
- *   typically implemented by opening a reader using one of the methods in the first category,
- *   doing something and finally closing the reader that was opened.
- * </ul>
- *
- * <p>Several methods in this class, such as {@link #readLines()}, break the contents of the
- * source into lines. Like {@link BufferedReader}, these methods break lines on any of {@code \n},
- * {@code \r} or {@code \r\n}, do not include the line separator in each line and do not consider
- * there to be an empty line at the end if the contents are terminated with a line separator.
- *
- * <p>Any {@link ByteSource} containing text encoded with a specific {@linkplain Charset character
- * encoding} may be viewed as a {@code CharSource} using {@link ByteSource#asCharSource(Charset)}.
- *
- * @since 14.0
- * @author Colin Decker
+ * @author Louis Wasserman
  */
-public abstract class CharSource {
+public class MapsCollectionTest extends TestCase {
+  public static Test suite() {
+    TestSuite suite = new TestSuite();
 
-  /**
-   * Opens a new {@link Reader} for reading from this source. This method should return a new,
-   * independent reader each time it is called.
-   *
-   * <p>The caller is responsible for ensuring that the returned reader is closed.
-   *
-   * @throws IOException if an I/O error occurs in the process of opening the reader
-   */
-  public abstract Reader openStream() throws IOException;
+    suite.addTest(NavigableMapTestSuiteBuilder
+        .using(new TestStringSortedMapGenerator() {
+          @Override
+          protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+            SafeTreeMap<String, String> map = new SafeTreeMap<String, String>();
+            putEntries(map, entries);
+            return Maps.unmodifiableNavigableMap(map);
+          }
+        })
+        .named("unmodifiableNavigableMap[SafeTreeMap]")
+        .withFeatures(CollectionSize.ANY,
+            MapFeature.ALLOWS_NULL_VALUES)
+        .createTestSuite());
+    suite.addTest(NavigableMapTestSuiteBuilder
+        .using(new TestStringSortedMapGenerator() {
 
-  /**
-   * Opens a new {@link BufferedReader} for reading from this source. This method should return a
-   * new, independent reader each time it is called.
-   *
-   * <p>The caller is responsible for ensuring that the returned reader is closed.
-   *
-   * @throws IOException if an I/O error occurs in the process of opening the reader
-   */
-  public BufferedReader openBufferedStream() throws IOException {
-    Reader reader = openStream();
-    return (reader instanceof BufferedReader)
-        ? (BufferedReader) reader
-        : new BufferedReader(reader);
+          @Override
+          protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+            SafeTreeMap<String, String> map = new SafeTreeMap<String, String>();
+            putEntries(map, entries);
+            return SerializableTester.reserialize(Maps.unmodifiableNavigableMap(map));
+          }
+        })
+        .named("unmodifiableNavigableMap[SafeTreeMap], reserialized")
+        .withFeatures(CollectionSize.ANY,
+            MapFeature.ALLOWS_NULL_VALUES)
+        .createTestSuite());
+    suite.addTest(BiMapTestSuiteBuilder
+        .using(new TestStringBiMapGenerator() {
+          @Override
+          protected BiMap<String, String> create(Entry<String, String>[] entries) {
+            BiMap<String, String> bimap = HashBiMap.create(entries.length);
+            for (Entry<String, String> entry : entries) {
+              checkArgument(!bimap.containsKey(entry.getKey()));
+              bimap.put(entry.getKey(), entry.getValue());
+            }
+            return Maps.unmodifiableBiMap(bimap);
+          }
+        })
+        .named("unmodifiableBiMap[HashBiMap]")
+        .withFeatures(
+            CollectionSize.ANY,
+            MapFeature.ALLOWS_NULL_VALUES,
+            MapFeature.ALLOWS_NULL_KEYS,
+            MapFeature.REJECTS_DUPLICATES_AT_CREATION)
+        .createTestSuite());
+    suite.addTest(BiMapTestSuiteBuilder
+        .using(new TestStringBiMapGenerator() {
+          @Override
+          protected BiMap<String, String> create(Entry<String, String>[] entries) {
+            BiMap<String, String> bimap = HashBiMap.create(entries.length);
+            for (Entry<String, String> entry : entries) {
+              checkArgument(!bimap.containsKey(entry.getKey()));
+              bimap.put(entry.getKey(), entry.getValue());
+            }
+            return SerializableTester.reserialize(Maps.unmodifiableBiMap(bimap));
+          }
+        })
+        .named("unmodifiableBiMap[HashBiMap], reserialized")
+        .withFeatures(
+            CollectionSize.ANY,
+            MapFeature.ALLOWS_NULL_VALUES,
+            MapFeature.ALLOWS_NULL_KEYS,
+            MapFeature.REJECTS_DUPLICATES_AT_CREATION)
+        .createTestSuite());
+    suite.addTest(MapTestSuiteBuilder
+        .using(new TestMapGenerator<String, Integer>() {
+          @Override
+          public SampleElements<Entry<String, Integer>> samples() {
+            return new SampleElements<Entry<String, Integer>>(
+                mapEntry("x", 1),
+                mapEntry("xxx", 3),
+                mapEntry("xx", 2),
+                mapEntry("xxxx", 4),
+                mapEntry("aaaaa", 5));
+          }
+
+          @Override
+          public Map<String, Integer> create(Object... elements) {
+            Set<String> set = Sets.newLinkedHashSet();
+            for (Object e : elements) {
+              Entry<?, ?> entry = (Entry<?, ?>) e;
+              checkNotNull(entry.getValue());
+              set.add((String) checkNotNull(entry.getKey()));
+            }
+            return Maps.asMap(set, new Function<String, Integer>() {
+              @Override
+              public Integer apply(String input) {
+                return input.length();
+              }
+            });
+          }
+
+          @SuppressWarnings("unchecked")
+          @Override
+          public Entry<String, Integer>[] createArray(int length) {
+            return new Entry[length];
+          }
+
+          @Override
+          public Iterable<Entry<String, Integer>> order(
+              List<Entry<String, Integer>> insertionOrder) {
+            return insertionOrder;
+          }
+
+          @Override
+          public String[] createKeyArray(int length) {
+            return new String[length];
+          }
+
+          @Override
+          public Integer[] createValueArray(int length) {
+            return new Integer[length];
+          }
+        })
+        .named("Maps.asMap[Set, Function]")
+        .withFeatures(CollectionSize.ANY,
+            MapFeature.SUPPORTS_REMOVE)
+        .createTestSuite());
+    suite.addTest(SortedMapTestSuiteBuilder
+        .using(new TestMapGenerator<String, Integer>() {
+          @Override
+          public String[] createKeyArray(int length) {
+            return new String[length];
+          }
+
+          @Override
+          public Integer[] createValueArray(int length) {
+            return new Integer[length];
+          }
+
+          @Override
+          public SampleElements<Entry<String, Integer>> samples() {
+            return new SampleElements<Entry<String, Integer>>(
+                mapEntry("a", 1),
+                mapEntry("aa", 2),
+                mapEntry("aba", 3),
+                mapEntry("bbbb", 4),
+                mapEntry("ccccc", 5));
+          }
+
+          @Override
+          public SortedMap<String, Integer> create(Object... elements) {
+            SortedSet<String> set = new NonNavigableSortedSet();
+            for (Object e : elements) {
+              Entry<?, ?> entry = (Entry<?, ?>) e;
+              checkNotNull(entry.getValue());
+              set.add((String) checkNotNull(entry.getKey()));
+            }
+            return Maps.asMap(set, new Function<String, Integer>() {
+              @Override
+              public Integer apply(String input) {
+                return input.length();
+              }
+            });
+          }
+
+          @SuppressWarnings("unchecked")
+          @Override
+          public Entry<String, Integer>[] createArray(int length) {
+            return new Entry[length];
+          }
+
+          @Override
+          public Iterable<Entry<String, Integer>> order(
+              List<Entry<String, Integer>> insertionOrder) {
+            Collections.sort(insertionOrder, new Comparator<Entry<String, Integer>>() {
+              @Override
+              public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+              }
+            });
+            return insertionOrder;
+          }
+        })
+        .named("Maps.asMap[SortedSet, Function]")
+        .withFeatures(CollectionSize.ANY,
+            MapFeature.SUPPORTS_REMOVE)
+        .createTestSuite());
+    suite.addTest(NavigableMapTestSuiteBuilder
+        .using(new TestMapGenerator<String, Integer>() {
+          @Override
+          public String[] createKeyArray(int length) {
+            return new String[length];
+          }
+
+          @Override
+          public Integer[] createValueArray(int length) {
+            return new Integer[length];
+          }
+
+          @Override
+          public SampleElements<Entry<String, Integer>> samples() {
+            return new SampleElements<Entry<String, Integer>>(
+                mapEntry("a", 1),
+                mapEntry("aa", 2),
+                mapEntry("aba", 3),
+                mapEntry("bbbb", 4),
+                mapEntry("ccccc", 5));
+          }
+
+          @Override
+          public NavigableMap<String, Integer> create(Object... elements) {
+            NavigableSet<String> set = Sets.newTreeSet(Ordering.natural());
+            for (Object e : elements) {
+              Map.Entry<?, ?> entry = (Entry<?, ?>) e;
+              checkNotNull(entry.getValue());
+              set.add((String) checkNotNull(entry.getKey()));
+            }
+            return Maps.asMap(set, new Function<String, Integer>() {
+              @Override
+              public Integer apply(String input) {
+                return input.length();
+              }
+            });
+          }
+
+          @SuppressWarnings("unchecked")
+          @Override
+          public Entry<String, Integer>[] createArray(int length) {
+            return new Entry[length];
+          }
+
+          @Override
+          public Iterable<Entry<String, Integer>> order(
+              List<Entry<String, Integer>> insertionOrder) {
+            Collections.sort(insertionOrder, new Comparator<Entry<String, Integer>>() {
+              @Override
+              public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+              }
+            });
+            return insertionOrder;
+          }
+        })
+        .named("Maps.asMap[NavigableSet, Function]")
+        .withFeatures(CollectionSize.ANY,
+            MapFeature.SUPPORTS_REMOVE)
+        .createTestSuite());
+    suite.addTest(filterSuite());
+    return suite;
   }
-
-  /**
-   * Appends the contents of this source to the given {@link Appendable} (such as a {@link Writer}).
-   * Does not close {@code appendable} if it is {@code Closeable}.
-   *
-   * @throws IOException if an I/O error occurs in the process of reading from this source or
-   *     writing to {@code appendable}
-   */
-  public long copyTo(Appendable appendable) throws IOException {
-    checkNotNull(appendable);
-
-    Closer closer = Closer.create();
-    try {
-      Reader reader = closer.register(openStream());
-      return CharStreams.copy(reader, appendable);
-    } catch (Throwable e) {
-      throw closer.rethrow(e);
-    } finally {
-      closer.close();
-    }
+  
+  static TestSuite filterSuite() {
+    TestSuite suite = new TestSuite("Filter");
+    suite.addTest(filterMapSuite());
+    suite.addTest(filterBiMapSuite());
+    suite.addTest(filterSortedMapSuite());
+    suite.addTest(filterNavigableMapSuite());
+    return suite;
   }
-
-  /**
-   * Copies the contents of this source to the given sink.
-   *
-   * @throws IOException if an I/O error occurs in the process of reading from this source or
-   *     writing to {@code sink}
-   */
-  public long copyTo(CharSink sink) throws IOException {
-    checkNotNull(sink);
-
-    Closer closer = Closer.create();
-    try {
-      Reader reader = closer.register(openStream());
-      Writer writer = closer.register(sink.openStream());
-      return CharStreams.copy(reader, writer);
-    } catch (Throwable e) {
-      throw closer.rethrow(e);
-    } finally {
-      closer.close();
-    }
+  
+  static TestSuite filterMapSuite() {
+    TestSuite suite = new TestSuite("FilterMap");
+    suite.addTest(MapTestSuiteBuilder.using(new TestStringMapGenerator() {
+        @Override
+        protected Map<String, String> create(Entry<String, String>[] entries) {
+          Map<String, String> map = Maps.newHashMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterKeys(map, FILTER_KEYS);
+        }
+      })
+      .named("Maps.filterKeys[Map, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    suite.addTest(MapTestSuiteBuilder.using(new TestStringMapGenerator() {
+        @Override
+        protected Map<String, String> create(Entry<String, String>[] entries) {
+          Map<String, String> map = Maps.newHashMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+      })
+      .named("Maps.filterValues[Map, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    suite.addTest(MapTestSuiteBuilder.using(new TestStringMapGenerator() {
+        @Override
+        protected Map<String, String> create(Entry<String, String>[] entries) {
+          Map<String, String> map = Maps.newHashMap();
+          putEntries(map, entries);
+           map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterEntries(map, FILTER_ENTRIES);
+        }
+      })
+      .named("Maps.filterEntries[Map, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    suite.addTest(MapTestSuiteBuilder.using(new TestStringMapGenerator() {
+        @Override
+        protected Map<String, String> create(Entry<String, String>[] entries) {
+          Map<String, String> map = Maps.newHashMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          map = Maps.filterEntries(map, FILTER_ENTRIES_1);
+          return Maps.filterEntries(map, FILTER_ENTRIES_2);
+        }
+      })
+      .named("Maps.filterEntries[Maps.filterEntries[Map, Predicate], Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    return suite;
   }
-
-  /**
-   * Reads the contents of this source as a string.
-   *
-   * @throws IOException if an I/O error occurs in the process of reading from this source
-   */
-  public String read() throws IOException {
-    Closer closer = Closer.create();
-    try {
-      Reader reader = closer.register(openStream());
-      return CharStreams.toString(reader);
-    } catch (Throwable e) {
-      throw closer.rethrow(e);
-    } finally {
-      closer.close();
-    }
+  
+  static TestSuite filterBiMapSuite() {
+    TestSuite suite = new TestSuite("FilterBiMap");
+    suite.addTest(BiMapTestSuiteBuilder.using(new TestStringBiMapGenerator() {
+        @Override
+        protected BiMap<String, String> create(Entry<String, String>[] entries) {
+          BiMap<String, String> map = HashBiMap.create();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterKeys(map, FILTER_KEYS);
+        }
+      })
+      .named("Maps.filterKeys[BiMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod(),
+          BiMapRemoveTester.getKeySetIteratorRemoveMethod())
+      .createTestSuite());
+    suite.addTest(BiMapTestSuiteBuilder.using(new TestStringBiMapGenerator() {
+        @Override
+        protected BiMap<String, String> create(Entry<String, String>[] entries) {
+          BiMap<String, String> map = HashBiMap.create();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+      })
+      .named("Maps.filterValues[BiMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod(),
+          BiMapRemoveTester.getKeySetIteratorRemoveMethod())
+      .createTestSuite());
+    suite.addTest(BiMapTestSuiteBuilder.using(new TestStringBiMapGenerator() {
+        @Override
+        protected BiMap<String, String> create(Entry<String, String>[] entries) {
+          BiMap<String, String> map = HashBiMap.create();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterEntries(map, FILTER_ENTRIES);
+        }
+      })
+      .named("Maps.filterEntries[BiMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_KEYS,
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorUnknownOrderRemoveSupportedMethod(),
+          BiMapRemoveTester.getKeySetIteratorRemoveMethod())
+      .createTestSuite());
+    return suite;
   }
-
-  /**
-   * Reads the first link of this source as a string. Returns {@code null} if this source is empty.
-   *
-   * <p>Like {@link BufferedReader}, this method breaks lines on any of {@code \n}, {@code \r} or
-   * {@code \r\n}, does not include the line separator in the returned line and does not consider
-   * there to be an extra empty line at the end if the content is terminated with a line separator.
-   *
-   * @throws IOException if an I/O error occurs in the process of reading from this source
-   */
-  public @Nullable String readFirstLine() throws IOException {
-    Closer closer = Closer.create();
-    try {
-      BufferedReader reader = closer.register(openBufferedStream());
-      return reader.readLine();
-    } catch (Throwable e) {
-      throw closer.rethrow(e);
-    } finally {
-      closer.close();
-    }
+  
+  static TestSuite filterSortedMapSuite() {
+    TestSuite suite = new TestSuite("FilterSortedMap");
+    suite.addTest(SortedMapTestSuiteBuilder.using(new TestStringSortedMapGenerator() {
+        @Override
+        protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+          SortedMap<String, String> map = new NonNavigableSortedMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+         return Maps.filterKeys(map, FILTER_KEYS);
+        }
+      })
+      .named("Maps.filterKeys[SortedMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    suite.addTest(SortedMapTestSuiteBuilder.using(new TestStringSortedMapGenerator() {
+        @Override
+        protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+          SortedMap<String, String> map = new NonNavigableSortedMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+      })
+      .named("Maps.filterValues[SortedMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    suite.addTest(SortedMapTestSuiteBuilder.using(new TestStringSortedMapGenerator() {
+        @Override
+        protected SortedMap<String, String> create(Entry<String, String>[] entries) {
+          SortedMap<String, String> map = new NonNavigableSortedMap();
+          putEntries(map, entries);
+          map.putAll(ENTRIES_TO_FILTER);
+          return Maps.filterEntries(map, FILTER_ENTRIES);
+        }
+      })
+      .named("Maps.filterEntries[SortedMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+      .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+      .createTestSuite());
+    return suite;
   }
-
-  /**
-   * Reads all the lines of this source as a list of strings. The returned list will be empty if
-   * this source is empty.
-   *
-   * <p>Like {@link BufferedReader}, this method breaks lines on any of {@code \n}, {@code \r} or
-   * {@code \r\n}, does not include the line separator in the returned lines and does not consider
-   * there to be an extra empty line at the end if the content is terminated with a line separator.
-   *
-   * @throws IOException if an I/O error occurs in the process of reading from this source
-   */
-  public ImmutableList<String> readLines() throws IOException {
-    Closer closer = Closer.create();
-    try {
-      BufferedReader reader = closer.register(openBufferedStream());
-      List<String> result = Lists.newArrayList();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        result.add(line);
+  
+  static TestSuite filterNavigableMapSuite() {
+    TestSuite suite = new TestSuite("FilterNavigableMap");
+    suite.addTest(NavigableMapTestSuiteBuilder.using(new TestStringSortedMapGenerator() {
+      @Override
+      protected NavigableMap<String, String> create(Entry<String, String>[] entries) {
+        NavigableMap<String, String> map = new SafeTreeMap<String, String>();
+        putEntries(map, entries);
+        map.put("banana", "toast");
+        map.put("eggplant", "spam");
+        return Maps.filterKeys(map, FILTER_KEYS);
       }
-      return ImmutableList.copyOf(result);
-    } catch (Throwable e) {
-      throw closer.rethrow(e);
-    } finally {
-      closer.close();
+    })
+    .named("Maps.filterKeys[NavigableMap, Predicate]")
+    .withFeatures(
+        MapFeature.ALLOWS_NULL_VALUES,
+        MapFeature.GENERAL_PURPOSE,
+        CollectionSize.ANY)
+        .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+        .createTestSuite());
+    suite.addTest(NavigableMapTestSuiteBuilder.using(new TestStringSortedMapGenerator() {
+      @Override
+      protected NavigableMap<String, String> create(Entry<String, String>[] entries) {
+        NavigableMap<String, String> map = new SafeTreeMap<String, String>();
+        putEntries(map, entries);
+        map.put("banana", "toast");
+        map.put("eggplant", "spam");
+          return Maps.filterValues(map, FILTER_VALUES);
+        }
+      })
+      .named("Maps.filterValues[NavigableMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+          .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+          .createTestSuite());
+    suite.addTest(NavigableMapTestSuiteBuilder.using(new TestStringSortedMapGenerator() {
+      @Override
+      protected NavigableMap<String, String> create(Entry<String, String>[] entries) {
+        NavigableMap<String, String> map = new SafeTreeMap<String, String>();
+        putEntries(map, entries);
+        map.put("banana", "toast");
+        map.put("eggplant", "spam");
+          return Maps.filterEntries(map, FILTER_ENTRIES);
+        }
+      })
+      .named("Maps.filterEntries[NavigableMap, Predicate]")
+      .withFeatures(
+          MapFeature.ALLOWS_NULL_VALUES,
+          MapFeature.GENERAL_PURPOSE,
+          CollectionSize.ANY)
+          .suppressing(CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod())
+          .createTestSuite());
+    return suite;
+  }
+  
+  static void putEntries(Map<String, String> map, Entry<String, String>[] entries) {
+    for (Entry<String, String> entry : entries) {
+       map.put(entry.getKey(), entry.getValue());
+     }
+  }
+
+  static final Predicate<String> FILTER_KEYS = new Predicate<String>() {
+    @Override
+    public boolean apply(@Nullable String string) {
+      return !"banana".equals(string) && !"eggplant".equals(string);
+    }
+  };
+  
+  static final Predicate<String> FILTER_VALUES = new Predicate<String>() {
+    @Override
+    public boolean apply(@Nullable String string) {
+      return !"toast".equals(string) && !"spam".equals(string);
+    }
+  };
+  
+  static final Predicate<Entry<String, String>> FILTER_ENTRIES = 
+      new Predicate<Entry<String, String>>() {
+    @Override
+    public boolean apply(Entry<String, String> entry) {
+      return !Helpers.mapEntry("banana", "toast").equals(entry)
+          && !Helpers.mapEntry("eggplant", "spam").equals(entry);
+    }
+  };
+  
+  static final Predicate<Entry<String, String>> FILTER_ENTRIES_1 = 
+      new Predicate<Entry<String, String>>() {
+    @Override
+    public boolean apply(Entry<String, String> entry) {
+      return !Helpers.mapEntry("banana", "toast").equals(entry);
+    }
+  };
+  
+  static final Predicate<Entry<String, String>> FILTER_ENTRIES_2 = 
+      new Predicate<Entry<String, String>>() {
+    @Override
+    public boolean apply(Entry<String, String> entry) {
+      return !Helpers.mapEntry("eggplant", "spam").equals(entry);
+    }
+  };
+  
+  static final Map<String, String> ENTRIES_TO_FILTER =
+      ImmutableMap.of("banana", "toast", "eggplant", "spam");
+  
+  static final Predicate<Entry<String, String>> NOT_NULL_ENTRY = 
+      new Predicate<Entry<String, String>>() {
+    @Override
+    public boolean apply(Entry<String, String> entry) {
+      return entry.getKey() != null && entry.getValue() != null;
+    }    
+  };
+
+  private static class NonNavigableSortedSet
+      extends ForwardingSortedSet<String> {
+
+    private final SortedSet<String> delegate = Sets.newTreeSet(Ordering.natural());
+
+    @Override
+    protected SortedSet<String> delegate() {
+      return delegate;
+    }
+  }
+
+  private static class NonNavigableSortedMap
+      extends ForwardingSortedMap<String, String> {
+
+    private final SortedMap<String, String> delegate = 
+        new SafeTreeMap<String, String>(Ordering.natural());
+
+    @Override
+    protected SortedMap<String, String> delegate() {
+      return delegate;
     }
   }
 }

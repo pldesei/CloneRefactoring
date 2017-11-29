@@ -1,10 +1,12 @@
-(startLine=158 endLine=165 srcPath=/home/ubuntu/luceneFilter/507/lucene/lucene/queries/src/test/org/apache/lucene/queries/ChainedFilterTest.java)
-  public void testXOR() throws Exception {
-    ChainedFilter chain = getChainedFilter(
-      new Filter[]{dateFilter, bobFilter}, ChainedFilter.XOR);
-
-    TopDocs hits = searcher.search(query, chain, 1000);
-    assertEquals("XOR matches sue", MAX / 2, hits.totalHits);
-    assertEquals("sue", searcher.doc(hits.scoreDocs[0].doc).get("owner"));
-  }
+(startLine=196 endLine=205 srcPath=/home/ubuntu/luceneFilter/20/lucene/lucene/test-framework/src/java/org/apache/lucene/codecs/asserting/AssertingDocValuesFormat.java)
+    public void addNumericField(FieldInfo field, Iterable<Number> values) throws IOException {
+      int count = 0;
+      for (Number v : values) {
+        assert v != null;
+        count++;
+      }
+      assert count == maxDoc;
+      checkIterator(values.iterator(), maxDoc, false);
+      in.addNumericField(field, values);
+    }
 

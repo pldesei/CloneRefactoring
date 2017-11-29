@@ -1,14 +1,40 @@
-(startLine=67 endLine=78 srcPath=/home/ubuntu/luceneFilter/1453/lucene/src/test/org/apache/lucene/util/TestOpenBitSet.java)
-  void doIterate2(BitSet a, OpenBitSet b) {
-    int aa=-1,bb=-1;
-    OpenBitSetIterator iterator = new OpenBitSetIterator(b);
-    do {
-      aa = a.nextSetBit(aa+1);
-      if (rand.nextBoolean())
-        bb = iterator.nextDoc();
-      else
-        bb = iterator.next(bb+1);
-      assertEquals(aa,bb);
-    } while (aa>=0);
+(startLine=1736 endLine=1773 srcPath=/home/ubuntu/luceneFilter/1454/lucene/src/test/org/apache/lucene/index/TestIndexReader.java)
+  public void testReopenChangeReadonly() throws Exception {
+    Directory dir = new MockRAMDirectory();
+    IndexWriter writer = new IndexWriter(dir, new WhitespaceAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+    Document doc = new Document();
+    doc.add(new Field("number", "17", Field.Store.NO, Field.Index.NOT_ANALYZED));
+    writer.addDocument(doc);
+    writer.commit();
+
+    // Open reader1
+    IndexReader r = IndexReader.open(dir);
+    assertTrue(r instanceof SegmentReader);
+    final int[] ints = FieldCache.DEFAULT.getInts(r, "number");
+    assertEquals(1, ints.length);
+    assertEquals(17, ints[0]);
+
+    // Reopen to readonly w/ no chnages
+    IndexReader r3 = (IndexReader) r.reopen(true);
+    assertTrue(r3 instanceof ReadOnlySegmentReader);
+    r3.close();
+
+    // Add new segment
+    writer.addDocument(doc);
+    writer.commit();
+
+    // Reopen reader1 --> reader2
+    IndexReader r2 = (IndexReader) r.reopen(true);
+    r.close();
+    assertTrue(r2 instanceof MultiSegmentReader);
+    IndexReader[] subs = r2.getSequentialSubReaders();
+    final int[] ints2 = FieldCache.DEFAULT.getInts(subs[0], "number");
+    r2.close();
+
+    assertTrue(subs[0] instanceof ReadOnlySegmentReader);
+    assertTrue(subs[1] instanceof ReadOnlySegmentReader);
+    assertTrue(ints == ints2);
+
+    dir.close();
   }
 

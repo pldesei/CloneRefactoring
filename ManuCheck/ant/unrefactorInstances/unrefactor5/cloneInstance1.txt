@@ -1,8 +1,23 @@
-(startLine=100 endLine=105 srcPath=/home/ubuntu/antFilter/16/ant/src/tests/junit/org/apache/tools/ant/taskdefs/UntarTest.java)
-    private void testLogoExtraction(String target) throws java.io.IOException {
-        buildRule.executeTarget(target);
-        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
-                FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif")));
+(startLine=51 endLine=71 srcPath=/home/ubuntu/antFilter/162/ant/src/tests/junit/org/apache/tools/ant/types/selectors/DependSelectorTest.java)
+    public void testValidate() {
+        DependSelector s = (DependSelector)getInstance();
+        try {
+            s.createMapper();
+            s.createMapper();
+            fail("DependSelector allowed more than one nested mapper.");
+        } catch (BuildException be1) {
+            assertEquals("Cannot define more than one mapper",
+                    be1.getMessage());
+        }
+
+        s = (DependSelector)getInstance();
+        try {
+            s.isSelected(basedir,filenames[0],files[0]);
+            fail("DependSelector did not check for required fields");
+        } catch (BuildException be2) {
+            assertEquals("The targetdir attribute is required.",
+                    be2.getMessage());
+        }
 
     }
 

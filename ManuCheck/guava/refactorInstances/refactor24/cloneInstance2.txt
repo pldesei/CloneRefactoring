@@ -1,11 +1,13 @@
-(startLine=412 endLine=420 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/AbstractService.java)
-  private void running() {
+(startLine=434 endLine=444 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/AbstractService.java)
+  private void terminated(final State from) {
     for (final ListenerExecutorPair pair : listeners) {
       queuedListeners.add(new Runnable() {
         @Override public void run() {
-          pair.listener.running();
+          pair.listener.terminated(from);
         }
       }, pair.executor);
     }
+    // There are no more state transitions so we can clear this out.
+    listeners.clear();
   }
 

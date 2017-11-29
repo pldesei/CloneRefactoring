@@ -1,11 +1,11 @@
-(startLine=368 endLine=376 srcPath=/home/ubuntu/guavaFilter/739/guava/guava-tests/test/com/google/common/reflect/TypeTokenTest.java)
-  public void testAssertSubtypeBeforeSupertype_duplicate() {
-    try {
-      assertSubtypeBeforeSupertype(
-          ImmutableList.of(String.class, String.class));
-    } catch (AssertionError expected) {
-      return;
+(startLine=248 endLine=256 srcPath=/home/ubuntu/guavaFilter/418/guava/guava-tests/benchmark/com/google/common/util/concurrent/MonitorBasedPriorityBlockingQueue.java)
+    public E take() throws InterruptedException {
+        final Monitor monitor = this.monitor;
+        monitor.enterWhen(notEmpty);
+        try {
+            return q.poll();
+        } finally {
+            monitor.leave();
+        }
     }
-    fail();
-  }
 

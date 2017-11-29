@@ -1,50 +1,31 @@
-(startLine=277 endLine=324 srcPath=/home/ubuntu/luceneFilter/297/lucene/lucene/analysis/common/src/java/org/tartarus/snowball/ext/RussianStemmer.java)
-                private boolean r_perfective_gerund() {
-            int among_var;
-            int v_1;
-                    // (, line 71
-                    // [, line 72
-                    ket = cursor;
-                    // substring, line 72
-                    among_var = find_among_b(a_0, 9);
-                    if (among_var == 0)
-                    {
-                        return false;
-                    }
-                    // ], line 72
-                    bra = cursor;
-                    switch(among_var) {
-                        case 0:
-                            return false;
-                        case 1:
-                            // (, line 76
-                            // or, line 76
-                            lab0: do {
-                                v_1 = limit - cursor;
-                                lab1: do {
-                                    // literal, line 76
-                                    if (!(eq_s_b(1, "\u0430")))
-                                    {
-                                        break lab1;
-                                    }
-                                    break lab0;
-                                } while (false);
-                                cursor = limit - v_1;
-                                // literal, line 76
-                                if (!(eq_s_b(1, "\u044F")))
-                                {
-                                    return false;
-                                }
-                            } while (false);
-                            // delete, line 76
-                            slice_del();
-                            break;
-                        case 2:
-                            // (, line 83
-                            // delete, line 83
-                            slice_del();
-                            break;
-                    }
-                    return true;
-                }
+(startLine=231 endLine=259 srcPath=/home/ubuntu/luceneFilter/465/lucene/lucene/queryparser/src/java/org/apache/lucene/queryparser/flexible/standard/parser/StandardSyntaxParser.java)
+  final public QueryNode ConjQuery(CharSequence field) throws ParseException {
+        QueryNode first, c;
+        Vector<QueryNode> clauses = null;
+    first = ModClause(field);
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case AND:
+        ;
+        break;
+      default:
+        jj_la1[6] = jj_gen;
+        break label_3;
+      }
+      jj_consume_token(AND);
+      c = ModClause(field);
+     if (clauses == null) {
+         clauses = new Vector<QueryNode>();
+         clauses.addElement(first);
+     }
+     clauses.addElement(c);
+    }
+    if (clauses != null) {
+            {if (true) return new AndQueryNode(clauses);}
+    } else {
+        {if (true) return first;}
+    }
+    throw new Error("Missing return statement in function");
+  }
 

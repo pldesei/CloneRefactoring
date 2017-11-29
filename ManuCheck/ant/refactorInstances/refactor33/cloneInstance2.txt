@@ -1,40 +1,17 @@
-(startLine=751 endLine=789 srcPath=/home/ubuntu/antFilter/242/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
-    private void initTypes() {
-        ClassLoader classLoader = null;
-        if (project.getCoreLoader() != null
-            && !(BUILD_SYSCLASSPATH_ONLY.equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH)))) {
-            classLoader = project.getCoreLoader();
-        }
-        String dataDefs = MagicNames.TYPEDEFS_PROPERTIES_RESOURCE;
-
-        InputStream in = null;
-        try {
-            Properties props = new Properties();
-            in = this.getClass().getResourceAsStream(dataDefs);
-            if (in == null) {
-                throw new BuildException(ERROR_NO_TYPE_LIST_LOAD);
-            }
-            props.load(in);
-
-            Enumeration e = props.propertyNames();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                String className = props.getProperty(name);
-                AntTypeDefinition def = new AntTypeDefinition();
-                def.setName(name);
-                def.setClassName(className);
-                def.setClassLoader(classLoader);
-                antTypeTable.put(name, def);
-            }
-        } catch (IOException ex) {
-            throw new BuildException(ERROR_NO_TYPE_LIST_LOAD);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (Exception ignore) {
-                    // ignore
+(startLine=611 endLine=626 srcPath=/home/ubuntu/antFilter/314/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    public void setExcludes(String[] excludes) {
+        if (excludes == null) {
+            this.excludes = null;
+        } else {
+            this.excludes = new String[excludes.length];
+            for (int i = 0; i < excludes.length; i++) {
+                String pattern;
+                pattern = excludes[i].replace('/', File.separatorChar).replace(
+                        '\\', File.separatorChar);
+                if (pattern.endsWith(File.separator)) {
+                    pattern += "**";
                 }
+                this.excludes[i] = pattern;
             }
         }
     }

@@ -1,9 +1,19 @@
-(startLine=181 endLine=187 srcPath=/home/ubuntu/luceneFilter/747/lucene/lucene/src/test/org/apache/lucene/index/TestOmitPositions.java)
-  private void assertNoPrx(Directory dir) throws Throwable {
-    final String[] files = dir.listAll();
-    for(int i=0;i<files.length;i++) {
-      assertFalse(files[i].endsWith(".prx"));
-      assertFalse(files[i].endsWith(".pos"));
-    }
+(startLine=274 endLine=290 srcPath=/home/ubuntu/luceneFilter/752/lucene/solr/contrib/extraction/src/test/org/apache/solr/handler/extraction/ExtractingRequestHandlerTest.java)
+  public void testPlainTextSpecifyingResourceName() throws Exception {
+    ExtractingRequestHandler handler = (ExtractingRequestHandler) h.getCore().getRequestHandler("/update/extract");
+    assertTrue("handler is null and it shouldn't be", handler != null);
+
+    // Load plain text specifying filename
+    loadLocal("extraction/version_control.txt", "fmap.created", "extractedDate", "fmap.producer", "extractedProducer",
+            "fmap.creator", "extractedCreator", "fmap.Keywords", "extractedKeywords",
+            "fmap.Author", "extractedAuthor",
+            "literal.id", "one",
+            "fmap.language", "extractedLanguage",
+            "fmap.content", "extractedContent",
+            ExtractingParams.RESOURCE_NAME, "extraction/version_control.txt"
+    );
+    assertQ(req("extractedContent:Apache"), "//*[@numFound='0']");
+    assertU(commit());
+    assertQ(req("extractedContent:Apache"), "//*[@numFound='1']");
   }
 

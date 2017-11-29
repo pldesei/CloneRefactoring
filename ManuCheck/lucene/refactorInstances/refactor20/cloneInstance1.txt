@@ -1,24 +1,20 @@
-(startLine=41 endLine=64 srcPath=/home/ubuntu/luceneFilter/1272/lucene/solr/src/java/org/apache/solr/analysis/EnglishPorterFilterFactory.java)
+(startLine=44 endLine=63 srcPath=/home/ubuntu/luceneFilter/1272/lucene/solr/src/java/org/apache/solr/analysis/KeepWordFilterFactory.java)
   public void inform(ResourceLoader loader) {
-    String wordFiles = args.get(PROTECTED_TOKENS);
+    String wordFiles = args.get("words");
+    ignoreCase = getBoolean("ignoreCase", false);
     if (wordFiles != null) {
       try {
-        File protectedWordFiles = new File(wordFiles);
-        if (protectedWordFiles.exists()) {
-          List<String> wlist = loader.getLines(wordFiles);
-          //This cast is safe in Lucene
-          protectedWords = new CharArraySet(wlist, false);//No need to go through StopFilter as before, since it just uses a List internally
-        } else  {
-          List<String> files = StrUtils.splitFileNames(wordFiles);
-          for (String file : files) {
-            List<String> wlist = loader.getLines(file.trim());
-            if (protectedWords == null)
-              protectedWords = new CharArraySet(wlist, false);
-            else
-              protectedWords.addAll(wlist);
-          }
+        List<String> files = StrUtils.splitFileNames(wordFiles);
+        if (words == null && files.size() > 0){
+          words = new CharArraySet(files.size() * 10, ignoreCase);
         }
-      } catch (IOException e) {
+        for (String file : files) {
+          List<String> wlist = loader.getLines(file.trim());
+          //TODO: once StopFilter.makeStopSet(List) method is available, switch to using that so we can avoid a toArray() call
+          words.addAll(StopFilter.makeStopSet((String[]) wlist.toArray(new String[0]), ignoreCase));
+        }
+      }
+      catch (IOException e) {
         throw new RuntimeException(e);
       }
     }

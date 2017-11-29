@@ -1,44 +1,9 @@
-(startLine=202 endLine=243 srcPath=/home/ubuntu/luceneFilter/764/lucene/modules/analysis/common/src/java/org/tartarus/snowball/ext/SwedishStemmer.java)
-        private boolean r_consonant_pair() {
-            int v_1;
-            int v_2;
-            int v_3;
-            // setlimit, line 50
-            v_1 = limit - cursor;
-            // tomark, line 50
-            if (cursor < I_p1)
-            {
-                return false;
-            }
-            cursor = I_p1;
-            v_2 = limit_backward;
-            limit_backward = cursor;
-            cursor = limit - v_1;
-            // (, line 50
-            // and, line 52
-            v_3 = limit - cursor;
-            // among, line 51
-            if (find_among_b(a_1, 7) == 0)
-            {
-                limit_backward = v_2;
-                return false;
-            }
-            cursor = limit - v_3;
-            // (, line 52
-            // [, line 52
-            ket = cursor;
-            // next, line 52
-            if (cursor <= limit_backward)
-            {
-                limit_backward = v_2;
-                return false;
-            }
-            cursor--;
-            // ], line 52
-            bra = cursor;
-            // delete, line 52
-            slice_del();
-            limit_backward = v_2;
-            return true;
-        }
+(startLine=207 endLine=213 srcPath=/home/ubuntu/luceneFilter/747/lucene/lucene/src/test/org/apache/lucene/index/TestOmitTf.java)
+  private void assertNoPrx(Directory dir) throws Throwable {
+    final String[] files = dir.listAll();
+    for(int i=0;i<files.length;i++) {
+      assertFalse(files[i].endsWith(".prx"));
+      assertFalse(files[i].endsWith(".pos"));
+    }
+  }
 

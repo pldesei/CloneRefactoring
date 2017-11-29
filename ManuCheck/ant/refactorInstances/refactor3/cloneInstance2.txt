@@ -1,47 +1,17 @@
-(startLine=272 endLine=316 srcPath=/home/ubuntu/antFilter/572/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
-    public void testCheckinFileFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "CheckInFile", "-file",
-            SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
-            "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
-            "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
-            "-workdir", project.getBaseDir().getAbsolutePath() + File.separator
-            + LOCAL_PATH, "-log", SRC_COMMENT };
-
-        Path path = new Path(project, LOCAL_PATH);
-
-        // Set up a SOSCheckin task
-        sosCheckin.setProject(project);
-        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
-        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
-        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
-        sosCheckin.setFile(SRC_FILE);
-        sosCheckin.setComment(SRC_COMMENT);
-        sosCheckin.setUsername(SOS_USERNAME);
-        sosCheckin.setPassword(SOS_PASSWORD);
-        sosCheckin.setLocalPath(path);
-        sosCheckin.setNoCache(true);
-        sosCheckin.setNoCompress(true);
-        sosCheckin.setVerbose(true);
-        sosCheckin.setRecursive(true);
-
-        commandline = sosCheckin.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
-
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("CheckInFile arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("CheckInFile missing arg");
-            }
-
+(startLine=113 endLine=127 srcPath=/home/ubuntu/antFilter/707/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/depend/DependTest.java)
+    public void testClosure() {
+        Project project = getProject();
+        executeTarget("testclosure");
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
         }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("CheckInFile extra args");
-        }
+        assertEquals("Depend did not leave correct number of files", 1, 
+            files.size());
+        assertTrue("Result did not contain D.class", 
+            files.containsKey("D.class"));
     }
 

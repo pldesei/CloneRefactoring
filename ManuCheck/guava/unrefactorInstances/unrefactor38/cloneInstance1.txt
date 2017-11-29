@@ -1,18 +1,12 @@
-(startLine=1937 endLine=1952 srcPath=/home/ubuntu/guavaFilter/484/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
-  public void testMakeChecked_listenersRunOnceCompleted() throws Exception {
-    SettableFuture<String> future = SettableFuture.create();
-
-    CheckedFuture<String, TestException> checked = Futures.makeChecked(
-        future, new Function<Exception, TestException>() {
-          @Override public TestException apply(Exception from) {
-            throw new NullPointerException();
-          }
-    });
-
-    ListenableFutureTester tester = new ListenableFutureTester(checked);
-    tester.setUp();
-    future.set(DATA1);
-    tester.testCompletedFuture(DATA1);
-    tester.tearDown();
+(startLine=435 endLine=444 srcPath=/home/ubuntu/guavaFilter/906/guava/guava-tests/test/com/google/common/collect/ArrayTableTest.java)
+  public void testRowPutIllegal() {
+    table = create("foo", 1, 'a', "bar", 1, 'b', "foo", 3, 'c');
+    Map<Integer, Character> map = table.row("foo");
+    try {
+      map.put(4, 'd');
+      fail();
+    } catch (IllegalArgumentException expected) {
+      assertEquals("Column 4 not in [1, 2, 3]", expected.getMessage());
+    }
   }
 

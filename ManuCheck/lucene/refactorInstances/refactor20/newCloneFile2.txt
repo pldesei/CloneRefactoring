@@ -14,71 +14,66 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.solr.analysis;
 
-import java.util.Map;
-import java.io.IOException;
-
-import org.apache.lucene.analysis.KeywordMarkerTokenFilter;
-import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.solr.common.ResourceLoader;
 import org.apache.solr.util.plugin.ResourceLoaderAware;
-import org.tartarus.snowball.SnowballProgram;
+import org.apache.lucene.analysis.StopFilter;
+import org.apache.lucene.analysis.StopAnalyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.CharArraySet;
+
+import java.util.Map;
+import java.util.Set;
+import java.io.IOException;
 
 /**
- * Factory for {@link SnowballFilter}, with configurable language
- * <p>
- * Note: Use of the "Lovins" stemmer is not recommended, as it is implemented with reflection.
- * 
  * @version $Id$
  */
-public class SnowballPorterFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
-  public static final String PROTECTED_TOKENS = "protected";
+public class StopFilterFactory extends BaseTokenFilterFactory implements ResourceLoaderAware {
 
-  private String language = "English";
-  private Class<?> stemClass;
-
+  @Override
+  public void init(Map<String,String> args) {
+    super.init(args);
+    assureMatchVersion();
+  }
 
   public void inform(ResourceLoader loader) {
-    String wordFiles = args.get(PROTECTED_TOKENS);
-    if (wordFiles != null) {
+    String stopWordFiles = args.get("words");
+    ignoreCase = getBoolean("ignoreCase",false);
+    enablePositionIncrements = getBoolean("enablePositionIncrements",false);
+
+    if (stopWordFiles != null) {
       try {
-        protectedWords = getWordSet(loader, wordFiles, false);
+        stopWords = getWordSet(loader, stopWordFiles, ignoreCase);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
+    } else {
+      stopWords = new CharArraySet(luceneMatchVersion, StopAnalyzer.ENGLISH_STOP_WORDS_SET, ignoreCase);
     }
   }
 
-  private CharArraySet protectedWords = null;
+  private CharArraySet stopWords;
+  private boolean ignoreCase;
+  private boolean enablePositionIncrements;
 
-  @Override
-  public void init(Map<String, String> args) {
-    super.init(args);
-    final String cfgLanguage = args.get("language");
-    if(cfgLanguage!=null) language = cfgLanguage;
-
-    try {
-      stemClass = Class.forName("org.tartarus.snowball.ext." + language + "Stemmer");
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException("Can't find class for stemmer language " + language, e);
-    }
+  public boolean isEnablePositionIncrements() {
+    return enablePositionIncrements;
   }
-  
-  public TokenFilter create(TokenStream input) {
-    SnowballProgram program;
-    try {
-      program = (SnowballProgram)stemClass.newInstance();
-    } catch (Exception e) {
-      throw new RuntimeException("Error instantiating stemmer for language " + language + "from class " +stemClass, e);
-    }
 
-    if (protectedWords != null)
-      input = new KeywordMarkerTokenFilter(input, protectedWords);
-    return new SnowballFilter(input, program);
+  public boolean isIgnoreCase() {
+    return ignoreCase;
+  }
+
+  public Set<?> getStopWords() {
+    return stopWords;
+  }
+
+  public StopFilter create(TokenStream input) {
+    StopFilter stopFilter = new StopFilter(luceneMatchVersion,input,stopWords,ignoreCase);
+    stopFilter.setEnablePositionIncrements(enablePositionIncrements);
+    return stopFilter;
   }
 }
-

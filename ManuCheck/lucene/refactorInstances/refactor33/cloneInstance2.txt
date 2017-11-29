@@ -1,20 +1,26 @@
-(startLine=514 endLine=531 srcPath=/home/ubuntu/luceneFilter/633/lucene/modules/analysis/common/src/test/org/apache/lucene/analysis/charfilter/HTMLStripCharFilterTest.java)
-  public void testRandomHugeStrings() throws Exception {
-    Analyzer analyzer = new Analyzer() {
+(startLine=108 endLine=131 srcPath=/home/ubuntu/luceneFilter/786/lucene/lucene/src/test/org/apache/lucene/index/TestTermVectorsWriter.java)
+  public void testEndOffsetPositionCharAnalyzer() throws Exception {
+    Directory dir = newDirectory();
+    IndexWriter w = new IndexWriter(dir, newIndexWriterConfig( TEST_VERSION_CURRENT, new MockAnalyzer(random)));
+    Document doc = new Document();
+    FieldType customType = new FieldType(TextField.TYPE_UNSTORED);
+    customType.setStoreTermVectors(true);
+    customType.setStoreTermVectorPositions(true);
+    customType.setStoreTermVectorOffsets(true);
+    Field f = newField("field", "abcd   ", customType);
+    doc.add(f);
+    doc.add(f);
+    w.addDocument(doc);
+    w.close();
 
-      @Override
-      protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-        Tokenizer tokenizer = new MockTokenizer(reader, MockTokenizer.WHITESPACE, false);
-        return new TokenStreamComponents(tokenizer, tokenizer);
-      }
-
-      @Override
-      protected Reader initReader(Reader reader) {
-        return new HTMLStripCharFilter(CharReader.get(reader));
-      }
-    };
-    
-    int numRounds = RANDOM_MULTIPLIER * 200;
-    checkRandomData(random, analyzer, numRounds, 8192);
+    IndexReader r = IndexReader.open(dir, true);
+    TermVectorOffsetInfo[] termOffsets = ((TermPositionVector) r.getTermFreqVector(0, "field")).getOffsets(0);
+    assertEquals(2, termOffsets.length);
+    assertEquals(0, termOffsets[0].getStartOffset());
+    assertEquals(4, termOffsets[0].getEndOffset());
+    assertEquals(8, termOffsets[1].getStartOffset());
+    assertEquals(12, termOffsets[1].getEndOffset());
+    r.close();
+    dir.close();
   }
 

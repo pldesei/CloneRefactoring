@@ -1,26 +1,18 @@
-(startLine=47 endLine=70 srcPath=/home/ubuntu/luceneFilter/601/lucene/lucene/core/src/test/org/apache/lucene/search/TestWildcardRandom.java)
-  public void setUp() throws Exception {
-    super.setUp();
-    dir = newDirectory();
-    RandomIndexWriter writer = new RandomIndexWriter(random(), dir,
-        newIndexWriterConfig(TEST_VERSION_CURRENT, new MockAnalyzer(random()))
-        .setMaxBufferedDocs(_TestUtil.nextInt(random(), 50, 1000)));
-    
-    Document doc = new Document();
-    Field field = newField("field", "", StringField.TYPE_UNSTORED);
-    doc.add(field);
-    
-    NumberFormat df = new DecimalFormat("000", new DecimalFormatSymbols(Locale.ENGLISH));
-    for (int i = 0; i < 1000; i++) {
-      field.setStringValue(df.format(i));
-      writer.addDocument(doc);
+(startLine=1502 endLine=1517 srcPath=/home/ubuntu/luceneFilter/16/lucene/lucene/codecs/src/java/org/apache/lucene/codecs/memory/DirectPostingsFormat.java)
+    public int nextDoc() {
+      upto++;
+      if (liveDocs == null) {
+        if (upto < postings.length) {
+          return postings[upto];
+        }
+      } else {
+        while (upto < postings.length) {
+          if (liveDocs.get(postings[upto])) {
+            return postings[upto];
+          }
+          upto++;
+        }
+      }
+      return NO_MORE_DOCS;
     }
-    
-    reader = writer.getReader();
-    searcher = newSearcher(reader);
-    writer.close();
-    if (VERBOSE) {
-      System.out.println("TEST: setUp searcher=" + searcher);
-    }
-  }
 

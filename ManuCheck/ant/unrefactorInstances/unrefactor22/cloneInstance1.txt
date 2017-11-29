@@ -1,40 +1,26 @@
-(startLine=50 endLine=87 srcPath=/home/ubuntu/antFilter/337/ant/src/main/org/apache/tools/ant/util/regexp/RegexpMatcherFactory.java)
-    public RegexpMatcher newRegexpMatcher(Project p)
-        throws BuildException {
-        String systemDefault = null;
-        if (p == null) {
-            systemDefault = System.getProperty("ant.regexp.regexpimpl");
+(startLine=115 endLine=138 srcPath=/home/ubuntu/antFilter/251/ant/src/main/org/apache/tools/ant/taskdefs/Ear.java)
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+                           int mode)
+        throws IOException {
+        // If the file being added is META-INF/application.xml, we
+        // warn if it's not the one specified in the "appxml"
+        // attribute - or if it's being added twice, meaning the same
+        // file is specified by the "appxml" attribute and in a
+        // <fileset> element.
+        if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
+            if (deploymentDescriptor == null
+                || !FILE_UTILS.fileNameEquals(deploymentDescriptor, file)
+                || descriptorAdded) {
+                log("Warning: selected " + archiveType
+                    + " files include a META-INF/application.xml which will"
+                    + " be ignored (please use appxml attribute to "
+                    + archiveType + " task)", Project.MSG_WARN);
+            } else {
+                super.zipFile(file, zOut, vPath, mode);
+                descriptorAdded = true;
+            }
         } else {
-            systemDefault = p.getProperty("ant.regexp.regexpimpl");
+            super.zipFile(file, zOut, vPath, mode);
         }
-
-        if (systemDefault != null) {
-            return createInstance(systemDefault);
-            // XXX     should we silently catch possible exceptions and try to
-            //         load a different implementation?
-        }
-
-        try {
-            testAvailability("java.util.regex.Matcher");
-            return createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher");
-        } catch (BuildException be) {
-            // ignore
-        }
-
-        try {
-            testAvailability("org.apache.oro.text.regex.Pattern");
-            return createInstance("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
-        } catch (BuildException be) {
-            // ignore
-        }
-
-        try {
-            testAvailability("org.apache.regexp.RE");
-            return createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
-        } catch (BuildException be) {
-            // ignore
-        }
-
-        throw new BuildException("No supported regular expression matcher found");
-   }
+    }
 

@@ -1,14 +1,63 @@
-(startLine=391 endLine=402 srcPath=/home/ubuntu/antFilter/676/ant/src/main/org/apache/tools/ant/taskdefs/optional/ejb/GenericDeploymentTool.java)
-    protected DescriptorHandler getDescriptorHandler(File srcDir) {
-        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
+(startLine=207 endLine=267 srcPath=/home/ubuntu/antFilter/576/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
+    public void testGetExceptions() {
+        boolean buildEx = false;
 
-        registerKnownDTDs(handler);
-
-        // register any DTDs supplied by the user
-        for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
-            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+        // Set up a SOSGet task
+        sosGet.setProject(project);
+        // No options set - SosServerPath should fail
+        try {
+            commandline = sosGet.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
+                buildEx = true;
+            }
         }
-        return handler;
+        assertTrue("GetException SosServerPath", buildEx);
+        buildEx = false;
+
+        // Set SosServerPath - Username should fail
+        sosGet.setSosServerPath(SOS_SERVER_PATH);
+        try {
+            commandline = sosGet.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
+                buildEx = true;
+            }
+        }
+        assertTrue("GetException Username", buildEx);
+        buildEx = false;
+
+        // Set Username - VssServerPath should fail
+        sosGet.setUsername(SOS_USERNAME);
+        try {
+            commandline = sosGet.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
+                buildEx = true;
+            }
+        }
+        assertTrue("GetException VssServerPath", buildEx);
+        buildEx = false;
+
+        // Set VssServerPath - ProjectPath should fail
+        sosGet.setVssServerPath(VSS_SERVER_PATH);
+        try {
+            commandline = sosGet.buildCmdLine();
+        } catch (BuildException be) {
+            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
+                buildEx = true;
+            }
+        }
+        assertTrue("GetException ProjectPath", buildEx);
+
+        // Set ProjectPath - All required options set
+        sosGet.setProjectPath(VSS_PROJECT_PATH);
+        try {
+            commandline = sosGet.buildCmdLine();
+            buildEx = true;
+        } catch (BuildException be) {
+            buildEx = false;
+        }
+        assertTrue("GetException All required options set", buildEx);
     }
 

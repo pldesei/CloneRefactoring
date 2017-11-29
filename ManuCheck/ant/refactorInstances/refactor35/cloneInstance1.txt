@@ -1,11 +1,34 @@
-(startLine=585 endLine=593 srcPath=/home/ubuntu/antFilter/46/ant/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
-    protected boolean assumeJava14() {
-        return "javac1.4".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4));
+(startLine=715 endLine=746 srcPath=/home/ubuntu/antFilter/198/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+    private void initTasks() {
+        ClassLoader classLoader = null;
+        classLoader = getClassLoader(classLoader);
+        String dataDefs = MagicNames.TASKDEF_PROPERTIES_RESOURCE;
+
+        InputStream in = null;
+        try {
+            Properties props = new Properties();
+            in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
+            }
+            props.load(in);
+
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                String className = props.getProperty(name);
+                AntTypeDefinition def = new AntTypeDefinition();
+                def.setName(name);
+                def.setClassName(className);
+                def.setClassLoader(classLoader);
+                def.setAdaptToClass(Task.class);
+                def.setAdapterClass(TaskAdapter.class);
+                antTypeTable.put(name, def);
+            }
+        } catch (IOException ex) {
+            throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
+        } finally {
+            FileUtils.close(in);
+        }
     }
 

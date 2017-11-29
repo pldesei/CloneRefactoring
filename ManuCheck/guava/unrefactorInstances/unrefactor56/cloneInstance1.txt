@@ -1,22 +1,9 @@
-(startLine=99 endLine=118 srcPath=/home/ubuntu/guavaFilter/139/guava/guava-tests/test/com/google/common/collect/MultisetsCollectionTest.java)
-  private static TestStringMultisetGenerator unmodifiableMultisetGenerator() {
-    return new TestStringMultisetGenerator() {
-      @Override protected Multiset<String> create(String[] elements) {
-        return Multisets.unmodifiableMultiset(
-            LinkedHashMultiset.create(asList(elements)));
+(startLine=464 endLine=470 srcPath=/home/ubuntu/guavaFilter/485/guava/guava-tests/test/com/google/common/collect/TreeRangeMapTest.java)
+  private void putModel(Map<Integer, Integer> model, Range<Integer> range, int value) {
+    for (int i = MIN_BOUND - 1; i <= MAX_BOUND + 1; i++) {
+      if (range.contains(i)) {
+        model.put(i, value);
       }
-      @Override public List<String> order(List<String> insertionOrder) {
-        List<String> order = new ArrayList<String>();
-        for (String s : insertionOrder) {
-          int index = order.indexOf(s);
-          if (index == -1) {
-            order.add(s);
-          } else {
-            order.add(index, s);
-          }
-        }
-        return order;
-      }
-    };
+    }
   }
 

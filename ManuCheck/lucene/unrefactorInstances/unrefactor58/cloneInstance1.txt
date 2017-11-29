@@ -1,25 +1,19 @@
-(startLine=109 endLine=131 srcPath=/home/ubuntu/luceneFilter/912/lucene/lucene/src/test/org/apache/lucene/util/TestFieldCacheSanityChecker.java)
-  public void testInsanity1() throws IOException {
-    FieldCache cache = FieldCache.DEFAULT;
-    cache.purgeAllCaches();
+(startLine=156 endLine=172 srcPath=/home/ubuntu/luceneFilter/192/lucene/solr/core/src/test/org/apache/solr/TestTrie.java)
+  public void testTrieLongRangeSearch() throws Exception {
+    for (long i = Integer.MAX_VALUE, c = 0; i < (long) Integer.MAX_VALUE + 10l; i++) {
+      assertU(adoc("id", String.valueOf(c++), "tlong", String.valueOf(i)));
+    }
+    assertU(commit());
+    String fq = "tlong:[" + Integer.MAX_VALUE + " TO " + (5l + Integer.MAX_VALUE) + "]";
+    SolrQueryRequest req = req("q", "*:*", "fq", fq);
+    assertQ("Range filter must match only 5 documents", req, "//*[@numFound='6']");
+    assertQ("Range filter tlong:[* to *] must match 10 documents", req("q", "*:*", "fq", "tlong:[* TO *]"), "//*[@numFound='10']");
 
-    cache.getInts(readerX, "theInt", FieldCache.DEFAULT_INT_PARSER);
-    cache.getTerms(readerX, "theInt");
-    cache.getBytes(readerX, "theByte");
+    // Sorting
+    assertQ("Sort descending does not work correctly on tlong fields", req("q", "*:*", "sort", "tlong desc"), "//*[@numFound='10']", "//long[@name='tlong'][.='2147483656']");
+    assertQ("Sort ascending does not work correctly on tlong fields", req("q", "*:*", "sort", "tlong asc"), "//*[@numFound='10']", "//long[@name='tlong'][.='2147483647']");
 
-    // // // 
-
-    Insanity[] insanity = 
-      FieldCacheSanityChecker.checkSanity(cache.getCacheEntries());
-
-    assertEquals("wrong number of cache errors", 1, insanity.length);
-    assertEquals("wrong type of cache error", 
-                 InsanityType.VALUEMISMATCH,
-                 insanity[0].getType());
-    assertEquals("wrong number of entries in cache error", 2,
-                 insanity[0].getCacheEntries().length);
-
-    // we expect bad things, don't let tearDown complain about them
-    cache.purgeAllCaches();
+    // Function queries
+    assertQ("Function queries does not work correctly on tlong fields", req("q", "_val_:\"sum(tlong,1.0)\""), "//*[@numFound='10']", "//long[@name='tlong'][.='2147483656']");
   }
 

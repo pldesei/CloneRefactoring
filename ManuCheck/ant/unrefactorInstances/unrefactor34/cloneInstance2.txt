@@ -1,33 +1,10 @@
-(startLine=217 endLine=247 srcPath=/home/ubuntu/antFilter/460/ant/src/main/org/apache/tools/ant/taskdefs/optional/net/RExecTask.java)
-        public void waitForString(String s, Integer timeout) {
-            InputStream is = this.getInputStream();
-            try {
-                StringBuffer sb = new StringBuffer();
-                if (timeout == null || timeout.intValue() == 0) {
-                    while (sb.toString().indexOf(s) == -1) {
-                        sb.append((char) is.read());
-                    }
-                } else {
-                    Calendar endTime = Calendar.getInstance();
-                    endTime.add(Calendar.SECOND, timeout.intValue());
-                    while (sb.toString().indexOf(s) == -1) {
-                        while (Calendar.getInstance().before(endTime) &&
-                               is.available() == 0) {
-                            Thread.sleep(250);
-                        }
-                        if (is.available() == 0) {
-                            throw new BuildException(
-                                "Response timed-out waiting for \"" + s + '\"',
-                                getLocation());
-                        }
-                        sb.append((char) is.read());
-                    }
-                }
-                log(sb.toString(), Project.MSG_INFO);
-            } catch (BuildException be) {
-                throw be;
-            } catch (Exception e) {
-                throw new BuildException(e, getLocation());
-            }
-        }
+(startLine=54 endLine=61 srcPath=/home/ubuntu/antFilter/256/ant/src/testcases/org/apache/tools/ant/util/DateUtilsTest.java)
+    public void testDateISO(){
+        TimeZone timeZone = TimeZone.getTimeZone("GMT");
+        Calendar cal = Calendar.getInstance(timeZone);
+        cal.set(2002,1,23);
+        String text = DateUtils.format(cal.getTime(),
+                DateUtils.ISO8601_DATE_PATTERN);
+        assertEquals("2002-02-23", text);
+    }
 

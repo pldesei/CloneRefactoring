@@ -1,19 +1,21 @@
-(startLine=255 endLine=271 srcPath=/home/ubuntu/luceneFilter/752/lucene/solr/contrib/extraction/src/test/org/apache/solr/handler/extraction/ExtractingRequestHandlerTest.java)
-  public void testPlainTextSpecifyingMimeType() throws Exception {
-    ExtractingRequestHandler handler = (ExtractingRequestHandler) h.getCore().getRequestHandler("/update/extract");
-    assertTrue("handler is null and it shouldn't be", handler != null);
+(startLine=87 endLine=105 srcPath=/home/ubuntu/luceneFilter/70/lucene/lucene/core/src/java/org/apache/lucene/store/NIOFSDirectory.java)
+  public IndexInputSlicer createSlicer(final String name,
+      final IOContext context) throws IOException {
+    ensureOpen();
+    final File path = new File(getDirectory(), name);
+    final FileChannel descriptor = FileChannel.open(path.toPath(), StandardOpenOption.READ);
+    return new Directory.IndexInputSlicer() {
 
-    // Load plain text specifying MIME type:
-    loadLocal("extraction/version_control.txt", "fmap.created", "extractedDate", "fmap.producer", "extractedProducer",
-            "fmap.creator", "extractedCreator", "fmap.Keywords", "extractedKeywords",
-            "fmap.Author", "extractedAuthor",
-            "literal.id", "one",
-            "fmap.language", "extractedLanguage",
-            "fmap.content", "extractedContent",
-            ExtractingParams.STREAM_TYPE, "text/plain"
-    );
-    assertQ(req("extractedContent:Apache"), "//*[@numFound='0']");
-    assertU(commit());
-    assertQ(req("extractedContent:Apache"), "//*[@numFound='1']");
+      @Override
+      public void close() throws IOException {
+        descriptor.close();
+      }
+
+      @Override
+      public IndexInput openSlice(String sliceDescription, long offset, long length) {
+        return new NIOFSIndexInput("NIOFSIndexInput(" + sliceDescription + " in path=\"" + path + "\" slice=" + offset + ":" + (offset+length) + ")", descriptor, offset,
+            length, BufferedIndexInput.bufferSize(context));
+      }
+    };
   }
 

@@ -1,15 +1,24 @@
-(startLine=253 endLine=265 srcPath=/home/ubuntu/guavaFilter/75/guava/guava-tests/test/com/google/common/util/concurrent/AtomicDoubleArrayTest.java)
-  public void testGetAndAdd() {
-    AtomicDoubleArray aa = new AtomicDoubleArray(SIZE);
-    for (int i : new int[] { 0, SIZE - 1}) {
-      for (double x : VALUES) {
-        for (double y : VALUES) {
-          aa.set(i, x);
-          double z = aa.getAndAdd(i, y);
-          assertBitEquals(x, z);
-          assertBitEquals(x + y, aa.get(i));
-        }
-      }
+(startLine=90 endLine=111 srcPath=/home/ubuntu/guavaFilter/166/guava/guava-testlib/test/com/google/common/testing/EquivalenceTesterTest.java)
+  public void testTest_symmetric() {
+    Object group1Item1 = new TestObject(1, 1);
+    Object group1Item2 = new TestObject(1, 2);
+
+    equivalenceMock.expectEquivalent(group1Item1, group1Item2);
+    equivalenceMock.expectDistinct(group1Item2, group1Item1);
+
+    equivalenceMock.expectHash(group1Item1, 1);
+    equivalenceMock.expectHash(group1Item2, 1);
+
+    equivalenceMock.replay();
+
+    try {
+      tester.addEquivalenceGroup(group1Item1, group1Item2).test();
+    } catch (AssertionFailedError expected) {
+      assertThat(expected.getMessage()).contains(
+          "TestObject{group=1, item=2} [group 1, item 2] must be equivalent to "
+          + "TestObject{group=1, item=1} [group 1, item 1]");
+      return;
     }
+    fail();
   }
 

@@ -1,9 +1,15 @@
-(startLine=784 endLine=790 srcPath=/home/ubuntu/guavaFilter/1039/guava/guava-tests/test/com/google/common/collect/MultimapsTest.java)
-  public void testIndex_nullKey() {
-    List<Integer> values = Arrays.asList(1, 2);
-    try {
-      Multimaps.index(values, Functions.constant(null));
-      fail();
-    } catch (NullPointerException e) {}
+(startLine=760 endLine=772 srcPath=/home/ubuntu/guavaFilter/213/guava/guava-tests/test/com/google/common/reflect/TypeTokenTest.java)
+  public void testAssignableParameterizedTypeToType() {
+    TypeToken<List<String>> tokenL = new TypeToken<List<String>>() {};
+    assertTrue(tokenL.isSupertypeOf(
+        StringList.class.getGenericInterfaces()[0]));
+    assertFalse(tokenL.isSupertypeOf(
+        IntegerList.class.getGenericInterfaces()[0]));
+
+    TypeToken<First<String>> tokenF = new TypeToken<First<String>>() {};
+    assertTrue(tokenF.isSupertypeOf(
+        ConcreteIS.class.getGenericSuperclass()));
+    assertFalse(tokenF.isSupertypeOf(
+        ConcreteSI.class.getGenericSuperclass()));
   }
 

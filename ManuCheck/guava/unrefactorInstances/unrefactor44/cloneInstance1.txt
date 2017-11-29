@@ -1,24 +1,15 @@
-(startLine=90 endLine=111 srcPath=/home/ubuntu/guavaFilter/166/guava/guava-testlib/test/com/google/common/testing/EquivalenceTesterTest.java)
-  public void testTest_symmetric() {
-    Object group1Item1 = new TestObject(1, 1);
-    Object group1Item2 = new TestObject(1, 2);
-
-    equivalenceMock.expectEquivalent(group1Item1, group1Item2);
-    equivalenceMock.expectDistinct(group1Item2, group1Item1);
-
-    equivalenceMock.expectHash(group1Item1, 1);
-    equivalenceMock.expectHash(group1Item2, 1);
-
-    equivalenceMock.replay();
-
+(startLine=45 endLine=57 srcPath=/home/ubuntu/guavaFilter/843/guava/guava-tests/test/com/google/common/collect/ImmutableMultimapTest.java)
+  public void testBuilder_withImmutableEntryAndNullContents() {
+    Builder<String, Integer> builder = new Builder<String, Integer>();
     try {
-      tester.addEquivalenceGroup(group1Item1, group1Item2).test();
-    } catch (AssertionFailedError expected) {
-      assertThat(expected.getMessage()).contains(
-          "TestObject{group=1, item=2} [group 1, item 2] must be equivalent to "
-          + "TestObject{group=1, item=1} [group 1, item 1]");
-      return;
+      builder.put(Maps.immutableEntry("one", (Integer) null));
+      fail();
+    } catch (NullPointerException expected) {
     }
-    fail();
+    try {
+      builder.put(Maps.immutableEntry((String) null, 1));
+      fail();
+    } catch (NullPointerException expected) {
+    }
   }
 

@@ -1,8 +1,15 @@
-(startLine=136 endLine=141 srcPath=/home/ubuntu/guavaFilter/420/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
-  public <T> void testWhere_incompatibleGenericArrayMapping() {
-    try {
-      new TypeResolver().where(new TypeCapture<T[]>() {}.capture(), String.class);
-      fail();
-    } catch (IllegalArgumentException expected) {}
+(startLine=345 endLine=357 srcPath=/home/ubuntu/guavaFilter/91/guava/guava-tests/test/com/google/common/collect/TreeMultimapNaturalTest.java)
+  public void testCreateFromTreeMultimap() {
+    Multimap<Double, Double> tree = TreeMultimap.create(KEY_COMPARATOR, VALUE_COMPARATOR);
+    tree.put(1.0, 2.0);
+    tree.put(2.0, 3.0);
+    tree.put(3.0, 4.0);
+    tree.put(4.0, 5.0);
+
+    TreeMultimap<Double, Double> copyFromTree = TreeMultimap.create(tree);
+    assertEquals(tree, copyFromTree);
+    assertSame(Ordering.natural(), copyFromTree.keyComparator());
+    assertSame(Ordering.natural(), copyFromTree.valueComparator());
+    assertSame(Ordering.natural(), copyFromTree.get(1.0).comparator());
   }
 

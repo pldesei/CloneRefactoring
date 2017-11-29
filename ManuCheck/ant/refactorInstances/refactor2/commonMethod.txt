@@ -1,12 +1,14 @@
-(startLine=160 endLine=169 srcPath=/home/ubuntu/antFilter/706/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/depend/DependTest.java)
-    private Hashtable getResultFiles() {
-        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable files = new Hashtable();
-        for (int i = 0; i < scannedFiles.length; ++i) {
-            files.put(scannedFiles[i], scannedFiles[i]);
+(startLine=168 endLine=179 srcPath=/home/ubuntu/antFilter/847/ant/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/BaseFilterReader.java)
+    protected final String readLine() throws IOException {
+        int ch = in.read();
+        String line = (ch == -1) ? null : "";
+        while (ch != -1) {
+            line += (char) ch;
+            if (ch == '\n') {
+                break;
+            }
+            ch = in.read();
         }
-        return files;
+        return line;
     }
 

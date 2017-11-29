@@ -1,26 +1,25 @@
-(startLine=39 endLine=62 srcPath=/home/ubuntu/luceneFilter/1272/lucene/solr/src/java/org/apache/solr/analysis/WordDelimiterFilterFactory.java)
+(startLine=40 endLine=62 srcPath=/home/ubuntu/luceneFilter/1272/lucene/solr/src/java/org/apache/solr/analysis/CommonGramsFilterFactory.java)
   public void inform(ResourceLoader loader) {
-    String wordFiles = args.get(PROTECTED_TOKENS);
-    if (wordFiles != null) {  
+    String commonWordFiles = args.get("words");
+    ignoreCase = getBoolean("ignoreCase", false);
+
+    if (commonWordFiles != null) {
       try {
-        File protectedWordFiles = new File(wordFiles);
-        if (protectedWordFiles.exists()) {
-          List<String> wlist = loader.getLines(wordFiles);
-          //This cast is safe in Lucene
-          protectedWords = new CharArraySet(wlist, false);//No need to go through StopFilter as before, since it just uses a List internally
-        } else  {
-          List<String> files = StrUtils.splitFileNames(wordFiles);
+        List<String> files = StrUtils.splitFileNames(commonWordFiles);
+          if (commonWords == null && files.size() > 0){
+            //default stopwords list has 35 or so words, but maybe don't make it that big to start
+            commonWords = new CharArraySet(files.size() * 10, ignoreCase);
+          }
           for (String file : files) {
             List<String> wlist = loader.getLines(file.trim());
-            if (protectedWords == null)
-              protectedWords = new CharArraySet(wlist, false);
-            else
-              protectedWords.addAll(wlist);
+            //TODO: once StopFilter.makeStopSet(List) method is available, switch to using that so we can avoid a toArray() call
+            commonWords.addAll(CommonGramsFilter.makeCommonSet((String[])wlist.toArray(new String[0]), ignoreCase));
           }
-        }
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
+    } else {
+      commonWords = (CharArraySet) StopAnalyzer.ENGLISH_STOP_WORDS_SET;
     }
   }
 

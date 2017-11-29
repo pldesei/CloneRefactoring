@@ -1,2 +1,34 @@
-(startLine=161 endLine=166 srcPath=/home/ubuntu/antFilter/386/ant/src/testcases/org/apache/tools/ant/filters/ConcatFilterTest.java)
+(startLine=428 endLine=459 srcPath=/home/ubuntu/antFilter/514/ant/src/main/org/apache/tools/ant/taskdefs/optional/sos/SOS.java)
+    protected void getRequiredAttributes() {
+        // Get the path to the soscmd(.exe)
+        commandLine.setExecutable(getSosCommand());
+        // SOS server address is required
+        if (getSosServerPath() == null) {
+            throw new BuildException("sosserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_SOS_SERVER);
+        commandLine.createArgument().setValue(getSosServerPath());
+        // Login info is required
+        if (getUsername() == null) {
+            throw new BuildException("username attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_USERNAME);
+        commandLine.createArgument().setValue(getUsername());
+        // The SOS class knows that the SOS server needs the password flag,
+        // even if there is no password ,so we send a " "
+        commandLine.createArgument().setValue(FLAG_PASSWORD);
+        commandLine.createArgument().setValue(getPassword());
+        // VSS Info is required
+        if (getVssServerPath() == null) {
+            throw new BuildException("vssserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_VSS_SERVER);
+        commandLine.createArgument().setValue(getVssServerPath());
+        // VSS project is required
+        if (getProjectPath() == null) {
+            throw new BuildException("projectpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_PROJECT);
+        commandLine.createArgument().setValue(getProjectPath());
+    }
 

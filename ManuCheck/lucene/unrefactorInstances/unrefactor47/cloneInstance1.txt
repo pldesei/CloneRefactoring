@@ -1,28 +1,12 @@
-(startLine=163 endLine=188 srcPath=/home/ubuntu/luceneFilter/604/lucene/lucene/analysis/common/src/java/org/tartarus/snowball/ext/KpStemmer.java)
-        private boolean r_V() {
-            int v_1;
-            int v_2;
-            // test, line 35
-            v_1 = limit - cursor;
-            // (, line 35
-            // or, line 35
-            lab0: do {
-                v_2 = limit - cursor;
-                lab1: do {
-                    if (!(in_grouping_b(g_v, 97, 121)))
-                    {
-                        break lab1;
-                    }
-                    break lab0;
-                } while (false);
-                cursor = limit - v_2;
-                // literal, line 35
-                if (!(eq_s_b(2, "ij")))
-                {
-                    return false;
-                }
-            } while (false);
-            cursor = limit - v_1;
-            return true;
-        }
+(startLine=58 endLine=67 srcPath=/home/ubuntu/luceneFilter/269/lucene/solr/core/src/java/org/apache/solr/spelling/SpellingResult.java)
+  public void add(Token token, List<String> suggestions) {
+    LinkedHashMap<String, Integer> map = this.suggestions.get(token);
+    if (map == null ) {
+      map = new LinkedHashMap<String, Integer>();
+      this.suggestions.put(token, map);
+    }
+    for (String suggestion : suggestions) {
+      map.put(suggestion, NO_FREQUENCY_INFO);
+    }
+  }
 

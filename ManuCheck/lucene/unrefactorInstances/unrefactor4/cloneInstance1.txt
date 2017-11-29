@@ -1,31 +1,49 @@
-(startLine=201 endLine=229 srcPath=/home/ubuntu/luceneFilter/465/lucene/lucene/queryparser/src/java/org/apache/lucene/queryparser/flexible/standard/parser/StandardSyntaxParser.java)
-  final public QueryNode DisjQuery(CharSequence field) throws ParseException {
-        QueryNode first, c;
-        Vector<QueryNode> clauses = null;
-    first = ConjQuery(field);
-    label_2:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case OR:
-        ;
-        break;
-      default:
-        jj_la1[5] = jj_gen;
-        break label_2;
-      }
-      jj_consume_token(OR);
-      c = ConjQuery(field);
-     if (clauses == null) {
-         clauses = new Vector<QueryNode>();
-         clauses.addElement(first);
-     }
-     clauses.addElement(c);
-    }
-    if (clauses != null) {
-            {if (true) return new OrQueryNode(clauses);}
-    } else {
-        {if (true) return first;}
-    }
-    throw new Error("Missing return statement in function");
-  }
+(startLine=644 endLine=690 srcPath=/home/ubuntu/luceneFilter/1376/lucene/contrib/snowball/src/java/org/tartarus/snowball/ext/EnglishStemmer.java)
+        private boolean r_Step_1c() {
+            int v_1;
+            int v_2;
+            // (, line 93
+            // [, line 94
+            ket = cursor;
+            // or, line 94
+            lab0: do {
+                v_1 = limit - cursor;
+                lab1: do {
+                    // literal, line 94
+                    if (!(eq_s_b(1, "y")))
+                    {
+                        break lab1;
+                    }
+                    break lab0;
+                } while (false);
+                cursor = limit - v_1;
+                // literal, line 94
+                if (!(eq_s_b(1, "Y")))
+                {
+                    return false;
+                }
+            } while (false);
+            // ], line 94
+            bra = cursor;
+            if (!(out_grouping_b(g_v, 97, 121)))
+            {
+                return false;
+            }
+            // not, line 95
+            {
+                v_2 = limit - cursor;
+                lab2: do {
+                    // atlimit, line 95
+                    if (cursor > limit_backward)
+                    {
+                        break lab2;
+                    }
+                    return false;
+                } while (false);
+                cursor = limit - v_2;
+            }
+            // <-, line 96
+            slice_from("i");
+            return true;
+        }
 

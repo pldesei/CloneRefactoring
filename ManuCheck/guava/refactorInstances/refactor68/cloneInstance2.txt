@@ -1,19 +1,20 @@
-(startLine=580 endLine=598 srcPath=/home/ubuntu/guavaFilter/185/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
-  public void mergeNodesFrom_directedNetwork() {
-    MutableNetwork<Integer, String> directedGraph = buildDirectedTestNetwork();
+(startLine=479 endLine=498 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  public void mergeNodesFrom_filtered_directed() {
+    Graph<Integer, String> directedGraph = buildDirectedTestGraph();
     directedGraph.addNode(N3);
+    Predicate<Integer> nodePredicate = connectedNodePredicate(directedGraph);
 
-    MutableNetwork<Integer, String> actualGraph = NetworkBuilder.directed().build();
+    Graph<Integer, String> actualGraph = GraphBuilder.directed().build();
     // prepopulate actualGraph to make sure that existing elements don't interfere with the merging
-    actualGraph.addNode(N4);
-    actualGraph.addNode(N2);
+    actualGraph.addNode(N4); // ensure that we don't remove nodes that don't pass the predicate
+    actualGraph.addNode(N2); // ensure that a pre-existing node is not affected by the merging
 
-    mergeNodesFrom(directedGraph, actualGraph);
+    mergeNodesFrom(directedGraph, actualGraph, nodePredicate);
 
-    MutableNetwork<Integer, String> expectedGraph = NetworkBuilder.directed().build();
+    Graph<Integer, String> expectedGraph = GraphBuilder.directed().build();
     expectedGraph.addNode(N1);
     expectedGraph.addNode(N2);
-    expectedGraph.addNode(N3);
+    // N3 is not expected because it's not connected
     expectedGraph.addNode(N4);
 
     assertThat(actualGraph).isEqualTo(expectedGraph);

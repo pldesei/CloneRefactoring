@@ -1,36 +1,20 @@
-(startLine=471 endLine=504 srcPath=/home/ubuntu/luceneFilter/1268/lucene/lucene/src/java/org/apache/lucene/search/MultiPhraseQuery.java)
-  @Override
-  public final int nextDoc() throws IOException {
-    if (_queue.size() == 0) {
-      return NO_MORE_DOCS;
+(startLine=101 endLine=118 srcPath=/home/ubuntu/luceneFilter/1271/lucene/solr/src/java/org/apache/solr/analysis/BaseTokenStreamFactory.java)
+  protected CharArraySet getWordSet(ResourceLoader loader,
+      String wordFiles, boolean ignoreCase) throws IOException {
+    assureMatchVersion();
+    List<String> files = StrUtils.splitFileNames(wordFiles);
+    CharArraySet words = null;
+    if (files.size() > 0) {
+      // default stopwords list has 35 or so words, but maybe don't make it that
+      // big to start
+      words = new CharArraySet(luceneMatchVersion, 
+          files.size() * 10, ignoreCase);
+      for (String file : files) {
+        List<String> wlist = loader.getLines(file.trim());
+        words.addAll(StopFilter.makeStopSet(luceneMatchVersion, wlist,
+            ignoreCase));
+      }
     }
-
-    // TODO: move this init into positions(): if the search
-    // doesn't need the positions for this doc then don't
-    // waste CPU merging them:
-    _posList.clear();
-    _doc = _queue.top().docID();
-
-    // merge sort all positions together
-    DocsAndPositionsEnum postings;
-    do {
-      postings = _queue.top();
-
-      final int freq = postings.freq();
-      for (int i = 0; i < freq; i++) {
-        _posList.add(postings.nextPosition());
-      }
-
-      if (postings.nextDoc() != NO_MORE_DOCS) {
-        _queue.updateTop();
-      } else {
-        _queue.pop();
-      }
-    } while (_queue.size() > 0 && _queue.top().docID() == _doc);
-
-    _posList.sort();
-    _freq = _posList.size();
-
-    return _doc;
+    return words;
   }
 

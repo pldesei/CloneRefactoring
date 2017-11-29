@@ -1,50 +1,13 @@
-(startLine=105 endLine=152 srcPath=/home/ubuntu/luceneFilter/1025/lucene/lucene/src/test/org/apache/lucene/search/TestComplexExplanations.java)
-  public void test2() throws Exception {
-    
-    BooleanQuery q = new BooleanQuery();
-    
-    q.add(qp.parse("\"w1 w2\"~1"), Occur.MUST);
-    q.add(snear(st("w2"),
-                sor("w5","zz"),
-                4, true),
-          Occur.SHOULD);
-    q.add(snear(sf("w3",2), st("w2"), st("w3"), 5, true),
-          Occur.SHOULD);
-    
-    Query t = new FilteredQuery(qp.parse("xx"),
-                                new ItemizedFilter(new int[] {1,3}));
-    t.setBoost(1000);
-    q.add(t, Occur.SHOULD);
-    
-    t = new ConstantScoreQuery(new ItemizedFilter(new int[] {0,2}));
-    t.setBoost(-20.0f);
-    q.add(t, Occur.SHOULD);
-    
-    DisjunctionMaxQuery dm = new DisjunctionMaxQuery(0.2f);
-    dm.add(snear(st("w2"),
-                 sor("w5","zz"),
-                 4, true));
-    dm.add(qp.parse("QQ"));
-    dm.add(qp.parse("xx yy -zz"));
-    dm.add(qp.parse("-xx -w1"));
-
-    DisjunctionMaxQuery dm2 = new DisjunctionMaxQuery(0.5f);
-    dm2.add(qp.parse("w1"));
-    dm2.add(qp.parse("w2"));
-    dm2.add(qp.parse("w3"));
-    dm.add(dm2);
-
-    q.add(dm, Occur.SHOULD);
-
-    BooleanQuery b = new BooleanQuery();
-    b.setMinimumNumberShouldMatch(2);
-    b.add(snear("w1","w2",1,true), Occur.SHOULD);
-    b.add(snear("w2","w3",1,true), Occur.SHOULD);
-    b.add(snear("w1","w3",3,true), Occur.SHOULD);
-    b.setBoost(0.0f);
-    
-    q.add(b, Occur.SHOULD);
-    
-    qtest(q, new int[] { 0,1,2 });
-  }
+(startLine=1535 endLine=1545 srcPath=/home/ubuntu/luceneFilter/389/lucene/lucene/highlighter/src/test/org/apache/lucene/search/highlight/HighlighterTest.java)
+      public boolean incrementToken() {
+        if(iter.hasNext()) {
+          Token token = iter.next();
+          clearAttributes();
+          termAtt.setEmpty().append(token);
+          posIncrAtt.setPositionIncrement(token.getPositionIncrement());
+          offsetAtt.setOffset(token.startOffset(), token.endOffset());
+          return true;
+        }
+        return false;
+      }
 

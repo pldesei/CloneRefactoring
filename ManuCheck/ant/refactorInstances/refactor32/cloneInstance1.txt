@@ -1,18 +1,23 @@
-(startLine=581 endLine=596 srcPath=/home/ubuntu/antFilter/314/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
-    public void setIncludes(String[] includes) {
-        if (includes == null) {
-            this.includes = null;
-        } else {
-            this.includes = new String[includes.length];
-            for (int i = 0; i < includes.length; i++) {
-                String pattern;
-                pattern = includes[i].replace('/', File.separatorChar).replace(
-                        '\\', File.separatorChar);
-                if (pattern.endsWith(File.separator)) {
-                    pattern += "**";
-                }
-                this.includes[i] = pattern;
+(startLine=1013 endLine=1033 srcPath=/home/ubuntu/antFilter/319/ant/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    protected boolean isIncluded(String name) {
+        if (!areNonPatternSetsReady) {
+            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
+            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
+            areNonPatternSetsReady = true;
+        }
+
+        if ((isCaseSensitive() && includeNonPatterns.contains(name))
+            ||
+            (!isCaseSensitive() 
+             && includeNonPatterns.contains(name.toUpperCase()))) {
+                return true;
+        }
+
+        for (int i = 0; i < includePatterns.length; i++) {
+            if (matchPath(includePatterns[i], name, isCaseSensitive())) {
+                return true;
             }
         }
+        return false;
     }
 

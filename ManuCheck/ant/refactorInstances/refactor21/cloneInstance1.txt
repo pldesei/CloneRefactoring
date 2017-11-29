@@ -1,18 +1,22 @@
-(startLine=68 endLine=83 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecTaskTest.java)
-    public void testRedirect1() {
-        executeTarget("redirect1");
-        if (getProject().getProperty("test.can.run") == null) {
+(startLine=222 endLine=241 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java)
+    private void testRedirect5or6(String target) {
+        executeTarget(target);
+        if (getProject().getProperty("sed.can.run") == null) {
             return;
         }
-        String expectedOut = getProject().getProperty("ant.file") + " out\n"
-            + getProject().getProperty("ant.file") + " err\n";
-
         String actualOut = null;
+        String actualErr = null;
         try {
             actualOut = FileUtils.newFileUtils().readFully(new FileReader(
                 getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
         } catch (IOException eyeOhEx) {
         }
-        assertEquals("unexpected output", expectedOut, actualOut);
+        assertPropertyEquals("redirect.out", "blah y z");
+        assertPropertyEquals("redirect.err", "");
+        assertEquals("unexpected content in redirect.out",
+            "blah y z\nx blah z\nx y blah\n", actualOut);
+        assertEquals("unexpected content in redirect.err", null, actualErr);
     }
 

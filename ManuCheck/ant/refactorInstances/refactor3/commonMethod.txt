@@ -1,18 +1,12 @@
-(startLine=360 endLine=375 srcPath=/home/ubuntu/antFilter/571/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
-    private void checkCommandLines(String[] sTestCmdLine, String[] sGeneratedCmdLine) {
-        int length = sTestCmdLine.length;
-        for (int i = 0; i < length; i++) {
-            try {
-                assertEquals("arg # " + String.valueOf(i),
-                        sTestCmdLine[i],
-                        sGeneratedCmdLine[i]);
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("missing arg " + sTestCmdLine[i]);
-            }
+(startLine=160 endLine=169 srcPath=/home/ubuntu/antFilter/706/ant/src/testcases/org/apache/tools/ant/taskdefs/optional/depend/DependTest.java)
+    private Hashtable getResultFiles() {
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
         }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("extra args");
-        }
+        return files;
     }
 

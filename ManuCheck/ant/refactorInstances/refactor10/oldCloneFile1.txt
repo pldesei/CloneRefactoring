@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,16 +51,18 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.sos;
 
+package org.apache.tools.ant.taskdefs.optional.vss;
+
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 
 /**
- * Retrieves and locks files in Visual SourceSafe via a SourceOffSite server.
- *
+ * Perform Get commands to Microsoft Visual SourceSafe.
  * <p>
- * The following attributes are interpretted:
+ * The following attributes are interpreted:
  * <table border="1">
  *   <tr>
  *     <th>Attribute</th>
@@ -68,40 +70,14 @@ import org.apache.tools.ant.types.Commandline;
  *     <th>Required</th>
  *   </tr>
  *   <tr>
- *     <td>soscmddir</td>
- *     <td>Directory which contains soscmd(.exe) <br>
- *     soscmd(.exe) must be in the path if this is not specified</td>
- *     <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vssserverpath</td>
- *      <td>path to the srcsafe.ini  - eg. \\server\vss\srcsafe.ini</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>sosserverpath</td>
- *      <td>address and port of the SOS server  - eg. 192.168.0.1:8888</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>projectpath</td>
- *      <td>SourceSafe project path without the "$"</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>file</td>
- *      <td>Filename to act upon<br> If no file is specified then act upon the project</td>
+ *      <td>login</td>
+ *      <td>username,password</td>
  *      <td>No</td>
  *   </tr>
  *   <tr>
- *      <td>username</td>
- *      <td>SourceSafe username</td>
+ *      <td>vsspath</td>
+ *      <td>SourceSafe path</td>
  *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>password</td>
- *      <td>SourceSafe password</td>
- *      <td>No</td>
  *   </tr>
  *   <tr>
  *      <td>localpath</td>
@@ -109,139 +85,295 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>No</td>
  *   </tr>
  *   <tr>
- *      <td>soshome</td>
- *      <td>The path to the SourceOffSite home directory</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>nocompression</td>
- *      <td>true or false - disable compression</td>
+ *      <td>writable</td>
+ *      <td>true or false</td>
  *      <td>No</td>
  *   </tr>
  *   <tr>
  *      <td>recursive</td>
- *      <td>true or false - Only works with the CheckOutProject command</td>
+ *      <td>true or false</td>
  *      <td>No</td>
  *   </tr>
  *   <tr>
- *      <td>nocache</td>
- *      <td>true or false - Only needed if SOSHOME is set as an enviroment variable</td>
+ *      <td>version</td>
+ *      <td>a version number to get</td>
  *      <td>No</td>
  *   </tr>
  *   <tr>
- *      <td>verbose</td>
- *      <td>true or false - Status messages are displayed</td>
+ *      <td>date</td>
+ *      <td>a date stamp to get at</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>label</td>
+ *      <td>a label to get for</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>quiet</td>
+ *      <td>suppress output (off by default)</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>autoresponse</td>
+ *      <td>What to respond with (sets the -I option). By default, -I- is
+ *      used; values of Y or N will be appended to this.</td>
  *      <td>No</td>
  *   </tr>
  * </table>
+ * <p>Note that only one of version, date or label should be specified</p>
  *
- * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
+ * @author Craig Cottingham
+ * @author Andrew Everitt
+ *
+ * @ant.task name="vssget" category="scm"
  */
+public class MSVSSGET extends MSVSS {
 
-public class SOSCheckout extends SOS {
-    Commandline commandLine;
-
+    private String m_LocalPath = null;
+    private boolean m_Recursive = false;
+    private boolean m_Writable = false;
+    private String m_Version = null;
+    private String m_Date = null;
+    private String m_Label = null;
+    private String m_AutoResponse = null;
+    private boolean m_Quiet = false;
 
     /**
      * Executes the task.
-     * <br>
-     * Builds a command line to execute soscmd and then calls Exec's run method
+     * <p>
+     * Builds a command line to execute ss and then calls Exec's run method
      * to execute the command line.
-     *
-     * @exception  BuildException  Description of Exception
      */
     public void execute() throws BuildException {
+        Commandline commandLine = new Commandline();
         int result = 0;
-        buildCmdLine();
+
+        // first off, make sure that we've got a command and a vssdir ...
+        if (getVsspath() == null) {
+            String msg = "vsspath attribute must be set!";
+            throw new BuildException(msg, getLocation());
+        }
+
+        // now look for illegal combinations of things ...
+
+        // build the command line from what we got the format is
+        // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
+        // as specified in the SS.EXE help
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_GET);
+
+        // VSS items
+        commandLine.createArgument().setValue(getVsspath());
+        // -GL
+        getLocalpathCommand(commandLine);
+        // -I- or -I-Y or -I-N
+        getAutoresponse(commandLine);
+        // -O-
+        getQuietCommand(commandLine);
+        // -R
+        getRecursiveCommand(commandLine);
+        // -V
+        getVersionCommand(commandLine);
+        // -W
+        getWritableCommand(commandLine);
+        // -Y
+        getLoginCommand(commandLine);
+
         result = run(commandLine);
-        if (result == 255) {
-            // This is the exit status
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
     }
 
+    /**
+     * Override the working directory and get to the specified path; optional.
+     */
+    public void setLocalpath(Path localPath) {
+        m_LocalPath = localPath.toString();
+    }
 
     /**
-     * Build the command line <br>
-     *
-     * CheckOutFile required parameters: -server -name -password -database -project -file<br>
-     * CheckOutFile optional parameters: -workdir -verbose -nocache -nocompression -soshome<br>
-     *
-     * CheckOutProject required parameters: -server -name -password -database -project<br>
-     * CheckOutProject optional parameters:-workdir -recursive -verbose -nocache
-     * -nocompression -soshome<br>
-     *
-     * @return    Commandline the generated command to be executed
+     * Builds and returns the -GL flag command if required.
+     * <p>
+     * The localpath is created if it didn't exist
      */
-    protected Commandline buildCmdLine() {
-        commandLine = new Commandline();
-        // Get the path to the soscmd(.exe)
-        commandLine.setExecutable(getSosCommand());
-        // If we find a "file" attribute then act on a file otherwise act on a project
-        if (getFilename() != null) {
-            // add -command CheckOutFile to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
-            commandLine.createArgument().setValue(SOSCmd.COMMAND_CHECKOUT_FILE);
-            // add -file xxxxx to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_FILE);
-            commandLine.createArgument().setValue(getFilename());
+    public void getLocalpathCommand(Commandline cmd) {
+        if (m_LocalPath == null) {
+            return;
         } else {
-            // add -command CheckOutProject to the commandline
-            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
-            commandLine.createArgument().setValue(SOSCmd.COMMAND_CHECKOUT_PROJECT);
-            // look for a recursive option
-            commandLine.createArgument().setValue(getRecursive());
-        }
-        // SOS server address is required
-        if (getSosServerPath() == null) {
-            throw new BuildException("sosserverpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
-        commandLine.createArgument().setValue(getSosServerPath());
-        // Login info is required
-        if (getUsername() == null) {
-            throw new BuildException("username attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
-        commandLine.createArgument().setValue(getUsername());
-        // The SOS class knows that the SOS server needs the password flag,
-        // even if there is no password ,so we send a " "
-        commandLine.createArgument().setValue(SOSCmd.FLAG_PASSWORD);
-        commandLine.createArgument().setValue(getPassword());
-        // VSS Info is required
-        if (getVssServerPath() == null) {
-            throw new BuildException("vssserverpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
-        commandLine.createArgument().setValue(getVssServerPath());
-        // VSS project is required
-        if (getProjectPath() == null) {
-            throw new BuildException("projectpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
-        commandLine.createArgument().setValue(getProjectPath());
+            // make sure m_LocalDir exists, create it if it doesn't
+            File dir = getProject().resolveFile(m_LocalPath);
+            if (!dir.exists()) {
+                boolean done = dir.mkdirs();
+                if (!done) {
+                    String msg = "Directory " + m_LocalPath + " creation was not " +
+                        "successful for an unknown reason";
+                    throw new BuildException(msg, getLocation());
+                }
+                getProject().log("Created dir: " + dir.getAbsolutePath());
+            }
 
-        // The following options are optional.
+            cmd.createArgument().setValue(FLAG_OVERRIDE_WORKING_DIR + m_LocalPath);
+        }
+    }
 
-        // -verbose
-        commandLine.createArgument().setValue(getVerbose());
-        // Disable Compression
-        commandLine.createArgument().setValue(getNoCompress());
-        // Path to the SourceOffSite home directory /home/user/.sos
-        if (getSosHome() == null) {
-            // If -soshome was not specified then we can look for nocache
-            commandLine.createArgument().setValue(getNoCache());
+    /**
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
+     */
+    public void setRecursive(boolean recursive) {
+        m_Recursive = recursive;
+    }
+
+    /**
+     *  the 'recursive' command if the attribute was 'true', otherwise an empty string
+     */
+    public void getRecursiveCommand(Commandline cmd) {
+        if (!m_Recursive) {
+            return;
         } else {
-            commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_HOME);
-            commandLine.createArgument().setValue(getSosHome());
+            cmd.createArgument().setValue(FLAG_RECURSION);
         }
-        // If a working directory was specified then add it to the command line
-        if (getLocalPath() != null) {
-            commandLine.createArgument().setValue(SOSCmd.FLAG_WORKING_DIR);
-            commandLine.createArgument().setValue(getLocalPath());
+    }
+
+    /**
+     * Flag to suppress output when true ; false by default.
+     */
+    public final void setQuiet (boolean quiet) {
+        this.m_Quiet = quiet;
+    }
+    
+    public void getQuietCommand (Commandline cmd) {
+        if (m_Quiet) {
+            cmd.createArgument().setValue (FLAG_QUIET);
         }
-        return commandLine;
+    }
+    
+    /**
+     * make fetched files  writable; optional, default false.
+     */
+    public final void setWritable(boolean argWritable) {
+        m_Writable = argWritable;
+    }
+
+    /**
+     * the 'make writable' command if the attribute was 'true', otherwise an empty string
+     */
+    public void getWritableCommand(Commandline cmd) {
+        if (!m_Writable) {
+            return;
+        } else {
+            cmd.createArgument().setValue(FLAG_WRITABLE);
+        }
+    }
+
+    /**
+     * Set a version number to get; 
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
+     * <p>
+     * ORIGINAL COMMENT THAT DOES NOT SEEM AT ALL VALID:
+     * Note we assume that if the supplied string has the value "null" that something
+     * went wrong and that the string value got populated from a null object. This
+     * happens if a ant variable is used e.g. version="${ver_server}" when ver_server
+     * has not been defined to ant!
+     * NO, in this case the version string is "${ver_server}".
+     * @todo fix this
+     */
+    public void setVersion(String version) {
+        if (version.equals("") || version.equals("null")) {
+            m_Version = null;
+        } else {
+            m_Version = version;
+        }
+    }
+
+    /**
+     * Set the date to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
+     * <p>
+     * ORIGINAL COMMENT THAT DOES NOT SEEM AT ALL VALID:
+     * Note we assume that if the supplied string has the value "null" that something
+     * went wrong and that the string value got populated from a null object. This
+     * happens if a ant variable is used e.g. date="${date}" when date
+     * has not been defined to ant!
+     * @todo fix this
+     */
+    public void setDate(String date) {
+        if (date.equals("") || date.equals("null")) {
+            m_Date = null;
+        } else {
+            m_Date = date;
+        }
+    }
+
+    /**
+     * Set the label to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
+     * <p>
+     * Note we assume that if the supplied string has the value "null" that something
+     * went wrong and that the string value got populated from a null object. This
+     * happens if a ant variable is used e.g. label="${label_server}" when label_server
+     * has not been defined to ant!
+     */
+    public void setLabel(String label) {
+        if (label.equals("") || label.equals("null")) {
+            m_Label = null;
+        } else {
+            m_Label = label;
+        }
+    }
+
+    /**
+     * Simple order of priority. Returns the first specified of version, date, label.
+     * If none of these was specified returns ""
+     */
+    public void getVersionCommand(Commandline cmd) {
+
+        if (m_Version != null) {
+            cmd.createArgument().setValue(FLAG_VERSION + m_Version);
+        } else if (m_Date != null) {
+            cmd.createArgument().setValue(FLAG_VERSION_DATE + m_Date);
+        } else if (m_Label != null) {
+            cmd.createArgument().setValue(FLAG_VERSION_LABEL + m_Label);
+        }
+    }
+
+    /**
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
+     */
+    public void setAutoresponse(String response){
+        if (response.equals("") || response.equals("null")) {
+            m_AutoResponse = null;
+        } else {
+            m_AutoResponse = response;
+        }
+    }
+    
+    /**
+     * Checks the value set for the autoResponse.
+     * if it equals "Y" then we return -I-Y
+     * if it equals "N" then we return -I-N
+     * otherwise we return -I
+     */
+    public void getAutoresponse(Commandline cmd) {
+        
+        if (m_AutoResponse == null) {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
+        } else if (m_AutoResponse.equalsIgnoreCase("Y")) {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_YES);
+            
+        } else if (m_AutoResponse.equalsIgnoreCase("N")) {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_NO);
+        } else {
+            cmd.createArgument().setValue(FLAG_AUTORESPONSE_DEF);
+        } // end of else
+
     }
 }
 

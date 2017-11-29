@@ -1,0 +1,8 @@
+(startLine=100 endLine=105 srcPath=/home/ubuntu/guavaFilter/442/guava/guava-tests/test/com/google/common/cache/ForwardingCacheTest.java)
+  public void testStats() {
+    expect(mock.stats()).andReturn(null);
+    replay(mock);
+    assertNull(forward.stats());
+    verify(mock);
+  }
+

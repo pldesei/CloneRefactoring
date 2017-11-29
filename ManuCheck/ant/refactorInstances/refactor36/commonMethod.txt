@@ -1,14 +1,11 @@
-(startLine=141 endLine=152 srcPath=/home/ubuntu/antFilter/40/ant/src/main/org/apache/tools/ant/taskdefs/launcher/CommandLauncher.java)
-    private static CommandLauncher extractLauncher(String referenceName,
-                                                   Project project) {
-        CommandLauncher launcher = null;
-        if (project != null) {
-            launcher = (CommandLauncher) project.getReference(referenceName);
-        }
-
-        if (launcher == null) {
-            launcher = getSystemLauncher(referenceName);
-        }
-        return launcher;
+(startLine=634 endLine=642 srcPath=/home/ubuntu/antFilter/45/ant/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
+    private boolean assumeJavaXY(String javacXY, String javaEnvVersionXY) {
+        return javacXY.equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY));
     }
 

@@ -1,14 +1,8 @@
-(startLine=128 endLine=139 srcPath=/home/ubuntu/antFilter/649/ant/src/testcases/org/apache/tools/ant/taskdefs/CVSPassTest.java)
-    public void testPassFileMultipleEntry() throws Exception { 
-        executeTarget("test5");
-        File f = new File(getProjectDir(), "testpassfile.tmp");
-
-        assertTrue( "Passfile "+f+" not created", f.exists());
-
-        assertEquals(
-            JAKARTA_URL+ EOL+
-            XML_URL+ EOL+
-            TIGRIS_URL+ EOL,
-            readFile(f));
+(startLine=80 endLine=85 srcPath=/home/ubuntu/antFilter/853/ant/src/testcases/org/apache/tools/ant/taskdefs/BUnzip2Test.java)
+    public void testRealTest() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("realTest");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo-huge.tar"),
+                                           project.resolveFile("asf-logo-huge.tar")));
     }
 

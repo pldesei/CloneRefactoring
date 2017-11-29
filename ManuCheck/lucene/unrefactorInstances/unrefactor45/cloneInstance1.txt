@@ -1,13 +1,33 @@
-(startLine=1570 endLine=1580 srcPath=/home/ubuntu/luceneFilter/258/lucene/lucene/highlighter/src/test/org/apache/lucene/search/highlight/HighlighterTest.java)
-      public boolean incrementToken() {
-        if(iter.hasNext()) {
-          Token token = iter.next();
-          clearAttributes();
-          termAtt.setEmpty().append(token);
-          posIncrAtt.setPositionIncrement(token.getPositionIncrement());
-          offsetAtt.setOffset(token.startOffset(), token.endOffset());
-          return true;
-        }
-        return false;
-      }
+(startLine=155 endLine=185 srcPath=/home/ubuntu/luceneFilter/411/lucene/solr/core/src/java/org/apache/solr/search/HashDocSet.java)
+  public DocSet intersection(DocSet other) {
+   if (other instanceof HashDocSet) {
+     // set "a" to the smallest doc set for the most efficient
+     // intersection.
+     final HashDocSet a = size()<=other.size() ? this : (HashDocSet)other;
+     final HashDocSet b = size()<=other.size() ? (HashDocSet)other : this;
+
+     int[] result = new int[a.size()];
+     int resultCount=0;
+     for (int i=0; i<a.table.length; i++) {
+       int id=a.table[i];
+       if (id >= 0 && b.exists(id)) {
+         result[resultCount++]=id;
+       }
+     }
+     return new HashDocSet(result,0,resultCount);
+
+   } else {
+
+     int[] result = new int[size()];
+     int resultCount=0;
+     for (int i=0; i<table.length; i++) {
+       int id=table[i];
+       if (id >= 0 && other.exists(id)) {
+         result[resultCount++]=id;
+       }
+     }
+     return new HashDocSet(result,0,resultCount);
+   }
+
+  }
 

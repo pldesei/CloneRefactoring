@@ -1,15 +1,16 @@
-(startLine=93 endLine=105 srcPath=/home/ubuntu/antFilter/940/ant/src/main/org/apache/tools/ant/taskdefs/Ear.java)
-    public void setAppxml(File descr) {
-        deploymentDescriptor = descr; 
-        if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
-        }
+(startLine=83 endLine=96 srcPath=/home/ubuntu/antFilter/83/ant/proposal/sandbox/httptasks/src/main/org/apache/tools/ant/taskdefs/optional/http/HttpDigestAuth.java)
+    public void setAuthenticationHeader(URLConnection requestConnection,
+            URLConnection responseConnection,
+            String username, String password)
+            throws BuildException {
 
-        // Create a ZipFileSet for this file, and pass it up.
-        ZipFileSet fs = new ZipFileSet();
-        fs.setDir(new File(deploymentDescriptor.getParent()));
-        fs.setIncludes(deploymentDescriptor.getName());
-        fs.setFullpath("META-INF/application.xml");
-        super.addFileset(fs);
-    }
+        if (username != null) {
+            password = username == null ? "" : password;
+            String encodeStr = username + ":" + password;
+            Base64Encode encoder = new Base64Encode();
+            char[] encodedPass = encoder.encodeBase64(encodeStr.getBytes());
+            String authStr = "BASIC " + new String(encodedPass);
+            requestConnection.setRequestProperty("Authorization", authStr);
+            }
+        }
 

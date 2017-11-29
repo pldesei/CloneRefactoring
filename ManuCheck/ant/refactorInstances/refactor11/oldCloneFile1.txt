@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "Ant" and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -51,145 +51,197 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.taskdefs.optional.sos;
 
-package org.apache.tools.ant.filters;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Commandline;
 
 /**
- * JUnit Testcases for ConcatReader
- * @author Jan Matèrne
+ * Retrieves and locks files in Visual SourceSafe via a SourceOffSite server.
+ *
+ * <p>
+ * The following attributes are interpretted:
+ * <table border="1">
+ *   <tr>
+ *     <th>Attribute</th>
+ *     <th>Values</th>
+ *     <th>Required</th>
+ *   </tr>
+ *   <tr>
+ *     <td>soscmddir</td>
+ *     <td>Directory which contains soscmd(.exe) <br>
+ *     soscmd(.exe) must be in the path if this is not specified</td>
+ *     <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>vssserverpath</td>
+ *      <td>path to the srcsafe.ini  - eg. \\server\vss\srcsafe.ini</td>
+ *      <td>Yes</td>
+ *   </tr>
+ *   <tr>
+ *      <td>sosserverpath</td>
+ *      <td>address and port of the SOS server  - eg. 192.168.0.1:8888</td>
+ *      <td>Yes</td>
+ *   </tr>
+ *   <tr>
+ *      <td>projectpath</td>
+ *      <td>SourceSafe project path without the "$"</td>
+ *      <td>Yes</td>
+ *   </tr>
+ *   <tr>
+ *      <td>file</td>
+ *      <td>Filename to act upon<br> If no file is specified then act upon the project</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>username</td>
+ *      <td>SourceSafe username</td>
+ *      <td>Yes</td>
+ *   </tr>
+ *   <tr>
+ *      <td>password</td>
+ *      <td>SourceSafe password</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>localpath</td>
+ *      <td>Override the working directory and get to the specified path</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>soshome</td>
+ *      <td>The path to the SourceOffSite home directory</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>nocompression</td>
+ *      <td>true or false - disable compression</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>recursive</td>
+ *      <td>true or false - Only works with the CheckOutProject command</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>nocache</td>
+ *      <td>true or false - Only needed if SOSHOME is set as an enviroment variable</td>
+ *      <td>No</td>
+ *   </tr>
+ *   <tr>
+ *      <td>verbose</td>
+ *      <td>true or false - Status messages are displayed</td>
+ *      <td>No</td>
+ *   </tr>
+ * </table>
+ *
+ * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
  */
-public class ConcatFilterTest extends BuildFileTest {
 
-    private static FileUtils fu = FileUtils.newFileUtils();
-    private static final String lSep = System.getProperty("line.separator");
-
-    private static final String FILE_PREPEND_WITH =
-          "this-should-be-the-first-line" + lSep
-        + "Line  1" + lSep
-        + "Line  2" + lSep
-        + "Line  3" + lSep
-        + "Line  4" + lSep
-    ;
-
-    private static final String FILE_PREPEND =
-          "Line  1" + lSep
-        + "Line  2" + lSep
-        + "Line  3" + lSep
-        + "Line  4" + lSep
-        + "Line  5" + lSep
-    ;
-
-    private static final String FILE_APPEND_WITH =
-          "Line 57" + lSep
-        + "Line 58" + lSep
-        + "Line 59" + lSep
-        + "Line 60" + lSep
-        + "this-should-be-the-last-line" + lSep
-    ;
-
-    private static final String FILE_APPEND =
-          "Line 56" + lSep
-        + "Line 57" + lSep
-        + "Line 58" + lSep
-        + "Line 59" + lSep
-        + "Line 60" + lSep
-    ;
+public class SOSCheckout extends SOS {
+    Commandline commandLine;
 
 
-    public ConcatFilterTest(String name) {
-        super(name);
-    }
-
-    public void setUp() {
-        configureProject("src/etc/testcases/filters/concat.xml");
-    }
-
-    public void tearDown() {
-        // I dont know why - but on my machine I always get a
-        // "Unable to delete file ...result\append.txt" (or prepend.txt)
-        // from Delete.removeDir(Delete.java:612).
-        // Win2000, JDK 1.4.1_02
-        // A <sleep> before <delete> doesn´t work. From 10ms to 3000ms.
-        // I modified the taskdefs.Delete.DELETE_RETRY_SLEEP_MILLIS
-        // from 10 up to 2000 ms, but no success.
-        // So I give up - and hope for a suggestion from another one.
-        // But this shouldn´t let the testcases fail, so I do the cleanup
-        // inside a try-block
-        //    Jan
-        try {
-            executeTarget("cleanup");
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * Executes the task.
+     * <br>
+     * Builds a command line to execute soscmd and then calls Exec's run method
+     * to execute the command line.
+     *
+     * @exception  BuildException  Description of Exception
+     */
+    public void execute() throws BuildException {
+        int result = 0;
+        buildCmdLine();
+        result = run(commandLine);
+        if (result == 255) {
+            // This is the exit status
+            String msg = "Failed executing: " + commandLine.toString();
+            throw new BuildException(msg, getLocation());
         }
     }
 
-    public void testFilterReaderNoArgs() throws IOException {
-        executeTarget("testFilterReaderNoArgs");
-        File expected = getProject().resolveFile("input/concatfilter.test");
-        File result = getProject().resolveFile("result/concat.filterReaderNoArgs.test");
-        assertTrue("testFilterReaderNoArgs: Result not like expected", fu.contentEquals(expected, result));
-    }
 
-    public void testFilterReaderBefore() throws IOException {
-        executeTarget("testFilterReaderPrepend");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderPrepend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
-    }
+    /**
+     * Build the command line <br>
+     *
+     * CheckOutFile required parameters: -server -name -password -database -project -file<br>
+     * CheckOutFile optional parameters: -workdir -verbose -nocache -nocompression -soshome<br>
+     *
+     * CheckOutProject required parameters: -server -name -password -database -project<br>
+     * CheckOutProject optional parameters:-workdir -recursive -verbose -nocache
+     * -nocompression -soshome<br>
+     *
+     * @return    Commandline the generated command to be executed
+     */
+    protected Commandline buildCmdLine() {
+        commandLine = new Commandline();
+        // Get the path to the soscmd(.exe)
+        commandLine.setExecutable(getSosCommand());
+        // If we find a "file" attribute then act on a file otherwise act on a project
+        if (getFilename() != null) {
+            // add -command CheckOutFile to the commandline
+            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
+            commandLine.createArgument().setValue(SOSCmd.COMMAND_CHECKOUT_FILE);
+            // add -file xxxxx to the commandline
+            commandLine.createArgument().setValue(SOSCmd.FLAG_FILE);
+            commandLine.createArgument().setValue(getFilename());
+        } else {
+            // add -command CheckOutProject to the commandline
+            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
+            commandLine.createArgument().setValue(SOSCmd.COMMAND_CHECKOUT_PROJECT);
+            // look for a recursive option
+            commandLine.createArgument().setValue(getRecursive());
+        }
+        // SOS server address is required
+        if (getSosServerPath() == null) {
+            throw new BuildException("sosserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
+        commandLine.createArgument().setValue(getSosServerPath());
+        // Login info is required
+        if (getUsername() == null) {
+            throw new BuildException("username attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
+        commandLine.createArgument().setValue(getUsername());
+        // The SOS class knows that the SOS server needs the password flag,
+        // even if there is no password ,so we send a " "
+        commandLine.createArgument().setValue(SOSCmd.FLAG_PASSWORD);
+        commandLine.createArgument().setValue(getPassword());
+        // VSS Info is required
+        if (getVssServerPath() == null) {
+            throw new BuildException("vssserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
+        commandLine.createArgument().setValue(getVssServerPath());
+        // VSS project is required
+        if (getProjectPath() == null) {
+            throw new BuildException("projectpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
+        commandLine.createArgument().setValue(getProjectPath());
 
-    public void testFilterReaderAfter() throws IOException {
-        executeTarget("testFilterReaderAppend");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
-    }
+        // The following options are optional.
 
-    public void testFilterReaderBeforeAfter() throws IOException {
-        executeTarget("testFilterReaderPrependAppend");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderPrependAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
+        // -verbose
+        commandLine.createArgument().setValue(getVerbose());
+        // Disable Compression
+        commandLine.createArgument().setValue(getNoCompress());
+        // Path to the SourceOffSite home directory /home/user/.sos
+        if (getSosHome() == null) {
+            // If -soshome was not specified then we can look for nocache
+            commandLine.createArgument().setValue(getNoCache());
+        } else {
+            commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_HOME);
+            commandLine.createArgument().setValue(getSosHome());
+        }
+        // If a working directory was specified then add it to the command line
+        if (getLocalPath() != null) {
+            commandLine.createArgument().setValue(SOSCmd.FLAG_WORKING_DIR);
+            commandLine.createArgument().setValue(getLocalPath());
+        }
+        return commandLine;
     }
-
-    public void testConcatFilter() throws IOException {
-        executeTarget("testConcatFilter");
-        File resultFile = getProject().resolveFile("result/concat.concatfilter.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
-    }
-
-    public void testConcatFilterBefore() throws IOException {
-        executeTarget("testConcatFilterPrepend");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterPrepend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
-    }
-
-    public void testConcatFilterAfter() throws IOException {
-        executeTarget("testConcatFilterAppend");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
-    }
-
-    public void testConcatFilterBeforeAfter() throws IOException {
-        executeTarget("testConcatFilterPrependAppend");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterPrependAppend.test");
-        String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
-    }
-
 }
+

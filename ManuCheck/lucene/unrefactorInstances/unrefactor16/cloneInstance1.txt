@@ -1,18 +1,20 @@
-(startLine=1502 endLine=1517 srcPath=/home/ubuntu/luceneFilter/16/lucene/lucene/codecs/src/java/org/apache/lucene/codecs/memory/DirectPostingsFormat.java)
-    public int nextDoc() {
-      upto++;
-      if (liveDocs == null) {
-        if (upto < postings.length) {
-          return postings[upto];
+(startLine=475 endLine=492 srcPath=/home/ubuntu/luceneFilter/1647/lucene/contrib/gdata-server/src/core/src/java/org/apache/lucene/gdata/storage/lucenestorage/StorageImplementation.java)
+    public String getServiceForFeed(String feedId) throws StorageException {
+        if (feedId == null)
+            throw new StorageException("no feed for the feedID == null");
+        ReferenceCounter<StorageQuery> query = null;
+        try {
+            query = this.controller.getStorageQuery();
+            String type = query.get().getService(feedId);
+            if (type == null)
+                throw new StorageException("no feed for the feedID == "
+                        + feedId + " found");
+            return type;
+        } catch (Exception e) {
+            throw new StorageException("Can not access storage", e);
+        } finally {
+            if (query != null)
+                query.decrementRef();
         }
-      } else {
-        while (upto < postings.length) {
-          if (liveDocs.get(postings[upto])) {
-            return postings[upto];
-          }
-          upto++;
-        }
-      }
-      return NO_MORE_DOCS;
     }
 

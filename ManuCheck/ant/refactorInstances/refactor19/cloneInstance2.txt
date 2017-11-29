@@ -1,7 +1,7 @@
-(startLine=243 endLine=262 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java)
-    public void testRedirect7() {
-        executeTarget("redirect7");
-        if (getProject().getProperty("sed.can.run") == null) {
+(startLine=109 endLine=142 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java)
+    public void testRedirect2() {
+        executeTarget("redirect2");
+        if (getProject().getProperty("test.can.run") == null) {
             return;
         }
         String actualOut = null;
@@ -13,10 +13,24 @@
                 getProject().resolveFile("redirect.err")));
         } catch (IOException eyeOhEx) {
         }
-        assertPropertyEquals("redirect.out", "blah y z");
-        assertPropertyUnset("redirect.err");
-        assertEquals("unexpected content in redirect.out",
-            "x y blah\n", actualOut);
-        assertEquals("unexpected content in redirect.err", null, actualErr);
+        File x = getProject().resolveFile("x");
+        File y = getProject().resolveFile("y");
+        File z = getProject().resolveFile("z");
+        int xout = actualOut.indexOf(x + " out");
+        int yout = actualOut.indexOf(y + " out");
+        int zout = actualOut.indexOf(z + " out");
+        int xerr = actualErr.indexOf(x + " err");
+        int yerr = actualErr.indexOf(y + " err");
+        int zerr = actualErr.indexOf(z + " err");
+        assertFalse("xout < 0", xout < 0);
+        assertFalse("yout < 0", yout < 0);
+        assertFalse("zout < 0", zout < 0);
+        assertFalse("xerr < 0", xerr < 0);
+        assertFalse("yerr < 0", yerr < 0);
+        assertFalse("zerr < 0", zerr < 0);
+        assertFalse("yout < xout", yout < xout);
+        assertFalse("zout < yout", zout < yout);
+        assertFalse("yerr < xerr", yerr < xerr);
+        assertFalse("zerr < yerr", zerr < yerr);
     }
 

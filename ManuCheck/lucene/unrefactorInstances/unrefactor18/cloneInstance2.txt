@@ -1,17 +1,25 @@
-(startLine=72 endLine=86 srcPath=/home/ubuntu/luceneFilter/1318/lucene/src/java/org/apache/lucene/store/RAMInputStream.java)
-  public void readBytes(byte[] b, int offset, int len) throws IOException {
-    while (len > 0) {
-      if (bufferPosition >= bufferLength) {
-        currentBufferIndex++;
-        switchCurrentBuffer(true);
-      }
-
-      int remainInBuffer = bufferLength - bufferPosition;
-      int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
-      System.arraycopy(currentBuffer, bufferPosition, b, offset, bytesToCopy);
-      offset += bytesToCopy;
-      len -= bytesToCopy;
-      bufferPosition += bytesToCopy;
+(startLine=48 endLine=70 srcPath=/home/ubuntu/luceneFilter/601/lucene/lucene/core/src/test/org/apache/lucene/search/TestRegexpRandom.java)
+  public void setUp() throws Exception {
+    super.setUp();
+    dir = newDirectory();
+    RandomIndexWriter writer = new RandomIndexWriter(random(), dir,
+        newIndexWriterConfig(TEST_VERSION_CURRENT, new MockAnalyzer(random()))
+        .setMaxBufferedDocs(_TestUtil.nextInt(random(), 50, 1000)));
+    
+    Document doc = new Document();
+    FieldType customType = new FieldType(TextField.TYPE_STORED);
+    customType.setOmitNorms(true);
+    Field field = newField("field", "", customType);
+    doc.add(field);
+    
+    NumberFormat df = new DecimalFormat("000", new DecimalFormatSymbols(Locale.ENGLISH));
+    for (int i = 0; i < 1000; i++) {
+      field.setStringValue(df.format(i));
+      writer.addDocument(doc);
     }
+    
+    reader = writer.getReader();
+    writer.close();
+    searcher = newSearcher(reader);
   }
 

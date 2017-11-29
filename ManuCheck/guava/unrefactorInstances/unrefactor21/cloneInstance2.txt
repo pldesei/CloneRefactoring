@@ -1,8 +1,16 @@
-(startLine=143 endLine=148 srcPath=/home/ubuntu/guavaFilter/420/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
-  public <T> void testWhere_incompatibleParameterizedTypeMapping() {
-    try {
-      new TypeResolver().where(new TypeCapture<Iterable<T>>() {}.capture(), List.class);
-      fail();
-    } catch (IllegalArgumentException expected) {}
+(startLine=380 endLine=393 srcPath=/home/ubuntu/guavaFilter/91/guava/guava-tests/test/com/google/common/collect/TreeMultimapNaturalTest.java)
+  public void testCreateFromSortedSetMultimap() {
+    SortedSetMultimap<Double, Double> tree = TreeMultimap.create(KEY_COMPARATOR, VALUE_COMPARATOR);
+    tree.put(1.0, 2.0);
+    tree.put(2.0, 3.0);
+    tree.put(3.0, 4.0);
+    tree.put(4.0, 5.0);
+
+    SortedSetMultimap<Double, Double> sorted = Multimaps.unmodifiableSortedSetMultimap(tree);
+    TreeMultimap<Double, Double> copyFromSorted = TreeMultimap.create(sorted);
+    assertEquals(tree, copyFromSorted);
+    assertSame(Ordering.natural(), copyFromSorted.keyComparator());
+    assertSame(Ordering.natural(), copyFromSorted.valueComparator());
+    assertSame(Ordering.natural(), copyFromSorted.get(1.0).comparator());
   }
 

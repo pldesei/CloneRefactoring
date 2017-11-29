@@ -1,13 +1,13 @@
-(startLine=434 endLine=444 srcPath=/home/ubuntu/guavaFilter/470/guava/guava/src/com/google/common/util/concurrent/AbstractService.java)
-  private void terminated(final State from) {
-    for (final ListenerExecutorPair pair : listeners) {
-      queuedListeners.add(new Runnable() {
-        @Override public void run() {
-          pair.listener.terminated(from);
+(startLine=932 endLine=942 srcPath=/home/ubuntu/guavaFilter/649/guava/guava/src/com/google/common/collect/Sets.java)
+    public E pollLast() {
+      Iterator<E> unfilteredIterator = unfiltered().descendingIterator();
+      while (unfilteredIterator.hasNext()) {
+        E e = unfilteredIterator.next();
+        if (predicate.apply(e)) {
+          unfilteredIterator.remove();
+          return e;
         }
-      }, pair.executor);
+      }
+      return null;
     }
-    // There are no more state transitions so we can clear this out.
-    listeners.clear();
-  }
 

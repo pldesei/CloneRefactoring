@@ -1,14 +1,20 @@
-(startLine=1019 endLine=1030 srcPath=/home/ubuntu/luceneFilter/1486/lucene/src/java/org/apache/lucene/queryParser/QueryParserTokenManager.java)
-private static final boolean jjCanMove_1(int hiByte, int i1, int i2, long l1, long l2)
-{
-   switch(hiByte)
-   {
-      case 0:
-         return ((jjbitVec3[i2] & l2) != 0L);
-      default :
-         if ((jjbitVec1[i1] & l1) != 0L)
-            return true;
-         return false;
-   }
-}
+(startLine=303 endLine=320 srcPath=/home/ubuntu/luceneFilter/1570/lucene/src/java/org/apache/lucene/index/TermVectorsReader.java)
+  final private long[] readTvfPointers(int fieldCount) throws IOException {
+    // Compute position in the tvf file
+    long position;
+    if (format >= FORMAT_VERSION2)
+      position = tvx.readLong();
+    else
+      position = tvd.readVLong();
+
+    long[] tvfPointers = new long[fieldCount];
+    tvfPointers[0] = position;
+
+    for (int i = 1; i < fieldCount; i++) {
+      position += tvd.readVLong();
+      tvfPointers[i] = position;
+    }
+
+    return tvfPointers;
+  }
 

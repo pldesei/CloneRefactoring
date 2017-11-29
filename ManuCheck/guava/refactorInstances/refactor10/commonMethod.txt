@@ -1,12 +1,6 @@
-(startLine=117 endLine=126 srcPath=/home/ubuntu/guavaFilter/692/guava/guava/src/com/google/common/collect/Collections2.java)
-  static boolean safeRemove(Collection<?> collection, Object object) {
-    checkNotNull(collection);
-    try {
-      return collection.remove(object);
-    } catch (ClassCastException e) {
-      return false;
-    } catch (NullPointerException e) {
-      return false;
-    }
+(startLine=122 endLine=125 srcPath=/home/ubuntu/guavaFilter/704/guava/guava/src/com/google/common/io/Closer.java)
+  public <C extends Closeable> C register(C closeable) {
+    stack.push(closeable);
+    return closeable;
   }
 

@@ -1,21 +1,19 @@
-(startLine=547 endLine=565 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
-  public void mergeNodesFrom_undirected() {
+(startLine=420 endLine=436 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  public void copyOf_filtered_undirected() {
     Graph<Integer, String> undirectedGraph = buildUndirectedTestGraph();
     undirectedGraph.addNode(N3);
+    Predicate<Integer> nodePredicate = connectedNodePredicate(undirectedGraph);
+    Predicate<String> edgePredicate = Predicates.not(selfLoopPredicate(undirectedGraph));
 
-    Graph<Integer, String> actualGraph = GraphBuilder.undirected().build();
-    // prepopulate actualGraph to make sure that existing elements don't interfere with the merging
-    actualGraph.addNode(N4);
-    actualGraph.addNode(N2);
+    Graph<Integer, String> filteredCopy =
+        copyOf(undirectedGraph, nodePredicate, edgePredicate);
 
-    mergeNodesFrom(undirectedGraph, actualGraph);
+    Graph<Integer, String> expectedGraph =
+        GraphBuilder.undirected().allowsParallelEdges(true).build();
+    expectedGraph.addEdge(E12, N1, N2);
+    expectedGraph.addEdge(E12_A, N1, N2);
+    expectedGraph.addEdge(E21, N2, N1);
 
-    Graph<Integer, String> expectedGraph = GraphBuilder.undirected().build();
-    expectedGraph.addNode(N1);
-    expectedGraph.addNode(N2);
-    expectedGraph.addNode(N3);
-    expectedGraph.addNode(N4);
-
-    assertThat(actualGraph).isEqualTo(expectedGraph);
+    assertThat(filteredCopy).isEqualTo(expectedGraph);
   }
 

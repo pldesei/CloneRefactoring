@@ -1,10 +1,15 @@
-(startLine=710 endLine=717 srcPath=/home/ubuntu/guavaFilter/383/guava/guava/src/com/google/common/collect/StandardTable.java)
-      @Override public Iterator<Entry<R, Map<C, V>>> iterator() {
-        return Maps.asMapEntryIterator(backingMap.keySet(), new Function<R, Map<C, V>>() {
-          @Override
-          public Map<C, V> apply(R rowKey) {
-            return row(rowKey);
-          }
-        });
-      }
+(startLine=184 endLine=196 srcPath=/home/ubuntu/guavaFilter/120/guava/guava-tests/test/com/google/common/collect/RangeTest.java)
+  public void testLessThan() {
+    Range<Integer> range = Range.lessThan(5);
+    assertTrue(range.contains(Integer.MIN_VALUE));
+    assertTrue(range.contains(4));
+    assertFalse(range.contains(5));
+    assertUnboundedBelow(range);
+    assertTrue(range.hasUpperBound());
+    assertEquals(5, (int) range.upperEndpoint());
+    assertEquals(OPEN, range.upperBoundType());
+    assertFalse(range.isEmpty());
+    assertEquals("(-\u221e..5)", range.toString());
+    reserializeAndAssert(range);
+  }
 

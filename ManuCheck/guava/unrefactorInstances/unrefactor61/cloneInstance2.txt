@@ -1,8 +1,11 @@
-(startLine=684 endLine=689 srcPath=/home/ubuntu/guavaFilter/855/guava/guava-tests/test/com/google/common/collect/ImmutableListTest.java)
-    public void testBuilderAdd_varargs() {
-      ImmutableList<String> list = new ImmutableList.Builder<String>()
-          .add("a", "b", "a", "c")
-          .build();
-      assertEquals(asList("a", "b", "a", "c"), list);
+(startLine=191 endLine=199 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/util/concurrent/FuturesGetCheckedTest.java)
+  public void testGetCheckedTimed_cancelled() throws TwoArgConstructorException {
+    SettableFuture<String> future = SettableFuture.create();
+    future.cancel(true);
+    try {
+      getChecked(future, TwoArgConstructorException.class, 0, SECONDS);
+      fail();
+    } catch (CancellationException expected) {
     }
+  }
 

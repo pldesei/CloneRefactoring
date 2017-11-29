@@ -1,11 +1,9 @@
-(startLine=218 endLine=226 srcPath=/home/ubuntu/guavaFilter/207/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
-  public <T> void testWhere_mapFromWildcard() {
-    Type subType = new TypeCapture<TypedKeyMap<T>>() {}.capture();
-    assertEquals(new TypeCapture<TypedKeyMap<String>>() {}.capture(),
-        new TypeResolver()
-            .where(
-                new TypeCapture<Map<Integer, T>>() {}.capture(),
-                new TypeCapture<Map<?, String>>() {}.capture())
-        .resolveType(subType));
+(startLine=239 endLine=245 srcPath=/home/ubuntu/guavaFilter/37/guava/guava-tests/test/com/google/common/primitives/CharsTest.java)
+  public void testFromByteArrayFails() {
+    try {
+      Chars.fromByteArray(new byte[Chars.BYTES - 1]);
+      fail();
+    } catch (IllegalArgumentException expected) {
+    }
   }
 

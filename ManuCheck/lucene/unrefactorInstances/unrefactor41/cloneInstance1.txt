@@ -1,16 +1,29 @@
-(startLine=281 endLine=294 srcPath=/home/ubuntu/luceneFilter/1298/lucene/src/test/org/apache/lucene/index/TestIndexReaderCloneNorms.java)
-  private void verifyIndex(IndexReader ir) throws IOException {
-    for (int i = 0; i < NUM_FIELDS; i++) {
-      String field = "f" + i;
-      byte b[] = ir.norms(field);
-      assertEquals("number of norms mismatches", numDocNorms, b.length);
-      ArrayList<Float> storedNorms = (i == 1 ? modifiedNorms : norms);
-      for (int j = 0; j < b.length; j++) {
-        float norm = Similarity.getDefault().decodeNormValue(b[j]);
-        float norm1 =  storedNorms.get(j).floatValue();
-        assertEquals("stored norm value of " + field + " for doc " + j + " is "
-            + norm + " - a mismatch!", norm, norm1, 0.000001);
+(startLine=410 endLine=436 srcPath=/home/ubuntu/luceneFilter/840/lucene/solr/core/src/java/org/apache/solr/util/ConcurrentLRUCache.java)
+  public Map<K, V> getOldestAccessedItems(int n) {
+    Map<K, V> result = new LinkedHashMap<K, V>();
+    if (n <= 0)
+      return result;
+    TreeSet<CacheEntry<K,V>> tree = new TreeSet<CacheEntry<K,V>>();
+    markAndSweepLock.lock();
+    try {
+      for (Map.Entry<Object, CacheEntry<K,V>> entry : map.entrySet()) {
+        CacheEntry<K,V> ce = entry.getValue();
+        ce.lastAccessedCopy = ce.lastAccessed;
+        if (tree.size() < n) {
+          tree.add(ce);
+        } else {
+          if (ce.lastAccessedCopy < tree.first().lastAccessedCopy) {
+            tree.remove(tree.first());
+            tree.add(ce);
+          }
+        }
       }
+    } finally {
+      markAndSweepLock.unlock();
     }
+    for (CacheEntry<K,V> e : tree) {
+      result.put(e.key, e.value);
+    }
+    return result;
   }
 

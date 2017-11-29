@@ -1,128 +1,41 @@
-(startLine=563 endLine=688 srcPath=/home/ubuntu/luceneFilter/1487/lucene/src/java/org/apache/lucene/queryParser/QueryParserTokenManager.java)
-private int jjMoveNfa_1(int startState, int curPos)
-{
-   int startsAt = 0;
-   jjnewStateCnt = 7;
-   int i = 1;
-   jjstateSet[0] = startState;
-   int kind = 0x7fffffff;
-   for (;;)
-   {
-      if (++jjround == 0x7fffffff)
-         ReInitRounds();
-      if (curChar < 64)
-      {
-         long l = 1L << curChar;
-         do
-         {
-            switch(jjstateSet[--i])
-            {
-               case 0:
-                  if ((0xfffffffeffffffffL & l) != 0L)
-                  {
-                     if (kind > 33)
-                        kind = 33;
-                     jjCheckNAdd(6);
-                  }
-                  if ((0x100002600L & l) != 0L)
-                  {
-                     if (kind > 7)
-                        kind = 7;
-                  }
-                  else if (curChar == 34)
-                     jjCheckNAddTwoStates(2, 4);
-                  break;
-               case 1:
-                  if (curChar == 34)
-                     jjCheckNAddTwoStates(2, 4);
-                  break;
-               case 2:
-                  if ((0xfffffffbffffffffL & l) != 0L)
-                     jjCheckNAddStates(16, 18);
-                  break;
-               case 3:
-                  if (curChar == 34)
-                     jjCheckNAddStates(16, 18);
-                  break;
-               case 5:
-                  if (curChar == 34 && kind > 32)
-                     kind = 32;
-                  break;
-               case 6:
-                  if ((0xfffffffeffffffffL & l) == 0L)
-                     break;
-                  if (kind > 33)
-                     kind = 33;
-                  jjCheckNAdd(6);
-                  break;
-               default : break;
-            }
-         } while(i != startsAt);
+(startLine=200 endLine=238 srcPath=/home/ubuntu/luceneFilter/1571/lucene/src/java/org/apache/lucene/index/TermVectorsReader.java)
+  TermFreqVector[] get(int docNum) throws IOException {
+    TermFreqVector[] result = null;
+    if (tvx != null) {
+      //We need to offset by
+      tvx.seek(((docNum + docStoreOffset) * 8L) + FORMAT_SIZE);
+      long position = tvx.readLong();
+
+      tvd.seek(position);
+      int fieldCount = tvd.readVInt();
+
+      // No fields are vectorized for this document
+      if (fieldCount != 0) {
+        int number = 0;
+        String[] fields = new String[fieldCount];
+
+        for (int i = 0; i < fieldCount; i++) {
+          if(tvdFormat == FORMAT_VERSION)
+            number = tvd.readVInt();
+          else
+            number += tvd.readVInt();
+
+          fields[i] = fieldInfos.fieldName(number);
+        }
+
+        // Compute position in the tvf file
+        position = 0;
+        long[] tvfPointers = new long[fieldCount];
+        for (int i = 0; i < fieldCount; i++) {
+          position += tvd.readVLong();
+          tvfPointers[i] = position;
+        }
+
+        result = readTermVectors(docNum, fields, tvfPointers);
       }
-      else if (curChar < 128)
-      {
-         long l = 1L << (curChar & 077);
-         do
-         {
-            switch(jjstateSet[--i])
-            {
-               case 0:
-               case 6:
-                  if ((0xdfffffffffffffffL & l) == 0L)
-                     break;
-                  if (kind > 33)
-                     kind = 33;
-                  jjCheckNAdd(6);
-                  break;
-               case 2:
-                  jjAddStates(16, 18);
-                  break;
-               case 4:
-                  if (curChar == 92)
-                     jjstateSet[jjnewStateCnt++] = 3;
-                  break;
-               default : break;
-            }
-         } while(i != startsAt);
-      }
-      else
-      {
-         int hiByte = (int)(curChar >> 8);
-         int i1 = hiByte >> 6;
-         long l1 = 1L << (hiByte & 077);
-         int i2 = (curChar & 0xff) >> 6;
-         long l2 = 1L << (curChar & 077);
-         do
-         {
-            switch(jjstateSet[--i])
-            {
-               case 0:
-               case 6:
-                  if (!jjCanMove_0(hiByte, i1, i2, l1, l2))
-                     break;
-                  if (kind > 33)
-                     kind = 33;
-                  jjCheckNAdd(6);
-                  break;
-               case 2:
-                  if (jjCanMove_0(hiByte, i1, i2, l1, l2))
-                     jjAddStates(16, 18);
-                  break;
-               default : break;
-            }
-         } while(i != startsAt);
-      }
-      if (kind != 0x7fffffff)
-      {
-         jjmatchedKind = kind;
-         jjmatchedPos = curPos;
-         kind = 0x7fffffff;
-      }
-      ++curPos;
-      if ((i = jjnewStateCnt) == (startsAt = 7 - (jjnewStateCnt = startsAt)))
-         return curPos;
-      try { curChar = input_stream.readChar(); }
-      catch(java.io.IOException e) { return curPos; }
-   }
-}
+    } else {
+      //System.out.println("No tvx file");
+    }
+    return result;
+  }
 

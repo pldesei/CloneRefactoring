@@ -1,16 +1,16 @@
-(startLine=458 endLine=476 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
-  public void mergeNodesFrom_directed() {
-    Graph<Integer, String> directedGraph = buildDirectedTestGraph();
-    directedGraph.addNode(N3);
+(startLine=547 endLine=565 srcPath=/home/ubuntu/guavaFilter/204/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  public void mergeNodesFrom_undirected() {
+    Graph<Integer, String> undirectedGraph = buildUndirectedTestGraph();
+    undirectedGraph.addNode(N3);
 
-    Graph<Integer, String> actualGraph = GraphBuilder.directed().build();
+    Graph<Integer, String> actualGraph = GraphBuilder.undirected().build();
     // prepopulate actualGraph to make sure that existing elements don't interfere with the merging
     actualGraph.addNode(N4);
     actualGraph.addNode(N2);
 
-    mergeNodesFrom(directedGraph, actualGraph);
+    mergeNodesFrom(undirectedGraph, actualGraph);
 
-    Graph<Integer, String> expectedGraph = GraphBuilder.directed().build();
+    Graph<Integer, String> expectedGraph = GraphBuilder.undirected().build();
     expectedGraph.addNode(N1);
     expectedGraph.addNode(N2);
     expectedGraph.addNode(N3);

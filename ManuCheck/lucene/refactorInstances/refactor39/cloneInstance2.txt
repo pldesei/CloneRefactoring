@@ -1,27 +1,12 @@
-(startLine=61 endLine=85 srcPath=/home/ubuntu/luceneFilter/569/lucene/lucene/analysis/common/src/test/org/apache/lucene/analysis/util/TestCharacterUtils.java)
-  public void testCodePointAtCharSequenceInt() {
-    CharacterUtils java4 = CharacterUtils.getInstance(Version.LUCENE_30);
-    String cpAt3 = "Abc\ud801\udc1c";
-    String highSurrogateAt3 = "Abc\ud801";
-    assertEquals((int) 'A', java4.codePointAt(cpAt3, 0));
-    assertEquals((int) '\ud801', java4.codePointAt(cpAt3, 3));
-    assertEquals((int) '\ud801', java4.codePointAt(highSurrogateAt3, 3));
-    try {
-      java4.codePointAt(highSurrogateAt3, 4);
-      fail("string index out of bounds");
-    } catch (IndexOutOfBoundsException e) {
-    }
-
-    CharacterUtils java5 = CharacterUtils.getInstance(TEST_VERSION_CURRENT);
-    assertEquals((int) 'A', java5.codePointAt(cpAt3, 0));
-    assertEquals(Character.toCodePoint('\ud801', '\udc1c'), java5.codePointAt(
-        cpAt3, 3));
-    assertEquals((int) '\ud801', java5.codePointAt(highSurrogateAt3, 3));
-    try {
-      java5.codePointAt(highSurrogateAt3, 4);
-      fail("string index out of bounds");
-    } catch (IndexOutOfBoundsException e) {
-    }
-
+(startLine=205 endLine=214 srcPath=/home/ubuntu/luceneFilter/600/lucene/solr/core/src/test/org/apache/solr/analysis/TestCapitalizationFilterFactory.java)
+  public void testForceFirstLetter() throws Exception {
+    Map<String,String> args = new HashMap<String,String>(DEFAULT_VERSION_PARAM);
+    args.put(CapitalizationFilterFactory.KEEP, "kitten");
+    args.put(CapitalizationFilterFactory.FORCE_FIRST_LETTER, "true");
+    CapitalizationFilterFactory factory = new CapitalizationFilterFactory();
+    factory.init(args);
+    Tokenizer tokenizer = new MockTokenizer(new StringReader("kitten"), MockTokenizer.WHITESPACE, false);
+    TokenStream ts = factory.create(tokenizer);
+    assertTokenStreamContents(ts, new String[] {"Kitten"});
   }
 

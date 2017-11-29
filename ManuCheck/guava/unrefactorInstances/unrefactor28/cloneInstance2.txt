@@ -1,10 +1,15 @@
-(startLine=781 endLine=788 srcPath=/home/ubuntu/guavaFilter/383/guava/guava/src/com/google/common/collect/StandardTable.java)
-      @Override public Iterator<Entry<C, Map<R, V>>> iterator() {
-        return Maps.asMapEntryIterator(columnKeySet(), new Function<C, Map<R, V>>() {
-          @Override
-          public Map<R, V> apply(C columnKey) {
-            return column(columnKey);
-          }
-        });
-      }
+(startLine=198 endLine=210 srcPath=/home/ubuntu/guavaFilter/120/guava/guava-tests/test/com/google/common/collect/RangeTest.java)
+  public void testGreaterThan() {
+    Range<Integer> range = Range.greaterThan(5);
+    assertFalse(range.contains(5));
+    assertTrue(range.contains(6));
+    assertTrue(range.contains(Integer.MAX_VALUE));
+    assertTrue(range.hasLowerBound());
+    assertEquals(5, (int) range.lowerEndpoint());
+    assertEquals(OPEN, range.lowerBoundType());
+    assertUnboundedAbove(range);
+    assertFalse(range.isEmpty());
+    assertEquals("(5..+\u221e)", range.toString());
+    reserializeAndAssert(range);
+  }
 

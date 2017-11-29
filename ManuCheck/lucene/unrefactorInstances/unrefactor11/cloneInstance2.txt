@@ -1,42 +1,16 @@
-(startLine=907 endLine=946 srcPath=/home/ubuntu/luceneFilter/1002/lucene/lucene/contrib/highlighter/src/test/org/apache/lucene/search/highlight/HighlighterTest.java)
-      public void run() throws Exception {
-        doSearching("Kennedy");
-        numHighlights = 0;
-        for (int i = 0; i < hits.totalHits; i++) {
-          String text = searcher.doc(hits.scoreDocs[i].doc).get(FIELD_NAME);
-          TokenStream tokenStream = analyzer.tokenStream(FIELD_NAME, new StringReader(text));
+(startLine=202 endLine=215 srcPath=/home/ubuntu/luceneFilter/812/lucene/solr/core/src/test/org/apache/solr/handler/TestReplicationHandler.java)
+  private NamedList<Object> getIndexVersion(SolrServer s) throws Exception {
+    
+    ModifiableSolrParams params = new ModifiableSolrParams();
+    params.set("command","indexversion");
+    params.set("qt","/replication");
+    QueryRequest req = new QueryRequest(params);
 
-          Highlighter highlighter = getHighlighter(query, FIELD_NAME, tokenStream,
-              HighlighterTest.this);
-          highlighter.setTextFragmenter(new SimpleFragmenter(40));
-          String result = highlighter.getBestFragment(tokenStream, text);
-          if (VERBOSE) System.out.println("\t" + result);
-        }
-        assertTrue("Failed to find correct number of highlights " + numHighlights + " found",
-            numHighlights == 4);
+    NamedList<Object> res = s.request(req);
 
-        numHighlights = 0;
-        for (int i = 0; i < hits.totalHits; i++) {
-          String text = searcher.doc(hits.scoreDocs[i].doc).get(FIELD_NAME);
-          TokenStream tokenStream = analyzer.tokenStream(FIELD_NAME, new StringReader(text));
-          Highlighter highlighter = getHighlighter(query, FIELD_NAME, tokenStream,
-              HighlighterTest.this);
-          highlighter.getBestFragment(analyzer, FIELD_NAME, text);
-        }
-        assertTrue("Failed to find correct number of highlights " + numHighlights + " found",
-            numHighlights == 4);
+    assertNotNull("null response from server", res);
 
-        numHighlights = 0;
-        for (int i = 0; i < hits.totalHits; i++) {
-          String text = searcher.doc(hits.scoreDocs[i].doc).get(FIELD_NAME);
 
-          TokenStream tokenStream = analyzer.tokenStream(FIELD_NAME, new StringReader(text));
-          Highlighter highlighter = getHighlighter(query, FIELD_NAME, tokenStream,
-              HighlighterTest.this);
-          highlighter.getBestFragments(analyzer, FIELD_NAME, text, 10);
-        }
-        assertTrue("Failed to find correct number of highlights " + numHighlights + " found",
-            numHighlights == 4);
-
-      }
+    return res;
+  }
 

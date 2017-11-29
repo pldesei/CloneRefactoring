@@ -1,21 +1,19 @@
-(startLine=102 endLine=120 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphEqualsTest.java)
-  public void equals_directedVsUndirected() {
-    graph.addEdge(E12, N1, N2);
+(startLine=289 endLine=305 srcPath=/home/ubuntu/guavaFilter/230/guava/guava/src/com/google/common/graph/ImmutableDirectedGraph.java)
+    public Builder<N, E> addGraph(DirectedGraph<N, E> graph) {
+      checkArgument(
+          directedGraph.config().compatibleWith(graph.config()),
+          "GraphConfigs for input and for graph being built are not compatible: input: %s, "
+              + "this graph: %s",
+          graph.config(),
+          directedGraph.config());
 
-    Graph<Integer, String> g2;
-    switch (graphType) {
-      case UNDIRECTED:
-        g2 = Graphs.createDirected();
-        break;
-      case DIRECTED:
-        g2 = Graphs.createUndirected();
-        break;
-      default:
-        throw new IllegalStateException("Unexpected graph type: " + graphType);
+      for (N node : graph.nodes()) {
+        directedGraph.addNode(node);
+      }
+      for (E edge : graph.edges()) {
+        directedGraph.addEdge(edge, graph.source(edge), graph.target(edge));
+      }
+
+      return this;
     }
-
-    g2.addEdge(E12, N1, N2);
-
-    new EqualsTester().addEqualityGroup(graph).addEqualityGroup(g2).testEquals();
-  }
 

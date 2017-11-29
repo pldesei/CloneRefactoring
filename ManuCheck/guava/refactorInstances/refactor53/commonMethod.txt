@@ -1,19 +1,8 @@
-(startLine=140 endLine=156 srcPath=/home/ubuntu/guavaFilter/229/guava/guava/src/com/google/common/graph/AbstractImmutableGraph.java)
-    @CanIgnoreReturnValue
-    public Builder<N, E> addGraph(Graph<N, E> graphToAdd) {
-      checkArgument(
-          graph.config().compatibleWith(graphToAdd.config()),
-          "GraphConfigs for input and for graph being built are not compatible: input: %s, "
-              + "this graph: %s",
-          graphToAdd.config(),
-          graph.config());
-
-      for (N node : graphToAdd.nodes()) {
-        graph.addNode(node);
-      }
-      for (E edge : graphToAdd.edges()) {
-        Graphs.addEdge(graph, edge, graphToAdd.incidentNodes(edge));
-      }
-      return this;
-    }
+(startLine=341 endLine=346 srcPath=/home/ubuntu/guavaFilter/242/guava/guava/src/com/google/common/graph/IncidenceSetUndirectedGraph.java)
+  private IncidentNodes<N> checkedIncidentNodes(Object edge) {
+    checkNotNull(edge, "edge");
+    IncidentNodes<N> incidentNodes = edgeToIncidentNodes.get(edge);
+    checkArgument(incidentNodes != null, EDGE_NOT_IN_GRAPH, edge);
+    return incidentNodes;
+  }
 

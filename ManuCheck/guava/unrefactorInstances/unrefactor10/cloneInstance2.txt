@@ -1,17 +1,26 @@
-(startLine=367 endLine=381 srcPath=/home/ubuntu/guavaFilter/180/guava/guava-tests/test/com/google/common/base/PreconditionsTest.java)
-  public void testAllOverloads_checkState() throws Exception {
-    for (ImmutableList<Class<?>> sig : allSignatures(boolean.class)) {
-      Method checkArgumentMethod =
-          Preconditions.class.getMethod("checkState", sig.toArray(new Class<?>[] {}));
-      checkArgumentMethod.invoke(null /* static method */, getParametersForSignature(true, sig));
+(startLine=585 endLine=608 srcPath=/home/ubuntu/guavaFilter/156/guava/guava-tests/test/com/google/common/util/concurrent/GeneratedMonitorTest.java)
+  private void runWaitTest() {
+    assertFalse(Thread.currentThread().isInterrupted());
+    assertFalse(monitor.isOccupiedByCurrentThread());
+    monitor.enter();
+    try {
+      assertTrue(monitor.isOccupiedByCurrentThread());
 
-      Object[] failingParams = getParametersForSignature(false, sig);
-      try {
-        checkArgumentMethod.invoke(null /* static method */, failingParams);
-        fail();
-      } catch (InvocationTargetException ite) {
-        assertFailureCause(ite.getCause(), IllegalStateException.class, failingParams);
-      }
+      doWaitScenarioSetUp();
+
+      boolean interruptedBeforeCall = Thread.currentThread().isInterrupted();
+      Outcome actualOutcome = doCall();
+      boolean occupiedAfterCall = monitor.isOccupiedByCurrentThread();
+      boolean interruptedAfterCall = Thread.currentThread().isInterrupted();
+
+      assertEquals(expectedOutcome, actualOutcome);
+      assertTrue(occupiedAfterCall);
+      assertEquals(interruptedBeforeCall && expectedOutcome != Outcome.INTERRUPT,
+          interruptedAfterCall);
+    } finally {
+      guard.setSatisfied(true);
+      monitor.leave();
+      assertFalse(monitor.isOccupiedByCurrentThread());
     }
   }
 

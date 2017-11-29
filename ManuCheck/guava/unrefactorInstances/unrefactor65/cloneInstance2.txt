@@ -1,15 +1,9 @@
-(startLine=760 endLine=772 srcPath=/home/ubuntu/guavaFilter/213/guava/guava-tests/test/com/google/common/reflect/TypeTokenTest.java)
-  public void testAssignableParameterizedTypeToType() {
-    TypeToken<List<String>> tokenL = new TypeToken<List<String>>() {};
-    assertTrue(tokenL.isSupertypeOf(
-        StringList.class.getGenericInterfaces()[0]));
-    assertFalse(tokenL.isSupertypeOf(
-        IntegerList.class.getGenericInterfaces()[0]));
-
-    TypeToken<First<String>> tokenF = new TypeToken<First<String>>() {};
-    assertTrue(tokenF.isSupertypeOf(
-        ConcreteIS.class.getGenericSuperclass()));
-    assertFalse(tokenF.isSupertypeOf(
-        ConcreteSI.class.getGenericSuperclass()));
+(startLine=779 endLine=785 srcPath=/home/ubuntu/guavaFilter/742/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testDereference_innerCancelsResult() throws Exception {
+    ListenableFuture<Foo> inner = SettableFuture.create();
+    ListenableFuture<ListenableFuture<Foo>> outer = Futures.immediateFuture(inner);
+    ListenableFuture<Foo> dereferenced = Futures.dereference(outer);
+    inner.cancel(true);
+    assertTrue(dereferenced.isCancelled());
   }
 

@@ -1,8 +1,8 @@
-(startLine=3418 endLine=3423 srcPath=/home/ubuntu/guavaFilter/193/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
-  public void testFutures_nullChecks() throws Exception {
-    new ClassSanityTester()
-        .forAllPublicStaticMethods(Futures.class)
-        .thatReturn(Future.class)
-        .testNulls();
-  }
+(startLine=420 endLine=425 srcPath=/home/ubuntu/guavaFilter/214/guava/guava/src/com/google/common/base/Objects.java)
+    private ToStringHelper addHolder(String name, @Nullable Object value) {
+      ValueHolder valueHolder = addHolder();
+      valueHolder.value = value;
+      valueHolder.name = checkNotNull(name);
+      return this;
+    }
 

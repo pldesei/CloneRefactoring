@@ -1,11 +1,16 @@
-(startLine=538 endLine=546 srcPath=/home/ubuntu/guavaFilter/939/guava/guava-tests/test/com/google/common/collect/IteratorsTest.java)
-  public void testCycleRemoveWithoutNext() {
-    Iterator<String> cycle = Iterators.cycle("a", "b");
-    assertTrue(cycle.hasNext());
-    try {
-      cycle.remove();
-      fail("no exception thrown");
-    } catch (IllegalStateException expected) {
+(startLine=390 endLine=403 srcPath=/home/ubuntu/guavaFilter/767/guava/guava-tests/test/com/google/common/math/IntMathTest.java)
+  public void testCheckedAdd() {
+    for (int a : ALL_INTEGER_CANDIDATES) {
+      for (int b : ALL_INTEGER_CANDIDATES) {
+        BigInteger expectedResult = valueOf(a).add(valueOf(b));
+        boolean expectedSuccess = fitsInInt(expectedResult);
+        try {
+          assertEquals(a + b, IntMath.checkedAdd(a, b));
+          assertTrue(expectedSuccess);
+        } catch (ArithmeticException e) {
+          assertFalse(expectedSuccess);
+        }
+      }
     }
   }
 

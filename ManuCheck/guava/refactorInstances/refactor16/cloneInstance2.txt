@@ -1,11 +1,12 @@
-(startLine=526 endLine=534 srcPath=/home/ubuntu/guavaFilter/679/guava/guava/src/com/google/common/collect/HashBiMap.java)
-    public K remove(@Nullable Object value) {
-      BiEntry<K, V> entry = seekByValue(value, hash(value));
-      if (entry == null) {
-        return null;
-      } else {
-        delete(entry);
-        return entry.key;
+(startLine=487 endLine=496 srcPath=/home/ubuntu/guavaFilter/693/guava/guava/src/com/google/common/collect/ConcurrentHashMultiset.java)
+      @Override public boolean remove(Object object) {
+        if (object == null) {
+          return false;
+        }
+        try {
+          return delegate.remove(object);
+        } catch (ClassCastException e) {
+          return false;
+        }
       }
-    }
 

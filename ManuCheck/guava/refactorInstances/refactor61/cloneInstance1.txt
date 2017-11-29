@@ -1,9 +1,9 @@
-(startLine=259 endLine=265 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
-  public void createUndirected_expectedNodeCount() {
-    UndirectedGraph<Integer, String> undirectedGraph =
-        Graphs.createUndirected(config().expectedNodeCount(NODE_COUNT));
-    assertThat(undirectedGraph.addEdge(E12, N1, N2)).isTrue();
-    assertThat(undirectedGraph.edgesConnecting(N1, N2)).isEqualTo(ImmutableSet.of(E12));
-    assertThat(undirectedGraph.edgesConnecting(N2, N1)).isEqualTo(ImmutableSet.of(E12));
+(startLine=250 endLine=256 srcPath=/home/ubuntu/guavaFilter/215/guava/guava-tests/test/com/google/common/graph/GraphsTest.java)
+  public void createDirected_expectedNodeCount() {
+    DirectedGraph<Integer, String> directedGraph =
+        Graphs.createDirected(config().expectedNodeCount(NODE_COUNT));
+    assertThat(directedGraph.addEdge(E12, N1, N2)).isTrue();
+    assertThat(directedGraph.edgesConnecting(N1, N2)).isEqualTo(ImmutableSet.of(E12));
+    assertThat(directedGraph.edgesConnecting(N2, N1)).isEmpty();
   }
 

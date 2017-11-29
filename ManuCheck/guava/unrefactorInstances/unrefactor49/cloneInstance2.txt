@@ -1,11 +1,14 @@
-(startLine=287 endLine=295 srcPath=/home/ubuntu/guavaFilter/652/guava/guava-tests/test/com/google/common/util/concurrent/AbstractServiceTest.java)
-  public void testManualServiceFailWhileRunning() throws Exception {
-    ManualSwitchedService service = new ManualSwitchedService();
-    RecordingListener listener = RecordingListener.record(service);
-    service.start();
-    service.notifyStarted();
-    service.notifyFailed(EXCEPTION);
-    assertEquals(ImmutableList.of(State.STARTING, State.RUNNING, State.FAILED),
-        listener.getStateHistory());
+(startLine=111 endLine=122 srcPath=/home/ubuntu/guavaFilter/861/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTransformAsyncFunctionTest.java)
+  public void testFutureCancellableBeforeOutputCompletion() throws Exception {
+    inputFuture.set(SLOW_OUTPUT_VALID_INPUT_DATA);
+    assertTrue(resultFuture.cancel(true));
+    assertTrue(resultFuture.isCancelled());
+    assertFalse(inputFuture.isCancelled());
+    assertTrue(outputFuture.isCancelled());
+    try {
+      resultFuture.get();
+      fail("Result future is cancelled and should have thrown a"
+          + " CancellationException");
+    } catch (CancellationException expected) {}
   }
 

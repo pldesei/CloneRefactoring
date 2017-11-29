@@ -1,8 +1,13 @@
-(startLine=239 endLine=244 srcPath=/home/ubuntu/guavaFilter/250/guava/guava/src/com/google/common/graph/ImmutableDirectedGraph.java)
-  public N source(Object edge) {
-    checkNotNull(edge, "edge");
-    DirectedIncidentNodes<N> endpoints = edgeToIncidentNodes.get(edge);
-    checkArgument(endpoints != null, EDGE_NOT_IN_GRAPH, edge);
-    return endpoints.source();
+(startLine=696 endLine=706 srcPath=/home/ubuntu/guavaFilter/384/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
+  public void testWithFallback_resultCancelledBeforeFallback() throws Exception {
+    SettableFuture<Integer> primary = SettableFuture.create();
+    FutureFallback<Integer> fallback = mocksControl.createMock(FutureFallback.class);
+
+    mocksControl.replay();
+    ListenableFuture<Integer> derived = Futures.withFallback(primary, fallback);
+    derived.cancel(false);
+    assertTrue(primary.isCancelled());
+    assertFalse(primary.wasInterrupted());
+    mocksControl.verify();
   }
 

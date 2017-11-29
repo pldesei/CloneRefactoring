@@ -1,8 +1,15 @@
-(startLine=334 endLine=339 srcPath=/home/ubuntu/luceneFilter/369/lucene/lucene/test-framework/src/java/org/apache/lucene/index/AssertingAtomicReader.java)
-    public int startOffset() throws IOException {
-      assert state != DocsEnumState.START : "startOffset() called before nextDoc()/advance()";
-      assert state != DocsEnumState.FINISHED : "startOffset() called after NO_MORE_DOCS";
-      assert positionCount > 0 : "startOffset() called before nextPosition()!";
-      return super.startOffset();
-    }
+(startLine=295 endLine=307 srcPath=/home/ubuntu/luceneFilter/645/lucene/solr/contrib/dataimporthandler/src/test/org/apache/solr/handler/dataimport/TestSqlEntityProcessorDelta.java)
+  public void testCompositePk_DeltaImport_nodelta() throws Exception {
+    add1document();
+    MockDataSource.clearCache();
+
+    MockDataSource.setIterator(DELTA_QUERY,
+        Collections.EMPTY_LIST.iterator());
+
+    runDeltaImport(dataConfig_delta);
+
+    assertQ(req("*:* OR testCompositePk_DeltaImport_nodelta"), "//*[@numFound='1']");
+    assertQ(req("id:1 OR testCompositePk_DeltaImport_nodelta"), "//*[@numFound='1']");
+    assertQ(req("desc:hello OR testCompositePk_DeltaImport_nodelta"), "//*[@numFound='1']");
+  }
 

@@ -1,11 +1,38 @@
-(startLine=600 endLine=608 srcPath=/home/ubuntu/antFilter/46/ant/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
-    protected boolean assumeJava15() {
-        return "javac1.5".equals(attributes.getCompilerVersion())
-            || ("classic".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
-            || ("modern".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
-            || ("extJavac".equals(attributes.getCompilerVersion())
-                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5));
+(startLine=760 endLine=795 srcPath=/home/ubuntu/antFilter/198/ant/src/main/org/apache/tools/ant/ComponentHelper.java)
+    private void initTypes() {
+        ClassLoader classLoader = null;
+        classLoader = getClassLoader(classLoader);
+        String dataDefs = MagicNames.TYPEDEFS_PROPERTIES_RESOURCE;
+
+        InputStream in = null;
+        try {
+            Properties props = new Properties();
+            in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException(ERROR_NO_TYPE_LIST_LOAD);
+            }
+            props.load(in);
+
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                String className = props.getProperty(name);
+                AntTypeDefinition def = new AntTypeDefinition();
+                def.setName(name);
+                def.setClassName(className);
+                def.setClassLoader(classLoader);
+                antTypeTable.put(name, def);
+            }
+        } catch (IOException ex) {
+            throw new BuildException(ERROR_NO_TYPE_LIST_LOAD);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception ignore) {
+                    // ignore
+                }
+            }
+        }
     }
 

@@ -1,4 +1,4 @@
-package org.apache.lucene.analysis.ar;
+package org.apache.lucene.analysis.ngram;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,113 +17,119 @@ package org.apache.lucene.analysis.ar;
  * limitations under the License.
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.WhitespaceTokenizer;
+
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-
 /**
- * Test the Arabic Normalization Filter
- *
+ * Tests {@link NGramTokenFilter} for correctness.
  */
-public class TestArabicStemFilter extends TestCase {
-  
-  public void testAlPrefix() throws IOException {
-    check("الحسن", "حسن");
-  }    
+public class NGramTokenFilterTest extends TestCase {
+    private TokenStream input;
+    private ArrayList tokens = new ArrayList();
+    
+    public void setUp() {
+        input = new WhitespaceTokenizer(new StringReader("abcde"));
+    }
 
-  public void testWalPrefix() throws IOException {
-    check("والحسن", "حسن");
-  }    
-  
-  public void testBalPrefix() throws IOException {
-    check("بالحسن", "حسن");
-  }    
-  
-  public void testKalPrefix() throws IOException {
-    check("كالحسن", "حسن");
-  }    
-  
-  public void testFalPrefix() throws IOException {
-    check("فالحسن", "حسن");
-  }    
+    public void testInvalidInput() throws Exception {
+        boolean gotException = false;
+        try {        
+            new NGramTokenFilter(input, 2, 1);
+        } catch (IllegalArgumentException e) {
+            gotException = true;
+        }
+        assertTrue(gotException);
+    }
 
-  public void testWaPrefix() throws IOException {
-    check("وحسن", "حسن");
-  } 
-  
-  public void testAhSuffix() throws IOException {
-    check("زوجها", "زوج");
-  } 
-  
-  public void testAnSuffix() throws IOException {
-    check("ساهدان", "ساهد");
-  } 
-  
-  public void testAtSuffix() throws IOException {
-    check("ساهدات", "ساهد");
-  } 
-  
-  public void testWnSuffix() throws IOException {
-    check("ساهدون", "ساهد");
-  } 
-  
-  public void testYnSuffix() throws IOException {
-    check("ساهدين", "ساهد");
-  } 
-  
-  public void testYhSuffix() throws IOException {
-    check("ساهديه", "ساهد");
-  } 
+    public void testInvalidInput2() throws Exception {
+        boolean gotException = false;
+        try {        
+            new NGramTokenFilter(input, 0, 1);
+        } catch (IllegalArgumentException e) {
+            gotException = true;
+        }
+        assertTrue(gotException);
+    }
 
-  public void testYpSuffix() throws IOException {
-    check("ساهدية", "ساهد");
-  } 
-  
-  public void testHSuffix() throws IOException {
-    check("ساهده", "ساهد");
-  } 
-  
-  public void testPSuffix() throws IOException {
-    check("ساهدة", "ساهد");
-  }
-  
-  public void testYSuffix() throws IOException {
-    check("ساهدي", "ساهد");
-  }
-  
-  public void testComboPrefSuf() throws IOException {
-    check("وساهدون", "ساهد");
-  }
-  
-  public void testComboSuf() throws IOException {
-    check("ساهدهات", "ساهد");
-  }
-  
-  public void testShouldntStem() throws IOException {
-    check("الو", "الو");
-  }
+    public void testUnigrams() throws Exception {
+      NGramTokenFilter filter = new NGramTokenFilter(input, 1, 1);
 
-  public void testNonArabic() throws IOException {
-    check("English", "English");
-  }
+      final Token reusableToken = new Token();
+        for (Token nextToken = filter.next(reusableToken); nextToken != null; nextToken = filter.next(reusableToken)) {
+            tokens.add(nextToken.toString());
+//          System.out.println(token.term());
+//          System.out.println(token);
+//          Thread.sleep(1000);
+        }
 
-  private void check(final String input, final String expected) throws IOException {
-    ArabicLetterTokenizer tokenStream  = new ArabicLetterTokenizer(new StringReader(input));
-    ArabicStemFilter filter = new ArabicStemFilter(tokenStream);
-    final Token reusableToken = new Token();
-    Token nextToken = filter.next(reusableToken);
-    if (nextToken == null)
-      fail();
-    assertEquals(expected, nextToken.term());
-    filter.close();
-  }
+        assertEquals(5, tokens.size());
+        ArrayList exp = new ArrayList();
+        exp.add("(a,0,1)"); exp.add("(b,1,2)"); exp.add("(c,2,3)"); exp.add("(d,3,4)"); exp.add("(e,4,5)");
+        assertEquals(exp, tokens);
+    }
 
+    public void testBigrams() throws Exception {
+      NGramTokenFilter filter = new NGramTokenFilter(input, 2, 2);
+      final Token reusableToken = new Token();
+        for (Token nextToken = filter.next(reusableToken); nextToken != null; nextToken = filter.next(reusableToken)) {
+            tokens.add(nextToken.toString());
+//          System.out.println(token.term());
+//          System.out.println(token);
+//          Thread.sleep(1000);
+        }
+
+        assertEquals(4, tokens.size());
+        ArrayList exp = new ArrayList();
+        exp.add("(ab,0,2)"); exp.add("(bc,1,3)"); exp.add("(cd,2,4)"); exp.add("(de,3,5)");
+        assertEquals(exp, tokens);
+    }
+
+    public void testNgrams() throws Exception {
+      NGramTokenFilter filter = new NGramTokenFilter(input, 1, 3);
+      final Token reusableToken = new Token();
+        for (Token nextToken = filter.next(reusableToken); nextToken != null; nextToken = filter.next(reusableToken)) {
+            tokens.add(nextToken.toString());
+//          System.out.println(token.term());
+//          System.out.println(token);
+//          Thread.sleep(1000);
+        }
+
+        assertEquals(12, tokens.size());
+        ArrayList exp = new ArrayList();
+        exp.add("(a,0,1)"); exp.add("(b,1,2)"); exp.add("(c,2,3)"); exp.add("(d,3,4)"); exp.add("(e,4,5)");
+        exp.add("(ab,0,2)"); exp.add("(bc,1,3)"); exp.add("(cd,2,4)"); exp.add("(de,3,5)");
+        exp.add("(abc,0,3)"); exp.add("(bcd,1,4)"); exp.add("(cde,2,5)");
+        assertEquals(exp, tokens);
+    }
+
+    public void testOversizedNgrams() throws Exception {
+      NGramTokenFilter filter = new NGramTokenFilter(input, 6, 7);
+      final Token reusableToken = new Token();
+        for (Token nextToken = filter.next(reusableToken); nextToken != null; nextToken = filter.next(reusableToken)) {
+            tokens.add(nextToken.toString());
+//          System.out.println(token.term());
+//          System.out.println(token);
+//          Thread.sleep(1000);
+        }
+
+        assertTrue(tokens.isEmpty());
+    }
+    
+    public void testSmallTokenInStream() throws Exception {
+      input = new WhitespaceTokenizer(new StringReader("abc de fgh"));
+      NGramTokenFilter filter = new NGramTokenFilter(input, 3, 3);
+      final Token reusableToken = new Token();
+      Token nextToken = filter.next(reusableToken);
+      assertEquals("(abc,0,3)", nextToken.toString());
+      nextToken = filter.next(reusableToken);
+      assertNotNull(nextToken);
+      assertEquals("(fgh,0,3)", nextToken.toString());
+      assertNull(filter.next(reusableToken));
+    }
 }

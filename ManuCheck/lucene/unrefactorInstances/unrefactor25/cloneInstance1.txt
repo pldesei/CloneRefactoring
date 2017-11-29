@@ -1,21 +1,15 @@
-(startLine=33 endLine=51 srcPath=/home/ubuntu/luceneFilter/63/lucene/lucene/analysis/common/src/test/org/apache/lucene/analysis/core/TestAnalyzers.java)
-  public void testSimple() throws Exception {
-    Analyzer a = new SimpleAnalyzer(TEST_VERSION_CURRENT);
-    assertAnalyzesTo(a, "foo bar FOO BAR", 
-                     new String[] { "foo", "bar", "foo", "bar" });
-    assertAnalyzesTo(a, "foo      bar .  FOO <> BAR", 
-                     new String[] { "foo", "bar", "foo", "bar" });
-    assertAnalyzesTo(a, "foo.bar.FOO.BAR", 
-                     new String[] { "foo", "bar", "foo", "bar" });
-    assertAnalyzesTo(a, "U.S.A.", 
-                     new String[] { "u", "s", "a" });
-    assertAnalyzesTo(a, "C++", 
-                     new String[] { "c" });
-    assertAnalyzesTo(a, "B2B", 
-                     new String[] { "b", "b" });
-    assertAnalyzesTo(a, "2B", 
-                     new String[] { "b" });
-    assertAnalyzesTo(a, "\"QUOTED\" word", 
-                     new String[] { "quoted", "word" });
-  }
+(startLine=377 endLine=389 srcPath=/home/ubuntu/luceneFilter/592/lucene/lucene/core/src/test/org/apache/lucene/search/TestBooleanMinShouldMatch.java)
+    protected void printHits(String test, ScoreDoc[] h, IndexSearcher searcher) throws Exception {
+
+        System.err.println("------- " + test + " -------");
+
+        DecimalFormat f = new DecimalFormat("0.000000");
+
+        for (int i = 0; i < h.length; i++) {
+            Document d = searcher.doc(h[i].doc);
+            float score = h[i].score;
+            System.err.println("#" + i + ": " + f.format(score) + " - " +
+                               d.get("id") + " - " + d.get("data"));
+        }
+    }
 

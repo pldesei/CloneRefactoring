@@ -1,15 +1,13 @@
-(startLine=1412 endLine=1424 srcPath=/home/ubuntu/guavaFilter/892/guava/guava-tests/test/com/google/common/collect/MapsTest.java)
-  public void testSortedMapTransformValues() {
-    SortedMap<String, Integer> map = ImmutableSortedMap.of("a", 4, "b", 9);
-    Function<Integer, Double> sqrt = new Function<Integer, Double>() {
-      @Override
-      public Double apply(Integer in) {
-        return Math.sqrt(in);
-      }
-    };
-    SortedMap<String, Double> transformed =
-        Maps.transformValues(map, sqrt);
-
-    assertEquals(ImmutableSortedMap.of("a", 2.0, "b", 3.0), transformed);
+(startLine=220 endLine=230 srcPath=/home/ubuntu/guavaFilter/919/guava/guava/src/com/google/common/collect/RegularImmutableSortedSet.java)
+  ImmutableSortedSet<E> tailSetImpl(E fromElement, boolean inclusive) {
+    int index;
+    if (inclusive) {
+      index = SortedLists.binarySearch(
+          elements, checkNotNull(fromElement), comparator(), FIRST_PRESENT, NEXT_HIGHER);
+    } else {
+      index = SortedLists.binarySearch(
+          elements, checkNotNull(fromElement), comparator(), FIRST_AFTER, NEXT_HIGHER);
+    }
+    return createSubset(index, size());
   }
 

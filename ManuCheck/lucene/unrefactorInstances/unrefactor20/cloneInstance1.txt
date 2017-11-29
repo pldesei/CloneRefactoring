@@ -1,19 +1,17 @@
-(startLine=26 endLine=42 srcPath=/home/ubuntu/luceneFilter/1234/lucene/lucene/src/test/org/apache/lucene/util/TestNumericUtils.java)
-  public void testLongConversionAndOrdering() throws Exception {
-    // generate a series of encoded longs, each numerical one bigger than the one before
-    BytesRef last=null, act=new BytesRef(NumericUtils.BUF_SIZE_LONG);
-    for (long l=-100000L; l<100000L; l++) {
-      NumericUtils.longToPrefixCoded(l, 0, act);
-      if (last!=null) {
-        // test if smaller
-        assertTrue("actual bigger than last (BytesRef)", BytesRef.getUTF8SortedAsUTF16Comparator().compare(last, act) < 0 );
-        assertTrue("actual bigger than last (as String)", last.utf8ToString().compareTo(act.utf8ToString()) < 0 );
+(startLine=75 endLine=89 srcPath=/home/ubuntu/luceneFilter/1541/lucene/contrib/surround/src/java/org/apache/lucene/queryParser/surround/query/ComposedQuery.java)
+  protected void infixToString(StringBuffer r) {
+    /* Brackets are possibly redundant in the result. */
+    Iterator sqi = getSubQueriesIterator();
+    r.append(getBracketOpen());
+    if (sqi.hasNext()) {
+      r.append(sqi.next().toString());
+      while (sqi.hasNext()) {
+        r.append(" ");
+        r.append(getOperatorName()); /* infix operator */
+        r.append(" ");
+        r.append(sqi.next().toString());
       }
-      // test is back and forward conversion works
-      assertEquals("forward and back conversion should generate same long", l, NumericUtils.prefixCodedToLong(act));
-      // next step
-      last = act;
-      act = new BytesRef(NumericUtils.BUF_SIZE_LONG);
     }
+    r.append(getBracketClose());
   }
 

@@ -1,11 +1,8 @@
-(startLine=438 endLine=446 srcPath=/home/ubuntu/guavaFilter/1154/guava/guava/src/com/google/common/cache/CacheBuilder.java)
-  public CacheBuilder<K, V> expireAfterWrite(long duration, TimeUnit unit) {
-    checkExpiration(duration, unit);
-    this.expireAfterWriteNanos = unit.toNanos(duration);
-    if (duration == 0 && this.nullRemovalCause == null) {
-      // SIZE trumps EXPIRED
-      this.nullRemovalCause = RemovalCause.EXPIRED;
-    }
-    return this;
+(startLine=136 endLine=141 srcPath=/home/ubuntu/guavaFilter/420/guava/guava-tests/test/com/google/common/reflect/TypeResolverTest.java)
+  public <T> void testWhere_incompatibleGenericArrayMapping() {
+    try {
+      new TypeResolver().where(new TypeCapture<T[]>() {}.capture(), String.class);
+      fail();
+    } catch (IllegalArgumentException expected) {}
   }
 

@@ -1,8 +1,8 @@
-(startLine=190 endLine=195 srcPath=/home/ubuntu/guavaFilter/246/guava/guava/src/com/google/common/graph/ImmutableDirectedGraph.java)
-  public Set<E> inEdges(Object node) {
-    checkNotNull(node, "node");
-    DirectedIncidentEdges<E> incidentEdges = nodeToIncidentEdges.get(node);
-    checkArgument(incidentEdges != null, NODE_NOT_IN_GRAPH, node);
-    return incidentEdges.inEdges();
+(startLine=142 endLine=147 srcPath=/home/ubuntu/guavaFilter/246/guava/guava/src/com/google/common/graph/ImmutableDirectedGraph.java)
+  public Set<N> incidentNodes(Object edge) {
+    checkNotNull(edge, "edge");
+    DirectedIncidentNodes<N> endpoints = edgeToIncidentNodes.get(edge);
+    checkArgument(endpoints != null, EDGE_NOT_IN_GRAPH, edge);
+    return endpoints.asImmutableSet();
   }
 

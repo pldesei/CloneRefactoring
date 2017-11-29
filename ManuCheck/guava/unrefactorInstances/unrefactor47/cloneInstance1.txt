@@ -1,8 +1,21 @@
-(startLine=112 endLine=117 srcPath=/home/ubuntu/guavaFilter/442/guava/guava-tests/test/com/google/common/cache/ForwardingLoadingCacheTest.java)
-  public void testStats() {
-    expect(mock.stats()).andReturn(null);
-    replay(mock);
-    assertNull(forward.stats());
-    verify(mock);
+(startLine=196 endLine=214 srcPath=/home/ubuntu/guavaFilter/274/guava/guava-tests/test/com/google/common/collect/TreeMultisetTest.java)
+  public void testElementSetSubsetRemoveAll() {
+    TreeMultiset<String> ms = TreeMultiset.create();
+    ms.add("a", 1);
+    ms.add("b", 3);
+    ms.add("c", 2);
+    ms.add("d", 1);
+    ms.add("e", 3);
+    ms.add("f", 2);
+
+    SortedSet<String> elementSet = ms.elementSet();
+    assertThat(elementSet).containsExactly("a", "b", "c", "d", "e", "f").inOrder();
+    SortedSet<String> subset = elementSet.subSet("b", "f");
+    assertThat(subset).containsExactly("b", "c", "d", "e").inOrder();
+
+    assertTrue(subset.removeAll(Arrays.asList("a", "c")));
+    assertThat(elementSet).containsExactly("a", "b", "d", "e", "f").inOrder();
+    assertThat(subset).containsExactly("b", "d", "e").inOrder();
+    assertEquals(10, ms.size());
   }
 

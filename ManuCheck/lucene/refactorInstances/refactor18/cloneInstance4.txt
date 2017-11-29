@@ -1,22 +1,9 @@
-(startLine=44 endLine=63 srcPath=/home/ubuntu/luceneFilter/1272/lucene/solr/src/java/org/apache/solr/analysis/KeepWordFilterFactory.java)
-  public void inform(ResourceLoader loader) {
-    String wordFiles = args.get("words");
-    ignoreCase = getBoolean("ignoreCase", false);
-    if (wordFiles != null) {
-      try {
-        List<String> files = StrUtils.splitFileNames(wordFiles);
-        if (words == null && files.size() > 0){
-          words = new CharArraySet(files.size() * 10, ignoreCase);
-        }
-        for (String file : files) {
-          List<String> wlist = loader.getLines(file.trim());
-          //TODO: once StopFilter.makeStopSet(List) method is available, switch to using that so we can avoid a toArray() call
-          words.addAll(StopFilter.makeStopSet((String[]) wlist.toArray(new String[0]), ignoreCase));
-        }
-      }
-      catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
+(startLine=83 endLine=89 srcPath=/home/ubuntu/luceneFilter/1396/lucene/src/test/org/apache/lucene/analysis/TestMappingCharFilter.java)
+  public void test1to3() throws Exception {
+    CharStream cs = new MappingCharFilter( normMap, CharReader.get( new StringReader( "k" ) ) );
+    TokenStream ts = new WhitespaceTokenizer( cs );
+    List real = getTokens( ts );
+    List expect = tokens( "kkk,1,0,1" );
+    assertTokEqualOff( expect, real );
   }
 

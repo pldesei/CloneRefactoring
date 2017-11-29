@@ -1,20 +1,8 @@
-(startLine=131 endLine=148 srcPath=/home/ubuntu/antFilter/164/ant/src/main/org/apache/tools/zip/ExtraFieldUtils.java)
-    public static byte[] mergeLocalFileDataData(ZipExtraField[] data) {
-        int sum = 4 * data.length;
-        for (int i = 0; i < data.length; i++) {
-            sum += data[i].getLocalFileDataLength().getValue();
-        }
-        byte[] result = new byte[sum];
-        int start = 0;
-        for (int i = 0; i < data.length; i++) {
-            System.arraycopy(data[i].getHeaderId().getBytes(),
-                             0, result, start, 2);
-            System.arraycopy(data[i].getLocalFileDataLength().getBytes(),
-                             0, result, start + 2, 2);
-            byte[] local = data[i].getLocalFileDataData();
-            System.arraycopy(local, 0, result, start + 4, local.length);
-            start += (local.length + 4);
-        }
-        return result;
+(startLine=100 endLine=105 srcPath=/home/ubuntu/antFilter/16/ant/src/tests/junit/org/apache/tools/ant/taskdefs/UntarTest.java)
+    private void testLogoExtraction(String target) throws java.io.IOException {
+        buildRule.executeTarget(target);
+        assertEquals(FileUtilities.getFileContents(buildRule.getProject().resolveFile("../asf-logo.gif")),
+                FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif")));
+
     }
 

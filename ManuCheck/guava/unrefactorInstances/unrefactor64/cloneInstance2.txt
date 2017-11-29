@@ -1,9 +1,9 @@
-(startLine=779 endLine=785 srcPath=/home/ubuntu/guavaFilter/742/guava/guava-tests/test/com/google/common/util/concurrent/FuturesTest.java)
-  public void testDereference_innerCancelsResult() throws Exception {
-    ListenableFuture<Foo> inner = SettableFuture.create();
-    ListenableFuture<ListenableFuture<Foo>> outer = Futures.immediateFuture(inner);
-    ListenableFuture<Foo> dereferenced = Futures.dereference(outer);
-    inner.cancel(true);
-    assertTrue(dereferenced.isCancelled());
+(startLine=80 endLine=86 srcPath=/home/ubuntu/guavaFilter/670/guava/guava-tests/test/com/google/common/collect/AbstractTableReadTest.java)
+  public void testContainsColumn() {
+    table = create("foo", 1, 'a', "bar", 1, 'b', "foo", 3, 'c');
+    assertTrue(table.containsColumn(1));
+    assertTrue(table.containsColumn(3));
+    assertFalse(table.containsColumn(2));
+    assertFalse(table.containsColumn(null));
   }
 

@@ -1,16 +1,10 @@
-(startLine=380 endLine=393 srcPath=/home/ubuntu/guavaFilter/91/guava/guava-tests/test/com/google/common/collect/TreeMultimapNaturalTest.java)
-  public void testCreateFromSortedSetMultimap() {
-    SortedSetMultimap<Double, Double> tree = TreeMultimap.create(KEY_COMPARATOR, VALUE_COMPARATOR);
-    tree.put(1.0, 2.0);
-    tree.put(2.0, 3.0);
-    tree.put(3.0, 4.0);
-    tree.put(4.0, 5.0);
+(startLine=132 endLine=139 srcPath=/home/ubuntu/guavaFilter/227/guava/guava/src/com/google/common/primitives/Primitives.java)
+  public static <T> Class<T> unwrap(Class<T> type) {
+    checkNotNull(type);
 
-    SortedSetMultimap<Double, Double> sorted = Multimaps.unmodifiableSortedSetMultimap(tree);
-    TreeMultimap<Double, Double> copyFromSorted = TreeMultimap.create(sorted);
-    assertEquals(tree, copyFromSorted);
-    assertSame(Ordering.natural(), copyFromSorted.keyComparator());
-    assertSame(Ordering.natural(), copyFromSorted.valueComparator());
-    assertSame(Ordering.natural(), copyFromSorted.get(1.0).comparator());
+    // cast is safe: long.class and Long.class are both of type Class<Long>
+    @SuppressWarnings("unchecked")
+    Class<T> unwrapped = (Class<T>) WRAPPER_TO_PRIMITIVE_TYPE.get(type);
+    return (unwrapped == null) ? type : unwrapped;
   }
 

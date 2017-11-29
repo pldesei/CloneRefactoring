@@ -1,29 +1,15 @@
-(startLine=188 endLine=214 srcPath=/home/ubuntu/luceneFilter/411/lucene/solr/core/src/java/org/apache/solr/search/HashDocSet.java)
-  public int intersectionSize(DocSet other) {
-   if (other instanceof HashDocSet) {
-     // set "a" to the smallest doc set for the most efficient
-     // intersection.
-     final HashDocSet a = size()<=other.size() ? this : (HashDocSet)other;
-     final HashDocSet b = size()<=other.size() ? (HashDocSet)other : this;
-
-     int resultCount=0;
-     for (int i=0; i<a.table.length; i++) {
-       int id=a.table[i];
-       if (id >= 0 && b.exists(id)) {
-         resultCount++;
-       }
-     }
-     return resultCount;
-   } else {
-     int resultCount=0;
-     for (int i=0; i<table.length; i++) {
-       int id=table[i];
-       if (id >= 0 && other.exists(id)) {
-         resultCount++;
-       }
-     }
-     return resultCount;
-   }
-
+(startLine=161 endLine=173 srcPath=/home/ubuntu/luceneFilter/149/lucene/lucene/facet/src/test/org/apache/lucene/facet/taxonomy/directory/TestDirectoryTaxonomyWriter.java)
+  public void testEnsureOpen() throws Exception {
+    // verifies that an exception is thrown if DTW was closed
+    Directory dir = newDirectory();
+    DirectoryTaxonomyWriter dtw = new DirectoryTaxonomyWriter(dir);
+    dtw.close();
+    try {
+      dtw.addCategory(new CategoryPath("a"));
+      fail("should not have succeeded to add a category following close.");
+    } catch (AlreadyClosedException e) {
+      // expected
+    }
+    dir.close();
   }
 

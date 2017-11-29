@@ -1,9 +1,8 @@
-(startLine=230 endLine=236 srcPath=/home/ubuntu/guavaFilter/37/guava/guava-tests/test/com/google/common/primitives/LongsTest.java)
-  public void testFromByteArrayFails() {
-    try {
-      Longs.fromByteArray(new byte[Longs.BYTES - 1]);
-      fail();
-    } catch (IllegalArgumentException expected) {
-    }
+(startLine=250 endLine=255 srcPath=/home/ubuntu/guavaFilter/193/guava/guava-tests/test/com/google/common/util/concurrent/JdkFutureAdaptersTest.java)
+  public void testAdapters_nullChecks() throws Exception {
+    new ClassSanityTester()
+        .forAllPublicStaticMethods(JdkFutureAdapters.class)
+        .thatReturn(Future.class)
+        .testNulls();
   }
 

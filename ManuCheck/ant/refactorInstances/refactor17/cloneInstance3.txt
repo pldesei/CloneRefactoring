@@ -1,13 +1,16 @@
-(startLine=144 endLine=175 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java)
-    public void testRedirect3() {
-        executeTarget("redirect3");
+(startLine=177 endLine=212 srcPath=/home/ubuntu/antFilter/369/ant/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java)
+    public void testRedirect4() {
+        executeTarget("redirect4");
         if (getProject().getProperty("test.can.run") == null) {
             return;
         }
         String actualOut = null;
+        String actualErr = null;
         try {
             actualOut = FileUtils.newFileUtils().readFully(new FileReader(
                 getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
         } catch (IOException eyeOhEx) {
         }
         File x = getProject().resolveFile("x");
@@ -16,9 +19,9 @@
         int xout = actualOut.indexOf(x + " out");
         int yout = actualOut.indexOf(y + " out");
         int zout = actualOut.indexOf(z + " out");
-        int xerr = getLog().indexOf(x + " err");
-        int yerr = getLog().indexOf(y + " err");
-        int zerr = getLog().indexOf(z + " err");
+        int xerr = actualErr.indexOf(x + " err");
+        int yerr = actualErr.indexOf(y + " err");
+        int zerr = actualErr.indexOf(z + " err");
         assertFalse("xout < 0", xout < 0);
         assertFalse("yout < 0", yout < 0);
         assertFalse("zout < 0", zout < 0);
@@ -30,5 +33,6 @@
         assertFalse("yerr < xerr", yerr < xerr);
         assertFalse("zerr < yerr", zerr < yerr);
         assertPropertyEquals("redirect.out", x + " out");
+        assertPropertyEquals("redirect.err", x + " err");
     }
 

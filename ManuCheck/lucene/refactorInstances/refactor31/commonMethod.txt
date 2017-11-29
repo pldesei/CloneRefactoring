@@ -1,16 +1,25 @@
-(startLine=362 endLine=375 srcPath=/home/ubuntu/luceneFilter/785/lucene/lucene/src/java/org/apache/lucene/index/ParallelReader.java)
-  @Override
-  public Fields getTermVectors(int docID) throws IOException {
-    ensureOpen();
-    ParallelFields fields = new ParallelFields();
-    for (Map.Entry<String,IndexReader> ent : fieldToReader.entrySet()) {
-      String fieldName = ent.getKey();
-      Terms vector = ent.getValue().getTermVector(docID, fieldName);
-      if (vector != null) {
-        fields.addField(fieldName, vector);
+(startLine=690 endLine=712 srcPath=/home/ubuntu/luceneFilter/833/lucene/lucene/src/java/org/apache/lucene/index/values/Bytes.java)
+    protected void writeIndex(IndexOutput idxOut, int docCount,
+        long maxValue, long[] addresses, int[] toEntry) throws IOException {
+      final PackedInts.Writer w = PackedInts.getWriter(idxOut, docCount,
+          PackedInts.bitsRequired(maxValue));
+      final int limit = docCount > docToEntry.length ? docToEntry.length
+          : docCount;
+      assert toEntry.length >= limit -1;
+      if (addresses != null) {
+        for (int i = 0; i < limit; i++) {
+          assert addresses[toEntry[i]] >= 0;
+          w.add(addresses[toEntry[i]]);
+        }
+      } else {
+        for (int i = 0; i < limit; i++) {
+          assert toEntry[i] >= 0;
+          w.add(toEntry[i]);
+        }
       }
+      for (int i = limit; i < docCount; i++) {
+        w.add(0);
+      }
+      w.finish();
     }
-
-    return fields;
-  }
 

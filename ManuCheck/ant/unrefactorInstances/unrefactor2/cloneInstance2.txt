@@ -1,13 +1,17 @@
-(startLine=121 endLine=131 srcPath=/home/ubuntu/antFilter/486/ant/src/testcases/org/apache/tools/ant/IncludeTest.java)
-    public void testParseErrorInIncluded() {
-        try {
-            configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
-            fail("should have caused a parser exception");
-        } catch (BuildException e) {
-            assertTrue(e.getLocation().toString() 
-                       + " should refer to included_file.xml",
-                       e.getLocation().toString()
-                       .indexOf("included_file.xml:") > -1);
-        }
+(startLine=99 endLine=113 srcPath=/home/ubuntu/antFilter/1203/ant/src/testcases/org/apache/tools/ant/util/GlobPatternMapperTest.java)
+    public void testPrefixOnly() {
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("foo*");
+        m.setTo("plonk*");
+        assertNull("Shouldn\'t match foo*", m.mapFileName("bar.baz"));
+        String[] result = m.mapFileName("foo.bar");
+        assertNotNull("Should match foo*", result);
+        assertEquals("only one result for foo.bar", 1, result.length);
+        assertEquals("plonk.bar", result[0]);
+
+        // Try a silly case
+        m.setTo("*foo");
+        result = m.mapFileName("foo.bar");
+        assertEquals(".barfoo", result[0]);
     }
 

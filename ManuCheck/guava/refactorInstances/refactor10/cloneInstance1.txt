@@ -1,12 +1,13 @@
-(startLine=471 endLine=480 srcPath=/home/ubuntu/guavaFilter/693/guava/guava/src/com/google/common/collect/ConcurrentHashMultiset.java)
-      public boolean contains(@Nullable Object object) {
-        if (object == null) {
-          return false;
-        }
-        try {
-          return delegate.contains(object);
-        } catch (ClassCastException e) {
-          return false;
-        }
-      }
+(startLine=133 endLine=143 srcPath=/home/ubuntu/guavaFilter/705/guava/guava/src/com/google/common/io/CharSource.java)
+  public String read() throws IOException {
+    Closer closer = Closer.create();
+    try {
+      Reader reader = closer.add(openStream());
+      return CharStreams.toString(reader);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
 

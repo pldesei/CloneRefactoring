@@ -1,14 +1,21 @@
-(startLine=233 endLine=244 srcPath=/home/ubuntu/antFilter/268/ant/src/main/org/apache/tools/ant/taskdefs/optional/net/RExecTask.java)
-        public void sendString(String s, boolean echoString) {
-            OutputStream os = this.getOutputStream();
-            try {
-                os.write((s + "\n").getBytes());
-                if (echoString) {
-                    log(s, Project.MSG_INFO);
-                }
-                os.flush();
-            } catch (Exception e) {
-                throw new BuildException(e, getLocation());
+(startLine=24 endLine=42 srcPath=/home/ubuntu/antFilter/1286/ant/proposal/myrmidon/src/java/org/apache/ant/modules/core/RegisterTasklet.java)
+    protected void registerResource( final String name, 
+                                     final String classname, 
+                                     final URL url )
+        throws AntException, RegistryException 
+    {
+        if( null == classname )
+        {
+            try { m_engine.getTskDeployer().deployTasklet( name, url.toString(), url ); }
+            catch( final DeploymentException de )
+            {
+                throw new AntException( "Failed deploying " + name + " from " + url, de );
             }
         }
+        else
+        {
+            final DefaultLocator locator = new DefaultLocator( classname, url );
+            m_engine.getRegistry().register( name, locator ); 
+        }
+    }
 
