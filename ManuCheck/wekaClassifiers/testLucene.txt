@@ -1,0 +1,1223 @@
+=== Run information ===
+
+Scheme:weka.classifiers.meta.AdaBoostM1 -P 100 -S 1 -I 50 -W weka.classifiers.trees.DecisionStump
+Relation:     cloneEval
+Instances:    666
+Attributes:   31
+              numInstance
+              minLeveDis
+              localOrClassFamily
+              numLineOfFrag
+              numTokenOfFrag
+              containControlBlock
+              cycComplexity
+              callPro
+              arithPro
+              beginControlStat
+              sameFile
+              samePkg
+              isTest
+              globalVars
+              numOfCommitFileExist
+              numFileDistinctAuthor
+              numOfCommitFileChange
+              numOfCommitFileOfSamePkgChange
+              numOfCommitRecentFileOfSamePkgChange
+              numOfCommitAllFragsChange
+              numOfCommitNoFragChange
+              numOfCommit1FragChange
+              numOfCommit2FragsChange
+              numOfCommit3FragsChange
+              numTotalMultiset
+              numPartiallySameMultiset
+              numCallDiffMultiset
+              numVarDiffMultiset
+              numTypeDiffMultiset
+              firstChangeCommitRelative
+              cloneEval
+Test mode:user supplied test set: size unknown (reading incrementally)
+
+=== Classifier model (full training set) ===
+
+AdaBoostM1: Base classifiers and their weights: 
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 1.0632240005738593E-4 : unrefactored
+numOfCommitAllFragsChange > 1.0632240005738593E-4 : refactored
+numOfCommitAllFragsChange is missing : refactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 1.0632240005738593E-4
+refactored	unrefactored	
+0.15333333333333332	0.8466666666666667	
+numOfCommitAllFragsChange > 1.0632240005738593E-4
+refactored	unrefactored	
+0.6007751937984496	0.3992248062015504	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.5	0.5	
+
+
+Weight: 0.65
+
+Decision Stump
+
+Classifications
+
+numOfCommitNoFragChange <= 0.09939336032376828 : refactored
+numOfCommitNoFragChange > 0.09939336032376828 : unrefactored
+numOfCommitNoFragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitNoFragChange <= 0.09939336032376828
+refactored	unrefactored	
+0.5216829453922758	0.4783170546077243	
+numOfCommitNoFragChange > 0.09939336032376828
+refactored	unrefactored	
+0.20589109579786616	0.7941089042021339	
+numOfCommitNoFragChange is missing
+refactored	unrefactored	
+0.4049094161262289	0.5950905838737711	
+
+
+Weight: 0.5
+
+Decision Stump
+
+Classifications
+
+isTest = true : unrefactored
+isTest != true : refactored
+isTest is missing : unrefactored
+
+Class distributions
+
+isTest = true
+refactored	unrefactored	
+0.22288673723177205	0.777113262768228	
+isTest != true
+refactored	unrefactored	
+0.5036966581503802	0.4963033418496198	
+isTest is missing
+refactored	unrefactored	
+0.36492907118406287	0.6350709288159371	
+
+
+Weight: 0.57
+
+Decision Stump
+
+Classifications
+
+firstChangeCommitRelative <= 0.03592011182194506 : refactored
+firstChangeCommitRelative > 0.03592011182194506 : unrefactored
+firstChangeCommitRelative is missing : unrefactored
+
+Class distributions
+
+firstChangeCommitRelative <= 0.03592011182194506
+refactored	unrefactored	
+0.5215559417462949	0.4784440582537051	
+firstChangeCommitRelative > 0.03592011182194506
+refactored	unrefactored	
+0.28539446811250313	0.7146055318874969	
+firstChangeCommitRelative is missing
+refactored	unrefactored	
+0.35189532343875457	0.6481046765612455	
+
+
+Weight: 0.66
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.10370831518811474	0.8962916848118851	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.4592921136921924	0.5407078863078075	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.4129521948196417	0.5870478051803583	
+
+
+Weight: 0.35
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : refactored
+numOfCommitAllFragsChange is missing : refactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.14125452335276145	0.8587454766472384	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.5470061906652857	0.45299380933471434	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.5000000000000027	0.49999999999999745	
+
+
+Weight: 0.34
+
+Decision Stump
+
+Classifications
+
+numOfCommitNoFragChange <= 0.024799170508046073 : refactored
+numOfCommitNoFragChange > 0.024799170508046073 : unrefactored
+numOfCommitNoFragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitNoFragChange <= 0.024799170508046073
+refactored	unrefactored	
+0.6725150000803254	0.3274849999196746	
+numOfCommitNoFragChange > 0.024799170508046073
+refactored	unrefactored	
+0.3792116931272797	0.6207883068727202	
+numOfCommitNoFragChange is missing
+refactored	unrefactored	
+0.43432293610360795	0.5656770638963919	
+
+
+Weight: 0.53
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : refactored
+numOfCommitAllFragsChange is missing : refactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.14433014192756075	0.8556698580724392	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.5619796676950016	0.43802033230499826	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.5169403545119717	0.4830596454880282	
+
+
+Weight: 0.38
+
+Decision Stump
+
+Classifications
+
+globalVars <= 0.5 : unrefactored
+globalVars > 0.5 : unrefactored
+globalVars is missing : unrefactored
+
+Class distributions
+
+globalVars <= 0.5
+refactored	unrefactored	
+0.12212492770667306	0.877875072293327	
+globalVars > 0.5
+refactored	unrefactored	
+0.47587617944924177	0.5241238205507583	
+globalVars is missing
+refactored	unrefactored	
+0.4414331798731867	0.5585668201268134	
+
+
+Weight: 0.24
+
+Decision Stump
+
+Classifications
+
+globalVars <= 0.5 : unrefactored
+globalVars > 0.5 : refactored
+globalVars is missing : unrefactored
+
+Class distributions
+
+globalVars <= 0.5
+refactored	unrefactored	
+0.14968011221722477	0.8503198877827752	
+globalVars > 0.5
+refactored	unrefactored	
+0.534638757808299	0.46536124219170094	
+globalVars is missing
+refactored	unrefactored	
+0.499999999999999	0.5000000000000011	
+
+
+Weight: 0.25
+
+Decision Stump
+
+Classifications
+
+globalVars <= 2.5 : unrefactored
+globalVars > 2.5 : refactored
+globalVars is missing : unrefactored
+
+Class distributions
+
+globalVars <= 2.5
+refactored	unrefactored	
+0.32954253427526187	0.6704574657247381	
+globalVars > 2.5
+refactored	unrefactored	
+0.5204867106385794	0.4795132893614206	
+globalVars is missing
+refactored	unrefactored	
+0.4474663582832126	0.5525336417167874	
+
+
+Weight: 0.31
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.1819569941900605	0.8180430058099396	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.4553944959848781	0.544605504015122	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.42740210612400803	0.5725978938759919	
+
+
+Weight: 0.29
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : refactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.2295796755856084	0.7704203244143916	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.5283597352869934	0.4716402647130065	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.4999999999999971	0.5000000000000028	
+
+
+Weight: 0.21
+
+Decision Stump
+
+Classifications
+
+numVarDiffMultiset <= 0.8452380952380952 : unrefactored
+numVarDiffMultiset > 0.8452380952380952 : unrefactored
+numVarDiffMultiset is missing : unrefactored
+
+Class distributions
+
+numVarDiffMultiset <= 0.8452380952380952
+refactored	unrefactored	
+0.4785689051312701	0.5214310948687298	
+numVarDiffMultiset > 0.8452380952380952
+refactored	unrefactored	
+0.1393291438815258	0.8606708561184742	
+numVarDiffMultiset is missing
+refactored	unrefactored	
+0.4579665775559079	0.542033422444092	
+
+
+Weight: 0.17
+
+Decision Stump
+
+Classifications
+
+numVarDiffMultiset <= 0.8452380952380952 : refactored
+numVarDiffMultiset > 0.8452380952380952 : unrefactored
+numVarDiffMultiset is missing : unrefactored
+
+Class distributions
+
+numVarDiffMultiset <= 0.8452380952380952
+refactored	unrefactored	
+0.5206768321784672	0.4793231678215329	
+numVarDiffMultiset > 0.8452380952380952
+refactored	unrefactored	
+0.1607927244430693	0.8392072755569308	
+numVarDiffMultiset is missing
+refactored	unrefactored	
+0.49999999999999983	0.5000000000000001	
+
+
+Weight: 0.16
+
+Decision Stump
+
+Classifications
+
+numOfCommitNoFragChange <= 0.09790907110348047 : refactored
+numOfCommitNoFragChange > 0.09790907110348047 : unrefactored
+numOfCommitNoFragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitNoFragChange <= 0.09790907110348047
+refactored	unrefactored	
+0.5469815811582136	0.4530184188417865	
+numOfCommitNoFragChange > 0.09790907110348047
+refactored	unrefactored	
+0.3996127577651291	0.6003872422348709	
+numOfCommitNoFragChange is missing
+refactored	unrefactored	
+0.465290205067494	0.5347097949325059	
+
+
+Weight: 0.31
+
+Decision Stump
+
+Classifications
+
+numFileDistinctAuthor <= 0.003980891719745223 : unrefactored
+numFileDistinctAuthor > 0.003980891719745223 : refactored
+numFileDistinctAuthor is missing : unrefactored
+
+Class distributions
+
+numFileDistinctAuthor <= 0.003980891719745223
+refactored	unrefactored	
+0.308836915193384	0.691163084806616	
+numFileDistinctAuthor > 0.003980891719745223
+refactored	unrefactored	
+0.5240893595430574	0.47591064045694265	
+numFileDistinctAuthor is missing
+refactored	unrefactored	
+0.4729785119109882	0.5270214880890118	
+
+
+Weight: 0.26
+
+Decision Stump
+
+Classifications
+
+sameFile = false : refactored
+sameFile != false : unrefactored
+sameFile is missing : unrefactored
+
+Class distributions
+
+sameFile = false
+refactored	unrefactored	
+0.5540410221110449	0.4459589778889551	
+sameFile != false
+refactored	unrefactored	
+0.3767608087050603	0.6232391912949398	
+sameFile is missing
+refactored	unrefactored	
+0.4384973184282525	0.5615026815717474	
+
+
+Weight: 0.4
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.48642759272665975	0.5135724072733402	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.0749893563059166	0.9250106436940834	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.46730269822822107	0.5326973017717789	
+
+
+Weight: 0.13
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : refactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : refactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.5191589039360169	0.48084109606398306	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.08459565787761189	0.9154043421223882	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.5000000000000008	0.49999999999999917	
+
+
+Weight: 0.15
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.48248126508216443	0.5175187349178355	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.0966768708335485	0.9033231291664514	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.4664210641140777	0.5335789358859224	
+
+
+Weight: 0.13
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : refactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.5160980804259411	0.4839019195740589	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.10907855782567136	0.8909214421743287	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.49999999999999933	0.5000000000000007	
+
+
+Weight: 0.12
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.23361574625541323	0.7663842537445867	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.4951871240085701	0.5048128759914299	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.4714139561268335	0.5285860438731665	
+
+
+Weight: 0.11
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : refactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.2547310226921659	0.7452689773078341	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.5237862580384203	0.47621374196157973	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.4999999999999987	0.5000000000000013	
+
+
+Weight: 0.17
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.47790477357200795	0.5220952264279921	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.11680947840936506	0.8831905215906349	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.464030440557889	0.5359695594421109	
+
+
+Weight: 0.14
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : refactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : refactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.5139185804910713	0.48608141950892875	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.13251877757253405	0.867481222427466	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.500000000000001	0.4999999999999989	
+
+
+Weight: 0.11
+
+Decision Stump
+
+Classifications
+
+numVarDiffMultiset <= 0.8452380952380952 : unrefactored
+numVarDiffMultiset > 0.8452380952380952 : unrefactored
+numVarDiffMultiset is missing : unrefactored
+
+Class distributions
+
+numVarDiffMultiset <= 0.8452380952380952
+refactored	unrefactored	
+0.4923137391090059	0.5076862608909941	
+numVarDiffMultiset > 0.8452380952380952
+refactored	unrefactored	
+0.19530238759305113	0.8046976124069488	
+numVarDiffMultiset is missing
+refactored	unrefactored	
+0.47506456032635036	0.5249354396736496	
+
+
+Weight: 0.1
+
+Decision Stump
+
+Classifications
+
+numVarDiffMultiset <= 0.8452380952380952 : refactored
+numVarDiffMultiset > 0.8452380952380952 : unrefactored
+numVarDiffMultiset is missing : unrefactored
+
+Class distributions
+
+numVarDiffMultiset <= 0.8452380952380952
+refactored	unrefactored	
+0.5172624128592034	0.4827375871407966	
+numVarDiffMultiset > 0.8452380952380952
+refactored	unrefactored	
+0.21146906166896698	0.788530938331033	
+numVarDiffMultiset is missing
+refactored	unrefactored	
+0.4999999999999992	0.5000000000000008	
+
+
+Weight: 0.13
+
+Decision Stump
+
+Classifications
+
+numOfCommitFileOfSamePkgChange <= 0.04869895193350199 : unrefactored
+numOfCommitFileOfSamePkgChange > 0.04869895193350199 : unrefactored
+numOfCommitFileOfSamePkgChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitFileOfSamePkgChange <= 0.04869895193350199
+refactored	unrefactored	
+0.48551808824585857	0.5144819117541414	
+numOfCommitFileOfSamePkgChange > 0.04869895193350199
+refactored	unrefactored	
+0.18274471041793608	0.817255289582064	
+numOfCommitFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.4709788507783181	0.5290211492216819	
+
+
+Weight: 0.12
+
+Decision Stump
+
+Classifications
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376 : refactored
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376
+refactored	unrefactored	
+0.5067527382868958	0.49324726171310423	
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376
+refactored	unrefactored	
+-1.2053242811688928E-13	1.0000000000001206	
+numOfCommitRecentFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.4999999999999988	0.5000000000000012	
+
+
+Weight: 0.05
+
+Decision Stump
+
+Classifications
+
+numOfCommitFileOfSamePkgChange <= 0.04869895193350199 : refactored
+numOfCommitFileOfSamePkgChange > 0.04869895193350199 : unrefactored
+numOfCommitFileOfSamePkgChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitFileOfSamePkgChange <= 0.04869895193350199
+refactored	unrefactored	
+0.5012391736499657	0.49876082635003416	
+numOfCommitFileOfSamePkgChange > 0.04869895193350199
+refactored	unrefactored	
+0.195268580898067	0.804731419101933	
+numOfCommitFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.4870204100694387	0.5129795899305613	
+
+
+Weight: 0.06
+
+Decision Stump
+
+Classifications
+
+firstChangeCommitRelative <= 0.9866955929583039 : unrefactored
+firstChangeCommitRelative > 0.9866955929583039 : refactored
+firstChangeCommitRelative is missing : unrefactored
+
+Class distributions
+
+firstChangeCommitRelative <= 0.9866955929583039
+refactored	unrefactored	
+0.452275008419201	0.547724991580799	
+firstChangeCommitRelative > 0.9866955929583039
+refactored	unrefactored	
+0.6748311108833348	0.3251688891166653	
+firstChangeCommitRelative is missing
+refactored	unrefactored	
+0.47307828237831534	0.5269217176216846	
+
+
+Weight: 0.24
+
+Decision Stump
+
+Classifications
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376 : refactored
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange is missing : refactored
+
+Class distributions
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376
+refactored	unrefactored	
+0.5277902857859849	0.47220971421401525	
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376
+refactored	unrefactored	
+-9.058141781785731E-14	1.0000000000000906	
+numOfCommitRecentFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.5218516907155226	0.47814830928447744	
+
+
+Weight: 0.13
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : refactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.28963759413762663	0.7103624058623734	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.5096697721569958	0.49033022784300423	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.4894468820481233	0.5105531179518766	
+
+
+Weight: 0.11
+
+Decision Stump
+
+Classifications
+
+numOfCommitNoFragChange <= 0.008614935390345562 : refactored
+numOfCommitNoFragChange > 0.008614935390345562 : unrefactored
+numOfCommitNoFragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitNoFragChange <= 0.008614935390345562
+refactored	unrefactored	
+0.6587900095703908	0.3412099904296093	
+numOfCommitNoFragChange > 0.008614935390345562
+refactored	unrefactored	
+0.44056065064191996	0.5594393493580799	
+numOfCommitNoFragChange is missing
+refactored	unrefactored	
+0.466393500488321	0.5336064995116789	
+
+
+Weight: 0.29
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5 : unrefactored
+numOfCommitAllFragsChange > 2.258764004336827E-5 : refactored
+numOfCommitAllFragsChange is missing : refactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 2.258764004336827E-5
+refactored	unrefactored	
+0.27649164556715583	0.7235083544328441	
+numOfCommitAllFragsChange > 2.258764004336827E-5
+refactored	unrefactored	
+0.5451576663020476	0.45484233369795235	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.5211661042120339	0.4788338957879661	
+
+
+Weight: 0.25
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.4818540095575239	0.5181459904424761	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.15496312644109075	0.8450368735589092	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.47055190468312574	0.5294480953168742	
+
+
+Weight: 0.12
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : refactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : refactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.511326314411884	0.4886736855881159	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.17104145331072165	0.8289585466892784	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.5	0.5	
+
+
+Weight: 0.09
+
+Decision Stump
+
+Classifications
+
+minLeveDis <= 3.5 : refactored
+minLeveDis > 3.5 : unrefactored
+minLeveDis is missing : unrefactored
+
+Class distributions
+
+minLeveDis <= 3.5
+refactored	unrefactored	
+0.5368314912765768	0.46316850872342313	
+minLeveDis > 3.5
+refactored	unrefactored	
+0.4089248945811188	0.5910751054188812	
+minLeveDis is missing
+refactored	unrefactored	
+0.4795198582617493	0.5204801417382506	
+
+
+Weight: 0.25
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : unrefactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.4842373521958708	0.5157626478041293	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.15310542672301253	0.8468945732769875	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.4727635005999979	0.5272364994000021	
+
+
+Weight: 0.11
+
+Decision Stump
+
+Classifications
+
+numOfCommit1FragChange <= 3.7514772530922353E-4 : refactored
+numOfCommit1FragChange > 3.7514772530922353E-4 : unrefactored
+numOfCommit1FragChange is missing : refactored
+
+Class distributions
+
+numOfCommit1FragChange <= 3.7514772530922353E-4
+refactored	unrefactored	
+0.5114935892768673	0.4885064107231328	
+numOfCommit1FragChange > 3.7514772530922353E-4
+refactored	unrefactored	
+0.16778666207533904	0.832213337924661	
+numOfCommit1FragChange is missing
+refactored	unrefactored	
+0.5000000000000014	0.49999999999999856	
+
+
+Weight: 0.09
+
+Decision Stump
+
+Classifications
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376
+refactored	unrefactored	
+0.48516786922929556	0.5148321307707044	
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376
+refactored	unrefactored	
+-2.744289090284631E-14	1.0000000000000275	
+numOfCommitRecentFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.4792264704751625	0.5207735295248375	
+
+
+Weight: 0.08
+
+Decision Stump
+
+Classifications
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376 : refactored
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange is missing : refactored
+
+Class distributions
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376
+refactored	unrefactored	
+0.5059487303431436	0.4940512696568564	
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376
+refactored	unrefactored	
+-1.3525913415348908E-14	1.0000000000000135	
+numOfCommitRecentFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.5000000000000016	0.49999999999999845	
+
+
+Weight: 0.05
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 0.004785833931562575 : unrefactored
+numOfCommitAllFragsChange > 0.004785833931562575 : unrefactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 0.004785833931562575
+refactored	unrefactored	
+0.4943306886124049	0.5056693113875951	
+numOfCommitAllFragsChange > 0.004785833931562575
+refactored	unrefactored	
+-1.4899974359936528E-14	1.0000000000000149	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.4885125536381435	0.5114874463618565	
+
+
+Weight: 0.05
+
+Decision Stump
+
+Classifications
+
+numOfCommitFileChange <= 0.004785833931562575 : refactored
+numOfCommitFileChange > 0.004785833931562575 : unrefactored
+numOfCommitFileChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitFileChange <= 0.004785833931562575
+refactored	unrefactored	
+0.505819651014544	0.494180348985456	
+numOfCommitFileChange > 0.004785833931562575
+refactored	unrefactored	
+-8.193460517839845E-14	1.000000000000082	
+numOfCommitFileChange is missing
+refactored	unrefactored	
+0.4999999999999989	0.5000000000000011	
+
+
+Weight: 0.05
+
+Decision Stump
+
+Classifications
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376
+refactored	unrefactored	
+0.49438714174562964	0.5056128582543704	
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376
+refactored	unrefactored	
+5.749091321205333E-14	0.9999999999999425	
+numOfCommitRecentFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.4887534055014136	0.5112465944985863	
+
+
+Weight: 0.04
+
+Decision Stump
+
+Classifications
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376 : refactored
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376 : unrefactored
+numOfCommitRecentFileOfSamePkgChange is missing : refactored
+
+Class distributions
+
+numOfCommitRecentFileOfSamePkgChange <= 0.014681966028189376
+refactored	unrefactored	
+0.5056351591340873	0.49436484086591265	
+numOfCommitRecentFileOfSamePkgChange > 0.014681966028189376
+refactored	unrefactored	
+-2.064173351659406E-14	1.0000000000000207	
+numOfCommitRecentFileOfSamePkgChange is missing
+refactored	unrefactored	
+0.5000000000000008	0.4999999999999992	
+
+
+Weight: 0.04
+
+Decision Stump
+
+Classifications
+
+numOfCommitAllFragsChange <= 0.004785833931562575 : unrefactored
+numOfCommitAllFragsChange > 0.004785833931562575 : unrefactored
+numOfCommitAllFragsChange is missing : unrefactored
+
+Class distributions
+
+numOfCommitAllFragsChange <= 0.004785833931562575
+refactored	unrefactored	
+0.494617564776606	0.505382435223394	
+numOfCommitAllFragsChange > 0.004785833931562575
+refactored	unrefactored	
+2.29314258141209E-14	0.999999999999977	
+numOfCommitAllFragsChange is missing
+refactored	unrefactored	
+0.48909827931712596	0.5109017206828741	
+
+
+Weight: 0.04
+
+Decision Stump
+
+Classifications
+
+numOfCommitFileChange <= 0.004785833931562575 : refactored
+numOfCommitFileChange > 0.004785833931562575 : unrefactored
+numOfCommitFileChange is missing : refactored
+
+Class distributions
+
+numOfCommitFileChange <= 0.004785833931562575
+refactored	unrefactored	
+0.5055205812018394	0.49447941879816065	
+numOfCommitFileChange > 0.004785833931562575
+refactored	unrefactored	
+1.3509314452037698E-14	0.9999999999999865	
+numOfCommitFileChange is missing
+refactored	unrefactored	
+0.5000000000000007	0.4999999999999994	
+
+
+Weight: 0.04
+
+Decision Stump
+
+Classifications
+
+numTotalMultiset <= 2.5 : unrefactored
+numTotalMultiset > 2.5 : refactored
+numTotalMultiset is missing : unrefactored
+
+Class distributions
+
+numTotalMultiset <= 2.5
+refactored	unrefactored	
+0.31973957035684025	0.6802604296431597	
+numTotalMultiset > 2.5
+refactored	unrefactored	
+0.5105326626030434	0.4894673373969565	
+numTotalMultiset is missing
+refactored	unrefactored	
+0.4893128338089746	0.5106871661910255	
+
+
+Weight: 0.12
+
+Number of performed Iterations: 50
+
+
+Time taken to build model: 0.11 seconds
+
+=== Evaluation on test set ===
+=== Summary ===
+
+Correctly Classified Instances          85               72.0339 %
+Incorrectly Classified Instances        33               27.9661 %
+Kappa statistic                          0.4407
+Mean absolute error                      0.3539
+Root mean squared error                  0.4493
+Relative absolute error                 70.781  %
+Root relative squared error             89.8586 %
+Total Number of Instances              118     
+
+=== Detailed Accuracy By Class ===
+
+               TP Rate   FP Rate   Precision   Recall  F-Measure   ROC Area  Class
+                 0.695     0.254      0.732     0.695     0.713      0.772    refactored
+                 0.746     0.305      0.71      0.746     0.727      0.772    unrefactored
+Weighted Avg.    0.72      0.28       0.721     0.72      0.72       0.772
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 41 18 |  a = refactored
+ 15 44 |  b = unrefactored
+
