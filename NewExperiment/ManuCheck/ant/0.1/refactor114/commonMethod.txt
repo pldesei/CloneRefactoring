@@ -1,0 +1,13 @@
+(startLine=123 endLine=133 srcPath=/home/sonia/NewExperiment/antFilter/00087/src/main/org/apache/tools/ant/types/resources/FileResource.java)
+    /**
+     * Return the basedir to which the name is relative.
+     * @return the basedir as File.
+     */
+    public File getBaseDir() {
+        if (isReference()) {
+            return ((FileResource) getCheckedRef()).getBaseDir();
+        }
+        dieOnCircularReference();
+        return baseDir;
+    }
+

@@ -1,0 +1,19 @@
+(startLine=595 endLine=611 srcPath=/home/sonia/NewExperiment/antFilter/01315/src/main/org/apache/tools/ant/taskdefs/optional/jdepend/JDependTask.java)
+        if (includeRuntime) {
+            Vector v = Execute.getProcEnvironment();
+            Enumeration e = v.elements();
+            while (e.hasMoreElements()) {
+                String s = (String) e.nextElement();
+                if (s.startsWith("CLASSPATH=")) {
+                    commandline.createClasspath(getProject()).createPath()
+                        .append(new Path(getProject(),
+                                         s.substring("CLASSPATH=".length()
+                                                     )));
+                }
+            }
+            log("Implicitly adding " + runtimeClasses + " to CLASSPATH",
+                Project.MSG_VERBOSE);
+            commandline.createClasspath(getProject()).createPath()
+                .append(runtimeClasses);
+        }
+

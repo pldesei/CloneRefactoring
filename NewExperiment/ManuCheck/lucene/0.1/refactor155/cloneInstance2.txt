@@ -1,0 +1,19 @@
+(startLine=248 endLine=264 srcPath=/home/sonia/NewExperiment/luceneFilter/02395/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+        if(this.min != null) {
+          if(this.min.indexOf("(") == -1) {
+            fieldType = searcher.getSchema().getField(this.min).getType();
+          } else {
+            LocalSolrQueryRequest request = null;
+            try {
+              SolrParams params = new ModifiableSolrParams();
+              request = new LocalSolrQueryRequest(searcher.getCore(), params);
+              FunctionQParser functionQParser = new FunctionQParser(this.min, null, null,request);
+              funcQuery = (FunctionQuery)functionQParser.parse();
+            } catch (Exception e) {
+              throw new IOException(e);
+            } finally {
+              request.close();
+            }
+          }
+        }
+

@@ -1,0 +1,27 @@
+(startLine=1215 endLine=1239 srcPath=/home/sonia/NewExperiment/luceneFilter/01278/solr/core/src/java/org/apache/solr/core/SolrCore.java)
+      if (currSearcher != null) {
+        try {
+          future = searcherExecutor.submit(
+                  new Callable() {
+                    public Object call() throws Exception {
+                      try {
+                        newSearcher.warm(currSearcher);
+                      } catch (Throwable e) {
+                        SolrException.log(log, null, e);
+                      }
+                      return null;
+                    }
+                  }
+          );
+        } catch(Exception e) {
+          // if submit fails, newSearchHolder does not get decref'd
+          if (newSearchHolder != null) {
+            newSearchHolder.decref();
+            if (returnSearcher) {
+              newSearchHolder.decref();
+            }
+          }
+          throw e;
+        }
+      }
+

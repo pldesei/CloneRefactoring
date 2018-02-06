@@ -1,0 +1,20 @@
+(startLine=282 endLine=299 srcPath=/home/sonia/NewExperiment/antFilter/00789/proposal/myrmidon/src/java/org/apache/myrmidon/components/configurer/DefaultConfigurer.java)
+    /**
+     * Sets the text content for the element.
+     */
+    private void setContent( final ConfigurationState state,
+                             final String content,
+                             final TaskContext context )
+        throws Exception
+    {
+        // Locate the content configurer
+        final PropertyConfigurer contentConfigurer = state.getConfigurer().getContentConfigurer();
+        if( contentConfigurer == null )
+        {
+            throw new NoSuchPropertyException();
+        }
+
+        // Set the content
+        setValue( contentConfigurer, state, content, context );
+    }
+

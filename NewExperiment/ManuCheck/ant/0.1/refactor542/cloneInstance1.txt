@@ -1,0 +1,41 @@
+(startLine=164 endLine=202 srcPath=/home/sonia/NewExperiment/antFilter/00907/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
+    public void testGetProjectFlags() {
+        String[] sTestCmdLine = { "soscmd", "-command", "GetProject", "-recursive",
+            "-label", SRC_LABEL, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+            "-password", "", "-database", VSS_SERVER_PATH , "-project",
+            "$"+VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+            project.getBaseDir().getAbsolutePath() };
+        // Set up a SOSGet task
+        sosGet.setProject(project);
+        sosGet.setVssServerPath(VSS_SERVER_PATH);
+        sosGet.setSosServerPath(SOS_SERVER_PATH);
+        sosGet.setProjectPath(VSS_PROJECT_PATH);
+        sosGet.setLabel(SRC_LABEL);
+        sosGet.setUsername(SOS_USERNAME);
+        sosGet.setSosHome(SOS_HOME);
+        sosGet.setNoCache(true);
+        sosGet.setNoCompress(false);
+        sosGet.setVerbose(false);
+        sosGet.setRecursive(true);
+
+        commandline = sosGet.buildCmdLine();
+        String[] sGeneratedCmdLine = commandline.getCommandline();
+
+        int i = 0;
+        while (i < sTestCmdLine.length) {
+            try {
+                assertEquals("GetProject arg # " + String.valueOf(i),
+                                sTestCmdLine[i],
+                                sGeneratedCmdLine[i]);
+                i++;
+            } catch (ArrayIndexOutOfBoundsException aioob) {
+                fail("GetProject missing arg");
+            }
+
+        }
+        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
+            // We have extra elements
+            fail("GetProject extra args");
+        }
+    }
+

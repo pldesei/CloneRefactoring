@@ -1,0 +1,17 @@
+(startLine=129 endLine=143 srcPath=/home/sonia/NewExperiment/antFilter/00077/src/main/org/apache/tools/ant/types/Resource.java)
+    /**
+     * Name attribute will contain the path of a file relative to the
+     * root directory of its fileset or the recorded path of a zip
+     * entry.
+     *
+     * <p>example for a file with fullpath /var/opt/adm/resource.txt
+     * in a file set with root dir /var/opt it will be
+     * adm/resource.txt.</p>
+     *
+     * <p>&quot;/&quot; will be used as the directory separator.</p>
+     * @return the name of this resource.
+     */
+    public String getName() {
+        return isReference() ? ((Resource) getCheckedRef()).getName() : name;
+    }
+

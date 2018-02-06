@@ -1,0 +1,10 @@
+(startLine=497 endLine=504 srcPath=/home/sonia/NewExperiment/luceneFilter/00800/lucene/src/test/org/apache/lucene/index/TestIndexWriterDelete.java)
+              if (updates) {
+                Document d = new Document();
+                d.add(new Field("id", Integer.toString(i), Field.Store.YES,
+                                Field.Index.NOT_ANALYZED));
+                d.add(new Field("content", "bbb " + i, Field.Store.NO,
+                                Field.Index.ANALYZED));
+                modifier.updateDocument(new Term("id", Integer.toString(docId)), d);
+              } else { // deletes
+

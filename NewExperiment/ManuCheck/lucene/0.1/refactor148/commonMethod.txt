@@ -1,0 +1,11 @@
+(startLine=164 endLine=172 srcPath=/home/sonia/NewExperiment/luceneFilter/02046/solr/test-framework/src/java/org/apache/solr/util/RestTestHarness.java)
+  private String getResponse(HttpUriRequest request) throws IOException {
+    HttpEntity entity = null;
+    try {
+      entity = httpClient.execute(request).getEntity();
+      return EntityUtils.toString(entity, "UTF-8");
+    } finally {
+      EntityUtils.consumeQuietly(entity);
+    }
+  }
+

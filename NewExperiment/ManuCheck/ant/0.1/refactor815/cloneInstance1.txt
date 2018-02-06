@@ -1,0 +1,16 @@
+(startLine=161 endLine=174 srcPath=/home/sonia/NewExperiment/antFilter/01137/src/main/org/apache/tools/ant/taskdefs/rmic/DefaultRmicAdapter.java)
+            } else {
+                // JDK > 1.1 seems to set java.home to the JRE directory.
+                classpath.addExisting(new Path(null,
+                                                System.getProperty("java.home")
+                                                + File.separator + "lib"
+                                                + File.separator + "rt.jar"));
+                // Just keep the old version as well and let addExistingToPath
+                // sort it out.
+                classpath.addExisting(new Path(null,
+                                                System.getProperty("java.home")
+                                                + File.separator +"jre"
+                                                + File.separator + "lib"
+                                                + File.separator + "rt.jar"));
+            }
+

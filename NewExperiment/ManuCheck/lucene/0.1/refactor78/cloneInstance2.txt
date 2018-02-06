@@ -1,0 +1,23 @@
+(startLine=396 endLine=416 srcPath=/home/sonia/NewExperiment/luceneFilter/01420/solr/contrib/dataimporthandler/src/java/org/apache/solr/handler/dataimport/DataImporter.java)
+  public void doDeltaImport(SolrWriter writer, RequestParams requestParams) {
+    LOG.info("Starting Delta Import");
+    setStatus(Status.RUNNING_DELTA_DUMP);
+
+    try {
+      setIndexStartTime(new Date());
+      docBuilder = new DocBuilder(this, writer, propWriter, requestParams);
+      checkWritablePersistFile(writer);
+      docBuilder.execute();
+      if (!requestParams.debug)
+        cumulativeStatistics.add(docBuilder.importStatistics);
+    } catch (Throwable t) {
+      LOG.error("Delta Import Failed", t);
+      docBuilder.rollback();
+    } finally {
+      setStatus(Status.IDLE);
+      config.clearCaches();
+      DocBuilder.INSTANCE.set(null);
+    }
+
+  }
+

@@ -1,0 +1,10 @@
+(startLine=2151 endLine=2158 srcPath=/home/sonia/NewExperiment/guavaFilter/00221/guava-gwt/src-super/com/google/common/collect/super/com/google/common/collect/Maps.java)
+  static <K, V> Iterator<V> valueIterator(Iterator<Entry<K, V>> entryIterator) {
+    return new TransformedIterator<Entry<K, V>, V>(entryIterator) {
+      @Override
+      V transform(Entry<K, V> entry) {
+        return entry.getValue();
+      }
+    };
+  }
+

@@ -1,0 +1,33 @@
+(startLine=212 endLine=242 srcPath=/home/sonia/NewExperiment/guavaFilter/00728/guava-tests/test/com/google/common/collect/MapMakerInternalMapTest.java)
+  public void testNewEntry() {
+    for (MapMaker maker : allKeyValueStrengthMakers()) {
+      MapMakerInternalMap<Object, Object> map = makeMap(maker);
+
+      Object keyOne = new Object();
+      Object valueOne = new Object();
+      int hashOne = map.hash(keyOne);
+      ReferenceEntry<Object, Object> entryOne = map.newEntry(keyOne, hashOne, null);
+      ValueReference<Object, Object> valueRefOne = map.newValueReference(entryOne, valueOne);
+      assertSame(valueOne, valueRefOne.get());
+      entryOne.setValueReference(valueRefOne);
+
+      assertSame(keyOne, entryOne.getKey());
+      assertEquals(hashOne, entryOne.getHash());
+      assertNull(entryOne.getNext());
+      assertSame(valueRefOne, entryOne.getValueReference());
+
+      Object keyTwo = new Object();
+      Object valueTwo = new Object();
+      int hashTwo = map.hash(keyTwo);
+      ReferenceEntry<Object, Object> entryTwo = map.newEntry(keyTwo, hashTwo, entryOne);
+      ValueReference<Object, Object> valueRefTwo = map.newValueReference(entryTwo, valueTwo);
+      assertSame(valueTwo, valueRefTwo.get());
+      entryTwo.setValueReference(valueRefTwo);
+
+      assertSame(keyTwo, entryTwo.getKey());
+      assertEquals(hashTwo, entryTwo.getHash());
+      assertSame(entryOne, entryTwo.getNext());
+      assertSame(valueRefTwo, entryTwo.getValueReference());
+    }
+  }
+

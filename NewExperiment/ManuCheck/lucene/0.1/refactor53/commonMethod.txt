@@ -1,0 +1,11 @@
+(startLine=110 endLine=118 srcPath=/home/sonia/NewExperiment/luceneFilter/00793/lucene/src/java/org/apache/lucene/search/Scorer.java)
+  /** Returns number of matches for the current document.
+   *  This returns a float (not int) because
+   *  SloppyPhraseScorer discounts its freq according to how
+   *  "sloppy" the match was.
+   *
+   * @lucene.experimental */
+  public float freq() throws IOException {
+    throw new UnsupportedOperationException(this + " does not implement freq()");
+  }
+

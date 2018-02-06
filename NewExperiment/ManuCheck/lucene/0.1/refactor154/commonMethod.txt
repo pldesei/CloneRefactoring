@@ -1,0 +1,24 @@
+(startLine=2009 endLine=2030 srcPath=/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+    public boolean boost(int globalDoc) {
+      if(index == Integer.MIN_VALUE) {
+        return false;
+      } else {
+        while(true) {
+          if(index >= boostDocs.length) {
+            index = Integer.MIN_VALUE;
+            return false;
+          } else {
+            int comp = boostDocs[index];
+            if(comp == globalDoc) {
+              ++index;
+              return true;
+            } else if(comp < globalDoc) {
+              ++index;
+            } else {
+              return false;
+            }
+          }
+        }
+      }
+    }
+

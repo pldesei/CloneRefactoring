@@ -1,0 +1,13 @@
+(startLine=155 endLine=165 srcPath=/home/sonia/NewExperiment/antFilter/00087/src/main/org/apache/tools/ant/types/Resource.java)
+    /**
+     * The exists attribute tells whether a resource exists.
+     * @return true if this resource exists.
+     */
+    public boolean isExists() {
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).isExists();
+        }
+        //default true:
+        return exists == null || exists.booleanValue();
+    }
+

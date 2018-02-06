@@ -1,0 +1,25 @@
+(startLine=353 endLine=375 srcPath=/home/sonia/NewExperiment/antFilter/00908/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
+    /**
+     *  Iterate through the generated command line comparing it to reference
+     *  one.
+     *
+     * @param  sTestCmdLine       The reference command line;
+     * @param  sGeneratedCmdLine  The generated command line;
+     */
+    private void checkCommandLines(String[] sTestCmdLine, String[] sGeneratedCmdLine) {
+        int length = sTestCmdLine.length;
+        for (int i = 0; i < length; i++) {
+            try {
+                assertEquals("arg # " + String.valueOf(i),
+                        sTestCmdLine[i],
+                        sGeneratedCmdLine[i]);
+            } catch (ArrayIndexOutOfBoundsException aioob) {
+                fail("missing arg " + sTestCmdLine[i]);
+            }
+        }
+        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
+            // We have extra elements
+            fail("extra args");
+        }
+    }
+

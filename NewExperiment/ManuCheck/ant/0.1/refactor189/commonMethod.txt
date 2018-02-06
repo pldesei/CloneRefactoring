@@ -1,0 +1,13 @@
+(startLine=131 endLine=141 srcPath=/home/sonia/NewExperiment/antFilter/00166/src/main/org/apache/tools/ant/util/CollectionUtils.java)
+    /**
+     * Append one enumeration to another.
+     * Elements are evaluated lazily.
+     * @param e1 the first enumeration.
+     * @param e2 the subsequent enumeration.
+     * @return an enumeration representing e1 followed by e2.
+     * @since Ant 1.6.3
+     */
+    public static Enumeration append(Enumeration e1, Enumeration e2) {
+        return new CompoundEnumeration(e1, e2);
+    }
+

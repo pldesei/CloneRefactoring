@@ -1,0 +1,12 @@
+(startLine=234 endLine=243 srcPath=/home/sonia/NewExperiment/guavaFilter/00372/guava/src/com/google/common/base/Predicates.java)
+  /**
+   * Returns the composition of a function and a predicate. For every {@code x},
+   * the generated predicate returns {@code predicate(function(x))}.
+   *
+   * @return the composition of the provided function and predicate
+   */
+  public static <A, B> Predicate<A> compose(
+      Predicate<B> predicate, Function<A, ? extends B> function) {
+    return new CompositionPredicate<A, B>(predicate, function);
+  }
+

@@ -1,0 +1,22 @@
+(startLine=383 endLine=402 srcPath=/home/sonia/NewExperiment/antFilter/01335/src/main/org/apache/tools/ant/taskdefs/optional/ReplaceRegExp.java)
+                    if (c == '\r') {
+                        if (hasCR) {
+                            // second CR -> EOL + possibly empty line
+                            line = linebuf.toString();
+                            res  = doReplace(regex, subs, line, options);
+
+                            if (!res.equals(line)) {
+                                changes = true;
+                            }
+
+                            bw.write(res);
+                            bw.write('\r');
+
+                            linebuf = new StringBuffer();
+                            // hasCR is still true (for the second one)
+                        } else {
+                            // first CR in this line
+                            hasCR = true;
+                        }
+                    } else if (c == '\n') {
+

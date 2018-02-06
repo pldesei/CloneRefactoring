@@ -1,0 +1,12 @@
+(startLine=230 endLine=239 srcPath=/home/sonia/NewExperiment/luceneFilter/03075/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+  /** Wraps a {@link SortedSetDocValues} as a single-valued view if the field is an instance of {@link SortedSetSortField},
+   * returns {@link SortedDocValues} for the field otherwise. */
+  static SortedDocValues getOrWrapSorted(LeafReader reader, SortField sortField) throws IOException {
+    if (sortField instanceof SortedSetSortField) {
+      SortedSetSortField sf = (SortedSetSortField) sortField;
+      return SortedSetSelector.wrap(DocValues.getSortedSet(reader, sf.getField()), sf.getSelector());
+    } else {
+      return DocValues.getSorted(reader, sortField.getField());
+    }
+  }
+

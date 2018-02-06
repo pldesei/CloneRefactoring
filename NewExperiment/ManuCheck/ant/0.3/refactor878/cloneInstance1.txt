@@ -1,0 +1,23 @@
+(startLine=721 endLine=741 srcPath=/home/sonia/NewExperiment/antFilter/01213/src/main/org/apache/tools/ant/ComponentHelper.java)
+        try {
+            Properties props = new Properties();
+            in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException(ERROR_NO_TASK_LIST_LOAD);
+            }
+            props.load(in);
+
+            Enumeration e = props.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                String className = props.getProperty(name);
+                AntTypeDefinition def = new AntTypeDefinition();
+                def.setName(name);
+                def.setClassName(className);
+                def.setClassLoader(classLoader);
+                def.setAdaptToClass(Task.class);
+                def.setAdapterClass(TaskAdapter.class);
+                antTypeTable.put(name, def);
+            }
+        } catch (IOException ex) {
+

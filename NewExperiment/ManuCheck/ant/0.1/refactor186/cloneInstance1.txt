@@ -1,0 +1,18 @@
+(startLine=562 endLine=577 srcPath=/home/sonia/NewExperiment/antFilter/00141/src/main/org/apache/tools/ant/taskdefs/optional/ejb/GenericDeploymentTool.java)
+                                { 
+                                    File superClassFile = new File(srcDir.getAbsolutePath() 
+                                                                    + File.separatorChar 
+                                                                    + interfaces[i].getName().replace('.',File.separatorChar)
+                                                                    + ".class"
+                                                                    );
+                                    if (superClassFile.exists() && superClassFile.isFile())
+                                    {
+                                        if (checkInterfaceClasses(interfaces[i].getName().replace('.',File.separatorChar)+".class", 
+                                              superClassFile, checkEntries))
+                                        {
+                                            checkEntries.put(interfaces[i].getName().replace('.',File.separatorChar)+".class",
+                                                 superClassFile);
+                                        }
+                                    }
+                                }
+

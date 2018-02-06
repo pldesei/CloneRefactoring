@@ -1,0 +1,31 @@
+(startLine=432 endLine=460 srcPath=/home/sonia/NewExperiment/antFilter/01050/src/main/org/apache/tools/ant/taskdefs/optional/jdepend/JDependTask.java)
+        } else if (getSourcespath() != null) {
+
+            // This is the old way and is deprecated - classespath is
+            // the right way to do this and is above
+            String[] sourcesPath = getSourcespath().list();
+            for (int i = 0; i < sourcesPath.length; i++) {
+                File f = new File(sourcesPath[i]);
+
+                // not necessary as JDepend would fail, but why loose
+                // some time?
+                if (!f.exists() || !f.isDirectory()) {
+                    String msg = "\""
+                        + f.getPath()
+                        + "\" does not represent a valid"
+                        + " directory. JDepend would fail.";
+                    log(msg);
+                    throw new BuildException(msg);
+                }
+                try {
+                    jdepend.addDirectory(f.getPath());
+                } catch (IOException e) {
+                    String msg =
+                        "JDepend Failed when adding a source directory: "
+                        + e.getMessage();
+                    log(msg);
+                    throw new BuildException(msg);
+                }
+            }
+        }
+

@@ -1,0 +1,68 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/03333
+predFragLineRange:177-188
+predMethodLineRange:152-240
+nextLineRange:157-238
+predStrMethodInvoNames:
+[createTempDir, buildJettyConfig, waitForAllNodes, println, getZkAddress, getZkServer, setProperty, getZkAddress, getZkServer, createTempDir, buildJettyConfig, waitForAllNodes, uploadConfigSet, configset, process, withProperty, createCollection, getSolrClient, getSolrClient, setDefaultCollection, addField, addField, add, setAction, println, process, query, assertEquals, getNumFound, getResults, uploadConfigSet, configset, process, createCollection, getSolrClient, getSolrClient, setDefaultCollection, cdcrStart, cdcrStart, getCdcrQueue, println, getResponse, waitForTargetToSync, assertEquals, cdcrStop, cdcrDisableBuffer, addField, addField, add, setAction, println, process, query, assertEquals, getNumFound, getResults, cdcrStart, cdcrEnableBuffer, waitForTargetToSync, assertEquals, shutdown, shutdown]
+%%%%%%%%%%
+AddedMethodInvo Line:180 InvoName:indexDocs(sourceSolrClient,"cdcr-source",docs)
+PackageName:org.apache.solr.cloud
+QualifiedClassName:org.apache.solr.cloud.CdcrBootstrapTest
+ClassName:CdcrBootstrapTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java
+InvokedMethodSig:private int indexDocs(org.apache.solr.client.solrj.impl.CloudSolrClient, java.lang.String, int) throws java.io.IOException, org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:196 InvoName:log.info("Cdcr queue response: " + response.getResponse())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:FSDirectory.open(target.getBaseDir().resolve("node1").resolve("cdcr-target_shard1_replica_n1").resolve("data").resolve("tlog")).listAll()
+PackageName:org.apache.lucene.store
+QualifiedClassName:org.apache.lucene.store.FSDirectory
+ClassName:FSDirectory
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/lucene/store/FSDirectory.java
+InvokedMethodSig:public java.lang.String[] listAll() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:FSDirectory.open(target.getBaseDir().resolve("node1").resolve("cdcr-target_shard1_replica_n1").resolve("data").resolve("tlog"))
+PackageName:org.apache.lucene.store
+QualifiedClassName:org.apache.lucene.store.FSDirectory
+ClassName:FSDirectory
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/lucene/store/FSDirectory.java
+InvokedMethodSig:public static org.apache.lucene.store.FSDirectory open(java.nio.file.Path) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:target.getBaseDir().resolve("node1").resolve("cdcr-target_shard1_replica_n1").resolve("data").resolve("tlog")
+PackageName:java.nio.file
+QualifiedClassName:java.nio.file.Path
+ClassName:Path
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/java/nio/file/Path.java
+InvokedMethodSig:public abstract java.nio.file.Path resolve(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:target.getBaseDir().resolve("node1").resolve("cdcr-target_shard1_replica_n1").resolve("data")
+PackageName:java.nio.file
+QualifiedClassName:java.nio.file.Path
+ClassName:Path
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/java/nio/file/Path.java
+InvokedMethodSig:public abstract java.nio.file.Path resolve(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:target.getBaseDir().resolve("node1").resolve("cdcr-target_shard1_replica_n1")
+PackageName:java.nio.file
+QualifiedClassName:java.nio.file.Path
+ClassName:Path
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/java/nio/file/Path.java
+InvokedMethodSig:public abstract java.nio.file.Path resolve(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:target.getBaseDir().resolve("node1")
+PackageName:java.nio.file
+QualifiedClassName:java.nio.file.Path
+ClassName:Path
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/java/nio/file/Path.java
+InvokedMethodSig:public abstract java.nio.file.Path resolve(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:200 InvoName:target.getBaseDir()
+PackageName:org.apache.solr.cloud
+QualifiedClassName:org.apache.solr.cloud.MiniSolrCloudCluster
+ClassName:MiniSolrCloudCluster
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/solr/cloud/MiniSolrCloudCluster.java
+InvokedMethodSig:public java.nio.file.Path getBaseDir() 
+%%%%%%%%%%
+AddedMethodInvo Line:219 InvoName:log.info("Adding 100 docs with commit=true, numDocs=" + numDocs)
+mBinding is null

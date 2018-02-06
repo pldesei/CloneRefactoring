@@ -1,0 +1,11 @@
+(startLine=630 endLine=638 srcPath=/home/sonia/NewExperiment/antFilter/01317/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
+    protected boolean assumeJava17() {
+        return "javac1.7".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7));
+    }
+

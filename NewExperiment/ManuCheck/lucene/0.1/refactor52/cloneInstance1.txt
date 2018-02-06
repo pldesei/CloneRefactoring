@@ -1,0 +1,84 @@
+(startLine=1814 endLine=1895 srcPath=/home/sonia/NewExperiment/luceneFilter/00774/lucene/src/test/org/apache/lucene/index/TestIndexWriter.java)
+  public void testDocumentsWriterExceptions() throws IOException {
+    Analyzer analyzer = new Analyzer() {
+      @Override
+      public TokenStream tokenStream(String fieldName, Reader reader) {
+        return new CrashingFilter(fieldName, new MockTokenizer(reader, MockTokenizer.WHITESPACE, false));
+      }
+    };
+
+    for(int i=0;i<2;i++) {
+      MockRAMDirectory dir = new MockRAMDirectory();
+      IndexWriter writer = new IndexWriter(dir, new IndexWriterConfig(TEST_VERSION_CURRENT, analyzer));
+      //writer.setInfoStream(System.out);
+      Document doc = new Document();
+      doc.add(new Field("contents", "here are some contents", Field.Store.YES,
+                        Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
+      writer.addDocument(doc);
+      writer.addDocument(doc);
+      doc.add(new Field("crash", "this should crash after 4 terms", Field.Store.YES,
+                        Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
+      doc.add(new Field("other", "this will not get indexed", Field.Store.YES,
+                        Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
+      try {
+        writer.addDocument(doc);
+        fail("did not hit expected exception");
+      } catch (IOException ioe) {
+      }
+
+      if (0 == i) {
+        doc = new Document();
+        doc.add(new Field("contents", "here are some contents", Field.Store.YES,
+                          Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
+        writer.addDocument(doc);
+        writer.addDocument(doc);
+      }
+      writer.close();
+
+      IndexReader reader = IndexReader.open(dir, true);
+      int expected = 3+(1-i)*2;
+      assertEquals(expected, reader.docFreq(new Term("contents", "here")));
+      assertEquals(expected, reader.maxDoc());
+      int numDel = 0;
+      for(int j=0;j<reader.maxDoc();j++) {
+        if (reader.isDeleted(j))
+          numDel++;
+        else {
+          reader.document(j);
+          reader.getTermFreqVectors(j);
+        }
+      }
+      reader.close();
+
+      assertEquals(1, numDel);
+
+      writer = new IndexWriter(dir, new IndexWriterConfig(TEST_VERSION_CURRENT,
+          analyzer).setMaxBufferedDocs(10));
+      doc = new Document();
+      doc.add(new Field("contents", "here are some contents", Field.Store.YES,
+                        Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS_OFFSETS));
+      for(int j=0;j<17;j++)
+        writer.addDocument(doc);
+      writer.optimize();
+      writer.close();
+
+      reader = IndexReader.open(dir, true);
+      expected = 19+(1-i)*2;
+      assertEquals(expected, reader.docFreq(new Term("contents", "here")));
+      assertEquals(expected, reader.maxDoc());
+      numDel = 0;
+      for(int j=0;j<reader.maxDoc();j++) {
+        if (reader.isDeleted(j))
+          numDel++;
+        else {
+          reader.document(j);
+          reader.getTermFreqVectors(j);
+        }
+      }
+      reader.close();
+      assertEquals(0, numDel);
+
+      dir.close();
+    }
+  }
+

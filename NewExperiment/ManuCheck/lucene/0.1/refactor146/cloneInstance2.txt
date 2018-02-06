@@ -1,0 +1,52 @@
+(startLine=1642 endLine=1691 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+    } else {
+
+      TopDocsCollector topCollector;
+
+      if (cmd.getSort() == null) {
+        topCollector = TopScoreDocCollector.create(len, true);
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+
+      DocSetCollector setCollector = new DocSetDelegateCollector(maxDoc>>6, maxDoc, topCollector);
+      Collector collector = setCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed );
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      set = setCollector.getDocSet();      
+
+      totalHits = topCollector.getTotalHits();
+      assert(totalHits == set.size());
+
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+

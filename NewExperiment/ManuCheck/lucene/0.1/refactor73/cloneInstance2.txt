@@ -1,0 +1,18 @@
+(startLine=1270 endLine=1285 srcPath=/home/sonia/NewExperiment/luceneFilter/01278/solr/core/src/java/org/apache/solr/core/SolrCore.java)
+        try {
+          future = searcherExecutor.submit(
+                  new Callable() {
+                    public Object call() throws Exception {
+                      try {
+                        for (SolrEventListener listener : newSearcherListeners) {
+                          listener.newSearcher(newSearcher, currSearcher);
+                        }
+                      } catch (Throwable e) {
+                        SolrException.log(log, null, e);
+                      }
+                      return null;
+                    }
+                  }
+          );
+      } catch(Exception e) {
+

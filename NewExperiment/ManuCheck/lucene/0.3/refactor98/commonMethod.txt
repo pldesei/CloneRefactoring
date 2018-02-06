@@ -1,0 +1,21 @@
+(startLine=336 endLine=354 srcPath=/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+  void setDocsWithField(AtomicReader reader, String field, Bits docsWithField) {
+    final int maxDoc = reader.maxDoc();
+    final Bits bits;
+    if (docsWithField == null) {
+      bits = new Bits.MatchNoBits(maxDoc);
+    } else if (docsWithField instanceof FixedBitSet) {
+      final int numSet = ((FixedBitSet) docsWithField).cardinality();
+      if (numSet >= maxDoc) {
+        // The cardinality of the BitSet is maxDoc if all documents have a value.
+        assert numSet == maxDoc;
+        bits = new Bits.MatchAllBits(maxDoc);
+      } else {
+        bits = docsWithField;
+      }
+    } else {
+      bits = docsWithField;
+    }
+    caches.get(DocsWithFieldCache.class).put(reader, new CacheKey(field, null), bits);
+  }
+

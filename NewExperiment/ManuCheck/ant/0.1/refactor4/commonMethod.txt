@@ -1,0 +1,25 @@
+(startLine=195 endLine=217 srcPath=/home/sonia/NewExperiment/antFilter/00044/src/main/org/apache/tools/ant/taskdefs/ExecTask.java)
+    /**
+     * Run the command using the given Execute instance.
+     */
+    protected void runExec(Execute exe) throws BuildException {
+        int err = -1; // assume the worst
+
+        try {
+            exe.setCommandline(cmdl.getCommandline());
+            err = exe.execute();
+            if (err != 0) {
+                if (failOnError) {
+                    throw new BuildException("Exec returned: "+err, location);
+                } else {
+                    log("Result: " + err, Project.MSG_ERR);
+                }
+            }
+        } catch (IOException e) {
+            throw new BuildException("Execute failed: " + e, e, location);
+        } finally {
+            // close the output file if required
+            logFlush();
+        }
+    }
+

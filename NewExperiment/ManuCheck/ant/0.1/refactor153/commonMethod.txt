@@ -1,0 +1,25 @@
+(startLine=349 endLine=371 srcPath=/home/sonia/NewExperiment/antFilter/00123/src/main/org/apache/tools/ant/taskdefs/optional/net/FTP.java)
+    /**
+     * Checks to see that all required parameters are set.
+     */
+    protected void checkConfiguration() throws BuildException
+    {
+        if (server == null)
+        {
+            throw new BuildException("server attribute must be set!");
+        }
+        if (userid == null)
+        {
+            throw new BuildException("userid attribute must be set!");
+        }
+        if (password == null)
+        {
+            throw new BuildException("password attribute must be set!");
+        }
+        
+        if ((action == LIST_FILES) && (listing == null))
+        {
+            throw new BuildException("listing attribute must be set for list action!");
+        }
+    }
+

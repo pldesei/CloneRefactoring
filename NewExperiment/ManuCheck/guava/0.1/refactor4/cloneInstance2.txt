@@ -1,0 +1,21 @@
+(startLine=248 endLine=266 srcPath=/home/sonia/NewExperiment/guavaFilter/00220/guava-gwt/src-super/com/google/common/collect/super/com/google/common/collect/AbstractBiMap.java)
+    @Override public Iterator<V> iterator() {
+      final Iterator<V> iterator = delegate.values().iterator();
+      return new Iterator<V>() {
+        V valueToRemove;
+
+        @Override public boolean hasNext() {
+          return iterator.hasNext();
+        }
+
+        @Override public V next() {
+          return valueToRemove = iterator.next();
+        }
+
+        @Override public void remove() {
+          iterator.remove();
+          removeFromInverseMap(valueToRemove);
+        }
+      };
+    }
+

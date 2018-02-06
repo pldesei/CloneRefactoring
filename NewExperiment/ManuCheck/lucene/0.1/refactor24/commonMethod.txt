@@ -1,0 +1,9 @@
+(startLine=5444 endLine=5450 srcPath=/home/sonia/NewExperiment/luceneFilter/00444/src/java/org/apache/lucene/index/IndexWriter.java)
+  private void handleOOM(OutOfMemoryError oom, String location) {
+    if (infoStream != null) {
+      message("hit OutOfMemoryError inside " + location);
+    }
+    hitOOM = true;
+    throw oom;
+  }
+

@@ -1,0 +1,18 @@
+(startLine=181 endLine=196 srcPath=/home/sonia/NewExperiment/luceneFilter/00592/src/java/org/apache/lucene/search/ParallelMultiSearcher.java)
+  private <T> void foreach(Function<T> func, List<Future<T>> list) throws IOException{
+    for (Future<T> future : list) {
+      try{
+        func.apply(future.get());
+      } catch (ExecutionException e) {
+        if (e.getCause() instanceof IOException)
+          throw (IOException) e.getCause();
+        throw new RuntimeException(e.getCause());
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        // In 3.0 we will change this to throw
+        // InterruptedException instead
+        throw new RuntimeException(e);
+      }
+    }
+  }
+

@@ -1,0 +1,10 @@
+(startLine=72 endLine=79 srcPath=/home/sonia/NewExperiment/antFilter/01340/src/tests/junit/org/apache/tools/ant/filters/HeadTailTest.java)
+    public void testFilterReaderHeadLinesSkip() throws IOException {
+        executeTarget("testFilterReaderHeadLinesSkip");
+        File expected = FILE_UTILS.resolveFile(getProject().getBaseDir(),
+            "expected/head-tail.headLinesSkip.test");
+        File result = new File(getProject().getProperty("output") + "/head-tail.filterReaderHeadLinesSkip.test");
+        assertTrue("testFilterReaderHeadLinesSkip: Result not like expected",
+                   FILE_UTILS.contentEquals(expected, result));
+    }
+

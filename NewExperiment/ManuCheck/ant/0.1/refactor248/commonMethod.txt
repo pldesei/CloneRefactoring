@@ -1,0 +1,26 @@
+(startLine=374 endLine=397 srcPath=/home/sonia/NewExperiment/antFilter/00212/src/main/org/apache/tools/ant/AntClassLoader.java)
+    private boolean isSystemFirst(String resourceName) {
+        // default to the global setting and then see
+        // if this class belongs to a package which has been
+        // designated to use a specific loader first (this one or the system one)
+        boolean useSystemFirst = systemFirst; 
+
+        for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String)e.nextElement();
+            if (resourceName.startsWith(packageName)) {
+                useSystemFirst = true;
+                break;
+            }
+        }
+
+        for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String)e.nextElement();
+            if (resourceName.startsWith(packageName)) {
+                useSystemFirst = false;
+                break;
+            }
+        }
+        
+        return useSystemFirst;
+    }
+

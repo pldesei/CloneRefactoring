@@ -1,0 +1,15 @@
+(startLine=200 endLine=212 srcPath=/home/sonia/NewExperiment/guavaFilter/00373/guava/src/com/google/common/io/ByteStreams.java)
+      OutputStream to) throws IOException {
+    checkNotNull(from);
+    checkNotNull(to);
+    Closer closer = Closer.create();
+    try {
+      InputStream in = closer.add(from.getInput());
+      return copy(in, to);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

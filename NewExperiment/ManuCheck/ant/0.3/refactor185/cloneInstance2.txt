@@ -1,0 +1,16 @@
+(startLine=585 endLine=598 srcPath=/home/sonia/NewExperiment/antFilter/00141/src/main/org/apache/tools/ant/taskdefs/optional/ejb/GenericDeploymentTool.java)
+                            {
+                                File superClassFile = new File(srcDir.getAbsolutePath() 
+                                + File.separatorChar 
+                                + s.getName().replace('.',File.separatorChar)
+                                + ".class"
+                                );
+                                if (superClassFile.exists() && superClassFile.isFile())
+                                {
+                                    checkSuperClasses(s.getName().replace('.',File.separatorChar) + ".class", 
+                                    superClassFile, checkEntries);
+                                    checkEntries.put(s.getName().replace('.',File.separatorChar) + ".class", 
+                                    superClassFile);
+                                }               
+                            }
+

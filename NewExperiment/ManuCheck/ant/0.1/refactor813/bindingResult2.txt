@@ -1,0 +1,28 @@
+ProjectPath:/home/sonia/NewExperiment/antFilter/01138
+predFragLineRange:105-137
+predMethodLineRange:72-149
+nextLineRange:61-114
+predStrMethodInvoNames:
+[createTask, setOwningTarget, setTaskName, getTaskName, setLocation, getLocation, resolveFile, exists, resolveFile, log, getNextEntry, translatePath, getName, log, getName, getParent, mkdirs, isDirectory, mkdirs, read, write, close, getJavaVersion, setFile, setMillis, getTime, getModTime, touch, log, getName, getPath, close]
+%%%%%%%%%%
+AddedMethodInvo Line:97 InvoName:compression.decompress(srcF,new BufferedInputStream(new FileInputStream(srcF)))
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Untar.UntarCompressionMethod
+ClassName:UntarCompressionMethod
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01138/src/main/org/apache/tools/ant/taskdefs/Untar.java
+InvokedMethodSig:private java.io.InputStream decompress(java.io.File, java.io.InputStream) throws java.io.IOException, org.apache.tools.ant.BuildException
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:getMapper()
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Expand
+ClassName:Expand
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01138/src/main/org/apache/tools/ant/taskdefs/Expand.java
+InvokedMethodSig:protected org.apache.tools.ant.util.FileNameMapper getMapper() 
+%%%%%%%%%%
+AddedMethodInvo Line:103 InvoName:extractFile(fileUtils,srcF,dir,tis,te.getName(),te.getModTime(),te.isDirectory(),mapper)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Expand
+ClassName:Expand
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01138/src/main/org/apache/tools/ant/taskdefs/Expand.java
+InvokedMethodSig:protected void extractFile(org.apache.tools.ant.util.FileUtils, java.io.File, java.io.File, java.io.InputStream, java.lang.String, java.util.Date, boolean, org.apache.tools.ant.util.FileNameMapper) throws java.io.IOException

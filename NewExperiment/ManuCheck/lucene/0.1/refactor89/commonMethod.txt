@@ -1,0 +1,11 @@
+(startLine=218 endLine=226 srcPath=/home/sonia/NewExperiment/luceneFilter/01585/lucene/spatial/src/java/org/apache/lucene/spatial/vector/TwoDoublesStrategy.java)
+  private NumericRangeQuery<Double> rangeQuery(String fieldName, Double min, Double max) {
+    return NumericRangeQuery.newDoubleRange(
+        fieldName,
+        precisionStep,
+        min,
+        max,
+        true,
+        true);//inclusive
+  }
+

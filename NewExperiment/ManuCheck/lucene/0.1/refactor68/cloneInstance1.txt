@@ -1,0 +1,24 @@
+(startLine=196 endLine=217 srcPath=/home/sonia/NewExperiment/luceneFilter/01154/lucene/src/java/org/apache/lucene/index/values/VarDerefBytesImpl.java)
+      try {
+        idxOut.writeInt(address - 1);
+        // write index
+        // TODO(simonw): -- allow forcing fixed array (not -1)
+        // TODO(simonw): check the address calculation / make it more intuitive
+        final PackedInts.Writer w = PackedInts.getWriter(idxOut, docCount,
+            PackedInts.bitsRequired(address - 1));
+        final int limit;
+        if (docCount > docToAddress.length) {
+          limit = docToAddress.length;
+        } else {
+          limit = docCount;
+        }
+        for (int i = 0; i < limit; i++) {
+          w.add(docToAddress[i]);
+        }
+        for (int i = limit; i < docCount; i++) {
+          w.add(0);
+        }
+        w.finish();
+        success = true;
+      } finally {
+

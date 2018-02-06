@@ -1,0 +1,48 @@
+(startLine=473 endLine=518 srcPath=/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/CategoryPath.java)
+  /**
+   * Add the given components to the end of the path. The components are given
+   * in a single string, separated by a given delimiter character. If the
+   * given string is empty, it is assumed to refer to the root (empty)
+   * category, and nothing is added to the path (rather than adding a single
+   * empty component).
+   * <P>
+   * Note that when a String object is passed to this method, a reference to
+   * it is not saved (rather, its content is copied), which will lead to that
+   * String object being gc'ed. To reduce the number of garbage objects, you
+   * can pass a mutable CharBuffer instead of an immutable String to this
+   * method.
+   */
+  public void add(CharSequence pathString, char delimiter) {
+    int len = pathString.length();
+    if (len == 0) {
+      return; // assume root category meant, so add nothing.
+    }
+    short pos = (ncomponents == 0) ? 0 : ends[ncomponents - 1];
+    for (int i = 0; i < len; i++) {
+      char c = pathString.charAt(i);
+      if (c == delimiter) {
+        if (ncomponents >= ends.length) {
+          short[] newends = new short[(ends.length + 1) * 2];
+          System.arraycopy(ends, 0, newends, 0, ends.length);
+          ends = newends;
+        }
+        ends[ncomponents++] = pos;
+      } else {
+        if (pos >= chars.length) {
+          char[] newchars = new char[(chars.length + 1) * 2];
+          System.arraycopy(chars, 0, newchars, 0, chars.length);
+          chars = newchars;
+        }
+        chars[pos++] = c;
+      }
+    }
+
+    // Don't forget to count the last component!
+    if (ncomponents >= ends.length) {
+      short[] newends = new short[(ends.length + 1) * 2];
+      System.arraycopy(ends, 0, newends, 0, ends.length);
+      ends = newends;
+    }
+    ends[ncomponents++] = pos;
+  }
+

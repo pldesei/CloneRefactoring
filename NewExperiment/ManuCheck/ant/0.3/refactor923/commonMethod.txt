@@ -1,0 +1,22 @@
+(startLine=335 endLine=354 srcPath=/home/sonia/NewExperiment/antFilter/01254/src/main/org/apache/tools/ant/taskdefs/cvslib/CvsTagDiff.java)
+    private boolean doFileHasChanged(Vector entries, String line) {
+        int index = line.indexOf(FILE_HAS_CHANGED);
+        if (index == -1) {
+            return false;
+        }
+        // it is a modified file
+        // set the revision and the prevrevision
+        String filename = line.substring(0, index);
+        int revSeparator = line.indexOf(" to ", index);
+        String prevRevision =
+            line.substring(index + FILE_HAS_CHANGED.length(),
+                           revSeparator);
+        String revision = line.substring(revSeparator + TO_STRING.length());
+        CvsTagEntry entry = new CvsTagEntry(filename,
+                                            revision,
+                                            prevRevision);
+        entries.addElement(entry);
+        log(entry.toString(), Project.MSG_VERBOSE);
+        return true;
+    }
+

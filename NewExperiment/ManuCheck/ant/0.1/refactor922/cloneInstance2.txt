@@ -1,0 +1,14 @@
+(startLine=318 endLine=329 srcPath=/home/sonia/NewExperiment/antFilter/01253/src/main/org/apache/tools/ant/taskdefs/cvslib/CvsTagDiff.java)
+                    } else if ((index = line.indexOf(FILE_WAS_REMOVED)) != -1) {
+                        // it is a removed file
+                        String filename = line.substring(0, index);
+                        String rev = null;
+                        int indexrev = -1;
+                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                            rev = line.substring(indexrev + REVISION.length());
+                        }
+                        entry = new CvsTagEntry(filename, null, rev);
+                        entries.addElement(entry);
+                        log(entry.toString(), Project.MSG_VERBOSE);
+                    }
+

@@ -1,0 +1,37 @@
+(startLine=77 endLine=111 srcPath=/home/sonia/NewExperiment/antFilter/01015/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSSGET.java)
+    Commandline buildCmdLine() {
+        Commandline commandLine = new Commandline();
+
+        // build the command line from what we got the format is
+        // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
+        // as specified in the SS.EXE help
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_GET);
+
+        if (getVsspath() == null) {
+            throw new BuildException("vsspath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(getVsspath());
+
+        // -GL
+        commandLine.createArgument().setValue(getLocalpath());
+        // -I- or -I-Y or -I-N
+        commandLine.createArgument().setValue(getAutoresponse());
+        // -O-
+        commandLine.createArgument().setValue(getQuiet());
+        // -R
+        commandLine.createArgument().setValue(getRecursive());
+        // -V
+        commandLine.createArgument().setValue(getVersionDateLabel());
+        // -W
+        commandLine.createArgument().setValue(getWritable());
+        // -Y
+        commandLine.createArgument().setValue(getLogin());
+        // -G
+        commandLine.createArgument().setValue(getFileTimeStamp());
+        // -GWS or -GWR
+        commandLine.createArgument().setValue(getWritableFiles());
+
+        return commandLine;
+    }
+

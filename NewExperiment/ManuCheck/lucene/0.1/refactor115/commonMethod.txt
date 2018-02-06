@@ -1,0 +1,44 @@
+(startLine=138 endLine=179 srcPath=/home/sonia/NewExperiment/luceneFilter/01811/solr/core/src/test/org/apache/solr/cloud/ShardSplitTest.java)
+  protected void checkDocCountsAndShardStates(int[] docCounts, int numReplicas) throws SolrServerException, KeeperException, InterruptedException {
+    SolrQuery query = new SolrQuery("*:*").setRows(1000).setFields("id", "_version_");
+    query.set("distrib", false);
+
+    ZkCoreNodeProps shard1_0 = getLeaderUrlFromZk(AbstractDistribZkTestBase.DEFAULT_COLLECTION, SHARD1_0);
+    HttpSolrServer shard1_0Server = new HttpSolrServer(shard1_0.getCoreUrl());
+    QueryResponse response = shard1_0Server.query(query);
+    long shard10Count = response.getResults().getNumFound();
+
+    ZkCoreNodeProps shard1_1 = getLeaderUrlFromZk(AbstractDistribZkTestBase.DEFAULT_COLLECTION, SHARD1_1);
+    HttpSolrServer shard1_1Server = new HttpSolrServer(shard1_1.getCoreUrl());
+    QueryResponse response2 = shard1_1Server.query(query);
+    long shard11Count = response2.getResults().getNumFound();
+
+    logDebugHelp(docCounts, response, shard10Count, response2, shard11Count);
+
+    assertEquals("Wrong doc count on shard1_0", docCounts[0], shard10Count);
+    assertEquals("Wrong doc count on shard1_1", docCounts[1], shard11Count);
+
+    ClusterState clusterState = null;
+    Slice slice1_0 = null, slice1_1 = null;
+    int i = 0;
+    for (i = 0; i < 10; i++) {
+      ZkStateReader zkStateReader = cloudClient.getZkStateReader();
+      zkStateReader.updateClusterState(true);
+      clusterState = zkStateReader.getClusterState();
+      slice1_0 = clusterState.getSlice(AbstractDistribZkTestBase.DEFAULT_COLLECTION, "shard1_0");
+      slice1_1 = clusterState.getSlice(AbstractDistribZkTestBase.DEFAULT_COLLECTION, "shard1_1");
+      if (Slice.ACTIVE.equals(slice1_0.getState()) && Slice.ACTIVE.equals(slice1_1.getState()))
+        break;
+      Thread.sleep(500);
+    }
+
+    log.info("ShardSplitTest waited for {} ms for shard state to be set to active", i * 500);
+
+    assertNotNull("Cluster state does not contain shard1_0", slice1_0);
+    assertNotNull("Cluster state does not contain shard1_0", slice1_1);
+    assertEquals("shard1_0 is not active", Slice.ACTIVE, slice1_0.getState());
+    assertEquals("shard1_1 is not active", Slice.ACTIVE, slice1_1.getState());
+    assertEquals("Wrong number of replicas created for shard1_0", numReplicas, slice1_0.getReplicas().size());
+    assertEquals("Wrong number of replicas created for shard1_1", numReplicas, slice1_1.getReplicas().size());
+  }
+

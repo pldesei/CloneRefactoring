@@ -1,0 +1,14 @@
+(startLine=537 endLine=548 srcPath=/home/sonia/NewExperiment/luceneFilter/02004/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java)
+    if (true) {
+      tool = new MapReduceIndexerTool();
+      res = ToolRunner.run(jobConf, tool, args);
+      assertEquals(0, res);
+      assertTrue(tool.job.isComplete());
+      assertTrue(tool.job.isSuccessful());
+      
+      checkConsistency(replicatedCollection);
+      
+      results = cloudClient.query(new SolrQuery("*:*"));      
+      assertEquals(2104, results.getResults().getNumFound());
+    }  
+

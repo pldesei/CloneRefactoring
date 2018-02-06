@@ -1,0 +1,91 @@
+ProjectPath:/home/sonia/NewExperiment/antFilter/01261
+predFragLineRange:105-137
+predMethodLineRange:72-149
+nextLineRange:61-226
+predStrMethodInvoNames:
+[createTask, setOwningTarget, setTaskName, getTaskName, setLocation, getLocation, resolveFile, exists, resolveFile, log, getNextEntry, translatePath, getName, log, getName, getParent, mkdirs, isDirectory, mkdirs, read, write, close, getJavaVersion, setFile, setMillis, getTime, getModTime, touch, log, getName, getPath, close]
+%%%%%%%%%%
+AddedMethodInvo Line:103 InvoName:expandStream(srcF.getPath(),fis,dir)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Untar
+ClassName:Untar
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/taskdefs/Untar.java
+InvokedMethodSig:private void expandStream(java.lang.String, java.io.InputStream, java.io.File) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:106 InvoName:ioe.toString()
+PackageName:java.lang
+QualifiedClassName:java.lang.Throwable
+ClassName:Throwable
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/java/lang/Throwable.java
+InvokedMethodSig:public java.lang.String toString() 
+%%%%%%%%%%
+AddedMethodInvo Line:123 InvoName:srcR.getInputStream()
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.Resource
+ClassName:Resource
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/types/Resource.java
+InvokedMethodSig:public java.io.InputStream getInputStream() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:124 InvoName:expandStream(srcR.getName(),i,dir)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Untar
+ClassName:Untar
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/taskdefs/Untar.java
+InvokedMethodSig:private void expandStream(java.lang.String, java.io.InputStream, java.io.File) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:141 InvoName:compression.decompress(name,new BufferedInputStream(stream))
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Untar.UntarCompressionMethod
+ClassName:UntarCompressionMethod
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/taskdefs/Untar.java
+InvokedMethodSig:public java.io.InputStream decompress(java.lang.String, java.io.InputStream) throws java.io.IOException, org.apache.tools.ant.BuildException
+%%%%%%%%%%
+AddedMethodInvo Line:145 InvoName:getMapper()
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Expand
+ClassName:Expand
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/taskdefs/Expand.java
+InvokedMethodSig:protected org.apache.tools.ant.util.FileNameMapper getMapper() 
+%%%%%%%%%%
+AddedMethodInvo Line:147 InvoName:extractFile(FileUtils.getFileUtils(),null,dir,tis,te.getName(),te.getModTime(),te.isDirectory(),mapper)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Expand
+ClassName:Expand
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/taskdefs/Expand.java
+InvokedMethodSig:protected void extractFile(org.apache.tools.ant.util.FileUtils, java.io.File, java.io.File, java.io.InputStream, java.lang.String, java.util.Date, boolean, org.apache.tools.ant.util.FileNameMapper) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:147 InvoName:FileUtils.getFileUtils()
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.FileUtils
+ClassName:FileUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/util/FileUtils.java
+InvokedMethodSig:public static org.apache.tools.ant.util.FileUtils getFileUtils() 
+%%%%%%%%%%
+AddedMethodInvo Line:184 InvoName:setValue(NONE)
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.EnumeratedAttribute
+ClassName:EnumeratedAttribute
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/types/EnumeratedAttribute.java
+InvokedMethodSig:public final void setValue(java.lang.String) throws org.apache.tools.ant.BuildException
+%%%%%%%%%%
+AddedMethodInvo Line:210 InvoName:getValue()
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.EnumeratedAttribute
+ClassName:EnumeratedAttribute
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/types/EnumeratedAttribute.java
+InvokedMethodSig:public final java.lang.String getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:211 InvoName:GZIP.equals(v)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/java/lang/String.java
+InvokedMethodSig:public boolean equals(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:214 InvoName:BZIP2.equals(v)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01261/src/main/java/lang/String.java
+InvokedMethodSig:public boolean equals(java.lang.Object) 

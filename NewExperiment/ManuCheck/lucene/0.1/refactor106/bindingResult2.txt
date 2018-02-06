@@ -1,0 +1,55 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01761
+predFragLineRange:310-318
+predMethodLineRange:290-319
+nextLineRange:315-342
+predStrMethodInvoNames:
+[termDocsEnum, getLiveDocs, nextDoc, assertTrue, get, assertEquals, intValue, parseInt, get, document, assertFalse, get, termDocsEnum, advance, assertTrue, get, assertEquals, intValue, parseInt, get, document, assertFalse, get]
+%%%%%%%%%%
+AddedMethodInvo Line:317 InvoName:randomLiveDocs(reader.maxDoc())
+PackageName:org.apache.lucene.index.sorter
+QualifiedClassName:org.apache.lucene.index.sorter.SorterTestBase
+ClassName:SorterTestBase
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/sorter/SorterTestBase.java
+InvokedMethodSig:org.apache.lucene.util.Bits randomLiveDocs(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:317 InvoName:reader.maxDoc()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.IndexReader
+ClassName:IndexReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/IndexReader.java
+InvokedMethodSig:public abstract int maxDoc() 
+%%%%%%%%%%
+AddedMethodInvo Line:318 InvoName:reader.terms(DOCS_ENUM_FIELD).iterator(null)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.Terms
+ClassName:Terms
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/Terms.java
+InvokedMethodSig:public abstract org.apache.lucene.index.TermsEnum iterator(org.apache.lucene.index.TermsEnum) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:318 InvoName:reader.terms(DOCS_ENUM_FIELD)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.AtomicReader
+ClassName:AtomicReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/AtomicReader.java
+InvokedMethodSig:public final org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:319 InvoName:termsEnum.seekCeil(new BytesRef(DOCS_ENUM_TERM))
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.TermsEnum
+ClassName:TermsEnum
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/TermsEnum.java
+InvokedMethodSig:public final SeekStatus seekCeil(org.apache.lucene.util.BytesRef) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:320 InvoName:termsEnum.docs(mappedLiveDocs,null)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.TermsEnum
+ClassName:TermsEnum
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/TermsEnum.java
+InvokedMethodSig:public final org.apache.lucene.index.DocsEnum docs(org.apache.lucene.util.Bits, org.apache.lucene.index.DocsEnum) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:332 InvoName:termsEnum.docs(mappedLiveDocs,docs)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.TermsEnum
+ClassName:TermsEnum
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/TermsEnum.java
+InvokedMethodSig:public final org.apache.lucene.index.DocsEnum docs(org.apache.lucene.util.Bits, org.apache.lucene.index.DocsEnum) throws java.io.IOException

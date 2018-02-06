@@ -1,0 +1,11 @@
+(startLine=116 endLine=124 srcPath=/home/sonia/NewExperiment/luceneFilter/01996/solr/core/src/test/org/apache/solr/analytics/facet/AbstractAnalyticsFacetTest.java)
+  protected ArrayList<Float> getFloatList(String n1, String n2, String n3, String element, String n4)
+      throws XPathExpressionException {
+    ArrayList<Float> ret = new ArrayList<Float>();
+    NodeList nodes = getNodes(n1, n2, n3, element, n4);
+    for (int idx = 0; idx < nodes.getLength(); ++idx) {
+      ret.add(Float.parseFloat(nodes.item(idx).getTextContent()));
+    }
+    return ret;
+  }
+

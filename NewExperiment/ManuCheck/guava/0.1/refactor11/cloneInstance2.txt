@@ -1,0 +1,15 @@
+(startLine=262 endLine=274 srcPath=/home/sonia/NewExperiment/guavaFilter/00373/guava/src/com/google/common/io/CharStreams.java)
+      InputSupplier<R> from, Appendable to) throws IOException {
+    checkNotNull(from);
+    checkNotNull(to);
+    Closer closer = Closer.create();
+    try {
+      R in = closer.add(from.getInput());
+      return copy(in, to);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

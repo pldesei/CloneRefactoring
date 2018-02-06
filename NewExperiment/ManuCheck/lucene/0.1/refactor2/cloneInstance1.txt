@@ -1,0 +1,19 @@
+(startLine=150 endLine=166 srcPath=/home/sonia/NewExperiment/luceneFilter/00087/sandbox/projects/appex/src/java/search/DocumentHandler.java)
+        {
+            // add the custom fields
+            for (Iterator it = customFields.keySet().iterator(); it.hasNext();)
+            {
+                String field = (String) it.next();
+                String value = (String) metadata.get(field);
+                String type = (String) customFields.get(field);
+                addFieldToDoc(type, field, value);
+            }
+            // Add OBJECT_CLASS_FIELD and OBJECT_IDENTIFIER
+            // to populate the result templates with the proper
+            // objects
+            doc.add(Field.UnIndexed(DataSource.OBJECT_CLASS,
+                                    (String) metadata.get(DataSource.OBJECT_CLASS)));
+            doc.add(Field.Text(DataSource.OBJECT_IDENTIFIER,
+                               (String) metadata.get(DataSource.OBJECT_IDENTIFIER)));
+        }
+

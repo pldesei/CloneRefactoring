@@ -1,0 +1,21 @@
+(startLine=79 endLine=97 srcPath=/home/sonia/NewExperiment/luceneFilter/02695/lucene/sandbox/src/java/org/apache/lucene/search/GeoPointDistanceQueryImpl.java)
+    protected AcceptStatus accept(BytesRef term) {
+      // first filter by bounding box
+      AcceptStatus status = super.accept(term);
+      assert status != AcceptStatus.YES_AND_SEEK;
+
+      if (status != AcceptStatus.YES) {
+        return status;
+      }
+
+      final long val = NumericUtils.prefixCodedToLong(term);
+      final double lon = GeoUtils.mortonUnhashLon(val);
+      final double lat = GeoUtils.mortonUnhashLat(val);
+      // post-filter by distance
+      if (!(SloppyMath.haversin(query.centerLat, query.centerLon, lat, lon)*1000.0 <= query.radius)) {
+        return AcceptStatus.NO;
+      }
+
+      return AcceptStatus.YES;
+    }
+

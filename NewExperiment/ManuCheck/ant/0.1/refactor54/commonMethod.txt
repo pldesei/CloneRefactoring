@@ -1,0 +1,13 @@
+(startLine=102 endLine=112 srcPath=/home/sonia/NewExperiment/antFilter/00062/src/main/org/apache/tools/ant/types/resources/FileResource.java)
+    /**
+     * Get the file represented by this FileResource.
+     * @return the File.
+     */
+    public File getFile() {
+        if (isReference()) {
+            return ((FileResource) getCheckedRef()).getFile();
+        }
+        dieOnCircularReference();
+        return file;
+    }
+

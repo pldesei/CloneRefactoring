@@ -1,0 +1,19 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/03333
+predFragLineRange:83-94
+predMethodLineRange:47-150
+nextLineRange:48-138
+predStrMethodInvoNames:
+[createTempDir, buildJettyConfig, waitForAllNodes, println, getZkAddress, getZkServer, setProperty, getZkAddress, getZkServer, createTempDir, buildJettyConfig, waitForAllNodes, uploadConfigSet, configset, process, withProperty, createCollection, getSolrClient, getSolrClient, setDefaultCollection, addField, addField, add, setAction, println, process, query, assertEquals, getNumFound, getResults, set, set, query, get, getResponse, max, uploadConfigSet, configset, stopJettySolrRunner, startJettySolrRunner, assertTrue, isRunning, waitForRecoveriesToFinish, getZkStateReader, getSolrClient, query, assertEquals, getNumFound, getResults, uploadConfigSet, configset, process, createCollection, getSolrClient, getSolrClient, setDefaultCollection, sleep, cdcrStart, cdcrStart, getCdcrQueue, println, getResponse, waitForTargetToSync, assertEquals, set, toString, set, query, get, getResponse, assertNotNull, assertEquals, longValue, shutdown, shutdown]
+%%%%%%%%%%
+AddedMethodInvo Line:65 InvoName:log.info("Target zkHost = " + target.getZkServer().getZkAddress())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:82 InvoName:indexDocs(sourceSolrClient,"cdcr-source",docs)
+PackageName:org.apache.solr.cloud
+QualifiedClassName:org.apache.solr.cloud.CdcrBootstrapTest
+ClassName:CdcrBootstrapTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java
+InvokedMethodSig:private int indexDocs(org.apache.solr.client.solrj.impl.CloudSolrClient, java.lang.String, int) throws java.io.IOException, org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:120 InvoName:log.info("Cdcr queue response: " + response.getResponse())
+mBinding is null

@@ -1,0 +1,13 @@
+(startLine=2083 endLine=2093 srcPath=/home/sonia/NewExperiment/guavaFilter/00371/guava/src/com/google/common/collect/Multimaps.java)
+      Multimap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+    checkNotNull(keyPredicate);
+    Predicate<Entry<K, V>> entryPredicate =
+        new Predicate<Entry<K, V>>() {
+          @Override
+          public boolean apply(Entry<K, V> input) {
+            return keyPredicate.apply(input.getKey());
+          }
+        };
+    return filterEntries(unfiltered, entryPredicate);
+  }
+

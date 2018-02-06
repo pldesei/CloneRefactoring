@@ -1,0 +1,59 @@
+(startLine=118 endLine=174 srcPath=/home/sonia/NewExperiment/antFilter/00887/src/testcases/org/apache/tools/ant/types/selectors/DependSelectorTest.java)
+    public void testSelectionBehaviour() {
+        DependSelector s;
+        String results;
+        Mapper m;
+        Mapper.MapperType identity = new Mapper.MapperType();
+        identity.setValue("identity");
+        Mapper.MapperType glob = new Mapper.MapperType();
+        glob.setValue("glob");
+        Mapper.MapperType merge = new Mapper.MapperType();
+        merge.setValue("merge");
+
+        try {
+            makeBed();
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFFFF", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(identity);
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFFFF", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(merge);
+            m.setTo("asf-logo.gif.gz");
+            results = selectionString(s);
+            assertEquals("TFFFFTTTFFFF", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(merge);
+            m.setTo("asf-logo.gif.bz2");
+            results = selectionString(s);
+            assertEquals("TTFTTTTTTTTT", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname + "/tar/bz2");
+            m = s.createMapper();
+            m.setType(glob);
+            m.setFrom("*.bz2");
+            m.setTo("*.tar.bz2");
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFTTF", results);
+
+        }
+        finally {
+            cleanupBed();
+        }
+
+    }
+

@@ -1,0 +1,16 @@
+(startLine=164 endLine=177 srcPath=/home/sonia/NewExperiment/antFilter/00044/src/main/org/apache/tools/ant/taskdefs/ExecTask.java)
+    /**
+     * Is this the OS the user wanted?
+     */
+    private boolean isValidOs() {
+        // test if os match
+        String myos = System.getProperty("os.name");
+        log("Myos = " + myos, Project.MSG_VERBOSE);
+        if ((os != null) && (os.indexOf(myos) < 0)){
+            // this command will be executed only on the specified OS
+            log("Not found in " + os, Project.MSG_VERBOSE);
+            return false;
+        }
+        return true;
+    }
+

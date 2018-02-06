@@ -1,0 +1,12 @@
+(startLine=520 endLine=529 srcPath=/home/sonia/NewExperiment/antFilter/00318/src/main/org/apache/tools/ant/taskdefs/optional/jdepend/JDependTask.java)
+        for (int i = 0; i < sourcesPath.length; i++) {
+            File f = new File(sourcesPath[i]);
+
+            // not necessary as JDepend would fail, but why loose some time?
+            if (!f.exists() || !f.isDirectory()) {
+                throw new BuildException("\"" + f.getPath() + "\" does not "
+                                         + "represent a valid directory. JDepend would fail.");
+            }
+            commandline.createArgument().setValue(f.getPath());
+        }
+

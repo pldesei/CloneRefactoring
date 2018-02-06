@@ -1,0 +1,40 @@
+(startLine=622 endLine=659 srcPath=/home/sonia/NewExperiment/antFilter/01293/src/main/org/apache/tools/ant/taskdefs/ExecTask.java)
+    /**
+     * A Utility method for this classes and subclasses to run an
+     * Execute instance (an external command).
+     *
+     * @param exe instance of the execute class.
+     *
+     * @throws IOException in case of problem to attach to the stdin/stdout/stderr
+     * streams of the process.
+     */
+    protected final void runExecute(Execute exe) throws IOException {
+        int returnCode = -1; // assume the worst
+
+        if (!spawn) {
+            returnCode = exe.execute();
+
+            //test for and handle a forced process death
+            if (exe.killedProcess()) {
+                String msg = "Timeout: killed the sub-process";
+                if (failOnError) {
+                    throw new BuildException(msg);
+                } else {
+                    log(msg, Project.MSG_WARN);
+                }
+            }
+            maybeSetResultPropertyValue(returnCode);
+            redirector.complete();
+            if (Execute.isFailure(returnCode)) {
+                if (failOnError) {
+                    throw new BuildException(getTaskType() + " returned: "
+                        + returnCode, getLocation());
+                } else {
+                    log("Result: " + returnCode, Project.MSG_ERR);
+                }
+            }
+        } else {
+            exe.spawn();
+        }
+    }
+

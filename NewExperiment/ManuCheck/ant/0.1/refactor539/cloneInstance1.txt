@@ -1,0 +1,43 @@
+(startLine=129 endLine=169 srcPath=/home/sonia/NewExperiment/antFilter/00887/src/testcases/org/apache/tools/ant/types/selectors/DependSelectorTest.java)
+        try {
+            makeBed();
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFFFF", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(identity);
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFFFF", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(merge);
+            m.setTo("asf-logo.gif.gz");
+            results = selectionString(s);
+            assertEquals("TFFFFTTTFFFF", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(merge);
+            m.setTo("asf-logo.gif.bz2");
+            results = selectionString(s);
+            assertEquals("TTFTTTTTTTTT", results);
+
+            s = (DependSelector)getInstance();
+            s.setTargetdir(basedirname + "/tar/bz2");
+            m = s.createMapper();
+            m.setType(glob);
+            m.setFrom("*.bz2");
+            m.setTo("*.tar.bz2");
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFTTF", results);
+
+        }
+

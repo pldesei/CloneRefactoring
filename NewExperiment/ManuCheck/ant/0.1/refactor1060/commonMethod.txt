@@ -1,0 +1,74 @@
+(startLine=152 endLine=223 srcPath=/home/sonia/NewExperiment/antFilter/01316/src/main/org/apache/tools/ant/taskdefs/Execute.java)
+    /**
+     * Find the list of environment variables for this process.
+     *
+     * @return a map containing the environment variables.
+     * @since Ant 1.8.2
+     */
+    public static synchronized Map/*<String,String>*/ getEnvironmentVariables() {
+        if (procEnvironment != null) {
+            return procEnvironment;
+        }
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_5)
+            && !Os.isFamily("openvms")) {
+            try {
+                procEnvironment = (Map) System.class
+                    .getMethod("getenv", new Class[0])
+                    .invoke(null, new Object[0]);
+                return procEnvironment;
+            } catch (Exception x) {
+                x.printStackTrace();
+            }
+        }
+
+        procEnvironment = new LinkedHashMap();
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Execute exe = new Execute(new PumpStreamHandler(out));
+            exe.setCommandline(getProcEnvCommand());
+            // Make sure we do not recurse forever
+            exe.setNewenvironment(true);
+            int retval = exe.execute();
+            if (retval != 0) {
+                // Just try to use what we got
+            }
+            BufferedReader in =
+                new BufferedReader(new StringReader(toString(out)));
+
+            if (Os.isFamily("openvms")) {
+                procEnvironment = getVMSLogicals(in);
+                return procEnvironment;
+            }
+            String var = null;
+            String line, lineSep = StringUtils.LINE_SEP;
+            while ((line = in.readLine()) != null) {
+                if (line.indexOf('=') == -1) {
+                    // Chunk part of previous env var (UNIX env vars can
+                    // contain embedded new lines).
+                    if (var == null) {
+                        var = lineSep + line;
+                    } else {
+                        var += lineSep + line;
+                    }
+                } else {
+                    // New env var...append the previous one if we have it.
+                    if (var != null) {
+                        int eq = var.indexOf("=");
+                        procEnvironment.put(var.substring(0, eq),
+                                            var.substring(eq + 1));
+                    }
+                    var = line;
+                }
+            }
+            // Since we "look ahead" before adding, there's one last env var.
+            if (var != null) {
+                int eq = var.indexOf("=");
+                procEnvironment.put(var.substring(0, eq), var.substring(eq + 1));
+            }
+        } catch (java.io.IOException exc) {
+            exc.printStackTrace();
+            // Just try to see how much we got
+        }
+        return procEnvironment;
+    }
+

@@ -1,0 +1,16 @@
+(startLine=197 endLine=210 srcPath=/home/sonia/NewExperiment/guavaFilter/00383/guava/src/com/google/common/io/ByteSource.java)
+  public long copyTo(ByteSink sink) throws IOException {
+    checkNotNull(sink);
+
+    Closer closer = Closer.create();
+    try {
+      InputStream in = closer.add(openStream());
+      OutputStream out = closer.add(sink.openStream());
+      return ByteStreams.copy(in, out);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

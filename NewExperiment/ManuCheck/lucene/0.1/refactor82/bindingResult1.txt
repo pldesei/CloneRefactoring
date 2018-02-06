@@ -1,0 +1,150 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01441
+predFragLineRange:916-934
+predMethodLineRange:827-979
+nextLineRange:827-868
+predStrMethodInvoNames:
+[]
+%%%%%%%%%%
+AddedMethodInvo Line:834 InvoName:ensureOpen()
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter
+ClassName:DirectoryTaxonomyWriter
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:protected final void ensureOpen() 
+%%%%%%%%%%
+AddedMethodInvo Line:835 InvoName:DirectoryReader.open(taxoDir)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.DirectoryReader
+ClassName:DirectoryReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/DirectoryReader.java
+InvokedMethodSig:public static org.apache.lucene.index.DirectoryReader open(org.apache.lucene.store.Directory) throws org.apache.lucene.index.CorruptIndexException, java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:837 InvoName:r.numDocs()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.IndexReader
+ClassName:IndexReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/IndexReader.java
+InvokedMethodSig:public abstract int numDocs() 
+%%%%%%%%%%
+AddedMethodInvo Line:839 InvoName:ordinalMap.setSize(size)
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter.OrdinalMap
+ClassName:OrdinalMap
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:public abstract void setSize(int) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:841 InvoName:MultiFields.getTerms(r,Consts.FULL)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.MultiFields
+ClassName:MultiFields
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/MultiFields.java
+InvokedMethodSig:public static org.apache.lucene.index.Terms getTerms(org.apache.lucene.index.IndexReader, java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:842 InvoName:terms.iterator(null)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.Terms
+ClassName:Terms
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/Terms.java
+InvokedMethodSig:public abstract org.apache.lucene.index.TermsEnum iterator(org.apache.lucene.index.TermsEnum) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:843 InvoName:MultiFields.getLiveDocs(r)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.MultiFields
+ClassName:MultiFields
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/MultiFields.java
+InvokedMethodSig:public static org.apache.lucene.util.Bits getLiveDocs(org.apache.lucene.index.IndexReader) 
+%%%%%%%%%%
+AddedMethodInvo Line:846 InvoName:te.next()
+PackageName:org.apache.lucene.util
+QualifiedClassName:org.apache.lucene.util.BytesRefIterator
+ClassName:BytesRefIterator
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/util/BytesRefIterator.java
+InvokedMethodSig:public abstract org.apache.lucene.util.BytesRef next() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:847 InvoName:te.term().utf8ToString()
+PackageName:org.apache.lucene.util
+QualifiedClassName:org.apache.lucene.util.BytesRef
+ClassName:BytesRef
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/util/BytesRef.java
+InvokedMethodSig:public java.lang.String utf8ToString() 
+%%%%%%%%%%
+AddedMethodInvo Line:847 InvoName:te.term()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.TermsEnum
+ClassName:TermsEnum
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/TermsEnum.java
+InvokedMethodSig:public abstract org.apache.lucene.util.BytesRef term() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:848 InvoName:cp.clear()
+PackageName:org.apache.lucene.facet.taxonomy
+QualifiedClassName:org.apache.lucene.facet.taxonomy.CategoryPath
+ClassName:CategoryPath
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/CategoryPath.java
+InvokedMethodSig:public void clear() 
+%%%%%%%%%%
+AddedMethodInvo Line:849 InvoName:cp.add(value,Consts.DEFAULT_DELIMITER)
+PackageName:org.apache.lucene.facet.taxonomy
+QualifiedClassName:org.apache.lucene.facet.taxonomy.CategoryPath
+ClassName:CategoryPath
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/CategoryPath.java
+InvokedMethodSig:public void add(java.lang.CharSequence, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:850 InvoName:findCategory(cp)
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter
+ClassName:DirectoryTaxonomyWriter
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:protected int findCategory(org.apache.lucene.facet.taxonomy.CategoryPath) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:855 InvoName:addCategory(cp)
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter
+ClassName:DirectoryTaxonomyWriter
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:public synchronized int addCategory(org.apache.lucene.facet.taxonomy.CategoryPath) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:857 InvoName:te.docs(liveDocs,docs,false)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.TermsEnum
+ClassName:TermsEnum
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/TermsEnum.java
+InvokedMethodSig:public abstract org.apache.lucene.index.DocsEnum docs(org.apache.lucene.util.Bits, org.apache.lucene.index.DocsEnum, boolean) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:858 InvoName:ordinalMap.addMapping(docs.nextDoc(),ordinal)
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter.OrdinalMap
+ClassName:OrdinalMap
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:public abstract void addMapping(int, int) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:858 InvoName:docs.nextDoc()
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.DocIdSetIterator
+ClassName:DocIdSetIterator
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/search/DocIdSetIterator.java
+InvokedMethodSig:public abstract int nextDoc() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:863 InvoName:ordinalMap.addMapping(0,0)
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter.OrdinalMap
+ClassName:OrdinalMap
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:public abstract void addMapping(int, int) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:864 InvoName:ordinalMap.addDone()
+PackageName:org.apache.lucene.facet.taxonomy.directory
+QualifiedClassName:org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter.OrdinalMap
+ClassName:OrdinalMap
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java
+InvokedMethodSig:public abstract void addDone() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:866 InvoName:r.close()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.IndexReader
+ClassName:IndexReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/index/IndexReader.java
+InvokedMethodSig:public final synchronized void close() throws java.io.IOException

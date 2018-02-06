@@ -1,0 +1,16 @@
+(startLine=202 endLine=215 srcPath=/home/sonia/NewExperiment/antFilter/00768/proposal/myrmidon/src/java/org/apache/antlib/cvslib/ChangeLogParser.java)
+        {
+            m_status = GET_FILE;
+            CVSEntry entry;
+            if( !m_entries.containsKey( entryKey ) )
+            {
+                entry = new CVSEntry( parseDate( m_date ), m_author, m_comment );
+                m_entries.put( entryKey, entry );
+            }
+            else
+            {
+                entry = (CVSEntry)m_entries.get( entryKey );
+            }
+            entry.addFile( m_file, m_revision );
+        }
+

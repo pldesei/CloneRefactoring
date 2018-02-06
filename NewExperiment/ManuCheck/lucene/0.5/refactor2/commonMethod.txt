@@ -1,0 +1,28 @@
+(startLine=169 endLine=194 srcPath=/home/sonia/NewExperiment/luceneFilter/00088/sandbox/projects/appex/src/java/search/DocumentHandler.java)
+    /**
+     * Add the contents of a Map to a document.
+     *
+     * @param Map to add.
+     */
+    private void addMapToDoc(Map map)
+    {
+        for (Iterator it = map.keySet().iterator(); it.hasNext();)
+        {
+            String field = (String) it.next();
+            Object value = map.get(field);
+            if (value instanceof String)
+            {
+                String type = null;
+                if (customFields != null)
+                {
+                    type = (String) customFields.get(field);
+                }
+                addFieldToDoc(type, field, (String) value);
+            }
+            else if (value instanceof Reader)
+            {
+                addFieldToDoc(field, (Reader) value);
+            }
+        }
+    }
+

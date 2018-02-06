@@ -1,0 +1,13 @@
+(startLine=264 endLine=274 srcPath=/home/sonia/NewExperiment/luceneFilter/01278/solr/core/src/test/org/apache/solr/search/TestRealTimeGet.java)
+              if (oper < commitPercent + deletePercent) {
+                if (VERBOSE) {
+                  verbose("deleting id",id,"val=",nextVal);
+                }
+
+                assertU("<delete><id>" + id + "</id></delete>");
+                model.put(id, -nextVal);
+                if (VERBOSE) {
+                  verbose("deleting id", id, "val=",nextVal,"DONE");
+                }
+              } else if (oper < commitPercent + deletePercent + deleteByQueryPercent) {
+

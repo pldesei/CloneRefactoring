@@ -1,0 +1,16 @@
+(startLine=256 endLine=269 srcPath=/home/sonia/NewExperiment/luceneFilter/01164/lucene/src/java/org/apache/lucene/util/BytesRef.java)
+  /**
+   * Copies the given long value and encodes it as 8 byte Big-Endian.
+   * <p>
+   * NOTE: this method resets the offset to 0, length to 8 and resizes the reference array
+   * if needed.
+   */
+  public void copy(long value) {
+    if (bytes.length < 8) {
+      bytes = new byte[8];
+    }
+    copyInternal((int) (value >> 32), offset = 0);
+    copyInternal((int) value, 4);
+    length = 8;
+  }
+

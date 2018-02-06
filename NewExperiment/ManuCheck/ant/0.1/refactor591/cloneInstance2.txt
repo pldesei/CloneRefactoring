@@ -1,0 +1,40 @@
+(startLine=600 endLine=637 srcPath=/home/sonia/NewExperiment/antFilter/01001/src/main/org/apache/tools/ant/taskdefs/optional/ejb/WeblogicDeploymentTool.java)
+                    {
+                        // Check files see if same
+                        JarEntry genericEntry = (JarEntry)genericEntries.get(filepath);
+                        JarEntry wlEntry = (JarEntry)wlEntries.get(filepath);
+                        if ((genericEntry.getCrc() !=  wlEntry.getCrc())  || // Crc's Match
+                            (genericEntry.getSize() != wlEntry.getSize()) ) // Size Match
+                        {
+                            if (genericEntry.getName().endsWith(".class"))
+                            {
+                                //File are different see if its an object or an interface
+                                String classname = genericEntry.getName().replace(File.separatorChar,'.');
+                                classname = classname.substring(0,classname.lastIndexOf(".class"));
+                                Class genclass = genericLoader.loadClass(classname);
+                                if (genclass.isInterface())
+                                {
+                                    //Interface changed   rebuild jar.
+                                    log("Interface " + genclass.getName() + " has changed",Project.MSG_VERBOSE);
+                                    rebuild = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    //Object class Changed   update it.
+                                    replaceEntries.put(filepath, genericEntry);
+                                }
+                            }
+                            else
+                            {
+                                // is it the manifest. If so ignore it
+                                if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
+                                    //File other then class changed   rebuild
+                                    log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
+                                    rebuild = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+

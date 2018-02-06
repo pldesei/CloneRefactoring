@@ -1,0 +1,21 @@
+(startLine=579 endLine=597 srcPath=/home/sonia/NewExperiment/antFilter/00142/src/main/org/apache/tools/ant/taskdefs/optional/ejb/GenericDeploymentTool.java)
+    private void addInterface(Class theInterface, Hashtable checkEntries) {
+        if (!theInterface.getName().startsWith("java")) // do not add system interfaces
+        { 
+            File interfaceFile = new File(srcDir.getAbsolutePath() 
+                                        + File.separatorChar 
+                                        + theInterface.getName().replace('.',File.separatorChar)
+                                        + ".class"
+                                        );
+            if (interfaceFile.exists() && interfaceFile.isFile())
+            {
+                checkEntries.put(theInterface.getName().replace('.',File.separatorChar)+".class",
+                                 interfaceFile);
+                Class[] superInterfaces = theInterface.getInterfaces();
+                for (int i = 0; i < superInterfaces.length; i++) {
+                    addInterface(superInterfaces[i], checkEntries);
+                }
+            }
+        }
+    }
+

@@ -1,0 +1,99 @@
+(startLine=436 endLine=532 srcPath=/home/sonia/NewExperiment/antFilter/01310/src/main/org/apache/tools/ant/types/RedirectorElement.java)
+    /**
+     * Configure the specified <code>Redirector</code>
+     * for the specified sourcefile.
+     * @param redirector   <code>Redirector</code>.
+     * @param sourcefile   <code>String</code>.
+     */
+    public void configure(Redirector redirector, String sourcefile) {
+        if (isReference()) {
+            getRef().configure(redirector, sourcefile);
+            return;
+        }
+        dieOnCircularReference();
+        if (alwaysLog != null) {
+            redirector.setAlwaysLog(alwaysLog.booleanValue());
+        }
+        if (logError != null) {
+            redirector.setLogError(logError.booleanValue());
+        }
+        if (append != null) {
+            redirector.setAppend(append.booleanValue());
+        }
+        if (createEmptyFiles != null) {
+            redirector.setCreateEmptyFiles(createEmptyFiles.booleanValue());
+        }
+        if (outputProperty != null) {
+            redirector.setOutputProperty(outputProperty);
+        }
+        if (errorProperty != null) {
+            redirector.setErrorProperty(errorProperty);
+        }
+        if (inputString != null) {
+            redirector.setInputString(inputString);
+        }
+        if (logInputString != null) {
+            redirector.setLogInputString(logInputString.booleanValue());
+        }
+        if (inputMapper != null) {
+            String[] inputTargets = null;
+            try {
+                inputTargets =
+                    inputMapper.getImplementation().mapFileName(sourcefile);
+            } catch (NullPointerException enPeaEx) {
+                if (sourcefile != null) {
+                    throw enPeaEx;
+                }
+            }
+            if (inputTargets != null && inputTargets.length > 0) {
+                redirector.setInput(toFileArray(inputTargets));
+            }
+        }
+        if (outputMapper != null) {
+            String[] outputTargets = null;
+            try {
+                outputTargets =
+                    outputMapper.getImplementation().mapFileName(sourcefile);
+            } catch (NullPointerException enPeaEx) {
+                if (sourcefile != null) {
+                    throw enPeaEx;
+                }
+            }
+            if (outputTargets != null && outputTargets.length > 0) {
+                redirector.setOutput(toFileArray(outputTargets));
+            }
+        }
+        if (errorMapper != null) {
+            String[] errorTargets = null;
+            try {
+                errorTargets =
+                    errorMapper.getImplementation().mapFileName(sourcefile);
+            } catch (NullPointerException enPeaEx) {
+                if (sourcefile != null) {
+                    throw enPeaEx;
+                }
+            }
+            if (errorTargets != null && errorTargets.length > 0) {
+                redirector.setError(toFileArray(errorTargets));
+            }
+        }
+        if (inputFilterChains.size() > 0) {
+            redirector.setInputFilterChains(inputFilterChains);
+        }
+        if (outputFilterChains.size() > 0) {
+            redirector.setOutputFilterChains(outputFilterChains);
+        }
+        if (errorFilterChains.size() > 0) {
+            redirector.setErrorFilterChains(errorFilterChains);
+        }
+        if (inputEncoding != null) {
+            redirector.setInputEncoding(inputEncoding);
+        }
+        if (outputEncoding != null) {
+            redirector.setOutputEncoding(outputEncoding);
+        }
+        if (errorEncoding != null) {
+            redirector.setErrorEncoding(errorEncoding);
+        }
+    }
+

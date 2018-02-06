@@ -1,0 +1,31 @@
+(startLine=340 endLine=368 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        float[] values = new float[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Float) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = Float.intBitsToFloat((int) dvs.longValue());
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Float.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+

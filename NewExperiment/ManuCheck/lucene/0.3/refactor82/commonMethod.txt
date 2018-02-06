@@ -1,0 +1,54 @@
+(startLine=380 endLine=431 srcPath=/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java)
+  /**
+   * Look up the given category in the cache and/or the on-disk storage,
+   * returning the category's ordinal, or a negative number in case the
+   * category does not yet exist in the taxonomy.
+   */
+  protected int findCategory(CategoryPath categoryPath) throws IOException {
+    // If we can find the category in our cache, we can return the
+    // response directly from it:
+    int res = cache.get(categoryPath);
+    if (res >= 0) {
+      return res;
+    }
+    // If we know that the cache is complete, i.e., contains every category
+    // which exists, we can return -1 immediately. However, if the cache is
+    // not complete, we need to check the disk.
+    if (cacheIsComplete) {
+      return -1;
+    }
+    cacheMisses++;
+    // After a few cache misses, it makes sense to read all the categories
+    // from disk and into the cache. The reason not to do this on the first
+    // cache miss (or even when opening the writer) is that it will
+    // significantly slow down the case when a taxonomy is opened just to
+    // add one category. The idea only spending a long time on reading
+    // after enough time was spent on cache misses is known as a "online
+    // algorithm".
+    if (perhapsFillCache()) {
+      return cache.get(categoryPath);
+    }
+
+    // We need to get an answer from the on-disk index. If a reader
+    // is not yet open, do it now:
+    if (reader == null) {
+      reader = openReader();
+    }
+
+    // TODO (Facet): avoid Multi*?
+    Bits liveDocs = MultiFields.getLiveDocs(reader);
+    DocsEnum docs = MultiFields.getTermDocsEnum(reader, liveDocs, Consts.FULL, 
+                                                new BytesRef(categoryPath.toString(delimiter)),
+                                                false);
+    if (docs == null || docs.nextDoc() == DocIdSetIterator.NO_MORE_DOCS) {
+      return -1; // category does not exist in taxonomy
+    }
+    // Note: we do NOT add to the cache the fact that the category
+    // does not exist. The reason is that our only use for this
+    // method is just before we actually add this category. If
+    // in the future this usage changes, we should consider caching
+    // the fact that the category is not in the taxonomy.
+    addToCache(categoryPath, docs.docID());
+    return docs.docID();
+  }
+

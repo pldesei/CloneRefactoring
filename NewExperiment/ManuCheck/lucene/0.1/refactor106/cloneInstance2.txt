@@ -1,0 +1,11 @@
+(startLine=310 endLine=318 srcPath=/home/sonia/NewExperiment/luceneFilter/01760/lucene/misc/src/test/org/apache/lucene/index/sorter/SorterTestBase.java)
+    while ((doc = docs.advance(doc)) != DocIdSetIterator.NO_MORE_DOCS) {
+      if (mappedLiveDocs != null) {
+        assertTrue("document " + doc + " marked as deleted", mappedLiveDocs.get(doc));
+      }
+      assertEquals("incorrect value; doc " + doc, sortedValues[doc].intValue(), Integer.parseInt(reader.document(doc).get(ID_FIELD)));
+      while (++prev < doc) {
+        assertFalse("document " + prev + " not marked as deleted", mappedLiveDocs.get(prev));
+      }
+    }
+

@@ -1,0 +1,42 @@
+(startLine=131 endLine=170 srcPath=/home/sonia/NewExperiment/antFilter/00887/src/testcases/org/apache/tools/ant/types/selectors/PresentSelectorTest.java)
+        try {
+            makeBed();
+
+            s = (PresentSelector)getInstance();
+            s.setTargetdir(basedirname);
+            results = selectionString(s);
+            assertEquals("TTTTTTTTTTTT", results);
+
+            s = (PresentSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(identity);
+            results = selectionString(s);
+            assertEquals("TTTTTTTTTTTT", results);
+
+            s = (PresentSelector)getInstance();
+            s.setTargetdir("src/etc/testcases/taskdefs/expected");
+            m = s.createMapper();
+            m.setType(flatten);
+            results = selectionString(s);
+            assertEquals("TTTTTTTTTTTF", results);
+
+            s = (PresentSelector)getInstance();
+            s.setTargetdir(basedirname);
+            m = s.createMapper();
+            m.setType(merge);
+            m.setTo("asf-logo.gif.gz");
+            results = selectionString(s);
+            assertEquals("TTTTTTTTTTTT", results);
+
+            s = (PresentSelector)getInstance();
+            s.setTargetdir(basedirname + "/tar/bz2");
+            m = s.createMapper();
+            m.setType(glob);
+            m.setFrom("*.bz2");
+            m.setTo("*.tar.bz2");
+            results = selectionString(s);
+            assertEquals("FFTFFFFFFFFF", results);
+
+        }
+

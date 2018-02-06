@@ -1,0 +1,104 @@
+(startLine=1038 endLine=1139 srcPath=/home/sonia/NewExperiment/luceneFilter/01279/solr/core/src/java/org/apache/solr/core/SolrCore.java)
+  /** Opens a new searcher and returns a RefCounted<SolrIndexSearcher> with it's reference incremented.
+   *
+   * "realtime" means that we need to open quickly for a realtime view of the index, hence don't do any
+   * autowarming and add to the _realtimeSearchers queue rather than the _searchers queue (so it won't
+   * be used for autowarming by a future normal searcher).  A "realtime" searcher will currently never
+   * become "registered" (since it currently lacks caching).
+   *
+   * realtimeSearcher is updated to the latest opened searcher, regardless of the value of "realtime".
+   *
+   * This method aquires openSearcherLock - do not call with searckLock held!
+   */
+  public RefCounted<SolrIndexSearcher> openNewSearcher(boolean updateHandlerReopens, boolean realtime) {
+    SolrIndexSearcher tmp;
+    RefCounted<SolrIndexSearcher> newestSearcher = null;
+    boolean nrt = solrConfig.reopenReaders && updateHandlerReopens;
+
+    openSearcherLock.lock();
+    try {
+      String newIndexDir = null;
+      File indexDirFile = null;
+      File newIndexDirFile = null;
+
+      // if it's not a normal near-realtime update, check that paths haven't changed.
+      if (!nrt) {
+        indexDirFile = new File(getIndexDir()).getCanonicalFile();
+        newIndexDir = getNewIndexDir();
+        newIndexDirFile = new File(newIndexDir).getCanonicalFile();
+      }
+
+      synchronized (searcherLock) {
+        newestSearcher = realtimeSearcher;
+        if (newestSearcher != null) {
+          newestSearcher.incref();      // the matching decref is in the finally block
+        }
+      }
+
+      if (newestSearcher != null && solrConfig.reopenReaders
+          && (nrt || indexDirFile.equals(newIndexDirFile))) {
+
+        IndexReader newReader;
+        IndexReader currentReader = newestSearcher.get().getIndexReader();
+
+        if (updateHandlerReopens) {
+          // SolrCore.verbose("start reopen from",previousSearcher,"writer=",writer);
+          IndexWriter writer = getUpdateHandler().getSolrCoreState().getIndexWriter(this);
+          newReader = IndexReader.openIfChanged(currentReader, writer, true);
+
+        } else {
+          // verbose("start reopen without writer, reader=", currentReader);
+          newReader = IndexReader.openIfChanged(currentReader);
+          // verbose("reopen result", newReader);
+        }
+
+        if (newReader == null) {
+          // if this is a request for a realtime searcher, just return the same searcher if there haven't been any changes.
+          if (realtime) {
+            newestSearcher.incref();
+            return newestSearcher;
+          }
+
+          currentReader.incRef();
+          newReader = currentReader;
+        }
+
+       // for now, turn off caches if this is for a realtime reader (caches take a little while to instantiate)
+        tmp = new SolrIndexSearcher(this, schema, (realtime ? "realtime":"main"), newReader, true, !realtime, true, directoryFactory);
+
+      } else {
+        // verbose("non-reopen START:");
+        tmp = new SolrIndexSearcher(this, newIndexDir, schema, getSolrConfig().mainIndexConfig, "main", true, directoryFactory);
+        // verbose("non-reopen DONE: searcher=",tmp);
+      }
+
+      List<RefCounted<SolrIndexSearcher>> searcherList = realtime ? _realtimeSearchers : _searchers;
+      RefCounted<SolrIndexSearcher> newSearcher = newHolder(tmp, searcherList);    // refcount now at 1
+
+      // Increment reference again for "realtimeSearcher" variable.  It should be at 2 after.
+      // When it's decremented by both the caller of this method, and by realtimeSearcher being replaced,
+      // it will be closed.
+      newSearcher.incref();
+
+      synchronized (searcherLock) {
+        if (realtimeSearcher != null) {
+          realtimeSearcher.decref();
+        }
+        realtimeSearcher = newSearcher;
+        searcherList.add(realtimeSearcher);
+      }
+
+      return newSearcher;
+
+    } catch (Exception e) {
+      throw new SolrException(SolrException.ErrorCode.SERVER_ERROR, "Error opening new searcher", e);
+    }
+    finally {
+      openSearcherLock.unlock();
+      if (newestSearcher != null) {
+        newestSearcher.decref();
+      }
+    }
+
+  }
+

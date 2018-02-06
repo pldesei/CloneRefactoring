@@ -1,0 +1,7 @@
+(startLine=634 endLine=638 srcPath=/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java)
+  private SolrDocumentList executeSolrQuery(SolrServer collection, String queryString) throws SolrServerException {
+    SolrQuery query = new SolrQuery(queryString).setRows(2 * RECORD_COUNT).addSort("id", ORDER.asc);
+    QueryResponse response = collection.query(query);
+    return response.getResults();
+  }
+

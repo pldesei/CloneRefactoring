@@ -1,0 +1,11 @@
+(startLine=135 endLine=143 srcPath=/home/sonia/NewExperiment/luceneFilter/00668/lucene/src/java/org/apache/lucene/index/MultiFields.java)
+  /**  This method may return null if the field does not exist.*/
+  public static Terms getTerms(IndexReader r, String field) throws IOException {
+    final Fields fields = getFields(r);
+    if (fields == null) {
+      return null;
+    } else {
+      return fields.terms(field);
+    }
+  }
+

@@ -1,0 +1,25 @@
+(startLine=609 endLine=631 srcPath=/home/sonia/NewExperiment/antFilter/00368/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSS.java)
+    /**
+     * Gets the value set for the FileTimeStamp.
+     * if it equals "current" then we return -GTC
+     * if it equals "modified" then we return -GTM
+     * if it equals "updated" then we return -GTU
+     * otherwise we return -GTC
+     *
+     * @return The default file time flag, if not set.
+     */
+    public String getFileTimeStamp() {
+        if (m_timestamp == null) {
+            return FLAG_FILETIME_DEF;
+        }
+        else if (m_timestamp.getValue().equals(TIME_MODIFIED)) {
+            return FLAG_FILETIME_MODIFIED;
+        }
+        else if (m_timestamp.getValue().equals(TIME_UPDATED)) {
+            return FLAG_FILETIME_UPDATED;
+        }
+        else {
+            return FLAG_FILETIME_DEF;
+        }
+    }
+

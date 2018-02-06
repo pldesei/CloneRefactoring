@@ -1,0 +1,15 @@
+(startLine=501 endLine=513 srcPath=/home/sonia/NewExperiment/antFilter/00943/src/main/org/apache/tools/ant/taskdefs/ExecTask.java)
+        if (error != null)  {
+            try {
+                errorStream 
+                    = new FileOutputStream(error.getAbsolutePath(), append);
+                log("Error redirected to " + out, Project.MSG_VERBOSE);
+            } catch (FileNotFoundException fne) {
+                throw new BuildException("Cannot write to " + error, fne,
+                                         getLocation());
+            } catch (IOException ioe) {
+                throw new BuildException("Cannot write to " + error, ioe,
+                                         getLocation());
+            }
+        }
+

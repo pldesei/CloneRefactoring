@@ -1,0 +1,27 @@
+(startLine=499 endLine=523 srcPath=/home/sonia/NewExperiment/antFilter/01163/src/main/org/apache/tools/bzip2/CBZip2InputStream.java)
+            while (zvec > limit[zt][zn]) {
+                zn++;
+                {
+                    {
+                        while (bsLive < 1) {
+                            int zzi;
+                            char thech = 0;
+                            try {
+                                thech = (char) bsStream.read();
+                            } catch (IOException e) {
+                                compressedStreamEOF();
+                            }
+                            if (thech == -1) {
+                                compressedStreamEOF();
+                            }
+                            zzi = thech;
+                            bsBuff = (bsBuff << 8) | (zzi & 0xff);
+                            bsLive += 8;
+                        }
+                    }
+                    zj = (bsBuff >> (bsLive - 1)) & 1;
+                    bsLive--;
+                }
+                zvec = (zvec << 1) | zj;
+            }
+

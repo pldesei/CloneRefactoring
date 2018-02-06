@@ -1,0 +1,15 @@
+(startLine=146 endLine=158 srcPath=/home/sonia/NewExperiment/antFilter/00232/src/main/org/apache/tools/ant/taskdefs/Expand.java)
+    /**
+     * get a mapper for a file
+     * @return a filenamemapper for a file
+     */
+    protected FileNameMapper getMapper() {
+        FileNameMapper mapper = null;
+        if (mapperElement != null) {
+            mapper = mapperElement.getImplementation();
+        } else {
+            mapper = new IdentityMapper();
+        }
+        return mapper;
+    }
+

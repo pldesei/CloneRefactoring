@@ -1,0 +1,33 @@
+ProjectPath:/home/sonia/NewExperiment/guavaFilter/00372
+predFragLineRange:2083-2093
+predMethodLineRange:2051-2093
+nextLineRange:2050-2095
+predStrMethodInvoNames:
+[checkNotNull, apply, getKey, filterEntries]
+%%%%%%%%%%
+AddedMethodInvo Line:2086 InvoName:Predicates.and(prev.keyPredicate,keyPredicate)
+PackageName:com.google.common.base
+QualifiedClassName:com.google.common.base.Predicates
+ClassName:Predicates
+InvokedFilePath:/home/sonia/NewExperiment/guavaFilter/00372/guava/src/com/google/common/base/Predicates.java
+InvokedMethodSig:public static Predicate<T> and(Predicate<? super T>, Predicate<? super T>) 
+%%%%%%%%%%
+AddedMethodInvo Line:2090 InvoName:Predicates.<Entry<K,V>>and(prev.entryPredicate(),Predicates.compose(keyPredicate,Maps.<K>keyFunction()))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:2090 InvoName:prev.entryPredicate()
+PackageName:com.google.common.collect
+QualifiedClassName:com.google.common.collect.FilteredMultimap<K,V>
+ClassName:FilteredMultimap<K,V>
+InvokedFilePath:/home/sonia/NewExperiment/guavaFilter/00372/guava-gwt/src-super/com/google/common/io/super/com/google/common/collect/FilteredMultimap<K,V>.java
+InvokedMethodSig:abstract Predicate<? super Entry<K,V>> entryPredicate() 
+%%%%%%%%%%
+AddedMethodInvo Line:2091 InvoName:Predicates.compose(keyPredicate,Maps.<K>keyFunction())
+PackageName:com.google.common.base
+QualifiedClassName:com.google.common.base.Predicates
+ClassName:Predicates
+InvokedFilePath:/home/sonia/NewExperiment/guavaFilter/00372/guava/src/com/google/common/base/Predicates.java
+InvokedMethodSig:public static Predicate<A> compose(Predicate<B>, Function<A,? extends B>) 
+%%%%%%%%%%
+AddedMethodInvo Line:2091 InvoName:Maps.<K>keyFunction()
+mBinding is null

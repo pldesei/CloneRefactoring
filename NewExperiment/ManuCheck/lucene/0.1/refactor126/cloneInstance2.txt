@@ -1,0 +1,26 @@
+(startLine=250 endLine=273 srcPath=/home/sonia/NewExperiment/luceneFilter/01919/lucene/core/src/java/org/apache/lucene/codecs/lucene41/Lucene41PostingsReader.java)
+    } else {
+      if (termState.docFreq == 1) {
+        termState.singletonDocID = in.readVInt();
+      } else {
+        termState.singletonDocID = -1;
+        termState.docStartFP += in.readVLong();
+      }
+      if (fieldHasPositions) {
+        termState.posStartFP += in.readVLong();
+        if (termState.totalTermFreq > BLOCK_SIZE) {
+          termState.lastPosBlockOffset = in.readVLong();
+        } else {
+          termState.lastPosBlockOffset = -1;
+        }
+        if ((fieldHasPayloads || fieldHasOffsets) && termState.totalTermFreq >= BLOCK_SIZE) {
+          long delta = in.readVLong();
+          if (termState.payStartFP == -1) {
+            termState.payStartFP = delta;
+          } else {
+            termState.payStartFP += delta;
+          }
+        }
+      }
+    }
+

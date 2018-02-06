@@ -1,0 +1,23 @@
+(startLine=293 endLine=313 srcPath=/home/sonia/NewExperiment/luceneFilter/01761/lucene/misc/src/test/org/apache/lucene/index/sorter/SorterTestBase.java)
+  Bits randomLiveDocs(int maxDoc) {
+    if (rarely()) {
+      if (random().nextBoolean()) {
+        return null;
+      } else {
+        return new Bits.MatchNoBits(maxDoc);
+      }
+    }
+    final FixedBitSet bits = new FixedBitSet(maxDoc);
+    final int bitsSet = _TestUtil.nextInt(random(), 1, maxDoc - 1);
+    for (int i = 0; i < bitsSet; ++i) {
+      while (true) {
+        final int index = random().nextInt(maxDoc);
+        if (!bits.get(index)) {
+          bits.set(index);
+          break;
+        }
+      }
+    }
+    return bits;
+  }
+

@@ -1,0 +1,14 @@
+(startLine=202 endLine=213 srcPath=/home/sonia/NewExperiment/antFilter/00888/src/testcases/org/apache/tools/ant/types/selectors/BaseSelectorTest.java)
+    /**
+     * <p>Creates a mirror of the testbed for use in dependency checks.</p>
+     *
+     * <p>Note that the right way to call this is within a try block,
+     * with a finally clause that calls cleanupMirror(). You place tests of
+     * the isSelected() method within the try block.</p>
+     */
+    protected void makeMirror() {
+        tbed = new TaskdefForMakingBed("mirrorfiles");
+        tbed.setUp();
+        tbed.makeMirror();
+    }
+

@@ -1,0 +1,23 @@
+(startLine=401 endLine=421 srcPath=/home/sonia/NewExperiment/antFilter/00331/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSS.java)
+    /**
+     *  Gets the version string. Returns the first specified of version "-V1.0",
+     *  date "-Vd01.01.01", label "-Vlbuild1".
+     *
+     * @return    An empty string if a version, date and label are not set.
+     */
+    protected String getVersionDateLabel() {
+        if (m_Version != null) {
+            return FLAG_VERSION + m_Version;
+        } else if (m_Date != null) {
+            return FLAG_VERSION_DATE + m_Date;
+        } else {
+            // Use getLabel() so labels longer then 30 char are truncated
+            // and the user is warned
+            String label = getLabel();
+            if (!label.equals("") && label != null) {
+                return FLAG_VERSION_LABEL + label;
+            }
+        }
+        return "";
+    }
+

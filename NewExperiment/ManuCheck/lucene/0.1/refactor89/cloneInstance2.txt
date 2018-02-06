@@ -1,0 +1,23 @@
+(startLine=214 endLine=234 srcPath=/home/sonia/NewExperiment/luceneFilter/01584/lucene/spatial/src/java/org/apache/lucene/spatial/vector/TwoDoublesStrategy.java)
+  Query makeDisjoint(Rectangle bbox) {
+    Query qX = NumericRangeQuery.newDoubleRange(
+        fieldNameX,
+        precisionStep,
+        bbox.getMinX(),
+        bbox.getMaxX(),
+        true,
+        true);
+    Query qY = NumericRangeQuery.newDoubleRange(
+        fieldNameY,
+        precisionStep,
+        bbox.getMinY(),
+        bbox.getMaxY(),
+        true,
+        true);
+
+    BooleanQuery bq = new BooleanQuery();
+    bq.add(qX,BooleanClause.Occur.MUST_NOT);
+    bq.add(qY,BooleanClause.Occur.MUST_NOT);
+    return bq;
+  }
+

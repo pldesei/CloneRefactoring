@@ -1,0 +1,13 @@
+(startLine=277 endLine=287 srcPath=/home/sonia/NewExperiment/antFilter/01330/src/main/org/apache/tools/ant/taskdefs/optional/junit/BriefJUnitResultFormatter.java)
+    public void testIgnored(Test test) {
+        String message = null;
+        if (test instanceof JUnit4TestCaseFacade) {
+            JUnit4TestCaseFacade facade = (JUnit4TestCaseFacade) test;
+            Ignore annotation = facade.getDescription().getAnnotation(Ignore.class);
+            if (annotation != null && annotation.value() != null && !annotation.value().isEmpty()) {
+                message = annotation.value();
+            }
+        }
+        formatSkip(test, message);
+    }
+

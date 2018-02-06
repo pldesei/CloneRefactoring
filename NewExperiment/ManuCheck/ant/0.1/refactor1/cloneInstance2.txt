@@ -1,0 +1,13 @@
+(startLine=167 endLine=177 srcPath=/home/sonia/NewExperiment/antFilter/00014/src/main/org/apache/tools/ant/taskdefs/MatchingTask.java)
+        if (ignoreString != null && ignoreString.length() > 0) {
+            Vector tmpExcludes = new Vector();
+            StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
+            while (tok.hasMoreTokens()) {
+                tmpExcludes.addElement("**/"+tok.nextToken().trim()+"/**");
+            }
+            this.excludes = new String[tmpExcludes.size()];
+            for (int i = 0; i < tmpExcludes.size(); i++) {
+                this.excludes[i] = (String)tmpExcludes.elementAt(i);
+            }
+        } else {
+

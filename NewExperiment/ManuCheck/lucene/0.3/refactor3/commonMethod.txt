@@ -1,0 +1,27 @@
+(startLine=196 endLine=220 srcPath=/home/sonia/NewExperiment/luceneFilter/00088/sandbox/projects/appex/src/java/search/DocumentHandler.java)
+    /**
+     * Add nested datasources.
+     *
+     * @param Map which contains the nested datasources.
+     */
+    private void addNestedDataSource(Map map) throws Exception
+    {
+        Object o = map.get(DataSource.NESTED_DATASOURCE);
+        if (o == null)
+            return;
+        if (o instanceof List)
+        {
+            List nestedDataSource = (List) o;
+            for (int i = 0; i < nestedDataSource.size(); i++)
+            {
+                DataSource ds = (DataSource) nestedDataSource.get(i);
+                addDataSource(ds);
+            }
+        }
+        else if (o instanceof DataSource)
+        {
+            DataSource ds = (DataSource) o;
+            addDataSource(ds);
+        }
+    }
+

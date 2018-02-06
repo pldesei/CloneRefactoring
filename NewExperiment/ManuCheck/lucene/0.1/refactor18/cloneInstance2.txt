@@ -1,0 +1,11 @@
+(startLine=130 endLine=138 srcPath=/home/sonia/NewExperiment/luceneFilter/00369/contrib/queries/src/test/org/apache/lucene/search/BooleanFilterTest.java)
+    {
+        BooleanFilter booleanFilter = new BooleanFilter();
+        booleanFilter.add(new FilterClause(getRangeFilter("price","030", "040"),BooleanClause.Occur.SHOULD));
+        booleanFilter.add(new FilterClause(getTermsFilter("accessRights", "admin"),BooleanClause.Occur.MUST));
+        booleanFilter.add(new FilterClause(getRangeFilter("date","20050101", "20051231"),BooleanClause.Occur.MUST));
+        booleanFilter.add(new FilterClause(getTermsFilter("inStock","N"),BooleanClause.Occur.MUST_NOT));
+        BitSet bits = booleanFilter.bits(reader);
+        assertEquals("Shoulds Ored but MUSTs ANDED and MustNot",0,bits.cardinality());
+    }
+

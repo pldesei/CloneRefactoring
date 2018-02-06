@@ -1,0 +1,12 @@
+(startLine=161 endLine=170 srcPath=/home/sonia/NewExperiment/antFilter/00043/src/main/org/apache/tools/ant/taskdefs/ExecTask.java)
+        } else {
+            String ant = project.getProperty("ant.home");
+            if (ant == null) throw new BuildException("Property 'ant.home' not found", location);
+            String antRun = project.resolveFile(ant + "/bin/antRun").toString();
+
+            cmdl = new Commandline();
+            cmdl.setExecutable(antRun);
+            cmdl.addValue(dir.getAbsolutePath());
+            cmdl.addLine(orig);
+        }
+

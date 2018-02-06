@@ -1,0 +1,10 @@
+(startLine=237 endLine=244 srcPath=/home/sonia/NewExperiment/luceneFilter/00665/lucene/src/test/org/apache/lucene/index/TestBackwardsCompatibility.java)
+  public void testSearchOldIndex() throws IOException {
+    for(int i=0;i<oldNames.length;i++) {
+      String dirName = "src/test/org/apache/lucene/index/index." + oldNames[i];
+      unzip(dirName, oldNames[i]);
+      searchIndex(oldNames[i], oldNames[i]);
+      rmDir(oldNames[i]);
+    }
+  }
+

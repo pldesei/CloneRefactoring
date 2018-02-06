@@ -1,0 +1,125 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/02396
+predFragLineRange:613-640
+predMethodLineRange:596-645
+nextLineRange:885-1092
+predStrMethodInvoNames:
+[getLeafCollector, setScorer, getCollapsedSet, getScores, getNullScores, getNullScore, nextDoc, getOrd, containsKey, get, getLeafCollector, setScorer, collect, finish]
+%%%%%%%%%%
+AddedMethodInvo Line:895 InvoName:this.ordinalMap.getGlobalOrds(currentContext)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:911 InvoName:collapseStrategy.getMergeBoost()
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.OrdFieldValueStrategy
+ClassName:OrdFieldValueStrategy
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public org.apache.solr.search.CollapsingQParserPlugin.MergeBoost getMergeBoost() 
+%%%%%%%%%%
+AddedMethodInvo Line:922 InvoName:this.ordinalMap.getGlobalOrds(currentContext)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:943 InvoName:mergeBoost.boost(globalDoc)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.MergeBoost
+ClassName:MergeBoost
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public boolean boost(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1022 InvoName:this.collapseStrategy.setNextReader(context)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.IntFieldValueStrategy
+ClassName:IntFieldValueStrategy
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public abstract void setNextReader(org.apache.lucene.index.LeafReaderContext) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1023 InvoName:context.reader().getNumericDocValues(this.collapseField)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReader
+ClassName:LeafReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/lucene/index/LeafReader.java
+InvokedMethodSig:public abstract org.apache.lucene.index.NumericDocValues getNumericDocValues(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1023 InvoName:context.reader()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReaderContext
+ClassName:LeafReaderContext
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/lucene/index/LeafReaderContext.java
+InvokedMethodSig:public org.apache.lucene.index.LeafReader reader() 
+%%%%%%%%%%
+AddedMethodInvo Line:1029 InvoName:collapseStrategy.collapse(collapseKey,contextDoc,globalDoc)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.IntFieldValueStrategy
+ClassName:IntFieldValueStrategy
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public abstract void collapse(int, int, int) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1039 InvoName:contexts[currentContext].reader().getNumericDocValues(this.collapseField)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReader
+ClassName:LeafReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/lucene/index/LeafReader.java
+InvokedMethodSig:public abstract org.apache.lucene.index.NumericDocValues getNumericDocValues(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1039 InvoName:contexts[currentContext].reader()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReaderContext
+ClassName:LeafReaderContext
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/lucene/index/LeafReaderContext.java
+InvokedMethodSig:public org.apache.lucene.index.LeafReader reader() 
+%%%%%%%%%%
+AddedMethodInvo Line:1047 InvoName:collapseStrategy.getCollapseMap()
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.IntFieldValueStrategy
+ClassName:IntFieldValueStrategy
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public IntLongOpenHashMap getCollapseMap() 
+%%%%%%%%%%
+AddedMethodInvo Line:1048 InvoName:collapseStrategy.getDocScores()
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.IntFieldValueStrategy
+ClassName:IntFieldValueStrategy
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public LongArrayList getDocScores() 
+%%%%%%%%%%
+AddedMethodInvo Line:1050 InvoName:collapseStrategy.getMergeBoost()
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.IntFieldValueStrategy
+ClassName:IntFieldValueStrategy
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public org.apache.solr.search.CollapsingQParserPlugin.MergeBoost getMergeBoost() 
+%%%%%%%%%%
+AddedMethodInvo Line:1061 InvoName:contexts[currentContext].reader().getNumericDocValues(this.collapseField)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReader
+ClassName:LeafReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/lucene/index/LeafReader.java
+InvokedMethodSig:public abstract org.apache.lucene.index.NumericDocValues getNumericDocValues(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1061 InvoName:contexts[currentContext].reader()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReaderContext
+ClassName:LeafReaderContext
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/lucene/index/LeafReaderContext.java
+InvokedMethodSig:public org.apache.lucene.index.LeafReader reader() 
+%%%%%%%%%%
+AddedMethodInvo Line:1074 InvoName:Float.intBitsToFloat(((int)docScore))
+PackageName:java.lang
+QualifiedClassName:java.lang.Float
+ClassName:Float
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/java/lang/Float.java
+InvokedMethodSig:public static native float intBitsToFloat(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1075 InvoName:mergeBoost.boost(globalDoc)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.MergeBoost
+ClassName:MergeBoost
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public boolean boost(int) 

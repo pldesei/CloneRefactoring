@@ -1,0 +1,6 @@
+(startLine=347 endLine=350 srcPath=/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCache.java)
+    @Override
+    public TermsEnum termsEnum(Terms terms) throws IOException {
+      return NumericUtils.filterPrefixCodedLongs(terms.iterator(null));
+    }
+

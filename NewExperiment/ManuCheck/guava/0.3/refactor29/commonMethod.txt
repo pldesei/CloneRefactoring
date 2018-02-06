@@ -1,0 +1,8 @@
+(startLine=55 endLine=60 srcPath=/home/sonia/NewExperiment/guavaFilter/00850/android/guava-tests/test/com/google/common/util/concurrent/ClassPathUtil.java)
+  /** Returns the URLs in the class path. */
+  static URL[] getClassPathUrls() {
+    return ClassPathUtil.class.getClassLoader() instanceof URLClassLoader
+        ? ((URLClassLoader) ClassPathUtil.class.getClassLoader()).getURLs()
+        : parseJavaClassPath();
+  }
+

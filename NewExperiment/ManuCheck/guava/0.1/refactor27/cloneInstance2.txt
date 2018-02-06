@@ -1,0 +1,32 @@
+(startLine=865 endLine=894 srcPath=/home/sonia/NewExperiment/guavaFilter/00728/guava-tests/test/com/google/common/collect/MapMakerInternalMapTest.java)
+  public void testDrainKeyReferenceQueueOnRead() {
+    for (MapMaker maker : allKeyValueStrengthMakers()) {
+      MapMakerInternalMap<Object, Object> map =
+          makeMap(maker.concurrencyLevel(1));
+      if (map.usesKeyReferences()) {
+        Segment<Object, Object> segment = map.segments[0];
+
+        Object keyOne = new Object();
+        int hashOne = map.hash(keyOne);
+        Object valueOne = new Object();
+        Object keyTwo = new Object();
+
+        map.put(keyOne, valueOne);
+        ReferenceEntry<Object, Object> entry = segment.getEntry(keyOne, hashOne);
+
+        @SuppressWarnings("unchecked")
+        Reference<Object> reference = (Reference) entry;
+        reference.enqueue();
+
+        for (int i = 0; i < SMALL_MAX_SIZE; i++) {
+          Object unused = map.get(keyTwo);
+        }
+        assertFalse(map.containsKey(keyOne));
+        assertFalse(map.containsValue(valueOne));
+        assertNull(map.get(keyOne));
+        assertEquals(0, map.size());
+        assertNull(segment.keyReferenceQueue.poll());
+      }
+    }
+  }
+

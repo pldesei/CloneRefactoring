@@ -1,0 +1,15 @@
+(startLine=292 endLine=304 srcPath=/home/sonia/NewExperiment/antFilter/01253/src/main/org/apache/tools/ant/taskdefs/cvslib/CvsTagDiff.java)
+                    if ((index = line.indexOf(FILE_IS_NEW)) != -1) {
+                        // it is a new file
+                        // set the revision but not the prevrevision
+                        String filename = line.substring(0, index);
+                        String rev = null;
+                        int indexrev = -1;
+                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                            rev = line.substring(indexrev + REVISION.length());
+                        }
+                        entry = new CvsTagEntry(filename, rev);
+                        entries.addElement(entry);
+                        log(entry.toString(), Project.MSG_VERBOSE);
+                    } else if ((index = line.indexOf(FILE_HAS_CHANGED)) != -1) {
+

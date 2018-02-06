@@ -1,0 +1,60 @@
+(startLine=209 endLine=266 srcPath=/home/sonia/NewExperiment/antFilter/01307/src/main/org/apache/tools/ant/taskdefs/optional/javacc/JavaCC.java)
+    public void execute() throws BuildException {
+
+        // load command line with optional attributes
+        Enumeration iter = optionalAttrs.keys();
+        while (iter.hasMoreElements()) {
+            String name  = (String)iter.nextElement();
+            Object value = optionalAttrs.get(name);
+            cmdl.createArgument().setValue("-"+name+":"+value.toString());
+        }
+
+        // load command line with required attributes
+        if (outputDirectory != null) {
+            if (!outputDirectory.isDirectory()) {
+                throw new BuildException("Outputdir not a directory.");
+            }
+            cmdl.createArgument().setValue(
+                "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath());
+        }
+
+        if (target == null || !target.isFile()) {
+            throw new BuildException("Invalid target: " + target);
+        }
+        final File javaFile = new File(
+            target.toString().substring(0, target.toString().indexOf(".jj")) + ".java");
+        if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
+            project.log("Target is already built - skipping (" + target + ")");
+            return;
+        }
+        cmdl.createArgument().setValue(target.getAbsolutePath());
+
+        if (javaccHome == null || !javaccHome.isDirectory()) {
+            throw new BuildException("Javacchome not set.");
+        }
+        final Path classpath = cmdl.createClasspath(project);
+        classpath.createPathElement().setPath(javaccHome.getAbsolutePath() +
+                                                  "/JavaCC.zip");
+
+        final Commandline.Argument arg = cmdl.createVmArgument();
+        arg.setValue("-mx140M");
+        arg.setValue("-Dinstall.root="+javaccHome.getAbsolutePath());
+
+        final Execute process =
+            new Execute(new LogStreamHandler(this,
+                                             Project.MSG_INFO,
+                                             Project.MSG_INFO),
+                        null);
+        log(cmdl.toString(), Project.MSG_VERBOSE);
+        process.setCommandline(cmdl.getCommandline());
+
+        try {
+            if (process.execute() != 0) {
+                throw new BuildException("JavaCC failed.");
+            }
+        }
+        catch (IOException e) {
+            throw new BuildException("Failed to launch JavaCC: " + e);
+        }
+    }
+

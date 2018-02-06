@@ -1,0 +1,15 @@
+(startLine=182 endLine=194 srcPath=/home/sonia/NewExperiment/antFilter/00369/src/main/org/apache/tools/ant/types/FileSet.java)
+    /**
+     * Sets the set of include patterns. Patterns may be separated by a comma
+     * or a space.
+     *
+     * @param includes the string containing the include patterns
+     */
+    public void setIncludes(String includes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+
+        defaultPatterns.setIncludes(includes);
+    }
+

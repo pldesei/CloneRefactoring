@@ -1,0 +1,39 @@
+(startLine=20 endLine=56 srcPath=/home/sonia/NewExperiment/luceneFilter/00032/src/test/org/apache/lucene/search/TestRangeQuery.java)
+  public void testExclusive() throws Exception {
+    Directory dir = new RAMDirectory();
+    Query query = new RangeQuery(new Term("content", "A"), new Term("content", "C"), false);
+    Hits hits = null;
+
+    IndexWriter writer = new IndexWriter(dir, new WhitespaceAnalyzer(), true);
+    addDoc(writer, "A");
+    addDoc(writer, "B");
+    addDoc(writer, "C");
+    addDoc(writer, "D");
+    writer.close();
+
+    IndexSearcher searcher = new IndexSearcher(dir);
+    hits = searcher.search(query);
+    assertEquals(1, hits.length());
+    searcher.close();
+
+    writer = new IndexWriter(dir, new WhitespaceAnalyzer(), true);
+    addDoc(writer, "A");
+    addDoc(writer, "B");
+    addDoc(writer, "D");
+    writer.close();
+
+    searcher = new IndexSearcher(dir);
+    hits = searcher.search(query);
+    assertEquals(1, hits.length());
+    searcher.close();
+
+    writer = new IndexWriter(dir, new WhitespaceAnalyzer(), false);
+    addDoc(writer, "C");
+    writer.close();
+
+    searcher = new IndexSearcher(dir);
+    hits = searcher.search(query);
+    assertEquals(1, hits.length());
+    searcher.close();
+  }
+

@@ -1,0 +1,12 @@
+(startLine=965 endLine=974 srcPath=/home/sonia/NewExperiment/guavaFilter/00374/guava/src/com/google/common/io/ByteStreams.java)
+  static ByteSource asByteSource(
+      final InputSupplier<? extends InputStream> supplier) {
+    checkNotNull(supplier);
+    return new ByteSource() {
+      @Override
+      public InputStream openStream() throws IOException {
+        return supplier.getInput();
+      }
+    };
+  }
+

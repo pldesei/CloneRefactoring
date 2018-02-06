@@ -1,0 +1,161 @@
+(startLine=1100 endLine=1258 srcPath=/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+    public DelegatingCollector getCollector(String collapseField,
+                                            String min,
+                                            String max,
+                                            int nullPolicy,
+                                            String hint,
+                                            boolean needsScores,
+                                            int size,
+                                            IntIntOpenHashMap boostDocs,
+                                            SolrIndexSearcher searcher) throws IOException {
+
+
+
+      SortedDocValues docValues = null;
+      FunctionQuery funcQuery = null;
+
+      FieldType collapseFieldType = searcher.getSchema().getField(collapseField).getType();
+      String defaultValue = searcher.getSchema().getField(collapseField).getDefaultValue();
+
+      if(collapseFieldType instanceof StrField) {
+        if(HINT_TOP_FC.equals(hint)) {
+
+            /*
+            * This hint forces the use of the top level field cache for String fields.
+            * This is VERY fast at query time but slower to warm and causes insanity.
+            */
+
+          Map<String, UninvertingReader.Type> mapping = new HashMap();
+          mapping.put(collapseField, UninvertingReader.Type.SORTED);
+          UninvertingReader uninvertingReader = new UninvertingReader(new ReaderWrapper(searcher.getLeafReader(), collapseField), mapping);
+          docValues = uninvertingReader.getSortedDocValues(collapseField);
+        } else {
+          docValues = DocValues.getSorted(searcher.getLeafReader(), collapseField);
+        }
+      } else {
+        if(HINT_TOP_FC.equals(hint)) {
+          throw new IOException("top_fc hint is only supported when collapsing on String Fields");
+        }
+      }
+
+      FieldType minMaxFieldType = null;
+      if(max != null) {
+        if(max.indexOf("(") == -1) {
+          minMaxFieldType = searcher.getSchema().getField(max).getType();
+        } else {
+          LocalSolrQueryRequest request = null;
+          try {
+            SolrParams params = new ModifiableSolrParams();
+            request = new LocalSolrQueryRequest(searcher.getCore(), params);
+            FunctionQParser functionQParser = new FunctionQParser(max, null, null,request);
+            funcQuery = (FunctionQuery)functionQParser.parse();
+          } catch (Exception e) {
+            throw new IOException(e);
+          } finally {
+            request.close();
+          }
+        }
+      }
+
+      if(min != null) {
+        if(min.indexOf("(") == -1) {
+          minMaxFieldType = searcher.getSchema().getField(min).getType();
+        } else {
+          LocalSolrQueryRequest request = null;
+          try {
+            SolrParams params = new ModifiableSolrParams();
+            request = new LocalSolrQueryRequest(searcher.getCore(), params);
+            FunctionQParser functionQParser = new FunctionQParser(min, null, null,request);
+            funcQuery = (FunctionQuery)functionQParser.parse();
+          } catch (Exception e) {
+            throw new IOException(e);
+          } finally {
+            request.close();
+          }
+        }
+      }
+
+      int maxDoc = searcher.maxDoc();
+      int leafCount = searcher.getTopReaderContext().leaves().size();
+
+      if (min != null || max != null) {
+
+        if(collapseFieldType instanceof StrField) {
+
+          return new OrdFieldValueCollector(maxDoc,
+                                            leafCount,
+                                            docValues,
+                                            nullPolicy,
+                                            max != null ? max : min,
+                                            max != null,
+                                            needsScores,
+                                            minMaxFieldType,
+                                            boostDocs,
+                                            funcQuery,
+                                            searcher);
+
+        } else if((collapseFieldType instanceof TrieIntField ||
+                   collapseFieldType instanceof TrieFloatField)) {
+
+          int nullValue = 0;
+
+          if(collapseFieldType instanceof TrieFloatField) {
+            if(defaultValue != null) {
+              nullValue = Float.floatToIntBits(Float.parseFloat(defaultValue));
+            } else {
+              nullValue = Float.floatToIntBits(0.0f);
+            }
+          } else {
+            if(defaultValue != null) {
+              nullValue = Integer.parseInt(defaultValue);
+            }
+          }
+
+          return new IntFieldValueCollector(maxDoc,
+                                            size,
+                                            leafCount,
+                                            nullValue,
+                                            nullPolicy,
+                                            collapseField,
+                                            max != null ? max : min,
+                                            max != null,
+                                            needsScores,
+                                            minMaxFieldType,
+                                            boostDocs,
+                                            funcQuery,
+                                            searcher);
+        } else {
+          throw new IOException("64 bit numeric collapse fields are not supported");
+        }
+
+      } else {
+
+        if(collapseFieldType instanceof StrField) {
+
+          return new OrdScoreCollector(maxDoc, leafCount, docValues, nullPolicy, boostDocs);
+
+        } else if(collapseFieldType instanceof TrieIntField ||
+                  collapseFieldType instanceof TrieFloatField) {
+
+          int nullValue = 0;
+
+          if(collapseFieldType instanceof TrieFloatField) {
+            if(defaultValue != null) {
+              nullValue = Float.floatToIntBits(Float.parseFloat(defaultValue));
+            } else {
+              nullValue = Float.floatToIntBits(0.0f);
+            }
+          } else {
+            if(defaultValue != null) {
+              nullValue = Integer.parseInt(defaultValue);
+            }
+          }
+
+          return new IntScoreCollector(maxDoc, leafCount, nullValue, nullPolicy, size, collapseField, boostDocs);
+
+        } else {
+          throw new IOException("64 bit numeric collapse fields are not supported");
+        }
+      }
+    }
+

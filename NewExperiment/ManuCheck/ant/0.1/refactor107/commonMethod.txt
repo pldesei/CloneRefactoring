@@ -1,0 +1,22 @@
+(startLine=802 endLine=821 srcPath=/home/sonia/NewExperiment/antFilter/00087/src/main/org/apache/tools/ant/taskdefs/Redirector.java)
+    /**
+     * Notify the <code>Redirector</code> that it is now okay
+     * to set any output and/or error properties.
+     */
+    public synchronized void setProperties() {
+        if (baos != null) {
+            try {
+                baos.close();
+            } catch (IOException eyeOhEx) {
+                // Ignore exception
+            }
+        }
+        if (errorBaos != null) {
+            try {
+                errorBaos.close();
+            } catch (IOException eyeOhEx) {
+                // Ignore exception
+            }
+        }
+    }
+

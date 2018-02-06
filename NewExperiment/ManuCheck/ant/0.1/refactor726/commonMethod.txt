@@ -1,0 +1,10 @@
+(startLine=159 endLine=166 srcPath=/home/sonia/NewExperiment/antFilter/01077/src/testcases/org/apache/tools/ant/taskdefs/optional/EchoPropertiesTest.java)
+    private void testEchoPrefixVarious(String target) throws Exception {
+        executeTarget(target);
+        Properties props = loadPropFile(PREFIX_OUTFILE);
+        assertEquals("prefix didn't include 'a.set' property",
+            "true", props.getProperty("a.set"));
+        assertNull("prefix failed to filter out property 'b.set'",
+            props.getProperty("b.set"));
+    }
+

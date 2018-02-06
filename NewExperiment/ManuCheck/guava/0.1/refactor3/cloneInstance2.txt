@@ -1,0 +1,59 @@
+(startLine=1298 endLine=1354 srcPath=/home/sonia/NewExperiment/guavaFilter/00174/guava-tests/test/com/google/common/cache/CacheLoadingTest.java)
+  public void testInvalidateDuringLoading() throws InterruptedException, ExecutionException {
+    // computation starts; invalidate() is called on the key being computed, computation finishes
+    final CountDownLatch computationStarted = new CountDownLatch(2);
+    final CountDownLatch letGetFinishSignal = new CountDownLatch(1);
+    final CountDownLatch getFinishedSignal = new CountDownLatch(2);
+    final String getKey = "get";
+    final String refreshKey = "refresh";
+    final String suffix = "Suffix";
+
+    CacheLoader<String, String> computeFunction = new CacheLoader<String, String>() {
+      @Override
+      public String load(String key) throws InterruptedException {
+        computationStarted.countDown();
+        letGetFinishSignal.await();
+        return key + suffix;
+      }
+    };
+
+    final LoadingCache<String, String> cache = CacheBuilder.newBuilder()
+        .build(computeFunction);
+    ConcurrentMap<String,String> map = cache.asMap();
+    map.put(refreshKey, refreshKey);
+
+    new Thread() {
+      @Override
+      public void run() {
+        cache.getUnchecked(getKey);
+        getFinishedSignal.countDown();
+      }
+    }.start();
+    new Thread() {
+      @Override
+      public void run() {
+        try {
+          cache.refresh(refreshKey);
+        } catch (ExecutionException e) {
+          throw new UncheckedExecutionException(e);
+        }
+        getFinishedSignal.countDown();
+      }
+    }.start();
+
+    computationStarted.await();
+    cache.invalidate(getKey);
+    cache.invalidate(refreshKey);
+    assertFalse(map.containsKey(getKey));
+    assertFalse(map.containsKey(refreshKey));
+
+    // let computation complete
+    letGetFinishSignal.countDown();
+    getFinishedSignal.await();
+
+    // results should be visible
+    assertEquals(2, cache.size());
+    assertEquals(getKey + suffix, map.get(getKey));
+    assertEquals(refreshKey + suffix, map.get(refreshKey));
+  }
+

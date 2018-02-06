@@ -1,0 +1,48 @@
+(startLine=647 endLine=692 srcPath=/home/sonia/NewExperiment/antFilter/01038/src/main/org/apache/tools/ant/taskdefs/optional/ejb/WeblogicDeploymentTool.java)
+                {
+                    log("No rebuild needed - updating jar",Project.MSG_VERBOSE);
+                    newWLJarFile = new File(weblogicJarFile.getAbsolutePath() + ".temp");
+                    if (newWLJarFile.exists()) {
+                        newWLJarFile.delete();
+                    }
+
+                    newJarStream = new JarOutputStream(new FileOutputStream(newWLJarFile));
+                    newJarStream.setLevel(0);
+
+                    //Copy files from old weblogic jar
+                    for (Enumeration e = wlEntries.elements() ; e.hasMoreElements();)
+                    {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        InputStream is;
+                        JarEntry je = (JarEntry)e.nextElement();
+                        if (je.getCompressedSize() == -1 ||
+                                je.getCompressedSize() == je.getSize()) {
+                            newJarStream.setLevel(0);
+                        }
+                        else {
+                            newJarStream.setLevel(9);
+                        }
+
+                        // Update with changed Bean class
+                        if (replaceEntries.containsKey(je.getName()))
+                        {
+                            log("Updating Bean class from generic Jar " + je.getName(),Project.MSG_VERBOSE);
+                            // Use the entry from the generic jar
+                            je = (JarEntry)replaceEntries.get(je.getName());
+                            is = genericJar.getInputStream(je);
+                        }
+                        else  //use fle from original weblogic jar
+                        {
+                            is = wlJar.getInputStream(je);
+                        }
+                        newJarStream.putNextEntry(new JarEntry(je.getName()));
+
+                        while ((bytesRead = is.read(buffer)) != -1)
+                        {
+                            newJarStream.write(buffer,0,bytesRead);
+                        }
+                        is.close();
+                    }
+                }
+

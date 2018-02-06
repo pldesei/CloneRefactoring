@@ -1,0 +1,35 @@
+(startLine=728 endLine=760 srcPath=/home/sonia/NewExperiment/antFilter/01164/src/main/org/apache/tools/bzip2/CBZip2InputStream.java)
+    private int getAndMoveToFrontDecode0(final int groupNo)
+        throws IOException {
+        final InputStream in  = this.in;
+        final Data data       = this.data;
+        final int zt          = data.selector[groupNo] & 0xff;
+        final int[] limit_zt  = data.limit[zt];
+        int zn = data.minLens[zt];
+        int zvec = bsR(zn);
+        int bsLive = this.bsLive;
+        int bsBuff = this.bsBuff;
+
+        while (zvec > limit_zt[zn]) {
+            zn++;
+            while (bsLive < 1) {
+                final int thech = in.read();
+
+                if (thech >= 0) {
+                    bsBuff = (bsBuff << 8) | thech;
+                    bsLive += 8;
+                    continue;
+                } else {
+                    throw new IOException("unexpected end of stream");
+                }
+            }
+            bsLive--;
+            zvec = (zvec << 1) | ((bsBuff >> bsLive) & 1);
+        }
+
+        this.bsLive = bsLive;
+        this.bsBuff = bsBuff;
+
+        return data.perm[zt][zvec - data.base[zt][zn]];
+    }
+

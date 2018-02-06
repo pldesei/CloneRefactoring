@@ -1,0 +1,24 @@
+(startLine=364 endLine=385 srcPath=/home/sonia/NewExperiment/luceneFilter/01420/solr/contrib/dataimporthandler/src/java/org/apache/solr/handler/dataimport/DataImporter.java)
+  public void doFullImport(SolrWriter writer, RequestParams requestParams) {
+    LOG.info("Starting Full Import");
+    setStatus(Status.RUNNING_FULL_DUMP);
+
+    setIndexStartTime(new Date());
+
+    try {
+      docBuilder = new DocBuilder(this, writer, propWriter, requestParams);
+      checkWritablePersistFile(writer);
+      docBuilder.execute();
+      if (!requestParams.debug)
+        cumulativeStatistics.add(docBuilder.importStatistics);
+    } catch (Throwable t) {
+      SolrException.log(LOG, "Full Import failed", t);
+      docBuilder.rollback();
+    } finally {
+      setStatus(Status.IDLE);
+      config.clearCaches();
+      DocBuilder.INSTANCE.set(null);
+    }
+
+  }
+

@@ -1,0 +1,21 @@
+(startLine=1081 endLine=1099 srcPath=/home/sonia/NewExperiment/antFilter/01315/src/main/org/apache/tools/ant/taskdefs/optional/junit/JUnitTask.java)
+    private void checkIncludeAntRuntime(CommandlineJava cmd) {
+        if (includeAntRuntime) {
+            Vector v = Execute.getProcEnvironment();
+            Enumeration e = v.elements();
+            while (e.hasMoreElements()) {
+                String s = (String) e.nextElement();
+                if (s.startsWith(CLASSPATH)) {
+                    cmd.createClasspath(getProject()).createPath()
+                        .append(new Path(getProject(),
+                                         s.substring(CLASSPATH.length()
+                                                     )));
+                }
+            }
+            log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
+                Project.MSG_VERBOSE);
+            cmd.createClasspath(getProject()).createPath()
+                .append(antRuntimeClasses);
+        }
+    }
+

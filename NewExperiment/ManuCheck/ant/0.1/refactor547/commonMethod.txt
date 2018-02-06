@@ -1,0 +1,9 @@
+(startLine=266 endLine=272 srcPath=/home/sonia/NewExperiment/antFilter/00944/src/main/org/apache/tools/ant/taskdefs/Redirector.java)
+    /**
+     * Create the StreamHandler to use with our Execute instance.
+     */
+    public ExecuteStreamHandler createHandler() throws BuildException {
+        createStreams();
+        return new PumpStreamHandler(outputStream, errorStream, inputStream);
+    }
+

@@ -1,0 +1,15 @@
+(startLine=275 endLine=287 srcPath=/home/sonia/NewExperiment/luceneFilter/00437/src/java/org/apache/lucene/search/MultiSearcher.java)
+      } else {
+        // We must shift the docIDs
+        hc = new MultiReaderHitCollector() {
+            private int docBase;
+            public void collect(int doc, float score) {
+              results.collect(doc + docBase + start, score);
+            }
+
+            public void setNextReader(IndexReader reader, int docBase) {
+              this.docBase = docBase;
+            }
+          };
+      }
+

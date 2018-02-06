@@ -1,0 +1,13 @@
+(startLine=167 endLine=177 srcPath=/home/sonia/NewExperiment/luceneFilter/01911/lucene/core/src/java/org/apache/lucene/index/SegmentMerger.java)
+          } else if (type == DocValuesType.BINARY) {
+            List<BinaryDocValues> toMerge = new ArrayList<BinaryDocValues>();
+            for (AtomicReader reader : mergeState.readers) {
+              BinaryDocValues values = reader.getBinaryDocValues(field.name);
+              if (values == null) {
+                values = BinaryDocValues.EMPTY;
+              }
+              toMerge.add(values);
+            }
+            consumer.mergeBinaryField(field, mergeState, toMerge);
+          } else if (type == DocValuesType.SORTED) {
+

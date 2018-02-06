@@ -1,0 +1,23 @@
+(startLine=135 endLine=155 srcPath=/home/sonia/NewExperiment/antFilter/00494/proposal/myrmidon/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSSCHECKOUT.java)
+    {
+
+        if( m_AutoResponse == null )
+        {
+            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+        }
+        else if( m_AutoResponse.equalsIgnoreCase( "Y" ) )
+        {
+            cmd.createArgument().setValue( FLAG_AUTORESPONSE_YES );
+
+        }
+        else if( m_AutoResponse.equalsIgnoreCase( "N" ) )
+        {
+            cmd.createArgument().setValue( FLAG_AUTORESPONSE_NO );
+        }
+        else
+        {
+            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+        }// end of else
+
+    }
+

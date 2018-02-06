@@ -1,0 +1,22 @@
+(startLine=461 endLine=480 srcPath=/home/sonia/NewExperiment/antFilter/00948/src/main/org/apache/tools/ant/taskdefs/optional/sos/SOS.java)
+    /** Adds the optional attributes to the command line. */
+    protected void getOptionalAttributes() {
+        // -verbose
+        commandLine.createArgument().setValue(getVerbose());
+        // Disable Compression
+        commandLine.createArgument().setValue(getNoCompress());
+        // Path to the SourceOffSite home directory /home/user/.sos
+        if (getSosHome() == null) {
+            // If -soshome was not specified then we can look for nocache
+            commandLine.createArgument().setValue(getNoCache());
+        } else {
+            commandLine.createArgument().setValue(FLAG_SOS_HOME);
+            commandLine.createArgument().setValue(getSosHome());
+        }
+        //If a working directory was specified then add it to the command line
+        if (getLocalPath() != null) {
+            commandLine.createArgument().setValue(FLAG_WORKING_DIR);
+            commandLine.createArgument().setValue(getLocalPath());
+        }
+    }
+

@@ -1,0 +1,11 @@
+(startLine=2350 endLine=2358 srcPath=/home/sonia/NewExperiment/antFilter/01246/src/main/org/apache/tools/ant/taskdefs/optional/net/FTP.java)
+            } else if (action == SITE_CMD) {
+                    RetryHandler h = new RetryHandler(this.retriesAllowed, this);
+                    final FTPClient lftp = ftp;
+                    executeRetryable(h, new Retryable() {
+                        public void execute() throws IOException {
+                            doSiteCommand(lftp, FTP.this.siteCommand);
+                        }
+                    }, "Site Command: " + this.siteCommand);
+            } else {
+

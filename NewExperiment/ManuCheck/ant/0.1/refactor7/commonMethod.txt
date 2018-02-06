@@ -1,0 +1,19 @@
+(startLine=186 endLine=202 srcPath=/home/sonia/NewExperiment/antFilter/00044/src/main/org/apache/tools/ant/taskdefs/Execute.java)
+    /**
+     * Set the name of the antRun script using the project's value.
+     *
+     * @param project the current project.
+     */
+    public void setAntRun(Project project) throws BuildException {
+        String ant = project.getProperty("ant.home");
+        if (ant == null) {
+            throw new BuildException("Property 'ant.home' not found");
+        }
+
+        if (myos.toLowerCase().indexOf("windows") >= 0) {
+            antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
+        } else {
+            antRun = project.resolveFile(ant + "/bin/antRun").toString();
+        }
+    }
+

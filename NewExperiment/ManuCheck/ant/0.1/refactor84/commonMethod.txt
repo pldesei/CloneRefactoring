@@ -1,0 +1,15 @@
+(startLine=365 endLine=377 srcPath=/home/sonia/NewExperiment/antFilter/00077/src/main/org/apache/tools/ant/taskdefs/Redirector.java)
+    /**
+     * This <code>Redirector</code>'s subordinate
+     * <code>PropertyOutputStream</code>s will not set their respective
+     * properties <code>while (appendProperties && append)</code>.
+     * 
+     * @param appendProperties
+     *            whether to append properties.
+     */
+    public void setAppendProperties(boolean appendProperties) {
+        synchronized (outMutex) {
+            this.appendProperties = appendProperties;
+        }
+    }
+

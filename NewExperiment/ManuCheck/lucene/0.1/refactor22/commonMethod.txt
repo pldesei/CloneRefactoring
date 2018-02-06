@@ -1,0 +1,9 @@
+(startLine=127 endLine=133 srcPath=/home/sonia/NewExperiment/luceneFilter/00438/src/java/org/apache/lucene/search/Collector.java)
+  /**
+   * Called before successive calls to {@link #collect(int)}. Implementations
+   * that need the score of the current document (passed-in to
+   * {@link #collect(int)}), should save the passed-in Scorer and call
+   * scorer.score() when needed.
+   */
+  public abstract void setScorer(Scorer scorer) throws IOException;
+

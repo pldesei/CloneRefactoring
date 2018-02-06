@@ -1,0 +1,23 @@
+(startLine=322 endLine=342 srcPath=/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreContainer.java)
+  static Properties getCoreProps(String instanceDir, String file, Properties defaults) {
+    if(file == null) file = "conf"+File.separator+ "solrcore.properties";
+    File corePropsFile = new File(file);
+    if(!corePropsFile.isAbsolute()){
+      corePropsFile = new File(instanceDir, file);
+    }
+    Properties p = defaults;
+    if (corePropsFile.exists() && corePropsFile.isFile()) {
+      p = new Properties(defaults);
+      InputStream is = null;
+      try {
+        is = new FileInputStream(corePropsFile);
+        p.load(is);
+      } catch (IOException e) {
+        log.warn("Error loading properties ",e);
+      } finally{
+        IOUtils.closeQuietly(is);        
+      }
+    }
+    return p;
+  }
+

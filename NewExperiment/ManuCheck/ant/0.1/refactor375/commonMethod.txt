@@ -1,0 +1,42 @@
+(startLine=530 endLine=569 srcPath=/home/sonia/NewExperiment/antFilter/00334/src/main/org/apache/tools/ant/taskdefs/optional/PropertyFile.java)
+        private String getCurrentValue(String oldValue) {
+            String ret = null;
+            if (operation == Operation.EQUALS_OPER) {
+                // If only value is specified, the property is set to it
+                // regardless of its previous value.
+                if (value != null && defaultValue == null) {
+                    ret = value;
+                }
+
+                // If only default is specified and the property previously
+                // existed in the property file, it is unchanged.
+                if (value == null && defaultValue != null && oldValue != null) {
+                    ret = oldValue;
+                }
+
+                // If only default is specified and the property did not
+                // exist in the property file, the property is set to default.
+                if (value == null && defaultValue != null && oldValue == null) {
+                    ret = defaultValue;
+                }
+
+                // If value and default are both specified and the property
+                // previously existed in the property file, the property
+                // is set to value.
+                if (value != null && defaultValue != null && oldValue != null) {
+                    ret = value;
+                }
+
+                // If value and default are both specified and the property
+                // did not exist in the property file, the property is set
+                // to default.
+                if (value != null && defaultValue != null && oldValue == null) {
+                    ret = defaultValue;
+                }
+            } else {
+                ret = (oldValue == null) ? defaultValue : oldValue;
+            }
+
+            return ret;
+        }
+

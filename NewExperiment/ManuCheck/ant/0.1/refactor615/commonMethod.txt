@@ -1,0 +1,14 @@
+(startLine=87 endLine=98 srcPath=/home/sonia/NewExperiment/antFilter/01013/src/main/org/apache/tools/ant/types/ZipFileSet.java)
+    /**
+     * Set the directory for the fileset.  Prevents both "dir" and "src"
+     * from being specified.
+     */
+    public void setDir(File dir) throws BuildException {
+        if (srcFile != null) {
+            throw new BuildException("Cannot set both dir and src attributes");
+        } else {
+            super.setDir(dir);
+            hasDir = true;
+        }
+    }
+

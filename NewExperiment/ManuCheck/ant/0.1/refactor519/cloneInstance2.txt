@@ -1,0 +1,26 @@
+(startLine=172 endLine=195 srcPath=/home/sonia/NewExperiment/antFilter/00608/proposal/myrmidon/src/java/org/apache/myrmidon/components/configurer/DefaultConfigurer.java)
+            {
+                final Configuration childConfig = children[ i ];
+                final String name = childConfig.getName();
+                try
+                {
+                    configureElement( state, childConfig, context );
+                }
+                catch( final NoSuchPropertyException nspe )
+                {
+                    final String message =
+                        REZ.getString( "no-such-element.error", elemName, name );
+                    throw new ConfigurationException( message, nspe );
+                }
+                catch( final ConfigurationException ce )
+                {
+                    throw ce;
+                }
+                catch( final CascadingException ce )
+                {
+                    final String message =
+                        REZ.getString( "bad-set-element.error", elemName, name );
+                    throw new ConfigurationException( message, ce );
+                }
+            }
+

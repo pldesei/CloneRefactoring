@@ -1,0 +1,10 @@
+(startLine=246 endLine=253 srcPath=/home/sonia/NewExperiment/luceneFilter/00665/lucene/src/test/org/apache/lucene/index/TestBackwardsCompatibility.java)
+  public void testIndexOldIndexNoAdds() throws IOException {
+    for(int i=0;i<oldNames.length;i++) {
+      String dirName = "src/test/org/apache/lucene/index/index." + oldNames[i];
+      unzip(dirName, oldNames[i]);
+      changeIndexNoAdds(oldNames[i]);
+      rmDir(oldNames[i]);
+    }
+  }
+

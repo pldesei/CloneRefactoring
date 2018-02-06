@@ -1,0 +1,20 @@
+(startLine=500 endLine=517 srcPath=/home/sonia/NewExperiment/antFilter/00087/src/main/org/apache/tools/ant/taskdefs/ExecuteOn.java)
+    /**
+     * log a message for skipping a fileset.
+     * @param currentType the current type.
+     * @param ds the directory scanner.
+     * @param base the dir base
+     */
+    private void logSkippingFileset(
+        String currentType, DirectoryScanner ds, File base) {
+        int includedCount
+            = ((!FileDirBoth.DIR.equals(currentType))
+               ? ds.getIncludedFilesCount() : 0)
+            + ((!FileDirBoth.FILE.equals(currentType))
+               ? ds.getIncludedDirsCount() : 0);
+
+        log("Skipping fileset for directory " + base + ". It is "
+            + ((includedCount > 0) ? "up to date." : "empty."),
+             verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
+    }
+

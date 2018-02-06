@@ -1,0 +1,13 @@
+(startLine=157 endLine=167 srcPath=/home/sonia/NewExperiment/luceneFilter/01911/lucene/core/src/java/org/apache/lucene/index/SegmentMerger.java)
+          if (type == DocValuesType.NUMERIC) {
+            List<NumericDocValues> toMerge = new ArrayList<NumericDocValues>();
+            for (AtomicReader reader : mergeState.readers) {
+              NumericDocValues values = reader.getNumericDocValues(field.name);
+              if (values == null) {
+                values = NumericDocValues.EMPTY;
+              }
+              toMerge.add(values);
+            }
+            consumer.mergeNumericField(field, mergeState, toMerge);
+          } else if (type == DocValuesType.BINARY) {
+

@@ -1,0 +1,59 @@
+(startLine=77 endLine=133 srcPath=/home/sonia/NewExperiment/luceneFilter/03209/solr/contrib/ltr/src/test/org/apache/solr/ltr/feature/TestOriginalScoreFeature.java)
+  public static void implTestOriginalScoreResponseDocsCheck(String modelName,
+      String origScoreFeatureName,
+      String nonScoringFeatureName, String nonScoringFeatureValue) throws Exception {
+
+    final SolrQuery query = new SolrQuery();
+    query.setQuery("title:w1");
+    query.add("fl", "*, score");
+    query.add("rows", "4");
+    query.add("wt", "json");
+
+    final int doc0Id = 1;
+    final int doc1Id = 8;
+    final int doc2Id = 6;
+    final int doc3Id = 7;
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='"+doc0Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='"+doc1Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='"+doc2Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='"+doc3Id+"'");
+
+    final String res = restTestHarness.query("/query" + query.toQueryString());
+    final Map<String,Object> jsonParse = (Map<String,Object>) ObjectBuilder
+        .fromJSON(res);
+    final String doc0Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(0)).get("score")).toString();
+    final String doc1Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(1)).get("score")).toString();
+    final String doc2Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(2)).get("score")).toString();
+    final String doc3Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(3)).get("score")).toString();
+
+    final boolean debugQuery = random().nextBoolean();
+    if (debugQuery) {
+      query.add(CommonParams.DEBUG_QUERY, "true");
+    }
+
+    query.remove("fl");
+    query.add("fl", "*, score, fv:[fv]");
+    query.add("rq", "{!ltr model="+modelName+" reRankDocs=4}");
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='"+doc0Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='"+doc1Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='"+doc2Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='"+doc3Id+"'");
+
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 0, doc0Id, origScoreFeatureName, doc0Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 1, doc1Id, origScoreFeatureName, doc1Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 2, doc2Id, origScoreFeatureName, doc2Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 3, doc3Id, origScoreFeatureName, doc3Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+  }
+

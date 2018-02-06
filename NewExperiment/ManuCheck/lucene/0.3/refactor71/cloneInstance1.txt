@@ -1,0 +1,24 @@
+(startLine=193 endLine=214 srcPath=/home/sonia/NewExperiment/luceneFilter/01267/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+    public void put(IndexReader reader, Entry key, Object value) {
+      final Object readerKey = reader.getCoreCacheKey();
+      synchronized (readerCache) {
+        Map<Entry,Object> innerCache = readerCache.get(readerKey);
+        if (innerCache == null) {
+          // First time this reader is using FieldCache
+          innerCache = new HashMap<Entry,Object>();
+          readerCache.put(readerKey, innerCache);
+          if (reader instanceof SegmentReader) {
+            ((SegmentReader) reader).addCoreClosedListener(wrapper.purgeCore);
+          } else {
+            reader.addReaderClosedListener(wrapper.purgeReader);
+          }
+        }
+        if (innerCache.get(key) == null) {
+          innerCache.put(key, value);
+        } else {
+          // Another thread beat us to it; leave the current
+          // value
+        }
+      }
+    }
+

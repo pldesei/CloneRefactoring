@@ -1,0 +1,29 @@
+(startLine=1471 endLine=1497 srcPath=/home/sonia/NewExperiment/luceneFilter/02017/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  /**
+   * Helper method for inspecting QueryCommand and creating the appropriate 
+   * {@link TopDocsCollector}
+   *
+   * @param len the number of docs to return
+   * @param cmd The Command whose properties should determine the type of 
+   *        TopDocsCollector to use.
+   */
+  private TopDocsCollector buildTopDocsCollector(int len, QueryCommand cmd) throws IOException {
+    
+    if (null == cmd.getSort()) {
+      assert null == cmd.getCursorMark() : "have cursor but no sort";
+      return TopScoreDocCollector.create(len, true);
+    } else {
+      // we have a sort
+      final boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+      final Sort weightedSort = weightSort(cmd.getSort());
+      final CursorMark cursor = cmd.getCursorMark();
+
+      // :TODO: make fillFields it's own QueryCommand flag? ...
+      // ... see comments in populateNextCursorMarkFromTopDocs for cache issues (SOLR-5595)
+      final boolean fillFields = (null != cursor);
+      final FieldDoc searchAfter = (null != cursor ? cursor.getSearchAfterFieldDoc() : null);
+      return TopFieldCollector.create(weightedSort, len, searchAfter,
+                                      fillFields, needScores, needScores, true); 
+    }
+  }
+

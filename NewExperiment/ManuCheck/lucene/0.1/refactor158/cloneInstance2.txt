@@ -1,0 +1,9 @@
+(startLine=60 endLine=66 srcPath=/home/sonia/NewExperiment/luceneFilter/02744/lucene/spatial3d/src/java/org/apache/lucene/geo3d/GeoAreaFactory.java)
+      } else {
+        if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+          return new dXYdZSolid(planetModel, (minX+maxX) * 0.5, minY, maxY, (minZ+maxZ) * 0.5);
+        } else {
+          return new dXYZSolid(planetModel, (minX+maxX) * 0.5, minY, maxY, minZ, maxZ);
+        }
+      }
+

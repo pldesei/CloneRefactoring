@@ -1,0 +1,20 @@
+(startLine=470 endLine=487 srcPath=/home/sonia/NewExperiment/luceneFilter/01441/lucene/facet/src/java/org/apache/lucene/facet/taxonomy/directory/DirectoryTaxonomyWriter.java)
+  @Override
+  public synchronized int addCategory(CategoryPath categoryPath) throws IOException {
+    ensureOpen();
+    // If the category is already in the cache and/or the taxonomy, we
+    // should return its existing ordinal:
+    int res = findCategory(categoryPath);
+    if (res < 0) {
+      // This is a new category, and we need to insert it into the index
+      // (and the cache). Actually, we might also need to add some of
+      // the category's ancestors before we can add the category itself
+      // (while keeping the invariant that a parent is always added to
+      // the taxonomy before its child). internalAddCategory() does all
+      // this recursively:
+      res = internalAddCategory(categoryPath, categoryPath.length());
+    }
+    return res;
+
+  }
+

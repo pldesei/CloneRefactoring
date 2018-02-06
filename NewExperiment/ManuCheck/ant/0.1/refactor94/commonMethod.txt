@@ -1,0 +1,27 @@
+(startLine=622 endLine=646 srcPath=/home/sonia/NewExperiment/antFilter/00077/src/main/org/apache/tools/ant/types/Commandline.java)
+    /**
+     * Return a String that describes the command and arguments suitable for
+     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     *
+     * <p>This method assumes that the first entry in the array is the
+     * executable to run.</p>
+     * @param args the command line to describe as an array of strings
+     * @return a string that describes the command and arguments.
+     * @since Ant 1.5
+     */
+    public static String describeCommand(String[] args) {
+        if (args == null || args.length == 0) {
+            return "";
+        }
+        StringBuffer buf = new StringBuffer("Executing \'");
+        buf.append(args[0]);
+        buf.append("\'");
+        if (args.length > 1) {
+            buf.append(" with ");
+            buf.append(describeArguments(args, 1));
+        } else {
+            buf.append(DISCLAIMER);
+        }
+        return buf.toString();
+    }
+

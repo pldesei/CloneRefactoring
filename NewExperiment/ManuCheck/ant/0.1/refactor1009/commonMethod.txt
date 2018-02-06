@@ -1,0 +1,13 @@
+(startLine=206 endLine=216 srcPath=/home/sonia/NewExperiment/antFilter/01308/src/main/org/apache/tools/ant/types/Resource.java)
+    /**
+     * Tells if the resource is a directory.
+     * @return boolean flag indicating if the resource is a directory.
+     */
+    public boolean isDirectory() {
+        if (isReference()) {
+            return ((Resource) getCheckedRef()).isDirectory();
+        }
+        //default false:
+        return directory != null && directory.booleanValue();
+    }
+

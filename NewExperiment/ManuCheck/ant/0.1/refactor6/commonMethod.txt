@@ -1,0 +1,17 @@
+(startLine=179 endLine=193 srcPath=/home/sonia/NewExperiment/antFilter/00044/src/main/org/apache/tools/ant/taskdefs/ExecTask.java)
+    /**
+     * Create an Execute instance with the correct working directory set.
+     */
+    protected Execute prepareExec() throws BuildException {
+        // default directory to the project's base directory
+        if (dir == null) dir = project.getBaseDir();
+        // show the command
+        log(cmdl.toString(), Project.MSG_VERBOSE);
+        
+        Execute exe = new Execute(createHandler(), createWatchdog());
+        exe.setAntRun(project);
+        exe.setWorkingDirectory(dir);
+        exe.setEnvironment(env.getVariables());
+        return exe;
+    }
+

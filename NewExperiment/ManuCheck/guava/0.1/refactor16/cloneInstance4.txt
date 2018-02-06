@@ -1,0 +1,15 @@
+(startLine=93 endLine=105 srcPath=/home/sonia/NewExperiment/guavaFilter/00383/guava/src/com/google/common/io/CharSource.java)
+  public long copyTo(Appendable appendable) throws IOException {
+    checkNotNull(appendable);
+
+    Closer closer = Closer.create();
+    try {
+      Reader reader = closer.add(openStream());
+      return CharStreams.copy(reader, appendable);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

@@ -1,0 +1,15 @@
+(startLine=608 endLine=620 srcPath=/home/sonia/NewExperiment/antFilter/01318/src/main/org/apache/tools/ant/taskdefs/compilers/DefaultCompilerAdapter.java)
+    /**
+     * Shall we assume command line switches for the given version of Java?
+     * @since Ant 1.8.3
+     */
+    private boolean assumeJavaXY(String javacXY, String javaEnvVersionXY) {
+        return javacXY.equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(javaEnvVersionXY));
+    }
+

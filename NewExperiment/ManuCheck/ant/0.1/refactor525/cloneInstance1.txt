@@ -1,0 +1,27 @@
+(startLine=115 endLine=139 srcPath=/home/sonia/NewExperiment/antFilter/00760/proposal/myrmidon/src/java/org/apache/myrmidon/components/configurer/DefaultConfigurer.java)
+            {
+                final String name = attributes[ i ];
+                try
+                {
+                    // Set the attribute
+                    final String value = configuration.getAttribute( name );
+                    setAttribute( state, name, value, context );
+                }
+                catch( final NoSuchPropertyException nspe )
+                {
+                    final String message =
+                        REZ.getString( "no-such-attribute.error", elemName, name );
+                    throw new ConfigurationException( message, nspe );
+                }
+                catch( final ConfigurationException ce )
+                {
+                    throw ce;
+                }
+                catch( final CascadingException ce )
+                {
+                    final String message =
+                        REZ.getString( "bad-set-attribute.error", elemName, name );
+                    throw new ConfigurationException( message, ce );
+                }
+            }
+

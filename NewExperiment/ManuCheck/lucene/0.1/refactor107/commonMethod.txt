@@ -1,0 +1,9 @@
+(startLine=88 endLine=94 srcPath=/home/sonia/NewExperiment/luceneFilter/01793/lucene/analysis/common/src/java/org/apache/lucene/analysis/util/AbstractAnalysisFactory.java)
+  public String require(Map<String,String> args, String name) {
+    String s = args.remove(name);
+    if (s == null) {
+      throw new IllegalArgumentException("Configuration Error: missing parameter '" + name + "'");
+    }
+    return s;
+  }
+

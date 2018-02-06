@@ -1,0 +1,18 @@
+(startLine=443 endLine=458 srcPath=/home/sonia/NewExperiment/luceneFilter/01155/lucene/src/java/org/apache/lucene/index/values/Bytes.java)
+    protected IndexOutput getOrCreateIndexOut() throws IOException {
+      boolean success = false;
+      try {
+        if (idxOut == null) {
+          idxOut = dir.createOutput(IndexFileNames.segmentFileName(id, "",
+              INDEX_EXTENSION), context);
+          CodecUtil.writeHeader(idxOut, codecName, version);
+        }
+        success = true;
+      } finally {
+        if (!success) {
+          IOUtils.closeWhileHandlingException(idxOut);
+        }
+      }
+      return idxOut;
+    }
+

@@ -1,0 +1,20 @@
+(startLine=42 endLine=59 srcPath=/home/sonia/NewExperiment/antFilter/01341/src/tests/junit/org/apache/tools/ant/FileUtilities.java)
+    /**
+     * Reads the contents of a file into a String.
+     * @param file the file to read.
+     * @return the contents of the given file as a string.
+     * @throws IOException on error reading the file (not existing, not readable etc)
+     */
+    public static String getFileContents(File file) throws IOException {
+            FileReader rdr = null;
+            try {
+                rdr = new FileReader(file);
+                return FileUtils.readFully(rdr);
+            }
+            finally {
+                if (rdr != null) {
+                rdr.close();
+            }
+        }
+    }
+

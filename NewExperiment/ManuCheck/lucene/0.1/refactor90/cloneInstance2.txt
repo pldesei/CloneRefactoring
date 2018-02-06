@@ -1,0 +1,14 @@
+(startLine=45 endLine=56 srcPath=/home/sonia/NewExperiment/luceneFilter/01629/lucene/core/src/java/org/apache/lucene/util/packed/Packed8ThreeBlocks.java)
+  Packed8ThreeBlocks(DataInput in, int valueCount) throws IOException {
+    this(valueCount);
+    for (int i = 0; i < 3 * valueCount; ++i) {
+      blocks[i] = in.readByte();
+    }
+    final int mod = blocks.length % 8;
+    if (mod != 0) {
+      for (int i = mod; i < 8; ++i) {
+         in.readByte();
+      }
+    }
+  }
+

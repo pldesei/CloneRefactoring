@@ -1,0 +1,50 @@
+(startLine=54 endLine=101 srcPath=/home/sonia/NewExperiment/luceneFilter/03208/solr/contrib/ltr/src/test/org/apache/solr/ltr/feature/TestOriginalScoreFeature.java)
+  public void testOriginalScore() throws Exception {
+    loadFeature("score", OriginalScoreFeature.class.getCanonicalName(), "{}");
+
+    loadModel("originalScore", LinearModel.class.getCanonicalName(),
+        new String[] {"score"}, "{\"weights\":{\"score\":1.0}}");
+
+    final SolrQuery query = new SolrQuery();
+    query.setQuery("title:w1");
+    query.add("fl", "*, score");
+    query.add("rows", "4");
+    query.add("wt", "json");
+
+    // Normal term match
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='1'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='8'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='6'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='7'");
+
+    final String res = restTestHarness.query("/query" + query.toQueryString());
+    final Map<String,Object> jsonParse = (Map<String,Object>) ObjectBuilder
+        .fromJSON(res);
+    final String doc0Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(0)).get("score")).toString();
+    final String doc1Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(1)).get("score")).toString();
+    final String doc2Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(2)).get("score")).toString();
+    final String doc3Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(3)).get("score")).toString();
+
+    query.add("fl", "[fv]");
+    query.add("rq", "{!ltr model=originalScore reRankDocs=4}");
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='1'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/score=="
+        + doc0Score);
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='8'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/score=="
+        + doc1Score);
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='6'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/score=="
+        + doc2Score);
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='7'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/score=="
+        + doc3Score);
+  }
+

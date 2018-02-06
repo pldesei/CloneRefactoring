@@ -1,0 +1,16 @@
+(startLine=80 endLine=93 srcPath=/home/sonia/NewExperiment/antFilter/01136/src/main/org/apache/tools/ant/taskdefs/War.java)
+    public void setWebxml(File descr) {
+        deploymentDescriptor = descr;
+        if (!deploymentDescriptor.exists()) {
+            throw new BuildException("Deployment descriptor: "
+                                     + deploymentDescriptor
+                                     + " does not exist.");
+        }
+
+        // Create a ZipFileSet for this file, and pass it up.
+        ZipFileSet fs = new ZipFileSet();
+        fs.setFile(deploymentDescriptor);
+        fs.setFullpath("WEB-INF/web.xml");
+        super.addFileset(fs);
+    }
+

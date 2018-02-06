@@ -1,0 +1,88 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01716
+predFragLineRange:336-386
+predMethodLineRange:334-386
+nextLineRange:287-439
+predStrMethodInvoNames:
+[]
+%%%%%%%%%%
+AddedMethodInvo Line:358 InvoName:getBytes(reader,field,null,setDocsWithField)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCacheImpl
+ClassName:FieldCacheImpl
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java
+InvokedMethodSig:public org.apache.lucene.search.FieldCache.Bytes getBytes(org.apache.lucene.index.AtomicReader, java.lang.String, org.apache.lucene.search.FieldCache.ByteParser, boolean) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:364 InvoName:reader.getNumericDocValues(field)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.AtomicReader
+ClassName:AtomicReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/index/AtomicReader.java
+InvokedMethodSig:public abstract org.apache.lucene.index.NumericDocValues getNumericDocValues(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:371 InvoName:valuesIn.get(docID)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.NumericDocValues
+ClassName:NumericDocValues
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/index/NumericDocValues.java
+InvokedMethodSig:public abstract long get(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:375 InvoName:caches.get(Byte.TYPE).get(reader,new CacheKey(field,parser),setDocsWithField)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCacheImpl.Cache
+ClassName:Cache
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java
+InvokedMethodSig:public java.lang.Object get(org.apache.lucene.index.AtomicReader, org.apache.lucene.search.FieldCacheImpl.CacheKey, boolean) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:375 InvoName:caches.get(Byte.TYPE)
+PackageName:java.util
+QualifiedClassName:java.util.Map<java.lang.Class<?>,org.apache.lucene.search.FieldCacheImpl.Cache>
+ClassName:Map<Class<?>,Cache>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/java/util/Map<java.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:401 InvoName:reader.maxDoc()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.IndexReader
+ClassName:IndexReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/index/IndexReader.java
+InvokedMethodSig:public abstract int maxDoc() 
+%%%%%%%%%%
+AddedMethodInvo Line:408 InvoName:wrapper.getBytes(reader,key.field,DEFAULT_BYTE_PARSER,setDocsWithField)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCacheImpl
+ClassName:FieldCacheImpl
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java
+InvokedMethodSig:public org.apache.lucene.search.FieldCache.Bytes getBytes(org.apache.lucene.index.AtomicReader, java.lang.String, org.apache.lucene.search.FieldCache.ByteParser, boolean) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:418 InvoName:parser.parseByte(term)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCache.ByteParser
+ClassName:ByteParser
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCache.java
+InvokedMethodSig:public abstract byte parseByte(org.apache.lucene.util.BytesRef) 
+%%%%%%%%%%
+AddedMethodInvo Line:428 InvoName:parser.termsEnum(terms)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCache.Parser
+ClassName:Parser
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCache.java
+InvokedMethodSig:public abstract org.apache.lucene.index.TermsEnum termsEnum(org.apache.lucene.index.Terms) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:432 InvoName:u.uninvert(reader,key.field,setDocsWithField)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCacheImpl.Uninvert
+ClassName:Uninvert
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java
+InvokedMethodSig:public void uninvert(org.apache.lucene.index.AtomicReader, java.lang.String, boolean) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:435 InvoName:wrapper.setDocsWithField(reader,key.field,u.docsWithField)
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.FieldCacheImpl
+ClassName:FieldCacheImpl
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01716/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java
+InvokedMethodSig:void setDocsWithField(org.apache.lucene.index.AtomicReader, java.lang.String, org.apache.lucene.util.Bits) 

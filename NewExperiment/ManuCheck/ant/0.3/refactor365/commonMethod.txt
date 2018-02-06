@@ -1,0 +1,31 @@
+(startLine=100 endLine=128 srcPath=/home/sonia/NewExperiment/antFilter/00332/src/main/org/apache/tools/ant/PathTokenizer.java)
+    public String nextToken() throws NoSuchElementException {
+        String token = null;
+        if (lookahead != null) {
+            token = lookahead;
+            lookahead = null;
+        }
+        else {
+            token = tokenizer.nextToken().trim();
+        }            
+            
+        if (token.length() == 1 && Character.isLetter(token.charAt(0))
+                                && dosStyleFilesystem
+                                && tokenizer.hasMoreTokens()) {
+            // we are on a dos style system so this path could be a drive
+            // spec. We look at the next token
+            String nextToken = tokenizer.nextToken().trim();
+            if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
+                // we know we are on a DOS style platform and the next path starts with a
+                // slash or backslash, so we know this is a drive spec
+                token += ":" + nextToken;
+            }
+            else {
+                // store the token just read for next time
+                lookahead = nextToken;
+            }
+        }
+           
+        return token;
+    }
+

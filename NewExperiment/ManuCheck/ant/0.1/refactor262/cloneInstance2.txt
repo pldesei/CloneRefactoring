@@ -1,0 +1,16 @@
+(startLine=652 endLine=665 srcPath=/home/sonia/NewExperiment/antFilter/00232/src/main/org/apache/tools/ant/AntClassLoader.java)
+        } else {
+            resourceStream = loadResource(name);
+            if (resourceStream != null) {
+                log("ResourceStream for " + name
+                    + " loaded from ant loader", Project.MSG_DEBUG);
+
+            } else {
+                resourceStream = loadBaseResource(name);
+                if (resourceStream != null) {
+                    log("ResourceStream for " + name
+                        + " loaded from parent loader", Project.MSG_DEBUG);
+                }
+            }
+        }
+

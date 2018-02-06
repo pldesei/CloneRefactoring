@@ -1,0 +1,24 @@
+(startLine=1409 endLine=1430 srcPath=/home/sonia/NewExperiment/antFilter/00133/src/main/org/apache/tools/ant/AntClassLoader.java)
+    /**
+     * Finds a system class (which should be loaded from the same classloader
+     * as the Ant core).
+     *
+     * For JDK 1.1 compatibility, this uses the findSystemClass method if
+     * no parent classloader has been specified.
+     *
+     * @param name The name of the class to be loaded.
+     *             Must not be <code>null</code>.
+     *
+     * @return the required Class object
+     *
+     * @exception ClassNotFoundException if the requested class does not exist
+     * on this loader's classpath.
+     */
+    private Class findBaseClass(String name) throws ClassNotFoundException {
+        if (parent == null) {
+            return findSystemClass(name);
+        } else {
+            return parent.loadClass(name);
+        }
+    }
+

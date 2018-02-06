@@ -1,0 +1,10 @@
+(startLine=447 endLine=454 srcPath=/home/sonia/NewExperiment/luceneFilter/00095/sandbox/contributions/webcrawler-LARM/src/de/lanlab/larm/fetcher/FetcherTask.java)
+        {
+            // no server is listening at this port
+            hi.setReachable(false);
+            taskState.setState(FT_EXCEPTION);
+            System.out.println("[" + threadNr + "] " + e.getClass().getName() + ": " + e.getMessage());
+            // e.printStackTrace();
+            errorLog.log("error: " + e.getClass().getName() + ": " + e.getMessage());
+        }
+

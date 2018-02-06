@@ -1,0 +1,13 @@
+(startLine=1016 endLine=1026 srcPath=/home/sonia/NewExperiment/antFilter/00181/src/main/org/apache/tools/ant/AntClassLoader.java)
+        if (isParentFirst(classname)) {
+            try {
+                theClass = findBaseClass(classname);
+                log("Class " + classname + " loaded from parent loader "
+                    + "(parentFirst)", Project.MSG_DEBUG);
+            } catch (ClassNotFoundException cnfe) {
+                theClass = findClass(classname);
+                log("Class " + classname + " loaded from ant loader "
+                    + "(parentFirst)", Project.MSG_DEBUG);
+            }
+        } else {
+

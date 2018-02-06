@@ -1,0 +1,24 @@
+(startLine=157 endLine=178 srcPath=/home/sonia/NewExperiment/antFilter/01351/src/main/org/apache/tools/ant/taskdefs/Property.java)
+    private void addProperties(Properties props) {
+        Enumeration e = props.keys();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            String value = (String) props.getProperty(name);
+            String v = ProjectHelper.replaceProperties(value, project.getProperties());
+            if( userProperty )
+                if (project.getUserProperty(name) == null) {
+            project.setUserProperty(name, v);
+                } else {
+                    project.log("Override ignored for " + name, 
+                                project.MSG_VERBOSE);
+                }
+            else
+                if (project.getProperty(name) == null) {
+            project.setProperty(name, v);
+                } else {
+                    project.log("Override ignored for " + name, 
+                                project.MSG_VERBOSE);
+                }
+        }
+    }
+

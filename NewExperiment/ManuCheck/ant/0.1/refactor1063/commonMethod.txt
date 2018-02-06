@@ -1,0 +1,8 @@
+(startLine=522 endLine=527 srcPath=/home/sonia/NewExperiment/antFilter/01336/src/main/org/apache/tools/ant/taskdefs/optional/ReplaceRegExp.java)
+    private boolean replaceAndWrite(String s, Writer w, int options)
+        throws IOException {
+        String res = doReplace(regex, subs, s, options);
+        w.write(res);
+        return !res.equals(s);
+    }
+

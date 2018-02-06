@@ -1,0 +1,27 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/00592
+predFragLineRange:58-95
+predMethodLineRange:51-95
+nextLineRange:76-99
+predStrMethodInvoNames:
+[start, join, interrupt, currentThread, getIOException, hits, size, size, pop]
+%%%%%%%%%%
+AddedMethodInvo Line:87 InvoName:executor.submit(new MultiSearcherCallableNoSort(lock,searchables[i],weight,filter,nDocs,hq,i,starts))
+PackageName:java.util.concurrent
+QualifiedClassName:java.util.concurrent.ExecutorService
+ClassName:ExecutorService
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00592/contrib/ant/src/java/java/util/concurrent/ExecutorService.java
+InvokedMethodSig:public abstract Future#RAW submit(Callable#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:92 InvoName:foreach(func,Arrays.asList(searchThreads))
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.ParallelMultiSearcher
+ClassName:ParallelMultiSearcher
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00592/src/java/org/apache/lucene/search/ParallelMultiSearcher.java
+InvokedMethodSig:private void foreach(Function<T>, List<Future<T>>) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:92 InvoName:Arrays.asList(searchThreads)
+PackageName:java.util
+QualifiedClassName:java.util.Arrays
+ClassName:Arrays
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00592/contrib/ant/src/java/java/util/Arrays.java
+InvokedMethodSig:public static List#RAW asList(T[]) 

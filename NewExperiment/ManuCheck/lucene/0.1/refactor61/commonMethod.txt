@@ -1,0 +1,9 @@
+(startLine=49 endLine=55 srcPath=/home/sonia/NewExperiment/luceneFilter/00915/lucene/src/test/org/apache/lucene/search/spans/MultiSpansWrapper.java)
+  public static Spans wrap(ReaderContext topLevelReaderContext, SpanQuery query) throws IOException {
+    AtomicReaderContext[] leaves = ReaderUtil.leaves(topLevelReaderContext);
+    if(leaves.length == 1) {
+      return query.getSpans(leaves[0]);
+    }
+    return new MultiSpansWrapper(leaves, query);
+  }
+

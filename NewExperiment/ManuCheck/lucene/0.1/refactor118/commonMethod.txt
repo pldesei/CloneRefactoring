@@ -1,0 +1,11 @@
+(startLine=99 endLine=107 srcPath=/home/sonia/NewExperiment/luceneFilter/01860/solr/core/src/test/org/apache/solr/core/SolrCoreCheckLockOnStartupTest.java)
+  private boolean checkForCoreInitException(Class<? extends Exception> clazz) {
+    for (Map.Entry<String, Exception> entry : h.getCoreContainer().getCoreInitFailures().entrySet()) {
+      for (Throwable t = entry.getValue(); t != null; t = t.getCause()) {
+        if (clazz.isInstance(t))
+          return true;
+      }
+    }
+    return false;
+  }
+

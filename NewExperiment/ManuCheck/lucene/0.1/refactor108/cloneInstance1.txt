@@ -1,0 +1,17 @@
+(startLine=41 endLine=55 srcPath=/home/sonia/NewExperiment/luceneFilter/01792/lucene/analysis/common/src/java/org/apache/lucene/analysis/ngram/EdgeNGramFilterFactory.java)
+  public EdgeNGramFilterFactory(Map<String, String> args) {
+    super(args);
+    minGramSize = getInt(args, "minGramSize", EdgeNGramTokenFilter.DEFAULT_MIN_GRAM_SIZE);
+    maxGramSize = getInt(args, "maxGramSize", EdgeNGramTokenFilter.DEFAULT_MAX_GRAM_SIZE);
+
+    String sideArg = args.remove("side");
+    if (sideArg == null) {
+      side = EdgeNGramTokenFilter.Side.FRONT.getLabel();
+    } else {
+      side = sideArg;
+    }
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
+  }
+

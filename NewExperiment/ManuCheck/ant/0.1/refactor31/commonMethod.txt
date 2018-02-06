@@ -1,0 +1,19 @@
+(startLine=595 endLine=611 srcPath=/home/sonia/NewExperiment/antFilter/00060/src/main/org/apache/tools/ant/util/ResourceUtils.java)
+    /**
+     * Convenience method to turn any fileProvider into a basic
+     * FileResource with the file's immediate parent as the basedir,
+     * for tasks that need one.
+     * @param fileProvider input
+     * @return fileProvider if it is a FileResource instance, or a new
+     * FileResource with fileProvider's file.
+     * @since Ant 1.8
+     */
+    public static FileResource asFileResource(FileProvider fileProvider) {
+        if (fileProvider instanceof FileResource || fileProvider == null) {
+            return (FileResource) fileProvider;
+        }
+        FileResource result = new FileResource(fileProvider.getFile());
+        result.setProject(Project.getProject(fileProvider));
+        return result;
+    }
+

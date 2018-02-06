@@ -1,0 +1,385 @@
+(startLine=1289 endLine=1671 srcPath=/home/sonia/NewExperiment/antFilter/00367/src/main/org/apache/tools/ant/taskdefs/optional/ejb/WebsphereDeploymentTool.java)
+    {
+
+    boolean rebuild = false;
+
+    
+
+    JarFile genericJar = null;
+
+    JarFile wasJar = null;
+
+    File newwasJarFile = null;
+
+    JarOutputStream newJarStream = null;
+
+        
+
+    try
+
+        {
+
+        log("Checking if websphere Jar needs to be rebuilt for jar " + websphereJarFile.getName(),
+
+            Project.MSG_VERBOSE);
+
+        // Only go forward if the generic and the websphere file both exist
+
+        if (genericJarFile.exists() && genericJarFile.isFile()
+
+            && websphereJarFile.exists() && websphereJarFile.isFile())
+
+            {
+
+                //open jar files
+
+            genericJar = new JarFile(genericJarFile);
+
+            wasJar = new JarFile(websphereJarFile);
+
+                
+
+            Hashtable genericEntries = new Hashtable();
+
+            Hashtable wasEntries = new Hashtable();
+
+            Hashtable replaceEntries = new Hashtable();
+
+                
+
+                //get the list of generic jar entries
+
+            for (Enumeration e = genericJar.entries(); e.hasMoreElements();)
+
+                {
+
+                JarEntry je = (JarEntry)e.nextElement();
+
+                genericEntries.put(je.getName().replace('\\', '/'), je);
+
+                }
+
+                //get the list of websphere jar entries
+
+            for (Enumeration e = wasJar.entries() ; e.hasMoreElements();)
+
+                {
+
+                JarEntry je = (JarEntry)e.nextElement();
+
+                wasEntries.put(je.getName(), je);
+
+                }
+
+                
+
+                //Cycle Through generic and make sure its in websphere
+
+            ClassLoader genericLoader = getClassLoaderFromJar(genericJarFile);
+
+            for (Enumeration e = genericEntries.keys(); e.hasMoreElements();)
+
+                {
+
+                String filepath = (String)e.nextElement();
+
+                if (wasEntries.containsKey(filepath))    // File name/path match
+
+                    {
+
+                    // Check files see if same
+
+                    JarEntry genericEntry = (JarEntry)genericEntries.get(filepath);
+
+                    JarEntry wasEntry = (JarEntry)wasEntries.get(filepath);
+
+                    if ((genericEntry.getCrc() !=  wasEntry.getCrc())  || // Crc's Match
+
+                        (genericEntry.getSize() != wasEntry.getSize()) ) // Size Match
+
+                        {
+
+                        if (genericEntry.getName().endsWith(".class"))
+
+                            {
+
+                            //File are different see if its an object or an interface
+
+                            String classname = genericEntry.getName().replace(File.separatorChar,'.');
+
+                            classname = classname.substring(0,classname.lastIndexOf(".class"));
+
+                            Class genclass = genericLoader.loadClass(classname);
+
+                            if (genclass.isInterface())
+
+                                {
+
+                                //Interface changed   rebuild jar.
+
+                                log("Interface " + genclass.getName() + " has changed",Project.MSG_VERBOSE);
+
+                                rebuild = true;
+
+                                break;
+
+                                }
+
+                            else
+
+                                {
+
+                                //Object class Changed   update it.
+
+                                replaceEntries.put(filepath, genericEntry);
+
+                                }
+
+                            }
+
+                        else
+
+                            {
+
+                            // is it the manifest. If so ignore it
+
+                            if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
+
+                                //File other then class changed   rebuild
+
+                                log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
+
+                                rebuild = true;
+
+                            }
+
+                            break;
+
+                            }
+
+                        }
+
+                    }
+
+                else // a file doesnt exist rebuild
+
+                    {
+
+                    log("File " + filepath + " not present in websphere jar",Project.MSG_VERBOSE);
+
+                    rebuild =  true;
+
+                    break;
+
+                    }
+
+                }
+
+                
+
+            if (!rebuild)
+
+                {
+
+                log("No rebuild needed - updating jar",Project.MSG_VERBOSE);
+
+                newwasJarFile = new File(websphereJarFile.getAbsolutePath() + ".temp");
+
+                if (newwasJarFile.exists()) {
+
+                    newwasJarFile.delete();
+
+                }
+
+                    
+
+                newJarStream = new JarOutputStream(new FileOutputStream(newwasJarFile));
+
+                newJarStream.setLevel(0);
+
+                    
+
+                //Copy files from old websphere jar
+
+                for (Enumeration e = wasEntries.elements() ; e.hasMoreElements();)
+
+                    {
+
+                    byte[] buffer = new byte[1024];
+
+                    int bytesRead;
+
+                    InputStream is;
+
+                    JarEntry je = (JarEntry)e.nextElement();
+
+                    if (je.getCompressedSize() == -1 ||
+
+                        je.getCompressedSize() == je.getSize()) {
+
+                        newJarStream.setLevel(0);
+
+                    }
+
+                    else {
+
+                        newJarStream.setLevel(9);
+
+                    }
+
+                        
+
+                    // Update with changed Bean class
+
+                    if (replaceEntries.containsKey(je.getName()))
+
+                        {
+
+                        log("Updating Bean class from generic Jar " + je.getName(),
+
+                            Project.MSG_VERBOSE);
+
+                        // Use the entry from the generic jar
+
+                        je = (JarEntry)replaceEntries.get(je.getName());
+
+                        is = genericJar.getInputStream(je);
+
+                        }
+
+                    else  //use fle from original websphere jar
+
+                        {
+
+                        is = wasJar.getInputStream(je);
+
+                        }
+
+                    newJarStream.putNextEntry(new JarEntry(je.getName()));
+
+                        
+
+                    while ((bytesRead = is.read(buffer)) != -1)
+
+                        {
+
+                        newJarStream.write(buffer,0,bytesRead);
+
+                        }
+
+                    is.close();
+
+                    }
+
+                }
+
+            else
+
+                {
+
+                log("websphere Jar rebuild needed due to changed interface or XML",Project.MSG_VERBOSE);
+
+                }
+
+            }
+
+        else
+
+            {
+
+            rebuild = true;
+
+            }
+
+        }
+
+    catch(ClassNotFoundException cnfe)
+
+        {
+
+        String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
+
+            + ". Details: "
+
+            + cnfe.getMessage();
+
+        throw new BuildException(cnfmsg, cnfe);
+
+        }
+
+    catch(IOException ioe) {
+
+        String msg = "IOException while processing ejb-jar file "
+
+        + ". Details: "
+
+        + ioe.getMessage();
+
+        throw new BuildException(msg, ioe);
+
+    }
+
+    finally {
+
+        // need to close files and perhaps rename output
+
+        if (genericJar != null) {
+
+        try {
+
+            genericJar.close();
+
+        }
+
+        catch (IOException closeException) {}
+
+        }
+
+            
+
+        if (wasJar != null) {
+
+        try {
+
+            wasJar.close();
+
+        }
+
+        catch (IOException closeException) {}
+
+        }
+
+            
+
+        if (newJarStream != null) {
+
+        try {
+
+            newJarStream.close();
+
+        }
+
+        catch (IOException closeException) {}
+
+                
+
+        websphereJarFile.delete();
+
+        newwasJarFile.renameTo(websphereJarFile);
+
+        if (!websphereJarFile.exists()) {
+
+            rebuild = true;
+
+        }
+
+        }
+
+    }
+
+        
+
+    return rebuild;
+
+    }
+

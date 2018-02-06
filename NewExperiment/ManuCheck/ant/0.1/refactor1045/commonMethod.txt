@@ -1,0 +1,55 @@
+(startLine=688 endLine=740 srcPath=/home/sonia/NewExperiment/antFilter/01310/src/main/org/apache/tools/ant/taskdefs/ExecuteOn.java)
+    /**
+     * Run the command in "parallel" mode, making sure that at most
+     * maxParallel sourcefiles get passed on the command line.
+     * @param exe the Executable to use.
+     * @param fileNames the Vector of filenames.
+     * @param baseDirs the Vector of base directories corresponding to fileNames.
+     * @throws IOException  on I/O errors.
+     * @throws BuildException on other errors.
+     * @since Ant 1.6
+     */
+    protected void runParallel(Execute exe, Vector fileNames,
+                               Vector baseDirs)
+        throws IOException, BuildException {
+        String[] s = new String[fileNames.size()];
+        fileNames.copyInto(s);
+        File[] b = new File[baseDirs.size()];
+        baseDirs.copyInto(b);
+
+        if (maxParallel <= 0
+            || s.length == 0 /* this is skipEmpty == false */) {
+            String[] command = getCommandline(s, b);
+            log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
+            exe.setCommandline(command);
+            runExecute(exe);
+        } else {
+            int stillToDo = fileNames.size();
+            int currentOffset = 0;
+            while (stillToDo > 0) {
+                int currentAmount = Math.min(stillToDo, maxParallel);
+                String[] cs = new String[currentAmount];
+                System.arraycopy(s, currentOffset, cs, 0, currentAmount);
+                File[] cb = new File[currentAmount];
+                System.arraycopy(b, currentOffset, cb, 0, currentAmount);
+                String[] command = getCommandline(cs, cb);
+                log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
+                exe.setCommandline(command);
+                if (redirectorElement != null) {
+                    setupRedirector();
+                    redirectorElement.configure(redirector, null);
+                }
+                if (redirectorElement != null || currentOffset > 0) {
+                    // need to reset the stream handler to restart
+                    // reading of pipes;
+                    // go ahead and do it always w/ nested redirectors
+                    exe.setStreamHandler(redirector.createHandler());
+                }
+                runExecute(exe);
+
+                stillToDo -= currentAmount;
+                currentOffset += currentAmount;
+            }
+        }
+    }
+

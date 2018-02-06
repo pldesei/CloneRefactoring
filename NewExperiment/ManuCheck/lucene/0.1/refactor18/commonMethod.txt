@@ -1,0 +1,12 @@
+(startLine=90 endLine=99 srcPath=/home/sonia/NewExperiment/luceneFilter/00370/contrib/queries/src/test/org/apache/lucene/search/BooleanFilterTest.java)
+        private void tstFilterCard(String mes, int expected, Filter filt)
+        throws Throwable
+        {
+          DocIdSetIterator disi = filt.getDocIdSet(reader).iterator();
+          int actual = 0;
+          while (disi.next()) {
+            actual++;
+          }
+          assertEquals(mes, expected, actual);
+        }
+

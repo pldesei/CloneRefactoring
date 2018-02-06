@@ -1,0 +1,8 @@
+(startLine=72 endLine=77 srcPath=/home/sonia/NewExperiment/luceneFilter/00800/lucene/src/test/org/apache/lucene/search/TestExplanations.java)
+    for (int i = 0; i < docFields.length; i++) {
+      Document doc = new Document();
+      doc.add(new Field(KEY, ""+i, Field.Store.NO, Field.Index.NOT_ANALYZED));
+      doc.add(new Field(FIELD, docFields[i], Field.Store.NO, Field.Index.ANALYZED));
+      writer.addDocument(doc);
+    }
+

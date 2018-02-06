@@ -1,0 +1,223 @@
+ProjectPath:/home/sonia/NewExperiment/antFilter/00211
+predFragLineRange:119-150
+predMethodLineRange:111-162
+nextLineRange:126-282
+predStrMethodInvoNames:
+[log, getNextEntry, translatePath, getName, log, getName, getParent, mkdirs, isDirectory, mkdirs, read, write, close, getJavaVersion, setFile, setMillis, getTime, touch, log, getPath, log, getPath, close]
+%%%%%%%%%%
+AddedMethodInvo Line:126 InvoName:getMapper()
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Expand
+ClassName:Expand
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/taskdefs/Expand.java
+InvokedMethodSig:protected org.apache.tools.ant.util.FileNameMapper getMapper() 
+%%%%%%%%%%
+AddedMethodInvo Line:129 InvoName:zf.getEntries()
+PackageName:org.apache.tools.zip
+QualifiedClassName:org.apache.tools.zip.ZipFile
+ClassName:ZipFile
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/zip/ZipFile.java
+InvokedMethodSig:public Enumeration#RAW getEntries() 
+%%%%%%%%%%
+AddedMethodInvo Line:130 InvoName:e.hasMoreElements()
+PackageName:java.util
+QualifiedClassName:java.util.Enumeration
+ClassName:Enumeration
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/util/Enumeration.java
+InvokedMethodSig:public abstract boolean hasMoreElements() 
+%%%%%%%%%%
+AddedMethodInvo Line:131 InvoName:e.nextElement()
+PackageName:java.util
+QualifiedClassName:java.util.Enumeration
+ClassName:Enumeration
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/util/Enumeration.java
+InvokedMethodSig:public abstract E nextElement() 
+%%%%%%%%%%
+AddedMethodInvo Line:132 InvoName:extractFile(fileUtils,srcF,dir,zf.getInputStream(ze),ze.getName(),new Date(ze.getTime()),ze.isDirectory(),mapper)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Expand
+ClassName:Expand
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/taskdefs/Expand.java
+InvokedMethodSig:protected void extractFile(org.apache.tools.ant.util.FileUtils, java.io.File, java.io.File, java.io.InputStream, java.lang.String, java.util.Date, boolean, org.apache.tools.ant.util.FileNameMapper) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:132 InvoName:zf.getInputStream(ze)
+PackageName:org.apache.tools.zip
+QualifiedClassName:org.apache.tools.zip.ZipFile
+ClassName:ZipFile
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/zip/ZipFile.java
+InvokedMethodSig:public java.io.InputStream getInputStream(org.apache.tools.zip.ZipEntry) throws java.io.IOException, java.util.zip.ZipException
+%%%%%%%%%%
+AddedMethodInvo Line:142 InvoName:ZipFile.closeQuietly(zf)
+PackageName:org.apache.tools.zip
+QualifiedClassName:org.apache.tools.zip.ZipFile
+ClassName:ZipFile
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/zip/ZipFile.java
+InvokedMethodSig:public static void closeQuietly(org.apache.tools.zip.ZipFile) 
+%%%%%%%%%%
+AddedMethodInvo Line:153 InvoName:mapperElement.getImplementation()
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.Mapper
+ClassName:Mapper
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/types/Mapper.java
+InvokedMethodSig:public org.apache.tools.ant.util.FileNameMapper getImplementation() throws org.apache.tools.ant.BuildException
+%%%%%%%%%%
+AddedMethodInvo Line:178 InvoName:patternsets.size()
+PackageName:java.util
+QualifiedClassName:java.util.Vector
+ClassName:Vector
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/util/Vector.java
+InvokedMethodSig:public synchronized int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:179 InvoName:entryName.replace('/',File.separatorChar).replace('\\',File.separatorChar)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public java.lang.String replace(char, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:179 InvoName:entryName.replace('/',File.separatorChar)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public java.lang.String replace(char, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:182 InvoName:patternsets.size()
+PackageName:java.util
+QualifiedClassName:java.util.Vector
+ClassName:Vector
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/util/Vector.java
+InvokedMethodSig:public synchronized int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:183 InvoName:patternsets.elementAt(v)
+PackageName:java.util
+QualifiedClassName:java.util.Vector
+ClassName:Vector
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/util/Vector.java
+InvokedMethodSig:public synchronized E elementAt(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:184 InvoName:p.getIncludePatterns(getProject())
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.PatternSet
+ClassName:PatternSet
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/types/PatternSet.java
+InvokedMethodSig:public java.lang.String[] getIncludePatterns(org.apache.tools.ant.Project) 
+%%%%%%%%%%
+AddedMethodInvo Line:184 InvoName:getProject()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Project getProject() 
+%%%%%%%%%%
+AddedMethodInvo Line:191 InvoName:incls[w].replace('/',File.separatorChar).replace('\\',File.separatorChar)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public java.lang.String replace(char, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:191 InvoName:incls[w].replace('/',File.separatorChar)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public java.lang.String replace(char, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:193 InvoName:pattern.endsWith(File.separator)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public boolean endsWith(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:197 InvoName:SelectorUtils.matchPath(pattern,name)
+PackageName:org.apache.tools.ant.types.selectors
+QualifiedClassName:org.apache.tools.ant.types.selectors.SelectorUtils
+ClassName:SelectorUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/types/selectors/SelectorUtils.java
+InvokedMethodSig:public static boolean matchPath(java.lang.String, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:208 InvoName:p.getExcludePatterns(getProject())
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.PatternSet
+ClassName:PatternSet
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/types/PatternSet.java
+InvokedMethodSig:public java.lang.String[] getExcludePatterns(org.apache.tools.ant.Project) 
+%%%%%%%%%%
+AddedMethodInvo Line:208 InvoName:getProject()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Project getProject() 
+%%%%%%%%%%
+AddedMethodInvo Line:211 InvoName:excls[w].replace('/',File.separatorChar).replace('\\',File.separatorChar)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public java.lang.String replace(char, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:211 InvoName:excls[w].replace('/',File.separatorChar)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public java.lang.String replace(char, char) 
+%%%%%%%%%%
+AddedMethodInvo Line:214 InvoName:pattern.endsWith(File.separator)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/lang/String.java
+InvokedMethodSig:public boolean endsWith(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:217 InvoName:SelectorUtils.matchPath(pattern,name)
+PackageName:org.apache.tools.ant.types.selectors
+QualifiedClassName:org.apache.tools.ant.types.selectors.SelectorUtils
+ClassName:SelectorUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/types/selectors/SelectorUtils.java
+InvokedMethodSig:public static boolean matchPath(java.lang.String, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:229 InvoName:mapper.mapFileName(entryName)
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.FileNameMapper
+ClassName:FileNameMapper
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/util/FileNameMapper.java
+InvokedMethodSig:public abstract java.lang.String[] mapFileName(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:233 InvoName:fileUtils.resolveFile(dir,mappedNames[0])
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.FileUtils
+ClassName:FileUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/util/FileUtils.java
+InvokedMethodSig:public java.io.File resolveFile(java.io.File, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:235 InvoName:f.exists()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/io/File.java
+InvokedMethodSig:public boolean exists() 
+%%%%%%%%%%
+AddedMethodInvo Line:236 InvoName:f.lastModified()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/io/File.java
+InvokedMethodSig:public long lastModified() 
+%%%%%%%%%%
+AddedMethodInvo Line:245 InvoName:f.getParentFile()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/proposal/sandbox/clearcase/src/main/java/io/File.java
+InvokedMethodSig:public java.io.File getParentFile() 
+%%%%%%%%%%
+AddedMethodInvo Line:277 InvoName:fileUtils.setFileLastModified(f,entryDate.getTime())
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.FileUtils
+ClassName:FileUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00211/src/main/org/apache/tools/ant/util/FileUtils.java
+InvokedMethodSig:public void setFileLastModified(java.io.File, long) 

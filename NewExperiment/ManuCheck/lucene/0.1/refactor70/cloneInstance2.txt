@@ -1,0 +1,17 @@
+(startLine=88 endLine=102 srcPath=/home/sonia/NewExperiment/luceneFilter/01163/lucene/src/java/org/apache/lucene/index/values/IndexDocValuesArray.java)
+    } else {
+      return new SourceEnum(attrSource, type(), this, maxDocID + 1) {
+
+        @Override
+        public int advance(int target) throws IOException {
+          if (target >= numDocs) {
+            return pos = NO_MORE_DOCS;
+          }
+          intsRef.ints[intsRef.offset] = IndexDocValuesArray.this
+              .getInt(target);
+          return pos = target;
+        }
+
+      };
+    }
+

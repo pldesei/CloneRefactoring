@@ -1,0 +1,20 @@
+(startLine=567 endLine=584 srcPath=/home/sonia/NewExperiment/antFilter/01171/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSS.java)
+    /**
+     * Gets the value to determine the behaviour when encountering writable files.
+     * @return An empty String, if not set.
+     */
+    public String getWritableFiles() {
+        if (writableFiles == null) {
+            return "";
+        } else if (writableFiles.getValue().equals(WRITABLE_REPLACE)) {
+            return FLAG_REPLACE_WRITABLE;
+        } else if (writableFiles.getValue().equals(WRITABLE_SKIP)) {
+            // ss.exe exits with '100', when files have been skipped
+            // so we have to ignore the failure
+            failOnError = false;
+            return FLAG_SKIP_WRITABLE;
+        } else {
+            return "";
+        }
+    }
+
