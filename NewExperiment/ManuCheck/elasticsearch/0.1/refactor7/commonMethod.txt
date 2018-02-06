@@ -1,0 +1,7 @@
+(startLine=61 endLine=65 srcPath=/root/NewExperiment/elasticsearchFilter/00131/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/AnalysisModule.java)
+            public void processTokenFilter(String name, Class<? extends TokenFilterFactory> tokenFilterFactory) {
+                if (!groupSettings.containsKey(name)) {
+                    binder.addBinding(name).toProvider(FactoryProvider.newFactory(TokenFilterFactoryFactory.class, tokenFilterFactory)).in(Scopes.SINGLETON);
+                }
+            }
+

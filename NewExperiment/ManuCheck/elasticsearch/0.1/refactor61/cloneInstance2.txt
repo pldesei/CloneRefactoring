@@ -1,0 +1,50 @@
+(startLine=154 endLine=201 srcPath=/root/NewExperiment/elasticsearchFilter/00686/src/main/java/org/elasticsearch/index/cache/id/simple/SimpleIdCache.java)
+                for (IndexReader reader : readers) {
+                    if (idReaders.containsKey(reader.getCoreCacheKey())) {
+                        // no need, continue
+                        continue;
+                    }
+
+                    Map<String, TypeBuilder> readerBuilder = builders.get(reader.getCoreCacheKey());
+
+                    String field = StringHelper.intern(ParentFieldMapper.NAME);
+                    TermDocs termDocs = reader.termDocs();
+                    TermEnum termEnum = reader.terms(new Term(field));
+                    try {
+                        do {
+                            Term term = termEnum.term();
+                            if (term == null || term.field() != field) break;
+                            // TODO we can optimize this, since type is the prefix, and we get terms ordered
+                            // so, only need to move to the next type once its different
+                            Uid uid = Uid.createUid(term.text());
+
+                            TypeBuilder typeBuilder = readerBuilder.get(uid.type());
+                            if (typeBuilder == null) {
+                                typeBuilder = new TypeBuilder(reader);
+                                readerBuilder.put(StringHelper.intern(uid.type()), typeBuilder);
+                            }
+
+                            HashedBytesArray idAsBytes = checkIfCanReuse(builders, new HashedBytesArray(uid.id()));
+                            boolean added = false; // optimize for when all the docs are deleted for this id
+
+                            termDocs.seek(termEnum);
+                            while (termDocs.next()) {
+                                // ignore deleted docs while we are at it
+                                if (!reader.isDeleted(termDocs.doc())) {
+                                    if (!added) {
+                                        typeBuilder.parentIdsValues.add(idAsBytes);
+                                        added = true;
+                                    }
+                                    typeBuilder.parentIdsOrdinals[termDocs.doc()] = typeBuilder.t;
+                                }
+                            }
+                            if (added) {
+                                typeBuilder.t++;
+                            }
+                        } while (termEnum.next());
+                    } finally {
+                        termDocs.close();
+                        termEnum.close();
+                    }
+                }
+

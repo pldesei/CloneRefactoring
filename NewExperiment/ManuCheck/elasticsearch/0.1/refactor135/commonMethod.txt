@@ -1,0 +1,35 @@
+(startLine=2533 endLine=2565 srcPath=/root/NewExperiment/elasticsearchFilter/00856/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+        /**
+         * Returns the TreeNode (or null if not found) for the given key
+         * starting at given root.
+         */
+        final TreeNode<K,V> findTreeNode(int h, Object k, Class<?> kc) {
+            if (k != null) {
+                TreeNode<K,V> p = this;
+                do  {
+                    int ph, dir; K pk; TreeNode<K,V> q;
+                    TreeNode<K,V> pl = p.left, pr = p.right;
+                    if ((ph = p.hash) > h)
+                        p = pl;
+                    else if (ph < h)
+                        p = pr;
+                    else if ((pk = p.key) == k || (pk != null && k.equals(pk)))
+                        return p;
+                    else if (pl == null && pr == null)
+                        break;
+                    else if ((kc != null ||
+                              (kc = comparableClassFor(k)) != null) &&
+                             (dir = compareComparables(kc, k, pk)) != 0)
+                        p = (dir < 0) ? pl : pr;
+                    else if (pl == null)
+                        p = pr;
+                    else if (pr == null ||
+                             (q = pr.findTreeNode(h, k, kc)) == null)
+                        p = pl;
+                    else
+                        return q;
+                } while (p != null);
+            }
+            return null;
+        }
+

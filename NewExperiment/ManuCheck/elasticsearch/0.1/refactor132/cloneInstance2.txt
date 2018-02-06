@@ -1,0 +1,36 @@
+(startLine=1539 endLine=1572 srcPath=/root/NewExperiment/elasticsearchFilter/00855/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+            else if ((fh = f.hash) < 0) {
+                if ((fk = f.key) instanceof TreeBin) {
+                    TreeBin<V> t = (TreeBin<V>)fk;
+                    t.acquire(0);
+                    try {
+                        if (tabAt(tab, i) == f) {
+                            len = 1;
+                            TreeNode<V> p = t.getTreeNode(h, k, t.root);
+                            if (p == null && onlyIfPresent)
+                                break;
+                            V pv = (p == null) ? null : p.val;
+                            if ((val = mf.apply(k, pv)) != null) {
+                                if (p != null)
+                                    p.val = val;
+                                else {
+                                    len = 2;
+                                    delta = 1;
+                                    t.putTreeNode(h, k, val);
+                                }
+                            }
+                            else if (p != null) {
+                                delta = -1;
+                                t.deleteTreeNode(p);
+                            }
+                        }
+                    } finally {
+                        t.release(0);
+                    }
+                    if (len != 0)
+                        break;
+                }
+                else
+                    tab = (Node<V>[])fk;
+            }
+

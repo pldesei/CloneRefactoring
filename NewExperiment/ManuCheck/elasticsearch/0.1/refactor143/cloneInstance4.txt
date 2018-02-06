@@ -1,0 +1,24 @@
+(startLine=250 endLine=271 srcPath=/root/NewExperiment/elasticsearchFilter/00914/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
+        public void collect(int doc) throws IOException {
+            BytesRef uid = values.getValue(doc);
+            if (uid == null) {
+                return;
+            }
+            Text id = new BytesText(Uid.idFromUid(uid));
+            Query query = queries.get(id);
+            if (query == null) {
+                // log???
+                return;
+            }
+            // run the query
+            try {
+                collector.reset();
+                searcher.search(query, collector);
+                if (collector.exists()) {
+                    counter++;
+                }
+            } catch (IOException e) {
+                logger.warn("[" + id + "] failed to execute query", e);
+            }
+        }
+

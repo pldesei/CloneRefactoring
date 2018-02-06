@@ -1,0 +1,20 @@
+(startLine=125 endLine=142 srcPath=/root/NewExperiment/elasticsearchFilter/00786/src/main/java/org/elasticsearch/index/fielddata/plain/ByteArrayIndexFieldData.java)
+    static ByteArrayAtomicFieldData build(AtomicReader reader, OrdinalsBuilder builder, Ordinals build, BuilderBytes values) {
+        if (!build.isMultiValued()) {
+            Docs ordinals = build.ordinals();
+            byte[] sValues = new byte[reader.maxDoc()];
+            int maxDoc = reader.maxDoc();
+            for (int i = 0; i < maxDoc; i++) {
+                sValues[i] = values.get(ordinals.getOrd(i));
+            }
+            final FixedBitSet set = builder.buildDocsWithValuesSet();
+            if (set == null) {
+                return new ByteArrayAtomicFieldData.Single(sValues, reader.maxDoc());
+            } else {
+                return new ByteArrayAtomicFieldData.SingleFixedSet(sValues, reader.maxDoc(), set);
+            }
+        } else {
+            return new ByteArrayAtomicFieldData.WithOrdinals(values.toArray(), reader.maxDoc(), build);
+        }
+    }
+

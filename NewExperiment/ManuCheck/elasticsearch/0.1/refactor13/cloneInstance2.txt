@@ -1,0 +1,12 @@
+(startLine=43 endLine=52 srcPath=/root/NewExperiment/elasticsearchFilter/00235/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/ArabicAnalyzerProvider.java)
+    @Inject public ArabicAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = ArabicAnalyzer.getDefaultStopSet();
+        }
+        arabicAnalyzer = new ArabicAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords);
+    }
+

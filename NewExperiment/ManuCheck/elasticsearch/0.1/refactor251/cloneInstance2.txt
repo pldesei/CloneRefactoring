@@ -1,0 +1,15 @@
+(startLine=220 endLine=232 srcPath=/root/NewExperiment/elasticsearchFilter/01698/src/main/java/org/elasticsearch/index/query/TermsFilterParser.java)
+            } else if (EXECUTION_VALUE_BOOL_NOCACHE.equals(execution)) {
+                XBooleanFilter boolFiler = new XBooleanFilter();
+                if (fieldMapper != null) {
+                    for (Object term : terms) {
+                        boolFiler.add(fieldMapper.termFilter(term, parseContext), BooleanClause.Occur.SHOULD);
+                    }
+                } else {
+                    for (Object term : terms) {
+                        boolFiler.add(new TermFilter(new Term(fieldName, BytesRefs.toBytesRef(term))), BooleanClause.Occur.SHOULD);
+                    }
+                }
+                filter = boolFiler;
+            } else if (EXECUTION_VALUE_AND.equals(execution)) {
+

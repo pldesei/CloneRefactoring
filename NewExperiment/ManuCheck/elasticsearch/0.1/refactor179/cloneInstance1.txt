@@ -1,0 +1,25 @@
+(startLine=70 endLine=92 srcPath=/root/NewExperiment/elasticsearchFilter/00994/src/main/java/org/elasticsearch/index/fielddata/AbstractAtomicNumericFieldData.java)
+                public Iter getIter(int docId) {
+                    final DoubleValues.Iter iter = values.getIter(docId);
+                    return new BytesValues.Iter() {
+                        private final BytesRef spare = new BytesRef();
+
+                        @Override
+                        public boolean hasNext() {
+                            return iter.hasNext();
+                        }
+
+                        @Override
+                        public BytesRef next() {
+                            spare.copyChars(Double.toString(iter.next()));
+                            return spare;
+                        }
+
+                        @Override
+                        public int hash() {
+                            return spare.hashCode();
+                        }
+
+                    };
+                }
+

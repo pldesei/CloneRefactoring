@@ -1,0 +1,22 @@
+(startLine=96 endLine=115 srcPath=/root/NewExperiment/elasticsearchFilter/00797/src/main/java/org/elasticsearch/index/fielddata/plain/ShortArrayIndexFieldData.java)
+        try {
+            BytesRefIterator iter = builder.buildFromTerms(builder.wrapNumeric32Bit(terms.iterator(null)), reader.getLiveDocs());
+            BytesRef term;
+            while ((term = iter.next()) != null) {
+                values.add((short) NumericUtils.prefixCodedToInt(term));
+            }
+
+            Ordinals build = builder.build(fieldDataType.getSettings());
+            return build(reader, fieldDataType, builder, build, new BuilderShorts() {
+                @Override
+                public short get(int index) {
+                    return values.get(index);
+                }
+
+                @Override
+                public short[] toArray() {
+                    return values.toArray();
+                }
+            });
+        } finally {
+

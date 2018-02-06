@@ -1,0 +1,29 @@
+(startLine=226 endLine=252 srcPath=/root/NewExperiment/elasticsearchFilter/00390/modules/elasticsearch/src/main/java/org/elasticsearch/transport/local/LocalTransport.java)
+    private void handleResponse(StreamInput buffer, final TransportResponseHandler handler) {
+        final Streamable streamable = handler.newInstance();
+        try {
+            streamable.readFrom(buffer);
+        } catch (Exception e) {
+            handleException(handler, new TransportSerializationException("Failed to deserialize response of type [" + streamable.getClass().getName() + "]", e));
+            return;
+        }
+        if (handler.spawn()) {
+            threadPool.execute(new Runnable() {
+                @SuppressWarnings({"unchecked"}) @Override public void run() {
+                    try {
+                        handler.handleResponse(streamable);
+                    } catch (Exception e) {
+                        handleException(handler, new ResponseHandlerFailureTransportException(e));
+                    }
+                }
+            });
+        } else {
+            try {
+                //noinspection unchecked
+                handler.handleResponse(streamable);
+            } catch (Exception e) {
+                handleException(handler, new ResponseHandlerFailureTransportException(e));
+            }
+        }
+    }
+

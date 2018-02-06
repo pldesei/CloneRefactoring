@@ -1,0 +1,20 @@
+(startLine=56 endLine=73 srcPath=/root/NewExperiment/elasticsearchFilter/00204/modules/elasticsearch/src/main/java/org/elasticsearch/search/facets/query/QueryFacetBuilder.java)
+    @Override public void toXContent(XContentBuilder builder, Params params) throws IOException {
+        if (query == null) {
+            throw new SearchSourceBuilderException("query must be set on query facet for facet [" + name + "]");
+        }
+        builder.startObject(name);
+        builder.field(QueryFacetCollectorParser.NAME);
+        query.toXContent(builder, params);
+
+        if (filter != null) {
+            builder.field("filter");
+            filter.toXContent(builder, params);
+        }
+
+        if (global != null) {
+            builder.field("global", global);
+        }
+        builder.endObject();
+    }
+

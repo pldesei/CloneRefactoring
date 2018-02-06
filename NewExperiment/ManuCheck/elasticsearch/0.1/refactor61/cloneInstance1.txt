@@ -1,0 +1,46 @@
+(startLine=107 endLine=150 srcPath=/root/NewExperiment/elasticsearchFilter/00686/src/main/java/org/elasticsearch/index/cache/id/simple/SimpleIdCache.java)
+                for (IndexReader reader : readers) {
+                    if (idReaders.containsKey(reader.getCoreCacheKey())) {
+                        // no need, continue
+                        continue;
+                    }
+
+                    if (reader instanceof SegmentReader) {
+                        ((SegmentReader) reader).addCoreClosedListener(this);
+                    }
+                    HashMap<String, TypeBuilder> readerBuilder = new HashMap<String, TypeBuilder>();
+                    builders.put(reader.getCoreCacheKey(), readerBuilder);
+
+                    String field = StringHelper.intern(UidFieldMapper.NAME);
+                    TermDocs termDocs = reader.termDocs();
+                    TermEnum termEnum = reader.terms(new Term(field));
+                    try {
+                        do {
+                            Term term = termEnum.term();
+                            if (term == null || term.field() != field) break;
+                            // TODO we can optimize this, since type is the prefix, and we get terms ordered
+                            // so, only need to move to the next type once its different
+                            Uid uid = Uid.createUid(term.text());
+
+                            TypeBuilder typeBuilder = readerBuilder.get(uid.type());
+                            if (typeBuilder == null) {
+                                typeBuilder = new TypeBuilder(reader);
+                                readerBuilder.put(StringHelper.intern(uid.type()), typeBuilder);
+                            }
+
+                            HashedBytesArray idAsBytes = checkIfCanReuse(builders, new HashedBytesArray(uid.id()));
+                            termDocs.seek(termEnum);
+                            while (termDocs.next()) {
+                                // when traversing, make sure to ignore deleted docs, so the key->docId will be correct
+                                if (!reader.isDeleted(termDocs.doc())) {
+                                    typeBuilder.idToDoc.put(idAsBytes, termDocs.doc());
+                                    typeBuilder.docToId[termDocs.doc()] = idAsBytes;
+                                }
+                            }
+                        } while (termEnum.next());
+                    } finally {
+                        termDocs.close();
+                        termEnum.close();
+                    }
+                }
+

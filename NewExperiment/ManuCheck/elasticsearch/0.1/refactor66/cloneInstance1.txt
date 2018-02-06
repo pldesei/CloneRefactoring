@@ -1,0 +1,9 @@
+(startLine=159 endLine=165 srcPath=/root/NewExperiment/elasticsearchFilter/00713/src/main/java/org/elasticsearch/search/facet/terms/TermsFacetProcessor.java)
+            if (fieldMapper instanceof IpFieldMapper) {
+                if (script != null || "map".equals(executionHint)) {
+                    return new TermsIpFacetCollector(facetName, field, size, comparatorType, allTerms, context, scriptLang, script, params);
+                } else {
+                    return new TermsIpOrdinalsFacetCollector(facetName, field, size, comparatorType, allTerms, context, null);
+                }
+            } else if (fieldMapper.fieldDataType() == FieldDataType.DefaultTypes.LONG) {
+

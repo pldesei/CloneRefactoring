@@ -1,0 +1,19 @@
+(startLine=45 endLine=61 srcPath=/root/NewExperiment/elasticsearchFilter/00235/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/GermanAnalyzerProvider.java)
+    @Inject public GermanAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = GermanAnalyzer.getDefaultStopSet();
+        }
+
+        String[] stemExclusion = settings.getAsArray("stem_exclusion");
+        if (stemExclusion.length > 0) {
+            this.stemExclusion = ImmutableSet.copyOf(Iterators.forArray(stemExclusion));
+        } else {
+            this.stemExclusion = ImmutableSet.of();
+        }
+        analyzer = new GermanAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords, this.stemExclusion);
+    }
+

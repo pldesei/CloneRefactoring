@@ -1,0 +1,21 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00050
+predFragLineRange:165-183
+predMethodLineRange:165-183
+nextLineRange:163-173
+predStrMethodInvoNames:
+[sortDocs, values, merge, scroll, buildScrollId, searchType, values, releaseQueryFetchResults, listenerThreaded, execute, onResponse, get, buildShardFailures, onResponse, get, buildShardFailures]
+%%%%%%%%%%
+AddedMethodInvo Line:170 InvoName:searchCache.releaseDfsResults(dfsResults)
+PackageName:org.elasticsearch.action.search.type
+QualifiedClassName:org.elasticsearch.action.search.type.TransportSearchCache
+ClassName:TransportSearchCache
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00050/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchCache.java
+InvokedMethodSig:public void releaseDfsResults(Collection<org.elasticsearch.search.dfs.DfsSearchResult>) 
+%%%%%%%%%%
+AddedMethodInvo Line:172 InvoName:invokeListener(new SearchResponse(internalResponse,scrollId,expectedSuccessfulOps,successulOps.get(),buildShardFailures()))
+PackageName:org.elasticsearch.action.search.type
+QualifiedClassName:org.elasticsearch.action.search.type.TransportSearchTypeAction.BaseAsyncAction<org.elasticsearch.search.dfs.DfsSearchResult>
+ClassName:BaseAsyncAction<DfsSearchResult>
+InnerClass
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00050/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchTypeAction.java
+InvokedMethodSig:protected void invokeListener(org.elasticsearch.action.search.SearchResponse) 

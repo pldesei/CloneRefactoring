@@ -1,0 +1,23 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00849
+predFragLineRange:86-138
+predMethodLineRange:85-138
+nextLineRange:86-140
+predStrMethodInvoNames:
+[reader, terms, indexName, getFieldNames, add, maxDoc, buildFromTerms, wrapNumeric64Bit, iterator, getLiveDocs, next, add, sortableLongToDouble, prefixCodedToLong, build, getSettings, isMultiValued, removeOrdsOnSingleValue, ordinals, buildDocsWithValuesSet, maxDoc, getBits, size, getMemorySizeInBytes, toArray, size, maxDoc, maxDoc, maxDoc, get, getOrd, maxDoc, maxDoc, toArray, size, maxDoc, close]
+%%%%%%%%%%
+AddedMethodInvo Line:98 InvoName:fieldDataType.getSettings().getAsFloat("acceptable_overhead_ratio",PackedInts.DEFAULT)
+PackageName:org.elasticsearch.common.settings
+QualifiedClassName:org.elasticsearch.common.settings.Settings
+ClassName:Settings
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00849/src/main/java/org/elasticsearch/common/settings/Settings.java
+InvokedMethodSig:public abstract java.lang.Float getAsFloat(java.lang.String, java.lang.Float) throws org.elasticsearch.common.settings.SettingsException
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:getNumericType().wrapTermsEnum(terms.iterator(null))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:getNumericType()
+PackageName:org.elasticsearch.index.fielddata.plain
+QualifiedClassName:org.elasticsearch.index.fielddata.plain.DoubleArrayIndexFieldData
+ClassName:DoubleArrayIndexFieldData
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00849/src/main/java/org/elasticsearch/index/fielddata/plain/DoubleArrayIndexFieldData.java
+InvokedMethodSig:public NumericType getNumericType() 

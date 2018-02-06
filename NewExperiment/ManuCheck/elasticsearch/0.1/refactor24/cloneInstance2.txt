@@ -1,0 +1,28 @@
+(startLine=195 endLine=220 srcPath=/root/NewExperiment/elasticsearchFilter/00402/modules/elasticsearch/src/main/java/org/elasticsearch/rest/action/admin/indices/status/RestIndicesStatusAction.java)
+                                if (shardStatus.gatewayRecoveryStatus() != null) {
+                                    GatewayRecoveryStatus gatewayRecoveryStatus = shardStatus.gatewayRecoveryStatus();
+                                    builder.startObject("gateway_recovery");
+                                    builder.field("stage", gatewayRecoveryStatus.stage());
+                                    builder.field("start_time_in_millis", gatewayRecoveryStatus.startTime());
+                                    builder.field("time", gatewayRecoveryStatus.time());
+                                    builder.field("time_in_millis", gatewayRecoveryStatus.time().millis());
+
+                                    builder.startObject("index");
+                                    builder.field("progress", gatewayRecoveryStatus.indexRecoveryProgress());
+                                    builder.field("size", gatewayRecoveryStatus.indexSize());
+                                    builder.field("size_in_bytes", gatewayRecoveryStatus.indexSize().bytes());
+                                    builder.field("reused_size", gatewayRecoveryStatus.reusedIndexSize());
+                                    builder.field("reused_size_in_bytes", gatewayRecoveryStatus.reusedIndexSize().bytes());
+                                    builder.field("expected_recovered_size", gatewayRecoveryStatus.expectedRecoveredIndexSize());
+                                    builder.field("expected_recovered_size_in_bytes", gatewayRecoveryStatus.expectedRecoveredIndexSize().bytes());
+                                    builder.field("recovered_size", gatewayRecoveryStatus.recoveredIndexSize());
+                                    builder.field("recovered_size_in_bytes", gatewayRecoveryStatus.recoveredIndexSize().bytes());
+                                    builder.endObject();
+
+                                    builder.startObject("translog");
+                                    builder.field("recovered", gatewayRecoveryStatus.recoveredTranslogOperations());
+                                    builder.endObject();
+
+                                    builder.endObject();
+                                }
+

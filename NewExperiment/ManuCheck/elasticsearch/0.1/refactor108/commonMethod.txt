@@ -1,0 +1,15 @@
+(startLine=358 endLine=370 srcPath=/root/NewExperiment/elasticsearchFilter/00775/src/main/java/org/elasticsearch/index/fielddata/BytesValues.java)
+        protected BytesRefArrayRef getValuesMulti(int docId) {
+            assert isMultiValued();
+            IntArrayRef ords = ordinals.getOrds(docId);
+            int size = ords.size();
+            if (size == 0) {
+                return BytesRefArrayRef.EMPTY;
+            }
+            arrayScratch.reset(size);
+            for (int i = ords.start; i < ords.end; i++) {
+                arrayScratch.values[arrayScratch.end++] = getValueScratchByOrd(ords.values[i], new BytesRef());
+            }
+            return arrayScratch;
+        }
+

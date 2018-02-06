@@ -1,0 +1,36 @@
+(startLine=85 endLine=118 srcPath=/root/NewExperiment/elasticsearchFilter/00797/src/main/java/org/elasticsearch/index/fielddata/plain/ShortArrayIndexFieldData.java)
+    public ShortArrayAtomicFieldData loadDirect(AtomicReaderContext context) throws Exception {
+        AtomicReader reader = context.reader();
+        Terms terms = reader.terms(getFieldNames().indexName());
+        if (terms == null) {
+            return ShortArrayAtomicFieldData.EMPTY;
+        }
+        // TODO: how can we guess the number of terms? numerics end up creating more terms per value...
+        final TShortArrayList values = new TShortArrayList();
+
+        values.add((short) 0); // first "t" indicates null value
+        OrdinalsBuilder builder = new OrdinalsBuilder(terms, reader.maxDoc());
+        try {
+            BytesRefIterator iter = builder.buildFromTerms(builder.wrapNumeric32Bit(terms.iterator(null)), reader.getLiveDocs());
+            BytesRef term;
+            while ((term = iter.next()) != null) {
+                values.add((short) NumericUtils.prefixCodedToInt(term));
+            }
+
+            Ordinals build = builder.build(fieldDataType.getSettings());
+            return build(reader, fieldDataType, builder, build, new BuilderShorts() {
+                @Override
+                public short get(int index) {
+                    return values.get(index);
+                }
+
+                @Override
+                public short[] toArray() {
+                    return values.toArray();
+                }
+            });
+        } finally {
+            builder.close();
+        }
+    }
+

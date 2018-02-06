@@ -1,0 +1,18 @@
+(startLine=258 endLine=273 srcPath=/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java)
+    /**
+     * A {@link TermsEnum} that iterates only full precision prefix coded 32 bit values.
+     * @see #buildFromTerms(TermsEnum, Bits)
+     */
+    public TermsEnum wrapNumeric32Bit(TermsEnum termsEnum) {
+        return new FilteredTermsEnum(termsEnum, false) {
+            
+            @Override
+            protected AcceptStatus accept(BytesRef term) throws IOException {
+                if (NumericUtils.getPrefixCodedIntShift(term) > 0) {
+                    return AcceptStatus.END;
+                } // we stop accepting terms once we moved across the prefix codec terms - redundant values!
+                return AcceptStatus.YES;
+            }
+        };
+    }
+

@@ -1,0 +1,10 @@
+(startLine=312 endLine=319 srcPath=/root/NewExperiment/elasticsearchFilter/00931/src/test/java/org/elasticsearch/test/integration/recovery/RecoveryWhileUnderLoadTests.java)
+    private void waitForDocs(final long numDocs) throws InterruptedException {
+        awaitBusy(new Predicate<Object>() {
+            public boolean apply(Object o) {
+                return client().prepareCount().setQuery(matchAllQuery()).execute().actionGet().getCount() > numDocs;
+            }
+        }, 5, TimeUnit.MINUTES); // not really relevant here we just have to wait some time
+        assertThat(client().prepareCount().setQuery(matchAllQuery()).execute().actionGet().getCount(), greaterThan(numDocs));
+    }
+

@@ -1,0 +1,9 @@
+(startLine=839 endLine=845 srcPath=/root/NewExperiment/elasticsearchFilter/00901/src/main/java/org/elasticsearch/common/xcontent/XContentBuilder.java)
+    public XContentBuilder timeValueField(XContentBuilderString rawFieldName, XContentBuilderString readableFieldName, TimeValue timeValue) throws IOException {
+        if (readableFormat) {
+            field(readableFieldName, timeValue.toString());
+        }
+        field(rawFieldName, timeValue.millis());
+        return this;
+    }
+

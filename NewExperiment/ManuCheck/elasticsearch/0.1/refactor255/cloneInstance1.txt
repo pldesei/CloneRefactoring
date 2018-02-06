@@ -1,0 +1,10 @@
+(startLine=510 endLine=517 srcPath=/root/NewExperiment/elasticsearchFilter/01710/core/src/main/java/org/elasticsearch/cluster/routing/allocation/decider/DiskThresholdDecider.java)
+        if (freeBytes < freeBytesThresholdHigh.bytes()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Less than the required {} free bytes threshold ({} bytes free) on node {}, shard cannot remain",
+                        freeBytesThresholdHigh, freeBytes, node.nodeId());
+            }
+            return allocation.decision(Decision.NO, NAME, "after allocation less than required [%s] free on node, free: [%s]",
+                    freeBytesThresholdHigh, new ByteSizeValue(freeBytes));
+        }
+

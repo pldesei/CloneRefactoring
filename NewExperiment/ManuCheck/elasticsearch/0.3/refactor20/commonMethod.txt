@@ -1,0 +1,20 @@
+(startLine=215 endLine=232 srcPath=/root/NewExperiment/elasticsearchFilter/00345/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/MapperService.java)
+    public DocumentMapper documentMapperWithAutoCreate(String type) {
+        DocumentMapper mapper = mappers.get(type);
+        if (mapper != null) {
+            return mapper;
+        }
+        if (!dynamic) {
+            return null;
+        }
+        // go ahead and dynamically create it
+        synchronized (mutex) {
+            mapper = mappers.get(type);
+            if (mapper != null) {
+                return mapper;
+            }
+            add(type, null);
+            return mappers.get(type);
+        }
+    }
+

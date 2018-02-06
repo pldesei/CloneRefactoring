@@ -1,0 +1,12 @@
+(startLine=219 endLine=228 srcPath=/root/NewExperiment/elasticsearchFilter/01140/src/test/java/org/elasticsearch/benchmark/search/child/ChildSearchBenchmark.java)
+        for (int j = 0; j < QUERY_COUNT; j++) {
+            double expected = Math.pow((j + 1), 3) * CHILD_COUNT;
+            SearchResponse searchResponse = client.prepareSearch(indexName)
+                    .setQuery(filteredQuery(matchAllQuery(), hasChildFilter("child", constantScoreQuery(rangeFilter("num").lte(expected)))))
+                    .execute().actionGet();
+            if (searchResponse.getHits().totalHits() != expected) {
+                System.err.println("mismatch on hits: " + searchResponse.getHits().totalHits() + " != " + expected);
+            }
+            totalQueryTime += searchResponse.getTookInMillis();
+        }
+

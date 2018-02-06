@@ -1,0 +1,16 @@
+(startLine=90 endLine=103 srcPath=/root/NewExperiment/elasticsearchFilter/00995/src/main/java/org/elasticsearch/index/fielddata/GeoPointValues.java)
+    /**
+     * Returns the next value for the current docID set to {@link #setDocument(int)}.
+     * This method should only be called <tt>N</tt> times where <tt>N</tt> is the number
+     * returned from {@link #setDocument(int)}. If called more than <tt>N</tt> times the behavior
+     * is undefined.
+     *
+     * Note: the returned {@link GeoPoint} might be shared across invocations.
+     *
+     * @return the next value for the current docID set to {@link #setDocument(int)}.
+     */
+    public GeoPoint nextValue() {
+        assert docId != -1;
+        return getValue(docId);
+    }
+

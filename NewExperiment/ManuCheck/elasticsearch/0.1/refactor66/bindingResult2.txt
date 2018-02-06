@@ -1,0 +1,51 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00714
+predFragLineRange:165-171
+predMethodLineRange:78-208
+nextLineRange:69-176
+predStrMethodInvoNames:
+[of, nextToken, currentName, equals, map, equals, builder, nextToken, add, bytes, build, equals, newArrayListWithCapacity, nextToken, add, text, toArray, size, isValue, equals, text, equals, text, equals, intValue, equals, equals, booleanValue, equals, text, equals, equals, text, equals, equals, fromString, text, equals, text, equals, text, equals, equals, textOrNull, equals, index, shardTarget, compile, smartNameFieldMapper, equals, fieldDataType, equals, fieldDataType, fieldDataType, equals, fieldDataType, equals, fieldDataType, equals, fieldDataType, equals, fieldDataType, equals]
+%%%%%%%%%%
+AddedMethodInvo Line:144 InvoName:context.scriptService().search(context.lookup(),scriptLang,script,params)
+PackageName:org.elasticsearch.script
+QualifiedClassName:org.elasticsearch.script.ScriptService
+ClassName:ScriptService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/script/ScriptService.java
+InvokedMethodSig:public org.elasticsearch.script.SearchScript search(org.elasticsearch.search.lookup.SearchLookup, java.lang.String, java.lang.String, Map<java.lang.String,java.lang.Object>) 
+%%%%%%%%%%
+AddedMethodInvo Line:144 InvoName:context.scriptService()
+PackageName:org.elasticsearch.search.internal
+QualifiedClassName:org.elasticsearch.search.internal.SearchContext
+ClassName:SearchContext
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/search/internal/SearchContext.java
+InvokedMethodSig:public org.elasticsearch.script.ScriptService scriptService() 
+%%%%%%%%%%
+AddedMethodInvo Line:144 InvoName:context.lookup()
+PackageName:org.elasticsearch.search.internal
+QualifiedClassName:org.elasticsearch.search.internal.SearchContext
+ClassName:SearchContext
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/search/internal/SearchContext.java
+InvokedMethodSig:public org.elasticsearch.search.lookup.SearchLookup lookup() 
+%%%%%%%%%%
+AddedMethodInvo Line:159 InvoName:context.fieldData().getForField(fieldMapper)
+PackageName:org.elasticsearch.index.fielddata
+QualifiedClassName:org.elasticsearch.index.fielddata.IndexFieldDataService
+ClassName:IndexFieldDataService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/index/fielddata/IndexFieldDataService.java
+InvokedMethodSig:public IFD getForField(FieldMapper#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:159 InvoName:context.fieldData()
+PackageName:org.elasticsearch.search.internal
+QualifiedClassName:org.elasticsearch.search.internal.SearchContext
+ClassName:SearchContext
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/search/internal/SearchContext.java
+InvokedMethodSig:public org.elasticsearch.index.fielddata.IndexFieldDataService fieldData() 
+%%%%%%%%%%
+AddedMethodInvo Line:162 InvoName:indexNumericFieldData.getNumericType().isFloatingPoint()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:162 InvoName:indexNumericFieldData.getNumericType()
+PackageName:org.elasticsearch.index.fielddata
+QualifiedClassName:org.elasticsearch.index.fielddata.IndexNumericFieldData
+ClassName:IndexNumericFieldData
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/index/fielddata/IndexNumericFieldData.java
+InvokedMethodSig:public abstract NumericType getNumericType() 

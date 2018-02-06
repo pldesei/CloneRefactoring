@@ -1,0 +1,9 @@
+(startLine=359 endLine=365 srcPath=/root/NewExperiment/elasticsearchFilter/00948/src/test/java/org/elasticsearch/test/integration/AbstractSharedClusterTest.java)
+    protected RefreshResponse refresh() {
+        waitForRelocation();
+        // TODO RANDOMIZE with flush?
+        RefreshResponse actionGet = client().admin().indices().prepareRefresh().execute().actionGet();
+        assertNoFailures(actionGet);
+        return actionGet;
+    }
+

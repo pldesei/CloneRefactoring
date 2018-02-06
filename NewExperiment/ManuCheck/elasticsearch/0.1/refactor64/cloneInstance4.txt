@@ -1,0 +1,9 @@
+(startLine=183 endLine=189 srcPath=/root/NewExperiment/elasticsearchFilter/00713/src/main/java/org/elasticsearch/search/facet/terms/TermsFacetProcessor.java)
+            } else if (fieldMapper.fieldDataType() == FieldDataType.DefaultTypes.FLOAT) {
+                if (script != null || "map".equals(executionHint)) {
+                    return new TermsFloatFacetCollector(facetName, field, size, comparatorType, allTerms, context, excluded, scriptLang, script, params);
+                } else {
+                    return new TermsFloatOrdinalsFacetCollector(facetName, field, size, comparatorType, allTerms, context, excluded);
+                }
+            } else if (fieldMapper.fieldDataType() == FieldDataType.DefaultTypes.SHORT) {
+

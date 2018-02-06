@@ -1,0 +1,15 @@
+(startLine=244 endLine=256 srcPath=/root/NewExperiment/elasticsearchFilter/01698/src/main/java/org/elasticsearch/index/query/TermsFilterParser.java)
+            } else if (EXECUTION_VALUE_AND_NOCACHE.equals(execution)) {
+                List<Filter> filters = Lists.newArrayList();
+                if (fieldMapper != null) {
+                    for (Object term : terms) {
+                        filters.add(fieldMapper.termFilter(term, parseContext));
+                    }
+                } else {
+                    for (Object term : terms) {
+                        filters.add(new TermFilter(new Term(fieldName, BytesRefs.toBytesRef(term))));
+                    }
+                }
+                filter = new AndFilter(filters);
+            } else if (EXECUTION_VALUE_OR.equals(execution)) {
+

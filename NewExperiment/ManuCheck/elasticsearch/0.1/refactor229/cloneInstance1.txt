@@ -1,0 +1,20 @@
+(startLine=283 endLine=300 srcPath=/root/NewExperiment/elasticsearchFilter/01151/src/main/java/org/elasticsearch/index/search/MatchQuery.java)
+                for (int i = 0; i < numTokens; i++) {
+                    int positionIncrement = 1;
+                    boolean hasNext = buffer.incrementToken();
+                    assert hasNext == true;
+                    positionIncrement = posIncrAtt.getPositionIncrement();
+
+                    if (positionIncrement > 0 && multiTerms.size() > 0) {
+                        if (enablePositionIncrements) {
+                            mpq.add(multiTerms.toArray(new Term[multiTerms.size()]), position);
+                        } else {
+                            mpq.add(multiTerms.toArray(new Term[multiTerms.size()]));
+                        }
+                        multiTerms.clear();
+                    }
+                    position += positionIncrement;
+                    //LUCENE 4 UPGRADE instead of string term we can convert directly from utf-16 to utf-8 
+                    multiTerms.add(new Term(field, termToByteRef(termAtt)));
+                }
+

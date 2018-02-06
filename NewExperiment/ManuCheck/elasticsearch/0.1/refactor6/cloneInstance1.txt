@@ -1,0 +1,17 @@
+(startLine=119 endLine=133 srcPath=/root/NewExperiment/elasticsearchFilter/00129/modules/elasticsearch/src/main/java/org/elasticsearch/index/query/support/MapperQueryParser.java)
+    @Override protected Query getPrefixQuery(String field, String termStr) throws ParseException {
+        String indexedNameField = field;
+        currentMapper = null;
+        if (mapperService != null) {
+            MapperService.SmartNameFieldMappers fieldMappers = mapperService.smartName(field);
+            if (fieldMappers != null) {
+                currentMapper = fieldMappers.fieldMappers().mapper();
+                if (currentMapper != null) {
+                    indexedNameField = currentMapper.names().indexName();
+                }
+                return wrapSmartNameQuery(super.getPrefixQuery(indexedNameField, termStr), fieldMappers, indexCache);
+            }
+        }
+        return super.getPrefixQuery(indexedNameField, termStr);
+    }
+

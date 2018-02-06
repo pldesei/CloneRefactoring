@@ -1,0 +1,13 @@
+(startLine=42 endLine=52 srcPath=/root/NewExperiment/elasticsearchFilter/00445/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/BrazilianAnalyzerProvider.java)
+    @Inject public BrazilianAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name, settings);
+        Set<?> stopWords = Analysis.parseStopWords(settings, BrazilianAnalyzer.getDefaultStopSet());
+        String[] stemExclusion = settings.getAsArray("stem_exclusion");
+        if (stemExclusion.length > 0) {
+            this.stemExclusion = ImmutableSet.copyOf(Iterators.forArray(stemExclusion));
+        } else {
+            this.stemExclusion = ImmutableSet.of();
+        }
+        analyzer = new BrazilianAnalyzer(version, stopWords, this.stemExclusion);
+    }
+

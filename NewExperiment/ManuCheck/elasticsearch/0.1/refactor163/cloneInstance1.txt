@@ -1,0 +1,30 @@
+(startLine=563 endLine=590 srcPath=/root/NewExperiment/elasticsearchFilter/00973/src/main/java/org/elasticsearch/action/bulk/TransportShardBulkAction.java)
+    private void updateMappingOnMaster(final String index, final String type) {
+        try {
+            MapperService mapperService = indicesService.indexServiceSafe(index).mapperService();
+            final DocumentMapper documentMapper = mapperService.documentMapper(type);
+            if (documentMapper == null) { // should not happen
+                return;
+            }
+            documentMapper.refreshSource();
+
+            mappingUpdatedAction.execute(new MappingUpdatedAction.MappingUpdatedRequest(index, type, documentMapper.mappingSource()), new ActionListener<MappingUpdatedAction.MappingUpdatedResponse>() {
+                @Override
+                public void onResponse(MappingUpdatedAction.MappingUpdatedResponse mappingUpdatedResponse) {
+                    // all is well
+                }
+
+                @Override
+                public void onFailure(Throwable e) {
+                    try {
+                        logger.warn("failed to update master on updated mapping for index [{}], type [{}] and source [{}]", e, index, type, documentMapper.mappingSource().string());
+                    } catch (IOException e1) {
+                        // ignore
+                    }
+                }
+            });
+        } catch (Throwable e) {
+            logger.warn("failed to update master on updated mapping for index [{}], type [{}]", e, index, type);
+        }
+    }
+

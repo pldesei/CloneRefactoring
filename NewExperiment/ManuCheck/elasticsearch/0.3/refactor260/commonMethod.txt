@@ -1,0 +1,7 @@
+(startLine=33 endLine=37 srcPath=/root/NewExperiment/elasticsearchFilter/01769/plugins/mapper-attachments/src/test/java/org/elasticsearch/mapper/attachments/AttachmentUnitTestCase.java)
+    protected static IndicesModule getIndicesModuleWithRegisteredAttachmentMapper() {
+        IndicesModule indicesModule = new IndicesModule();
+        indicesModule.registerMapper(AttachmentMapper.CONTENT_TYPE, new AttachmentMapper.TypeParser());
+        return indicesModule;
+    }
+

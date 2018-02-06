@@ -1,0 +1,13 @@
+(startLine=98 endLine=108 srcPath=/root/NewExperiment/elasticsearchFilter/00995/src/main/java/org/elasticsearch/index/fielddata/LongValues.java)
+    /**
+     * Sets iteration to the specified docID and returns the number of
+     * values for this document ID,
+     * @param docId document ID
+     *
+     * @see #nextValue()
+     */
+    public int setDocument(int docId) {
+        this.docId = docId;
+        return hasValue(docId) ?  1 : 0;
+    }
+

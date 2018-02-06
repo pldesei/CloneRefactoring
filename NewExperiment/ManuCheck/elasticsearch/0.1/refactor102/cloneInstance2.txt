@@ -1,0 +1,40 @@
+(startLine=1581 endLine=1618 srcPath=/root/NewExperiment/elasticsearchFilter/00748/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+            else if (f.casHash(fh, fh | LOCKED)) {
+                try {
+                    if (tabAt(tab, i) == f) {
+                        count = 1;
+                        for (Node e = f;; ++count) {
+                            Object ek, ev;
+                            if ((e.hash & HASH_BITS) == h &&
+                                (ev = e.val) != null &&
+                                ((ek = e.key) == k || k.equals(ek))) {
+                                val = mf.remap(k, (V)ev);
+                                if (val != null)
+                                    e.val = val;
+                                break;
+                            }
+                            Node last = e;
+                            if ((e = e.next) == null) {
+                                if ((val = mf.remap(k, null)) != null) {
+                                    last.next = new Node(h, k, val, null);
+                                    added = true;
+                                    if (count >= TREE_THRESHOLD)
+                                        replaceWithTreeBin(tab, i, k);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                } finally {
+                    if (!f.casHash(fh | LOCKED, fh)) {
+                        f.hash = fh;
+                        synchronized (f) { f.notifyAll(); };
+                    }
+                }
+                if (count != 0) {
+                    if (tab.length <= 64)
+                        count = 2;
+                    break;
+                }
+            }
+

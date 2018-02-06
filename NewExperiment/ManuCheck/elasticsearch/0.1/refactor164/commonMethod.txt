@@ -1,0 +1,8 @@
+(startLine=235 endLine=240 srcPath=/root/NewExperiment/elasticsearchFilter/00974/src/main/java/org/elasticsearch/cluster/metadata/IndexMetaData.java)
+        assert uuid() != null;
+        if (INDEX_UUID_NA_VALUE.equals(otherUUID) || INDEX_UUID_NA_VALUE.equals(uuid())) {
+            return true;
+        }
+        return otherUUID.equals(getUUID());
+    }
+

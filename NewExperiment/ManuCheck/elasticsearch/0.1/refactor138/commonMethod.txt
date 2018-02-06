@@ -1,0 +1,8 @@
+(startLine=261 endLine=266 srcPath=/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/query/IndexQueryParserService.java)
+    @Nullable
+    public Filter parseInnerFilter(XContentParser parser) throws IOException {
+        QueryParseContext context = cache.get();
+        context.reset(parser);
+        return context.parseInnerFilter();
+    }
+

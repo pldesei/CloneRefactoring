@@ -1,0 +1,28 @@
+(startLine=168 endLine=193 srcPath=/root/NewExperiment/elasticsearchFilter/00402/modules/elasticsearch/src/main/java/org/elasticsearch/rest/action/admin/indices/status/RestIndicesStatusAction.java)
+                                if (shardStatus.peerRecoveryStatus() != null) {
+                                    PeerRecoveryStatus peerRecoveryStatus = shardStatus.peerRecoveryStatus();
+                                    builder.startObject("peer_recovery");
+                                    builder.field("stage", peerRecoveryStatus.stage());
+                                    builder.field("start_time_in_millis", peerRecoveryStatus.startTime());
+                                    builder.field("time", peerRecoveryStatus.time());
+                                    builder.field("time_in_millis", peerRecoveryStatus.time().millis());
+
+                                    builder.startObject("index");
+                                    builder.field("progress", peerRecoveryStatus.indexRecoveryProgress());
+                                    builder.field("size", peerRecoveryStatus.indexSize());
+                                    builder.field("size_in_bytes", peerRecoveryStatus.indexSize().bytes());
+                                    builder.field("reused_size", peerRecoveryStatus.reusedIndexSize());
+                                    builder.field("reused_size_in_bytes", peerRecoveryStatus.reusedIndexSize().bytes());
+                                    builder.field("expected_recovered_size", peerRecoveryStatus.expectedRecoveredIndexSize());
+                                    builder.field("expected_recovered_size_in_bytes", peerRecoveryStatus.expectedRecoveredIndexSize().bytes());
+                                    builder.field("recovered_size", peerRecoveryStatus.recoveredIndexSize());
+                                    builder.field("recovered_size_in_bytes", peerRecoveryStatus.recoveredIndexSize().bytes());
+                                    builder.endObject();
+
+                                    builder.startObject("translog");
+                                    builder.field("recovered", peerRecoveryStatus.recoveredTranslogOperations());
+                                    builder.endObject();
+
+                                    builder.endObject();
+                                }
+

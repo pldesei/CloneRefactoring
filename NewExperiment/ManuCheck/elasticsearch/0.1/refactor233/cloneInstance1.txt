@@ -1,0 +1,46 @@
+(startLine=1397 endLine=1440 srcPath=/root/NewExperiment/elasticsearchFilter/01178/src/test/java/org/elasticsearch/search/child/SimpleChildQuerySearchTests.java)
+    public void testDeleteByQuery_has_child() throws Exception {
+        client().admin().indices().prepareCreate("test")
+                .setSettings(
+                        ImmutableSettings.settingsBuilder()
+                                .put("index.number_of_shards", 1)
+                                .put("index.number_of_replicas", 1)
+                                .put("index.refresh_interval", "-1")
+                )
+                .addMapping("parent")
+                .addMapping("child", "_parent", "type=parent")
+                .get();
+        ensureGreen();
+
+        // index simple data
+        client().prepareIndex("test", "parent", "p1").setSource("p_field", "p_value1").get();
+        client().prepareIndex("test", "child", "c1").setSource("c_field", "red").setParent("p1").get();
+        client().prepareIndex("test", "child", "c2").setSource("c_field", "yellow").setParent("p1").get();
+        client().prepareIndex("test", "parent", "p2").setSource("p_field", "p_value2").get();
+        client().admin().indices().prepareFlush("test").get();
+        client().prepareIndex("test", "child", "c3").setSource("c_field", "blue").setParent("p2").get();
+        client().prepareIndex("test", "child", "c4").setSource("c_field", "red").setParent("p2").get();
+        client().prepareIndex("test", "parent", "p3").setSource("p_field", "p_value3").get();
+        client().admin().indices().prepareFlush("test").get();
+        client().prepareIndex("test", "child", "c5").setSource("c_field", "blue").setParent("p3").get();
+        client().prepareIndex("test", "child", "c6").setSource("c_field", "red").setParent("p3").get();
+        client().admin().indices().prepareRefresh().get();
+        // p4 will not be found via search api, but will be deleted via delete_by_query api!
+        client().prepareIndex("test", "parent", "p4").setSource("p_field", "p_value4").get();
+        client().prepareIndex("test", "child", "c7").setSource("c_field", "blue").setParent("p4").get();
+        client().prepareIndex("test", "child", "c8").setSource("c_field", "red").setParent("p4").get();
+
+        SearchResponse searchResponse = client().prepareSearch("test")
+                .setQuery(randomHasChild("child", "c_field", "blue"))
+                .get();
+        assertHitCount(searchResponse, 2l);
+
+        client().prepareDeleteByQuery("test").setQuery(randomHasChild("child", "c_field", "blue")).get();
+        client().admin().indices().prepareRefresh("test").get();
+
+        searchResponse = client().prepareSearch("test")
+                .setQuery(randomHasChild("child", "c_field", "blue"))
+                .get();
+        assertHitCount(searchResponse, 0l);
+    }
+

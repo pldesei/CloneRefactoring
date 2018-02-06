@@ -1,0 +1,13 @@
+(startLine=43 endLine=53 srcPath=/root/NewExperiment/elasticsearchFilter/00235/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/CzechAnalyzerProvider.java)
+    @Inject public CzechAnalyzerProvider(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
+        super(index, indexSettings, name);
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            this.stopWords = ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            this.stopWords = CzechAnalyzer.getDefaultStopSet();
+        }
+
+        analyzer = new CzechAnalyzer(Lucene.ANALYZER_VERSION, this.stopWords);
+    }
+

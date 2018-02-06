@@ -1,0 +1,15 @@
+(startLine=940 endLine=952 srcPath=/root/NewExperiment/elasticsearchFilter/00855/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+                        else {
+                            if (x == xp.right) {
+                                rotateLeft(x = xp);
+                                xpp = (xp = x.parent) == null ? null : xp.parent;
+                            }
+                            if (xp != null) {
+                                xp.red = false;
+                                if (xpp != null) {
+                                    xpp.red = true;
+                                    rotateRight(xpp);
+                                }
+                            }
+                        }
+

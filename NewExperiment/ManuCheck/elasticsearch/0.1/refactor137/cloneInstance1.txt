@@ -1,0 +1,10 @@
+(startLine=223 endLine=230 srcPath=/root/NewExperiment/elasticsearchFilter/00864/src/main/java/org/elasticsearch/index/percolator/PercolatorService.java)
+                    for (IndexService indexService : indicesService) {
+                        // only load queries for "this" index percolator service
+                        if (indexService.index().equals(index())) {
+                            logger.debug("loading percolator queries for index [{}]...", indexService.index().name());
+                            loadQueries(indexService.index().name());
+                            logger.trace("done loading percolator queries for index [{}]", indexService.index().name());
+                        }
+                    }
+

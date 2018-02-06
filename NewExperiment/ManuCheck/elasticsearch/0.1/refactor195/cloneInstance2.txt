@@ -1,0 +1,19 @@
+(startLine=147 endLine=163 srcPath=/root/NewExperiment/elasticsearchFilter/01086/src/main/java/org/elasticsearch/index/query/IndicesQueryParser.java)
+    protected boolean matchesIndices(String currentIndex, String... indices) {
+        final String[] concreteIndices;
+        try {
+            concreteIndices = clusterService.state().metaData().concreteIndices(indices, IgnoreIndices.MISSING, true);
+        } catch(IndexMissingException e) {
+            //Although we use IgnoreIndices.MISSING, according to MetaData#concreteIndices contract,
+            // we get IndexMissing either when we have a single index that is missing or when all indices are missing
+            return false;
+        }
+
+        for (String index : concreteIndices) {
+            if (Regex.simpleMatch(index, currentIndex)) {
+                return true;
+            }
+        }
+        return false;
+    }
+

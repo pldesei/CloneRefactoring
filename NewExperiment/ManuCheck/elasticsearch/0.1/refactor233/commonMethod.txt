@@ -1,0 +1,20 @@
+(startLine=374 endLine=391 srcPath=/root/NewExperiment/elasticsearchFilter/01179/src/test/java/org/elasticsearch/test/ElasticsearchIntegrationTest.java)
+    /**
+     * Returns a settings object used in {@link #createIndex(String...)} and {@link #prepareCreate(String)} and friends.
+     * This method can be overwritten by subclasses to set defaults for the indices that are created by the test.
+     * By default it returns a settings object that sets a random number of shards. Number of shards and replicas
+     * can be controlled through specific methods.
+     */
+    public Settings indexSettings() {
+        ImmutableSettings.Builder builder = ImmutableSettings.builder();
+        int numberOfShards = numberOfShards();
+        if (numberOfShards > 0) {
+            builder.put(IndexMetaData.SETTING_NUMBER_OF_SHARDS, numberOfShards).build();
+        }
+        int numberOfReplicas = numberOfReplicas();
+        if (numberOfReplicas >= 0) {
+            builder.put(IndexMetaData.SETTING_NUMBER_OF_REPLICAS, numberOfReplicas).build();
+        }
+        return builder.build();
+    }
+

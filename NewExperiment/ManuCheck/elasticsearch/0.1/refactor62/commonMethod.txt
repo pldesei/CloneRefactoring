@@ -1,0 +1,22 @@
+(startLine=110 endLine=129 srcPath=/root/NewExperiment/elasticsearchFilter/00687/src/main/java/org/elasticsearch/index/mapper/Uid.java)
+    public static HashedBytesArray[] splitUidIntoTypeAndId(BytesRef uid) {
+        int loc = -1;
+        for (int i = uid.offset; i < uid.length; i++) {
+            if (uid.bytes[i] == 0x23) { // 0x23 is equal to '#'
+                loc = i;
+                break;
+            }
+        }
+
+        if (loc == -1) {
+            return null;
+        }
+
+        byte[] type = new byte[loc - uid.offset];
+        System.arraycopy(uid.bytes, uid.offset, type, 0, type.length);
+
+        byte[] id = new byte[uid.length - type.length -1];
+        System.arraycopy(uid.bytes, loc + 1, id, 0, id.length);
+        return new HashedBytesArray[]{new HashedBytesArray(type), new HashedBytesArray(id)};
+    }
+

@@ -1,0 +1,18 @@
+(startLine=45 endLine=60 srcPath=/root/NewExperiment/elasticsearchFilter/00446/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/Analysis.java)
+    public static Set<?> parseStemExclusion(Settings settings, Set<?> defaultStemExclusion) {
+        String value = settings.get("stem_exclusion");
+        if (value != null) {
+            if ("_none_".equals(value)) {
+                return ImmutableSet.of();
+            } else {
+                return ImmutableSet.copyOf(Strings.commaDelimitedListToSet(value));
+            }
+        }
+        String[] stopWords = settings.getAsArray("stem_exclusion", null);
+        if (stopWords != null) {
+            return ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            return defaultStemExclusion;
+        }
+    }
+

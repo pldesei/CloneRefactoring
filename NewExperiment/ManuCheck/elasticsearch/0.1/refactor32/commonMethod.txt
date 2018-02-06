@@ -1,0 +1,41 @@
+(startLine=180 endLine=218 srcPath=/root/NewExperiment/elasticsearchFilter/00429/modules/benchmark/micro/src/main/java/org/elasticsearch/benchmark/search/facet/TermsFacetSearchBenchmark.java)
+    private static StatsResult terms(String name, String field, String executionHint) {
+        long totalQueryTime;// LM VALUE
+
+        client.admin().indices().prepareClearCache().setFieldDataCache(true).execute().actionGet();
+
+        System.out.println("--> Warmup (" + name + ")...");
+        // run just the child query, warm up first
+        for (int j = 0; j < QUERY_WARMUP; j++) {
+            SearchResponse searchResponse = client.prepareSearch()
+                    .setSearchType(SearchType.COUNT)
+                    .setQuery(matchAllQuery())
+                    .addFacet(termsFacet(field).field(field).executionHint(executionHint))
+                    .execute().actionGet();
+            if (j == 0) {
+                System.out.println("--> Loading (" + field + "): took: " + searchResponse.took());
+            }
+            if (searchResponse.hits().totalHits() != COUNT) {
+                System.err.println("--> mismatch on hits");
+            }
+        }
+        System.out.println("--> Warmup (" + name + ") DONE");
+
+
+        System.out.println("--> Running (" + name + ")...");
+        totalQueryTime = 0;
+        for (int j = 0; j < QUERY_COUNT; j++) {
+            SearchResponse searchResponse = client.prepareSearch()
+                    .setSearchType(SearchType.COUNT)
+                    .setQuery(matchAllQuery())
+                    .addFacet(termsFacet(field).field(field).executionHint(executionHint))
+                    .execute().actionGet();
+            if (searchResponse.hits().totalHits() != COUNT) {
+                System.err.println("--> mismatch on hits");
+            }
+            totalQueryTime += searchResponse.tookInMillis();
+        }
+        System.out.println("--> Terms Facet (" + field + "), hint(" + executionHint + "): " + (totalQueryTime / QUERY_COUNT) + "ms");
+        return new StatsResult(name, totalQueryTime);
+    }
+

@@ -1,0 +1,29 @@
+(startLine=440 endLine=466 srcPath=/root/NewExperiment/elasticsearchFilter/01711/core/src/main/java/org/elasticsearch/cluster/routing/allocation/decider/DiskThresholdDecider.java)
+    private DiskUsage getDiskUsage(RoutingNode node, RoutingAllocation allocation) {
+        ClusterInfo clusterInfo = allocation.clusterInfo();
+        Map<String, DiskUsage> usages = clusterInfo.getNodeDiskUsages();
+        DiskUsage usage = usages.get(node.nodeId());
+        if (usage == null) {
+            // If there is no usage, and we have other nodes in the cluster,
+            // use the average usage for all nodes as the usage for this node
+            usage = averageUsage(node, usages);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Unable to determine disk usage for {}, defaulting to average across nodes [{} total] [{} free] [{}% free]",
+                        node.nodeId(), usage.getTotalBytes(), usage.getFreeBytes(), usage.getFreeDiskAsPercentage());
+            }
+        }
+
+        if (includeRelocations) {
+            Map<String, Long> shardSizes = clusterInfo.getShardSizes();
+            long relocatingShardsSize = sizeOfRelocatingShards(node, shardSizes, true);
+            DiskUsage usageIncludingRelocations = new DiskUsage(node.nodeId(), node.node().name(),
+                    usage.getTotalBytes(), usage.getFreeBytes() - relocatingShardsSize);
+            if (logger.isTraceEnabled()) {
+                logger.trace("usage without relocations: {}", usage);
+                logger.trace("usage with relocations: [{} bytes] {}", relocatingShardsSize, usageIncludingRelocations);
+            }
+            usage = usageIncludingRelocations;
+        }
+        return usage;
+    }
+

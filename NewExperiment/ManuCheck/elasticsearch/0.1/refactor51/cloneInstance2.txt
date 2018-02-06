@@ -1,0 +1,9 @@
+(startLine=237 endLine=243 srcPath=/root/NewExperiment/elasticsearchFilter/00596/src/main/java/org/elasticsearch/cluster/service/InternalClusterService.java)
+                        if (logger.isTraceEnabled()) {
+                            StringBuilder sb = new StringBuilder("cluster state updated:\nversion [").append(clusterState.version()).append("], source [").append(source).append("]\n");
+                            sb.append(clusterState.nodes().prettyPrint());
+                            sb.append(clusterState.routingTable().prettyPrint());
+                            sb.append(clusterState.readOnlyRoutingNodes().prettyPrint());
+                            logger.trace(sb.toString());
+                        } else if (logger.isDebugEnabled()) {
+

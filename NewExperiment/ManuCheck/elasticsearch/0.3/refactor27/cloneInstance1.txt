@@ -1,0 +1,12 @@
+(startLine=150 endLine=159 srcPath=/root/NewExperiment/elasticsearchFilter/00417/modules/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/longs/TermsLongFacetCollector.java)
+        } else {
+            // we need to fetch facets of "size * numberOfShards" because of problems in how they are distributed across shards
+            BoundedTreeSet<InternalLongTermsFacet.LongEntry> ordered = new BoundedTreeSet<InternalLongTermsFacet.LongEntry>(comparatorType.comparator(), size * numberOfShards);
+            for (TLongIntIterator it = facets.iterator(); it.hasNext();) {
+                it.advance();
+                ordered.add(new InternalLongTermsFacet.LongEntry(it.key(), it.value()));
+            }
+            pushFacets(facets);
+            return new InternalLongTermsFacet(facetName, comparatorType, size, ordered, aggregator.missing());
+        }
+

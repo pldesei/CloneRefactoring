@@ -1,0 +1,34 @@
+(startLine=462 endLine=493 srcPath=/root/NewExperiment/elasticsearchFilter/00953/src/main/java/org/elasticsearch/plugins/PluginManager.java)
+        static PluginHandle parse(String name) {
+            String[] elements = name.split("/");
+            // We first consider the simplest form: pluginname
+            String repo = elements[0];
+            String user = null;
+            String version = null;
+
+            // We consider the form: username/pluginname
+            if (elements.length > 1) {
+                user = elements[0];
+                repo = elements[1];
+
+                // We consider the form: username/pluginname/version
+                if (elements.length > 2) {
+                    version = elements[2];
+                }
+            }
+
+            if (repo.startsWith("elasticsearch-")) {
+                // remove elasticsearch- prefix
+                String endname = repo.substring("elasticsearch-".length());
+                return new PluginHandle(endname, version, user, repo);
+            }
+
+            if (name.startsWith("es-")) {
+                // remove es- prefix
+                String endname = repo.substring("es-".length());
+                return new PluginHandle(endname, version, user, repo);
+            }
+
+            return new PluginHandle(repo, version, user, repo);
+        }
+

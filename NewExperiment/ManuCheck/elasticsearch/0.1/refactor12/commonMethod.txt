@@ -1,0 +1,14 @@
+(startLine=38 endLine=49 srcPath=/root/NewExperiment/elasticsearchFilter/00236/modules/elasticsearch/src/main/java/org/elasticsearch/index/analysis/Analysis.java)
+    public static Set<?> parseStopWords(Settings settings, Set<?> defaultStopWords) {
+        String value = settings.get("stopwords");
+        if (value != null && "_none_".equals(value)) {
+            return ImmutableSet.of();
+        }
+        String[] stopWords = settings.getAsArray("stopwords", null);
+        if (stopWords != null) {
+            return ImmutableSet.copyOf(Iterators.forArray(stopWords));
+        } else {
+            return defaultStopWords;
+        }
+    }
+

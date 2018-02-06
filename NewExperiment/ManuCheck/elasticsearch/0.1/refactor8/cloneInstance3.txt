@@ -1,0 +1,22 @@
+(startLine=51 endLine=70 srcPath=/root/NewExperiment/elasticsearchFilter/00185/modules/elasticsearch/src/main/java/org/elasticsearch/index/store/fs/MmapFsStore.java)
+    @Inject public MmapFsStore(ShardId shardId, @IndexSettings Settings indexSettings, IndexStore indexStore, ByteBufferCache byteBufferCache) throws IOException {
+        super(shardId, indexSettings);
+        // by default, we don't need to sync to disk, since we use the gateway
+        this.syncToDisk = componentSettings.getAsBoolean("sync_to_disk", false);
+        LockFactory lockFactory = buildLockFactory();
+        File location = ((FsIndexStore) indexStore).shardIndexLocation(shardId);
+        location.mkdirs();
+        this.fsDirectory = new CustomMMapDirectory(location, lockFactory, syncToDisk);
+
+        SwitchDirectory switchDirectory = buildSwitchDirectoryIfNeeded(fsDirectory, byteBufferCache);
+        if (switchDirectory != null) {
+            suggestUseCompoundFile = false;
+            logger.debug("Using [mmap_fs] Store with path [{}], cache [true] with extensions [{}]", fsDirectory.getFile(), switchDirectory.primaryExtensions());
+            directory = switchDirectory;
+        } else {
+            suggestUseCompoundFile = true;
+            directory = fsDirectory;
+            logger.debug("Using [mmap_fs] Store with path [{}]", fsDirectory.getFile());
+        }
+    }
+

@@ -1,0 +1,40 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00948
+predFragLineRange:215-222
+predMethodLineRange:162-223
+nextLineRange:129-176
+predStrMethodInvoNames:
+[between, builder, put, put, between, numberOfNodes, put, putArray, put, put, put, endObject, endObject, endObject, endObject, endObject, endObject, field, field, field, startObject, endObject, field, startObject, startObject, field, field, startObject, startObject, startObject, startObject, jsonBuilder, actionGet, execute, prepareDelete, indices, admin, client, actionGet, execute, addMapping, setSettings, prepareCreate, indices, admin, client, build, actionGet, execute, setWaitForGreenStatus, prepareHealth, cluster, admin, client, indexRandom, setSource, prepareIndex, client, endObject, field, startObject, jsonBuilder, setSource, prepareIndex, client, endObject, field, startObject, jsonBuilder, setSource, prepareIndex, client, endObject, field, startObject, jsonBuilder, searchSuggest, client, gramSize, addCandidateGenerator, field, phraseSuggestion, maxEdits, suggestMode, minWordLength, prefixLength, candidateGenerator, assertSuggestion, setSearchType, prepareSearch, client, setSuggestText, addSuggestion, gramSize, addCandidateGenerator, field, phraseSuggestion, maxEdits, suggestMode, minWordLength, prefixLength, candidateGenerator, assertThrows, setSearchType, prepareSearch, client, setSuggestText, addSuggestion, gramSize, addCandidateGenerator, field, phraseSuggestion, maxEdits, suggestMode, minWordLength, prefixLength, candidateGenerator, assertThrows]
+%%%%%%%%%%
+AddedMethodInvo Line:131 InvoName:settingsBuilder()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:142 InvoName:ImmutableMap.of("name",ImmutableMap.of("type","string"),"name_shingled",ImmutableMap.of("type","string","index_analyzer","biword","search_analyzer","standard"))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:143 InvoName:ImmutableMap.of("type","string")
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:144 InvoName:ImmutableMap.of("type","string","index_analyzer","biword","search_analyzer","standard")
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:148 InvoName:builder.get()
+PackageName:org.elasticsearch.action
+QualifiedClassName:org.elasticsearch.action.ActionRequestBuilder<org.elasticsearch.action.admin.indices.create.CreateIndexRequest,org.elasticsearch.action.admin.indices.create.CreateIndexResponse,org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder>
+ClassName:ActionRequestBuilder<CreateIndexRequest,CreateIndexResponse,CreateIndexRequestBuilder>
+InnerClass
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00948/src/test/java/org/elasticsearch/action/ActionRequestBuilder<org.java
+InvokedMethodSig:public Response get() throws org.elasticsearch.ElasticSearchException
+%%%%%%%%%%
+AddedMethodInvo Line:149 InvoName:ensureGreen()
+PackageName:org.elasticsearch.test.integration
+QualifiedClassName:org.elasticsearch.test.integration.AbstractSharedClusterTest
+ClassName:AbstractSharedClusterTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00948/src/test/java/org/elasticsearch/test/integration/AbstractSharedClusterTest.java
+InvokedMethodSig:public ClusterHealthStatus ensureGreen() 
+%%%%%%%%%%
+AddedMethodInvo Line:155 InvoName:refresh()
+PackageName:org.elasticsearch.test.integration
+QualifiedClassName:org.elasticsearch.test.integration.AbstractSharedClusterTest
+ClassName:AbstractSharedClusterTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00948/src/test/java/org/elasticsearch/test/integration/AbstractSharedClusterTest.java
+InvokedMethodSig:protected org.elasticsearch.action.admin.indices.refresh.RefreshResponse refresh() 

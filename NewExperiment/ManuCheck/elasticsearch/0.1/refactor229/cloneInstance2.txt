@@ -1,0 +1,19 @@
+(startLine=333 endLine=349 srcPath=/root/NewExperiment/elasticsearchFilter/01151/src/main/java/org/elasticsearch/index/search/MatchQuery.java)
+            for (int i = 0; i < numTokens; i++) {
+                int positionIncrement = 1;
+                boolean hasNext = buffer.incrementToken();
+                assert hasNext == true;
+                positionIncrement = posIncrAtt.getPositionIncrement();
+
+                if (positionIncrement > 0 && multiTerms.size() > 0) {
+                    if (enablePositionIncrements) {
+                        mpq.add(multiTerms.toArray(new Term[multiTerms.size()]), position);
+                    } else {
+                        mpq.add(multiTerms.toArray(new Term[multiTerms.size()]));
+                    }
+                    multiTerms.clear();
+                }
+                position += positionIncrement;
+                multiTerms.add(new Term(field, termToByteRef(termAtt)));
+            }
+

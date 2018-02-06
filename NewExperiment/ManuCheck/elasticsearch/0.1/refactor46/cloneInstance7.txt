@@ -1,0 +1,15 @@
+(startLine=83 endLine=95 srcPath=/root/NewExperiment/elasticsearchFilter/00544/modules/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/floats/TermsFloatFacetCollector.java)
+        } else {
+            // add type filter if there is exact doc mapper associated with it
+            if (smartMappers.hasDocMapper()) {
+                setFilter(context.filterCache().cache(smartMappers.docMapper().typeFilter()));
+            }
+
+            if (smartMappers.mapper().fieldDataType() != FieldDataType.DefaultTypes.FLOAT) {
+                throw new ElasticSearchIllegalArgumentException("Field [" + fieldName + "] doesn't is not of float type, can't run terms float facet collector on it");
+            }
+
+            this.indexFieldName = smartMappers.mapper().names().indexName();
+            this.fieldDataType = smartMappers.mapper().fieldDataType();
+        }
+

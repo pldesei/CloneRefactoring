@@ -1,0 +1,14 @@
+(startLine=166 endLine=177 srcPath=/root/NewExperiment/elasticsearchFilter/00952/src/main/java/org/elasticsearch/plugins/PluginManager.java)
+                        if (!downloaded) {
+                            pluginUrl = new URL("https://oss.sonatype.org/service/local/repositories/releases/content/" + userName.replace('.', '/') + "/" + repoName + "/" + version + "/" + repoName + "-" + version + ".zip");
+                            System.out.println("Trying " + pluginUrl.toExternalForm() + "...");
+                            try {
+                                downloadHelper.download(pluginUrl, pluginFile, new HttpDownloadHelper.VerboseProgress(System.out));
+                                downloaded = true;
+                            } catch (Exception e) {
+                                if (verbose) {
+                                    System.out.println("Failed: " + ExceptionsHelper.detailedMessage(e));
+                                }
+                            }
+                        }
+

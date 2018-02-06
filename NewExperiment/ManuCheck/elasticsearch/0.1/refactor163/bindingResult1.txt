@@ -1,0 +1,34 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00974
+predFragLineRange:563-590
+predMethodLineRange:563-590
+nextLineRange:563-589
+predStrMethodInvoNames:
+[mapperService, indexServiceSafe, documentMapper, refreshSource, execute, mappingSource, warn, string, mappingSource, warn]
+%%%%%%%%%%
+AddedMethodInvo Line:572 InvoName:clusterService.state().metaData().index(index)
+PackageName:org.elasticsearch.cluster.metadata
+QualifiedClassName:org.elasticsearch.cluster.metadata.MetaData
+ClassName:MetaData
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00974/src/main/java/org/elasticsearch/cluster/metadata/MetaData.java
+InvokedMethodSig:public org.elasticsearch.cluster.metadata.IndexMetaData index(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:572 InvoName:clusterService.state().metaData()
+PackageName:org.elasticsearch.cluster
+QualifiedClassName:org.elasticsearch.cluster.ClusterState
+ClassName:ClusterState
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00974/src/main/java/org/elasticsearch/cluster/ClusterState.java
+InvokedMethodSig:public org.elasticsearch.cluster.metadata.MetaData metaData() 
+%%%%%%%%%%
+AddedMethodInvo Line:572 InvoName:clusterService.state()
+PackageName:org.elasticsearch.cluster
+QualifiedClassName:org.elasticsearch.cluster.ClusterService
+ClassName:ClusterService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00974/src/main/java/org/elasticsearch/cluster/ClusterService.java
+InvokedMethodSig:public abstract org.elasticsearch.cluster.ClusterState state() 
+%%%%%%%%%%
+AddedMethodInvo Line:574 InvoName:metaData.uuid()
+PackageName:org.elasticsearch.cluster.metadata
+QualifiedClassName:org.elasticsearch.cluster.metadata.IndexMetaData
+ClassName:IndexMetaData
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00974/src/main/java/org/elasticsearch/cluster/metadata/IndexMetaData.java
+InvokedMethodSig:public java.lang.String uuid() 

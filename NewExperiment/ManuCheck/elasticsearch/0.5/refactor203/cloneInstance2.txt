@@ -1,0 +1,16 @@
+(startLine=65 endLine=78 srcPath=/root/NewExperiment/elasticsearchFilter/01134/src/main/java/org/elasticsearch/search/aggregations/bucket/terms/LongTermsAggregator.java)
+    public void collect(int doc, long owningBucketOrdinal) throws IOException {
+        assert owningBucketOrdinal == 0;
+        final LongValues values = valuesSource.longValues();
+        final int valuesCount = values.setDocument(doc);
+
+        for (int i = 0; i < valuesCount; ++i) {
+            final long val = values.nextValue();
+            long bucketOrdinal = bucketOrds.add(val);
+            if (bucketOrdinal < 0) { // already seen
+                bucketOrdinal = - 1 - bucketOrdinal;
+            }
+            collectBucket(doc, bucketOrdinal);
+        }
+    }
+

@@ -1,0 +1,18 @@
+(startLine=424 endLine=439 srcPath=/root/NewExperiment/elasticsearchFilter/00953/src/main/java/org/elasticsearch/plugins/PluginManager.java)
+        List<URL> urls() {
+            List<URL> urls = new ArrayList<URL>();
+            if (version != null) {
+                // Elasticsearch download service
+                addUrl(urls, "http://download.elasticsearch.org/" + user + "/" + repo + "/" + repo + "-" + version + ".zip");
+                // Maven central repository
+                addUrl(urls, "http://search.maven.org/remotecontent?filepath=" + user.replace('.', '/') + "/" + repo + "/" + version + "/" + repo + "-" + version + ".zip");
+                // Sonatype repository
+                addUrl(urls, "https://oss.sonatype.org/service/local/repositories/releases/content/" + user.replace('.', '/') + "/" + repo + "/" + version + "/" + repo + "-" + version + ".zip");
+                // Github repository
+                addUrl(urls, "https://github.com/" + user + "/" + repo + "/archive/v" + version + ".zip");
+            }
+            // Github repository for master branch (assume site)
+            addUrl(urls, "https://github.com/" + user + "/" + repo + "/archive/master.zip");
+            return urls;
+        }
+

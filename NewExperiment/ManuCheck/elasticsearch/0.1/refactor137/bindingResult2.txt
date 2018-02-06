@@ -1,0 +1,64 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00865
+predFragLineRange:250-259
+predMethodLineRange:213-260
+nextLineRange:180-205
+predStrMethodInvoNames:
+[equals, name, index, shardId, equals, index, index, debug, name, index, loadQueries, name, index, trace, name, index, equals, index, shardId, index, percolatorAllocated, indexService, name, index, shardId, numberOfShards, debug, name, index, loadQueries, name, trace, name, index]
+%%%%%%%%%%
+AddedMethodInvo Line:180 InvoName:docMapper.parse(source(parser).type(type).flyweight(true))
+PackageName:org.elasticsearch.index.mapper
+QualifiedClassName:org.elasticsearch.index.mapper.DocumentMapper
+ClassName:DocumentMapper
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/mapper/DocumentMapper.java
+InvokedMethodSig:public org.elasticsearch.index.mapper.ParsedDocument parse(org.elasticsearch.common.bytes.BytesReference) throws org.elasticsearch.index.mapper.MapperParsingException
+%%%%%%%%%%
+AddedMethodInvo Line:180 InvoName:source(parser).type(type).flyweight(true)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:180 InvoName:source(parser).type(type)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:180 InvoName:source(parser)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:187 InvoName:documentIndexService.queryParserService().parse(parser).query()
+PackageName:org.elasticsearch.index.query
+QualifiedClassName:org.elasticsearch.index.query.ParsedQuery
+ClassName:ParsedQuery
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/query/ParsedQuery.java
+InvokedMethodSig:public Query query() 
+%%%%%%%%%%
+AddedMethodInvo Line:187 InvoName:documentIndexService.queryParserService().parse(parser)
+PackageName:org.elasticsearch.index.query
+QualifiedClassName:org.elasticsearch.index.query.IndexQueryParserService
+ClassName:IndexQueryParserService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/query/IndexQueryParserService.java
+InvokedMethodSig:public org.elasticsearch.index.query.ParsedQuery parse(org.elasticsearch.common.xcontent.XContentParser) 
+%%%%%%%%%%
+AddedMethodInvo Line:187 InvoName:documentIndexService.queryParserService()
+PackageName:org.elasticsearch.index.service
+QualifiedClassName:org.elasticsearch.index.service.IndexService
+ClassName:IndexService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/service/IndexService.java
+InvokedMethodSig:public abstract org.elasticsearch.index.query.IndexQueryParserService queryParserService() 
+%%%%%%%%%%
+AddedMethodInvo Line:192 InvoName:documentIndexService.queryParserService().parseInnerFilter(parser)
+PackageName:org.elasticsearch.index.query
+QualifiedClassName:org.elasticsearch.index.query.IndexQueryParserService
+ClassName:IndexQueryParserService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/query/IndexQueryParserService.java
+InvokedMethodSig:public Filter parseInnerFilter(org.elasticsearch.common.xcontent.XContentParser) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:192 InvoName:documentIndexService.queryParserService()
+PackageName:org.elasticsearch.index.service
+QualifiedClassName:org.elasticsearch.index.service.IndexService
+ClassName:IndexService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/service/IndexService.java
+InvokedMethodSig:public abstract org.elasticsearch.index.query.IndexQueryParserService queryParserService() 
+%%%%%%%%%%
+AddedMethodInvo Line:203 InvoName:parser.close()
+PackageName:org.elasticsearch.common.xcontent
+QualifiedClassName:org.elasticsearch.common.xcontent.XContentParser
+ClassName:XContentParser
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/common/xcontent/XContentParser.java
+InvokedMethodSig:public abstract void close() 

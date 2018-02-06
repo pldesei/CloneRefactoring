@@ -1,0 +1,12 @@
+(startLine=53 endLine=62 srcPath=/root/NewExperiment/elasticsearchFilter/00205/modules/elasticsearch/src/main/java/org/elasticsearch/search/facets/AbstractFacetBuilder.java)
+    protected void addFilterFacetAndGlobal(XContentBuilder builder, Params params) throws IOException {
+        if (facetFilter != null) {
+            builder.field("facet_filter");
+            facetFilter.toXContent(builder, params);
+        }
+
+        if (global != null) {
+            builder.field("global", global);
+        }
+    }
+

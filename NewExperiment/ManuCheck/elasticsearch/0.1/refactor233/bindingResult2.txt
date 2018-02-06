@@ -1,0 +1,16 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/01179
+predFragLineRange:1443-1484
+predMethodLineRange:1442-1484
+nextLineRange:1288-1328
+predStrMethodInvoNames:
+[get, addMapping, addMapping, setSettings, prepareCreate, indices, admin, client, put, put, put, settingsBuilder, ensureGreen, get, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, prepareFlush, indices, admin, client, get, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, setParent, setSource, prepareIndex, client, get, prepareRefresh, indices, admin, client, get, setQuery, prepareSearch, client, randomHasChild, assertHitCount, get, setQuery, prepareDeleteByQuery, client, randomHasChild, get, prepareRefresh, indices, admin, client, get, setQuery, prepareSearch, client, randomHasChild, assertHitCount]
+%%%%%%%%%%
+AddedMethodInvo Line:1290 InvoName:assertAcked(prepareCreate("test").setSettings(settingsBuilder().put(indexSettings()).put("index.refresh_interval","-1")).addMapping("parent").addMapping("child","_parent","type=parent"))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1293 InvoName:indexSettings()
+PackageName:org.elasticsearch.test
+QualifiedClassName:org.elasticsearch.test.ElasticsearchIntegrationTest
+ClassName:ElasticsearchIntegrationTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/01179/src/test/java/org/elasticsearch/test/ElasticsearchIntegrationTest.java
+InvokedMethodSig:public org.elasticsearch.common.settings.Settings indexSettings() 

@@ -1,0 +1,41 @@
+(startLine=426 endLine=464 srcPath=/root/NewExperiment/elasticsearchFilter/01065/src/main/java/org/elasticsearch/cluster/routing/allocation/AllocationService.java)
+            if (failedShard.state() == INITIALIZING) {
+                // the shard is initializing and recovering from another node
+                boolean dirty = false;
+                // first, we need to cancel the current node that is being initialized
+                RoutingNode initializingNode = routingNodes.node(failedShard.currentNodeId());
+                if (initializingNode != null) {
+                    for (Iterator<MutableShardRouting> it = initializingNode.iterator(); it.hasNext(); ) {
+                        MutableShardRouting shardRouting = it.next();
+                        if (shardRouting.equals(failedShard)) {
+                            dirty = true;
+                            it.remove();
+
+                            routingNodes.deassignShard( shardRouting );
+
+                            if (addToIgnoreList) {
+                                // make sure we ignore this shard on the relevant node
+                                allocation.addIgnoreShardForNode(failedShard.shardId(), failedShard.currentNodeId());
+                            }
+
+                            break;
+                        }
+                    }
+                }
+                if (dirty) {
+                    // now, find the node that we are relocating *from*, and cancel its relocation
+                    RoutingNode relocatingFromNode = routingNodes.node(failedShard.relocatingNodeId());
+                    if (relocatingFromNode != null) {
+                        for (Iterator<MutableShardRouting> it = relocatingFromNode.iterator(); it.hasNext(); ) {
+                            MutableShardRouting shardRouting = it.next();
+                            if (shardRouting.shardId().equals(failedShard.shardId()) && shardRouting.state() == RELOCATING) {
+                                dirty = true;
+                                routingNodes.cancelRelocationForShard( shardRouting );
+                                break;
+                            }
+                        }
+                    }
+                }
+                return dirty;
+            } else if (failedShard.state() == RELOCATING) {
+

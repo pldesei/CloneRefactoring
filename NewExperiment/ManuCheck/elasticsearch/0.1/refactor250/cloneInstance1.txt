@@ -1,0 +1,16 @@
+(startLine=241 endLine=254 srcPath=/root/NewExperiment/elasticsearchFilter/01698/src/main/java/org/elasticsearch/index/mapper/internal/IdFieldMapper.java)
+    public Filter prefixFilter(Object value, @Nullable QueryParseContext context) {
+        if (fieldType.indexOptions() != IndexOptions.NONE || context == null) {
+            return super.prefixFilter(value, context);
+        }
+        Collection<String> queryTypes = context.queryTypes();
+        if (queryTypes.size() == 1) {
+            return new PrefixFilter(new Term(UidFieldMapper.NAME, Uid.createUidAsBytes(Iterables.getFirst(queryTypes, null), BytesRefs.toBytesRef(value))));
+        }
+        XBooleanFilter filter = new XBooleanFilter();
+        for (String queryType : queryTypes) {
+            filter.add(new PrefixFilter(new Term(UidFieldMapper.NAME, Uid.createUidAsBytes(queryType, BytesRefs.toBytesRef(value)))), BooleanClause.Occur.SHOULD);
+        }
+        return filter;
+    }
+

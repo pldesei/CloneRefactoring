@@ -1,0 +1,32 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/01025
+predFragLineRange:433-480
+predMethodLineRange:432-480
+nextLineRange:302-340
+predStrMethodInvoNames:
+[actionGet, execute, addMapping, setSettings, prepareCreate, indices, admin, client, put, settingsBuilder, endObject, endObject, endObject, endObject, endObject, endObject, field, field, field, startObject, startObject, startObject, endObject, field, field, field, startObject, startObject, startObject, startObject, jsonBuilder, actionGet, execute, setWaitForYellowStatus, setWaitForEvents, prepareHealth, cluster, admin, client, actionGet, execute, setRefresh, setSource, prepareIndex, client, toString, endObject, endArray, endObject, field, startObject, endObject, field, startObject, startArray, field, startObject, jsonBuilder, actionGet, execute, addHighlightedField, setQuery, prepareSearch, client, fieldQuery, assertNoFailures, assertThat, totalHits, getHits, equalTo, assertThat, hits, getHits, equalTo, getHits, assertThat, string, fragments, get, highlightFields, equalTo, actionGet, execute, addHighlightedField, setQuery, prepareSearch, client, fieldQuery, assertNoFailures, assertThat, totalHits, getHits, equalTo, assertThat, hits, getHits, equalTo, getHits, assertThat, string, fragments, get, highlightFields, equalTo, assertThat, string, fragments, get, highlightFields, equalTo]
+%%%%%%%%%%
+AddedMethodInvo Line:304 InvoName:assertAcked(client().admin().indices().prepareCreate("test").setSettings(ImmutableSettings.settingsBuilder().put("index.number_of_shards",2)).addMapping("type1",jsonBuilder().startObject().startObject("type1").startObject("properties").startObject("title").field("type","string").field("store","no").field("term_vector","no").endObject().startObject("attachments").startObject("properties").startObject("body").field("type","string").field("store","no").field("term_vector","no").endObject().endObject().endObject().endObject().endObject().endObject()))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:310 InvoName:ensureYellow()
+PackageName:org.elasticsearch.test
+QualifiedClassName:org.elasticsearch.test.AbstractIntegrationTest
+ClassName:AbstractIntegrationTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/01025/src/test/java/org/elasticsearch/test/AbstractIntegrationTest.java
+InvokedMethodSig:public ClusterHealthStatus ensureYellow() 
+%%%%%%%%%%
+AddedMethodInvo Line:320 InvoName:indexRandom(true,indexRequestBuilders)
+PackageName:org.elasticsearch.test
+QualifiedClassName:org.elasticsearch.test.AbstractIntegrationTest
+ClassName:AbstractIntegrationTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/01025/src/test/java/org/elasticsearch/test/AbstractIntegrationTest.java
+InvokedMethodSig:public void indexRandom(boolean, org.elasticsearch.action.index.IndexRequestBuilder[]) throws java.lang.InterruptedException, java.util.concurrent.ExecutionException
+%%%%%%%%%%
+AddedMethodInvo Line:328 InvoName:assertHighlight(search,i,"title",0,equalTo("This is a test on the highlighting <em>bug</em> present in elasticsearch"))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:337 InvoName:assertHighlight(search,i,"attachments.body",0,equalTo("<em>attachment</em> 1"))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:338 InvoName:assertHighlight(search,i,"attachments.body",1,equalTo("<em>attachment</em> 2"))
+mBinding is null

@@ -1,0 +1,12 @@
+(startLine=60 endLine=69 srcPath=/root/NewExperiment/elasticsearchFilter/00415/modules/elasticsearch/src/main/java/org/elasticsearch/common/io/stream/LZFStreamOutput.java)
+        while (remainingBytes > 0) {
+            if (position >= outputBuffer.length) {
+                writeCompressedBlock();
+            }
+            int chunkLength = (remainingBytes > (outputBuffer.length - position)) ? outputBuffer.length - position : remainingBytes;
+            System.arraycopy(b, inputCursor, outputBuffer, position, chunkLength);
+            position += chunkLength;
+            remainingBytes -= chunkLength;
+            inputCursor += chunkLength;
+        }
+

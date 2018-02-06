@@ -1,0 +1,13 @@
+(startLine=164 endLine=174 srcPath=/root/NewExperiment/elasticsearchFilter/00664/src/main/java/org/elasticsearch/rest/action/admin/cluster/state/RestClusterStateAction.java)
+                            for (Map.Entry<String, CompressedString> entry : templateMetaData.mappings().entrySet()) {
+                                byte[] mappingSource = entry.getValue().uncompressed();
+                                XContentParser parser = XContentFactory.xContent(mappingSource).createParser(mappingSource);
+                                Map<String, Object> mapping = parser.map();
+                                if (mapping.size() == 1 && mapping.containsKey(entry.getKey())) {
+                                    // the type name is the root value, reduce it
+                                    mapping = (Map<String, Object>) mapping.get(entry.getKey());
+                                }
+                                builder.field(entry.getKey());
+                                builder.map(mapping);
+                            }
+

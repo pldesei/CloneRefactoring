@@ -1,0 +1,30 @@
+(startLine=533 endLine=560 srcPath=/root/NewExperiment/elasticsearchFilter/00584/src/main/java/org/elasticsearch/index/translog/Translog.java)
+        public void readFrom(StreamInput in) throws IOException {
+            int version = in.readVInt(); // version
+            id = in.readUTF();
+            type = in.readUTF();
+            sourceOffset = 0;
+            sourceLength = in.readVInt();
+            source = new byte[sourceLength];
+            in.readFully(source);
+            if (version >= 1) {
+                if (in.readBoolean()) {
+                    routing = in.readUTF();
+                }
+            }
+            if (version >= 2) {
+                if (in.readBoolean()) {
+                    parent = in.readUTF();
+                }
+            }
+            if (version >= 3) {
+                this.version = in.readLong();
+            }
+            if (version >= 4) {
+                this.timestamp = in.readLong();
+            }
+            if (version >= 5) {
+                this.ttl = in.readLong();
+            }
+        }
+

@@ -1,0 +1,9 @@
+(startLine=296 endLine=302 srcPath=/root/NewExperiment/elasticsearchFilter/00948/src/test/java/org/elasticsearch/test/integration/AbstractSharedClusterTest.java)
+    public ClusterHealthStatus ensureGreen() {
+        ClusterHealthResponse actionGet = client().admin().cluster()
+                .health(Requests.clusterHealthRequest().waitForGreenStatus().waitForEvents(Priority.LANGUID).waitForRelocatingShards(0)).actionGet();
+        assertThat(actionGet.isTimedOut(), equalTo(false));
+        assertThat(actionGet.getStatus(), equalTo(ClusterHealthStatus.GREEN));
+        return actionGet.getStatus();
+    }
+

@@ -1,0 +1,51 @@
+(startLine=273 endLine=321 srcPath=/root/NewExperiment/elasticsearchFilter/01769/core/src/test/java/org/elasticsearch/common/lucene/all/SimpleAllTests.java)
+    public void testMultipleTokensAllWithBoost() throws Exception {
+        Directory dir = new RAMDirectory();
+        IndexWriter indexWriter = new IndexWriter(dir, new IndexWriterConfig(Lucene.STANDARD_ANALYZER));
+
+        Document doc = new Document();
+        doc.add(new Field("_id", "1", StoredField.TYPE));
+        AllEntries allEntries = new AllEntries();
+        allEntries.addText("field1", "something moo", 1.0f);
+        allEntries.addText("field2", "else koo", 1.0f);
+        allEntries.reset();
+        doc.add(new TextField("_all", AllTokenStream.allTokenStream("_all", allEntries, Lucene.STANDARD_ANALYZER)));
+
+        indexWriter.addDocument(doc);
+
+        doc = new Document();
+        doc.add(new Field("_id", "2", StoredField.TYPE));
+        allEntries = new AllEntries();
+        allEntries.addText("field1", "else koo", 2.0f);
+        allEntries.addText("field2", "something moo", 1.0f);
+        allEntries.reset();
+        doc.add(new TextField("_all", AllTokenStream.allTokenStream("_all", allEntries, Lucene.STANDARD_ANALYZER)));
+
+        indexWriter.addDocument(doc);
+
+        IndexReader reader = DirectoryReader.open(indexWriter, true);
+        IndexSearcher searcher = new IndexSearcher(reader);
+
+        TopDocs docs = searcher.search(new AllTermQuery(new Term("_all", "else")), 10);
+        assertThat(docs.totalHits, equalTo(2));
+        assertThat(docs.scoreDocs[0].doc, equalTo(1));
+        assertThat(docs.scoreDocs[1].doc, equalTo(0));
+
+        docs = searcher.search(new AllTermQuery(new Term("_all", "koo")), 10);
+        assertThat(docs.totalHits, equalTo(2));
+        assertThat(docs.scoreDocs[0].doc, equalTo(1));
+        assertThat(docs.scoreDocs[1].doc, equalTo(0));
+
+        docs = searcher.search(new AllTermQuery(new Term("_all", "something")), 10);
+        assertThat(docs.totalHits, equalTo(2));
+        assertThat(docs.scoreDocs[0].doc, equalTo(0));
+        assertThat(docs.scoreDocs[1].doc, equalTo(1));
+
+        docs = searcher.search(new AllTermQuery(new Term("_all", "moo")), 10);
+        assertThat(docs.totalHits, equalTo(2));
+        assertThat(docs.scoreDocs[0].doc, equalTo(0));
+        assertThat(docs.scoreDocs[1].doc, equalTo(1));
+
+        indexWriter.close();
+    }
+

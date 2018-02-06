@@ -1,0 +1,44 @@
+(startLine=76 endLine=117 srcPath=/root/NewExperiment/elasticsearchFilter/00544/modules/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/shorts/TermsShortOrdinalsFacetCollector.java)
+                                            ImmutableSet<String> excluded) {
+        super(facetName);
+        this.fieldDataCache = context.fieldDataCache();
+        this.size = size;
+        this.comparatorType = comparatorType;
+        this.numberOfShards = context.numberOfShards();
+
+        MapperService.SmartNameFieldMappers smartMappers = context.mapperService().smartName(fieldName);
+        if (smartMappers == null || !smartMappers.hasMapper()) {
+            throw new ElasticSearchIllegalArgumentException("Field [" + fieldName + "] doesn't have a type, can't run terms short facet collector on it");
+        } else {
+            // add type filter if there is exact doc mapper associated with it
+            if (smartMappers.hasDocMapper()) {
+                setFilter(context.filterCache().cache(smartMappers.docMapper().typeFilter()));
+            }
+
+            if (smartMappers.mapper().fieldDataType() != FieldDataType.DefaultTypes.SHORT) {
+                throw new ElasticSearchIllegalArgumentException("Field [" + fieldName + "] is not of short type, can't run terms short facet collector on it");
+            }
+
+            this.indexFieldName = smartMappers.mapper().names().indexName();
+            this.fieldDataType = smartMappers.mapper().fieldDataType();
+        }
+
+        if (excluded == null || excluded.isEmpty()) {
+            this.excluded = null;
+        } else {
+            this.excluded = new TShortHashSet(excluded.size());
+            for (String s : excluded) {
+                this.excluded.add(Short.parseShort(s));
+            }
+        }
+
+        // minCount is offset by -1
+        if (allTerms) {
+            minCount = -1;
+        } else {
+            minCount = 0;
+        }
+
+        this.aggregators = new ArrayList<ReaderAggregator>(context.searcher().subReaders().length);
+    }
+

@@ -1,0 +1,34 @@
+(startLine=312 endLine=343 srcPath=/root/NewExperiment/elasticsearchFilter/01181/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
+        public void collect(int doc) throws IOException {
+            final Query query = getQuery(doc);
+            if (query == null) {
+                // log???
+                return;
+            }
+            // run the query
+            try {
+                collector.reset();
+                if (context.highlight() != null) {
+                    context.parsedQuery(new ParsedQuery(query, ImmutableMap.<String, Filter>of()));
+                    context.hitContext().cache().clear();
+                }
+                searcher.search(query, collector);
+                if (collector.exists()) {
+                    if (!limit || counter < size) {
+                        matches.add(values.copyShared());
+                        scores.add(scorer.score());
+                        if (context.highlight() != null) {
+                            highlightPhase.hitExecute(context, context.hitContext());
+                            hls.add(context.hitContext().hit().getHighlightFields());
+                        }
+                    }
+                    counter++;
+                    if (facetAndAggregatorCollector != null) {
+                        facetAndAggregatorCollector.collect(doc);
+                    }
+                }
+            } catch (IOException e) {
+                logger.warn("[" + spare.bytes.utf8ToString() + "] failed to execute query", e);
+            }
+        }
+

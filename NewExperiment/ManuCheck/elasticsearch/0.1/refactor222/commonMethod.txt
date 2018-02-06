@@ -1,0 +1,18 @@
+(startLine=279 endLine=294 srcPath=/root/NewExperiment/elasticsearchFilter/01152/src/main/java/org/elasticsearch/index/search/MatchQuery.java)
+        public Query createCommonTermsQuery(String field, String queryText, Occur highFreqOccur, Occur lowFreqOccur, float maxTermFrequency) {
+            Query booleanQuery = createBooleanQuery(field, queryText, Occur.SHOULD);
+            if (booleanQuery != null && booleanQuery instanceof BooleanQuery) {
+                BooleanQuery bq = (BooleanQuery) booleanQuery;
+                ExtendedCommonTermsQuery query = new ExtendedCommonTermsQuery(highFreqOccur, lowFreqOccur, maxTermFrequency, ((BooleanQuery)booleanQuery).isCoordDisabled());
+                for (BooleanClause clause : bq.clauses()) {
+                    if (!(clause.getQuery() instanceof TermQuery)) {
+                        return booleanQuery;
+                    }
+                    query.add(((TermQuery) clause.getQuery()).getTerm());
+                }
+                return query;
+            }
+            return booleanQuery;
+
+        }
+

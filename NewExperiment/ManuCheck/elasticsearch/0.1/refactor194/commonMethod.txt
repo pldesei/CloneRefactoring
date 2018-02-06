@@ -1,0 +1,13 @@
+(startLine=150 endLine=160 srcPath=/root/NewExperiment/elasticsearchFilter/01079/src/main/java/org/elasticsearch/common/Table.java)
+    public List<Cell> getHeadersFromNames(List<String> headerNames) {
+        List<Cell> hdrs = new ArrayList<Cell>();
+        for (String hdrToFind : headerNames) {
+            for (Cell header : headers) {
+                if (((String) header.value).equalsIgnoreCase(hdrToFind)) {
+                    hdrs.add(header);
+                }
+            }
+        }
+        return hdrs;
+    }
+

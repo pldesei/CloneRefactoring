@@ -1,0 +1,23 @@
+(startLine=54 endLine=74 srcPath=/root/NewExperiment/elasticsearchFilter/00204/modules/elasticsearch/src/main/java/org/elasticsearch/search/facets/statistical/StatisticalFacetBuilder.java)
+    @Override public void toXContent(XContentBuilder builder, Params params) throws IOException {
+        if (fieldName == null) {
+            throw new SearchSourceBuilderException("field must be set on statistical facet for facet [" + name + "]");
+        }
+        builder.startObject(name);
+
+        builder.startObject(StatisticalFacetCollectorParser.NAME);
+        builder.field("field", fieldName);
+        builder.endObject();
+
+        if (filter != null) {
+            builder.field("filter");
+            filter.toXContent(builder, params);
+        }
+
+        if (global != null) {
+            builder.field("global", global);
+        }
+
+        builder.endObject();
+    }
+

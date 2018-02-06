@@ -1,0 +1,15 @@
+(startLine=89 endLine=101 srcPath=/root/NewExperiment/elasticsearchFilter/00544/modules/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/strings/TermsStringOrdinalsFacetCollector.java)
+        } else {
+            // add type filter if there is exact doc mapper associated with it
+            if (smartMappers.hasDocMapper()) {
+                setFilter(context.filterCache().cache(smartMappers.docMapper().typeFilter()));
+            }
+
+            if (smartMappers.mapper().fieldDataType() != FieldDataType.DefaultTypes.STRING) {
+                throw new ElasticSearchIllegalArgumentException("Field [" + fieldName + "] is not of string type, can't run terms string facet collector on it");
+            }
+
+            this.indexFieldName = smartMappers.mapper().names().indexName();
+            this.fieldDataType = smartMappers.mapper().fieldDataType();
+        }
+

@@ -1,0 +1,10 @@
+(startLine=129 endLine=136 srcPath=/root/NewExperiment/elasticsearchFilter/01183/src/main/java/org/elasticsearch/search/aggregations/bucket/terms/LongTerms.java)
+            for (Terms.Bucket bucket : terms.buckets) {
+                List<Bucket> existingBuckets = buckets.v().get(((Bucket) bucket).term);
+                if (existingBuckets == null) {
+                    existingBuckets = new ArrayList<Bucket>(aggregations.size());
+                    buckets.v().put(((Bucket) bucket).term, existingBuckets);
+                }
+                existingBuckets.add((Bucket) bucket);
+            }
+

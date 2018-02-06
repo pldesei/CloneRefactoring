@@ -1,0 +1,9 @@
+(startLine=382 endLine=388 srcPath=/root/NewExperiment/elasticsearchFilter/01066/src/main/java/org/elasticsearch/cluster/routing/RoutingNodes.java)
+    /**
+     * Cancels a relocation of a shard that shard must relocating.
+     */
+    public void cancelRelocation(MutableShardRouting shard) {
+        relocatingShards--;
+        shard.cancelRelocation();
+    }
+

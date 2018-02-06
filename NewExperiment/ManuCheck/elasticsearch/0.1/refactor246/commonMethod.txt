@@ -1,0 +1,7 @@
+(startLine=274 endLine=278 srcPath=/root/NewExperiment/elasticsearchFilter/01628/src/main/java/org/elasticsearch/search/aggregations/support/ValuesSource.java)
+            @Override
+            public SortedNumericDoubleValues doubleValues(LeafReaderContext context) throws IOException {
+                script.setNextReader(context);
+                return new DoubleValues(delegate.doubleValues(context), script);
+            }
+

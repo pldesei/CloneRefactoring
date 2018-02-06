@@ -1,0 +1,13 @@
+(startLine=75 endLine=85 srcPath=/root/NewExperiment/elasticsearchFilter/01768/core/src/main/java/org/elasticsearch/index/query/DisMaxQueryParser.java)
+            } else {
+                if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else if ("tie_breaker".equals(currentFieldName) || "tieBreaker".equals(currentFieldName)) {
+                    tieBreaker = parser.floatValue();
+                } else if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else {
+                    throw new ParsingException(parser.getTokenLocation(), "[dis_max] query does not support [" + currentFieldName + "]");
+                }
+            }
+

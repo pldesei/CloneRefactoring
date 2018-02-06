@@ -1,0 +1,17 @@
+(startLine=135 endLine=149 srcPath=/root/NewExperiment/elasticsearchFilter/00129/modules/elasticsearch/src/main/java/org/elasticsearch/index/query/support/MapperQueryParser.java)
+    @Override protected Query getFuzzyQuery(String field, String termStr, float minSimilarity) throws ParseException {
+        String indexedNameField = field;
+        currentMapper = null;
+        if (mapperService != null) {
+            MapperService.SmartNameFieldMappers fieldMappers = mapperService.smartName(field);
+            if (fieldMappers != null) {
+                currentMapper = fieldMappers.fieldMappers().mapper();
+                if (currentMapper != null) {
+                    indexedNameField = currentMapper.names().indexName();
+                }
+                return wrapSmartNameQuery(super.getFuzzyQuery(indexedNameField, termStr, minSimilarity), fieldMappers, indexCache);
+            }
+        }
+        return super.getFuzzyQuery(indexedNameField, termStr, minSimilarity);
+    }
+

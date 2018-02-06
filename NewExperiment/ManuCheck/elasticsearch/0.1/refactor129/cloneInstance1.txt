@@ -1,0 +1,24 @@
+(startLine=932 endLine=953 srcPath=/root/NewExperiment/elasticsearchFilter/00855/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+                    if (xp == xppl) {
+                        TreeNode<V> y = xpp.right;
+                        if (y != null && y.red) {
+                            y.red = false;
+                            xp.red = false;
+                            xpp.red = true;
+                            x = xpp;
+                        }
+                        else {
+                            if (x == xp.right) {
+                                rotateLeft(x = xp);
+                                xpp = (xp = x.parent) == null ? null : xp.parent;
+                            }
+                            if (xp != null) {
+                                xp.red = false;
+                                if (xpp != null) {
+                                    xpp.red = true;
+                                    rotateRight(xpp);
+                                }
+                            }
+                        }
+                    }
+

@@ -1,0 +1,10 @@
+(startLine=209 endLine=216 srcPath=/root/NewExperiment/elasticsearchFilter/00596/src/main/java/org/elasticsearch/cluster/service/InternalClusterService.java)
+                } catch (Exception e) {
+                    StringBuilder sb = new StringBuilder("failed to execute cluster state update, state:\nversion [").append(clusterState.version()).append("], source [").append(source).append("]\n");
+                    sb.append(clusterState.nodes().prettyPrint());
+                    sb.append(clusterState.routingTable().prettyPrint());
+                    sb.append(clusterState.readOnlyRoutingNodes().prettyPrint());
+                    logger.warn(sb.toString(), e);
+                    return;
+                }
+

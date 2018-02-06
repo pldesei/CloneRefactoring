@@ -1,0 +1,57 @@
+(startLine=2708 endLine=2762 srcPath=/root/NewExperiment/elasticsearchFilter/00856/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+        /**
+         * Finds or adds a node.
+         * @return null if added
+         */
+        final TreeNode<K,V> putTreeVal(int h, K k, V v) {
+            Class<?> kc = null;
+            for (TreeNode<K,V> p = root;;) {
+                int dir, ph; K pk; TreeNode<K,V> q, pr;
+                if (p == null) {
+                    first = root = new TreeNode<K,V>(h, k, v, null, null);
+                    break;
+                }
+                else if ((ph = p.hash) > h)
+                    dir = -1;
+                else if (ph < h)
+                    dir = 1;
+                else if ((pk = p.key) == k || (pk != null && k.equals(pk)))
+                    return p;
+                else if ((kc == null &&
+                          (kc = comparableClassFor(k)) == null) ||
+                         (dir = compareComparables(kc, k, pk)) == 0) {
+                    if (p.left == null)
+                        dir = 1;
+                    else if ((pr = p.right) == null ||
+                             (q = pr.findTreeNode(h, k, kc)) == null)
+                        dir = -1;
+                    else
+                        return q;
+                }
+                TreeNode<K,V> xp = p;
+                if ((p = (dir < 0) ? p.left : p.right) == null) {
+                    TreeNode<K,V> x, f = first;
+                    first = x = new TreeNode<K,V>(h, k, v, f, xp);
+                    if (f != null)
+                        f.prev = x;
+                    if (dir < 0)
+                        xp.left = x;
+                    else
+                        xp.right = x;
+                    if (!xp.red)
+                        x.red = true;
+                    else {
+                        lockRoot();
+                        try {
+                            root = balanceInsertion(root, x);
+                        } finally {
+                            unlockRoot();
+                        }
+                    }
+                    break;
+                }
+            }
+            assert checkInvariants(root);
+            return null;
+        }
+

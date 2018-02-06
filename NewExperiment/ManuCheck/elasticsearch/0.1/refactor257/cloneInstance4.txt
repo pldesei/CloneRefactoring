@@ -1,0 +1,13 @@
+(startLine=63 endLine=73 srcPath=/root/NewExperiment/elasticsearchFilter/01768/core/src/main/java/org/elasticsearch/index/query/SpanFirstQueryParser.java)
+            } else {
+                if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else if ("end".equals(currentFieldName)) {
+                    end = parser.intValue();
+                } else if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else {
+                    throw new ParsingException(parser.getTokenLocation(), "[span_first] query does not support [" + currentFieldName + "]");
+                }
+            }
+

@@ -1,0 +1,8 @@
+(startLine=564 endLine=569 srcPath=/root/NewExperiment/elasticsearchFilter/01024/src/test/java/org/elasticsearch/search/highlight/HighlighterSearchTests.java)
+        for (SearchHit hit : search.getHits()) {
+            Text[] fragments = hit.highlightFields().get("title").fragments();
+            assertThat(fragments.length, equalTo(2));
+            assertThat(fragments[0].string(), equalTo("This is a test on the highlighting <em>bug</em> present in elasticsearch. Hopefully it works."));
+            assertThat(fragments[1].string(), equalTo("This is the second <em>bug</em> to perform highlighting on."));
+        }
+

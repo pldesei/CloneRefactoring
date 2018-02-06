@@ -1,0 +1,9 @@
+(startLine=137 endLine=143 srcPath=/root/NewExperiment/elasticsearchFilter/01092/src/main/java/org/elasticsearch/search/lookup/SourceLookup.java)
+    /**
+     * Returns the values associated with the path. Those are "low" level values, and it can
+     * handle path expression where an array/list is navigated within.
+     */
+    public List<Object> extractRawValues(String path) {
+        return XContentMapValues.extractRawValues(path, loadSourceIfNeeded());
+    }
+

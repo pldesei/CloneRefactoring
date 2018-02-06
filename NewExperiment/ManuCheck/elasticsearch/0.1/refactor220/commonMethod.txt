@@ -1,0 +1,24 @@
+(startLine=87 endLine=108 srcPath=/root/NewExperiment/elasticsearchFilter/01152/src/main/java/org/elasticsearch/common/lucene/search/MultiPhrasePrefixQuery.java)
+    /**
+     * Allows to specify the relative position of terms within the phrase.
+     *
+     * @param terms
+     * @param position
+     * @see org.apache.lucene.search.PhraseQuery#add(Term, int)
+     */
+    public void add(Term[] terms, int position) {
+        if (termArrays.size() == 0)
+            field = terms[0].field();
+
+        for (int i = 0; i < terms.length; i++) {
+            if (terms[i].field() != field) {
+                throw new IllegalArgumentException(
+                        "All phrase terms must be in the same field (" + field + "): "
+                                + terms[i]);
+            }
+        }
+
+        termArrays.add(terms);
+        positions.add(Integer.valueOf(position));
+    }
+

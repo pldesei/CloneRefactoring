@@ -1,0 +1,9 @@
+(startLine=165 endLine=171 srcPath=/root/NewExperiment/elasticsearchFilter/00713/src/main/java/org/elasticsearch/search/facet/terms/TermsFacetProcessor.java)
+            } else if (fieldMapper.fieldDataType() == FieldDataType.DefaultTypes.LONG) {
+                if (script != null || "map".equals(executionHint)) {
+                    return new TermsLongFacetCollector(facetName, field, size, comparatorType, allTerms, context, excluded, scriptLang, script, params);
+                } else {
+                    return new TermsLongOrdinalsFacetCollector(facetName, field, size, comparatorType, allTerms, context, excluded);
+                }
+            } else if (fieldMapper.fieldDataType() == FieldDataType.DefaultTypes.DOUBLE) {
+

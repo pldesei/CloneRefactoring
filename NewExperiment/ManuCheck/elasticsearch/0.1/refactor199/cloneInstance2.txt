@@ -1,0 +1,12 @@
+(startLine=400 endLine=409 srcPath=/root/NewExperiment/elasticsearchFilter/01091/src/main/java/org/elasticsearch/index/get/ShardGetService.java)
+                        if (value != null && x != null) {
+                            if (value instanceof List) {
+                                List list = (List) value;
+                                for (int i = 0; i < list.size(); i++) {
+                                    list.set(i, x.mapper().valueForSearch(list.get(i)));
+                                }
+                            } else {
+                                value = x.mapper().valueForSearch(value);
+                            }
+                        }
+

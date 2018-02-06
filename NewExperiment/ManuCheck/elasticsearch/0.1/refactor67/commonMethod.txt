@@ -1,0 +1,9 @@
+(startLine=541 endLine=547 srcPath=/root/NewExperiment/elasticsearchFilter/00714/src/main/java/org/elasticsearch/search/internal/SearchContext.java)
+    public SearchLookup lookup() {
+        // TODO: The types should take into account the parsing context in QueryParserContext...
+        if (searchLookup == null) {
+            searchLookup = new SearchLookup(mapperService(), fieldData(), request.types());
+        }
+        return searchLookup;
+    }
+

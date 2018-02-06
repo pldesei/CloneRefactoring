@@ -1,0 +1,12 @@
+(startLine=99 endLine=108 srcPath=/root/NewExperiment/elasticsearchFilter/01078/src/main/java/org/elasticsearch/rest/action/support/RestTable.java)
+        for (List<Table.Cell> row : table.getRows()) {
+            for (int i = 0; i < width.length; i++) {
+                String headerName = table.getHeaders().get(i).value.toString();
+                if (displayHeaders.contains(headerName)) {
+                    pad(row.get(i), width[i], request, out);
+                    out.append(" ");
+                }
+            }
+            out.append("\n");
+        }
+

@@ -1,0 +1,16 @@
+(startLine=193 endLine=206 srcPath=/root/NewExperiment/elasticsearchFilter/00952/src/main/java/org/elasticsearch/plugins/PluginManager.java)
+                } else {
+                    // assume site plugin, download master....
+                    URL pluginUrl = new URL("https://github.com/" + userName + "/" + repoName + "/archive/master.zip");
+                    System.out.println("Trying " + pluginUrl.toExternalForm() + "... (assuming site plugin)");
+                    try {
+                        downloadHelper.download(pluginUrl, pluginFile, new HttpDownloadHelper.VerboseProgress(System.out));
+                        downloaded = true;
+                    } catch (Exception e2) {
+                        // ignore
+                        if (verbose) {
+                            System.out.println("Failed: " + ExceptionsHelper.detailedMessage(e2));
+                        }
+                    }
+                }
+
