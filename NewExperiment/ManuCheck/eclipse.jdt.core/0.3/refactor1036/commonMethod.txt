@@ -1,0 +1,10 @@
+(startLine=549 endLine=556 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02466/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/InferenceContext18.java)
+	public boolean registerSolution(TypeBinding targetType, MethodBinding updatedBinding) {
+		Solution solution = (Solution) this.solutionsPerTargetType.get(targetType);
+		if (solution != null)
+			return false; // no update
+		this.solutionsPerTargetType.put(targetType, new Solution(updatedBinding, null));
+		this.stepCompleted = TYPE_INFERRED;
+		return true;
+	}
+

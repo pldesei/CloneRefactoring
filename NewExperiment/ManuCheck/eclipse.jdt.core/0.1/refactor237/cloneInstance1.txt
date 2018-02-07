@@ -1,0 +1,46 @@
+(startLine=332 endLine=375 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00313/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/EqualExpression.java)
+	if ((inline = right.constant) != NotAConstant) {
+		// optimized case: x == null
+		if (right.constant == NullConstant.Default) {
+			left.generateCode(currentScope, codeStream, valueRequired);
+			if (valueRequired) {
+				if (falseLabel == null) {
+					if (trueLabel != null) {
+						// implicit falling through the FALSE case
+						codeStream.ifnull(trueLabel);
+					}
+				} else {
+					// implicit falling through the TRUE case
+					if (trueLabel == null) {
+						codeStream.ifnonnull(falseLabel);
+					} else {
+						// no implicit fall through TRUE/FALSE --> should never occur
+					}
+				}
+			}
+			codeStream.recordPositionsFrom(pc, this.sourceStart);
+			return;
+		}
+		// optimized case: x == 0
+		if (((left.implicitConversion >> 4) == T_int) && (inline.intValue() == 0)) {
+			left.generateCode(currentScope, codeStream, valueRequired);
+			if (valueRequired) {
+				if (falseLabel == null) {
+					if (trueLabel != null) {
+						// implicit falling through the FALSE case
+						codeStream.ifeq(trueLabel);
+					}
+				} else {
+					// implicit falling through the TRUE case
+					if (trueLabel == null) {
+						codeStream.ifne(falseLabel);
+					} else {
+						// no implicit fall through TRUE/FALSE --> should never occur
+					}
+				}
+			}
+			codeStream.recordPositionsFrom(pc, this.sourceStart);
+			return;
+		}
+	}
+

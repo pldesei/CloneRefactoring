@@ -1,0 +1,16 @@
+(startLine=287 endLine=300 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01715/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeBinding.java)
+		    if (!otherType.isInterface()) {
+				while ((currentType = currentType.superclass()) != null) {
+					if (currentType == otherType)
+						return currentType;
+					switch(currentType.kind()) {
+						case Binding.PARAMETERIZED_TYPE :
+						case Binding.RAW_TYPE :
+						case Binding.ARRAY_TYPE : 
+							if (currentType.erasure() == otherType)
+								return currentType;
+					}					
+				}
+				return null;
+		    }
+

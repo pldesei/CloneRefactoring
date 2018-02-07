@@ -1,0 +1,14 @@
+(startLine=698 endLine=709 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00863/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/TypeBinding.java)
+	public void appendTypeArguments(StringBuffer buffer, ITypeBinding[] typeArgs) {
+		int typeArgsLength = typeArgs.length;
+		if (typeArgsLength != 0) {
+			buffer.append('<');
+			for (int i = 0; i < typeArgsLength; i++) {
+				TypeBinding typeArg = (TypeBinding) typeArgs[i];
+				typeArg.appendParameterKey(buffer);
+				buffer.append(',');
+			}
+			buffer.append('>');
+		}
+	}
+

@@ -1,0 +1,23 @@
+(startLine=504 endLine=524 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01845/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/formatter/FormatterCommentsMassiveTests.java)
+									while (true) {
+										if (start < length) {
+											while (start < length && ScannerHelper.isWhitespace(line.charAt(start))) {
+												start++;
+											}
+											buffer.append(ModelTestsUtil.removeWhiteSpace(line.substring(start)));
+										}
+										line = tokenizer.nextToken();
+										length = line.length();
+										start = 0;
+										while (start < length && ScannerHelper.isWhitespace(line.charAt(start))) {
+											start++;
+										}
+										if (start > length+1 || line.charAt(start) != '/' || line.charAt(start+1) != '/') {
+											buffer.append('\n');
+											skipToken = true;
+											// only gate to break the loop
+											continue lineLoop;
+										}
+										start += 2;
+									}
+

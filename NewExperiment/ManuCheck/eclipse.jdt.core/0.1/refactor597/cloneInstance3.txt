@@ -1,0 +1,13 @@
+(startLine=2190 endLine=2200 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug84100d() throws CoreException {
+	resultCollector.showRule = true;
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 2, workingCopies.length);
+	IMethod method = selectMethod(workingCopies[0], "foo", 4);
+	search(method, REFERENCES);
+	discard = false; // use working copy for next test
+	assertSearchResults(
+		"src/b84100/Z.java void b84100.Z.foo() [foo(3, \"\", \"\")] EXACT_MATCH"
+	);
+}
+

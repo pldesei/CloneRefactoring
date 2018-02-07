@@ -1,0 +1,17 @@
+(startLine=1254 endLine=1268 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01108/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+public void test0073() throws JavaModelException {
+	CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true);
+	ICompilationUnit cu= getCompilationUnit("Completion", "src3", "test0073", "Test.java");
+
+	String str = cu.getSource();
+	String completeBehind = "test0073.p.ImportedClass.Inner.ZZ";
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	cu.codeComplete(cursorLocation, requestor);
+
+	assertResults(
+			"ZZZ1[FIELD_REF]{test0073.p.ImportedClass.Inner.ZZZ1;, Ltest0073.p.ImportedClass$Inner;, I, ZZZ1, null, " + (R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}\n" +
+			"ZZZ2[METHOD_IMPORT]{test0073.p.ImportedClass.Inner.ZZZ2;, Ltest0073.p.ImportedClass$Inner;, ()V, ZZZ2, null, " + (R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}\n" +
+			"ZZZ2[METHOD_IMPORT]{test0073.p.ImportedClass.Inner.ZZZ2;, Ltest0073.p.ImportedClass$Inner;, (I)V, ZZZ2, (i), " + (R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}",
+			requestor.getResults());
+}
+

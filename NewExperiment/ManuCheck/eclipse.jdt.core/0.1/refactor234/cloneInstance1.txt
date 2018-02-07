@@ -1,0 +1,14 @@
+(startLine=1248 endLine=1259 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00283/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/DeltaProcessor.java)
+						}
+					} catch(JavaModelException e) {
+						if (project.getProject().isAccessible()) {
+							Util.log(e, 
+								"Exception while retrieving "+ project.getPath() //$NON-NLS-1$
+								+"/.classpath, ignore change"); //$NON-NLS-1$
+						}
+						project.createClasspathProblemMarker(
+							Util.bind("classpath.cannotReadClasspathFile", project.getElementName()), //$NON-NLS-1$
+							IMarker.SEVERITY_ERROR,
+							false,	//  cycle error
+							true);	//	file format error
+

@@ -1,0 +1,12 @@
+(startLine=887 endLine=896 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug79990c() throws CoreException {
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 1, workingCopies.length);
+	IMethod method = workingCopies[0].getType("Test").getMethods()[1];
+	search(method, DECLARATIONS|IGNORE_DECLARING_TYPE|IGNORE_RETURN_TYPE);
+	assertSearchResults(
+		"src/b79990/Test.java void b79990.Test.second(T) [second] EXACT_MATCH\n" + 
+		"src/b79990/Test.java void b79990.Sub.second(Exception) [second] EXACT_MATCH"
+	);
+}
+

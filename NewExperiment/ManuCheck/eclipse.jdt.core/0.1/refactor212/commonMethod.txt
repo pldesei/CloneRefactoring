@@ -1,0 +1,9 @@
+(startLine=577 endLine=583 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00142/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/DefaultBindingResolver.java)
+	private IBinding internalResolveNameForThisExpression(Name name) {
+		AstNode node = (AstNode) this.newAstToOldAst.get(name);
+		if (node instanceof TypeReference) {
+			return this.getTypeBinding(((TypeReference) node).binding);
+		}
+		return null;
+	}
+

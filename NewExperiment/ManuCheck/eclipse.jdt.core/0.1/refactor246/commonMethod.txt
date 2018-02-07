@@ -1,0 +1,20 @@
+(startLine=737 endLine=754 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00380/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaModelManager.java)
+	private void firePostChangeDelta(
+		IJavaElementDelta deltaToNotify,
+		IElementChangedListener[] listeners,
+		int[] listenerMask,
+		int listenerCount) {
+			
+		// post change deltas
+		if (DeltaProcessor.VERBOSE){
+			System.out.println("FIRING POST_CHANGE Delta ["+Thread.currentThread()+"]:"); //$NON-NLS-1$//$NON-NLS-2$
+			System.out.println(deltaToNotify == null ? "<NONE>" : deltaToNotify.toString()); //$NON-NLS-1$
+		}
+		if (deltaToNotify != null) {
+			// flush now so as to keep listener reactions to post their own deltas for subsequent iteration
+			this.flush();
+			
+			notifyListeners(deltaToNotify, ElementChangedEvent.POST_CHANGE, listeners, listenerMask, listenerCount);
+		} 
+	}		
+

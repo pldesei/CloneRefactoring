@@ -1,0 +1,17 @@
+(startLine=1548 endLine=1562 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnFieldName(ASTNode astNode, Scope scope) {
+		if (!this.requestor.isIgnored(CompletionProposal.VARIABLE_DECLARATION)) {
+			CompletionOnFieldName field = (CompletionOnFieldName) astNode;
+
+			FieldBinding[] fields = scope.enclosingSourceType().fields();
+			char[][] excludeNames = new char[fields.length][];
+			for(int i = 0 ; i < fields.length ; i++){
+				excludeNames[i] = fields[i].name;
+			}
+
+			this.completionToken = field.realName;
+
+			findVariableNames(field.realName, field.type, excludeNames, null, FIELD, field.modifiers);
+		}
+	}
+

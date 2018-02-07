@@ -1,0 +1,17 @@
+(startLine=3306 endLine=3320 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01394/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void if_icmplt(BranchLabel lbl) {
+	if (DEBUG) System.out.println(position + "\t\tif_iacmplt:"+lbl); //$NON-NLS-1$
+	countLabels = 0;
+	stackDepth -= 2;
+	if (this.wideMode) {
+		generateWideRevertedConditionalBranch(Opcodes.OPC_if_icmpge, lbl);
+	} else {
+		if (classFileOffset >= bCodeStream.length) {
+			resizeByteArray();
+		}
+		position++;
+		bCodeStream[classFileOffset++] = Opcodes.OPC_if_icmplt;
+		lbl.branch();
+	}
+}
+

@@ -1,0 +1,11 @@
+(startLine=3392 endLine=3400 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00756/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/PublicScanner.java)
+public void unicodeInitializeBuffer(int length) {
+	this.withoutUnicodePtr = length;	
+    if (this.withoutUnicodeBuffer == null) this.withoutUnicodeBuffer = new char[length+(1+10)];
+    int bLength = this.withoutUnicodeBuffer.length;
+    if (1+length >= bLength) {
+        System.arraycopy(this.withoutUnicodeBuffer, 0, this.withoutUnicodeBuffer = new char[length + (1+10)], 0, bLength);
+    }
+	System.arraycopy(this.source, this.startPosition, this.withoutUnicodeBuffer, 1, length);    
+}
+

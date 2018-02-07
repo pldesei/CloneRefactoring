@@ -1,0 +1,17 @@
+(startLine=1518 endLine=1532 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnClassLiteralAccess(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		if (!this.requestor.isIgnored(CompletionProposal.FIELD_REF)) {
+			CompletionOnClassLiteralAccess access = (CompletionOnClassLiteralAccess) astNode;
+			setSourceAndTokenRange(access.classStart, access.sourceEnd);
+			this.completionToken = access.completionIdentifier;
+			findClassField(
+					this.completionToken,
+					(TypeBinding) qualifiedBinding,
+					scope,
+					null,
+					null,
+					null,
+					false);
+		}
+	}
+

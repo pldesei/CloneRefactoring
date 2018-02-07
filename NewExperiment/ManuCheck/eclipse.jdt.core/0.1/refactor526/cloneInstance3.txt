@@ -1,0 +1,25 @@
+(startLine=455 endLine=477 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01338/org.eclipse.jdt.apt.core/src/org/eclipse/jdt/apt/core/internal/util/Factory.java)
+    		{
+    			final char c = ((Character)value).charValue();
+    			switch( ((PrimitiveType)expectedType).getKind() )
+    			{
+    			case INT:
+    				return new Integer(c); 
+    			case LONG:
+    				return new Long(c);
+    			case FLOAT:
+    				return new Float(c);
+    			case DOUBLE:
+    				return new Double(c);
+    			case BYTE:
+    				return new Byte((byte)c);
+    			case SHORT:
+    				return new Short((short)c);  
+    			
+    			default:
+    				// it is either already correct or it is completely wrong,
+    				// which doesn't really matter what's returned
+    				return value;
+    			}
+    		}
+

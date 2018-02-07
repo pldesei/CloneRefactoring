@@ -1,0 +1,30 @@
+(startLine=685 endLine=712 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00524/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+	public String format(String string, int[] positions, CompilationUnitDeclaration compilationUnitDeclaration) {
+		// reset the scribe
+		this.scribe.reset(positions);
+		
+		if (compilationUnitDeclaration == null || compilationUnitDeclaration.ignoreFurtherInvestigation) {
+			return failedToFormat();
+		}
+
+		long startTime = System.currentTimeMillis();
+
+		final char[] compilationUnitSource = string.toCharArray();
+		
+		this.scribe.scanner.setSource(compilationUnitSource);
+		this.localScanner.setSource(compilationUnitSource);
+		this.scribe.scannerEndPosition = compilationUnitSource.length;
+		this.scribe.scanner.resetTo(0, this.scribe.scannerEndPosition);
+
+		this.lastLocalDeclarationSourceStart = -1;
+		try {
+			compilationUnitDeclaration.traverse(this, compilationUnitDeclaration.scope);
+		} catch(AbortFormatting e){
+			return failedToFormat();
+		}
+		if (DEBUG){
+			System.out.println("Formatting time: " + (System.currentTimeMillis() - startTime));  //$NON-NLS-1$
+		}
+		return this.scribe.toString();
+	}
+

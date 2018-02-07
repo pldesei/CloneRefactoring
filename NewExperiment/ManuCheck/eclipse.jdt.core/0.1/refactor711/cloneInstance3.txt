@@ -1,0 +1,16 @@
+(startLine=311 endLine=324 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01817/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/AbstractCommentParser.java)
+			if (this.inlineTagStarted) {
+				this.inlineTagStarted = false;
+				if (this.reportProblems) {
+					int end = previousPosition<invalidInlineTagLineEnd ? previousPosition : invalidInlineTagLineEnd;
+					if (this.index >= this.javadocEnd) end = invalidInlineTagLineEnd;
+					this.sourceParser.problemReporter().javadocUnterminatedInlineTag(this.inlineTagStart, end);
+				}
+				if (pushText) {
+					if (this.lineStarted && this.textStart != -1 && this.textStart < previousPosition) {
+						pushText(this.textStart, previousPosition);
+					}
+					refreshInlineTagPosition(previousPosition);
+				}
+			} else if (pushText && this.lineStarted && this.textStart < previousPosition) {
+

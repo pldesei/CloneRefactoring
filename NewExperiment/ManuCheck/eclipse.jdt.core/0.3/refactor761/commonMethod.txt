@@ -1,0 +1,47 @@
+(startLine=2107 endLine=2151 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnMessageSendName(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)) {
+			CompletionOnMessageSendName messageSend = (CompletionOnMessageSendName) astNode;
+
+			this.insideQualifiedReference = true;
+			this.completionToken = messageSend.selector;
+			boolean onlyStatic = false;
+			if (messageSend.receiver instanceof NameReference) {
+				onlyStatic = ((NameReference)messageSend.receiver).isTypeReference();
+			} else if (!(messageSend.receiver instanceof MessageSend) &&
+					!(messageSend.receiver instanceof FieldReference) &&
+					!(messageSend.receiver.isThis())) {
+				onlyStatic = true;
+			}
+
+			TypeBinding receiverType = (TypeBinding)qualifiedBinding;
+
+			if(receiverType != null && receiverType instanceof ReferenceBinding) {
+				TypeBinding[] typeArgTypes = computeTypesIfCorrect(messageSend.typeArguments);
+				if(typeArgTypes != null) {
+					findMethods(
+							this.completionToken,
+							typeArgTypes,
+							null,
+							(ReferenceBinding)receiverType.capture(scope, messageSend.receiver.sourceEnd),
+							scope,
+							new ObjectVector(),
+							onlyStatic,
+							false,
+							messageSend,
+							scope,
+							false,
+							false,
+							false,
+							null,
+							null,
+							null,
+							false,
+							null,
+							-1,
+							-1);
+				}
+			}
+		}
+	}
+

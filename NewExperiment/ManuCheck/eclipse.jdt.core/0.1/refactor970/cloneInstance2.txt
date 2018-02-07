@@ -1,0 +1,27 @@
+(startLine=2296 endLine=2320 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02176/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+					while (tokenizer.hasMoreTokens()) {
+						String token = tokenizer.nextToken();
+						tokenCounter++;
+						switch(token.charAt(0)) {
+							case '+' :
+								if (allowPlusOrMinus) {
+									isEnabling = true;
+									token = token.substring(1);
+								} else {
+									throw new IllegalArgumentException(
+											this.bind("configure.invalidUsageOfPlusOption", token)); //$NON-NLS-1$
+								}
+								break;
+							case '-' :
+								if (allowPlusOrMinus) {
+									isEnabling = false;
+									token = token.substring(1);
+								} else {
+									throw new IllegalArgumentException(
+											this.bind("configure.invalidUsageOfMinusOption", token)); //$NON-NLS-1$
+								}
+								break;
+						}
+						handleErrorToken(token, isEnabling);
+					}
+

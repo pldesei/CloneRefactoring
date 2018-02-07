@@ -1,0 +1,27 @@
+(startLine=670 endLine=694 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00093/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader.java)
+private boolean hasNonSyntheticMethodChanges(MethodInfo[] currentMethodInfos, MethodInfo[] otherMethodInfos) {
+	int length1 = currentMethodInfos == null ? 0 : currentMethodInfos.length;
+	int length2 = otherMethodInfos == null ? 0 : otherMethodInfos.length;
+	int index1 = 0;
+	int index2 = 0;
+
+	end : while (index1 < length1 && index2 < length2) {
+		while (currentMethodInfos[index1].isSynthetic()) {
+			if (++index1 >= length1) break end;
+		}
+		while (otherMethodInfos[index2].isSynthetic()) {
+			if (++index2 >= length2) break end;
+		}
+		if (hasStructuralMethodChanges(currentMethodInfos[index1++], otherMethodInfos[index2++]))
+			return true;
+	}
+
+	while (index1 < length1) {
+		if (!currentMethodInfos[index1++].isSynthetic()) return true;
+	}
+	while (index2 < length2) {
+		if (!otherMethodInfos[index2++].isSynthetic()) return true;
+	}
+	return false;
+}
+

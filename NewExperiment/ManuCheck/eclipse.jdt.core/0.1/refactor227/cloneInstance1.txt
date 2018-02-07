@@ -1,0 +1,28 @@
+(startLine=1211 endLine=1236 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00271/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/DeltaProcessor.java)
+				if ((flags & IResourceDelta.OPEN) != 0) {
+					// project has been opened or closed
+					IProject res = (IProject)delta.getResource();
+					element = this.createElement(res, elementType, project);
+					if (element == null) {
+						// resource might be containing shared roots (see bug 19058)
+						this.updateRoots(res.getFullPath(), delta);
+						throw newInvalidElementType();
+					}
+					if (res.isOpen()) {
+						if (this.hasJavaNature(res)) {
+							this.elementAdded(element, delta);
+							this.indexManager.indexAll(res);
+						}
+					} else {
+						JavaModel javaModel = JavaModelManager.getJavaModelManager().getJavaModel();
+						boolean wasJavaProject = javaModel.findJavaProject(res) != null;
+						if (wasJavaProject) {
+							this.elementRemoved(element, delta);
+							this.indexManager.discardJobs(element.getElementName());
+							this.indexManager.removeIndexFamily(res.getFullPath());
+							
+						}
+					}
+					return false; // when a project is open/closed don't process children
+				}
+

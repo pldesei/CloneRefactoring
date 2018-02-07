@@ -1,0 +1,9 @@
+(startLine=190 endLine=196 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00524/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PatternLocator.java)
+/**
+ * Reports the match of the given reference.
+ */
+protected void matchReportReference(AstNode reference, IJavaElement element, int accuracy, MatchLocator locator) throws CoreException {
+	// default is to report a match on the whole node.
+	locator.report(reference.sourceStart, reference.sourceEnd, element, accuracy);
+}
+

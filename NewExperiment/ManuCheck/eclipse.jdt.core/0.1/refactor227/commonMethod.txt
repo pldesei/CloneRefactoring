@@ -1,0 +1,23 @@
+(startLine=801 endLine=821 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00272/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	/**
+	 * Remove all markers denoting classpath problems
+	 */
+	protected void flushClasspathProblemMarkers(boolean flushCycleMarkers, boolean flushClasspathFormatMarkers) {
+		try {
+			IProject project = getProject();
+			if (project.exists()) {
+				IMarker[] markers = project.findMarkers(IJavaModelMarker.BUILDPATH_PROBLEM_MARKER, false, IResource.DEPTH_ONE);
+				for (int i = 0, length = markers.length; i < length; i++) {
+					IMarker marker = markers[i];
+					String cycleAttr = (String)marker.getAttribute(IJavaModelMarker.CYCLE_DETECTED);
+					String classpathFileFormatAttr =  (String)marker.getAttribute(IJavaModelMarker.CLASSPATH_FILE_FORMAT);
+					if ((flushCycleMarkers == (cycleAttr != null && cycleAttr.equals("true"))) //$NON-NLS-1$
+						&& (flushClasspathFormatMarkers == (classpathFileFormatAttr != null && classpathFileFormatAttr.equals("true")))){ //$NON-NLS-1$
+						marker.delete();
+					}
+				}
+			}
+		} catch (CoreException e) {
+		}
+	}
+

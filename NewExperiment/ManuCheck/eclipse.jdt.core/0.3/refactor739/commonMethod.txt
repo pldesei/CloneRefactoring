@@ -1,0 +1,76 @@
+(startLine=1934 endLine=2007 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnMemberAccess(ASTNode astNode, ASTNode enclosingNode, Binding qualifiedBinding,
+			Scope scope, boolean insideTypeAnnotation) {
+		this.insideQualifiedReference = true;
+		CompletionOnMemberAccess access = (CompletionOnMemberAccess) astNode;
+		long completionPosition = access.nameSourcePosition;
+		setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+
+		this.completionToken = access.token;
+
+		if (qualifiedBinding.problemId() == ProblemReasons.NotFound) {
+			// complete method members with missing return type
+			// class X {
+			//   Missing f() {return null;}
+			//   void foo() {
+			//     f().|
+			//   }
+			// }
+			if (this.assistNodeInJavadoc == 0 &&
+					(this.requestor.isAllowingRequiredProposals(CompletionProposal.FIELD_REF, CompletionProposal.TYPE_REF) ||
+							this.requestor.isAllowingRequiredProposals(CompletionProposal.METHOD_REF, CompletionProposal.TYPE_REF))) {
+				ProblemMethodBinding problemMethodBinding = (ProblemMethodBinding) qualifiedBinding;
+				findFieldsAndMethodsFromMissingReturnType(
+						problemMethodBinding.selector,
+						problemMethodBinding.parameters,
+						scope,
+						access,
+						insideTypeAnnotation);
+			}
+		} else {
+			if (!access.isInsideAnnotation) {
+				if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+					findKeywords(this.completionToken, new char[][]{Keywords.NEW}, false, false);
+				}
+
+				ObjectVector fieldsFound = new ObjectVector();
+				ObjectVector methodsFound = new ObjectVector();
+
+				boolean superCall = access.receiver instanceof SuperReference;
+
+				findFieldsAndMethods(
+					this.completionToken,
+					((TypeBinding) qualifiedBinding).capture(scope, access.receiver.sourceEnd),
+					scope,
+					fieldsFound,
+					methodsFound,
+					access,
+					scope,
+					false,
+					superCall,
+					null,
+					null,
+					null,
+					false,
+					null,
+					-1,
+					-1);
+
+				if (!superCall) {
+					
+					checkCancel();
+					
+					findFieldsAndMethodsFromCastedReceiver(
+							enclosingNode,
+							qualifiedBinding,
+							scope,
+							fieldsFound,
+							methodsFound,
+							access,
+							scope,
+							access.receiver);
+				}
+			}
+		}
+	}
+

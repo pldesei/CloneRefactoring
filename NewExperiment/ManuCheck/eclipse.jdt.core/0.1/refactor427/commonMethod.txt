@@ -1,0 +1,27 @@
+(startLine=552 endLine=576 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00969/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CopyResourceElementsOperation.java)
+	/**
+	 * Updates the content of <code>cu</code>, modifying the type name and/or package
+	 * declaration as necessary.
+	 *
+	 * @return an AST rewrite or null if no rewrite needed
+	 */
+	private ASTRewrite updateContent(ICompilationUnit cu, PackageFragment dest, String newName) throws JavaModelException {
+		String[] currPackageName = ((PackageFragment) cu.getParent()).names;
+		String[] destPackageName = dest.names;
+		if (Util.equalArraysOrNull(currPackageName, destPackageName) && newName == null) {
+			return null; //nothing to change
+		} else {
+			String typeName = cu.getElementName();
+			typeName = typeName.substring(0, typeName.length() - 5);
+			// ensure cu is consistent (noop if already consistent)
+			cu.makeConsistent(this.progressMonitor);
+			this.parser.setSource(cu);
+			CompilationUnit astCU = (CompilationUnit) this.parser.createAST(this.progressMonitor);
+			AST ast = astCU.getAST();
+			ASTRewrite rewrite = ASTRewrite.create(ast);
+			updateTypeName(cu, astCU, cu.getElementName(), newName, rewrite);
+			updatePackageStatement(astCU, destPackageName, rewrite);
+			return rewrite;
+		}
+	}
+

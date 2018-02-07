@@ -1,0 +1,15 @@
+(startLine=356 endLine=368 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02167/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/TryStatement.java)
+private boolean isUncheckedCatchBlock(int catchBlock) {
+	if (this.caughtExceptionsCatchBlocks == null) {
+		return this.caughtExceptionTypes[catchBlock].isUncheckedException(true);
+	}
+	for (int i = 0, length = this.caughtExceptionsCatchBlocks.length; i < length; i++) {
+		if (this.caughtExceptionsCatchBlocks[i] == catchBlock) {
+			if (this.caughtExceptionTypes[i].isUncheckedException(true)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+

@@ -1,0 +1,73 @@
+(startLine=394 endLine=464 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00003/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/impl/StateSnapConstantPool.java)
+/**
+ * Internal -- Read an IHandle from an input stream into the pool.
+ */
+private IHandle readHandle(IDevelopmentContext dc, DataInputStream in, int tag) throws IOException {
+	switch (tag) {
+		case 4: {
+			// package
+			String name = getString(in.readInt());
+			boolean isUnnamed = in.readBoolean();
+			return dc.getImage().getPackageHandle(name, isUnnamed);
+		}
+		case 5: {
+			// primitive type
+			// Should not occur since primitive types are well known and not written
+			throw new IOException("Internal error");
+		}
+		case 6: {
+			// array type
+			TypeImpl elementType = (TypeImpl) getType(in.readInt());
+			int nesting = in.readByte() & 0xFF;
+			return new ArrayTypeHandleImpl(elementType, nesting);
+		}
+		case 7: {
+			// class or interface type
+			IPackage pkg = getPackage(in.readInt());
+			String simpleName = getString(in.readInt());
+			return pkg.getClassHandle(simpleName);
+		}
+		case 8: {
+			// method
+			IType declaringClass = getType(in.readInt());
+			if (declaringClass.isPrimitive() || declaringClass.isArray()) {
+				throw new IOException("Bad format");
+			}
+			String name = getString(in.readInt());
+			int numParams = in.readByte() & 0xFF;
+			IType[] params = new IType[numParams];
+			for (int i = 0; i < numParams; ++i) {
+				params[i] = getType(in.readInt());
+			}
+			return declaringClass.getMethodHandle(name, params);
+		}
+		case 9: {
+			// constructor
+			IType declaringClass = getType(in.readInt());
+			if (declaringClass.isPrimitive() || declaringClass.isArray()) {
+				throw new IOException("Bad format");
+			}
+			int numParams = in.readByte() & 0xFF;
+			IType[] params = new IType[numParams];
+			for (int i = 0; i < numParams; ++i) {
+				params[i] = getType(in.readInt());
+			}
+			return declaringClass.getConstructorHandle(params);
+		}
+		case 10: {
+			// field 
+			IType declaringClass = getType(in.readInt());
+			if (declaringClass.isPrimitive() || declaringClass.isArray()) {
+				throw new IOException("Bad format");
+			}
+			String name = getString(in.readInt());
+			return declaringClass.getFieldHandle(name);
+		}
+		case 11:
+			// image
+			return dc.getImage();
+		default:
+			throw new IOException("Unexpected kind of pool item");
+	}
+}
+

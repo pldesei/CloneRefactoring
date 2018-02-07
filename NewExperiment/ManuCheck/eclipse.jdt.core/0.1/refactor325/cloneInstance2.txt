@@ -1,0 +1,21 @@
+(startLine=34 endLine=52 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00668/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTestMixed.java)
+		if (false) {
+			TestSuite ts;
+			int[] numbers = { 41 };
+			//some of the tests depend on the order of this suite.
+			ts = new TestSuite();
+			for (int i = 0; i < numbers.length; i++) {
+				String meth = "test";
+				int num = numbers[i];
+				if (num < 10) {
+					meth += "0";
+				}
+				if (num < 100) {
+					meth += "0";
+				}
+				meth += num;
+				ts.addTest(new JavadocTestMixed(meth));
+			}
+			return new RegressionTestSetup(ts, COMPLIANCE_1_4);
+		}
+

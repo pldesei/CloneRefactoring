@@ -1,0 +1,12 @@
+(startLine=4043 endLine=4052 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01293/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void ior() {
+	if (DEBUG) System.out.println(position + "\t\tior"); //$NON-NLS-1$
+	countLabels = 0;
+	stackDepth--;
+	if (classFileOffset >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_ior;
+}
+

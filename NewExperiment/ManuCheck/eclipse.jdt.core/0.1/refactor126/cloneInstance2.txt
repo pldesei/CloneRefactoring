@@ -1,0 +1,15 @@
+(startLine=713 endLine=725 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00043/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MatchLocator.java)
+	} else { // initializer
+		// create defining initializer
+		IInitializer initializer = this.createInitializerHandle(typeDeclaration, fieldDeclaration, definingTypeNames);
+		
+		// accept reference
+		if (reference instanceof QualifiedNameReference || reference instanceof QualifiedTypeReference) {
+			this.pattern.matchReportReference((AstNode)reference, initializer, accuracy, this);
+		} else if (reference instanceof MessageSend) { // message ref are starting at the selector start
+			this.report((int)(((MessageSend)reference).nameSourcePosition >> 32), reference.sourceEnd, initializer, accuracy);
+		} else {
+			this.report(reference.sourceStart, reference.sourceEnd, initializer, accuracy);
+		}
+	}
+

@@ -1,0 +1,16 @@
+(startLine=562 endLine=575 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01255/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+public void test0021() throws JavaModelException {
+	CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+	ICompilationUnit cu = getCompilationUnit("Completion", "src3", "test0021", "Test.java");
+	
+	String str = cu.getSource();
+	String completeBehind = "<Z0021";
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	cu.codeComplete(cursorLocation, requestor);
+	
+	assertEquals("should have one class",
+		"element:Z0021Z    completion:Z0021Z    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_UNQUALIFIED + R_NON_RESTRICTED)+"\n"+
+		"element:Z0021ZZ    completion:Z0021ZZ    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_UNQUALIFIED + R_NON_RESTRICTED),
+		requestor.getResults());
+}
+

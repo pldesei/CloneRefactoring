@@ -1,0 +1,51 @@
+(startLine=2009 endLine=2057 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnMemberValueName(ASTNode astNode, ASTNode astNodeParent, Scope scope,
+			boolean insideTypeAnnotation) {
+		CompletionOnMemberValueName memberValuePair = (CompletionOnMemberValueName) astNode;
+		Annotation annotation = (Annotation) astNodeParent;
+
+		this.completionToken = memberValuePair.name;
+
+		ReferenceBinding annotationType = (ReferenceBinding)annotation.resolvedType;
+
+		if (annotationType != null && annotationType.isAnnotationType()) {
+			if (!this.requestor.isIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF)) {
+				findAnnotationAttributes(this.completionToken, annotation.memberValuePairs(), annotationType);
+			}
+			if (this.assistNodeCanBeSingleMemberAnnotation) {
+				if (this.expectedTypesPtr > -1 && this.expectedTypes[0].isAnnotationType()) {
+					findTypesAndPackages(this.completionToken, scope, false, false, new ObjectVector());
+				} else {
+					if (this.expectedTypesPtr > -1) {
+						this.assistNodeIsEnum = true;
+						done : for (int i = 0; i <= this.expectedTypesPtr; i++) {
+							if (!this.expectedTypes[i].isEnum()) {
+								this.assistNodeIsEnum = false;
+								break done;
+							}
+						}
+
+					}
+					if (scope instanceof BlockScope && !this.requestor.isIgnored(CompletionProposal.LOCAL_VARIABLE_REF)) {
+						char[][] alreadyDefinedName = computeAlreadyDefinedName((BlockScope)scope, FakeInvocationSite);
+
+						findUnresolvedReference(
+								memberValuePair.sourceStart,
+								memberValuePair.sourceEnd,
+								(BlockScope)scope,
+								alreadyDefinedName);
+					}
+					findVariablesAndMethods(
+						this.completionToken,
+						scope,
+						FakeInvocationSite,
+						scope,
+						insideTypeAnnotation,
+						true);
+					// can be the start of a qualified type name
+					findTypesAndPackages(this.completionToken, scope, false, false, new ObjectVector());
+				}
+			}
+		}
+	}
+

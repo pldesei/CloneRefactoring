@@ -1,0 +1,66 @@
+(startLine=610 endLine=673 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01394/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Expression.java)
+	/**
+	 * Default generation of a boolean value
+	 * @param currentScope
+	 * @param codeStream
+	 * @param trueLabel
+	 * @param falseLabel
+	 * @param valueRequired
+	 */
+	public void generateOptimizedBoolean(
+		BlockScope currentScope,
+		CodeStream codeStream,
+		BranchLabel trueLabel,
+		BranchLabel falseLabel,
+		boolean valueRequired) {
+
+		// a label valued to nil means: by default we fall through the case... 
+		// both nil means we leave the value on the stack
+
+		if ((constant != Constant.NotAConstant) && (constant.typeID() == T_boolean)) {
+			int pc = codeStream.position;
+			if (constant.booleanValue() == true) {
+				// constant == true
+				if (valueRequired) {
+					if (falseLabel == null) {
+						// implicit falling through the FALSE case
+						if (trueLabel != null) {
+							codeStream.goto_(trueLabel);
+						}
+					}
+				}
+			} else {
+				if (valueRequired) {
+					if (falseLabel != null) {
+						// implicit falling through the TRUE case
+						if (trueLabel == null) {
+							codeStream.goto_(falseLabel);
+						}
+					}
+				}
+			}
+			codeStream.recordPositionsFrom(pc, this.sourceStart);
+			return;
+		}
+		generateCode(currentScope, codeStream, valueRequired);
+		// branching
+		int position = codeStream.position;
+		if (valueRequired) {
+			if (falseLabel == null) {
+				if (trueLabel != null) {
+					// Implicit falling through the FALSE case
+					codeStream.ifne(trueLabel);
+				}
+			} else {
+				if (trueLabel == null) {
+					// Implicit falling through the TRUE case
+					codeStream.ifeq(falseLabel);
+				} else {
+					// No implicit fall through TRUE/FALSE --> should never occur
+				}
+			}
+		}
+		// reposition the endPC
+		codeStream.updateLastRecordedEndPC(currentScope, position);
+	}
+

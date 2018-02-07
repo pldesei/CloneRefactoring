@@ -1,0 +1,6 @@
+(startLine=2039 endLine=2042 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01829/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+	protected void refreshExternalArchives(IJavaProject p) throws JavaModelException {
+		waitForAutoBuild(); // ensure that the auto-build job doesn't interfere with external jar refreshing
+		getJavaModel().refreshExternalArchives(new IJavaElement[] {p}, null);
+	}
+

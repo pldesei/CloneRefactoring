@@ -1,0 +1,16 @@
+(startLine=842 endLine=855 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00430/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+	public static long versionToJdkLevel(String versionID) {
+		if (versionID.equals(VERSION_1_1)) {
+			return JDK1_1;
+		} else if (versionID.equals(VERSION_1_2)) {
+			return JDK1_2;
+		} else if (versionID.equals(VERSION_1_3)) {
+			return JDK1_3;
+		} else if (versionID.equals(VERSION_1_4)) {
+			return JDK1_4;
+		} else if (versionID.equals(VERSION_1_5)) {
+			return JDK1_5;
+		}
+		return 0; // unknown
+	}
+

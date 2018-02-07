@@ -1,0 +1,25 @@
+(startLine=4574 endLine=4596 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00892/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTest.java)
+	public void test0197() throws JavaModelException {
+		ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0197", "Test.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		char[] source = sourceUnit.getSource().toCharArray();
+		ASTNode result = runConversion(sourceUnit, true);
+		assertEquals("Not a compilation unit", ASTNode.COMPILATION_UNIT, result.getNodeType());
+		CompilationUnit unit = (CompilationUnit) result;
+		// TODO (olivier) problem count  got incremented (null check)
+		assertEquals("Wrong number of problems", 1, unit.getProblems().length); 
+		ASTNode node2 = getASTNode(unit, 1, 0, 1);
+		assertTrue("ExpressionStatement", node2 instanceof ExpressionStatement); //$NON-NLS-1$
+		ExpressionStatement expressionStatement = (ExpressionStatement) node2;
+		Expression ex = expressionStatement.getExpression();
+		assertTrue("MethodInvocation", ex instanceof MethodInvocation); //$NON-NLS-1$
+		MethodInvocation methodInvocation = (MethodInvocation) ex;
+		checkSourceRange(methodInvocation, "a.getFile()/*[*/.getName()", source); //$NON-NLS-1$
+		Expression receiver = methodInvocation.getExpression();
+		assertTrue("Not a method invocation", receiver instanceof MethodInvocation); //$NON-NLS-1$
+		MethodInvocation methodInvocation2 = (MethodInvocation) receiver;
+		ITypeBinding typeBinding = methodInvocation2.resolveTypeBinding();
+		assertNotNull("No binding", typeBinding); //$NON-NLS-1$
+		assertEquals("Wrong name", "File", typeBinding.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+		checkSourceRange(methodInvocation2, "a.getFile()", source); //$NON-NLS-1$
+	}	
+

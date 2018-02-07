@@ -1,0 +1,12 @@
+(startLine=839 endLine=848 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02022/org.eclipse.jdt.core.tests.builder/src/org/eclipse/jdt/core/tests/builder/TestingEnvironment.java)
+	public void removeClass(IPath packagePath, String className) {
+		checkAssertion("a workspace must be open", this.isOpen); //$NON-NLS-1$
+		className += ".java"; //$NON-NLS-1$
+		IFolder packageFolder = this.workspace.getRoot().getFolder(packagePath);
+		try {
+			packageFolder.getFile(className).delete(true, null);
+		} catch (CoreException e) {
+			handle(e);
+		}
+	}
+

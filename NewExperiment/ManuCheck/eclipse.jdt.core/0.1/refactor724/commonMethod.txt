@@ -1,0 +1,19 @@
+(startLine=857 endLine=873 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void addExpectedType(TypeBinding type, Scope scope){
+		if (type == null || !type.isValidBinding() || type == TypeBinding.NULL) return;
+
+		// do not add twice the same type
+		for (int i = 0; i <= this.expectedTypesPtr; i++) {
+			if (this.expectedTypes[i] == type) return;
+		}
+
+		int length = this.expectedTypes.length;
+		if (++this.expectedTypesPtr >= length)
+			System.arraycopy(this.expectedTypes, 0, this.expectedTypes = new TypeBinding[length * 2], 0, length);
+		this.expectedTypes[this.expectedTypesPtr] = type;
+
+		if(type == scope.getJavaLangObject()) {
+			this.hasJavaLangObjectAsExpectedType = true;
+		}
+	}
+

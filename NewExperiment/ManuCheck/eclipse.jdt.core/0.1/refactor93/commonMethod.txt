@@ -1,0 +1,43 @@
+(startLine=2748 endLine=2788 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00026/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void init(ClassFile classFile) {
+	this.classFile = classFile;
+	this.constantPool = classFile.constantPool;
+	this.bCodeStream = classFile.contents;
+	this.classFileOffset = classFile.contentsOffset;
+	this.startingClassFileOffset = this.classFileOffset;
+	pcToSourceMapSize = 0;
+	lastEntryPC = 0;
+	int length = visibleLocals.length;
+	if (noVisibleLocals.length < length) {
+		noVisibleLocals = new LocalVariableBinding[length];
+	}
+	System.arraycopy(noVisibleLocals, 0, visibleLocals, 0, length);
+	visibleLocalsCount = 0;
+	
+	length = locals.length;
+	if (noLocals.length < length) {
+		noLocals = new LocalVariableBinding[length];
+	}
+	System.arraycopy(noLocals, 0, locals, 0, length);
+	allLocalsCounter = 0;
+
+	length = exceptionHandlers.length;
+	if (noExceptionHandlers.length < length) {
+		noExceptionHandlers = new ExceptionLabel[length];
+	}
+	System.arraycopy(noExceptionHandlers, 0, exceptionHandlers, 0, length);
+	exceptionHandlersNumber = 0;
+	
+	length = labels.length;
+	if (noLabels.length < length) {
+		noLabels = new Label[length];
+	}
+	System.arraycopy(noLabels, 0, labels, 0, length);
+	countLabels = 0;
+
+	stackMax = 0;
+	stackDepth = 0;
+	maxLocals = 0;
+	position = 0;
+}
+

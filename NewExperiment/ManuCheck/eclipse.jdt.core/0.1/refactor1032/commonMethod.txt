@@ -1,0 +1,44 @@
+(startLine=816 endLine=857 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02431/org.eclipse.jdt.compiler.apt/src/org/eclipse/jdt/internal/compiler/apt/model/Factory.java)
+	public static AnnotationBinding [] getUnpackedAnnotationBindings(AnnotationBinding [] annotations) {
+		
+		int length = annotations == null ? 0 : annotations.length;
+		if (length == 0)
+			return annotations;
+		
+		List<AnnotationBinding> unpackedAnnotations = new ArrayList<AnnotationBinding>();
+		for (int i = 0; i < length; i++) {
+			AnnotationBinding annotation = annotations[i];
+			if (annotation == null) continue;
+			unpackedAnnotations.add(annotation);
+			ReferenceBinding annotationType = annotation.getAnnotationType();
+			
+			MethodBinding [] values = annotationType.getMethods(TypeConstants.VALUE);
+			if (values == null || values.length != 1)
+				continue;
+			MethodBinding value = values[0];
+			
+			if (value.returnType.dimensions() != 1)
+				continue;
+			
+			TypeBinding containeeType = value.returnType.leafComponentType();
+			if (containeeType == null || !containeeType.isAnnotationType() || !containeeType.isRepeatableAnnotationType())
+				continue;
+			
+			if (containeeType.containerAnnotationType() != annotationType)
+				continue;
+			
+			// We have a kosher container: unwrap the contained annotations.
+			ElementValuePair [] elementValuePairs = annotation.getElementValuePairs();
+			for (ElementValuePair elementValuePair : elementValuePairs) {
+				if (CharOperation.equals(elementValuePair.getName(), TypeConstants.VALUE)) {
+					Object [] containees = (Object []) elementValuePair.getValue();
+					for (Object object : containees) {
+						unpackedAnnotations.add((AnnotationBinding) object);
+					}
+					break;
+				}
+			}
+		}
+		return (AnnotationBinding[]) unpackedAnnotations.toArray(new AnnotationBinding [unpackedAnnotations.size()]);
+	}	
+

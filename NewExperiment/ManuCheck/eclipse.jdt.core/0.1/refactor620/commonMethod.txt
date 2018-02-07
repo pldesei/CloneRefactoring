@@ -1,0 +1,42 @@
+(startLine=4417 endLine=4456 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * To get these tests search matches in a workspace, do NOT forget to modify files
+ * to set them as working copies.
+ *
+ * @test Bug 110060: [plan][search] Add support for Camel Case search pattern
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=110060"
+ */
+// Types search
+private void setUpBug110060_TypePattern() throws CoreException {
+	workingCopies = new ICompilationUnit[5];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b110060/AA.java",
+		"package b110060;\n" + 
+		"public class AA {\n" +
+		"}\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b110060/AAxx.java",
+		"package b110060;\n" + 
+		"public class AAxx {\n" +
+		"}\n"
+	);
+	workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b110060/AxxAyy.java",
+		"package b110060;\n" + 
+		"public class AxxAyy {\n" +
+		"}\n"
+	);
+	workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b110060/AxA.java",
+		"package b110060;\n" + 
+		"public class AxA {\n" +
+		"}\n"
+	);
+	workingCopies[4] = getWorkingCopy("/JavaSearchBugs/src/b110060/Test.java",
+		"package b110060;\n" + 
+		"public class Test {\n" +
+		"	AA aa;\n" + 
+		"	AAxx aaxx;\n" + 
+		"	AxA axa;\n" + 
+		"	AxxAyy axxayy;\n" + 
+		"}\n"
+	);
+}
+

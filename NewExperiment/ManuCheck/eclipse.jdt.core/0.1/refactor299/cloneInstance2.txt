@@ -1,0 +1,31 @@
+(startLine=117 endLine=145 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00601/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/ConstructorPattern.java)
+protected char[] indexEntryPrefix() {
+	// will have a common pattern in the new story
+	if (this.isCaseSensitive && this.declaringSimpleName != null) {
+		switch(this.matchMode) {
+			case EXACT_MATCH :
+				int arity = this.parameterSimpleNames == null ? -1 : this.parameterSimpleNames.length;
+				if (arity >= 0) {
+					char[] countChars = arity < 10 ? COUNTS[arity] : ("/" + String.valueOf(arity)).toCharArray(); //$NON-NLS-1$
+					return CharOperation.concat(this.currentTag, this.declaringSimpleName, countChars);
+				}
+			case PREFIX_MATCH :
+				return CharOperation.concat(this.currentTag, this.declaringSimpleName);
+			case PATTERN_MATCH :
+				int starPos = CharOperation.indexOf('*', this.declaringSimpleName);
+				switch(starPos) {
+					case -1 :
+						return CharOperation.concat(this.currentTag, this.declaringSimpleName);
+					default : 
+						int length = this.currentTag.length;
+						char[] result = new char[length + starPos];
+						System.arraycopy(this.currentTag, 0, result, 0, length);
+						System.arraycopy(this.declaringSimpleName, 0, result, length, starPos);
+						return result;
+					case 0 : // fall through
+				}
+		}
+	}
+	return this.currentTag; // find them all
+}
+

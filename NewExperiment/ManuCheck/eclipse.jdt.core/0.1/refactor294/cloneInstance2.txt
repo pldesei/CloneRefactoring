@@ -1,0 +1,24 @@
+(startLine=192 endLine=213 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00587/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/AND_AND_Expression.java)
+			if (condConst.booleanValue() == true) {
+				// x && <something equivalent to true>
+				if ((bits & OnlyValueRequiredMASK) != 0) {
+					left.generateCode(currentScope, codeStream, valueRequired);
+				} else {
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						valueRequired);
+				}
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+			} else {
+

@@ -1,0 +1,30 @@
+(startLine=56 endLine=83 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02373/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Annotation.java)
+				if (annotationsOnDimensions != null) {
+					// check if the annotation is located on the first dimension
+					Annotation[] annotations = annotationsOnDimensions[0];
+					if (annotations != null) {
+						for (int j = 0, max2 = annotations.length; j < max2; j++) {
+							Annotation current = annotations[j];
+							if (current == this.currentAnnotation) {
+								this.search = false;
+								return false;
+							}
+						}
+					}
+
+					this.currentIndexes.push(new Integer(0));
+					for (int i = 1, max = annotationsOnDimensions.length; i < max; i++) {
+						annotations = annotationsOnDimensions[i];
+						if (annotations != null) {
+							for (int j = 0, max2 = annotations.length; j < max2; j++) {
+								Annotation current = annotations[j];
+								if (current == this.currentAnnotation) {
+									this.search = false;
+									return false;
+								}
+							}
+						}
+						this.currentIndexes.push(new Integer(((Integer) this.currentIndexes.pop()).intValue() + 1));
+					}
+				}
+

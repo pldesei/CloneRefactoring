@@ -1,0 +1,20 @@
+ProjectPath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01109
+predFragLineRange:627-642
+predMethodLineRange:627-642
+nextLineRange:643-666
+predStrMethodInvoNames:
+[getCompilationUnit, getSource, lastIndexOf, length, codeComplete, assertEquals, getResults]
+%%%%%%%%%%
+AddedMethodInvo Line:644 InvoName:getWorkingCopy("/Completion/src/CompletionAmbiguousFieldName2.java","public class CompletionAmbiguousFieldName2 {\n" + "	int xBar;\n" + "	class classFoo {\n"+ "		public void foo(int xBar){\n"+ "			xBa\n"+ "		}\n"+ "	}\n"+ "}")
+PackageName:org.eclipse.jdt.core.tests.model
+QualifiedClassName:org.eclipse.jdt.core.tests.model.AbstractJavaModelCompletionTests
+ClassName:AbstractJavaModelCompletionTests
+InvokedFilePath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01109/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelCompletionTests.java
+InvokedMethodSig:public org.eclipse.jdt.core.ICompilationUnit getWorkingCopy(java.lang.String, java.lang.String) throws 
+%%%%%%%%%%
+AddedMethodInvo Line:662 InvoName:assertResults("xBar[FIELD_REF]{CompletionAmbiguousFieldName2.this.xBar, LCompletionAmbiguousFieldName2;, I, xBar, null, " + (R_DEFAULT + R_INTERESTING + R_CASE+ R_NON_RESTRICTED) + "}\n"+ "xBar[LOCAL_VARIABLE_REF]{xBar, null, I, xBar, null, "+ (R_DEFAULT + R_INTERESTING + R_CASE+ R_UNQUALIFIED+ R_NON_RESTRICTED)+ "}",requestor.getResults())
+PackageName:org.eclipse.jdt.core.tests.model
+QualifiedClassName:org.eclipse.jdt.core.tests.model.AbstractJavaModelCompletionTests
+ClassName:AbstractJavaModelCompletionTests
+InvokedFilePath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01109/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelCompletionTests.java
+InvokedMethodSig:protected void assertResults(java.lang.String, java.lang.String) 

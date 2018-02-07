@@ -1,0 +1,20 @@
+(startLine=120 endLine=137 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00417/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/ReturnStatement.java)
+	if (subroutines != null) {
+		for (int i = 0, max = subroutines.length; i < max; i++) {
+			AstNode sub;
+			if ((sub = subroutines[i]) instanceof SynchronizedStatement) {
+				codeStream.load(((SynchronizedStatement) sub).synchroVariable);
+				codeStream.monitorexit();
+			} else {
+				TryStatement trySub = (TryStatement) sub;
+				if (trySub.subRoutineCannotReturn) {
+					codeStream.goto_(trySub.subRoutineStartLabel);
+					codeStream.recordPositionsFrom(pc, this.sourceStart);
+					return;
+				} else {
+					codeStream.jsr(trySub.subRoutineStartLabel);
+				}
+			}
+		}
+	}
+

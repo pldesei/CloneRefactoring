@@ -1,0 +1,21 @@
+(startLine=69 endLine=87 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00055/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/AND_AND_Expression.java)
+public void computeConstant(BlockScope scope, int leftId, int rightId) {
+	//the TC has been done so leftId and rightId are both equal to T_boolean
+
+	Constant cst;
+	if ((cst = left.constant) != NotAConstant) {
+		if (cst.booleanValue() == false) { // false && x --> false
+			constant = cst; // inlined to constant(false)
+		} else { // true && x --> x
+			if ((constant = right.constant) == NotAConstant) {
+				// compute conditionalConstant
+				optimizedBooleanConstant(leftId, (bits & OperatorMASK) >> OperatorSHIFT, rightId);
+			}
+		}
+	} else {
+		constant = NotAConstant;
+		// compute conditionalConstant
+		optimizedBooleanConstant(leftId, (bits & OperatorMASK) >> OperatorSHIFT, rightId);
+	}
+}
+

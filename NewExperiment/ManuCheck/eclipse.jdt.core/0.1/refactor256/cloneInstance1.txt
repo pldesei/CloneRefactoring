@@ -1,0 +1,33 @@
+(startLine=1686 endLine=1716 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+		IConstantPoolEntry constantInterfaceMethodref) {
+
+		char[] methodDescriptor = constantInterfaceMethodref.getMethodDescriptor();
+		CharOperation.replace(methodDescriptor, '/', '.');
+		char[] returnType = Signature.getReturnType(methodDescriptor);
+		CharOperation.replace(returnType, '/', '.');
+		
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.INVOKEINTERFACE])
+			.append(Util.bind("classformat.nargs")) //$NON-NLS-1$
+			.append(nargs)
+			.append(Util.bind("classformat.interfacemethodrefindex")) //$NON-NLS-1$
+			.append(index)
+			.append(Util.bind("classformat.invokeinterfacemethod")) //$NON-NLS-1$
+			.append(returnDeclaringClassName(constantInterfaceMethodref))
+			.append(Util.bind("disassembler.classmemberseparator")) //$NON-NLS-1$
+			.append(
+				Signature.toCharArray(
+					methodDescriptor,
+					constantInterfaceMethodref.getMethodName(),
+					getParameterNames(methodDescriptor),
+					true,
+					false))
+			.append(Util.bind("disassembler.space")) //$NON-NLS-1$
+			.append(Signature.toCharArray(returnType))
+			.append(Util.bind("classformat.invokeinterfacemethodclose")); //$NON-NLS-1$
+		writeNewLine();
+	}
+

@@ -1,0 +1,26 @@
+(startLine=2424 endLine=2447 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+/**
+ * Write a unsigned byte into the byte array
+ * 
+ * @param <CODE>int</CODE> The value to write into the byte array
+ */
+protected final void writeU2(int value) {
+	//first byte
+	try {
+		poolContent[currentOffset++] = (byte) (value >> 8);
+	} catch (IndexOutOfBoundsException e) {
+		 //currentOffset has been ++ already (see the -1)
+		int length = poolContent.length;
+		System.arraycopy(poolContent, 0, (poolContent = new byte[length + CONSTANTPOOL_GROW_SIZE]), 0, length);
+		poolContent[currentOffset - 1] = (byte) (value >> 8);
+	}
+	try {
+		poolContent[currentOffset++] = (byte) value;
+	} catch (IndexOutOfBoundsException e) {
+		 //currentOffset has been ++ already (see the -1)
+		int length = poolContent.length;
+		System.arraycopy(poolContent, 0, (poolContent = new byte[length + CONSTANTPOOL_GROW_SIZE]), 0, length);
+		poolContent[currentOffset - 1] = (byte) value;
+	}
+}
+

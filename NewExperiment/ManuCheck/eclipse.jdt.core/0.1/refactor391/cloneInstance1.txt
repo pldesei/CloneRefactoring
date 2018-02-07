@@ -1,0 +1,18 @@
+(startLine=1841 endLine=1856 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+			if (shownConstructor.typeVariables == TypeConstants.NoTypeVariables) {
+				this.handle(
+					IProblem.NonGenericConstructor,
+					new String[] { 
+					        new String(shownConstructor.declaringClass.sourceName()),
+					        parametersAsString(shownConstructor.parameters, false), 
+					        new String(shownConstructor.declaringClass.readableName()), 
+					        parametersAsString(targetConstructor.parameters, false) },
+					new String[] { 
+					        new String(shownConstructor.declaringClass.sourceName()),
+					        parametersAsString(shownConstructor.parameters, true), 
+					        new String(shownConstructor.declaringClass.shortReadableName()), 
+					        parametersAsString(targetConstructor.parameters, true) },
+					statement.sourceStart,
+					statement.sourceEnd);		    
+			} else {
+

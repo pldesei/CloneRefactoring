@@ -1,0 +1,37 @@
+(startLine=3037 endLine=3071 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void computeExpectedTypesForAllocationExpression(
+		ReferenceBinding binding,
+		Expression[] arguments,
+		Scope scope,
+		InvocationSite invocationSite) {
+
+		MethodBinding[] methods = binding.availableMethods();
+		nextMethod : for (int i = 0; i < methods.length; i++) {
+			MethodBinding method = methods[i];
+
+			if (!method.isConstructor()) continue nextMethod;
+
+			if (method.isSynthetic()) continue nextMethod;
+
+			if (this.options.checkVisibility && !method.canBeSeenBy(invocationSite, scope)) continue nextMethod;
+
+			TypeBinding[] parameters = method.parameters;
+			if(parameters.length < arguments.length)
+				continue nextMethod;
+
+			int length = arguments.length - 1;
+
+			for (int j = 0; j < length; j++) {
+				Expression argument = arguments[j];
+				TypeBinding argType = argument.resolvedType;
+				if(argType != null && !argType.isCompatibleWith(parameters[j]))
+					continue nextMethod;
+			}
+
+			TypeBinding expectedType = method.parameters[arguments.length - 1];
+			if(expectedType != null) {
+				addExpectedType(expectedType, scope);
+			}
+		}
+	}
+

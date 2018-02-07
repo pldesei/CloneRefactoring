@@ -1,0 +1,27 @@
+(startLine=3130 endLine=3154 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01481/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+	if (extdirsClasspaths.size() != 0) {
+		File[] directoriesToCheck = new File[extdirsClasspaths.size()];
+		for (int i = 0; i < directoriesToCheck.length; i++) 
+			directoriesToCheck[i] = new File((String) extdirsClasspaths.get(i));
+		extdirsClasspaths.clear();
+		File[][] extdirsJars = getLibrariesFiles(directoriesToCheck);
+		if (extdirsJars != null) {
+			for (int i = 0, max = extdirsJars.length; i < max; i++) {
+				File[] current = extdirsJars[i];
+				if (current != null) {
+					for (int j = 0, max2 = current.length; j < max2; j++) {
+						FileSystem.Classpath classpath = 
+							FileSystem.getClasspath(
+									current[j].getAbsolutePath(),
+									null, null); 
+						if (classpath != null) {
+							extdirsClasspaths.add(classpath);
+						}
+					}
+				} else if (directoriesToCheck[i].isFile()) {
+					this.logger.logIncorrectExtDirsEntry(directoriesToCheck[i].getAbsolutePath());
+				}
+			}
+		}
+	}
+

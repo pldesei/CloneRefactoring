@@ -1,0 +1,9 @@
+(startLine=707 endLine=713 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedNameReference.java)
+			} else {
+				if (this.otherCodegenBindings == this.otherBindings){
+					int l = this.otherBindings.length;
+					System.arraycopy(this.otherBindings, 0, this.otherCodegenBindings = new FieldBinding[l], 0, l);
+				}
+				this.otherCodegenBindings[this.otherCodegenBindings.length-1] = currentScope.enclosingSourceType().getUpdatedFieldBinding(fieldBinding, (ReferenceBinding)lastReceiverType);
+			}
+

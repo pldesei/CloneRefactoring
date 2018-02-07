@@ -1,0 +1,24 @@
+(startLine=284 endLine=305 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01339/org.eclipse.jdt.apt.core/src/org/eclipse/jdt/apt/core/internal/util/Factory.java)
+	/**
+	 * @param convertedValue value in mirror form.
+	 * @param name the name of the annotation member or null for default value 
+	 * @param index the number indicate the source order of the annotation member value 
+	 *              in the annotation instance.
+	 * @param mirror either {@link AnnotationMirrorImpl } or {@link AnnotationElementDeclarationImpl}
+	 * @param env
+	 * @param needBoxing whether the expected type of the member value is an array or not.
+	 * @return
+	 */
+	public static AnnotationValue createAnnotationValueFromDOMValue(Object convertedValue, 
+																	String name,
+																	int index,
+																	EclipseMirrorImpl mirror, 
+																	BaseProcessorEnv env)	
+	{
+		if( convertedValue == null ) return null;
+		if( mirror instanceof AnnotationMirrorImpl )
+			return new AnnotationValueImpl(convertedValue, name, index, (AnnotationMirrorImpl)mirror, env);
+		else
+			return new AnnotationValueImpl(convertedValue, index, (AnnotationElementDeclarationImpl)mirror, env);
+	}
+

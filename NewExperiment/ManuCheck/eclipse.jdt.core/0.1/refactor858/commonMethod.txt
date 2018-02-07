@@ -1,0 +1,47 @@
+(startLine=1693 endLine=1737 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocMessageSend(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		CompletionOnJavadocMessageSend messageSend = (CompletionOnJavadocMessageSend) astNode;
+		TypeBinding[] argTypes = null; //computeTypes(messageSend.arguments);
+		this.completionToken = messageSend.selector;
+		this.javadocTagPosition = messageSend.tagSourceStart;
+
+		// Set source range
+		int rangeStart = astNode.sourceStart;
+		if (messageSend.receiver.isThis()) {
+			if (messageSend.completeInText()) {
+				rangeStart = messageSend.separatorPosition;
+			}
+		} else if (messageSend.completeInText()) {
+			rangeStart = messageSend.receiver.sourceStart;
+		}
+		setSourceAndTokenRange(rangeStart, astNode.sourceEnd, false);
+
+		if (qualifiedBinding == null) {
+			if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)) {
+				findImplicitMessageSends(this.completionToken, argTypes, scope, messageSend, scope, new ObjectVector());
+			}
+		} else if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)) {
+			findMethods(
+				this.completionToken,
+				null,
+				argTypes,
+				(ReferenceBinding) ((ReferenceBinding) qualifiedBinding).capture(scope, messageSend.receiver.sourceEnd),
+				scope,
+				new ObjectVector(),
+				false,
+				false/* prefix match */,
+				messageSend,
+				scope,
+				false,
+				messageSend.receiver instanceof SuperReference,
+				true,
+				null,
+				null,
+				null,
+				false,
+				null,
+				-1,
+				-1);
+		}
+	}
+

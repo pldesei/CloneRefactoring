@@ -1,0 +1,17 @@
+(startLine=6393 endLine=6407 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01325/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+protected void writePosition(Label label, int forwardReference) {
+	final int offset = label.position - forwardReference + 1;
+	if (Math.abs(offset) > 0x7FFF && !this.wideMode) {
+		throw new AbortMethod(CodeStream.RESTART_IN_WIDE_MODE, null);
+	}
+	if (this.wideMode) {
+		if ((label.tagBits & Label.WIDE) != 0) {
+			this.writeSignedWord(forwardReference, offset);
+		} else {
+			this.writeSignedShort(forwardReference, offset);
+		}
+	} else {
+		this.writeSignedShort(forwardReference, offset);
+	}
+}
+

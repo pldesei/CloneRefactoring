@@ -1,0 +1,16 @@
+(startLine=336 endLine=349 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveArgumentName1() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveArgumentName.java");
+
+	String str = cu.getSource();
+	String selectAt = "var1";
+	String selection = "var1";
+	int start = str.lastIndexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one type", elements.length == 1 && 
+		elements[0].getElementName().equals("Object") &&
+		elements[0] instanceof IType);	
+}
+

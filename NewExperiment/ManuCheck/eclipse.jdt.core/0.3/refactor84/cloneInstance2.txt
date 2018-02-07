@@ -1,0 +1,61 @@
+(startLine=271 endLine=329 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MethodDeclarationPattern.java)
+	public boolean matchesBinary(Object binaryInfo, Object enclosingBinaryInfo) {
+		if (!(binaryInfo instanceof IBinaryMethod))
+			return false;
+
+		IBinaryMethod method = (IBinaryMethod) binaryInfo;
+
+		// selector
+		if (!this.matchesName(this.selector, method.getSelector()))
+			return false;
+
+		// declaring type
+		IBinaryType declaringType = (IBinaryType) enclosingBinaryInfo;
+		if (declaringType != null) {
+			char[] declaringTypeName = (char[]) declaringType.getName().clone();
+			CharOperation.replace(declaringTypeName, '/', '.');
+			if (!this
+				.matchesType(
+					this.declaringSimpleName,
+					this.declaringQualification,
+					declaringTypeName)) {
+				return false;
+			}
+		}
+
+		// return type
+		String methodDescriptor =
+			new String(method.getMethodDescriptor()).replace('/', '.');
+		String returnTypeSignature =
+			Signature.toString(Signature.getReturnType(methodDescriptor));
+		if (!this
+			.matchesType(
+				this.returnSimpleName,
+				this.returnQualification,
+				returnTypeSignature.toCharArray())) {
+			return false;
+		}
+
+		// parameter types
+		int parameterCount =
+			this.parameterSimpleNames == null ? -1 : this.parameterSimpleNames.length;
+		if (parameterCount > -1) {
+			String[] arguments = Signature.getParameterTypes(methodDescriptor);
+			int argumentCount = arguments.length;
+			if (parameterCount != argumentCount)
+				return false;
+			for (int i = 0; i < parameterCount; i++) {
+				char[] qualification = this.parameterQualifications[i];
+				char[] type = this.parameterSimpleNames[i];
+				if (!this
+					.matchesType(
+						type,
+						qualification,
+						Signature.toString(arguments[i]).toCharArray()))
+					return false;
+			}
+		}
+
+		return true;
+	}
+

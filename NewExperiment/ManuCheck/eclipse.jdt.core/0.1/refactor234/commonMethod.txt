@@ -1,0 +1,18 @@
+(startLine=79 endLine=94 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00284/org.eclipse.jdt.core/model/org/eclipse/jdt/core/JavaModelException.java)
+/**
+ * Returns the Java model status object for this exception.
+ * Equivalent to <code>(IJavaModelStatus) getStatus()</code>.
+ *
+ * @return a status object
+ */
+public IJavaModelStatus getJavaModelStatus() {
+	IStatus status = this.getStatus();
+	if (status instanceof IJavaModelStatus) {
+		return (IJavaModelStatus)status;
+	} else {
+		// A regular IStatus is created only in the case of a CoreException.
+		// See bug 13492 Should handle JavaModelExceptions that contains CoreException more gracefully  
+		return new JavaModelStatus(this.nestedCoreException);
+	}
+}
+

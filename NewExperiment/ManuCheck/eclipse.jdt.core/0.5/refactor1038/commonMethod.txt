@@ -1,0 +1,9 @@
+(startLine=271 endLine=277 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02507/org.eclipse.jdt.compiler.apt.tests/src/org/eclipse/jdt/compiler/apt/tests/BatchTestUtils.java)
+	private static void addProcessorPaths(List<String> options, boolean useJLS8Processors) {
+		String path = useJLS8Processors ? _jls8ProcessorJarPath : _processorJarPath;
+		options.add("-cp");
+		options.add(_tmpSrcFolderName + File.pathSeparator + _tmpGenFolderName + File.pathSeparator + path);
+		options.add("-processorpath");
+		options.add(path);
+	}
+

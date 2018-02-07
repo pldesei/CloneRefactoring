@@ -1,0 +1,59 @@
+(startLine=207 endLine=263 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02373/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Annotation.java)
+			public boolean visit(ParameterizedQualifiedTypeReference typeReference, BlockScope scope) {
+				if (!this.search) return false;
+				Annotation[][] annotationsOnDimensions = typeReference.annotationsOnDimensions;
+				if (annotationsOnDimensions != null) {
+					// check if the annotation is located on the first dimension
+					Annotation[] annotations = annotationsOnDimensions[0];
+					if (annotations != null) {
+						for (int j = 0, max2 = annotations.length; j < max2; j++) {
+							Annotation current = annotations[j];
+							if (current == this.currentAnnotation) {
+								this.search = false;
+								return false;
+							}
+						}
+					}
+
+					this.currentIndexes.push(new Integer(0));
+					for (int i = 1, max = annotationsOnDimensions.length; i < max; i++) {
+						annotations = annotationsOnDimensions[i];
+						if (annotations != null) {
+							for (int j = 0, max2 = annotations.length; j < max2; j++) {
+								Annotation current = annotations[j];
+								if (current == this.currentAnnotation) {
+									this.search = false;
+									return false;
+								}
+							}
+						}
+						this.currentIndexes.push(new Integer(((Integer) this.currentIndexes.pop()).intValue() + 1));
+					}
+				}
+				Annotation[][] annotations = typeReference.annotations;
+				if (annotations == null) {
+					annotations = new Annotation[][] { primaryAnnotation };
+				}
+				int annotationsLevels = annotations.length;
+				for (int i = 0; i < annotationsLevels; i++) {
+					Annotation [] current = annotations[i];
+					int annotationsLength = current == null ? 0 : current.length;
+					for (int j = 0; j < annotationsLength; j++) {
+						if (current[j] == this.currentAnnotation) {
+							this.search = false;
+							return false;
+						}
+					}
+				}
+				//TODO it is unclear how to manage annotations located in the first type arguments
+				TypeReference[] typeReferences = typeReference.typeArguments[typeReference.typeArguments.length - 1];
+				this.currentIndexes.push(new Integer(0));
+				for (int i = 0, max = typeReferences.length; i < max; i++) {
+					typeReferences[i].traverse(this, scope);
+					if (!this.search) return false;
+					this.currentIndexes.push(new Integer(((Integer) this.currentIndexes.pop()).intValue() + 1));
+				}
+				this.currentIndexes.pop();
+				return true;
+			}
+

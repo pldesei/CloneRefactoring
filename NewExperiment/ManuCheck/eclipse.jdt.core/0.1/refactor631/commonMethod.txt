@@ -1,0 +1,32 @@
+(startLine=5939 endLine=5968 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * To get these tests search matches in a workspace, do NOT forget to modify files
+ * to set them as working copies.
+ *
+ * @test Bug 130390: CamelCase algorithm cleanup and improvement
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=130390"
+ */
+private void setUpBug130390() throws CoreException {
+	workingCopies = new ICompilationUnit[4];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b130390/TZ.java",
+		"package b130390;\n" + 
+		"public class TZ {\n" +
+		"}\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b130390/TimeZone.java",
+		"package b130390;\n" + 
+		"public class TimeZone{\n" +
+		"}\n"
+	);
+	workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b130390/Npe.java",
+		"package b130390;\n" + 
+		"public class Npe {\n" +
+		"}\n"
+	);
+	workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b130390/NullPointerException.java",
+		"package b130390;\n" + 
+		"public class NullPointerException {\n" +
+		"}\n"
+	);
+}
+

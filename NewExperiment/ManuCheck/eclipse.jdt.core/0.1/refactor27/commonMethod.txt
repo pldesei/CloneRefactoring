@@ -1,0 +1,12 @@
+(startLine=3358 endLine=3367 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void ixor() {
+	countLabels = 0;
+	stackDepth--;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_ixor;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_ixor);
+	}
+}
+

@@ -1,0 +1,40 @@
+(startLine=3493 endLine=3530 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00840/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void invoke(int opcode, int argsSize, int returnTypeSize, char[] declaringClass, char[] selector, char[] signature) {
+	countLabels = 0;
+	int argCount = argsSize;
+	switch(opcode) {
+		case OPC_invokeinterface :
+			if (classFileOffset + 4 >= bCodeStream.length) {
+				resizeByteArray();
+			}
+			position +=3;
+			bCodeStream[classFileOffset++] = OPC_invokeinterface;
+			writeUnsignedShort(constantPool.literalIndexForMethod(declaringClass, selector, signature, true));
+			argCount++;
+			bCodeStream[classFileOffset++] = (byte) argCount;
+			bCodeStream[classFileOffset++] = 0;
+			break;
+		case OPC_invokevirtual :
+		case OPC_invokespecial :
+			if (classFileOffset + 2 >= bCodeStream.length) {
+				resizeByteArray();
+			}
+			position++;
+			bCodeStream[classFileOffset++] = (byte) opcode;
+			writeUnsignedShort(constantPool.literalIndexForMethod(declaringClass, selector, signature, false));
+			argCount++;
+			break;
+		case OPC_invokestatic :
+			if (classFileOffset + 2 >= bCodeStream.length) {
+				resizeByteArray();
+			}
+			position++;
+			bCodeStream[classFileOffset++] = OPC_invokestatic;
+			writeUnsignedShort(constantPool.literalIndexForMethod(declaringClass, selector, signature, false));
+	}
+	stackDepth += returnTypeSize - argCount;
+	if (stackDepth > stackMax) {
+		stackMax = stackDepth;
+	}
+}
+

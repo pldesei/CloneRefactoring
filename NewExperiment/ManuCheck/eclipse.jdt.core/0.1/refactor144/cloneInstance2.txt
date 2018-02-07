@@ -1,0 +1,41 @@
+(startLine=600 endLine=638 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00092/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader.java)
+				if (orderRequired) {
+					if (this.fieldsCount != 0) {
+						Arrays.sort(this.fields);
+					}
+					if (otherFieldInfosLength != 0) {
+						Arrays.sort(otherFieldInfos);	
+					}
+					changedInFields = false;			
+					for (int i = 0; i < otherFieldInfosLength && !changedInFields; i++) {
+						changedInFields = hasStructuralFieldChanges(this.fields[i], otherFieldInfos[i]);
+					}
+					if (changedInFields) {
+						if (excludesSynthetic) {
+							// remove synthetic fields
+							FieldInfo[] otherFieldsInfoWithoutSynthetics = this.removeSyntheticFieldsInfos(otherFieldInfos);
+							FieldInfo[] fieldsInfoWithoutSynthetics = this.removeSyntheticFieldsInfos(this.fields);
+							int fieldsInfoWithoutSyntheticsLength = fieldsInfoWithoutSynthetics == null ? 0 : fieldsInfoWithoutSynthetics.length;
+							int otherFieldsInfoWithoutSyntheticsLength = otherFieldsInfoWithoutSynthetics == null ? 0 : otherFieldsInfoWithoutSynthetics.length;
+							if (fieldsInfoWithoutSyntheticsLength != this.fieldsCount || otherFieldsInfoWithoutSyntheticsLength != otherFieldInfosLength) {
+								if (fieldsInfoWithoutSyntheticsLength != otherFieldsInfoWithoutSyntheticsLength) {
+									return true;
+								}
+								changedInFields = false;
+								if (otherFieldsInfoWithoutSyntheticsLength != 0) {
+									for (int i = 0; i < otherFieldsInfoWithoutSyntheticsLength && !changedInFields; i++) {
+										changedInFields = hasStructuralFieldChanges(fieldsInfoWithoutSynthetics[i], otherFieldsInfoWithoutSynthetics[i]);
+									}
+									if (changedInFields) {
+										return true;
+									}
+								}
+							} else {
+								return true;
+							}
+						} else {
+							return true;
+						}
+					}
+				} else if (excludesSynthetic) {
+

@@ -1,0 +1,11 @@
+(startLine=1089 endLine=1097 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00056/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	public final MethodScope methodScope() {
+		Scope scope = this;
+		do {
+			if (scope instanceof MethodScope)
+				return (MethodScope) scope;
+			scope = scope.parent;
+		} while (scope != null);
+		return null;
+	}
+

@@ -1,0 +1,50 @@
+(startLine=4827 endLine=4874 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02334/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+			ClassScope scope) {
+		final int numberOfParens = (parameterizedSingleTypeReference.bits & ASTNode.ParenthesizedMASK) >> ASTNode.ParenthesizedSHIFT;
+		if (numberOfParens > 0) {
+			manageOpeningParenthesizedExpression(parameterizedSingleTypeReference, numberOfParens);
+		}
+		this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier);
+
+		TypeReference[] typeArguments = parameterizedSingleTypeReference.typeArguments;
+		int typeArgumentsLength = typeArguments.length;
+		if (typeArgumentsLength > 0) {
+			this.scribe.printNextToken(TerminalTokens.TokenNameLESS, this.preferences.insert_space_before_opening_angle_bracket_in_parameterized_type_reference);
+			if (this.preferences.insert_space_after_opening_angle_bracket_in_parameterized_type_reference) {
+				this.scribe.space();
+			}
+			for (int i = 0; i < typeArgumentsLength - 1; i++) {
+				typeArguments[i].traverse(this, scope);
+				this.scribe.printNextToken(TerminalTokens.TokenNameCOMMA, this.preferences.insert_space_before_comma_in_parameterized_type_reference);
+				if (this.preferences.insert_space_after_comma_in_parameterized_type_reference) {
+					this.scribe.space();
+				}
+			}
+			typeArguments[typeArgumentsLength - 1].traverse(this, scope);
+			if (isClosingGenericToken()) {
+				this.scribe.printNextToken(CLOSING_GENERICS_EXPECTEDTOKENS, this.preferences.insert_space_before_closing_angle_bracket_in_parameterized_type_reference);
+			}
+		} else {
+			this.scribe.printNextToken(TerminalTokens.TokenNameLESS, this.preferences.insert_space_before_opening_angle_bracket_in_parameterized_type_reference);
+			this.scribe.printNextToken(CLOSING_GENERICS_EXPECTEDTOKENS);
+		}
+
+		int dimensions = getDimensions();
+		if (dimensions != 0 && dimensions <= parameterizedSingleTypeReference.dimensions()) {
+			if (this.preferences.insert_space_before_opening_bracket_in_array_type_reference) {
+				this.scribe.space();
+			}
+			for (int i = 0; i < dimensions; i++) {
+				this.scribe.printNextToken(TerminalTokens.TokenNameLBRACKET);
+				if (this.preferences.insert_space_between_brackets_in_array_type_reference) {
+					this.scribe.space();
+				}
+				this.scribe.printNextToken(TerminalTokens.TokenNameRBRACKET);
+			}
+		}
+		if (numberOfParens > 0) {
+			manageClosingParenthesizedExpression(parameterizedSingleTypeReference, numberOfParens);
+		}
+		return false;
+	}
+

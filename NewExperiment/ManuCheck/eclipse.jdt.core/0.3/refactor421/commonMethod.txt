@@ -1,0 +1,21 @@
+(startLine=39 endLine=57 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00952/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	protected void assertBindingsEqual(String expected, IBinding[] actualBindings) {
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0, length = actualBindings.length; i < length; i++) {
+			if (i > 0) buffer.append('\n');
+			if (actualBindings[i] == null)
+				buffer.append("<null>");
+			else
+				buffer.append(actualBindings[i].getKey());
+		}
+		String actual = buffer.toString();
+		if (!expected.equals(actual)) {
+			System.out.print(displayString(actual, 4));
+			System.out.println(',');
+		}
+		assertEquals(
+			"Unexpected bindings",
+			expected,
+			actual);
+	}
+

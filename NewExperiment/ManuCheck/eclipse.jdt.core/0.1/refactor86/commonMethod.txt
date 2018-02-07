@@ -1,0 +1,23 @@
+(startLine=465 endLine=485 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00003/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/impl/StateSnapConstantPool.java)
+/**
+ * Internal -- Read a Number from an input stream into the pool.
+ */
+private Number readNumber(DataInputStream in, int tag) throws IOException {
+	switch (tag) {
+		case 12:
+			// Integer
+			return new Integer(in.readInt());
+		case 13:
+			// Long
+			return new Long(in.readLong());
+		case 14:
+			// Float
+			return new Float(Float.intBitsToFloat(in.readInt()));
+		case 15:
+			// Double
+			return new Double(Double.longBitsToDouble(in.readLong()));
+		default:
+			throw new IOException("Unexpeced kind of Number");
+	}
+}
+

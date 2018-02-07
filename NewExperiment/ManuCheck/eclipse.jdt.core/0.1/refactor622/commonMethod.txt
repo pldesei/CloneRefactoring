@@ -1,0 +1,38 @@
+(startLine=4868 endLine=4903 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+private void setUpBug110060_ConstructorPattern() throws CoreException {
+	workingCopies = new ICompilationUnit[5];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b110060/AA.java",
+		"package b110060;\n" + 
+		"public class AA {\n" +
+		"	AA() {}\n" +
+		"}\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b110060/AAxx.java",
+		"package b110060;\n" + 
+		"public class AAxx {\n" +
+		"	AAxx() {}\n" +
+		"}\n"
+	);
+	workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b110060/AxxAyy.java",
+		"package b110060;\n" + 
+		"public class AxxAyy {\n" +
+		"	AxxAyy() {}\n" +
+		"}\n"
+	);
+	workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b110060/AxA.java",
+		"package b110060;\n" + 
+		"public class AxA {\n" +
+		"	AxA() {}\n" +
+		"}\n"
+	);
+	workingCopies[4] = getWorkingCopy("/JavaSearchBugs/src/b110060/Test.java",
+		"package b110060;\n" + 
+		"public class Test {\n" +
+		"	AA aa = new AA();\n" + 
+		"	AAxx aaxx = new AAxx();\n" + 
+		"	AxA axa = new AxA();\n" + 
+		"	AxxAyy axxayy = new AxxAyy();\n" + 
+		"}\n"
+	);
+}
+

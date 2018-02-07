@@ -1,0 +1,42 @@
+(startLine=152 endLine=191 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02724/org.eclipse.jdt.core/model/org/eclipse/jdt/core/compiler/ReconcileContext.java)
+/**
+ * Returns a resolved AST with the given AST level.
+ * It is created from the current state of the working copy.
+ * Creates one if none exists yet.
+ * Returns <code>null</code> if the current state of the working copy
+ * doesn't allow the AST to be created (e.g. if the working copy's content
+ * cannot be parsed).
+ * <p>
+ * If the AST level requested during reconciling is not the latest available AST level
+ * or if binding resolutions was not requested, then a different AST is created.
+ * Note that this AST does not become the current AST and it is only valid for
+ * the requestor.
+ * </p>
+ *
+ * @param level the API level; one of the <code>.JLS*</code> level constants
+ * declared on {@link AST}
+ * @return the AST created from the current state of the working copy,
+ *   or <code>null</code> if none could be created
+ * @exception JavaModelException  if the contents of the working copy
+ *		cannot be accessed. Reasons include:
+ * <ul>
+ * <li> The working copy does not exist (ELEMENT_DOES_NOT_EXIST)</li>
+ * </ul>
+ * @since 3.14
+ */
+public org.eclipse.jdt.core.dom.CompilationUnit getAST(int level) throws JavaModelException {
+	if (this.operation.astLevel != level || !this.operation.resolveBindings) {
+		// create AST (optionally resolving bindings)
+		ASTParser parser = ASTParser.newParser(level);
+		parser.setCompilerOptions(this.workingCopy.getJavaProject().getOptions(true));
+		if (JavaProject.hasJavaNature(this.workingCopy.getJavaProject().getProject()))
+			parser.setResolveBindings(true);
+		parser.setStatementsRecovery((this.operation.reconcileFlags & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
+		parser.setBindingsRecovery((this.operation.reconcileFlags & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0);
+		parser.setSource(this.workingCopy);
+		parser.setIgnoreMethodBodies((this.operation.reconcileFlags & ICompilationUnit.IGNORE_METHOD_BODIES) != 0);
+		return (org.eclipse.jdt.core.dom.CompilationUnit) parser.createAST(this.operation.progressMonitor);
+	}
+	return this.operation.makeConsistent(this.workingCopy);
+}
+

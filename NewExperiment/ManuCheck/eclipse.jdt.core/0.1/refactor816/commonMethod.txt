@@ -1,0 +1,12 @@
+(startLine=36 endLine=45 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/ThrownExceptionFinder.java)
+	public ReferenceBinding[] find(TryStatement tryStatement, BlockScope scope) {
+		this.thrownExceptions = new SimpleSet();
+		this.exceptionsStack = new Stack();
+		tryStatement.traverse(this, scope);
+		removeCaughtExceptions(tryStatement);
+
+		ReferenceBinding[] result = new ReferenceBinding[this.thrownExceptions.elementSize];
+		this.thrownExceptions.asArray(result);
+		return result;
+	}
+

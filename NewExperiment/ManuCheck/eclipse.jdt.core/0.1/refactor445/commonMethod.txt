@@ -1,0 +1,21 @@
+(startLine=207 endLine=225 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01046/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/QualifiedType.java)
+	/**
+	 * Sets the qualifier of this qualified type to the given type.
+	 * 
+	 * @param type the new qualifier of this qualified type
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * </ul>
+	 */ 
+	public void setQualifier(Type type) {
+		if (type == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.qualifier;
+		preReplaceChild(oldChild, type, QUALIFIER_PROPERTY);
+		this.qualifier = type;
+		postReplaceChild(oldChild, type, QUALIFIER_PROPERTY);
+	}
+

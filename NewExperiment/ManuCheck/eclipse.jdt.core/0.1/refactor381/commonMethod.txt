@@ -1,0 +1,14 @@
+(startLine=151 endLine=162 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00795/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeVariableBinding.java)
+	/**
+	 * Returns true if the type variable is directly bound to a given type
+	 */
+	public boolean isErasureBoundTo(TypeBinding type) {
+		if (this.superclass.erasure() == type) 
+			return true;
+		for (int i = 0, length = this.superInterfaces.length; i < length; i++) {
+			if (this.superInterfaces[i].erasure() == type)
+				return true;
+		}
+		return false;
+	}
+

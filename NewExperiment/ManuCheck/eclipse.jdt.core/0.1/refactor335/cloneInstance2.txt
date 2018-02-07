@@ -1,0 +1,39 @@
+(startLine=2040 endLine=2076 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00748/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+			if (method.binding != null) {
+				TypeBinding[] parameters = method.binding.parameters;
+				Argument[] arguments = method.arguments;
+				if ((parameters != null) && (arguments != null)) {
+					for (int i = 0, max = parameters.length; i < max; i++) {
+						TypeBinding argumentBinding = parameters[i];
+						if (localContentsOffset + 10 >= (contentsLength = localContents.length)) {
+							System.arraycopy(
+								contents,
+								0,
+								(localContents = contents = new byte[contentsLength + INCREMENT_SIZE]),
+								0,
+								contentsLength);
+						}
+						// now we can safely add the local entry
+						numberOfEntries++;
+						localContents[localContentsOffset++] = 0;
+						localContents[localContentsOffset++] = 0;
+						localContents[localContentsOffset++] = (byte) (code_length >> 8);
+						localContents[localContentsOffset++] = (byte) code_length;
+						int nameIndex = constantPool.literalIndex(arguments[i].name);
+						localContents[localContentsOffset++] = (byte) (nameIndex >> 8);
+						localContents[localContentsOffset++] = (byte) nameIndex;
+						descriptorIndex = constantPool.literalIndex(argumentBinding.signature());
+						localContents[localContentsOffset++] = (byte) (descriptorIndex >> 8);
+						localContents[localContentsOffset++] = (byte) descriptorIndex;
+						int resolvedPosition = argSize;
+						if ((argumentBinding == BaseTypes.LongBinding)
+							|| (argumentBinding == BaseTypes.DoubleBinding))
+							argSize += 2;
+						else
+							argSize++;
+						localContents[localContentsOffset++] = (byte) (resolvedPosition >> 8);
+						localContents[localContentsOffset++] = (byte) resolvedPosition;
+					}
+				}
+			}
+

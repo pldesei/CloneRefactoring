@@ -1,0 +1,38 @@
+(startLine=186 endLine=221 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01390/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/ReferenceBinding.java)
+/**
+ * Sort the field array using a quicksort
+ */
+public static void sortMethods(MethodBinding[] sortedMethods, int left, int right) {
+	if (true) {
+		Arrays.sort(sortedMethods, left, right+1, METHOD_COMPARATOR);
+		return;
+	}
+	int original_left = left;
+	int original_right = right;
+	MethodBinding mid = sortedMethods[ (left + right) / 2];
+	char[] midSelector = mid.selector;
+	int midLength = midSelector.length;
+	char[] leftSelector, rightSelector;
+	do {
+		while (compare(leftSelector = sortedMethods[left].selector, midSelector, leftSelector.length, midLength) < 0) {
+			left++;
+		}
+		while (compare(midSelector, rightSelector = sortedMethods[right].selector, midLength, rightSelector.length) < 0) {
+			right--;
+		}
+		if (left <= right) {
+			MethodBinding tmp = sortedMethods[left];
+			sortedMethods[left] = sortedMethods[right];
+			sortedMethods[right] = tmp;
+			left++;
+			right--;
+		}
+	} while (left <= right);
+	if (original_left < right) {
+		sortMethods(sortedMethods, original_left, right);
+	}
+	if (left < original_right) {
+		sortMethods(sortedMethods, left, original_right);
+	}
+}
+

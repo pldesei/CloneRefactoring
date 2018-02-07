@@ -1,0 +1,8 @@
+(startLine=1785 endLine=1790 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01352/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	public final PackageBinding getCurrentPackage() {
+		Scope scope, unitScope = this;
+		while ((scope = unitScope.parent) != null)
+			unitScope = scope;
+		return ((CompilationUnitScope) unitScope).fPackage;
+	}
+

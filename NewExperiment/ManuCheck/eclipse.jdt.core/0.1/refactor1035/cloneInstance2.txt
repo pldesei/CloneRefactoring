@@ -1,0 +1,98 @@
+(startLine=230 endLine=325 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/ScannerHelper.java)
+static void initializeTable17() {
+	Tables7 = new long[2][][];
+	Tables7[START_INDEX] = new long[3][];
+	Tables7[PART_INDEX] = new long[4][];
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start0.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[START_INDEX][0] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start1.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[START_INDEX][1] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/start2.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[START_INDEX][2] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part0.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[PART_INDEX][0] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part1.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[PART_INDEX][1] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part2.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[PART_INDEX][2] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode6/part14.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables7[PART_INDEX][3] = readValues;
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+}
+

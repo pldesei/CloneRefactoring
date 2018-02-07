@@ -1,0 +1,62 @@
+(startLine=1417 endLine=1476 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00631/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	public Map getOptions(boolean inheritJavaCoreOptions) {
+		
+		// initialize to the defaults from JavaCore options pool
+		Map options = inheritJavaCoreOptions ? JavaCore.getOptions() : new Hashtable(5);
+
+		Preferences preferences = getPreferences();
+		if (preferences == null) return options; // cannot do better (non-Java project)
+		HashSet optionNames = JavaModelManager.OptionNames;
+		
+		// get preferences set to their default
+		if (inheritJavaCoreOptions){
+			String[] defaultPropertyNames = preferences.defaultPropertyNames();
+			for (int i = 0; i < defaultPropertyNames.length; i++){
+				String propertyName = defaultPropertyNames[i];
+				if (optionNames.contains(propertyName)){
+					options.put(propertyName, preferences.getDefaultString(propertyName).trim());
+				}
+			}		
+		}
+		// get custom preferences not set to their default
+		String[] propertyNames = preferences.propertyNames();
+		for (int i = 0; i < propertyNames.length; i++){
+			String propertyName = propertyNames[i];
+			String value = preferences.getString(propertyName).trim();
+			if (optionNames.contains(propertyName)){
+				options.put(propertyName, value);
+			}		
+			// bug 45112 backward compatibility.
+			// TODO (frederic) remove after 3.0 M6
+			else if (CompilerOptions.OPTION_ReportInvalidAnnotation.equals(propertyName)) {
+				options.put(JavaCore.COMPILER_PB_INVALID_JAVADOC, value);
+			}
+			else if (CompilerOptions.OPTION_ReportMissingAnnotation.equals(propertyName)) {
+				if (JavaCore.ENABLED.equals(value)) {
+					value = preferences.getString(JavaCore.COMPILER_PB_INVALID_JAVADOC);
+				} else {
+					value = JavaCore.IGNORE;
+				}
+				options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_COMMENTS, value);
+			}
+			// end bug 45112
+			// bug 46854 backward compatibility
+			// TODO (frederic) remove after 3.0 M7
+			else if (CompilerOptions.OPTION_ReportMissingJavadoc.equals(propertyName)) {
+				if (JavaCore.ENABLED.equals(value)) {
+					value = preferences.getString(JavaCore.COMPILER_PB_INVALID_JAVADOC);
+				} else {
+					value = JavaCore.IGNORE;
+				}
+				options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_COMMENTS, value);
+			}
+			// end bug 46854
+			// TODO (olivier) Remove after M7
+			else if (propertyName.startsWith(JavaCore.PLUGIN_ID + ".formatter")) {//$NON-NLS-1$
+				convertFormatterOptions(propertyName, value, options);
+			}
+		}		
+
+		return options;
+	}
+

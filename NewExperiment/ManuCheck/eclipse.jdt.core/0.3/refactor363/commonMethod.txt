@@ -1,0 +1,44 @@
+(startLine=1271 endLine=1312 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00765/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/AbstractCommentParser.java)
+	private boolean verifyEndLine(int textPosition) {
+		int startPosition = this.index;
+		int previousPosition = this.index;
+		this.starPosition = -1;
+		char ch = readChar();
+		nextChar: while (true) {
+			switch (ch) {
+				case '\r':
+				case '\n':
+					if (this.kind == DOM_PARSER) {
+						parseTag();
+						pushText(textPosition, previousPosition);
+					}
+					this.index = previousPosition;
+					return true;
+				case '\u000c' :	/* FORM FEED               */
+				case ' ' :			/* SPACE                   */
+				case '\t' :			/* HORIZONTAL TABULATION   */
+					if (this.starPosition >= 0) break nextChar;
+					break;
+				case '*':
+					this.starPosition = previousPosition;
+					break;
+				case '/':
+					if (this.starPosition >= textPosition) {
+						if (this.kind == DOM_PARSER) {
+							parseTag();
+							pushText(textPosition, this.starPosition);
+						}
+						return true;
+					}
+				default :
+					// leave loop
+					break nextChar;
+				
+			}
+			previousPosition = this.index;
+			ch = readChar();
+		}
+		this.index = startPosition;
+		return false;
+	}
+

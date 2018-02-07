@@ -1,0 +1,10 @@
+(startLine=5973 endLine=5980 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01379/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+	if (method.isConstructor()) {
+		this.handle(
+			IProblem.ConstructorVarargsArgumentNeedCast,
+			new String[] {new String(argumentType.readableName()), new String(lastParam.readableName()), new String(method.declaringClass.readableName()), typesAsString(method.isVarargs(), method.parameters, false), },
+			new String[] {new String(argumentType.shortReadableName()), new String(lastParam.shortReadableName()), new String(method.declaringClass.shortReadableName()), typesAsString(method.isVarargs(), method.parameters, true), },
+			location.sourceStart(),
+			location.sourceEnd());
+	} else {
+

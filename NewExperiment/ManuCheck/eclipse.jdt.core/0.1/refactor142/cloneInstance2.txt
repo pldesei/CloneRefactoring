@@ -1,0 +1,21 @@
+(startLine=1167 endLine=1185 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00088/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+		int visibleSize) {
+		MethodBinding method = null;
+		nextVisible : for (int i = 0; i < visibleSize; i++) {
+			method = visible[i];
+			for (int j = 0; j < visibleSize; j++) {
+				if (i == j)
+					continue;
+				MethodBinding next = visible[j];
+				if (!areParametersAssignable(next.parameters, method.parameters))
+					continue nextVisible;
+			}
+			compilationUnitScope().addTypeReferences(method.thrownExceptions);
+			return method;
+		}
+		return new ProblemMethodBinding(
+			visible[0].selector,
+			visible[0].parameters,
+			Ambiguous);
+	}
+

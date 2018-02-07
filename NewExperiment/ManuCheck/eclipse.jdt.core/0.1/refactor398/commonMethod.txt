@@ -1,0 +1,9 @@
+(startLine=95 endLine=101 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00840/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+private int getFromNameAndTypeCache(char[] name, char[] signature) {
+	CharArrayCache value = (CharArrayCache) this.nameAndTypeCacheForFieldsAndMethods.get(name);
+	if (value == null) {
+		return -1;
+	}
+	return value.get(signature);
+}
+

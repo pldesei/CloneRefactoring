@@ -1,0 +1,25 @@
+(startLine=607 endLine=629 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00135/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+		if (falseLabel == null){
+			if (trueLabel != null){
+				// implicit falling through the FALSE case
+				switch(promotedTypeID){
+					case T_int :
+						codeStream.if_icmpgt(trueLabel);
+						break;
+					case T_float :
+						codeStream.fcmpl();
+						codeStream.ifgt(trueLabel);
+						break;
+					case T_long :
+						codeStream.lcmp();
+						codeStream.ifgt(trueLabel);
+						break;
+					case T_double :
+						codeStream.dcmpl();
+						codeStream.ifgt(trueLabel);
+				}
+				codeStream.recordPositionsFrom(pc, this.sourceStart);
+				return;
+			}
+		} else {
+

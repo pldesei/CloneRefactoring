@@ -1,0 +1,48 @@
+(startLine=2987 endLine=3032 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01234/org.eclipse.jdt.core/compiler/org/eclipse/jdt/core/compiler/CharOperation.java)
+	/**
+	 * Answers a new array which is a copy of the given array starting at the given start and 
+	 * ending at the given end. The given start is inclusive and the given end is exclusive.
+	 * Answers null if start is greater than end, if start is lower than 0 or if end is greater 
+	 * than the length of the given array. If end  equals -1, it is converted to the array length.
+	 * <br>
+	 * <br>
+	 * For example:
+	 * <ol>
+	 * <li><pre>
+	 *    array = { 'a' , 'b' }
+	 *    start = 0
+	 *    end = 1
+	 *    result => { 'a' }
+	 * </pre>
+	 * </li>
+	 * <li><pre>
+	 *    array = { 'a', 'b' }
+	 *    start = 0
+	 *    end = -1
+	 *    result => { 'a' , 'b' }
+	 * </pre>
+	 * </li>
+	 * </ol>
+	 *  
+	 * @param array the given array
+	 * @param start the given starting index
+	 * @param end the given ending index
+	 * @return a new array which is a copy of the given array starting at the given start and 
+	 * ending at the given end
+	 * @throws NullPointerException if the given array is null
+	 */
+	public static final char[] subarray(char[] array, int start, int end) {
+		if (end == -1)
+			end = array.length;
+		if (start > end)
+			return null;
+		if (start < 0)
+			return null;
+		if (end > array.length)
+			return null;
+	
+		char[] result = new char[end - start];
+		System.arraycopy(array, start, result, 0, end - start);
+		return result;
+	}
+

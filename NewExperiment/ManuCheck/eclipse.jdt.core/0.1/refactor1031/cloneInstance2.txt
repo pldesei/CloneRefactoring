@@ -1,0 +1,36 @@
+(startLine=168 endLine=201 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02421/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/AnnotatableTypeSystem.java)
+	public RawTypeBinding getRawType(ReferenceBinding genericType, ReferenceBinding enclosingType, AnnotationBinding [] annotations) {
+		
+		if (!haveTypeAnnotations(genericType, enclosingType, null, annotations))
+			return this.unannotatedTypeSystem.getRawType(genericType, enclosingType);
+		
+		if (genericType.hasTypeAnnotations())
+			throw new IllegalStateException();
+		
+		TypeBinding[] cachedInfo = (TypeBinding[]) this.annotatedTypes.get(genericType);
+		int index = 0;
+		if (cachedInfo != null) {
+			for (int max = cachedInfo.length; index < max; index++) {
+				TypeBinding cachedType = cachedInfo[index];
+				if (cachedType == null)
+					break;
+				if (cachedType.isRawType() && cachedType.enclosingType() == enclosingType && Util.effectivelyEqual(cachedType.getTypeAnnotations(), annotations))
+					return (RawTypeBinding) cachedType;
+			}
+		} else {
+			this.annotatedTypes.put(genericType, cachedInfo = new TypeBinding[4]);
+		}
+		
+		int length = cachedInfo.length;
+		if (index == length) {
+			System.arraycopy(cachedInfo, 0, cachedInfo = new TypeBinding[length * 2], 0, length);
+			this.annotatedTypes.put(genericType, cachedInfo);
+		}
+		// Add the new comer, retaining the same type binding id as the naked type.
+		RawTypeBinding unannotatedRawType = this.unannotatedTypeSystem.getRawType(genericType, enclosingType);
+		TypeBinding rawType = new RawTypeBinding(genericType, enclosingType, this.environment);
+		rawType.id = unannotatedRawType.id;
+		rawType.setTypeAnnotations(annotations, this.environment.globalOptions.isAnnotationBasedNullAnalysisEnabled);
+		return (RawTypeBinding) (cachedInfo[index] = rawType);
+	}
+

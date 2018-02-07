@@ -1,0 +1,11 @@
+(startLine=1414 endLine=1422 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02405/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeBinding.java)
+public static boolean equalsEquals(TypeBinding that, TypeBinding other) {
+	if (that == other)
+		return true;
+	if (that == null || other == null)
+		return false;
+	if (that.id != TypeIds.NoId && that.id == other.id)
+		return true;
+	return false;
+}
+

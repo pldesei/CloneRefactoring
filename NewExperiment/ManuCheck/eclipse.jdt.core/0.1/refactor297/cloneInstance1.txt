@@ -1,0 +1,27 @@
+(startLine=1812 endLine=1836 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00597/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+				do {
+					try {
+						this.scribe.alignFragment(arrayInitializerAlignment, 0);
+						if (this.preferences.insert_space_before_first_initializer) {
+							this.scribe.space();
+						}
+						expressions[0].traverse(this, scope);
+						for (int i = 1; i < expressionsLength; i++) {
+							this.scribe.printNextToken(TerminalTokens.TokenNameCOMMA, this.preferences.insert_space_before_comma_in_array_initializer);
+							this.scribe.alignFragment(arrayInitializerAlignment, i);
+							if (this.preferences.insert_space_after_comma_in_array_initializer) {
+								this.scribe.space();
+							}
+							expressions[i].traverse(this, scope);
+							if (i == expressionsLength - 1) {
+								if (isComma()) {
+									this.scribe.printNextToken(TerminalTokens.TokenNameCOMMA, this.preferences.insert_space_before_comma_in_array_initializer);
+								}
+							}
+						}
+						ok = true;
+					} catch (AlignmentException e) {
+						this.scribe.redoAlignment(e);
+					}
+				} while (!ok);
+

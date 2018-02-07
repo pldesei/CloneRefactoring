@@ -1,0 +1,19 @@
+(startLine=1087 endLine=1103 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02607/org.eclipse.jdt.core.tests.builder/src/org/eclipse/jdt/core/tests/builder/TestingEnvironment.java)
+	/**
+	 * Wait for autobuild notification to occur
+	 */
+	public void waitForAutoBuild() {
+		checkAssertion("a workspace must be open", this.isOpen); //$NON-NLS-1$
+		boolean wasInterrupted = false;
+		do {
+			try {
+				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+				wasInterrupted = false;
+			} catch (OperationCanceledException e) {
+				handle(e);
+			} catch (InterruptedException e) {
+				wasInterrupted = true;
+			}
+		} while (wasInterrupted);
+	}
+

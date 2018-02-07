@@ -1,0 +1,21 @@
+(startLine=5490 endLine=5508 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * @test Bug 122442: [search] API inconsistency with IJavaSearchConstants.IMPLEMENTORS and SearchPattern
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=122442"
+ */
+private void setUpBug122442a() throws CoreException {
+	workingCopies = new ICompilationUnit[3];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b122442/I.java",
+		"package b122442;\n" + 
+		"public interface I {}\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b122442/II.java",
+		"package b122442;\n" + 
+		"public interface II extends I {}\n"
+	);
+	workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b122442/X.java",
+		"package b122442;\n" + 
+		"public class X implements I {}\n"
+	);
+}
+

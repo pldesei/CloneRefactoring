@@ -1,0 +1,16 @@
+(startLine=5531 endLine=5544 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+private void setUpBug122442d() throws CoreException {
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b122442/User.java",
+		"class Klass {}\n" + 
+		"interface Interface {}\n" + 
+		"class User {\n" + 
+		"    void m() {\n" + 
+		"        new Klass() {};\n" + 
+		"        new Interface() {};\n" + 
+		"    }\n" + 
+		"}\n" + 
+		"class Sub extends Klass {}"
+	);
+}
+

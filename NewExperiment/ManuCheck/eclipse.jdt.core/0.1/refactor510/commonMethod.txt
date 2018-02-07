@@ -1,0 +1,53 @@
+(startLine=1131 endLine=1181 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01293/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+	/**
+	 * Boolean generation for |
+	 */
+	public void generateLogicalOr(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+			
+		Constant condConst;
+		if ((left.implicitConversion & COMPILE_TYPE_MASK) == T_boolean) {
+			if ((condConst = left.optimizedBooleanConstant()) != Constant.NotAConstant) {
+				if (condConst.booleanValue() == true) {
+					// <something equivalent to true> | x
+					left.generateCode(currentScope, codeStream, false);
+					right.generateCode(currentScope, codeStream, false);
+					if (valueRequired) {
+						codeStream.iconst_1();
+					}
+					// reposition the endPC
+					codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);					
+				} else {
+					// <something equivalent to false> | x
+					left.generateCode(currentScope, codeStream, false);
+					right.generateCode(currentScope, codeStream, valueRequired);
+				}
+				return;
+			}
+			if ((condConst = right.optimizedBooleanConstant()) != Constant.NotAConstant) {
+				if (condConst.booleanValue() == true) {
+					// x | <something equivalent to true>
+					left.generateCode(currentScope, codeStream, false);
+					right.generateCode(currentScope, codeStream, false);
+					if (valueRequired) {
+						codeStream.iconst_1();
+					}
+					// reposition the endPC
+					codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);					
+				} else {
+					// x | <something equivalent to false>
+					left.generateCode(currentScope, codeStream, valueRequired);
+					right.generateCode(currentScope, codeStream, false);
+				}
+				return;
+			}
+		}
+		// default case
+		left.generateCode(currentScope, codeStream, valueRequired);
+		right.generateCode(currentScope, codeStream, valueRequired);
+		if (valueRequired) {
+			codeStream.ior();
+		}
+		// reposition the endPC
+		codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);					
+	}
+

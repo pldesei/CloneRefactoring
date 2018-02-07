@@ -1,0 +1,15 @@
+(startLine=439 endLine=451 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+			if(optionID.equals(OPTION_ReportLocalVariableHiding)){
+				if (optionValue.equals(ERROR)) {
+					this.errorThreshold |= LocalVariableHiding;
+					this.warningThreshold &= ~LocalVariableHiding;
+				} else if (optionValue.equals(WARNING)) {
+					this.errorThreshold &= ~LocalVariableHiding;
+					this.warningThreshold |= LocalVariableHiding;
+				} else if (optionValue.equals(IGNORE)) {
+					this.errorThreshold &= ~LocalVariableHiding;
+					this.warningThreshold &= ~LocalVariableHiding;
+				}
+				continue;
+			}
+

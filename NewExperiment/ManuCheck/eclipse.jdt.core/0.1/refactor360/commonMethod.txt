@@ -1,0 +1,17 @@
+(startLine=1353 endLine=1367 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void illegalUsageOfQualifiedTypeReference(QualifiedTypeReference qualifiedTypeReference) {
+	StringBuffer buffer = new StringBuffer();
+	char[][] tokens = qualifiedTypeReference.tokens;
+	for (int i = 0; i < tokens.length; i++) {
+		if (i > 0) buffer.append('.');
+		buffer.append(tokens[i]);
+	}
+	String[] arguments = new String[] { String.valueOf(buffer)};
+	this.handle(
+		IProblem.IllegalUsageOfQualifiedTypeReference,
+		arguments,
+		arguments,
+		qualifiedTypeReference.sourceStart,
+		qualifiedTypeReference.sourceEnd);	
+}
+

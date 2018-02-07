@@ -1,0 +1,44 @@
+(startLine=6228 endLine=6269 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void findImports(CompletionOnImportReference importReference, boolean findMembers) {
+		char[][] tokens = importReference.tokens;
+
+		char[] importName = CharOperation.concatWith(tokens, '.');
+
+		if (importName.length == 0)
+			return;
+
+		char[] lastToken = tokens[tokens.length - 1];
+		if(lastToken != null && lastToken.length == 0)
+			importName = CharOperation.concat(importName, new char[]{'.'});
+
+		this.resolvingImports = true;
+		this.resolvingStaticImports = importReference.isStatic();
+
+		this.completionToken =  lastToken;
+		this.qualifiedCompletionToken = importName;
+
+		// want to replace the existing .*;
+		if(!this.requestor.isIgnored(CompletionProposal.PACKAGE_REF)) {
+			int oldStart = this.startPosition;
+			int oldEnd = this.endPosition;
+			setSourceRange(
+				importReference.sourceStart,
+				importReference.declarationSourceEnd);
+			this.nameEnvironment.findPackages(importName, this);
+			setSourceRange(
+				oldStart,
+				oldEnd - 1,
+				false);
+		}
+		if(!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+			this.foundTypesCount = 0;
+			this.nameEnvironment.findTypes(
+					importName,
+					findMembers,
+					this.options.camelCaseMatch,
+					IJavaSearchConstants.TYPE,
+					this);
+			acceptTypes(null);
+		}
+	}
+

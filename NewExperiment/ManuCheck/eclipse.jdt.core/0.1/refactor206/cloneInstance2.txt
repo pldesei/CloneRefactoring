@@ -1,0 +1,22 @@
+(startLine=688 endLine=707 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00135/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+			&& (right.constant.intValue() == 0)) {
+			left.generateCode(currentScope, codeStream, valueRequired);
+			if (valueRequired){
+				if (falseLabel == null){
+					if (trueLabel != null){
+						// implicitly falling through the FALSE case
+						codeStream.ifge(trueLabel);
+					}
+				} else {
+					if (trueLabel == null){
+						// implicitly falling through the TRUE case
+						codeStream.iflt(falseLabel);
+					} else {
+						// no implicit fall through TRUE/FALSE --> should never occur
+					}
+				}
+			}
+			codeStream.recordPositionsFrom(pc, this.sourceStart);
+			return;
+		}			
+

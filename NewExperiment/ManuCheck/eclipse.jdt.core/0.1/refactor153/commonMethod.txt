@@ -1,0 +1,50 @@
+(startLine=198 endLine=245 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00130/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+public static String[] tokenize(String commandLine){
+	int count = 0;
+	String[] arguments = new String[10];
+	StringTokenizer tokenizer = new StringTokenizer(commandLine, " \"", true); //$NON-NLS-1$
+	String token = "",lastToken;
+	boolean insideQuotes = false;
+	boolean startNewToken = true;
+	
+	// take care to quotes on the command line
+	// 'xxx "aaa bbb";ccc yyy' --->  {"xxx", "aaa bbb;ccc", "yyy" }
+	// 'xxx "aaa bbb;ccc" yyy' --->  {"xxx", "aaa bbb;ccc", "yyy" }
+	// 'xxx "aaa bbb";"ccc" yyy' --->  {"xxx", "aaa bbb;ccc", "yyy" }
+	// 'xxx/"aaa bbb";"ccc" yyy' --->  {"xxx/aaa bbb;ccc", "yyy" }
+	while (tokenizer.hasMoreTokens()){
+		lastToken = token;
+		token = tokenizer.nextToken();
+
+		if (token.equals(" ")){//$NON-NLS-1$
+			if (insideQuotes){ 
+				arguments[count-1] += token; 	
+				startNewToken = false;	
+			} else {
+				startNewToken = true;
+			}
+		} else if (token.equals("\"")){//$NON-NLS-1$
+			if (!insideQuotes && startNewToken){//$NON-NLS-1$
+				if (count == arguments.length) System.arraycopy(arguments, 0, (arguments = new String[count * 2]), 0, count);
+				arguments[count++] = "";//$NON-NLS-1$
+			}
+			insideQuotes = !insideQuotes;
+			startNewToken = false;	
+		} else {
+			if (insideQuotes){
+				arguments[count-1] += token; 			
+			} else {
+				if (token.length() > 0 && !startNewToken){
+					arguments[count-1] += token;
+				} else {
+					if (count == arguments.length) System.arraycopy(arguments, 0, (arguments = new String[count * 2]), 0, count);
+					arguments[count++] = token;
+				}
+			}
+			startNewToken = false;	
+		}
+	}
+	System.arraycopy(arguments, 0, arguments = new String[count], 0, count);
+	return arguments;	
+}	
+

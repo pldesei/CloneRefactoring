@@ -1,0 +1,25 @@
+(startLine=43 endLine=65 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01571/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/indexing/AbstractIndexer.java)
+			boolean secondary) {
+		char[] indexKey = TypeDeclarationPattern.createIndexKey(modifiers, name, packageName, enclosingTypeNames, secondary);
+		addIndexEntry(TYPE_DECL, indexKey);
+
+		if (superclass != null) {
+			superclass = erasure(superclass);
+			addTypeReference(superclass);
+		}
+		addIndexEntry(
+			SUPER_REF, 
+			SuperTypeReferencePattern.createIndexKey(
+				modifiers, packageName, name, enclosingTypeNames, typeParameterSignatures, CLASS_SUFFIX, superclass, CLASS_SUFFIX));
+		if (superinterfaces != null) {
+			for (int i = 0, max = superinterfaces.length; i < max; i++) {
+				char[] superinterface = erasure(superinterfaces[i]);
+				addTypeReference(superinterface);
+				addIndexEntry(
+					SUPER_REF,
+					SuperTypeReferencePattern.createIndexKey(
+						modifiers, packageName, name, enclosingTypeNames, typeParameterSignatures, CLASS_SUFFIX, superinterface, INTERFACE_SUFFIX));
+			}
+		}
+	}
+

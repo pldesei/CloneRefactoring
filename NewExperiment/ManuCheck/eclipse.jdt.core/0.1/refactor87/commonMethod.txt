@@ -1,0 +1,28 @@
+(startLine=114 endLine=139 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00003/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/impl/OrderedSet.java)
+/**
+ * Associate the given object with the given index in this OrderedSet.
+ * The object's index is not retrievable using index(Object).
+ * But the object is retrievable using get(int index).
+ * The index must not yet have been assigned.
+ *
+ * @param		index the index of the object
+ * @param		obj	the object to add
+ *
+ * @see			#get
+ * @see			java.lang.Object#equals
+ */
+public void put(int index, Object obj) {
+	if (obj == null) throw new NullPointerException ();
+	if (orderedList.length <= index) {
+		int[] newOrderedList = new int[orderedList.length*2];
+		System.arraycopy(orderedList, 0, newOrderedList, 0, elementCount);
+	}
+	if (orderedList[index] != null) {
+		throw new IllegalArgumentException();
+	}
+	orderedList[index] = obj;
+	if (index >= elementCount) {
+		elementCount = index + 1;
+	}
+}
+

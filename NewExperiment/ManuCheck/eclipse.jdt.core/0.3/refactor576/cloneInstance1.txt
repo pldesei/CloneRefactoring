@@ -1,0 +1,21 @@
+(startLine=1590 endLine=1608 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01393/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+			&& ((bits & ReturnTypeIDMASK) == T_JavaLangString)) {
+			if (constant != Constant.NotAConstant) {
+				codeStream.generateConstant(constant, implicitConversion);
+				codeStream.invokeStringConcatenationAppendForType(implicitConversion & COMPILE_TYPE_MASK);
+			} else {
+				int pc = codeStream.position;
+				left.generateOptimizedStringConcatenation(
+					blockScope,
+					codeStream,
+					left.implicitConversion & COMPILE_TYPE_MASK);
+				codeStream.recordPositionsFrom(pc, left.sourceStart);
+				pc = codeStream.position;
+				right.generateOptimizedStringConcatenation(
+					blockScope,
+					codeStream,
+					right.implicitConversion & COMPILE_TYPE_MASK);
+				codeStream.recordPositionsFrom(pc, right.sourceStart);
+			}
+		} else {
+

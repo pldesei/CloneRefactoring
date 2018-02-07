@@ -1,0 +1,12 @@
+(startLine=98 endLine=107 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01279/org.eclipse.jdt.apt.core/src/org/eclipse/jdt/apt/core/util/AptConfig.java)
+    	synchronized (AptConfig.class) {
+	    	Map<String, String> options = getRawProcessorOptions(jproj);
+	    	old = options.get(key);
+	    	options.remove(key);
+	    	String serializedOptions = serializeProcessorOptions(options);
+			IScopeContext context = (null != jproj) ? 
+					new ProjectScope(jproj.getProject()) : new InstanceScope();
+			node = context.getNode(AptPlugin.PLUGIN_ID);
+			node.put(AptPreferenceConstants.APT_PROCESSOROPTIONS, serializedOptions);
+    	}
+

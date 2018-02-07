@@ -1,0 +1,16 @@
+(startLine=192 endLine=205 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01817/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/AbstractCommentParser.java)
+							if (this.inlineTagStarted) {
+								this.inlineTagStarted = false;
+								// bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=53279
+								// Cannot have @ inside inline comment
+								if (this.reportProblems) {
+									int end = previousPosition<invalidInlineTagLineEnd ? previousPosition : invalidInlineTagLineEnd;
+									this.sourceParser.problemReporter().javadocUnterminatedInlineTag(this.inlineTagStart, end);
+								}
+								validComment = false;
+								if (this.textStart != -1 && this.textStart < previousPosition) {
+									if (pushText) pushText(this.textStart, previousPosition);
+								}
+								if (isDomParser) refreshInlineTagPosition(previousPosition);
+							}
+

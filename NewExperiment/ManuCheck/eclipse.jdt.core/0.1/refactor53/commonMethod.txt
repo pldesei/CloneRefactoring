@@ -1,0 +1,12 @@
+(startLine=2708 endLine=2717 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void imul() {
+	countLabels = 0;
+	stackDepth--;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_imul;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_imul);
+	}
+}
+

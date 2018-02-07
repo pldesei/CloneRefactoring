@@ -1,0 +1,27 @@
+(startLine=1219 endLine=1243 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00001/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+				} else {
+					// x & <something equivalent to false>
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					if (valueRequired) {
+						if ((bits & OnlyValueRequiredMASK) != 0) {
+							codeStream.iconst_0();
+						} else {
+							if (falseLabel != null) {
+								// implicit falling through the TRUE case
+								codeStream.goto_(falseLabel);
+							}
+						}
+					}
+				}
+

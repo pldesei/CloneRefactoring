@@ -1,0 +1,12 @@
+(startLine=4689 endLine=4698 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01394/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void ixor() {
+	if (DEBUG) System.out.println(position + "\t\tixor"); //$NON-NLS-1$
+	countLabels = 0;
+	stackDepth--;
+	if (classFileOffset >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = Opcodes.OPC_ixor;
+}
+

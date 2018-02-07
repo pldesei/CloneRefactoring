@@ -1,0 +1,15 @@
+(startLine=1362 endLine=1374 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01304/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/Util.java)
+	public static ClassFileReader newClassFileReader(IResource resource) throws CoreException, ClassFormatException, IOException {
+		InputStream in = null;
+		try {
+			URI uri = resource.getLocationURI();
+			if (uri == null) return null;
+			IFileStore store = EFS.getStore(uri);
+			in = store.openInputStream(EFS.NONE, null);
+			return ClassFileReader.read(in, uri.getPath());
+		} finally {
+			if (in != null)
+				in.close();
+		}
+	}
+

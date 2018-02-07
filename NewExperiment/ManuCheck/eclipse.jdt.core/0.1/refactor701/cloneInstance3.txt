@@ -1,0 +1,14 @@
+(startLine=307 endLine=318 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01685/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/JavaBuilder.java)
+	} catch (CoreException e) {
+		Util.log(e, "JavaBuilder handling CoreException while cleaning: " + currentProject.getName()); //$NON-NLS-1$
+		IMarker marker = currentProject.createMarker(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		marker.setAttributes(
+			new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IMarker.SOURCE_ID},
+			new Object[] {
+				Messages.bind(Messages.build_inconsistentProject, e.getLocalizedMessage()),
+				new Integer(IMarker.SEVERITY_ERROR),
+				JavaBuilder.SOURCE_ID
+			}
+		);
+	} finally {
+

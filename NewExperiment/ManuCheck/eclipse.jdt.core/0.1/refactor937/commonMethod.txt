@@ -1,0 +1,82 @@
+(startLine=1941 endLine=2020 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02094/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+	private int generateConstantValueAttribute(Constant fieldConstant, FieldBinding fieldBinding, int fieldAttributeOffset) {
+		int localContentsOffset = this.contentsOffset;
+		int attributesNumber = 1;
+		if (localContentsOffset + 8 >= this.contents.length) {
+			resizeContents(8);
+		}
+		// Now we generate the constant attribute corresponding to the fieldBinding
+		int constantValueNameIndex =
+			this.constantPool.literalIndex(AttributeNamesConstants.ConstantValueName);
+		this.contents[localContentsOffset++] = (byte) (constantValueNameIndex >> 8);
+		this.contents[localContentsOffset++] = (byte) constantValueNameIndex;
+		// The attribute length = 2 in case of a constantValue attribute
+		this.contents[localContentsOffset++] = 0;
+		this.contents[localContentsOffset++] = 0;
+		this.contents[localContentsOffset++] = 0;
+		this.contents[localContentsOffset++] = 2;
+		// Need to add the constant_value_index
+		switch (fieldConstant.typeID()) {
+			case T_boolean :
+				int booleanValueIndex =
+					this.constantPool.literalIndex(fieldConstant.booleanValue() ? 1 : 0);
+				this.contents[localContentsOffset++] = (byte) (booleanValueIndex >> 8);
+				this.contents[localContentsOffset++] = (byte) booleanValueIndex;
+				break;
+			case T_byte :
+			case T_char :
+			case T_int :
+			case T_short :
+				int integerValueIndex =
+					this.constantPool.literalIndex(fieldConstant.intValue());
+				this.contents[localContentsOffset++] = (byte) (integerValueIndex >> 8);
+				this.contents[localContentsOffset++] = (byte) integerValueIndex;
+				break;
+			case T_float :
+				int floatValueIndex =
+					this.constantPool.literalIndex(fieldConstant.floatValue());
+				this.contents[localContentsOffset++] = (byte) (floatValueIndex >> 8);
+				this.contents[localContentsOffset++] = (byte) floatValueIndex;
+				break;
+			case T_double :
+				int doubleValueIndex =
+					this.constantPool.literalIndex(fieldConstant.doubleValue());
+				this.contents[localContentsOffset++] = (byte) (doubleValueIndex >> 8);
+				this.contents[localContentsOffset++] = (byte) doubleValueIndex;
+				break;
+			case T_long :
+				int longValueIndex =
+					this.constantPool.literalIndex(fieldConstant.longValue());
+				this.contents[localContentsOffset++] = (byte) (longValueIndex >> 8);
+				this.contents[localContentsOffset++] = (byte) longValueIndex;
+				break;
+			case T_JavaLangString :
+				int stringValueIndex =
+					this.constantPool.literalIndex(
+						((StringConstant) fieldConstant).stringValue());
+				if (stringValueIndex == -1) {
+					if (!this.creatingProblemType) {
+						// report an error and abort: will lead to a problem type classfile creation
+						TypeDeclaration typeDeclaration = this.referenceBinding.scope.referenceContext;
+						FieldDeclaration[] fieldDecls = typeDeclaration.fields;
+						for (int i = 0, max = fieldDecls.length; i < max; i++) {
+							if (fieldDecls[i].binding == fieldBinding) {
+								// problem should abort
+								typeDeclaration.scope.problemReporter().stringConstantIsExceedingUtf8Limit(
+									fieldDecls[i]);
+							}
+						}
+					} else {
+						// already inside a problem type creation : no constant for this field
+						this.contentsOffset = fieldAttributeOffset;
+						attributesNumber = 0;
+					}
+				} else {
+					this.contents[localContentsOffset++] = (byte) (stringValueIndex >> 8);
+					this.contents[localContentsOffset++] = (byte) stringValueIndex;
+				}
+		}
+		this.contentsOffset = localContentsOffset;
+		return attributesNumber;
+	}
+

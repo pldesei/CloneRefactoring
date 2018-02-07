@@ -1,0 +1,27 @@
+(startLine=1585 endLine=1609 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndexForJavaLangDoubleTYPE() {
+	int index;
+	if ((index = wellKnownFields[JAVA_LANG_DOUBLE_TYPE_FIELD]) == 0) {
+		int nameAndTypeIndex;
+		int classIndex;
+		// The entry doesn't exit yet
+		classIndex = literalIndexForJavaLangDouble();
+		if ((nameAndTypeIndex = wellKnownFieldNameAndTypes[TYPE_JAVALANGCLASS_NAME_AND_TYPE]) == 0) {
+			int nameIndex = literalIndex(QualifiedNamesConstants.TYPE);
+			int typeIndex = literalIndex(QualifiedNamesConstants.JavaLangClassSignature);
+			nameAndTypeIndex = wellKnownFieldNameAndTypes[TYPE_JAVALANGCLASS_NAME_AND_TYPE] = currentIndex++;
+			writeU1(NameAndTypeTag);
+			writeU2(nameIndex);
+			writeU2(typeIndex);
+		}
+		index = wellKnownFields[JAVA_LANG_DOUBLE_TYPE_FIELD] = currentIndex++;
+		if (index > 0xFFFF){
+			this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+		}
+		writeU1(FieldRefTag);
+		writeU2(classIndex);
+		writeU2(nameAndTypeIndex);
+	}
+	return index;
+}
+

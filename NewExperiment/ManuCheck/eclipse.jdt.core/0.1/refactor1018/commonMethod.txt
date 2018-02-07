@@ -1,0 +1,8 @@
+(startLine=1348 endLine=1353 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02374/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/ReferenceBinding.java)
+/**
+ * Answer true if the receiver is a static member type (or toplevel)
+ */
+public final boolean isStatic() {
+	return (this.modifiers & (ClassFileConstants.AccStatic | ClassFileConstants.AccInterface)) != 0 || (this.tagBits & TagBits.IsNestedType) == 0;
+}
+

@@ -1,0 +1,9 @@
+(startLine=1209 endLine=1215 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02383/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeBinding.java)
+/** Answer a readable name (for error reporting) that includes nullness type annotations. */
+public char[] nullAnnotatedReadableName(CompilerOptions options, boolean shortNames) /* e.g.: java.lang.Object @o.e.j.a.NonNull[] */ {
+	if (shortNames)
+		return shortReadableName();
+	else
+		return readableName();
+}
+

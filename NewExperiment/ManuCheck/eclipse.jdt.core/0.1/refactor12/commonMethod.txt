@@ -1,0 +1,42 @@
+(startLine=2164 endLine=2203 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+/**
+ * We didn't call it goto, because there is a conflit with the goto keyword
+ */
+final public void goto_(Label lbl) {
+	try {
+		lbl.inlineForwardReferencesFromLabelsTargeting(position);
+		/*
+		 Possible optimization for code such as:
+		 public Object foo() {
+			boolean b = true;
+			if (b) {
+				if (b)
+					return null;
+			} else {
+				if (b) {
+					return null;
+				}
+			}
+			return null;
+		}
+		The goto around the else block for the first if will
+		be unreachable, because the thenClause of the second if
+		returns.
+		See inlineForwardReferencesFromLabelsTargeting defined
+		on the Label class for the remaining part of this
+		optimization.
+		 if (!lbl.isBranchTarget(position)) {
+			switch(bCodeStream[classFileOffset-1]) {
+				case OPC_return :
+				case OPC_areturn:
+					return;
+			}
+		}*/
+		position++;
+		bCodeStream[classFileOffset++] = OPC_goto;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_goto);
+	}
+	lbl.branch();
+}
+

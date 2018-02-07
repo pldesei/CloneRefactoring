@@ -1,0 +1,30 @@
+(startLine=5689 endLine=5716 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02405/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTConverter.java)
+	/** extracts the subArrayType for a given declaration for AST levels less
+	 * @param arrayType parent type
+	 * @param remainingDimensions 
+	 * @param extraDimensions
+	 * @return an ArrayType
+	 */
+	private ArrayType extractSubArrayType(ArrayType arrayType, int remainingDimensions, int extraDimensions) {
+		ArrayType subArrayType = arrayType;
+		int start = subArrayType.getStartPosition();
+		if (this.ast.apiLevel() < AST.JLS8) {
+			while (extraDimensions > 0 ) {
+				subArrayType = (ArrayType) componentType(subArrayType);
+				extraDimensions--;
+			}
+			updateInnerPositions(subArrayType, remainingDimensions);
+		} else {
+			List dimensions = subArrayType.dimensions();
+			while (extraDimensions > 0 ) {
+				dimensions.remove(dimensions.size() - 1);
+				extraDimensions--;
+			}
+		}
+		int end = retrieveProperRightBracketPosition(remainingDimensions, start);
+		subArrayType.setSourceRange(start, end - start + 1);
+		// cut the child loose from its parent (without creating garbage)
+		subArrayType.setParent(null, null);
+		return subArrayType;
+	}
+

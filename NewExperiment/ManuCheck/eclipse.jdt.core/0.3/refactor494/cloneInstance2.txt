@@ -1,0 +1,21 @@
+(startLine=2318 endLine=2336 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01233/org.eclipse.jdt.core/compiler/org/eclipse/jdt/core/compiler/CharOperation.java)
+							isCaseSensitive)) {
+			// mismatch - restart current path segment
+			pSegmentEnd =
+				CharOperation.indexOf(pathSeparator, pattern, pSegmentStart = pSegmentRestart);
+			if (pSegmentEnd < 0) pSegmentEnd = pLength;
+
+			fSegmentRestart = 
+				CharOperation.indexOf(pathSeparator, filepath, fSegmentRestart + 1);
+			// skip separator
+			if (fSegmentRestart < 0) {
+				fSegmentRestart = fLength;
+			} else {
+				fSegmentRestart++;
+			}
+			fSegmentEnd =
+				CharOperation.indexOf(pathSeparator, filepath, fSegmentStart = fSegmentRestart);
+			if (fSegmentEnd < 0) fSegmentEnd = fLength;
+			continue checkSegment;
+		}
+

@@ -1,0 +1,76 @@
+(startLine=1618 endLine=1691 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocFieldReference(ASTNode astNode, Scope scope) {
+		this.insideQualifiedReference = true;
+		CompletionOnJavadocFieldReference fieldRef = (CompletionOnJavadocFieldReference) astNode;
+		this.completionToken = fieldRef.token;
+		long completionPosition = fieldRef.nameSourcePosition;
+		this.javadocTagPosition = fieldRef.tagSourceStart;
+
+		if (fieldRef.actualReceiverType != null && fieldRef.actualReceiverType.isValidBinding()) {
+				ReferenceBinding receiverType = (ReferenceBinding) fieldRef.actualReceiverType;
+			int rangeStart = (int) (completionPosition >>> 32);
+			if (fieldRef.receiver.isThis()) {
+				if (fieldRef.completeInText()) {
+					rangeStart = fieldRef.separatorPosition;
+				}
+			} else if (fieldRef.completeInText()) {
+				rangeStart = fieldRef.receiver.sourceStart;
+			}
+			setSourceAndTokenRange(rangeStart, (int) completionPosition);
+
+			if (!this.requestor.isIgnored(CompletionProposal.FIELD_REF)
+					|| !this.requestor.isIgnored(CompletionProposal.JAVADOC_FIELD_REF)) {
+				findFields(this.completionToken,
+					receiverType,
+					scope,
+					new ObjectVector(),
+					new ObjectVector(),
+					false, /*not only static */
+					fieldRef,
+					scope,
+					false,
+					true,
+					null,
+					null,
+					null,
+					false,
+					null,
+					-1,
+					-1);
+			}
+
+			if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)
+					|| !this.requestor.isIgnored(CompletionProposal.JAVADOC_METHOD_REF)) {
+				findMethods(
+					this.completionToken,
+					null,
+					null,
+					receiverType,
+					scope,
+					new ObjectVector(),
+					false, /*not only static */
+					false,
+					fieldRef,
+					scope,
+					false,
+					false,
+					true,
+					null,
+					null,
+					null,
+					false,
+					null,
+					-1,
+					-1);
+				if (fieldRef.actualReceiverType instanceof ReferenceBinding) {
+					ReferenceBinding refBinding = (ReferenceBinding)fieldRef.actualReceiverType;
+					if (this.completionToken == null
+							|| CharOperation.prefixEquals(this.completionToken, refBinding.sourceName)
+							|| (this.options.camelCaseMatch && CharOperation.camelCaseMatch(this.completionToken, refBinding.sourceName))) {
+						findConstructors(refBinding, null, scope, fieldRef, false);
+					}
+				}
+			}
+		}
+	}
+

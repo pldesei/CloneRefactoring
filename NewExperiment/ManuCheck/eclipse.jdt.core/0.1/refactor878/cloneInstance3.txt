@@ -1,0 +1,19 @@
+(startLine=469 endLine=485 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testBinaryMemberTypeConstructor() throws JavaModelException {
+		IClassFile classFile = getClassFile("P", "/P/lib.jar", "p", "W$Member.class");
+		String source = classFile.getSource();
+		MarkerInfo markerInfo = new MarkerInfo(source);
+		markerInfo.astStarts = new int[] {source.indexOf("/*start*/") + "/*start*/".length()};
+		markerInfo.astEnds = new int[] {source.indexOf("/*end*/")};
+		ASTNode node = buildAST(markerInfo, classFile);
+		IBinding binding = ((MethodDeclaration) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"Member(p.W, java.lang.String) [in Member [in W$Member.class [in p [in lib.jar [in P]]]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

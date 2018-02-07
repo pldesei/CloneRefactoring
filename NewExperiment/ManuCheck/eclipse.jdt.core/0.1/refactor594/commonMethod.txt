@@ -1,0 +1,25 @@
+(startLine=970 endLine=992 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 80194: [1.5][search]Rename field fails on field based on parameterized type with member type parameter
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=80194"
+ */
+private void setUpBug80194() throws CoreException, JavaModelException {
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b80194/Test.java",
+		"package b80194;\n" + 
+		"interface Map<K, V> {}\n" + 
+		"class HashMap<K, V> implements Map {}\n" + 
+		"public class Test {\n" + 
+		"	void callDoSomething() {\n" + 
+		"		final Map<String, Object> map = new HashMap<String, Object>();\n" + 
+		"		doSomething(map);\n" + 
+		"		doSomething(map, true);\n" + 
+		"		doSomething(true);\n" + 
+		"	}\n" + 
+		"	void doSomething(final Map<String, Object> map) {}\n" + 
+		"	void doSomething(final Map<String, Object> map, final boolean flag) {}\n" + 
+		"	void doSomething(final boolean flag) {}\n" + 
+		"}\n"
+	);
+}
+

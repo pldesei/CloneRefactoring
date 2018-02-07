@@ -1,0 +1,22 @@
+(startLine=5730 endLine=5749 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01325/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void optimizeBranch(int oldPosition, Label lbl) {
+	for (int i = 0; i < this.countLabels; i++) {
+		Label label = this.labels[i];
+		if (oldPosition == label.position) {
+			label.position = position;
+			if (label instanceof CaseLabel) {
+				int offset = position - ((CaseLabel) label).instructionPosition;
+				for (int j = 0; j < label.forwardReferenceCount; j++) {
+					int forwardPosition = label.forwardReferences[j];
+					this.writeWidePosition(forwardPosition, offset);
+				}
+			} else {
+				for (int j = 0; j < label.forwardReferenceCount; j++) {
+					final int forwardReference = label.forwardReferences[j];
+					this.writePosition(lbl, forwardReference);
+				}
+			}
+		}
+	}
+}
+

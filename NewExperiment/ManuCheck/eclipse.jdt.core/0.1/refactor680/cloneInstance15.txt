@@ -1,0 +1,15 @@
+(startLine=9734 endLine=9746 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01548/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests.java)
+public void testCompletionToplevelType1() throws JavaModelException {
+	CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+		ICompilationUnit cu= getCompilationUnit("Completion", "src", "p3", "CompletionToplevelType1.java");
+
+		String str = cu.getSource();
+		String completeBehind = "CompletionToplevelType1";
+		int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+		cu.codeComplete(cursorLocation, requestor);
+
+		assertEquals(
+			"element:CompletionToplevelType1    completion:CompletionToplevelType1    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_EXACT_NAME+ R_NON_RESTRICTED),
+			requestor.getResults());
+}
+

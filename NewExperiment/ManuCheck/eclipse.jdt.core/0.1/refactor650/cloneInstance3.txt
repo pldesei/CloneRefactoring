@@ -1,0 +1,32 @@
+(startLine=9553 endLine=9582 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01545/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+public void testFavoriteImports005() throws JavaModelException {
+	this.workingCopies = new ICompilationUnit[2];
+	this.workingCopies[0] = getWorkingCopy(
+			"/Completion/src3/test/Test.java",
+			"package test;\n" +
+			"public class Test {\n" +
+			"    public void method() {\n" +
+			"        foo\n" +
+			"    }\n" +
+			"}");
+	
+	this.workingCopies[1] = getWorkingCopy(
+			"/Completion/src3/test/p/ZZZ.java",
+			"package test.p;\n" +
+			"public class ZZZ {\n" +
+			"    public static int foo;\n" +
+			"}");
+	
+	CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true);
+	requestor.setFavoriteReferences(new String[]{"test.p.ZZZ.foo"});
+	
+	String str = this.workingCopies[0].getSource();
+	String completeBehind = "foo";
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	this.workingCopies[0].codeComplete(cursorLocation, requestor, this.wcOwner);
+
+	assertResults(
+			"foo[FIELD_REF]{test.p.ZZZ.foo, Ltest.p.ZZZ;, I, foo, null, "+(R_DEFAULT + R_INTERESTING + R_CASE + R_EXACT_NAME + R_NON_RESTRICTED)+"}",
+			requestor.getResults());
+}
+

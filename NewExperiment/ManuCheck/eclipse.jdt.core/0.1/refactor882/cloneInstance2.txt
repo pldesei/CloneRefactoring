@@ -1,0 +1,17 @@
+(startLine=2138 endLine=2152 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testWildCard() throws JavaModelException {
+		ASTNode node = buildAST(
+			"public class X<T> {\n" +
+			"	X</*start*/? extends Exception/*end*/> field;\n" +
+			"}"
+		);
+		IBinding binding = ((WildcardType) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"<null>",
+			element
+		);
+	}
+

@@ -1,0 +1,10 @@
+(startLine=5980 endLine=5987 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01379/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+	} else {
+		this.handle(
+			IProblem.MethodVarargsArgumentNeedCast,
+			new String[] { new String(argumentType.readableName()), new String(lastParam.readableName()), new String(method.selector), typesAsString(method.isVarargs(), method.parameters, false), new String(method.declaringClass.readableName()), },
+			new String[] { new String(argumentType.shortReadableName()), new String(lastParam.shortReadableName()), new String(method.selector), typesAsString(method.isVarargs(), method.parameters, true), new String(method.declaringClass.shortReadableName()), },
+			location.sourceStart(),
+			location.sourceEnd());
+	}
+

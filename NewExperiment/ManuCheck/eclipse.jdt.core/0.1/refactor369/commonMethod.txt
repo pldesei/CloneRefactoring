@@ -1,0 +1,22 @@
+(startLine=2276 endLine=2295 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00772/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void invalidOperator(BinaryExpression expression, TypeBinding leftType, TypeBinding rightType) {
+	String leftName = new String(leftType.readableName());
+	String rightName = new String(rightType.readableName());
+	String leftShortName = new String(leftType.shortReadableName());
+	String rightShortName = new String(rightType.shortReadableName());
+	if (leftShortName.equals(rightShortName)){
+		leftShortName = leftName;
+		rightShortName = rightName;
+	}
+	this.handle(
+		IProblem.InvalidOperator,
+		new String[] {
+			expression.operatorToString(),
+			leftName + ", " + rightName}, //$NON-NLS-1$
+		new String[] {
+			expression.operatorToString(),
+			leftShortName + ", " + rightShortName}, //$NON-NLS-1$
+		expression.sourceStart,
+		expression.sourceEnd);
+}
+

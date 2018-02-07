@@ -1,0 +1,19 @@
+(startLine=27 endLine=43 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02273/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/Sorting.java)
+	/**
+	 * Topological sort for types
+	 * Guarantee: supertypes come before subtypes.
+	 */
+	public static ReferenceBinding[] sortTypes(ReferenceBinding[] types) {
+		int len = types.length;
+
+		ReferenceBinding[] unsorted = new ReferenceBinding[len];
+		ReferenceBinding[] sorted = new ReferenceBinding[len];
+		System.arraycopy(types, 0, unsorted, 0, len);
+		
+		int o = 0;
+		for(int i=0; i<len; i++)
+			o = sort(unsorted, i, sorted, o);
+
+		return sorted;
+	}
+

@@ -1,0 +1,10 @@
+(startLine=281 endLine=288 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02637/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeVariableBinding.java)
+	private BoundCheckStatus nullBoundCheck(Scope scope, TypeBinding argumentType, TypeBinding substitutedSuperType, Substitution substitution, ASTNode location, BoundCheckStatus previousStatus) {
+		if (NullAnnotationMatching.analyse(this, argumentType, substitutedSuperType, substitution, -1, null, CheckMode.BOUND_CHECK).isAnyMismatch()) {
+			if (location != null)
+				scope.problemReporter().nullityMismatchTypeArgument(this, argumentType, location);
+			return BoundCheckStatus.NULL_PROBLEM;
+		}
+		return previousStatus;
+	}
+

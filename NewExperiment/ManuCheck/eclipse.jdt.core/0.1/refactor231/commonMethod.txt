@@ -1,0 +1,51 @@
+(startLine=1128 endLine=1176 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00272/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	/**
+	 * @see IJavaProject
+	 */
+	public IPath getOutputLocation() throws JavaModelException {
+
+		IPath outputLocation = null;
+		if (this.isOpen()) {
+			JavaProjectElementInfo info = getJavaProjectElementInfo();
+			outputLocation = info.getOutputLocation();
+			if (outputLocation != null) {
+				return outputLocation;
+			}
+			return defaultOutputLocation();
+		}
+		// if not already opened, then read from file (avoid populating the model for CP question)
+		if (!this.getProject().exists()){
+			throw newNotPresentException();
+		}
+		IClasspathEntry[] classpath = null;
+		try {
+			String sharedClasspath = loadClasspath();
+			if (sharedClasspath != null) {
+				classpath = readPaths(sharedClasspath);
+			}
+		} catch(JavaModelException e) {
+			if (JavaModelManager.VERBOSE && this.getProject().isAccessible()){
+				Util.log(e, 
+					"Exception while retrieving "+ this.getPath() //$NON-NLS-1$
+					+"/.classpath, will revert to default output location"); //$NON-NLS-1$
+			}
+		} catch(IOException e){
+			if (JavaModelManager.VERBOSE && this.getProject().isAccessible()){
+				Util.log(e, 
+					"Exception while retrieving "+ this.getPath() //$NON-NLS-1$
+					+"/.classpath, will revert to default output location"); //$NON-NLS-1$
+			}
+		}
+		// extract out the output location
+		if (classpath != null && classpath.length > 0) {
+			IClasspathEntry entry = classpath[classpath.length - 1];
+			if (entry.getContentKind() == ClasspathEntry.K_OUTPUT) {
+				outputLocation = entry.getPath();
+			}
+		}
+		if (outputLocation != null) {
+			return outputLocation;
+		}
+		return defaultOutputLocation();
+	}
+

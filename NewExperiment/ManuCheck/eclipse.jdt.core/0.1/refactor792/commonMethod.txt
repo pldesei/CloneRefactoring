@@ -1,0 +1,37 @@
+(startLine=10387 endLine=10421 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private Initializer parseSnippeInitializer(char[] snippet, int position, char[][] localVariableTypeNames, char[][] localVariableNames, int[] localVariableModifiers, boolean isStatic){
+		StringBuffer prefix = new StringBuffer();
+		prefix.append("public class FakeType {\n "); //$NON-NLS-1$
+		if(isStatic) {
+			prefix.append("static "); //$NON-NLS-1$
+		}
+		prefix.append("{\n"); //$NON-NLS-1$
+		for (int i = 0; i < localVariableTypeNames.length; i++) {
+			ASTNode.printModifiers(localVariableModifiers[i], prefix);
+			prefix.append(' ');
+			prefix.append(localVariableTypeNames[i]);
+			prefix.append(' ');
+			prefix.append(localVariableNames[i]);
+			prefix.append(';');
+		}
+
+		char[] fakeSource = CharOperation.concat(prefix.toString().toCharArray(), snippet, "}}".toCharArray());//$NON-NLS-1$
+		this.offset = prefix.length();
+
+		String encoding = this.compilerOptions.defaultEncoding;
+		BasicCompilationUnit fakeUnit = new BasicCompilationUnit(
+			fakeSource,
+			null,
+			"FakeType.java", //$NON-NLS-1$
+			encoding);
+
+		this.actualCompletionPosition = prefix.length() + position - 1;
+
+		CompilationResult fakeResult = new CompilationResult(fakeUnit, 1, 1, this.compilerOptions.maxProblemsPerUnit);
+		CompilationUnitDeclaration fakeAST = this.parser.dietParse(fakeUnit, fakeResult, this.actualCompletionPosition);
+
+		parseBlockStatements(fakeAST, this.actualCompletionPosition);
+
+		return (Initializer)fakeAST.types[0].fields[0];
+	}
+

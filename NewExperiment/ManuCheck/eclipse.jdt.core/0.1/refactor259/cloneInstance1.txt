@@ -1,0 +1,21 @@
+(startLine=2319 endLine=2337 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _lookupswitch(int pc, int defaultoffset, int npairs, int[][] offset_pairs) {
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.LOOKUPSWITCH])
+			.append("default:") //$NON-NLS-1$
+			.append(defaultoffset + pc);
+		writeNewLine();
+		for (int i = 0; i < npairs; i++) {
+			writeExtraTabs(1);
+			buffer
+				.append("case") //$NON-NLS-1$
+				.append(offset_pairs[i][0])
+				.append(":") //$NON-NLS-1$
+				.append(offset_pairs[i][1] + pc);
+			writeNewLine();
+		}
+	}
+

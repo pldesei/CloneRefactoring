@@ -1,0 +1,25 @@
+(startLine=902 endLine=924 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00039/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		do {
+			ReferenceBinding[] itsInterfaces = currentType.superInterfaces();
+			if (itsInterfaces != NoSuperInterfaces) {
+				if (interfacesToVisit == null)
+					interfacesToVisit = new ReferenceBinding[5][];
+				if (++lastPosition == interfacesToVisit.length)
+					System.arraycopy(
+						interfacesToVisit,
+						0,
+						interfacesToVisit = new ReferenceBinding[lastPosition * 2][],
+						0,
+						lastPosition);
+				interfacesToVisit[lastPosition] = itsInterfaces;
+			}
+
+			findMemberTypes(
+				typeName,
+				currentType.memberTypes(),
+				typesFound,
+				receiverType,
+				typeInvocation);
+			currentType = currentType.superclass();
+		} while (currentType != null);
+

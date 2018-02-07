@@ -1,0 +1,82 @@
+(startLine=1853 endLine=1932 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnMarkerAnnotationName(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		CompletionOnMarkerAnnotationName annot = (CompletionOnMarkerAnnotationName) astNode;
+
+		CompletionOnAnnotationOfType fakeType = (CompletionOnAnnotationOfType)scope.parent.referenceContext();
+		if (fakeType.annotations[0] == annot) {
+			// When the completion is inside a method body the annotation cannot be accuratly attached to the correct node by completion recovery.
+			// So 'targetedElement' is not computed in this case.
+			if (scope.parent.parent == null || !(scope.parent.parent instanceof MethodScope)) {
+				this.targetedElement = computeTargetedElement(fakeType);
+			}
+
+		}
+
+		this.assistNodeIsAnnotation = true;
+		if (annot.type instanceof CompletionOnSingleTypeReference) {
+			CompletionOnSingleTypeReference type = (CompletionOnSingleTypeReference) annot.type;
+			this.completionToken = type.token;
+			setSourceAndTokenRange(type.sourceStart, type.sourceEnd);
+
+			if (scope.parent.parent != null &&
+					!(scope.parent.parent instanceof MethodScope) &&
+					!fakeType.isParameter) {
+
+				if (this.completionToken.length <= Keywords.INTERFACE.length
+					&& CharOperation.prefixEquals(this.completionToken, Keywords.INTERFACE, false /* ignore case */
+				)){
+					int relevance = computeBaseRelevance();
+					relevance += computeRelevanceForResolution();
+					relevance += computeRelevanceForInterestingProposal();
+					relevance += computeRelevanceForCaseMatching(this.completionToken, Keywords.INTERFACE);
+					relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE); // no access restriction for keywords
+					relevance += R_ANNOTATION; // this proposal is most relevant than annotation proposals
+
+					this.noProposal = false;
+					if(!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+						CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, this.actualCompletionPosition);
+						proposal.setName(Keywords.INTERFACE);
+						proposal.setCompletion(Keywords.INTERFACE);
+						proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+						proposal.setTokenRange(this.tokenStart - this.offset, this.tokenEnd - this.offset);
+						proposal.setRelevance(relevance);
+						this.requestor.accept(proposal);
+						if(DEBUG) {
+							this.printDebug(proposal);
+						}
+					}
+				}
+			}
+
+			findTypesAndPackages(this.completionToken, scope, false, false, new ObjectVector());
+		} else if (annot.type instanceof CompletionOnQualifiedTypeReference) {
+			this.insideQualifiedReference = true;
+
+			CompletionOnQualifiedTypeReference type = (CompletionOnQualifiedTypeReference) annot.type;
+			this.completionToken = type.completionIdentifier;
+			long completionPosition = type.sourcePositions[type.tokens.length];
+			if (qualifiedBinding instanceof PackageBinding) {
+
+				setSourceRange(astNode.sourceStart, (int) completionPosition);
+				setTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+				// replace to the end of the completion identifier
+				findTypesAndSubpackages(this.completionToken, (PackageBinding) qualifiedBinding, scope);
+			} else {
+				setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+
+				findMemberTypes(
+					this.completionToken,
+					(ReferenceBinding) qualifiedBinding,
+					scope,
+					scope.enclosingSourceType(),
+					false,
+					false,
+					new ObjectVector(),
+					null,
+					null,
+					null,
+					false);
+			}
+		}
+	}
+

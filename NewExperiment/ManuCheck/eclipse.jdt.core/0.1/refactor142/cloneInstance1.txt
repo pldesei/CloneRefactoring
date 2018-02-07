@@ -1,0 +1,26 @@
+(startLine=1111 endLine=1134 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00088/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+		int visibleSize) {
+		MethodBinding method = null;
+		MethodBinding previous = null;
+		nextVisible : for (int i = 0; i < visibleSize; i++) {
+			method = visible[i];
+			if (previous != null && method.declaringClass != previous.declaringClass)
+				break;
+			// cannot answer a method farther up the hierarchy than the first method found
+			previous = method;
+			for (int j = 0; j < visibleSize; j++) {
+				if (i == j)
+					continue;
+				MethodBinding next = visible[j];
+				if (!areParametersAssignable(next.parameters, method.parameters))
+					continue nextVisible;
+			}
+			compilationUnitScope().addTypeReferences(method.thrownExceptions);
+			return method;
+		}
+		return new ProblemMethodBinding(
+			visible[0].selector,
+			visible[0].parameters,
+			Ambiguous);
+	}
+

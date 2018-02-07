@@ -1,0 +1,8 @@
+(startLine=1798 endLine=1803 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocTag(ASTNode astNode) {
+		CompletionOnJavadocTag javadocTag = (CompletionOnJavadocTag) astNode;
+		setSourceAndTokenRange(javadocTag.tagSourceStart, javadocTag.sourceEnd);
+		findJavadocBlockTags(javadocTag);
+		findJavadocInlineTags(javadocTag);
+	}
+

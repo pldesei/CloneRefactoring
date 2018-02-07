@@ -1,0 +1,18 @@
+(startLine=748 endLine=763 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01108/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests.java)
+public void testCompletionPrefixMethodName3() throws JavaModelException {
+
+	CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+	ICompilationUnit cu= getCompilationUnit("Completion", "src", "", "CompletionPrefixMethodName3.java");
+
+	String str = cu.getSource();
+	String completeBehind = "xBar(1,";
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	cu.codeComplete(cursorLocation, requestor);
+
+	assertEquals(
+		"should have one completion", 
+		"element:xBar    completion:    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_EXACT_NAME + R_UNQUALIFIED + R_NON_RESTRICTED)+"\n" +
+		"element:xBar    completion:CompletionPrefixMethodName3.this.xBar(1,    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_EXACT_NAME+ R_NON_RESTRICTED),
+		requestor.getResults());
+}
+

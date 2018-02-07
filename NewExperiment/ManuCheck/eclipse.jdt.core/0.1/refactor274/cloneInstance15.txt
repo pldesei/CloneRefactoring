@@ -1,0 +1,16 @@
+(startLine=521 endLine=534 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveClass3() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveClass3.java");
+	
+	String str = cu.getSource();
+	String selectAt = "X[]{";
+	String selection = "X";
+	int start = str.lastIndexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one class", elements.length == 1 && 
+		elements[0].getElementName().equals("X") &&
+		elements[0] instanceof IType);
+}
+

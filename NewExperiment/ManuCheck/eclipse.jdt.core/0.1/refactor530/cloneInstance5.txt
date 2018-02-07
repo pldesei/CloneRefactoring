@@ -1,0 +1,16 @@
+(startLine=1483 endLine=1496 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01351/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests.java)
+public void testCompletionVariableNameOfArray4() throws JavaModelException {
+	CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+	ICompilationUnit cu= getCompilationUnit("Completion", "src", "", "CompletionVariableNameOfArray4.java");
+
+	String str = cu.getSource();
+	String completeBehind = "ob";
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	cu.codeComplete(cursorLocation, requestor);
+
+	assertEquals(
+		"should have no completion",
+		"",
+		requestor.getResults());
+}
+

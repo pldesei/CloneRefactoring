@@ -1,0 +1,21 @@
+(startLine=330 endLine=348 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00968/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CopyResourceElementsOperation.java)
+			try {
+				if (newContent != null){
+					String encoding = null;
+					try {
+						// TODO (frederic) remove when bug 67606 will be fixed (bug 67823)
+						// fix bug 66898
+						if (sourceEncoding != null) destFile.setCharset(sourceEncoding, this.progressMonitor);
+						// end todo
+						encoding = destFile.getCharset();
+					}
+					catch (CoreException ce) {
+						// use no encoding
+					}
+					destFile.setContents(
+						new ByteArrayInputStream(encoding == null ? newContent.getBytes() : newContent.getBytes(encoding)), 
+						force ? IResource.FORCE | IResource.KEEP_HISTORY : IResource.KEEP_HISTORY, 
+						getSubProgressMonitor(1));
+				}
+			} catch(IOException e) {
+

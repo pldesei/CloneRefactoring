@@ -1,0 +1,29 @@
+(startLine=685 endLine=711 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00840/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+/**
+ * @param key1
+ * @param key2
+ * @param key3
+ * @param index
+ * @return the given index
+ */
+private int putInCache(final char[] key1, final char[] key2, final char[] key3, int index) {
+	HashtableOfObject value = (HashtableOfObject) this.methodsAndFieldsCache.get(key1);
+	if (value == null) {
+		value = new HashtableOfObject();
+		this.methodsAndFieldsCache.put(key1, value);
+		CharArrayCache charArrayCache = new CharArrayCache();
+		charArrayCache.put(key3, index);
+		value.put(key2, charArrayCache);
+	} else {
+		CharArrayCache charArrayCache = (CharArrayCache) value.get(key2);
+		if (charArrayCache == null) {
+			charArrayCache = new CharArrayCache();
+			charArrayCache.put(key3, index);
+			value.put(key2, charArrayCache);
+		} else {
+			charArrayCache.put(key3, index);			
+		}
+	}
+	return index;
+}
+

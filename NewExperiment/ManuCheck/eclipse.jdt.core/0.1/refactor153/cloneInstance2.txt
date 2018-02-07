@@ -1,0 +1,11 @@
+(startLine=247 endLine=255 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00129/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+			} else {
+				tokenizer = new StringTokenizer(commandLine.substring(startIndex, commandLine.length()), File.pathSeparator + " "); //$NON-NLS-1$
+				while (tokenizer.hasMoreTokens()) {
+					if (count == argv.length) {
+						System.arraycopy(argv, 0, (argv = new String[count * 2]), 0, count);
+					}
+					argv[count++] = tokenizer.nextToken();
+				}
+			}
+

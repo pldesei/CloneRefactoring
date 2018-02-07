@@ -1,0 +1,11 @@
+(startLine=190 endLine=198 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/ScannerHelper.java)
+	try {
+		DataInputStream inputStream = new DataInputStream(new BufferedInputStream(ScannerHelper.class.getResourceAsStream("unicode/part1.rsc"))); //$NON-NLS-1$
+		long[] readValues = new long[1024];
+		for (int i = 0; i < 1024; i++) {
+			readValues[i] = inputStream.readLong();
+		}
+		inputStream.close();
+		Tables[PART_INDEX][1] = readValues;
+	} catch (FileNotFoundException e) {
+

@@ -1,0 +1,55 @@
+(startLine=374 endLine=426 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02449/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/AllocationExpression.java)
+	if (this.arguments != null) {
+		boolean argHasError = false;
+		int length = this.arguments.length;
+		argumentTypes = new TypeBinding[length];
+		TypeBinding argumentType;
+		for (int i = 0; i < length; i++) {
+			Expression argument = this.arguments[i];
+			if (argument instanceof CastExpression) {
+				argument.bits |= DisableUnnecessaryCastCheck; // will check later on
+				argsContainCast = true;
+			}
+			argument.setExpressionContext(INVOCATION_CONTEXT);
+			if ((argumentType = argumentTypes[i] = argument.resolveType(scope)) == null) {
+				argHasError = true;
+			}
+			if (argumentType != null && argumentType.kind() == Binding.POLY_TYPE)
+				polyExpressionSeen = true;
+		}
+		if (argHasError) {
+			/* https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
+			   No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
+			   not return the partially resolved type.
+			 */
+			if (isDiamond) {
+				return null; // not the partially cooked this.resolvedType
+			}
+			if (this.resolvedType instanceof ReferenceBinding) {
+				// record a best guess, for clients who need hint about possible constructor match
+				TypeBinding[] pseudoArgs = new TypeBinding[length];
+				for (int i = length; --i >= 0;) {
+					pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
+				}
+				this.binding = scope.findMethod((ReferenceBinding) this.resolvedType, TypeConstants.INIT, pseudoArgs, this, false);
+				if (this.binding != null && !this.binding.isValidBinding()) {
+					MethodBinding closestMatch = ((ProblemMethodBinding)this.binding).closestMatch;
+					// record the closest match, for clients who may still need hint about possible method match
+					if (closestMatch != null) {
+						if (closestMatch.original().typeVariables != Binding.NO_TYPE_VARIABLES) { // generic method
+							// shouldn't return generic method outside its context, rather convert it to raw method (175409)
+							closestMatch = scope.environment().createParameterizedGenericMethod(closestMatch.original(), (RawTypeBinding)null);
+						}
+						this.binding = closestMatch;
+						MethodBinding closestMatchOriginal = closestMatch.original();
+						if (closestMatchOriginal.isOrEnclosedByPrivateType() && !scope.isDefinedInMethod(closestMatchOriginal)) {
+							// ignore cases where method is used from within inside itself (e.g. direct recursions)
+							closestMatchOriginal.modifiers |= ExtraCompilerModifiers.AccLocallyUsed;
+						}
+					}
+				}
+			}
+			return this.resolvedType;
+		}
+	}
+

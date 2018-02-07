@@ -1,0 +1,33 @@
+(startLine=2257 endLine=2287 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnQualifiedAllocationExpression(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		setSourceAndTokenRange(astNode.sourceStart, astNode.sourceEnd, false);
+
+		CompletionOnQualifiedAllocationExpression allocExpression =
+			(CompletionOnQualifiedAllocationExpression) astNode;
+		TypeBinding[] argTypes = computeTypes(allocExpression.arguments);
+
+		ReferenceBinding ref = (ReferenceBinding) qualifiedBinding;
+		if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF)
+				&& ref.isClass()
+				&& !ref.isAbstract()) {
+				findConstructors(
+					ref,
+					argTypes,
+					scope,
+					allocExpression,
+					false);
+		}
+		
+		checkCancel();
+		
+		if (!this.requestor.isIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION)
+				&& !ref.isFinal()
+				&& !ref.isEnum()){
+			findAnonymousType(
+				ref,
+				argTypes,
+				scope,
+				allocExpression);
+		}
+	}
+

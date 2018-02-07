@@ -1,0 +1,12 @@
+(startLine=4309 endLine=4318 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void lsub() {
+	countLabels = 0;
+	stackDepth -= 2;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_lsub;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_lsub);
+	}
+}
+

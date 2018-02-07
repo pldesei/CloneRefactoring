@@ -1,0 +1,12 @@
+(startLine=257 endLine=266 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00478/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/CastExpression.java)
+		for (int i = 0; i < length; i++) {
+			Expression argument = arguments[i];
+			if (argument instanceof CastExpression && (argument.bits & UnnecessaryCastMask) == 0) {
+				TypeBinding castedExpressionType = ((CastExpression)argument).expression.resolvedType;
+				if (rawArgumentTypes == argumentTypes) {
+					System.arraycopy(rawArgumentTypes, 0, rawArgumentTypes = new TypeBinding[length], 0, length);
+				}
+				rawArgumentTypes[i] = castedExpressionType; 
+			}
+		}
+

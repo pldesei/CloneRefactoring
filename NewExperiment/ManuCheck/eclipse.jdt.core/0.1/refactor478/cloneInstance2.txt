@@ -1,0 +1,22 @@
+(startLine=7804 endLine=7823 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01108/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests.java)
+public void testCompletionMemberType2() throws JavaModelException {
+		CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+		ICompilationUnit cu= getCompilationUnit("Completion", "src", "", "CompletionMemberType2.java");
+
+		String str = cu.getSource();
+		String completeBehind = "new ";
+		int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+		cu.codeComplete(cursorLocation, requestor);
+
+		if(CompletionEngine.NO_TYPE_COMPLETION_ON_EMPTY_TOKEN) {
+			assertEquals(
+				"",
+				requestor.getResults());
+		} else {
+			assertEquals(
+				"element:CompletionMemberType2    completion:CompletionMemberType2    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_UNQUALIFIED + R_NON_RESTRICTED)+"\n"+
+				"element:CompletionMemberType2.MemberException    completion:MemberException    relevance:"+(R_DEFAULT + R_INTERESTING + R_CASE + R_EXCEPTION+ R_NON_RESTRICTED),
+				requestor.getResults());
+		}
+}
+

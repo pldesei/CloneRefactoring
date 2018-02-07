@@ -1,0 +1,23 @@
+(startLine=2531 endLine=2551 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+			if ((index = wellKnownMethods[VALUEOF_INT_METHOD]) == 0) {
+				if ((nameAndTypeIndex = wellKnownMethodNameAndTypes[VALUEOF_INT_METHOD_NAME_AND_TYPE]) == 0) {
+					int nameIndex = literalIndex(QualifiedNamesConstants.ValueOf);
+					int typeIndex = literalIndex(QualifiedNamesConstants.ValueOfIntSignature);
+					nameAndTypeIndex = wellKnownMethodNameAndTypes[VALUEOF_INT_METHOD_NAME_AND_TYPE] = currentIndex++;
+					writeU1(NameAndTypeTag);
+					writeU2(nameIndex);
+					writeU2(typeIndex);
+				}
+				index = wellKnownMethods[VALUEOF_INT_METHOD] = currentIndex++;
+				if (index > 0xFFFF){
+					this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+				}
+				// Write the method ref constant into the constant pool
+				// First add the tag
+				writeU1(MethodRefTag);
+				// Then write the class index
+				writeU2(classIndex);
+				// The write the nameAndType index
+				writeU2(nameAndTypeIndex);
+			}
+

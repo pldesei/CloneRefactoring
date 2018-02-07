@@ -1,0 +1,38 @@
+(startLine=1915 endLine=1950 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00748/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+		if (codeStream.generateLineNumberAttributes) {
+			if (localContentsOffset + 20 >= (contentsLength = localContents.length)) {
+				System.arraycopy(
+					contents,
+					0,
+					(localContents = contents = new byte[contentsLength + INCREMENT_SIZE]),
+					0,
+					contentsLength);
+			}			
+			/* Create and add the line number attribute (used for debugging) 
+			    * Build the pairs of:
+			    * (bytecodePC lineNumber)
+			    * according to the table of start line indexes and the pcToSourceMap table
+			    * contained into the codestream
+			    */
+			int lineNumberNameIndex =
+				constantPool.literalIndex(AttributeNamesConstants.LineNumberTableName);
+			localContents[localContentsOffset++] = (byte) (lineNumberNameIndex >> 8);
+			localContents[localContentsOffset++] = (byte) lineNumberNameIndex;
+			localContents[localContentsOffset++] = 0;
+			localContents[localContentsOffset++] = 0;
+			localContents[localContentsOffset++] = 0;
+			localContents[localContentsOffset++] = 6;
+			localContents[localContentsOffset++] = 0;
+			localContents[localContentsOffset++] = 1;
+			if (problemLine == 0) {
+				problemLine = searchLineNumber(startLineIndexes, binding.sourceStart());
+			}
+			// first entry at pc = 0
+			localContents[localContentsOffset++] = 0;
+			localContents[localContentsOffset++] = 0;
+			localContents[localContentsOffset++] = (byte) (problemLine >> 8);
+			localContents[localContentsOffset++] = (byte) problemLine;
+			// now we change the size of the line number attribute
+			attributeNumber++;
+		}
+

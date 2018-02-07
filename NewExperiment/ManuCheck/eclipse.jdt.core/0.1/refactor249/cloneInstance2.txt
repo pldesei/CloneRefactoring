@@ -1,0 +1,91 @@
+(startLine=1944 endLine=2032 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00415/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ClasspathTests.java)
+public void testCycleDetectionThroughContainerVariants() throws CoreException {
+	
+	IJavaProject[] p = null;
+	try {
+
+		p = new IJavaProject[]{
+			this.createJavaProject("P0", new String[] {""}, ""),
+			this.createJavaProject("P1", new String[] {""}, ""),
+			this.createJavaProject("P2", new String[] {""}, ""),
+			this.createJavaProject("P3", new String[] {""}, ""),
+			this.createJavaProject("P4", new String[] {""}, ""),
+		};
+
+		class TestContainer implements IClasspathContainer {
+			IPath path;
+			IClasspathEntry[] entries;
+			TestContainer(IPath path, IClasspathEntry[] entries){
+				this.path = path;
+				this.entries = entries;
+			}
+			public IPath getPath() { return this.path; }
+			public IClasspathEntry[] getClasspathEntries() { return this.entries;	}
+			public String getDescription() { return null; 	}
+			public int getKind() { return 0; }
+		};
+
+		IClasspathContainer[] containers = new IClasspathContainer[]{ 
+			new TestContainer(
+				new Path("container0/default"), 
+				new IClasspathEntry[]{ JavaCore.newProjectEntry(p[3].getPath()) }),
+			new TestContainer(
+				new Path("container0/default"), 
+				new IClasspathEntry[]{ JavaCore.newProjectEntry(p[1].getPath()) }),
+			new TestContainer(
+				new Path("container0/default"), 
+				new IClasspathEntry[]{ JavaCore.newProjectEntry(p[4].getPath()) }),
+		};
+
+		IClasspathEntry[][] extraEntries = new IClasspathEntry[][]{ 
+			{ JavaCore.newProjectEntry(p[1].getPath()), JavaCore.newContainerEntry(containers[0].getPath()) },
+			{ JavaCore.newProjectEntry(p[2].getPath()), JavaCore.newProjectEntry(p[3].getPath()) },
+			{ JavaCore.newContainerEntry(containers[1].getPath()) }, 
+			{ JavaCore.newContainerEntry(containers[2].getPath())}, 
+			{ JavaCore.newProjectEntry(p[3].getPath()), JavaCore.newProjectEntry(p[0].getPath()) } 
+		}; 
+
+		int[][] expectedCycleParticipants = new int[][] {
+			{ 0, 0, 0, 0, 0 }, // after setting CP p[0]
+			{ 0, 0, 0, 0, 0 }, // after setting CP p[1]
+			{ 0, 0, 0, 0, 0 }, // after setting CP p[2]
+			{ 0, 0, 0, 0, 0 }, // after setting CP p[3]
+			{ 1, 1, 1, 1, 1 }, // after setting CP p[4]
+		};
+		
+		for (int i = 0; i < p.length; i++){
+
+			// append project references			
+			IClasspathEntry[] oldClasspath = p[i].getRawClasspath();
+			IClasspathEntry[] newClasspath = new IClasspathEntry[oldClasspath.length+extraEntries[i].length];
+			System.arraycopy(oldClasspath, 0 , newClasspath, 0, oldClasspath.length);
+			for (int j = 0; j < extraEntries[i].length; j++){
+				newClasspath[oldClasspath.length+j] = extraEntries[i][j];
+			}			
+			// set classpath
+			p[i].setRawClasspath(newClasspath, null);
+
+			// update same container path for multiple projects
+			if (i == p.length - 1){
+				JavaCore.setClasspathContainer(
+					containers[0].getPath(),
+					new IJavaProject[]{ p[0], p[2], p[3] },
+					new IClasspathContainer[] { containers[0], containers[1], containers[2] },
+					null);
+			}
+			
+			// check cycle markers
+			this.assertCycleMarkers(p[i], p, expectedCycleParticipants[i]);
+		}
+		//this.startDeltas();
+		
+	} finally {
+		//this.stopDeltas();
+		if (p != null){
+			for (int i = 0; i < p.length; i++){
+				this.deleteProject(p[i].getElementName());
+			}
+		}
+	}
+}
+

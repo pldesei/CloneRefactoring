@@ -1,0 +1,12 @@
+(startLine=3188 endLine=3197 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void irem() {
+	countLabels = 0;
+	stackDepth--;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_irem;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_irem);
+	}
+}
+

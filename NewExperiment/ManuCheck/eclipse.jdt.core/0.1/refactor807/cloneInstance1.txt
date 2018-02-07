@@ -1,0 +1,31 @@
+(startLine=1368 endLine=1396 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01924/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+			} else if (qualifiedBinding instanceof ReferenceBinding && !(qualifiedBinding instanceof TypeVariableBinding)) {
+				if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+					setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+
+					ObjectVector typesFound = new ObjectVector();
+
+					if (this.assistNodeIsException && astNodeParent instanceof TryStatement) {
+						findExceptionFromTryStatement(
+								this.completionToken,
+								(ReferenceBinding)qualifiedBinding,
+								scope.enclosingSourceType(),
+								(BlockScope)scope,
+								typesFound);
+					}
+
+					findMemberTypes(
+						this.completionToken,
+						(ReferenceBinding) qualifiedBinding,
+						scope,
+						scope.enclosingSourceType(),
+						false,
+						false,
+						typesFound,
+						null,
+						null,
+						null,
+						false);
+				}
+			} else if (qualifiedBinding instanceof PackageBinding) {
+

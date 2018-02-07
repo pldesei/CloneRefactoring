@@ -1,0 +1,24 @@
+(startLine=227 endLine=248 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00588/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Expression.java)
+	/**
+	 * Every expression is responsible for generating its implicit conversion when necessary.
+	 *
+	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
+	 * @param valueRequired boolean
+	 */
+	public void generateCode(
+		BlockScope currentScope,
+		CodeStream codeStream,
+		boolean valueRequired) {
+
+		if (constant != NotAConstant) {
+			// generate a constant expression
+			int pc = codeStream.position;
+			codeStream.generateConstant(constant, implicitConversion);
+			codeStream.recordPositionsFrom(pc, this.sourceStart);
+		} else {
+			// actual non-constant code generation
+			throw new ShouldNotImplement(Util.bind("ast.missingCode")); //$NON-NLS-1$
+		}
+	}
+

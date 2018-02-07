@@ -1,0 +1,21 @@
+(startLine=1111 endLine=1129 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00825/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		)) {
+			int relevance = computeBaseRelevance();
+			relevance += computeRelevanceForInterestingProposal();
+			relevance += computeRelevanceForCaseMatching(token, classField);
+			relevance += computeRelevanceForExpectingType(scope.getJavaLangClass());
+			
+			this.noProposal = false;
+			this.requestor.acceptField(
+				CharOperation.NO_CHAR,
+				CharOperation.NO_CHAR,
+				classField,
+				CharOperation.NO_CHAR,
+				CharOperation.NO_CHAR,
+				classField,
+				IConstants.AccStatic | IConstants.AccPublic,
+				this.startPosition - this.offset,
+				this.endPosition - this.offset,
+				relevance);
+		}
+

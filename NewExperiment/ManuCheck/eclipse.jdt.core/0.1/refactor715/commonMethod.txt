@@ -1,0 +1,39 @@
+(startLine=625 endLine=661 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01846/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/formatter/FormatterCommentsMassiveTests.java)
+private int getIndentationLevel(Scanner scanner, int position) {
+	int indentationLevel = 0;
+	int numberOfIndentations = 0;
+	int indentationSize;
+	try {
+		indentationSize = Integer.parseInt(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE);
+	} catch (NumberFormatException nfe) {
+		indentationSize = 4;
+	}
+	int lineNumber = scanner.getLineNumber(position);
+	int lineStart = scanner.getLineStart(lineNumber);
+	scanner.resetTo(lineStart, position-1);
+	while (!scanner.atEnd()) {
+		int ch = scanner.getNextChar();
+		switch (ch) {
+			case '\n':
+				indentationLevel = 0;
+				numberOfIndentations = 0;
+				break;
+			case '\t':
+				numberOfIndentations++;
+				indentationLevel = numberOfIndentations * indentationSize;
+				break;
+			default:
+				indentationLevel++;
+				if ((indentationLevel%indentationSize) == 0) {
+					numberOfIndentations++;
+				}
+				break;
+		}
+	}
+	if ((indentationLevel%indentationSize) != 0) {
+		numberOfIndentations++;
+		indentationLevel = numberOfIndentations * indentationSize;
+	}
+	return numberOfIndentations;
+}
+

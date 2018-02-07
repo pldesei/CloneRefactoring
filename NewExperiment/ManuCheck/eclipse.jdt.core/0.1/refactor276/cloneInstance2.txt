@@ -1,0 +1,16 @@
+(startLine=163 endLine=176 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveExplicitSuperConstructorCall() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveExplicitSuperConstructorCall.java");
+
+	String str = cu.getSource();
+	String selectAt = "super(";
+	String selection = "super";
+	int start = str.indexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+
+	assertTrue("should have one type", elements.length == 1 && 
+		elements[0].getElementName().equals("SuperClass") &&
+		elements[0] instanceof IMethod);	
+}
+

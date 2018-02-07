@@ -1,0 +1,13 @@
+(startLine=993 endLine=1003 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug80194string2() throws CoreException, JavaModelException {
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 1, workingCopies.length);
+	search("doSomething(Map<String,Object>)", METHOD, ALL_OCCURRENCES);
+	discard = false; // keep working copies for next test (set before assertion as an error is raised...)
+	assertSearchResults(
+		"src/b80194/Test.java void b80194.Test.callDoSomething() [doSomething(map)] EXACT_MATCH\n" + 
+		"src/b80194/Test.java void b80194.Test.callDoSomething() [doSomething(true)] EXACT_MATCH\n" + 
+		"src/b80194/Test.java void b80194.Test.doSomething(Map<String,Object>) [doSomething] EXACT_MATCH"
+	);
+}
+

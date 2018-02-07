@@ -1,0 +1,11 @@
+(startLine=505 endLine=513 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02167/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	public final CompilationUnitScope compilationUnitScope() {
+		Scope lastScope = null;
+		Scope scope = this;
+		do {
+			lastScope = scope;
+			scope = scope.parent;
+		} while (scope != null);
+		return (CompilationUnitScope) lastScope;
+	}
+

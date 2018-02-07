@@ -1,0 +1,15 @@
+(startLine=903 endLine=915 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02607/org.eclipse.jdt.core.tests.builder/src/org/eclipse/jdt/core/tests/builder/TestingEnvironment.java)
+	/** Remove a project from the workspace.
+	 */
+	public void removeProject(IPath projectPath){
+		checkAssertion("a workspace must be open", this.isOpen); //$NON-NLS-1$
+		try {
+			getJavaProject(projectPath).close();
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+		IProject project = getProject(projectPath);
+		deleteResource(project);
+
+	}
+

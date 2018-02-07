@@ -1,0 +1,33 @@
+(startLine=1564 endLine=1594 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnFieldType(ASTNode astNode, Scope scope) {
+		CompletionOnFieldType field = (CompletionOnFieldType) astNode;
+		CompletionOnSingleTypeReference type = (CompletionOnSingleTypeReference) field.type;
+		this.completionToken = type.token;
+		setSourceAndTokenRange(type.sourceStart, type.sourceEnd);
+
+		findTypesAndPackages(this.completionToken, scope, true, true, new ObjectVector());
+		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+			findKeywordsForMember(this.completionToken, field.modifiers);
+		}
+
+		if (!field.isLocalVariable && field.modifiers == ClassFileConstants.AccDefault) {
+			SourceTypeBinding enclosingType = scope.enclosingSourceType();
+			if (!enclosingType.isAnnotationType()) {
+				if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
+					findMethodDeclarations(
+							this.completionToken,
+							enclosingType,
+							scope,
+							new ObjectVector(),
+							null,
+							null,
+							null,
+							false);
+				}
+				if (!this.requestor.isIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION)) {
+					proposeNewMethod(this.completionToken, enclosingType);
+				}
+			}
+		}
+	}
+

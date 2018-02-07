@@ -1,0 +1,86 @@
+(startLine=1059 endLine=1142 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private boolean complete(
+			ASTNode astNode,
+			ASTNode astNodeParent,
+			ASTNode enclosingNode,
+			CompilationUnitDeclaration compilationUnitDeclaration,
+			Binding qualifiedBinding,
+			Scope scope,
+			boolean insideTypeAnnotation) {
+
+		setSourceAndTokenRange(astNode.sourceStart, astNode.sourceEnd);
+
+		scope = computeForbiddenBindings(astNode, astNodeParent, scope);
+		computeUninterestingBindings(astNodeParent, scope);
+		if(astNodeParent != null) {
+			if(!isValidParent(astNodeParent, astNode, scope)) return false;
+			computeExpectedTypes(astNodeParent, astNode, scope);
+		}
+
+		buildContext(astNode, astNodeParent, compilationUnitDeclaration, qualifiedBinding, scope);
+
+		if (astNode instanceof CompletionOnFieldType) {
+			completionOnFieldType(astNode, scope);
+		} else if (astNode instanceof CompletionOnMethodReturnType) {
+			completionOnMethodReturnType(astNode, scope);
+		} else if (astNode instanceof CompletionOnSingleNameReference) {
+			completionOnSingleNameReference(astNode, astNodeParent, scope, insideTypeAnnotation);
+		} else if (astNode instanceof CompletionOnSingleTypeReference) {
+			completionOnSingleTypeReference(astNode, astNodeParent, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnQualifiedNameReference) {
+			completionOnQualifiedNameReference(astNode, enclosingNode, qualifiedBinding, scope, insideTypeAnnotation);
+		} else if (astNode instanceof CompletionOnQualifiedTypeReference) {
+			completionOnQualifiedTypeReference(astNode, astNodeParent, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnMemberAccess) {
+			completionOnMemberAccess(astNode, enclosingNode, qualifiedBinding, scope, insideTypeAnnotation);
+		} else if (astNode instanceof CompletionOnMessageSend) {
+			completionOnMessageSend(astNode, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnExplicitConstructorCall) {
+			completionOnExplicitConstructorCall(astNode, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnQualifiedAllocationExpression) {
+			completionOnQualifiedAllocationExpression(astNode, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnClassLiteralAccess) {
+			completionOnClassLiteralAccess(astNode, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnMethodName) {
+			completionOnMethodName(astNode, scope);
+		} else if (astNode instanceof CompletionOnFieldName) {
+			completionOnFieldName(astNode, scope);
+		} else if (astNode instanceof CompletionOnLocalName) {
+			completionOnLocalOrArgumentName(astNode, scope);
+		} else if (astNode instanceof CompletionOnArgumentName) {
+			completionOnLocalOrArgumentName(astNode, scope);
+		} else if (astNode instanceof CompletionOnKeyword) {
+			completionOnKeyword(astNode);
+		} else if (astNode instanceof CompletionOnParameterizedQualifiedTypeReference) {
+			completionOnParameterizedQualifiedTypeReference(astNode, astNodeParent, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnMarkerAnnotationName) {
+			completionOnMarkerAnnotationName(astNode, qualifiedBinding, scope);
+		} else if (astNode instanceof CompletionOnMemberValueName) {
+			completionOnMemberValueName(astNode, astNodeParent, scope, insideTypeAnnotation);
+		} else if(astNode instanceof CompletionOnBranchStatementLabel) {
+			completionOnBranchStatementLabel(astNode);
+		} else if(astNode instanceof CompletionOnMessageSendName) {
+			completionOnMessageSendName(astNode, qualifiedBinding, scope);
+		// Completion on Javadoc nodes
+		} else if ((astNode.bits & ASTNode.InsideJavadoc) != 0) {
+			if (astNode instanceof CompletionOnJavadocSingleTypeReference) {
+				completionOnJavadocSingleTypeReference(astNode, scope);
+			} else if (astNode instanceof CompletionOnJavadocQualifiedTypeReference) {
+				completionOnJavadocQualifiedTypeReference(astNode, qualifiedBinding, scope);
+			} else if (astNode instanceof CompletionOnJavadocFieldReference) {
+				completionOnJavadocFieldReference(astNode, scope);
+			} else if (astNode instanceof CompletionOnJavadocMessageSend) {
+				completionOnJavadocMessageSend(astNode, qualifiedBinding, scope);
+			} else if (astNode instanceof CompletionOnJavadocAllocationExpression) {
+				completionOnJavadocAllocationExpression(astNode, qualifiedBinding, scope);
+			} else if (astNode instanceof CompletionOnJavadocParamNameReference) {
+				completionOnJavadocParamNameReference(astNode);
+			} else if (astNode instanceof CompletionOnJavadocTypeParamReference) {
+				completionOnJavadocTypeParamReference(astNode);
+			} else if (astNode instanceof CompletionOnJavadocTag) {
+				completionOnJavadocTag(astNode);
+			}
+		}
+		return true;
+	}
+

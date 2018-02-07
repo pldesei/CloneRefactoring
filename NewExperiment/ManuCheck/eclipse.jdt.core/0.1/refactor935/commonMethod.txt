@@ -1,0 +1,29 @@
+(startLine=2249 endLine=2275 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02094/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+	private int generateExceptionsAttribute(ReferenceBinding[] thrownsExceptions) {
+		int localContentsOffset = this.contentsOffset;
+		int length = thrownsExceptions.length;
+		int exSize = 8 + length * 2;
+		if (exSize + this.contentsOffset >= this.contents.length) {
+			resizeContents(exSize);
+		}
+		int exceptionNameIndex =
+			this.constantPool.literalIndex(AttributeNamesConstants.ExceptionsName);
+		this.contents[localContentsOffset++] = (byte) (exceptionNameIndex >> 8);
+		this.contents[localContentsOffset++] = (byte) exceptionNameIndex;
+		// The attribute length = length * 2 + 2 in case of a exception attribute
+		int attributeLength = length * 2 + 2;
+		this.contents[localContentsOffset++] = (byte) (attributeLength >> 24);
+		this.contents[localContentsOffset++] = (byte) (attributeLength >> 16);
+		this.contents[localContentsOffset++] = (byte) (attributeLength >> 8);
+		this.contents[localContentsOffset++] = (byte) attributeLength;
+		this.contents[localContentsOffset++] = (byte) (length >> 8);
+		this.contents[localContentsOffset++] = (byte) length;
+		for (int i = 0; i < length; i++) {
+			int exceptionIndex = this.constantPool.literalIndexForType(thrownsExceptions[i]);
+			this.contents[localContentsOffset++] = (byte) (exceptionIndex >> 8);
+			this.contents[localContentsOffset++] = (byte) exceptionIndex;
+		}
+		this.contentsOffset = localContentsOffset;
+		return 1;
+	}
+

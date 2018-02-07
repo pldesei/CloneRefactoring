@@ -1,0 +1,104 @@
+(startLine=5216 endLine=5317 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01325/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public final void load(TypeBinding typeBinding, int resolvedPosition) {
+	countLabels = 0;
+	// Using dedicated int bytecode
+	switch(typeBinding.id) {
+		case TypeIds.T_int :
+		case TypeIds.T_byte :
+		case TypeIds.T_char :
+		case TypeIds.T_boolean :
+		case TypeIds.T_short :
+			switch (resolvedPosition) {
+				case 0 :
+					this.iload_0();
+					break;
+				case 1 :
+					this.iload_1();
+					break;
+				case 2 :
+					this.iload_2();
+					break;
+				case 3 :
+					this.iload_3();
+					break;
+				//case -1 :
+				// internal failure: trying to load variable not supposed to be generated
+				//	break;
+				default :
+					this.iload(resolvedPosition);
+			}
+			break;
+		case TypeIds.T_float :
+			switch (resolvedPosition) {
+				case 0 :
+					this.fload_0();
+					break;
+				case 1 :
+					this.fload_1();
+					break;
+				case 2 :
+					this.fload_2();
+					break;
+				case 3 :
+					this.fload_3();
+					break;
+				default :
+					this.fload(resolvedPosition);
+			}
+			break;
+		case TypeIds.T_long :
+			switch (resolvedPosition) {
+				case 0 :
+					this.lload_0();
+					break;
+				case 1 :
+					this.lload_1();
+					break;
+				case 2 :
+					this.lload_2();
+					break;
+				case 3 :
+					this.lload_3();
+					break;
+				default :
+					this.lload(resolvedPosition);
+			}
+			break;
+		case TypeIds.T_double :
+			switch (resolvedPosition) {
+				case 0 :
+					this.dload_0();
+					break;
+				case 1 :
+					this.dload_1();
+					break;
+				case 2 :
+					this.dload_2();
+					break;
+				case 3 :
+					this.dload_3();
+					break;
+				default :
+					this.dload(resolvedPosition);
+			}
+			break;
+		default :
+			switch (resolvedPosition) {
+				case 0 :
+					this.aload_0();
+					break;
+				case 1 :
+					this.aload_1();
+					break;
+				case 2 :
+					this.aload_2();
+					break;
+				case 3 :
+					this.aload_3();
+					break;
+				default :
+					this.aload(resolvedPosition);
+			}
+	}
+}
+

@@ -1,0 +1,16 @@
+(startLine=589 endLine=602 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveInterface() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveInterface.java");
+	
+	String str = cu.getSource();
+	String selectAt = "Y";
+	String selection = "Y";
+	int start = str.lastIndexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one interface", elements.length == 1 && 
+		elements[0].getElementName().equals("Y") &&
+		elements[0] instanceof IType);	
+}
+

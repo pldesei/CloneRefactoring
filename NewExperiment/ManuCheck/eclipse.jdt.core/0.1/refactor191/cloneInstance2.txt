@@ -1,0 +1,16 @@
+(startLine=1093 endLine=1106 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00135/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+			if (condConst.booleanValue() == true) {
+				// x | <something equivalent to true>
+				left.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, false);
+				right.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, false);
+				if (valueRequired) {
+					if ((bits & OnlyValueRequiredMASK) != 0) {
+						codeStream.iconst_1();
+					} else {
+						if (trueLabel != null) {
+							codeStream.goto_(trueLabel);
+						}
+					}
+				}
+			} else {
+

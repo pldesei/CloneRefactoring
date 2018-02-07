@@ -1,0 +1,14 @@
+(startLine=1523 endLine=1534 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTVisitorTest.java)
+	public void testExpressionMethodReference() {
+		if (this.ast.apiLevel() < AST.JLS8)
+			return;
+		ExpressionMethodReference x1 = this.ast.newExpressionMethodReference();
+		x1.setExpression(this.E1);
+		x1.setName(this.N1);
+		TestVisitor v1 = new TestVisitor();
+		this.b.setLength(0);
+		x1.accept(v1);
+		String result = this.b.toString();
+		assertTrue(result.equals("[(eEMR"+this.E1S+this.N1S+"eEMR)]")); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+

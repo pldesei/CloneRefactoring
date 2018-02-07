@@ -1,0 +1,15 @@
+(startLine=473 endLine=485 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/impl/StateSnapConstantPool.java)
+				{
+					// constructor
+					IType declaringClass = getType(in.readInt());
+					if (declaringClass.isPrimitive() || declaringClass.isArray()) {
+						throw new IOException("Bad format");
+					}
+					int numParams = in.readByte() & 0xFF;
+					IType[] params = new IType[numParams];
+					for (int i = 0; i < numParams; ++i) {
+						params[i] = getType(in.readInt());
+					}
+					return declaringClass.getConstructorHandle(params);
+				}
+

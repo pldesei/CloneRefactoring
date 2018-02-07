@@ -1,0 +1,16 @@
+(startLine=722 endLine=735 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00380/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaModelManager.java)
+	private void firePreAutoBuildDelta(
+		IJavaElementDelta deltaToNotify,
+		IElementChangedListener[] listeners,
+		int[] listenerMask,
+		int listenerCount) {
+			
+		if (DeltaProcessor.VERBOSE){
+			System.out.println("FIRING PRE_AUTO_BUILD Delta ["+Thread.currentThread()+"]:"); //$NON-NLS-1$//$NON-NLS-2$
+			System.out.println(deltaToNotify == null ? "<NONE>" : deltaToNotify.toString()); //$NON-NLS-1$
+		}
+		if (deltaToNotify != null) {
+			notifyListeners(deltaToNotify, ElementChangedEvent.PRE_AUTO_BUILD, listeners, listenerMask, listenerCount);
+		}
+	}
+

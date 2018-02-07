@@ -1,0 +1,8 @@
+(startLine=1813 endLine=1818 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnKeyword(ASTNode astNode) {
+		if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+			CompletionOnKeyword keyword = (CompletionOnKeyword)astNode;
+			findKeywords(keyword.getToken(), keyword.getPossibleKeywords(), keyword.canCompleteEmptyToken(), false);
+		}
+	}
+

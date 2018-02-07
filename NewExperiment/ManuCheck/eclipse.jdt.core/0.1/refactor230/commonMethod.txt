@@ -1,0 +1,42 @@
+(startLine=1366 endLine=1405 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00272/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	/**
+	 * @see IJavaProject
+	 */
+	public IClasspathEntry[] getRawClasspath() throws JavaModelException {
+
+		JavaModelManager.PerProjectInfo perProjectInfo = getJavaModelManager().getPerProjectInfoCheckExistence(fProject);
+		IClasspathEntry[] classpath = perProjectInfo.classpath;
+		if (classpath != null) return classpath;
+		try {
+			String sharedClasspath = loadClasspath();
+			if (sharedClasspath != null) {
+				classpath = readPaths(sharedClasspath);
+			}
+		} catch(JavaModelException e) {
+			if (JavaModelManager.VERBOSE && this.getProject().isAccessible()){
+				Util.log(e, 
+					"Exception while retrieving "+ this.getPath() //$NON-NLS-1$
+					+"/.classpath, will revert to default classpath"); //$NON-NLS-1$
+			}
+		} catch(IOException e){
+			if (JavaModelManager.VERBOSE && this.getProject().isAccessible()){
+				Util.log(e, 
+					"Exception while retrieving "+ this.getPath() //$NON-NLS-1$
+					+"/.classpath, will revert to default classpath"); //$NON-NLS-1$
+			}
+		}
+		// extract out the output location
+		if (classpath != null && classpath.length > 0) {
+			IClasspathEntry entry = classpath[classpath.length - 1];
+			if (entry.getContentKind() == ClasspathEntry.K_OUTPUT) {
+				IClasspathEntry[] copy = new IClasspathEntry[classpath.length - 1];
+				System.arraycopy(classpath, 0, copy, 0, copy.length);
+				classpath = copy;
+			}
+		}
+		if (classpath != null) {
+			return classpath;
+		}
+		return defaultClasspath();
+	}
+

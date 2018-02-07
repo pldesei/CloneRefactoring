@@ -1,0 +1,17 @@
+(startLine=193 endLine=207 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00003/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/impl/StateSnapConstantPool.java)
+/**
+ * Returns the IPath at the given index.  It must not be null.
+ */
+public IPath getPath(int index) throws IOException {
+	try {
+		IPath result = (IPath)fSet.get(index);
+		if (result == null) {
+			throw new IOException("Error in format");
+		}
+		return result;
+	}
+	catch (ClassCastException e) {
+		throw new IOException("Error in format");
+	}
+}
+

@@ -1,0 +1,22 @@
+(startLine=2282 endLine=2301 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00655/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/PublicScanner.java)
+public void recordComment(int token) {
+
+	// a new comment is recorded
+	try {
+		this.commentStops[++this.commentPtr] = (token==TokenNameCOMMENT_JAVADOC) ? this.currentPosition : -this.currentPosition;
+	} catch (IndexOutOfBoundsException e) {
+		int oldStackLength = this.commentStops.length;
+		int[] oldStack = this.commentStops;
+		this.commentStops = new int[oldStackLength + 30];
+		System.arraycopy(oldStack, 0, this.commentStops, 0, oldStackLength);
+		this.commentStops[this.commentPtr] = (token==TokenNameCOMMENT_JAVADOC) ? this.currentPosition : -this.currentPosition;
+		//grows the positions buffers too
+		int[] old = this.commentStarts;
+		this.commentStarts = new int[oldStackLength + 30];
+		System.arraycopy(old, 0, this.commentStarts, 0, oldStackLength);
+	}
+
+	//the buffer is of a correct size here
+	this.commentStarts[this.commentPtr] = this.startPosition;
+}
+

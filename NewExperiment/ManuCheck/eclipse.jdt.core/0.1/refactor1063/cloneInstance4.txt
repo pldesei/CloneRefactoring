@@ -1,0 +1,13 @@
+(startLine=1553 endLine=1563 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTMatcherTest.java)
+	public void testTypeAnnotations8() {	
+		if (this.ast.apiLevel() < AST.JLS8) {
+			return;
+		}
+		// annotations on wildcard type
+		WildcardType x1 = this.ast.newWildcardType();
+		SimpleType x2 = this.ast.newSimpleType(this.N1);
+		x1.setBound(x2);
+		x1.annotations().add(this.ANO1);
+		basicMatch(x1);
+	}
+

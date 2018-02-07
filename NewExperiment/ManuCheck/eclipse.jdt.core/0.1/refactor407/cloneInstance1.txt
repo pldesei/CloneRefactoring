@@ -1,0 +1,14 @@
+(startLine=2892 endLine=2903 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void invokeJavaLangErrorConstructor() {
+	// invokespecial: java.lang.Error<init>(Ljava.lang.String;)V
+	if (DEBUG) System.out.println(position + "\t\tinvokespecial: java.lang.Error<init>(Ljava.lang.String;)V"); //$NON-NLS-1$
+	countLabels = 0;
+	if (classFileOffset + 2 >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_invokespecial;
+	stackDepth -= 2;
+	writeUnsignedShort(constantPool.literalIndexForJavaLangErrorConstructor());
+}
+

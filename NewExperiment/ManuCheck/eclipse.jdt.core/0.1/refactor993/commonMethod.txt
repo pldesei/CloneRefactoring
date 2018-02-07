@@ -1,0 +1,13 @@
+(startLine=2946 endLine=2956 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02335/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+	private void formatArrayQualifiedTypeReference(ArrayQualifiedTypeReference arrayQualifiedTypeReference) {
+		final int numberOfParens = (arrayQualifiedTypeReference.bits & ASTNode.ParenthesizedMASK) >> ASTNode.ParenthesizedSHIFT;
+		if (numberOfParens > 0) {
+			manageOpeningParenthesizedExpression(arrayQualifiedTypeReference, numberOfParens);
+		}
+		formatQualifiedTypeReference(arrayQualifiedTypeReference);
+		formatLeadingDimensions(arrayQualifiedTypeReference, true);
+		if (numberOfParens > 0) {
+			manageClosingParenthesizedExpression(arrayQualifiedTypeReference, numberOfParens);
+		}
+	}
+

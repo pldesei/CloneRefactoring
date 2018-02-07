@@ -1,0 +1,13 @@
+(startLine=8694 endLine=8704 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void findPackages(CompletionOnPackageReference packageStatement) {
+
+		this.completionToken = CharOperation.concatWith(packageStatement.tokens, '.');
+		if (this.completionToken.length == 0)
+			return;
+
+		setSourceRange(packageStatement.sourceStart, packageStatement.sourceEnd);
+		long completionPosition = packageStatement.sourcePositions[packageStatement.sourcePositions.length - 1];
+		setTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+		this.nameEnvironment.findPackages(CharOperation.toLowerCase(this.completionToken), this);
+	}
+

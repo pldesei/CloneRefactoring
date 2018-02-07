@@ -1,0 +1,35 @@
+(startLine=4689 endLine=4721 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02335/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+		for (int i = 0; i < length; i++) {
+			this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier);
+			TypeReference[] typeArgument = typeArguments[i];
+			if (typeArgument != null) {
+				int typeArgumentLength = typeArgument.length;
+				if (typeArgumentLength > 0) {
+					this.scribe.printNextToken(TerminalTokens.TokenNameLESS, this.preferences.insert_space_before_opening_angle_bracket_in_parameterized_type_reference);
+					if (this.preferences.insert_space_after_opening_angle_bracket_in_parameterized_type_reference) {
+						this.scribe.space();
+					}
+					for (int j = 0; j < typeArgumentLength - 1; j++) {
+						typeArgument[j].traverse(this, scope);
+						this.scribe.printNextToken(TerminalTokens.TokenNameCOMMA, this.preferences.insert_space_before_comma_in_parameterized_type_reference);
+						if (this.preferences.insert_space_after_comma_in_parameterized_type_reference) {
+							this.scribe.space();
+						}
+					}
+					typeArgument[typeArgumentLength - 1].traverse(this, scope);
+					if (isClosingGenericToken()) {
+						this.scribe.printNextToken(CLOSING_GENERICS_EXPECTEDTOKENS, this.preferences.insert_space_before_closing_angle_bracket_in_parameterized_type_reference);
+					}
+				} else {
+					this.scribe.printNextToken(TerminalTokens.TokenNameLESS, this.preferences.insert_space_before_opening_angle_bracket_in_parameterized_type_reference);
+					this.scribe.printNextToken(CLOSING_GENERICS_EXPECTEDTOKENS);
+				}
+			}
+			if (i < length - 1) {
+				this.scribe.printNextToken(TerminalTokens.TokenNameDOT);
+				if (parameterizedQualifiedTypeReference.annotations != null && parameterizedQualifiedTypeReference.annotations.length > i+1) {
+					formatInlineAnnotations(parameterizedQualifiedTypeReference.annotations[i+1], false);
+				}
+			}
+		}
+

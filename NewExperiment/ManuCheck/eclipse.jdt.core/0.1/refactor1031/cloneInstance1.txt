@@ -1,0 +1,37 @@
+(startLine=128 endLine=162 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02421/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/AnnotatableTypeSystem.java)
+	public ParameterizedTypeBinding getParameterizedType(ReferenceBinding genericType, TypeBinding[] typeArguments, ReferenceBinding enclosingType, AnnotationBinding [] annotations) {
+		
+		if (!haveTypeAnnotations(genericType, enclosingType, typeArguments, annotations))
+			return this.unannotatedTypeSystem.getParameterizedType(genericType, typeArguments, enclosingType);
+		
+		if (genericType.hasTypeAnnotations())
+			throw new IllegalStateException();
+		
+		int index = 0;
+		TypeBinding[] cachedInfo = (TypeBinding[]) this.annotatedTypes.get(genericType);
+		if (cachedInfo != null) {
+			for (int max = cachedInfo.length; index < max; index++){
+				TypeBinding cachedType = cachedInfo[index];
+				if (cachedType == null) 
+					break;
+				if (!cachedType.isParameterizedType())
+					continue;
+				if (cachedType.enclosingType() == enclosingType && Util.effectivelyEqual(annotations, cachedType.getTypeAnnotations()) && Util.effectivelyEqual(cachedType.typeArguments(), typeArguments))
+					return (ParameterizedTypeBinding) cachedType;
+			}
+		} else {
+			this.annotatedTypes.put(genericType, cachedInfo = new TypeBinding[4]);
+		}
+		int length = cachedInfo.length;
+		if (index == length) {
+			System.arraycopy(cachedInfo, 0, cachedInfo = new TypeBinding[length * 2], 0, length);
+			this.annotatedTypes.put(genericType, cachedInfo);
+		}
+		// Add the new comer, retaining the same type binding id as the naked type.
+		ParameterizedTypeBinding unannotatedParameterizedType = this.unannotatedTypeSystem.getParameterizedType(genericType, typeArguments, enclosingType);
+		TypeBinding parameterizedType = new ParameterizedTypeBinding(genericType, typeArguments, enclosingType, this.environment);
+		parameterizedType.id = unannotatedParameterizedType.id;
+		parameterizedType.setTypeAnnotations(annotations, this.environment.globalOptions.isAnnotationBasedNullAnalysisEnabled);
+		return (ParameterizedTypeBinding) (cachedInfo[index] = parameterizedType);
+	}
+

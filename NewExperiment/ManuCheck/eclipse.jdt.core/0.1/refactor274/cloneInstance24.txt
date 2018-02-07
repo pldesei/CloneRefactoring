@@ -1,0 +1,16 @@
+(startLine=792 endLine=805 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveMemberTypeDeclaration() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveMemberTypeDeclaration1.java");
+	
+	String str = cu.getSource();
+	String selectAt = "MemberInterface";
+	String selection = "MemberInterface";
+	int start = str.indexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one type", elements.length == 1 && 
+		elements[0].getElementName().equals("MemberInterface") &&
+		elements[0] instanceof IType);	
+}
+

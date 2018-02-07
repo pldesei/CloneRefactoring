@@ -1,0 +1,36 @@
+(startLine=1224 endLine=1257 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00699/org.eclipse.jdt.core/model/org/eclipse/jdt/core/JavaCore.java)
+	public static ClasspathContainerInitializer getClasspathContainerInitializer(String containerID){
+		
+		Plugin jdtCorePlugin = JavaCore.getPlugin();
+		if (jdtCorePlugin == null) return null;
+
+		IExtensionPoint extension = jdtCorePlugin.getDescriptor().getExtensionPoint(JavaModelManager.CPCONTAINER_INITIALIZER_EXTPOINT_ID);
+		if (extension != null) {
+			IExtension[] extensions =  extension.getExtensions();
+			for(int i = 0; i < extensions.length; i++){
+				IConfigurationElement [] configElements = extensions[i].getConfigurationElements();
+				for(int j = 0; j < configElements.length; j++){
+					String initializerID = configElements[j].getAttribute("id"); //$NON-NLS-1$
+					if (initializerID != null && initializerID.equals(containerID)){
+						if (JavaModelManager.CP_RESOLVE_VERBOSE) {
+							System.out.println("CPContainer INIT - found initializer: "+containerID +" --> " + configElements[j].getAttribute("class"));//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+						}						
+						try {
+							Object execExt = configElements[j].createExecutableExtension("class"); //$NON-NLS-1$
+							if (execExt instanceof ClasspathContainerInitializer){
+								return (ClasspathContainerInitializer)execExt;
+							}
+						} catch(CoreException e) {
+							// executable extension could not be created: ignore this initializer
+							if (JavaModelManager.CP_RESOLVE_VERBOSE) {
+								System.out.println("CPContainer INIT - failed to instanciate initializer: "+containerID +" --> " + configElements[j].getAttribute("class"));//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+								e.printStackTrace();
+							}						
+						}
+					}
+				}
+			}	
+		}
+		return null;
+	}
+

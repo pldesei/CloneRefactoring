@@ -1,0 +1,14 @@
+(startLine=463 endLine=474 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00661/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTParser.java)
+	/**
+     * Sets the source code to be parsed.
+     *
+	 * @param source the Java model class file whose corresponding source code
+     * is to be parsed, or <code>null</code> if none
+     */
+	public void setSource(IClassFile source) {
+		this.classFileSource = source;
+		// clear the others
+		this.rawSource = null;
+		this.compilationUnitSource = null;
+	}
+

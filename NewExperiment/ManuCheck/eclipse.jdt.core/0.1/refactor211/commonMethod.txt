@@ -1,0 +1,43 @@
+(startLine=1188 endLine=1228 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00136/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/OperatorExpression.java)
+	public static final int[] get_MINUS(){
+	
+		//the code is an int
+		// (cast)  left   Op (cast)  rigth --> result
+		//  0000   0000       0000   0000      0000
+		//  <<16   <<12       <<8    <<4       
+		
+		int[] table  = new int[16*16] ;
+	
+		table = (int[]) get_PLUS().clone();
+
+		// customization	
+		table[(T_String<<4)+T_byte] 		= T_undefined ;
+		table[(T_String<<4)+T_long] 		= T_undefined ;
+		table[(T_String<<4)+T_short] 		= T_undefined ;
+		table[(T_String<<4)+T_void] 		= T_undefined ;
+		table[(T_String<<4)+T_String] 		= T_undefined ;
+		table[(T_String<<4)+T_Object] 		= T_undefined ;
+		table[(T_String<<4)+T_double] 		= T_undefined ;
+		table[(T_String<<4)+T_float] 		= T_undefined ;
+		table[(T_String<<4)+T_boolean] 		= T_undefined ;
+		table[(T_String<<4)+T_char] 		= T_undefined ;
+		table[(T_String<<4)+T_int] 			= T_undefined ;
+		table[(T_String<<4)+T_null] 		= T_undefined ;
+		
+		table[(T_byte<<4)	+T_String] 		= T_undefined ;
+		table[(T_long<<4)	+T_String] 		= T_undefined ;
+		table[(T_short<<4)	+T_String] 		= T_undefined ;
+		table[(T_void<<4)	+T_String] 		= T_undefined ;
+		table[(T_Object<<4)	+T_String] 		= T_undefined ;
+		table[(T_double<<4)	+T_String] 		= T_undefined ;
+		table[(T_float<<4)	+T_String] 		= T_undefined ;
+		table[(T_boolean<<4)+T_String] 		= T_undefined ;
+		table[(T_char<<4)	+T_String] 		= T_undefined ;
+		table[(T_int<<4)	+T_String] 		= T_undefined ;
+		table[(T_null<<4)	+T_String] 		= T_undefined ;
+		
+		table[(T_null<<4)	+T_null] 		= T_undefined ;
+	
+		return table ;
+	}
+

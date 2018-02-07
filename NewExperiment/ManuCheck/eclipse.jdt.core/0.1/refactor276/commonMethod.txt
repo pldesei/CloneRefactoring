@@ -1,0 +1,21 @@
+(startLine=83 endLine=101 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00507/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+protected void assertElementsEqual(String message, String expected, IJavaElement[] elements) {
+	StringBuffer buffer = new StringBuffer();
+	if (elements != null) {
+		for (int i = 0, length = elements.length; i < length; i++){
+			buffer.append(((JavaElement)elements[i]).toStringWithAncestors());
+			if (i != length-1) buffer.append("\n");
+		}
+	} else {
+		buffer.append("<null>");
+	}
+	if (!expected.equals(buffer.toString())) {
+		System.out.println(org.eclipse.jdt.core.tests.util.Util.displayString(buffer.toString(), 2));
+	}
+	assertEquals(
+		message,
+		expected,
+		buffer.toString()
+	);
+}
+

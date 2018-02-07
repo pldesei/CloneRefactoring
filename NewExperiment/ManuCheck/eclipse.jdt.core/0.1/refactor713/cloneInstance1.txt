@@ -1,0 +1,19 @@
+(startLine=2570 endLine=2586 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01828/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaElementDeltaTests.java)
+public void testRemoveZIPArchive3() throws CoreException {
+	try {
+		createExternalFile("externalLib.abc", "");
+		createJavaProject("P", new String[0], new String[] {getExternalResourcePath("externalLib.abc")}, "");
+		startDeltas();
+		deleteAndRefreshExternalZIPArchive("externalLib.abc", "P");
+		assertDeltas(
+			"Unexpected delta", 
+			"P[*]: {CHILDREN}\n" + 
+			"	"+ getExternalPath() + "externalLib.abc[-]: {}"
+		);
+	} finally {
+		stopDeltas();
+		deleteAndRefreshExternalZIPArchive("externalLib.abc", "P");
+		deleteProject("P");
+	}
+}
+

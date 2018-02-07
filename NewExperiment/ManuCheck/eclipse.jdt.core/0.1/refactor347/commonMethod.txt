@@ -1,0 +1,22 @@
+(startLine=817 endLine=836 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedNameReference.java)
+	protected void setCodegenBinding(FieldBinding fieldBinding, int index, FieldBinding someCodegenBinding, TypeBinding someGenericCast) {
+
+		if (fieldBinding == binding){
+			this.codegenBinding = someCodegenBinding;
+			if (someGenericCast != null) this.genericCast = someGenericCast;
+		} else {
+		    int length = this.otherBindings.length;
+		    int position = index < 0 ? length-1: index-1; // write is always the last
+			if (this.otherCodegenBindings == this.otherBindings){
+				System.arraycopy(this.otherBindings, 0, this.otherCodegenBindings = new FieldBinding[length], 0, length);
+			}
+			this.otherCodegenBindings[position] = someCodegenBinding;
+			if (someGenericCast != null) {
+			    if (this.otherGenericCasts == null) {
+			        this.otherGenericCasts = new TypeBinding[length];
+			    }
+			    this.otherGenericCasts[position] = someGenericCast;
+			}
+		}	    
+	}
+

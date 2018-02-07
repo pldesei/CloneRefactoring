@@ -1,0 +1,72 @@
+(startLine=757 endLine=826 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00755/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+public final boolean getNextCharAsDigit(int radix) {
+	//BOOLEAN
+	//handle the case of unicode.
+	//when a unicode appears then we must use a buffer that holds char internal values
+	//At the end of this method currentCharacter holds the new visited char
+	//and currentPosition points right next after it
+	//Both previous lines are true if the currentCharacter is a digit base on radix
+	//On false, no side effect has occured.
+
+	//ALL getNextChar.... ARE OPTIMIZED COPIES 
+	if (this.currentPosition >= this.source.length) // handle the obvious case upfront
+		return false;
+
+	int temp = this.currentPosition;
+	try {
+		if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+			&& (this.source[this.currentPosition] == 'u')) {
+			//-------------unicode traitement ------------
+			int c1, c2, c3, c4;
+			int unicodeSize = 6;
+			this.currentPosition++;
+			while (this.source[this.currentPosition] == 'u') {
+				this.currentPosition++;
+				unicodeSize++;
+			}
+
+			if (((c1 = Character.getNumericValue(this.source[this.currentPosition++])) > 15
+				|| c1 < 0)
+				|| ((c2 = Character.getNumericValue(this.source[this.currentPosition++])) > 15 || c2 < 0)
+				|| ((c3 = Character.getNumericValue(this.source[this.currentPosition++])) > 15 || c3 < 0)
+				|| ((c4 = Character.getNumericValue(this.source[this.currentPosition++])) > 15 || c4 < 0)) {
+				this.currentPosition = temp;
+				return false;
+			}
+
+			this.currentCharacter = (char) (((c1 * 16 + c2) * 16 + c3) * 16 + c4);
+			if (Character.digit(this.currentCharacter, radix) == -1) {
+				this.currentPosition = temp;
+				return false;
+			}
+
+			//need the unicode buffer
+			if (this.withoutUnicodePtr == 0) {
+				//buffer all the entries that have been left aside....
+				this.withoutUnicodePtr = this.currentPosition - unicodeSize - this.startPosition;
+				System.arraycopy(
+					this.source, 
+					this.startPosition, 
+					this.withoutUnicodeBuffer, 
+					1, 
+					this.withoutUnicodePtr); 
+			}
+			//fill the buffer with the char
+			this.withoutUnicodeBuffer[++this.withoutUnicodePtr] = this.currentCharacter;
+			return true;
+		} //-------------end unicode traitement--------------
+		else {
+			if (Character.digit(this.currentCharacter, radix) == -1) {
+				this.currentPosition = temp;
+				return false;
+			}
+			if (this.withoutUnicodePtr != 0)
+				this.withoutUnicodeBuffer[++this.withoutUnicodePtr] = this.currentCharacter;
+			return true;
+		}
+	} catch (IndexOutOfBoundsException e) {
+		this.currentPosition = temp;
+		return false;
+	}
+}
+

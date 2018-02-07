@@ -1,0 +1,32 @@
+(startLine=60 endLine=89 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00219/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/SourceType.java)
+public void codeComplete(char[] snippet,int insertion,int position,char[][] localVariableTypeNames,char[][] localVariableNames,int[] localVariableModifiers,boolean isStatic,ICompletionRequestor requestor) throws JavaModelException {
+	if (requestor == null) {
+		throw new IllegalArgumentException(Util.bind("codeAssist.nullRequestor")); //$NON-NLS-1$
+	}
+	
+	SearchableEnvironment environment = (SearchableEnvironment) ((JavaProject) getJavaProject()).getSearchableNameEnvironment();
+	NameLookup nameLookup = ((JavaProject) getJavaProject()).getNameLookup();
+	CompletionEngine engine = new CompletionEngine(environment, new CompletionRequestorWrapper(requestor,nameLookup), JavaCore.getOptions());
+	
+	String source = getCompilationUnit().getSource();
+	if (source != null && insertion > -1 && insertion < source.length()) {
+		String encoding = (String) JavaCore.getOptions().get(CompilerOptions.OPTION_Encoding);
+		if ("".equals(encoding)) encoding = null; //$NON-NLS-1$
+		
+		char[] prefix = CharOperation.concat(source.substring(0, insertion).toCharArray(), new char[]{'{'});
+		char[] suffix = CharOperation.concat(new char[]{'}'}, source.substring(insertion).toCharArray());
+		char[] fakeSource = CharOperation.concat(prefix, snippet, suffix);
+		
+		BasicCompilationUnit cu = 
+			new BasicCompilationUnit(
+				fakeSource, 
+				null,
+				getElementName(),
+				encoding); 
+
+		engine.complete(cu, prefix.length + position, prefix.length);
+	} else {
+		engine.complete(this, snippet, position, localVariableTypeNames, localVariableNames, localVariableModifiers, isStatic);
+	}
+}
+

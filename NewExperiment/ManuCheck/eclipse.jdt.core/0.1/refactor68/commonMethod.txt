@@ -1,0 +1,12 @@
+(startLine=1222 endLine=1231 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void frem() {
+	countLabels = 0;
+	stackDepth--;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_frem;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_frem);
+	}
+}
+

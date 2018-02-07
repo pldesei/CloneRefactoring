@@ -1,0 +1,34 @@
+(startLine=2144 endLine=2175 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 84100: [1.5][search] Search for varargs method not finding match
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=84100"
+ */
+private void setUpBug84100() throws CoreException {
+	resultCollector.showRule = true;
+	workingCopies = new ICompilationUnit[2];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b84100/X.java",
+		"package b84100;\n" + 
+		"public class X {\n" + 
+		"	void foo() {}\n" + 
+		"	void foo(String s) {}\n" + 
+		"	void foo(String... xs) {}\n" + 
+		"	void foo(int x, String... xs) {}\n" + 
+		"	void foo(String s, int x, String... xs) {}\n" + 
+		"}\n"
+		);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b84100/Z.java",
+		"package b84100;\n" + 
+		"public class Z {\n" + 
+		"	X x;\n" + 
+		"	void foo() {\n" + 
+		"		x.foo();\n" + 
+		"		x.foo(\"\");\n" + 
+		"		x.foo(\"\", \"\");\n" + 
+		"	 	x.foo(\"\", \"\", null);\n" + 
+		"		x.foo(3, \"\", \"\");\n" + 
+		"		x.foo(\"\", 3, \"\", \"\");\n" + 
+		"	}\n" + 
+		"}\n"
+	);
+}
+

@@ -1,0 +1,69 @@
+(startLine=2492 endLine=2558 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnSingleNameReference(ASTNode astNode, ASTNode astNodeParent, Scope scope,
+			boolean insideTypeAnnotation) {
+		CompletionOnSingleNameReference singleNameReference = (CompletionOnSingleNameReference) astNode;
+		this.completionToken = singleNameReference.token;
+		SwitchStatement switchStatement = astNodeParent instanceof SwitchStatement ? (SwitchStatement) astNodeParent : null;
+		if (switchStatement != null
+				&& switchStatement.expression.resolvedType != null
+				&& switchStatement.expression.resolvedType.isEnum()) {
+			if (!this.requestor.isIgnored(CompletionProposal.FIELD_REF)) {
+				this.assistNodeIsEnum = true;
+				findEnumConstantsFromSwithStatement(this.completionToken, (SwitchStatement) astNodeParent);
+			}
+		} else if (this.expectedTypesPtr > -1 && this.expectedTypes[0].isAnnotationType()) {
+			findTypesAndPackages(this.completionToken, scope, false, false, new ObjectVector());
+		} else {
+			if (this.expectedTypesPtr > -1) {
+				this.assistNodeIsEnum = true;
+				done : for (int i = 0; i <= this.expectedTypesPtr; i++) {
+					if (!this.expectedTypes[i].isEnum()) {
+						this.assistNodeIsEnum = false;
+						break done;
+					}
+				}
+
+			}
+			if (scope instanceof BlockScope && !this.requestor.isIgnored(CompletionProposal.LOCAL_VARIABLE_REF)) {
+				char[][] alreadyDefinedName = computeAlreadyDefinedName((BlockScope)scope, singleNameReference);
+
+				findUnresolvedReference(
+						singleNameReference.sourceStart,
+						singleNameReference.sourceEnd,
+						(BlockScope)scope,
+						alreadyDefinedName);
+			}
+			
+			checkCancel();
+			
+			findVariablesAndMethods(
+				this.completionToken,
+				scope,
+				singleNameReference,
+				scope,
+				insideTypeAnnotation,
+				singleNameReference.isInsideAnnotationAttribute);
+			
+			checkCancel();
+			
+			// can be the start of a qualified type name
+			findTypesAndPackages(this.completionToken, scope, true, false, new ObjectVector());
+			if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+				if (this.completionToken != null && this.completionToken.length != 0) {
+					findKeywords(this.completionToken, singleNameReference.possibleKeywords, false, false);
+				} else {
+					findTrueOrFalseKeywords(singleNameReference.possibleKeywords);
+				}
+			}
+			if (singleNameReference.canBeExplicitConstructor && !this.requestor.isIgnored(CompletionProposal.METHOD_REF)){
+				if (CharOperation.prefixEquals(this.completionToken, Keywords.THIS, false)) {
+					ReferenceBinding ref = scope.enclosingSourceType();
+					findExplicitConstructors(Keywords.THIS, ref, (MethodScope)scope, singleNameReference);
+				} else if (CharOperation.prefixEquals(this.completionToken, Keywords.SUPER, false)) {
+					ReferenceBinding ref = scope.enclosingSourceType();
+					findExplicitConstructors(Keywords.SUPER, ref.superclass(), (MethodScope)scope, singleNameReference);
+				}
+			}
+		}
+	}
+

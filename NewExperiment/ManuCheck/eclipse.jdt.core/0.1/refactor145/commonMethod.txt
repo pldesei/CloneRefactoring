@@ -1,0 +1,27 @@
+(startLine=606 endLine=630 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00093/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/classfmt/ClassFileReader.java)
+private boolean hasNonSyntheticFieldChanges(FieldInfo[] currentFieldInfos, FieldInfo[] otherFieldInfos) {
+	int length1 = currentFieldInfos == null ? 0 : currentFieldInfos.length;
+	int length2 = otherFieldInfos == null ? 0 : otherFieldInfos.length;
+	int index1 = 0;
+	int index2 = 0;
+
+	end : while (index1 < length1 && index2 < length2) {
+		while (currentFieldInfos[index1].isSynthetic()) {
+			if (++index1 >= length1) break end;
+		}
+		while (otherFieldInfos[index2].isSynthetic()) {
+			if (++index2 >= length2) break end;
+		}
+		if (hasStructuralFieldChanges(currentFieldInfos[index1++], otherFieldInfos[index2++]))
+			return true;
+	}
+
+	while (index1 < length1) {
+		if (!currentFieldInfos[index1++].isSynthetic()) return true;
+	}
+	while (index2 < length2) {
+		if (!otherFieldInfos[index2++].isSynthetic()) return true;
+	}
+	return false;
+}
+

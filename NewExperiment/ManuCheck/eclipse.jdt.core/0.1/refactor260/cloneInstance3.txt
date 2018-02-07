@@ -1,0 +1,14 @@
+(startLine=1564 endLine=1575 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _iinc(int pc, int index, int _const) {
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.IINC])
+			.append(Util.bind("disassembler.space")) //$NON-NLS-1$
+			.append(index)
+			.append(Util.bind("disassembler.space")) //$NON-NLS-1$
+			.append(_const);
+		writeNewLine();
+	}
+

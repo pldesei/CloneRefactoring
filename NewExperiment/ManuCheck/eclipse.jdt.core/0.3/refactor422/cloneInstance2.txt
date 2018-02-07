@@ -1,0 +1,19 @@
+(startLine=141 endLine=157 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00951/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testMethod2() throws JavaModelException {
+		ASTNode node = buildAST(
+			"public class X<K, V> {\n" +
+			"  /*start*/void foo() {\n" +
+			"  }/*end*/\n" +
+			"}"
+		);
+		IBinding binding = ((MethodDeclaration) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"foo() [in X [in [Working copy] X.java [in <default> [in <project root> [in P]]]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

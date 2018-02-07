@@ -1,0 +1,13 @@
+(startLine=485 endLine=495 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01527/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTParser.java)
+	void setTypeRoot(ITypeRoot source) {
+		this.typeRoot = source;
+		// clear the raw source
+		this.rawSource = null;
+		if (source != null) {
+			this.project = source.getJavaProject();
+			Map options = this.project.getOptions(true);
+			options.remove(JavaCore.COMPILER_TASK_TAGS); // no need to parse task tags
+			this.compilerOptions = options;
+		}
+	}
+

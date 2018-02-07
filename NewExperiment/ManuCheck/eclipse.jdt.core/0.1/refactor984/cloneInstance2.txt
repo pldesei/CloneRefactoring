@@ -1,0 +1,27 @@
+(startLine=1175 endLine=1199 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02311/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/rewrite/describing/ASTRewritingMethodDeclTest.java)
+		{ // delete first 2, replace last and insert after & replace first exception and insert before
+			MethodDeclaration methodDecl= findMethodDeclaration(type, "gee");
+			List parameters= methodDecl.parameters();
+			assertTrue("must be 3 parameters", parameters.size() == 3);
+
+			rewrite.remove((ASTNode) parameters.get(0), null);
+			rewrite.remove((ASTNode) parameters.get(1), null);
+
+			SingleVariableDeclaration newParam1= createNewParam(ast, "m1");
+			rewrite.replace((ASTNode) parameters.get(2), newParam1, null);
+
+			SingleVariableDeclaration newParam2= createNewParam(ast, "m2");
+			rewrite.getListRewrite(methodDecl, MethodDeclaration.PARAMETERS_PROPERTY).insertLast(newParam2, null);
+
+
+			List thrownExceptions= methodDecl.thrownExceptions();
+			assertTrue("must be 1 thrown exceptions", thrownExceptions.size() == 1);
+
+			Name modifiedThrownException= ast.newSimpleName("InterruptedException");
+			rewrite.replace((ASTNode) thrownExceptions.get(0), modifiedThrownException, null);
+
+			Name newThrownException2= ast.newSimpleName("ArrayStoreException");
+			rewrite.getListRewrite(methodDecl, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY).insertLast(newThrownException2, null);
+
+		}
+

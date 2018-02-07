@@ -1,0 +1,14 @@
+(startLine=2495 endLine=2506 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00749/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+	/**
+	 * Resize the pool contents
+	 */
+	private final void resizePoolContents(int minimalSize) {
+		final int contentsLength = this.contents.length;
+		System.arraycopy(
+			this.contents,
+			0,
+			(this.contents = new byte[contentsLength + Math.max(INCREMENT_SIZE, minimalSize)]),
+			0,
+			contentsLength);
+	}
+

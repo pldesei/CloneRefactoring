@@ -1,0 +1,10 @@
+(startLine=4101 endLine=4108 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/complete/CompletionParser.java)
+public CompilationUnitDeclaration dietParse(ICompilationUnit sourceUnit, CompilationResult compilationResult, int cursorLoc) {
+
+	this.cursorLocation = cursorLoc;
+	CompletionScanner completionScanner = (CompletionScanner)this.scanner;
+	completionScanner.completionIdentifier = null;
+	completionScanner.cursorLocation = cursorLoc;
+	return this.dietParse(sourceUnit, compilationResult);
+}
+

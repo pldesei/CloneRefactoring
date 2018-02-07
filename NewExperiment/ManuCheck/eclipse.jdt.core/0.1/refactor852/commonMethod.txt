@@ -1,0 +1,14 @@
+(startLine=1785 endLine=1796 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocSingleTypeReference(ASTNode astNode, Scope scope) {
+		CompletionOnJavadocSingleTypeReference typeRef = (CompletionOnJavadocSingleTypeReference) astNode;
+		this.completionToken = typeRef.token;
+		this.javadocTagPosition = typeRef.tagSourceStart;
+		setSourceAndTokenRange(typeRef.sourceStart, typeRef.sourceEnd);
+		findTypesAndPackages(
+				this.completionToken,
+				scope,
+				(this.assistNodeInJavadoc & CompletionOnJavadoc.BASE_TYPES) != 0,
+				false,
+				new ObjectVector());
+	}
+

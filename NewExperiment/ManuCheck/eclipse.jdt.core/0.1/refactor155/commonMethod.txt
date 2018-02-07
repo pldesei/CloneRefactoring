@@ -1,0 +1,104 @@
+(startLine=1496 endLine=1597 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00136/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+/**
+ * @param implicitConversionCode int
+ */
+public void generateImplicitConversion(int implicitConversionCode) {
+	switch (implicitConversionCode) {
+		case Float2Char :
+			this.f2i();
+			this.i2c();
+			break;
+		case Double2Char :
+			this.d2i();
+			this.i2c();
+			break;
+		case Int2Char :
+		case Short2Char :
+		case Byte2Char :
+			this.i2c();
+			break;
+		case Long2Char :
+			this.l2i();
+			this.i2c();
+			break;
+		case Char2Float :
+		case Short2Float :
+		case Int2Float :
+		case Byte2Float :
+			this.i2f();
+			break;
+		case Double2Float :
+			this.d2f();
+			break;
+		case Long2Float :
+			this.l2f();
+			break;
+		case Float2Byte :
+			this.f2i();
+			this.i2b();
+			break;
+		case Double2Byte :
+			this.d2i();
+			this.i2b();
+			break;
+		case Int2Byte :
+		case Short2Byte :
+		case Char2Byte :
+			this.i2b();
+			break;
+		case Long2Byte :
+			this.l2i();
+			this.i2b();
+			break;
+		case Byte2Double :
+		case Char2Double :
+		case Short2Double :
+		case Int2Double :
+			this.i2d();
+			break;
+		case Float2Double :
+			this.f2d();
+			break;
+		case Long2Double :
+			this.l2d();
+			break;
+		case Byte2Short :
+		case Char2Short :
+		case Int2Short :
+			this.i2s();
+			break;
+		case Double2Short :
+			this.d2i();
+			this.i2s();
+			break;
+		case Long2Short :
+			this.l2i();
+			this.i2s();
+			break;
+		case Float2Short :
+			this.f2i();
+			this.i2s();
+			break;
+		case Double2Int :
+			this.d2i();
+			break;
+		case Float2Int :
+			this.f2i();
+			break;
+		case Long2Int :
+			this.l2i();
+			break;
+		case Int2Long :
+		case Char2Long :
+		case Byte2Long :
+		case Short2Long :
+			this.i2l();
+			break;
+		case Double2Long :
+			this.d2l();
+			break;
+		case Float2Long :
+			this.f2l();
+	}
+}
+

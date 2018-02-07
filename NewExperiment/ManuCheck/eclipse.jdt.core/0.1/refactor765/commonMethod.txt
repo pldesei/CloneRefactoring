@@ -1,0 +1,82 @@
+(startLine=8296 endLine=8375 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void findMethodDeclarations(
+		char[] selector,
+		ReferenceBinding receiverType,
+		Scope scope,
+		ObjectVector methodsFound,
+		Binding[] missingElements,
+		int[] missingElementsStarts,
+		int[] missingElementsEnds,
+		boolean missingElementsHaveProblems) {
+
+		if (selector == null) {
+			return;
+		}
+
+		MethodBinding[] receiverTypeMethods = receiverType.availableMethods();
+		if (receiverTypeMethods != null){
+			for (int i = 0; i < receiverTypeMethods.length; i++) {
+				if(!receiverTypeMethods[i].isDefaultAbstract()) {
+					methodsFound.add(receiverTypeMethods[i]);
+				}
+			}
+		}
+
+		ReferenceBinding currentType = receiverType;
+		
+		findInterfacesMethodDeclarations(
+			selector,
+			receiverType,
+			currentType.superInterfaces(),
+			scope,
+			methodsFound,
+			missingElements,
+			missingElementsStarts,
+			missingElementsEnds,
+			missingElementsHaveProblems);
+		
+		if (receiverType.isInterface()) {
+			currentType = scope.getJavaLangObject();
+		} else {
+			currentType = receiverType.superclass();
+		}
+		
+		boolean hasPotentialDefaultAbstractMethods = true;
+		while (currentType != null) {
+
+			MethodBinding[] methods = currentType.availableMethods();
+			if (methods != null) {
+				findLocalMethodDeclarations(
+					selector,
+					methods,
+					scope,
+					methodsFound,
+					false,
+					receiverType);
+			}
+
+			if (hasPotentialDefaultAbstractMethods &&
+					(currentType.isAbstract() ||
+							currentType.isTypeVariable() ||
+							currentType.isIntersectionType() ||
+							currentType.isEnum())){
+
+				ReferenceBinding[] superInterfaces = currentType.superInterfaces();
+
+				findInterfacesMethodDeclarations(
+					selector,
+					receiverType,
+					superInterfaces,
+					scope,
+					methodsFound,
+					missingElements,
+					missingElementsStarts,
+					missingElementsEnds,
+					missingElementsHaveProblems);
+			} else {
+				hasPotentialDefaultAbstractMethods = false;
+			}
+			currentType = currentType.superclass();
+		}
+	}
+

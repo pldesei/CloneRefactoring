@@ -1,0 +1,12 @@
+(startLine=399 endLine=408 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01380/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+	public int getSeverity(long irritant) {
+		if((this.errorThreshold & irritant) != 0) {
+			return this.treatOptionalErrorAsFatal
+				? ProblemSeverities.Error | ProblemSeverities.Optional | ProblemSeverities.Fatal
+				: ProblemSeverities.Error | ProblemSeverities.Optional;
+		}
+		if((this.warningThreshold & irritant) != 0)
+			return ProblemSeverities.Warning | ProblemSeverities.Optional;
+		return ProblemSeverities.Ignore;
+	}
+

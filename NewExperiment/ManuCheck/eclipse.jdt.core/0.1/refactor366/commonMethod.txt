@@ -1,0 +1,21 @@
+(startLine=5364 endLine=5382 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00772/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void updateLastRecordedEndPC(int pos) {
+
+	/* Tune positions in the table, this is due to some 
+	 * extra bytecodes being
+	 * added to some user code (jumps). */
+	/** OLD CODE
+		if (!generateLineNumberAttributes)
+			return;
+		pcToSourceMap[pcToSourceMapSize - 1][1] = position;
+		// need to update the initialization endPC in case of generation of local variable attributes.
+		updateLocalVariablesAttribute(pos);	
+	*/	
+
+	if (!generateLineNumberAttributes)
+		return;
+	this.lastEntryPC = pos;
+	// need to update the initialization endPC in case of generation of local variable attributes.
+	updateLocalVariablesAttribute(pos);
+}
+

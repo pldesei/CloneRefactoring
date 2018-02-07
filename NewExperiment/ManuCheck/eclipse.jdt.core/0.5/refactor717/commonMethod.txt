@@ -1,0 +1,19 @@
+(startLine=629 endLine=645 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01852/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AbstractRegressionTest.java)
+	protected void checkCompilerLog(String[] testFiles, Requestor requestor, 
+			String platformIndependantExpectedLog, Throwable exception) {
+		String computedProblemLog = Util.convertToIndependantLineDelimiter(requestor.problemLog.toString());
+		if (!platformIndependantExpectedLog.equals(computedProblemLog)) {
+			System.out.println(getClass().getName() + '#' + getName());
+			System.out.println(Util.displayString(computedProblemLog, INDENT, SHIFT));
+			for (int i = 0; i < testFiles.length; i += 2) {
+				System.out.print(testFiles[i]);
+				System.out.println(" ["); //$NON-NLS-1$
+				System.out.println(testFiles[i + 1]);
+				System.out.println("]"); //$NON-NLS-1$
+			}
+		}
+		if (exception == null) {
+			assertEquals("Invalid problem log ", platformIndependantExpectedLog, computedProblemLog);
+		}
+    }
+

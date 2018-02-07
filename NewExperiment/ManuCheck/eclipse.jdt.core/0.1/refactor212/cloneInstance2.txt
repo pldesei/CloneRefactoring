@@ -1,0 +1,16 @@
+(startLine=125 endLine=138 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00141/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/DefaultBindingResolver.java)
+		} else {
+			// this is the qualifier
+			org.eclipse.jdt.internal.compiler.ast.Expression receiver = messageSend.receiver;
+			if (receiver instanceof QualifiedNameReference) {
+				QualifiedNameReference qualifiedNameReference = (QualifiedNameReference) receiver;
+		
+				if (qualifiedNameReference.isTypeReference()) {
+					return this.getTypeBinding((ReferenceBinding)qualifiedNameReference.binding);
+				} else {
+					// this is a variable or a field
+					return this.getVariableBinding((org.eclipse.jdt.internal.compiler.lookup.VariableBinding) qualifiedNameReference.binding);				
+				}
+			}
+		}
+

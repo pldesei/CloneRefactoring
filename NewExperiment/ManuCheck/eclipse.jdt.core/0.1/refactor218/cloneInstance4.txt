@@ -1,0 +1,12 @@
+(startLine=142 endLine=151 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00209/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/JavaBuilder.java)
+	} catch (MissingSourceFileException e) {
+		if (DEBUG){
+			System.out.println("Builder handling MissingSourceFileException"); //$NON-NLS-1$
+			 e.printStackTrace();
+		}
+		removeProblemsFor(currentProject); // make this the only problem for this project
+		IMarker marker = currentProject.createMarker(ProblemMarkerTag);
+		marker.setAttribute(IMarker.MESSAGE, Util.bind("build.missingSourceFile", e.missingSourceFile)); //$NON-NLS-1$
+		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+	} finally {
+

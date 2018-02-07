@@ -1,0 +1,13 @@
+(startLine=371 endLine=381 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00955/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+		/**
+		 * 
+		 */
+		public void logNoClassFileCreated(String fileName) {
+			if (isXml) {
+				this.parameters.clear();
+				this.parameters.put(MESSAGE, Main.bind("output.noClassFileCreated", fileName)); //$NON-NLS-1$
+				this.printTag(ERROR_TAG, this.parameters, true, true);
+			}
+			this.printlnErr(Main.bind("output.noClassFileCreated", fileName)); //$NON-NLS-1$
+		}
+

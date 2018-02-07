@@ -1,0 +1,17 @@
+(startLine=774 endLine=788 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00657/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MatchLocator.java)
+		if (searchPattern.focus != null) {
+			IResource resource = searchPattern.focus.getResource();
+			SearchDocument document = participant.getDocument(resource.getFullPath().toString());
+			this.currentPossibleMatch = new PossibleMatch(this, resource, null, document);
+			try {
+				this.report(-1, -2, searchPattern.focus, IJavaSearchResultCollector.EXACT_MATCH);
+			} catch (CoreException e) {
+				if (e instanceof JavaModelException) {
+					throw (JavaModelException) e;
+				} else {
+					throw new JavaModelException(e);
+				}
+			}					
+			return;
+		}
+

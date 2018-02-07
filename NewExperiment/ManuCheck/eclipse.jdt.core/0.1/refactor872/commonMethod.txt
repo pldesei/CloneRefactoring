@@ -1,0 +1,23 @@
+(startLine=1596 endLine=1616 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocAllocationExpression(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		// setSourceRange(astNode.sourceStart, astNode.sourceEnd, false);
+		
+		CompletionOnJavadocAllocationExpression allocExpression = (CompletionOnJavadocAllocationExpression) astNode;
+		this.javadocTagPosition = allocExpression.tagSourceStart;
+		int rangeStart = astNode.sourceStart;
+		if (allocExpression.type.isThis()) {
+			if (allocExpression.completeInText()) {
+				rangeStart = allocExpression.separatorPosition;
+			}
+		} else if (allocExpression.completeInText()) {
+			rangeStart = allocExpression.type.sourceStart;
+		}
+		setSourceAndTokenRange(rangeStart, astNode.sourceEnd, false);
+		TypeBinding[] argTypes = computeTypes(allocExpression.arguments);
+
+		ReferenceBinding ref = (ReferenceBinding) qualifiedBinding;
+		if (!this.requestor.isIgnored(CompletionProposal.METHOD_REF) && ref.isClass()) {
+			findConstructors(ref, argTypes, scope, allocExpression, false);
+		}
+	}
+

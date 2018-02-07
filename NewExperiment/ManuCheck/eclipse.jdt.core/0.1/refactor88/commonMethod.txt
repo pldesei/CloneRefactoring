@@ -1,0 +1,21 @@
+(startLine=358 endLine=376 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00003/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/impl/StateSnapV5.java)
+/** 
+ * Read the next source entry.
+ */
+protected SourceEntry readSourceEntry(StateSnapConstantPool pool, DataInputStream in) throws IOException {
+	IPath path = pool.getPath(in.readInt());
+	String zipEntryName = pool.getStringOrNull(in.readInt());
+	String zipEntryPath = null, zipEntryFileName = null;
+	if (zipEntryName != null) {
+		int pos = zipEntryName.lastIndexOf('/');
+		if (pos != -1) {
+			zipEntryPath = zipEntryName.substring(0, pos);
+			zipEntryFileName = zipEntryName.substring(pos + 1);
+		} else {
+			zipEntryPath = null;
+			zipEntryFileName = zipEntryName;
+		}
+	}
+	return new SourceEntry(path, zipEntryPath, zipEntryFileName);
+}
+

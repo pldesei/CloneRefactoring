@@ -1,0 +1,14 @@
+(startLine=127 endLine=138 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01972/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodVerifier15.java)
+		if (originalInherited.returnType != concreteMethod.returnType) {
+			if (abstractMethod.returnType.leafComponentType().isParameterizedTypeWithActualArguments()) {
+				if (concreteMethod.returnType.leafComponentType().isRawType())
+					problemReporter().unsafeReturnTypeOverride(concreteMethod, originalInherited, this.type);
+			} else if (abstractMethod.hasSubstitutedReturnType() && originalInherited.returnType.leafComponentType().isTypeVariable()) {
+				if (((TypeVariableBinding) originalInherited.returnType.leafComponentType()).declaringElement == originalInherited) { // see 81618 - type variable from inherited method
+					TypeBinding currentReturnType = concreteMethod.returnType.leafComponentType();
+					if (!currentReturnType.isTypeVariable() || ((TypeVariableBinding) currentReturnType).declaringElement != concreteMethod)
+						problemReporter().unsafeReturnTypeOverride(concreteMethod, originalInherited, this.type);
+				}
+			}
+		}
+

@@ -1,0 +1,16 @@
+(startLine=1594 endLine=1607 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01393/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+			} else {
+				int pc = codeStream.position;
+				left.generateOptimizedStringConcatenation(
+					blockScope,
+					codeStream,
+					left.implicitConversion & COMPILE_TYPE_MASK);
+				codeStream.recordPositionsFrom(pc, left.sourceStart);
+				pc = codeStream.position;
+				right.generateOptimizedStringConcatenation(
+					blockScope,
+					codeStream,
+					right.implicitConversion & COMPILE_TYPE_MASK);
+				codeStream.recordPositionsFrom(pc, right.sourceStart);
+			}
+

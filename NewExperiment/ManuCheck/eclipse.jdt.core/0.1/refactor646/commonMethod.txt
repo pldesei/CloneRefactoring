@@ -1,0 +1,56 @@
+(startLine=1710 endLine=1763 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01482/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+protected ArrayList handleEndorseddirs(ArrayList endorsedDirClasspaths) {
+ 	final File javaHome = getJavaHome();
+	/*
+	 * Feed endorsedDirClasspath according to:
+	 * - -endorseddirs first if present;
+	 * - else java.endorsed.dirs if defined;
+	 * - else default extensions directory for the platform. (/lib/endorsed)
+	 */
+	if (endorsedDirClasspaths == null) {
+		endorsedDirClasspaths = new ArrayList(DEFAULT_SIZE_CLASSPATH);
+		String endorsedDirsStr = System.getProperty("java.endorsed.dirs"); //$NON-NLS-1$
+		if (endorsedDirsStr == null) {
+			if (javaHome != null) {
+				endorsedDirClasspaths.add(javaHome.getAbsolutePath() + "/lib/endorsed"); //$NON-NLS-1$
+			}
+		} else {
+			StringTokenizer tokenizer = new StringTokenizer(endorsedDirsStr, File.pathSeparator);
+			while (tokenizer.hasMoreTokens()) {
+				endorsedDirClasspaths.add(tokenizer.nextToken());
+			}
+		}
+	}
+	
+	/*
+	 * Feed extdirsClasspath with the entries found into the directories listed by
+	 * extdirsNames.
+	 */
+	if (endorsedDirClasspaths.size() != 0) {
+		File[] directoriesToCheck = new File[endorsedDirClasspaths.size()];
+		for (int i = 0; i < directoriesToCheck.length; i++) 
+			directoriesToCheck[i] = new File((String) endorsedDirClasspaths.get(i));
+		endorsedDirClasspaths.clear();
+		File[][] endorsedDirsJars = getLibrariesFiles(directoriesToCheck);
+		if (endorsedDirsJars != null) {
+			for (int i = 0, max = endorsedDirsJars.length; i < max; i++) {
+				File[] current = endorsedDirsJars[i];
+				if (current != null) {
+					for (int j = 0, max2 = current.length; j < max2; j++) {
+						FileSystem.Classpath classpath = 
+							FileSystem.getClasspath(
+									current[j].getAbsolutePath(),
+									null, null); 
+						if (classpath != null) {
+							endorsedDirClasspaths.add(classpath);
+						}
+					}
+				} else if (directoriesToCheck[i].isFile()) {
+					this.logger.logIncorrectEndorsedDirsEntry(directoriesToCheck[i].getAbsolutePath());
+				}
+			}
+		}
+	}
+	return endorsedDirClasspaths;
+}
+

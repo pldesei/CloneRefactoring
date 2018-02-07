@@ -1,0 +1,12 @@
+(startLine=1106 endLine=1115 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01394/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void fcmpg() {
+	if (DEBUG) System.out.println(position + "\t\tfcmpg"); //$NON-NLS-1$
+	countLabels = 0;
+	stackDepth--;
+	if (classFileOffset >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = Opcodes.OPC_fcmpg;
+}
+

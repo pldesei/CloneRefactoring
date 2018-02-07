@@ -1,0 +1,17 @@
+(startLine=386 endLine=400 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/FieldReference.java)
+		} else if (binding.isProtected()) {
+
+			SourceTypeBinding enclosingSourceType;
+			if (((bits & DepthMASK) != 0)
+				&& binding.declaringClass.getPackage()
+					!= (enclosingSourceType = currentScope.enclosingSourceType()).getPackage()) {
+
+				SourceTypeBinding currentCompatibleType =
+					(SourceTypeBinding) enclosingSourceType.enclosingTypeAt(
+						(bits & DepthMASK) >> DepthSHIFT);
+				syntheticReadAccessor = currentCompatibleType.addSyntheticMethod(binding, true);
+				currentScope.problemReporter().needToEmulateFieldReadAccess(binding, this);
+				return;
+			}
+		}
+

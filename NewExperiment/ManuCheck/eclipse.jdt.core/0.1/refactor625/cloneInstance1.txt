@@ -1,0 +1,12 @@
+(startLine=4462 endLine=4471 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug110060_TypePattern03() throws CoreException {
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 5, workingCopies.length);
+	search("AAx", TYPE, ALL_OCCURRENCES, SearchPattern.R_CAMELCASE_MATCH);
+	this.discard = false;
+	assertSearchResults(
+		"src/b110060/AAxx.java b110060.AAxx [AAxx] EXACT_MATCH\n" + 
+		"src/b110060/Test.java b110060.Test.aaxx [AAxx] EXACT_MATCH"
+	);
+}
+

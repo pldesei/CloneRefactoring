@@ -1,0 +1,138 @@
+(startLine=2289 endLine=2424 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnQualifiedNameReference(ASTNode astNode, ASTNode enclosingNode, Binding qualifiedBinding,
+			Scope scope, boolean insideTypeAnnotation) {
+		this.insideQualifiedReference = true;
+		CompletionOnQualifiedNameReference ref =
+			(CompletionOnQualifiedNameReference) astNode;
+		this.completionToken = ref.completionIdentifier;
+		long completionPosition = ref.sourcePositions[ref.sourcePositions.length - 1];
+
+		if (qualifiedBinding.problemId() == ProblemReasons.NotFound) {
+			setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+			// complete field members with missing fields type
+			// class X {
+			//   Missing f;
+			//   void foo() {
+			//     f.|
+			//   }
+			// }
+			if (this.assistNodeInJavadoc == 0 &&
+					(this.requestor.isAllowingRequiredProposals(CompletionProposal.FIELD_REF, CompletionProposal.TYPE_REF) ||
+							this.requestor.isAllowingRequiredProposals(CompletionProposal.METHOD_REF, CompletionProposal.TYPE_REF) ||
+							this.requestor.isAllowingRequiredProposals(CompletionProposal.TYPE_REF, CompletionProposal.TYPE_REF))) {
+				if(ref.tokens.length == 1) {
+					boolean foundSomeFields = findFieldsAndMethodsFromMissingFieldType(ref.tokens[0], scope, ref, insideTypeAnnotation);
+
+					if (!foundSomeFields) {
+						
+						checkCancel();
+						
+						findMembersFromMissingType(
+								ref.tokens[0],
+								ref.sourcePositions[0],
+								null,
+								scope,
+								ref,
+								ref.isInsideAnnotationAttribute);
+					}
+				}
+			}
+		} else if (qualifiedBinding instanceof VariableBinding) {
+			setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+			TypeBinding receiverType = ((VariableBinding) qualifiedBinding).type;
+			if (receiverType != null && (receiverType.tagBits & TagBits.HasMissingType) == 0) {
+				ObjectVector fieldsFound = new ObjectVector();
+				ObjectVector methodsFound = new ObjectVector();
+
+				findFieldsAndMethods(
+						this.completionToken,
+						receiverType.capture(scope, ref.sourceEnd),
+						scope,
+						fieldsFound,
+						methodsFound,
+						ref,
+						scope,
+						false,
+						false,
+						null,
+						null,
+						null,
+						false,
+						null,
+						-1,
+						-1);
+				
+				checkCancel();
+
+				findFieldsAndMethodsFromCastedReceiver(
+						enclosingNode,
+						qualifiedBinding,
+						scope,
+						fieldsFound,
+						methodsFound,
+						ref,
+						scope,
+						ref);
+
+			} else if (this.assistNodeInJavadoc == 0 &&
+					(this.requestor.isAllowingRequiredProposals(CompletionProposal.FIELD_REF, CompletionProposal.TYPE_REF) ||
+							this.requestor.isAllowingRequiredProposals(CompletionProposal.METHOD_REF, CompletionProposal.TYPE_REF))) {
+				boolean proposeField = !this.requestor.isIgnored(CompletionProposal.FIELD_REF);
+				boolean proposeMethod = !this.requestor.isIgnored(CompletionProposal.METHOD_REF);
+				if (proposeField || proposeMethod) {
+					if(ref.tokens.length == 1) {
+						if (qualifiedBinding instanceof LocalVariableBinding) {
+							// complete local variable members with missing variables type
+							// class X {
+							//   void foo() {
+							//     Missing f;
+							//     f.|
+							//   }
+							// }
+							LocalVariableBinding localVariableBinding = (LocalVariableBinding) qualifiedBinding;
+							findFieldsAndMethodsFromMissingType(
+									localVariableBinding.declaration.type,
+									localVariableBinding.declaringScope,
+									ref,
+									scope);
+						} else {
+							// complete field members with missing fields type
+							// class X {
+							//   Missing f;
+							//   void foo() {
+							//     f.|
+							//   }
+							// }
+							findFieldsAndMethodsFromMissingFieldType(ref.tokens[0], scope, ref, insideTypeAnnotation);
+						}
+
+					}
+				}
+			}
+
+		} else if (qualifiedBinding instanceof ReferenceBinding && !(qualifiedBinding instanceof TypeVariableBinding)) {
+			boolean isInsideAnnotationAttribute = ref.isInsideAnnotationAttribute;
+			ReferenceBinding receiverType = (ReferenceBinding) qualifiedBinding;
+			setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+
+			findMembers(
+					this.completionToken,
+					receiverType,
+					scope,
+					ref,
+					isInsideAnnotationAttribute,
+					null,
+					null,
+					null,
+					false);
+
+		} else if (qualifiedBinding instanceof PackageBinding) {
+
+			setSourceRange(astNode.sourceStart, (int) completionPosition);
+			setTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+
+			// replace to the end of the completion identifier
+			findTypesAndSubpackages(this.completionToken, (PackageBinding) qualifiedBinding, scope);
+		}
+	}
+

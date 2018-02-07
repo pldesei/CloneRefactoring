@@ -1,0 +1,27 @@
+(startLine=735 endLine=759 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00135/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+		} else {
+			if (trueLabel == null){
+				// implicit falling through the TRUE case
+				switch(promotedTypeID){
+					case T_int :
+						codeStream.if_icmplt(falseLabel);
+						break;
+					case T_float :
+						codeStream.fcmpl();
+						codeStream.iflt(falseLabel);
+						break;
+					case T_long :
+						codeStream.lcmp();
+						codeStream.iflt(falseLabel);
+						break;
+					case T_double :
+						codeStream.dcmpl();
+						codeStream.iflt(falseLabel);
+				}
+				codeStream.recordPositionsFrom(pc, this.sourceStart);
+				return;
+			} else {
+				// no implicit fall through TRUE/FALSE --> should never occur
+			}
+		}
+

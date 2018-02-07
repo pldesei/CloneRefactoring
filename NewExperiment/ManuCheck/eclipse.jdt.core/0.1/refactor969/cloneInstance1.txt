@@ -1,0 +1,61 @@
+(startLine=3406 endLine=3464 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02166/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+			} else if (getNextChar('.')) {
+				if (this.sourceLevel < ClassFileConstants.JDK1_5) {
+					if (end == start) {
+						throw new InvalidInputException(INVALID_HEXA);
+					}
+					this.currentPosition = end;
+					return TokenNameIntegerLiteral;
+				}
+				// hexadecimal floating point literal
+				// read decimal part
+				boolean hasNoDigitsBeforeDot = end == start;
+				start = this.currentPosition;
+				while (getNextCharAsDigit(16)){/*empty*/}
+				end = this.currentPosition;
+				if (hasNoDigitsBeforeDot && end == start) {
+					throw new InvalidInputException(INVALID_HEXA);
+				}
+
+				if (getNextChar('p', 'P') >= 0) { // consume next character
+					this.unicodeAsBackSlash = false;
+					if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+						&& (this.source[this.currentPosition] == 'u')) {
+						getNextUnicodeChar();
+					} else {
+						if (this.withoutUnicodePtr != 0) {
+							unicodeStore();
+						}
+					}
+
+					if ((this.currentCharacter == '-')
+						|| (this.currentCharacter == '+')) { // consume next character
+						this.unicodeAsBackSlash = false;
+						if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+							&& (this.source[this.currentPosition] == 'u')) {
+							getNextUnicodeChar();
+						} else {
+							if (this.withoutUnicodePtr != 0) {
+								unicodeStore();
+							}
+						}
+					}
+					if (!ScannerHelper.isDigit(this.currentCharacter)) {
+						throw new InvalidInputException(INVALID_HEXA);
+					}
+					while (getNextCharAsDigit()){/*empty*/}
+					if (getNextChar('f', 'F') >= 0) {
+						return TokenNameFloatingPointLiteral;
+					}
+					if (getNextChar('d', 'D') >= 0) {
+						return TokenNameDoubleLiteral;
+					}
+					if (getNextChar('l', 'L') >= 0) {
+						throw new InvalidInputException(INVALID_HEXA);
+					}
+					return TokenNameDoubleLiteral;
+				} else {
+					throw new InvalidInputException(INVALID_HEXA);
+				}
+			} else if (getNextChar('p', 'P') >= 0) { // consume next character
+

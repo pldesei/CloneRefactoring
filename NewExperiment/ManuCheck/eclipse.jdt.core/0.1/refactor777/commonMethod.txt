@@ -1,0 +1,34 @@
+(startLine=1820 endLine=1851 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnLocalOrArgumentName(ASTNode astNode, Scope scope) {
+		if (!this.requestor.isIgnored(CompletionProposal.VARIABLE_DECLARATION)) {
+			LocalDeclaration variable = (LocalDeclaration) astNode;
+
+			int kind;
+			if (variable instanceof CompletionOnLocalName){
+				this.completionToken = ((CompletionOnLocalName) variable).realName;
+				kind = LOCAL;
+			} else {
+				CompletionOnArgumentName arg = (CompletionOnArgumentName) variable;
+				this.completionToken = arg.realName;
+				kind = arg.isCatchArgument ? LOCAL : ARGUMENT;
+			}
+
+			char[][] alreadyDefinedName = computeAlreadyDefinedName((BlockScope)scope, variable);
+
+			char[][] forbiddenNames = findVariableFromUnresolvedReference(variable, (BlockScope)scope, alreadyDefinedName);
+
+			LocalVariableBinding[] locals = ((BlockScope)scope).locals;
+			char[][] discouragedNames = new char[locals.length][];
+			int localCount = 0;
+			for(int i = 0 ; i < locals.length ; i++){
+				if (locals[i] != null) {
+					discouragedNames[localCount++] = locals[i].name;
+				}
+			}
+
+			System.arraycopy(discouragedNames, 0, discouragedNames = new char[localCount][], 0, localCount);
+
+			findVariableNames(this.completionToken, variable.type, discouragedNames, forbiddenNames, kind, variable.modifiers);
+		}
+	}
+

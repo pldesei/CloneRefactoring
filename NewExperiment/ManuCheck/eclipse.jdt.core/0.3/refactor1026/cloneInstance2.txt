@@ -1,0 +1,36 @@
+(startLine=73 endLine=106 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02404/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/FieldBinding.java)
+	if (isProtected()) {
+		// answer true if the invocationType is the declaringClass or they are in the same package
+		// OR the invocationType is a subclass of the declaringClass
+		//    AND the receiverType is the invocationType or its subclass
+		//    OR the method is a static method accessed directly through a type
+		//    OR previous assertions are true for one of the enclosing type
+		if (invocationType == this.declaringClass) return true;
+		if (invocationType.fPackage == this.declaringClass.fPackage) return true;
+
+		ReferenceBinding currentType = invocationType;
+		int depth = 0;
+		ReferenceBinding receiverErasure = (ReferenceBinding)receiverType.erasure();
+		ReferenceBinding declaringErasure = (ReferenceBinding) this.declaringClass.erasure();
+		do {
+			if (currentType.findSuperTypeOriginatingFrom(declaringErasure) != null) {
+				if (invocationSite.isSuperAccess())
+					return true;
+				// receiverType can be an array binding in one case... see if you can change it
+				if (receiverType instanceof ArrayBinding)
+					return false;
+				if (isStatic()) {
+					if (depth > 0) invocationSite.setDepth(depth);
+					return true; // see 1FMEPDL - return invocationSite.isTypeAccess();
+				}
+				if (currentType == receiverErasure || receiverErasure.findSuperTypeOriginatingFrom(currentType) != null) {
+					if (depth > 0) invocationSite.setDepth(depth);
+					return true;
+				}
+			}
+			depth++;
+			currentType = currentType.enclosingType();
+		} while (currentType != null);
+		return false;
+	}
+

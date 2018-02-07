@@ -1,0 +1,12 @@
+(startLine=456 endLine=465 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01788/org.eclipse.jdt.compiler.apt.tests/processors/org/eclipse/jdt/compiler/apt/tests/processors/negative/NegativeModelProc.java)
+			else if ("zorkOfString".equals(name)) {
+				foundZorkOfString = true;
+				TypeMirror retType = ((ExecutableElement)element).getReturnType();
+				TypeKind retKind = retType.getKind();
+				// javac returns ERROR type
+				if (retKind != TypeKind.DECLARED && retKind != TypeKind.ERROR) {
+					reportError("Return type of Negative4." + name + " should be DECLARED or ERROR, but is reported as " + retKind);
+					return false;
+				}
+			}
+

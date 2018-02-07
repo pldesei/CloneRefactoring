@@ -1,0 +1,45 @@
+(startLine=1058 endLine=1100 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01924/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		} else if (astNode instanceof CompletionOnMethodReturnType) {
+
+			CompletionOnMethodReturnType method = (CompletionOnMethodReturnType) astNode;
+			SingleTypeReference type = (CompletionOnSingleTypeReference) method.returnType;
+			this.completionToken = type.token;
+			setSourceAndTokenRange(type.sourceStart, type.sourceEnd);
+			findTypesAndPackages(this.completionToken, scope.parent, true, true, new ObjectVector());
+			if (!this.requestor.isIgnored(CompletionProposal.KEYWORD)) {
+				findKeywordsForMember(this.completionToken, method.modifiers);
+			}
+
+			if (method.modifiers == ClassFileConstants.AccDefault) {
+				SourceTypeBinding enclosingType = scope.enclosingSourceType();
+				if (!enclosingType.isAnnotationType()) {
+					if (!this.requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
+						findMethods(
+								this.completionToken,
+								null,null,
+								scope.enclosingSourceType(),
+								scope,
+								new ObjectVector(),
+								false,
+								false,
+								true,
+								null,
+								null,
+								false,
+								false,
+								true,
+								null,
+								null,
+								null,
+								false,
+								null,
+								-1,
+								-1);
+					}
+					if (!this.requestor.isIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION)) {
+						proposeNewMethod(this.completionToken, scope.enclosingSourceType());
+					}
+				}
+			}
+		} else if (astNode instanceof CompletionOnSingleNameReference) {
+

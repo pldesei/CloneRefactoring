@@ -1,0 +1,14 @@
+(startLine=380 endLine=391 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01960/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private static char[] getRequiredTypeSignature(TypeBinding typeBinding) {
+		char[] result = null;
+		StringBuffer sig = new StringBuffer(10);
+
+		sig.append(typeBinding.signature());
+
+		int sigLength = sig.length();
+		result = new char[sigLength];
+		sig.getChars(0, sigLength, result, 0);
+		result = CharOperation.replaceOnCopy(result, '/', '.');
+		return result;
+	}
+

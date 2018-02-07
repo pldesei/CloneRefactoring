@@ -1,0 +1,38 @@
+(startLine=2009 endLine=2044 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00272/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	/**
+	 * Saves the classpath in a shareable format (VCM-wise) if necessary.
+	 *  (i.e.&nbsp;semantically different).
+	 * Will never write an identical one.
+	 * 
+	 * @return Return whether the .classpath file was modified.
+	 */
+	public boolean saveClasspath(IClasspathEntry[] newClasspath, IPath newOutputLocation) throws JavaModelException {
+
+		if (!getProject().exists()) return false;
+
+		try {
+			// attempt to prove the classpath has not change
+			String fileClasspathString = getSharedProperty(CLASSPATH_FILENAME);
+			if (fileClasspathString != null) {
+				IClasspathEntry[] fileEntries = readPaths(fileClasspathString);
+				if (isClasspathEqualsTo(newClasspath, newOutputLocation, fileEntries)) {
+					// no need to save it, it is the same
+					return false;
+				}
+			}
+		} catch (IOException e) {
+		} catch (RuntimeException e) {
+		} catch (CoreException e) {
+		}
+
+		// actual file saving
+		try {
+			setSharedProperty(
+				CLASSPATH_FILENAME,
+				getClasspathAsXML(newClasspath, newOutputLocation));
+			return true;
+		} catch (CoreException e) {
+			throw new JavaModelException(e);
+		}
+	}
+

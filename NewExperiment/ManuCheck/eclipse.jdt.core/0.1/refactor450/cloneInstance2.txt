@@ -1,0 +1,29 @@
+(startLine=341 endLine=367 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01065/org.eclipse.jdt.core.tests.performance/src/org/eclipse/jdt/core/tests/performance/FullSourceWorkspaceSearchTests.java)
+	public void testPerfSearchField() throws CoreException {
+		tagAsSummary("Search>Occurences>Fields", Dimension.CPU_TIME, true/*put in fingerprint*/);
+
+		// Wait for indexing end
+		waitUntilIndexesReady();
+//		INDEX_MANAGER.performConcurrentJob(new DoNothing(), IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+//		assertEquals("Index manager should not have remaining jobs!", 0, INDEX_MANAGER.awaitingJobsCount()); //$NON-NLS-1$
+
+		// warm-up
+		search("FILE", FIELD, ALL_OCCURRENCES, this.resultCollector);
+
+		// Loop of measures
+		for (int i=0; i<MEASURES_COUNT; i++) {
+			startMeasuring();
+//			for (int j=0; j<ITERATIONS_COUNT; j++) {
+				search("FILE", FIELD, ALL_OCCURRENCES, this.resultCollector);
+//			}
+			stopMeasuring();
+		}
+		
+		// Commit measures
+		commitMeasurements();
+		assertPerformance();
+
+		// Store counter
+		REFERENCES[1] = this.resultCollector.count;
+	}
+

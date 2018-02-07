@@ -1,0 +1,7 @@
+(startLine=130 endLine=134 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00778/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/processing/JobManager.java)
+	protected synchronized boolean isJobWaiting(IJob request) {
+		for (int i = this.jobEnd; i > this.jobStart; i--) // don't check job at jobStart, as it may have already started
+			if (request.equals(this.awaitingJobs[i])) return true;
+		return false;
+	}
+

@@ -1,0 +1,32 @@
+(startLine=368 endLine=397 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+				if (methodBinding.returnType.id == T_JavaLangStringBuffer) {
+					switch (methodBinding.parameters[0].id) {
+						case T_int :
+						case T_byte :
+						case T_short :
+							// This method binding is append(int)
+							return APPEND_INT_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_float :
+							// This method binding is append(float)
+							return APPEND_FLOAT_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_long :
+							// This method binding is append(long)
+							return APPEND_LONG_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_JavaLangObject :
+							// This method binding is append(java.lang.Object)
+							return APPEND_OBJECT_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_char :
+							// This method binding is append(char)
+							return APPEND_CHAR_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_JavaLangString :
+							// This method binding is append(java.lang.String)
+							return APPEND_STRING_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_boolean :
+							// This method binding is append(boolean)
+							return APPEND_BOOLEAN_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+						case T_double :
+							// This method binding is append(double)
+							return APPEND_DOUBLE_STRINGBUFFER_METHOD_NAME_AND_TYPE;
+					}
+				} else if (methodBinding.returnType.id == T_JavaLangStringBuilder) {
+

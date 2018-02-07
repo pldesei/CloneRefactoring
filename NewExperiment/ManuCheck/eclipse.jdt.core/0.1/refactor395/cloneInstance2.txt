@@ -1,0 +1,13 @@
+(startLine=2916 endLine=2926 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void invokeObjectGetClass() {
+	// invokevirtual: java.lang.Object.getClass()Ljava.lang.Class;
+	if (DEBUG) System.out.println(position + "\t\tinvokevirtual: java.lang.Object.getClass()Ljava.lang.Class;"); //$NON-NLS-1$
+	countLabels = 0;
+	if (classFileOffset + 2 >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_invokevirtual;
+	writeUnsignedShort(constantPool.literalIndexForJavaLangObjectGetClass());
+}
+

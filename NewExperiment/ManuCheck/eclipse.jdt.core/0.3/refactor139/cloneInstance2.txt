@@ -1,0 +1,21 @@
+(startLine=70 endLine=88 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00055/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/OR_OR_Expression.java)
+public void computeConstant(BlockScope scope, int leftId, int rightId) {
+	//the TC has been done so leftId and rightId are both equal to T_boolean
+
+	Constant cst;
+	if ((cst = left.constant) != NotAConstant) {
+		if (cst.booleanValue() == true) { // true || x --> true
+			constant = cst; // inlined to constant(false)
+		} else { // false || x --> x
+			if ((constant = right.constant) == NotAConstant) {
+				// compute conditionalConstant
+				optimizedBooleanConstant(leftId, (bits & OperatorMASK) >> OperatorSHIFT, rightId);
+			}
+		}
+	} else {
+		constant = NotAConstant;
+		// compute conditionalConstant
+		optimizedBooleanConstant(leftId, (bits & OperatorMASK) >> OperatorSHIFT, rightId);
+	}
+}
+

@@ -1,0 +1,22 @@
+(startLine=5667 endLine=5686 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02254/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Parser.java)
+protected void consumePrimaryNoNewArrayArrayType() {
+	// PrimaryNoNewArray ::= Name Dims '.' 'class'
+	this.intPtr--; // remove the class start position
+
+	pushOnGenericsIdentifiersLengthStack(this.identifierLengthStack[this.identifierLengthPtr]);
+	pushOnGenericsLengthStack(0);
+	ClassLiteralAccess cla;
+	pushOnExpressionStack(
+		cla = new ClassLiteralAccess(this.intStack[this.intPtr--], getUnannotatedTypeReference(this.intStack[this.intPtr--])));
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=383884
+	Annotation [][] dimensionAnnotations = cla.type.getAnnotationsOnDimensions();
+	if (dimensionAnnotations != null) {
+		for (int i = 0, max = dimensionAnnotations.length; i < max; i++) {
+			Annotation [] annotations = dimensionAnnotations[i];
+			if (annotations != null) {
+				problemReporter().misplacedTypeAnnotations(annotations[0], annotations[annotations.length - 1]);
+			}
+		}
+	}
+}
+

@@ -1,0 +1,66 @@
+(startLine=836 endLine=899 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00283/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+		IResource underlyingResource)	throws JavaModelException {
+
+		boolean validInfo = false;
+		try {
+			if (((IProject) getUnderlyingResource()).isOpen()) {
+				// put the info now, because setting the classpath requires it
+				JavaModelManager.getJavaModelManager().putInfo(this, info);
+
+				// read classpath property (contains actual classpath and output location settings)
+				IPath outputLocation = null;
+				IClasspathEntry[] classpath = null;
+
+				// read from file
+				try {
+					String sharedClasspath = loadClasspath();
+					if (sharedClasspath != null) {
+						classpath = readPaths(sharedClasspath);
+					}
+				} catch(JavaModelException e) {
+					if (JavaModelManager.VERBOSE && this.getProject().isAccessible()){
+							Util.log(e, 
+								"Exception while retrieving "+ this.getPath() //$NON-NLS-1$
+								+"/.classpath, will revert to default classpath"); //$NON-NLS-1$
+					}
+				} catch(IOException e){
+					if (JavaModelManager.VERBOSE && this.getProject().isAccessible()){
+						Util.log(e, 
+							"Exception while retrieving "+ this.getPath() //$NON-NLS-1$
+							+"/.classpath, will revert to default classpath"); //$NON-NLS-1$
+					}
+				}
+
+				// extract out the output location
+				if (classpath != null && classpath.length > 0) {
+					IClasspathEntry entry = classpath[classpath.length - 1];
+					if (entry.getContentKind() == ClasspathEntry.K_OUTPUT) {
+						outputLocation = entry.getPath();
+						IClasspathEntry[] copy = new IClasspathEntry[classpath.length - 1];
+						System.arraycopy(classpath, 0, copy, 0, copy.length);
+						classpath = copy;
+					}
+				}
+				// restore output location				
+				if (outputLocation == null) {
+					outputLocation = defaultOutputLocation();
+				}
+				((JavaProjectElementInfo)info).setOutputLocation(outputLocation);
+
+				// restore classpath
+				if (classpath == null) {
+					classpath = defaultClasspath();
+				}
+				setRawClasspath0(classpath);
+
+				// only valid if reaches here				
+				validInfo = true;
+			}
+		} catch (JavaModelException e) {
+		} finally {
+			if (!validInfo)
+				JavaModelManager.getJavaModelManager().removeInfo(this);
+		}
+		return validInfo;
+	}
+

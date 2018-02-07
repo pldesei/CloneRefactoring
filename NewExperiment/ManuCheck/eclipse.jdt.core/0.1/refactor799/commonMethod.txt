@@ -1,0 +1,10 @@
+(startLine=1739 endLine=1746 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocParamNameReference(ASTNode astNode) {
+		if (!this.requestor.isIgnored(CompletionProposal.JAVADOC_PARAM_REF)) {
+			CompletionOnJavadocParamNameReference paramRef = (CompletionOnJavadocParamNameReference) astNode;
+			setSourceAndTokenRange(paramRef.tagSourceStart, paramRef.tagSourceEnd);
+			findJavadocParamNames(paramRef.token, paramRef.missingParams, false);
+			findJavadocParamNames(paramRef.token, paramRef.missingTypeParams, true);
+		}
+	}
+

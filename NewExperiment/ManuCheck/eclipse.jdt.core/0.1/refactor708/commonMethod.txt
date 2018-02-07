@@ -1,0 +1,34 @@
+(startLine=578 endLine=609 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01789/org.eclipse.jdt.compiler.apt.tests/processors/org/eclipse/jdt/compiler/apt/tests/processors/negative/NegativeModelProc.java)
+	/**
+	 * Compare a set of elements to a reference model, and output error information if there is a
+	 * mismatch.
+	 * 
+	 * @param rootElements
+	 * @param expected
+	 *            a string representation of the XML reference model, as it would be serialized by
+	 *            XMLConverter
+	 * @param name
+	 *            the name of the test, which is used for human-readable output
+	 * @return true if the actual and expected models were equivalent
+	 * @throws Exception
+	 */
+	private boolean checkModel(List<TypeElement> rootElements, String expected, String name) throws Exception {
+		Document actualModel = XMLConverter.convertModel(rootElements);
+		
+    	InputSource source = new InputSource(new StringReader(expected));
+    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        Document expectedModel = factory.newDocumentBuilder().parse(source);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        StringBuilder summary = new StringBuilder();
+        summary.append("Test ").append(name).append(" failed; see console for details.  ");
+        boolean success = XMLComparer.compare(actualModel, expectedModel, out, summary, _ignoreJavacBugs);
+        if (!success) {
+        	System.out.println("Test " + name + " failed.  Detailed output follows:");
+        	System.out.print(out.toString());
+        	System.out.println("=============== end output ===============");
+        	reportError(summary.toString());
+        }
+        return success;
+	}
+

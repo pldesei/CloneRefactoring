@@ -1,0 +1,20 @@
+(startLine=223 endLine=240 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/ConstructorDeclarationPattern.java)
+		if (parameterCount > -1) {
+			String methodDescriptor =
+				new String(method.getMethodDescriptor()).replace('/', '.');
+			String[] arguments = Signature.getParameterTypes(methodDescriptor);
+			int argumentCount = arguments.length;
+			if (parameterCount != argumentCount)
+				return false;
+			for (int i = 0; i < parameterCount; i++) {
+				char[] qualification = this.parameterQualifications[i];
+				char[] type = this.parameterSimpleNames[i];
+				if (!this
+					.matchesType(
+						type,
+						qualification,
+						Signature.toString(arguments[i]).toCharArray()))
+					return false;
+			}
+		}
+

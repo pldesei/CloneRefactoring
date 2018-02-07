@@ -1,0 +1,11 @@
+(startLine=4053 endLine=4061 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01334/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void localVariableMayBeNull(LocalVariableBinding local, ASTNode location) {
+	String[] arguments = new String[] {new String(local.name)};
+	this.handle(
+		IProblem.LocalVariableMayBeNull,
+		arguments,
+		arguments,
+		location.sourceStart,
+		location.sourceEnd);
+}
+

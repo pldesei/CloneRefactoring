@@ -1,0 +1,55 @@
+(startLine=2560 endLine=2612 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnSingleTypeReference(ASTNode astNode, ASTNode astNodeParent, Binding qualifiedBinding, Scope scope) {
+		CompletionOnSingleTypeReference singleRef = (CompletionOnSingleTypeReference) astNode;
+
+		this.completionToken = singleRef.token;
+
+		this.assistNodeIsClass = singleRef.isClass();
+		this.assistNodeIsException = singleRef.isException();
+		this.assistNodeIsInterface = singleRef.isInterface();
+		this.assistNodeIsConstructor = singleRef.isConstructorType;
+		this.assistNodeIsSuperType = singleRef.isSuperType();
+
+		// can be the start of a qualified type name
+		if (qualifiedBinding == null) {
+			if (this.completionToken.length == 0 &&
+					(astNodeParent instanceof ParameterizedSingleTypeReference ||
+							astNodeParent instanceof ParameterizedQualifiedTypeReference)) {
+				this.setSourceAndTokenRange(astNode.sourceStart, astNode.sourceStart - 1, false);
+
+				findParameterizedType((TypeReference)astNodeParent, scope);
+			} else {
+				ObjectVector typesFound = new ObjectVector();
+				if (this.assistNodeIsException && astNodeParent instanceof TryStatement) {
+					findExceptionFromTryStatement(
+							this.completionToken,
+							null,
+							scope.enclosingSourceType(),
+							(BlockScope)scope,
+							typesFound);
+				}
+				
+				checkCancel();
+				
+				findTypesAndPackages(this.completionToken, scope, this.assistNodeIsConstructor, false, typesFound);
+			}
+		} else if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+			findMemberTypes(
+				this.completionToken,
+				(ReferenceBinding) qualifiedBinding,
+				scope,
+				scope.enclosingSourceType(),
+				false,
+				false,
+				false,
+				false,
+				!this.assistNodeIsConstructor,
+				null,
+				new ObjectVector(),
+				null,
+				null,
+				null,
+				false);
+		}
+	}
+

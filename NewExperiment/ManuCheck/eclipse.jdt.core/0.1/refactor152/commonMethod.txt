@@ -1,0 +1,73 @@
+(startLine=253 endLine=323 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00105/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/DeltaProcessor.java)
+	/**
+	 * Creates the openables corresponding to this resource.
+	 * Returns null if none was found.
+	 */
+	protected Openable createElement(IResource resource, int elementType) {
+		if (resource == null) return null;
+		
+		// find the element that encloses the resource
+		IPath path = resource.getFullPath();
+		this.popUntilPrefixOf(path);
+		
+		IJavaElement element = null;
+		if (this.currentElement != null) {
+			switch (elementType) {
+				case IJavaElement.JAVA_PROJECT:
+					element = JavaCore.create((IProject)resource);
+					break;
+				case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+					element = this.currentElement.getJavaProject().getPackageFragmentRoot(resource);
+					break;
+				case IJavaElement.PACKAGE_FRAGMENT:
+					IPackageFragmentRoot root = this.currentElement.getPackageFragmentRoot();
+					if (root != null && !Util.conflictsWithOutputLocation(path, (JavaProject)root.getJavaProject())) {
+						IPath pkgPath = path.removeFirstSegments(root.getPath().segmentCount());
+						String pkg = Util.packageName(pkgPath);
+						if (pkg == null) return null;
+						element = root.getPackageFragment(pkg);
+					}
+					break;
+				case IJavaElement.COMPILATION_UNIT:
+					IPackageFragment pkgFragment = null;
+					switch (this.currentElement.getElementType()) {
+						case IJavaElement.PACKAGE_FRAGMENT:
+							pkgFragment = (IPackageFragment)this.currentElement;
+							break;
+						case IJavaElement.COMPILATION_UNIT:
+						case IJavaElement.CLASS_FILE:
+							pkgFragment = (IPackageFragment)this.currentElement.getParent();
+							break;
+					}
+					if (pkgFragment != null) {
+						String fileName = path.lastSegment();
+						if (!Util.isValidCompilationUnitName(fileName)) return null;
+						element = pkgFragment.getCompilationUnit(fileName);
+					}
+					break;
+				case IJavaElement.CLASS_FILE:
+					pkgFragment = null;
+					switch (this.currentElement.getElementType()) {
+						case IJavaElement.PACKAGE_FRAGMENT:
+							pkgFragment = (IPackageFragment)this.currentElement;
+							break;
+						case IJavaElement.COMPILATION_UNIT:
+						case IJavaElement.CLASS_FILE:
+							pkgFragment = (IPackageFragment)this.currentElement.getParent();
+							break;
+					}
+					if (pkgFragment != null) {
+						String fileName = path.lastSegment();
+						if (!Util.isValidClassFileName(fileName)) return null;
+						element = pkgFragment.getClassFile(fileName);
+					}
+					break;
+			}
+		}
+		if (element == null) {
+			element = JavaCore.create(resource);
+		}
+		this.currentElement = (Openable)element;
+		return this.currentElement;
+	}
+

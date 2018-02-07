@@ -1,0 +1,76 @@
+(startLine=52 endLine=125 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01109/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+private ICompilationUnit[] getExternalQQTypes() throws JavaModelException {
+	ICompilationUnit[] units = new ICompilationUnit[6];
+	
+	units[0] = getWorkingCopy(
+		"/Completion/src3/pkgstaticimport/QQType1.java",
+		"package pkgstaticimport;\n"+
+		"\n"+
+		"public class QQType1 {\n"+
+		"	public class Inner1 {}\n"+
+		"	public static class Inner2 {}\n"+
+		"	protected class Inner3 {}\n"+
+		"	protected static class Inner4 {}\n"+
+		"	private class Inner5 {}\n"+
+		"	private static class Inner6 {}\n"+
+		"	class Inner7 {}\n"+
+		"	static class Inner8 {}\n"+
+		"}");
+	
+	units[1] = getWorkingCopy(
+		"/Completion/src3/pkgstaticimport/QQType3.java",
+		"package pkgstaticimport;\n"+
+		"\n"+
+		"public class QQType3 extends QQType1 {\n"+
+		"	\n"+
+		"}");
+	
+	units[2] = getWorkingCopy(
+		"/Completion/src3/pkgstaticimport/QQType4.java",
+		"package pkgstaticimport;\n"+
+		"\n"+
+		"public class QQType4 {\n"+
+		"	public int zzvarzz1;\n"+
+		"	public static int zzvarzz2;\n"+
+		"	protected int zzvarzz3;\n"+
+		"	protected static int zzvarzz4;\n"+
+		"	private int zzvarzz5;\n"+
+		"	private static int zzvarzz6;\n"+
+		"	int zzvarzz7;\n"+
+		"	static int zzvarzz8;\n"+
+		"}");
+	
+	units[3] = getWorkingCopy(
+		"/Completion/src3/pkgstaticimport/QQType6.java",
+		"package pkgstaticimport;\n"+
+		"\n"+
+		"public class QQType6 extends QQType4 {\n"+
+		"	\n"+
+		"}");
+	
+	units[4] = getWorkingCopy(
+		"/Completion/src3/pkgstaticimport/QQType7.java",
+		"package pkgstaticimport;\n"+
+		"\n"+
+		"public class QQType7 {\n"+
+		"	public void zzfoozz1(){};\n"+
+		"	public static void zzfoozz2(){};\n"+
+		"	protected void zzfoozz3(){};\n"+
+		"	protected static void zzfoozz4(){};\n"+
+		"	private void zzfoozz5(){};\n"+
+		"	private static void zzfoozz6(){};\n"+
+		"	void zzfoozz7(){};\n"+
+		"	static void zzfoozz8(){};\n"+
+		"}");
+	
+	units[5] = getWorkingCopy(
+		"/Completion/src3/pkgstaticimport/QQType9.java",
+		"package pkgstaticimport;\n"+
+		"\n"+
+		"public class QQType9 extends QQType7 {\n"+
+		"	\n"+
+		"}");
+	
+	return units;
+}
+

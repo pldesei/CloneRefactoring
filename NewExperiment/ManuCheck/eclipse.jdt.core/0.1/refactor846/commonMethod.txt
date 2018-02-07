@@ -1,0 +1,38 @@
+(startLine=1748 endLine=1783 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnJavadocQualifiedTypeReference(ASTNode astNode, Binding qualifiedBinding, Scope scope) {
+		this.insideQualifiedReference = true;
+
+		CompletionOnJavadocQualifiedTypeReference typeRef = (CompletionOnJavadocQualifiedTypeReference) astNode;
+		this.completionToken = typeRef.completionIdentifier;
+		long completionPosition = typeRef.sourcePositions[typeRef.tokens.length];
+		this.javadocTagPosition = typeRef.tagSourceStart;
+
+		// get the source positions of the completion identifier
+		if (qualifiedBinding instanceof ReferenceBinding && !(qualifiedBinding instanceof TypeVariableBinding)) {
+			if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF) ||
+					((this.assistNodeInJavadoc & CompletionOnJavadoc.TEXT) != 0 && !this.requestor.isIgnored(CompletionProposal.JAVADOC_TYPE_REF))) {
+				int rangeStart = typeRef.completeInText() ? typeRef.sourceStart : (int) (completionPosition >>> 32);
+				setSourceAndTokenRange(rangeStart, (int) completionPosition);
+				findMemberTypes(
+					this.completionToken,
+					(ReferenceBinding) qualifiedBinding,
+					scope,
+					scope.enclosingSourceType(),
+					false,
+					false,
+					new ObjectVector(),
+					null,
+					null,
+					null,
+					false);
+			}
+		} else if (qualifiedBinding instanceof PackageBinding) {
+
+			setSourceRange(astNode.sourceStart, (int) completionPosition);
+			int rangeStart = typeRef.completeInText() ? typeRef.sourceStart : (int) (completionPosition >>> 32);
+			setTokenRange(rangeStart, (int) completionPosition);
+			// replace to the end of the completion identifier
+			findTypesAndSubpackages(this.completionToken, (PackageBinding) qualifiedBinding, scope);
+		}
+	}
+

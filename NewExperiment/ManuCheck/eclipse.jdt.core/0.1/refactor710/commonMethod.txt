@@ -1,0 +1,8 @@
+(startLine=676 endLine=681 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01790/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	public final LookupEnvironment environment() {
+		Scope scope, unitScope = this;
+		while ((scope = unitScope.parent) != null)
+			unitScope = scope;
+		return ((CompilationUnitScope) unitScope).environment;
+	}
+

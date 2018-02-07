@@ -1,0 +1,26 @@
+(startLine=2262 endLine=2285 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00284/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	/**
+	 * NOTE: <code>null</code> specifies default classpath, and an empty
+	 * array specifies an empty classpath.
+	 *
+	 * @exception NotPresentException if this project does not exist.
+	 */
+	protected void setRawClasspath0(IClasspathEntry[] rawEntries)
+		throws JavaModelException {
+
+		JavaModelManager.PerProjectInfo info = getJavaModelManager().getPerProjectInfoCheckExistence(fProject);
+	
+		synchronized (info) {
+			if (rawEntries == null) {
+				rawEntries = defaultClasspath();
+			}
+			// clear cache of resolved classpath
+			info.lastResolvedClasspath = null;
+			
+			info.classpath = rawEntries;
+				
+			// compute the new roots
+			updatePackageFragmentRoots();				
+		}
+	}
+

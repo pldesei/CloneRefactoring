@@ -1,0 +1,21 @@
+(startLine=450 endLine=468 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01292/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+						if (falseLabel.hasForwardReferences()) {
+							if (valueRequired) {
+								codeStream.iconst_1();
+								if ((bits & IsReturnedValue) != 0) {
+									codeStream.generateImplicitConversion(this.implicitConversion);
+									codeStream.generateReturnBytecode(this);
+									falseLabel.place();
+									codeStream.iconst_0();
+								} else {
+									codeStream.goto_(endLabel = new Label(codeStream));
+									codeStream.decrStackSize(1);
+									falseLabel.place();
+									codeStream.iconst_0();
+									endLabel.place();
+								}
+							} else {
+								falseLabel.place();
+							}
+						}
+

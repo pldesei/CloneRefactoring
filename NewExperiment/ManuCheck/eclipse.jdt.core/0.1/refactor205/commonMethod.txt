@@ -1,0 +1,131 @@
+(startLine=1262 endLine=1390 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00136/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+	/**
+	 * Boolean generation for |
+	 */
+	public void generateOptimizedLogicalOr(
+		BlockScope currentScope,
+		CodeStream codeStream,
+		Label trueLabel,
+		Label falseLabel,
+		boolean valueRequired) {
+			
+		int pc = codeStream.position;
+		Constant condConst;
+		if ((left.implicitConversion & 0xF) == T_boolean) {
+			if ((condConst = left.conditionalConstant()) != NotAConstant) {
+				if (condConst.booleanValue() == true) {
+					// <something equivalent to true> | x
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					if (valueRequired) {
+						if ((bits & OnlyValueRequiredMASK) != 0) {
+							codeStream.iconst_1();
+						} else {
+							if (trueLabel != null) {
+								codeStream.goto_(trueLabel);
+							}
+						}
+					}
+				} else {
+					// <something equivalent to false> | x
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					if ((bits & OnlyValueRequiredMASK) != 0) {
+						right.generateCode(currentScope, codeStream, valueRequired);
+					} else {
+						right.generateOptimizedBoolean(
+							currentScope,
+							codeStream,
+							trueLabel,
+							falseLabel,
+							valueRequired);
+					}
+				}
+				codeStream.recordPositionsFrom(pc, this.sourceStart);
+				return;
+			}
+			if ((condConst = right.conditionalConstant()) != NotAConstant) {
+				if (condConst.booleanValue() == true) {
+					// x | <something equivalent to true>
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					if (valueRequired) {
+						if ((bits & OnlyValueRequiredMASK) != 0) {
+							codeStream.iconst_1();
+						} else {
+							if (trueLabel != null) {
+								codeStream.goto_(trueLabel);
+							}
+						}
+					}
+				} else {
+					// x | <something equivalent to false>
+					if ((bits & OnlyValueRequiredMASK) != 0) {
+						left.generateCode(currentScope, codeStream, valueRequired);
+					} else {
+						left.generateOptimizedBoolean(
+							currentScope,
+							codeStream,
+							trueLabel,
+							falseLabel,
+							valueRequired);
+					}
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+				}
+				codeStream.recordPositionsFrom(pc, this.sourceStart);
+				return;
+			}
+		}
+		// default case
+		left.generateCode(currentScope, codeStream, valueRequired);
+		right.generateCode(currentScope, codeStream, valueRequired);
+		if (valueRequired) {
+			codeStream.ior();
+			if ((bits & OnlyValueRequiredMASK) == 0) {
+				if (falseLabel == null) {
+					if (trueLabel != null) {
+						// implicit falling through the FALSE case
+						codeStream.ifne(trueLabel);
+					}
+				} else {
+					// implicit falling through the TRUE case
+					if (trueLabel == null) {
+						codeStream.ifeq(falseLabel);
+					} else {
+						// no implicit fall through TRUE/FALSE --> should never occur
+					}
+				}
+			}
+		}
+		codeStream.recordPositionsFrom(pc, this.sourceStart);
+	}
+

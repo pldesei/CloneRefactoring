@@ -1,0 +1,108 @@
+(startLine=1842 endLine=1947 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01217/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+						if (test > 0) { //traditional and javadoc comment
+							boolean isJavadoc = false;
+							try { //get the next char
+								boolean star = false;
+								int previous;
+								boolean isUnicode = false;
+								// consume next character
+								this.unicodeAsBackSlash = false;
+								if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+										&& (this.source[this.currentPosition] == 'u')) {
+									getNextUnicodeChar();
+									isUnicode = true;
+								} else {
+									isUnicode = false;
+									if (this.withoutUnicodePtr != 0) {
+    								    unicodeStore();
+									}
+								}
+	
+								if (this.currentCharacter == '*') {
+									isJavadoc = true;
+									star = true;
+								}
+								if ((this.currentCharacter == '\r') || (this.currentCharacter == '\n')) {
+									if (this.currentLine != null) {
+										parseTags(false);
+									}
+									if (this.recordLineSeparator) {
+										if (isUnicode) {
+											pushUnicodeLineSeparator();
+										} else {
+											pushLineSeparator();
+										}
+									} else if (this.currentLine != null) {
+										this.currentLine.clear();
+									}
+								}
+								isUnicode = false;
+								previous = this.currentPosition;
+								if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+										&& (this.source[this.currentPosition] == 'u')) {
+									getNextUnicodeChar();
+									isUnicode = true;
+								} else {
+									isUnicode = false;
+								}
+								//handle the \\u case manually into comment
+								if (this.currentCharacter == '\\') {
+									if (this.source[this.currentPosition] == '\\')
+										this.currentPosition++; //jump over the \\
+								}
+								// empty comment is not a javadoc /**/
+								if (this.currentCharacter == '/') { 
+									isJavadoc = false;
+								}
+								//loop until end of comment */
+								int firstTag = 0;
+								while ((this.currentCharacter != '/') || (!star)) {
+									if ((this.currentCharacter == '\r') || (this.currentCharacter == '\n')) {
+										if (this.currentLine != null) {
+											parseTags(false);
+										}
+										if (this.recordLineSeparator) {
+											if (isUnicode) {
+												pushUnicodeLineSeparator();
+											} else {
+												pushLineSeparator();
+											}
+										} else if (this.currentLine != null) {
+											this.currentLine.clear();
+										}
+									}
+									switch (this.currentCharacter) {
+										case '*':
+											star = true;
+											break;
+										case '@':
+											if (firstTag == 0) {
+												firstTag = previous;
+											}
+											// fall through default case to set star to false
+										default:
+											star = false;
+									}
+									//get next char
+									previous = this.currentPosition;
+									if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+											&& (this.source[this.currentPosition] == 'u')) {
+										getNextUnicodeChar();
+										isUnicode = true;
+									} else {
+										isUnicode = false;
+									}
+									//handle the \\u case manually into comment
+									if (this.currentCharacter == '\\') {
+										if (this.source[this.currentPosition] == '\\')
+											this.currentPosition++;
+									} //jump over the \\
+								}
+								recordComment(isJavadoc ? TokenNameCOMMENT_JAVADOC : TokenNameCOMMENT_BLOCK);
+								this.commentTagStarts[this.commentPtr] = firstTag;
+							} catch (IndexOutOfBoundsException e) {
+								return;
+							}
+							break NextToken;
+						}
+

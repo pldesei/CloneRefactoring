@@ -1,0 +1,12 @@
+(startLine=3845 endLine=3854 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void lmul() {
+	countLabels = 0;
+	stackDepth -= 2;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_lmul;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_lmul);
+	}
+}
+

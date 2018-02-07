@@ -1,0 +1,56 @@
+(startLine=2202 endLine=2255 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01925/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	private void completionOnParameterizedQualifiedTypeReference(ASTNode astNode, ASTNode astNodeParent, Binding qualifiedBinding, Scope scope) {
+		if (!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+			CompletionOnParameterizedQualifiedTypeReference ref = (CompletionOnParameterizedQualifiedTypeReference) astNode;
+
+			this.insideQualifiedReference = true;
+
+			this.assistNodeIsClass = ref.isClass();
+			this.assistNodeIsException = ref.isException();
+			this.assistNodeIsInterface = ref.isInterface();
+			this.assistNodeIsSuperType = ref.isSuperType();
+
+			this.completionToken = ref.completionIdentifier;
+			long completionPosition = ref.sourcePositions[ref.tokens.length];
+			setSourceAndTokenRange((int) (completionPosition >>> 32), (int) completionPosition);
+
+			if (qualifiedBinding.problemId() == ProblemReasons.NotFound ||
+					(((ReferenceBinding)qualifiedBinding).tagBits & TagBits.HasMissingType) != 0) {
+				if (this.assistNodeInJavadoc == 0 &&
+						(this.requestor.isAllowingRequiredProposals(CompletionProposal.TYPE_REF, CompletionProposal.TYPE_REF))) {
+					if(ref.tokens.length == 1) {
+						findMemberTypesFromMissingType(
+								ref,
+								ref.sourcePositions[0],
+								scope);
+					}
+				}
+			} else {
+				ObjectVector typesFound = new ObjectVector();
+				if (this.assistNodeIsException && astNodeParent instanceof TryStatement) {
+					findExceptionFromTryStatement(
+							this.completionToken,
+							(ReferenceBinding)qualifiedBinding,
+							scope.enclosingSourceType(),
+							(BlockScope)scope,
+							typesFound);
+				}
+				
+				checkCancel();
+				
+				findMemberTypes(
+					this.completionToken,
+					(ReferenceBinding) qualifiedBinding,
+					scope,
+					scope.enclosingSourceType(),
+					false,
+					false,
+					typesFound,
+					null,
+					null,
+					null,
+					false);
+			}
+		}
+	}
+

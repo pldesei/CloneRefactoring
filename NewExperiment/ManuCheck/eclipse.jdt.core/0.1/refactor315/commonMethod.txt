@@ -1,0 +1,31 @@
+(startLine=547 endLine=575 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00661/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTParser.java)
+	/**
+     * Creates an abstract syntax tree.
+     * <p>
+     * Calling this method also returns all settings to their
+     * default values so the object is ready to be reused.
+     * </p>
+     * 
+	 * @param monitor the progress monitor used to report progress and request cancelation,
+	 *   or <code>null</code> if none
+	 * @return an AST node whose type depends on the kind of parse
+	 *  requested, with a fallback to a <code>CompilationUnit</code>
+	 *  in the case of severe parsing errors
+     */
+	public ASTNode createAST(IProgressMonitor monitor) {
+	   if ((this.rawSource == null)
+	   	  && (this.compilationUnitSource == null)
+	   	  && (this.classFileSource == null)) {
+	   	  throw new IllegalStateException("source not specified"); //$NON-NLS-1$
+	   }
+	   ASTNode result;
+	   if (this.API_LEVEL == AST.LEVEL_2_0) {
+	   		result = temporaryCreateASTDispatch(monitor);
+	   } else {
+	   		throw new RuntimeException("J2SE 1.5 parser not implemented yet"); //$NON-NLS-1$
+	   }
+   	   // if successful, re-init defaults to allow reuse (and avoid leaking)
+   	   initializeDefaults();
+   	   return result;
+	}
+

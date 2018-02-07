@@ -1,0 +1,13 @@
+(startLine=697 endLine=707 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02272/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodVerifier.java)
+			if ((itsInterfaces = superType.superInterfaces()) != Binding.NO_SUPERINTERFACES) {
+				int itsLength = itsInterfaces.length;
+				if (nextPosition + itsLength >= interfacesToVisit.length)
+					System.arraycopy(interfacesToVisit, 0, interfacesToVisit = new ReferenceBinding[nextPosition + itsLength + 5], 0, nextPosition);
+				nextInterface : for (int a = 0; a < itsLength; a++) {
+					ReferenceBinding next = itsInterfaces[a];
+					for (int b = 0; b < nextPosition; b++)
+						if (next == interfacesToVisit[b]) continue nextInterface;
+					interfacesToVisit[nextPosition++] = next;
+				}
+			}
+

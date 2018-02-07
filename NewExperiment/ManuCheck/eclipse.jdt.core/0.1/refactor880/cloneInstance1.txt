@@ -1,0 +1,18 @@
+(startLine=405 endLine=420 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testArrayType1() throws JavaModelException {
+		ASTNode node = buildAST(
+			"public class X {\n" +
+			"  /*start*/Object[]/*end*/ field;\n" +
+			"}"
+		);
+		IBinding binding = ((ArrayType) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"Object [in Object.class [in java.lang [in "+ getExternalJCLPathString("1.5") + "]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

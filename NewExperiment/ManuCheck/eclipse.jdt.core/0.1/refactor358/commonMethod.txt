@@ -1,0 +1,10 @@
+(startLine=305 endLine=312 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void cannotInstantiateWithWildcards(TypeReference typeRef, ParameterizedTypeBinding type) {
+	this.handle(
+		IProblem.InvalidClassInstantiationWithWildcards,
+		new String[] {new String(type.erasure().readableName()), parametersAsString(type.arguments, false) },
+		new String[] {new String(type.erasure().shortReadableName()), parametersAsString(type.arguments, true)},
+		typeRef.sourceStart,
+		typeRef.sourceEnd);
+}
+

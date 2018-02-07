@@ -1,0 +1,26 @@
+(startLine=550 endLine=573 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01845/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/formatter/FormatterCommentsMassiveTests.java)
+									while (true) {
+										if (start < length) {
+											while (start < length && ScannerHelper.isWhitespace(line.charAt(start))) {
+												start++;
+											}
+											if (start < length) {
+												buffer.append(line.substring(start));
+											}
+										}
+										line = tokenizer.nextToken();
+										length = line.length();
+										start = 0;
+										while (start < length && ScannerHelper.isWhitespace(line.charAt(start))) {
+											start++;
+										}
+										if (start < length && (line.charAt(start) != '/' || line.charAt(start+1) != '/')) {
+											buffer.append('\n');
+											skipToken = true;
+											// only gate to break the loop
+											continue lineLoop;
+										}
+										buffer.append(' ');
+										start += 2; // skip next line starting comment
+									}
+

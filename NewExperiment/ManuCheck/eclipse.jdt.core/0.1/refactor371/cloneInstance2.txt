@@ -1,0 +1,22 @@
+(startLine=420 endLine=439 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00771/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/EqualExpression.java)
+	} else if (left instanceof NullLiteral) { // optimized case: null == x
+		right.generateCode(currentScope, codeStream, valueRequired);
+		if (valueRequired) {
+			if (falseLabel == null) {
+				if (trueLabel != null) {
+					// implicit falling through the FALSE case
+					codeStream.ifnull(trueLabel);
+				}
+			} else {
+				// implicit falling through the TRUE case
+				if (trueLabel == null) {
+					codeStream.ifnonnull(falseLabel);
+				} else {
+					// no implicit fall through TRUE/FALSE --> should never occur
+				}
+			}
+		}
+		codeStream.recordPositionsFrom(pc, this.sourceStart);
+		return;
+	}
+

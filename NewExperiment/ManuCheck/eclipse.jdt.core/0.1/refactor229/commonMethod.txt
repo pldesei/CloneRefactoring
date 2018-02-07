@@ -1,0 +1,29 @@
+(startLine=1681 endLine=1707 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00272/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaProject.java)
+	/**
+	 * Compare current classpath with given one to see if any different.
+	 * Note that the argument classpath contains its binary output.
+	 */
+	public boolean isClasspathEqualsTo(IClasspathEntry[] newClasspath, IPath newOutputLocation, IClasspathEntry[] otherClasspathWithOutput)
+		throws JavaModelException {
+
+		if (otherClasspathWithOutput != null && otherClasspathWithOutput.length > 0) {
+
+			int length = otherClasspathWithOutput.length;
+			if (length == newClasspath.length + 1) {
+				// output is amongst file entries (last one)
+
+				// compare classpath entries
+				for (int i = 0; i < length - 1; i++) {
+					if (!otherClasspathWithOutput[i].equals(newClasspath[i]))
+						return false;
+				}
+				// compare binary outputs
+				if (otherClasspathWithOutput[length - 1].getContentKind()
+					== ClasspathEntry.K_OUTPUT
+					&& otherClasspathWithOutput[length - 1].getPath().equals(newOutputLocation))
+					return true;
+			}
+		}
+		return false;
+	}
+

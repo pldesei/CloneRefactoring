@@ -1,0 +1,9 @@
+(startLine=111 endLine=117 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00044/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/PotentialMatch.java)
+public void locateMatches() throws CoreException {
+	if (this.openable instanceof CompilationUnit) {
+		this.locateMatchesInCompilationUnit();
+	} else if (this.openable instanceof org.eclipse.jdt.internal.core.ClassFile) {
+		this.locateMatchesInClassFile();
+	}
+}
+

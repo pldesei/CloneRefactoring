@@ -1,0 +1,16 @@
+(startLine=163 endLine=176 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01715/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeBinding.java)
+    if (erasureIsClass) {
+		while ((currentType = currentType.superclass()) != null) { 
+			if (currentType.id == wellKnownErasureID)
+				return currentType;
+			switch(currentType.kind()) {
+				case Binding.PARAMETERIZED_TYPE :
+				case Binding.RAW_TYPE :
+				case Binding.ARRAY_TYPE :
+					if (currentType.erasure().id == wellKnownErasureID) 
+						return currentType;
+			}
+		}    
+		return null;
+    }
+

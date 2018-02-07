@@ -1,0 +1,55 @@
+(startLine=1656 endLine=1708 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01482/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+protected ArrayList handleExtdirs(ArrayList extdirsClasspaths) {
+ 	final File javaHome = getJavaHome();
+
+	/*
+	 * Feed extDirClasspath according to:
+	 * - -extdirs first if present;
+	 * - else java.ext.dirs if defined;
+	 * - else default extensions directory for the platform.
+	 */
+	if (extdirsClasspaths == null) {
+		extdirsClasspaths = new ArrayList(DEFAULT_SIZE_CLASSPATH);
+		String extdirsStr = System.getProperty("java.ext.dirs"); //$NON-NLS-1$
+		if (extdirsStr == null) {
+			extdirsClasspaths.add(javaHome.getAbsolutePath() + "/lib/ext"); //$NON-NLS-1$
+		} else {
+			StringTokenizer tokenizer = new StringTokenizer(extdirsStr, File.pathSeparator);
+			while (tokenizer.hasMoreTokens()) 
+				extdirsClasspaths.add(tokenizer.nextToken());
+		}
+	}
+	
+	/*
+	 * Feed extdirsClasspath with the entries found into the directories listed by
+	 * extdirsNames.
+	 */
+	if (extdirsClasspaths.size() != 0) {
+		File[] directoriesToCheck = new File[extdirsClasspaths.size()];
+		for (int i = 0; i < directoriesToCheck.length; i++) 
+			directoriesToCheck[i] = new File((String) extdirsClasspaths.get(i));
+		extdirsClasspaths.clear();
+		File[][] extdirsJars = getLibrariesFiles(directoriesToCheck);
+		if (extdirsJars != null) {
+			for (int i = 0, max = extdirsJars.length; i < max; i++) {
+				File[] current = extdirsJars[i];
+				if (current != null) {
+					for (int j = 0, max2 = current.length; j < max2; j++) {
+						FileSystem.Classpath classpath = 
+							FileSystem.getClasspath(
+									current[j].getAbsolutePath(),
+									null, null); 
+						if (classpath != null) {
+							extdirsClasspaths.add(classpath);
+						}
+					}
+				} else if (directoriesToCheck[i].isFile()) {
+					this.logger.logIncorrectExtDirsEntry(directoriesToCheck[i].getAbsolutePath());
+				}
+			}
+		}
+	}
+	
+	return extdirsClasspaths;
+}
+

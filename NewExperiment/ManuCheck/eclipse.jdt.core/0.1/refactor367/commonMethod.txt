@@ -1,0 +1,18 @@
+(startLine=72 endLine=87 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00772/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/EqualExpression.java)
+	public final void computeConstant(TypeBinding leftType, TypeBinding rightType) {
+		if ((this.left.constant != NotAConstant) && (this.right.constant != NotAConstant)) {
+			this.constant =
+				Constant.computeConstantOperationEQUAL_EQUAL(
+					left.constant,
+					leftType.id,
+					EQUAL_EQUAL,
+					right.constant,
+					rightType.id);
+			if (((this.bits & OperatorMASK) >> OperatorSHIFT) == NOT_EQUAL)
+				constant = Constant.fromValue(!constant.booleanValue());
+		} else {
+			this.constant = NotAConstant;
+			// no optimization for null == null
+		}
+	}
+

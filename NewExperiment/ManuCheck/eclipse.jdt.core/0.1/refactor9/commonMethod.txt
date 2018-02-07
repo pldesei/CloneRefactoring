@@ -1,0 +1,13 @@
+(startLine=2550 endLine=2560 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void ifne(Label lbl) {
+	countLabels = 0;
+	stackDepth--;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_ifne;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_ifne);
+	}
+	lbl.branch();
+}
+

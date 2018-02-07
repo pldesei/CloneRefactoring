@@ -1,0 +1,16 @@
+(startLine=596 endLine=609 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00660/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/AST.java)
+			try {
+				// parse and resolve
+				compilationUnitDeclaration = CompilationUnitResolver.resolve(unit, false/*don't cleanup*/, source, owner, monitor);
+				ASTConverter converter = new ASTConverter(unit.getJavaProject().getOptions(true), true, monitor);
+				AST ast = new AST();
+				BindingResolver resolver = new DefaultBindingResolver(compilationUnitDeclaration.scope);
+				ast.setBindingResolver(resolver);
+				converter.setAST(ast);
+			
+				CompilationUnit cu = converter.convert(compilationUnitDeclaration, source);
+				cu.setLineEndTable(compilationUnitDeclaration.compilationResult.lineSeparatorPositions);
+				resolver.storeModificationCount(ast.modificationCount());
+				return cu;
+			} catch(JavaModelException e) {
+

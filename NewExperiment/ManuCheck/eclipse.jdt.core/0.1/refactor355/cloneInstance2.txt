@@ -1,0 +1,16 @@
+(startLine=631 endLine=644 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedNameReference.java)
+								!= currentScope.enclosingSourceType().getPackage())) {
+				if (syntheticReadAccessors == null) {
+					if (otherBindings == null)
+						syntheticReadAccessors = new SyntheticAccessMethodBinding[1];
+					else
+						syntheticReadAccessors =
+							new SyntheticAccessMethodBinding[otherBindings.length + 1];
+				}
+				syntheticReadAccessors[index] =
+					((SourceTypeBinding) currentScope.enclosingSourceType().enclosingTypeAt(depth))
+											.addSyntheticMethod(fieldBinding, true);
+				currentScope.problemReporter().needToEmulateFieldReadAccess(fieldBinding, this);
+				return;
+			}
+

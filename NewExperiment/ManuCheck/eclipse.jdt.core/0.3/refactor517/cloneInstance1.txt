@@ -1,0 +1,11 @@
+(startLine=97 endLine=105 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01303/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/ClasspathDirectory.java)
+	try {
+		ClassFileReader reader = ClassFileReader.read(binaryLocation + qualifiedBinaryFileName);
+		if (reader != null) {
+			if (this.accessRuleSet == null)
+				return new NameEnvironmentAnswer(reader, null);
+			String fileNameWithoutExtension = qualifiedBinaryFileName.substring(0, qualifiedBinaryFileName.length() - SuffixConstants.SUFFIX_CLASS.length);
+			return new NameEnvironmentAnswer(reader, this.accessRuleSet.getViolatedRestriction(fileNameWithoutExtension.toCharArray()));
+		}
+	} catch (Exception e) {
+
