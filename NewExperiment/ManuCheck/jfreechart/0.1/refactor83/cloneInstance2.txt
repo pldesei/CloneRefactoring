@@ -1,0 +1,12 @@
+(startLine=5629 endLine=5638 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00359/source/org/jfree/chart/plot/XYPlot.java)
+        for (int i = 0; i < this.renderers.size(); i++) {
+            XYItemRenderer renderer2 = (XYItemRenderer) this.renderers.get(i);
+            if (renderer2 instanceof PublicCloneable) {
+                PublicCloneable pc = (PublicCloneable) renderer2;
+                XYItemRenderer rc = (XYItemRenderer) pc.clone();
+                clone.renderers.set(i, rc);
+                rc.setPlot(clone);
+                rc.addChangeListener(clone);
+            }
+        }
+

@@ -1,0 +1,16 @@
+(startLine=167 endLine=180 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00326/tests/org/jfree/chart/renderer/xy/XYBlockRendererTest.java)
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        XYBlockRenderer r1 = new XYBlockRenderer();
+        XYBlockRenderer r2;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(buffer);
+        out.writeObject(r1);
+        out.close();
+
+        ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(
+                buffer.toByteArray()));
+        r2 = (XYBlockRenderer) in.readObject();
+        in.close();
+        assertEquals(r1, r2);
+    }
+

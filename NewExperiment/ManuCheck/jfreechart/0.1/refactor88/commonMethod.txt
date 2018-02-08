@@ -1,0 +1,15 @@
+(startLine=3377 endLine=3389 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00365/source/org/jfree/chart/plot/XYPlot.java)
+    private List<Integer> getRendererIndices(DatasetRenderingOrder order) {
+        List<Integer> result = new ArrayList<Integer>();
+        for (Entry<Integer, XYItemRenderer> entry : this.renderers.entrySet()) {
+            if (entry.getValue() != null) {
+                result.add(entry.getKey());
+            }
+        }
+        Collections.sort(result);
+        if (order == DatasetRenderingOrder.REVERSE) {
+            Collections.reverse(result);
+        }
+        return result;        
+    }
+

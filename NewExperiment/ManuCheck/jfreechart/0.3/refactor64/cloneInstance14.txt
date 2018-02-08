@@ -1,0 +1,15 @@
+(startLine=131 endLine=143 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00325/tests/org/jfree/chart/renderer/category/GroupedStackedBarRendererTest.java)
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        GroupedStackedBarRenderer r1 = new GroupedStackedBarRenderer();
+        GroupedStackedBarRenderer r2;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(buffer);
+        out.writeObject(r1);
+        out.close();
+        ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(
+                buffer.toByteArray()));
+        r2 = (GroupedStackedBarRenderer) in.readObject();
+        in.close();
+        assertEquals(r1, r2);
+    }
+

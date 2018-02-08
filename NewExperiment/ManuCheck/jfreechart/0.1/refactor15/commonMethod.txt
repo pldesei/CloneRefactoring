@@ -1,0 +1,52 @@
+(startLine=815 endLine=864 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00276/source/org/jfree/chart/renderer/category/BarRenderer.java)
+    /**
+     * Calculates the coordinate of the first "side" of a bar.  This will be
+     * the minimum x-coordinate for a vertical bar, and the minimum
+     * y-coordinate for a horizontal bar.
+     *
+     * @param plot  the plot.
+     * @param orientation  the plot orientation.
+     * @param dataArea  the data area.
+     * @param domainAxis  the domain axis.
+     * @param state  the renderer state (has the bar width precalculated).
+     * @param row  the row index.
+     * @param column  the column index.
+     *
+     * @return The coordinate.
+     */
+    protected double calculateBarW0(CategoryPlot plot,
+                                    PlotOrientation orientation,
+                                    Rectangle2D dataArea,
+                                    CategoryAxis domainAxis,
+                                    CategoryItemRendererState state,
+                                    int row,
+                                    int column) {
+        // calculate bar width...
+        double space = 0.0;
+        if (orientation == PlotOrientation.HORIZONTAL) {
+            space = dataArea.getHeight();
+        }
+        else {
+            space = dataArea.getWidth();
+        }
+        double barW0 = domainAxis.getCategoryStart(column, getColumnCount(),
+                dataArea, plot.getDomainAxisEdge());
+        int seriesCount = state.getVisibleSeriesCount() >= 0
+                ? state.getVisibleSeriesCount() : getRowCount();
+        int categoryCount = getColumnCount();
+        if (seriesCount > 1) {
+            double seriesGap = space * getItemMargin()
+                               / (categoryCount * (seriesCount - 1));
+            double seriesW = calculateSeriesWidth(space, domainAxis,
+                    categoryCount, seriesCount);
+            barW0 = barW0 + row * (seriesW + seriesGap)
+                          + (seriesW / 2.0) - (state.getBarWidth() / 2.0);
+        }
+        else {
+            barW0 = domainAxis.getCategoryMiddle(column, getColumnCount(),
+                    dataArea, plot.getDomainAxisEdge()) - state.getBarWidth()
+                    / 2.0;
+        }
+        return barW0;
+    }
+

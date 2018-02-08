@@ -1,0 +1,22 @@
+(startLine=1279 endLine=1298 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00140/source/org/jfree/chart/plot/CategoryPlot.java)
+    /**
+     * Returns the index of the specified dataset, or <code>-1</code> if the
+     * dataset does not belong to the plot.
+     *
+     * @param dataset  the dataset (<code>null</code> not permitted).
+     *
+     * @return The index.
+     *
+     * @since 1.0.11
+     */
+    public int indexOf(CategoryDataset dataset) {
+        int result = -1;
+        for (int i = 0; i < this.datasets.size(); i++) {
+            if (dataset == this.datasets.get(i)) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+

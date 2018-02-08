@@ -1,0 +1,30 @@
+(startLine=1652 endLine=1679 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00219/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java)
+    /**
+     * Adds an entity with the specified hotspot.
+     *
+     * @param entities  the entity collection.
+     * @param dataset  the dataset.
+     * @param row  the row index.
+     * @param column  the column index.
+     * @param hotspot  the hotspot.
+     */
+    protected void addItemEntity(EntityCollection entities,
+                                 CategoryDataset dataset, int row, int column,
+                                 Shape hotspot) {
+
+        String tip = null;
+        CategoryToolTipGenerator tipster = getToolTipGenerator(row, column);
+        if (tipster != null) {
+            tip = tipster.generateToolTip(dataset, row, column);
+        }
+        String url = null;
+        CategoryURLGenerator urlster = getItemURLGenerator(row, column);
+        if (urlster != null) {
+            url = urlster.generateURL(dataset, row, column);
+        }
+        CategoryItemEntity entity = new CategoryItemEntity(hotspot, tip, url,
+                dataset, dataset.getRowKey(row), dataset.getColumnKey(column));
+        entities.add(entity);
+
+    }
+

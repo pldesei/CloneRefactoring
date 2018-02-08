@@ -1,0 +1,22 @@
+(startLine=4990 endLine=5009 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00236/source/org/jfree/chart/plot/XYPlot.java)
+            Point2D source) {
+        if (!isDomainPannable()) {
+            return;
+        }
+        int domainAxisCount = getDomainAxisCount();
+        for (int i = 0; i < domainAxisCount; i++) {
+            ValueAxis axis = getDomainAxis(i);
+            if (axis == null) {
+                continue;
+            }
+            double length = axis.getRange().getLength();
+            double adj = -percent * length;
+            if (axis.isInverted()) {
+                adj = -adj;
+            }
+            axis.setRange(axis.getLowerBound() + adj,
+                    axis.getUpperBound() + adj);
+        }
+        configureRangeAxes();
+    }
+

@@ -1,0 +1,19 @@
+(startLine=206 endLine=222 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00289/source/org/jfree/data/DataUtilities.java)
+             int[] validCols) {
+        if (data == null) {
+            throw new IllegalArgumentException("Null 'data' argument.");
+        }
+        double total = 0.0;
+        int colCount = data.getColumnCount();
+        for (int v = 0; v < validCols.length; v++) {
+            int col = validCols[v];
+            if (col < colCount) {
+                Number n = data.getValue(row, col);
+                if (n != null) {
+                    total += n.doubleValue();
+                }
+            }
+        }
+        return total;
+    }
+

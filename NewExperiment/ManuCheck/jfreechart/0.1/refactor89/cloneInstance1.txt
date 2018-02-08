@@ -1,0 +1,34 @@
+(startLine=3293 endLine=3324 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00364/source/org/jfree/chart/plot/XYPlot.java)
+        if (order == DatasetRenderingOrder.FORWARD) {
+
+            // draw background annotations
+            int rendererCount = this.renderers.size();
+            for (int i = 0; i < rendererCount; i++) {
+                XYItemRenderer r = getRenderer(i);
+                if (r != null) {
+                    ValueAxis domainAxis = getDomainAxisForDataset(i);
+                    ValueAxis rangeAxis = getRangeAxisForDataset(i);
+                    r.drawAnnotations(g2, dataArea, domainAxis, rangeAxis,
+                            Layer.BACKGROUND, info);
+                }
+            }
+
+            // render data items...
+            for (int i = 0; i < getDatasetCount(); i++) {
+                foundData = render(g2, dataArea, i, info, crosshairState)
+                    || foundData;
+            }
+
+            // draw foreground annotations
+            for (int i = 0; i < rendererCount; i++) {
+                XYItemRenderer r = getRenderer(i);
+                if (r != null) {
+                    ValueAxis domainAxis = getDomainAxisForDataset(i);
+                    ValueAxis rangeAxis = getRangeAxisForDataset(i);
+                    r.drawAnnotations(g2, dataArea, domainAxis, rangeAxis,
+                            Layer.FOREGROUND, info);
+                }
+            }
+
+        }
+

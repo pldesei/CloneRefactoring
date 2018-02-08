@@ -1,0 +1,16 @@
+(startLine=1811 endLine=1824 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00252/source/org/jfree/chart/renderer/xy/AbstractXYItemRenderer.java)
+    /**
+     * Utility method delegating to {@link GeneralPath#lineTo} taking double as
+     * parameters.
+     *
+     * @param hotspot  the region under construction (<code>null</code> not 
+     *           permitted);
+     * @param x  the x coordinate;
+     * @param y  the y coordinate;
+     *
+     * @since 1.0.14
+     */
+    protected static void lineTo(GeneralPath hotspot, double x, double y) {
+        hotspot.lineTo((float) x, (float) y);
+    }
+
