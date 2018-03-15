@@ -1,0 +1,78 @@
+ProjectPath:/home/sonia/NewExperiment/jmeterFilter/00313
+predFragLineRange:466-483
+predMethodLineRange:383-506
+nextLineRange:419-558
+predStrMethodInvoNames:
+[toString, debug, getPropertyAsBoolean, setMonitor, setMonitor, setSampleLabel, sampleStart, setupConnection, connect, error, debug, disconnect, setUseKeepAlive, debug, equals, sendPostData, readResponse, sampleEnd, setResponseData, getResponseCode, setResponseCode, toString, setSuccessful, setResponseMessage, getResponseMessage, getContentType, setContentType, toLowerCase, indexOf, setDataEncoding, substring, length, startsWith, setDataType, setDataType, setResponseHeaders, getResponseHeaders, isRedirect, setRedirectLocation, getHeaderField, saveConnectionCookies, getCookieManager, resultProcessing, debug, sampleEnd, errorResult, disconnect]
+%%%%%%%%%%
+AddedMethodInvo Line:445 InvoName:isMonitor()
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSamplerBase
+ClassName:HTTPSamplerBase
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java
+InvokedMethodSig:public boolean isMonitor() 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:res.setQueryString(postBody)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSampleResult
+ClassName:HTTPSampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampleResult.java
+InvokedMethodSig:public void setQueryString(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:482 InvoName:sendPutData(conn)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSampler
+ClassName:HTTPSampler
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampler.java
+InvokedMethodSig:private void sendPutData(java.net.URLConnection) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:501 InvoName:Integer.parseInt(respMsg.substring(0,3))
+PackageName:java.lang
+QualifiedClassName:java.lang.Integer
+ClassName:Integer
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/java/lang/Integer.java
+InvokedMethodSig:public static int parseInt(java.lang.String) throws java.lang.NumberFormatException
+%%%%%%%%%%
+AddedMethodInvo Line:502 InvoName:log.warn("ResponseCode==-1; parsed " + respMsg + " as "+ errorLevel)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:504 InvoName:log.warn("ResponseCode==-1; could not parse " + respMsg + " hdr: "+ hdr)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:508 InvoName:log.warn("ResponseCode==-1 & null ResponseMessage. Header(0)= " + hdr)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:516 InvoName:isSuccessCode(errorLevel)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSamplerBase
+ClassName:HTTPSamplerBase
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java
+InvokedMethodSig:protected boolean isSuccessCode(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:525 InvoName:res.setEncodingAndType(ct)
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void setEncodingAndType(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:533 InvoName:getAutoRedirects()
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSamplerBase
+ClassName:HTTPSamplerBase
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java
+InvokedMethodSig:public boolean getAutoRedirects() 
+%%%%%%%%%%
+AddedMethodInvo Line:534 InvoName:res.setURL(conn.getURL())
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void setURL(java.net.URL) 
+%%%%%%%%%%
+AddedMethodInvo Line:534 InvoName:conn.getURL()
+PackageName:java.net
+QualifiedClassName:java.net.URLConnection
+ClassName:URLConnection
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/java/net/URLConnection.java
+InvokedMethodSig:public java.net.URL getURL() 

@@ -1,0 +1,15 @@
+(startLine=86 endLine=98 srcPath=/home/sonia/NewExperiment/jmeterFilter/00564/test/src/org/apache/jmeter/gui/util/TristateCheckBoxTest.java)
+            public void itemStateChanged(ItemEvent e) {
+                System.out.println(e);
+                switch(tristateBox.getState()) {
+                case SELECTED:
+                    System.out.println("Selected"); break;
+                case DESELECTED:
+                    System.out.println("Not Selected"); break;
+                case INDETERMINATE:
+                    System.out.println("Tristate Selected"); break;
+                default:
+                    System.err.println("Unexpected state: " + tristateBox.getState()); break;
+                }
+            }
+

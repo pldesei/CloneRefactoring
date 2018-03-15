@@ -1,0 +1,39 @@
+(startLine=548 endLine=584 srcPath=/home/sonia/NewExperiment/jmeterFilter/00285/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampler.java)
+            {
+                boolean didFollowRedirects= false;
+                if (res.isRedirect())
+                {
+                    log.debug("Location set to - " + res.getRedirectLocation());
+                    
+                    if (getFollowRedirects())
+                    {
+                        res= followRedirects(res, frameDepth);
+                        didFollowRedirects= true;
+                    }
+                }
+
+                if (isImageParser()
+                    && (HTTPSampleResult.TEXT).equals(res.getDataType())
+                    && res.isSuccessful())
+                {
+                    if (frameDepth > MAX_FRAME_DEPTH)
+                    {
+                        res.addSubResult(
+                            errorResult(
+                                new Exception("Maximum frame/iframe nesting depth exceeded."),
+                                res));
+                    }
+                    else
+                    {
+                        // If we followed redirects, we already have a container:
+                        boolean createContainerResults= !didFollowRedirects;
+
+                        res=
+                            downloadPageResources(
+                                res,
+                                createContainerResults,
+                                frameDepth);
+                    }
+                }
+            }
+

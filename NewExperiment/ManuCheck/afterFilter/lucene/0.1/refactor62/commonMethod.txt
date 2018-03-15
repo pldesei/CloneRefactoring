@@ -1,0 +1,31 @@
+(startLine=58 endLine=86 srcPath=/home/sonia/NewExperiment/luceneFilter/00955/modules/benchmark/src/test/org/apache/lucene/benchmark/byTask/feeds/LineDocSourceTest.java)
+  private void writeDocsToFile(BufferedWriter writer, boolean addHeader, Properties otherFields) throws IOException {
+    if (addHeader) {
+      writer.write(WriteLineDocTask.FIELDS_HEADER_INDICATOR);
+      writer.write(WriteLineDocTask.SEP);
+      writer.write(DocMaker.TITLE_FIELD);
+      writer.write(WriteLineDocTask.SEP);
+      writer.write(DocMaker.DATE_FIELD);
+      writer.write(WriteLineDocTask.SEP);
+      writer.write(DocMaker.BODY_FIELD);
+      if (otherFields!=null) {
+        // additional field names in the header 
+        for (Object fn : otherFields.keySet()) {
+          writer.write(WriteLineDocTask.SEP);
+          writer.write(fn.toString());
+        }
+      }
+      writer.newLine();
+    }
+    StringBuilder doc = new StringBuilder();
+    doc.append("title").append(WriteLineDocTask.SEP).append("date").append(WriteLineDocTask.SEP).append(DocMaker.BODY_FIELD);
+    if (otherFields!=null) {
+      // additional field values in the doc line 
+      for (Object fv : otherFields.values()) {
+        doc.append(WriteLineDocTask.SEP).append(fv.toString());
+      }
+    }
+    writer.write(doc.toString());
+    writer.newLine();
+  }
+

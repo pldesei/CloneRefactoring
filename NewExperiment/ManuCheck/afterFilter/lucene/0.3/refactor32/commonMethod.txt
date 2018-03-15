@@ -1,0 +1,10 @@
+(startLine=269 endLine=276 srcPath=/home/sonia/NewExperiment/luceneFilter/00628/src/java/org/apache/lucene/util/ArrayUtil.java)
+  public static byte[] grow(byte[] array, int minSize) {
+    if (array.length < minSize) {
+      byte[] newArray = new byte[oversize(minSize, 1)];
+      System.arraycopy(array, 0, newArray, 0, array.length);
+      return newArray;
+    } else
+      return array;
+  }
+

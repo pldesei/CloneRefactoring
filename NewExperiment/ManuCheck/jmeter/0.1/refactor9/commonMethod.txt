@@ -1,0 +1,37 @@
+(startLine=866 endLine=900 srcPath=/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/ldap/org/apache/jmeter/protocol/ldap/sampler/LDAPExtSampler.java)
+    private void writeSearchResults(final XMLBuffer xmlb, final NamingEnumeration srch)
+            throws NamingException
+    {
+   	
+        final ArrayList     sortedResults = new ArrayList(MAX_SORTED_RESULTS);
+        final String        searchBase = getPropertyAsString(SEARCHBASE);
+        final String        rootDn = getRootdn();
+
+        // read all sortedResults into memory so we can guarantee ordering
+        try {
+			while (srch.hasMore() && (sortedResults.size() < MAX_SORTED_RESULTS)) {
+			    final SearchResult    sr = (SearchResult) srch.next();
+
+			        // must be done prior to sorting
+			    normaliseSearchDN(sr, searchBase, rootDn);
+			    sortedResults.add(sr);
+			}
+		} finally { // show what we did manage to retrieve
+		
+	        sortResults(sortedResults);
+	        
+	        for (Iterator it = sortedResults.iterator(); it.hasNext();)
+	        {
+	            final SearchResult  sr = (SearchResult) it.next();
+	            writeSearchResult(sr, xmlb);
+	        }
+		}
+
+		while (srch.hasMore()) { // If there's anything left ...
+            final SearchResult    sr = (SearchResult) srch.next();
+
+            normaliseSearchDN(sr, searchBase, rootDn);
+            writeSearchResult(sr, xmlb);
+        }
+    }
+

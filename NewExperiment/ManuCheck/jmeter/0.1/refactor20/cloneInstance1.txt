@@ -1,0 +1,22 @@
+(startLine=173 endLine=192 srcPath=/home/sonia/NewExperiment/jmeterFilter/00397/src/protocol/jms/org/apache/jmeter/protocol/jms/sampler/SubscriberSampler.java)
+        for(cnt = 0; cnt < loop ; cnt++) {
+            TextMessage msg = queue.poll();
+            if (msg != null) {
+                read++;
+                try {
+                    buffer.append(msg.getText());
+                    Enumeration<?> props = msg.getPropertyNames();
+                    while(props.hasMoreElements()) {
+                        String name = (String) props.nextElement();
+                        propBuffer.append("PROPERTY: ");
+                        propBuffer.append(name);
+                        propBuffer.append("=");
+                        propBuffer.append(msg.getObjectProperty(name));
+                        propBuffer.append("\n");
+                    }
+                } catch (JMSException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+

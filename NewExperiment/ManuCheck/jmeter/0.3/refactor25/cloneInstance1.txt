@@ -1,0 +1,14 @@
+(startLine=377 endLine=388 srcPath=/home/sonia/NewExperiment/jmeterFilter/00460/src/core/org/apache/jmeter/engine/StandardJMeterEngine.java)
+            while (running && setupIter.hasNext()) {//for each setup thread group
+                AbstractThreadGroup group = setupIter.next();
+                groupCount++;
+                log.info("Starting Setup Thread: " + groupCount);
+                String groupName = startThreadGroup(group, groupCount, setupSearcher, testLevelElements, notifier);
+                if (serialized && setupIter.hasNext()) {
+                    log.info("Waiting for setup thread group: "+groupName+" to finish before starting next setup group");
+                    while (running && allThreads.size() > 0) {
+                        pause(1000);
+                    }
+                }
+            }    
+

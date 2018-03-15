@@ -1,0 +1,15 @@
+(startLine=71 endLine=83 srcPath=/home/sonia/NewExperiment/luceneFilter/00181/src/java/org/apache/lucene/search/MultiTermQuery.java)
+    public String toString(String field) {
+        StringBuffer buffer = new StringBuffer();
+        if (!term.field().equals(field)) {
+            buffer.append(term.field());
+            buffer.append(":");
+        }
+        buffer.append(term.text());
+        if (getBoost() != 1.0f) {
+            buffer.append("^");
+            buffer.append(Float.toString(getBoost()));
+        }
+        return buffer.toString();
+    }
+

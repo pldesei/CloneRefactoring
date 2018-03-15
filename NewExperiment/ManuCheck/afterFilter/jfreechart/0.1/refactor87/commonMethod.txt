@@ -1,0 +1,18 @@
+(startLine=1406 endLine=1421 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00365/source/org/jfree/chart/plot/XYPlot.java)
+    /**
+     * Returns the index of the specified dataset, or {@code -1} if the
+     * dataset does not belong to the plot.
+     *
+     * @param dataset  the dataset ({@code null} not permitted).
+     *
+     * @return The index or -1.
+     */
+    public int indexOf(XYDataset dataset) {
+        for (Map.Entry<Integer, XYDataset> entry: this.datasets.entrySet()) {
+            if (dataset == entry.getValue()) {
+                return entry.getKey();
+            }
+        }
+        return -1;
+    }
+

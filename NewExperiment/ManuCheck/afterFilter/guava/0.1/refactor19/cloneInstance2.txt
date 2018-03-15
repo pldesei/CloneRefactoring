@@ -1,0 +1,29 @@
+(startLine=255 endLine=281 srcPath=/home/sonia/NewExperiment/guavaFilter/00404/guava/src/com/google/common/collect/HashBiMap.java)
+  private K putInverse(@Nullable V value, @Nullable K key, boolean force) {
+    int valueHash = hash(value);
+    int keyHash = hash(key);
+
+    BiEntry<K, V> oldEntryForValue = seekByValue(value, valueHash);
+    if (oldEntryForValue != null && keyHash == oldEntryForValue.keyHash
+        && Objects.equal(key, oldEntryForValue.key)) {
+      return key;
+    }
+
+    BiEntry<K, V> oldEntryForKey = seekByKey(key, keyHash);
+    if (oldEntryForKey != null) {
+      if (force) {
+        delete(oldEntryForKey);
+      } else {
+        throw new IllegalArgumentException("value already present: " + key);
+      }
+    }
+
+    if (oldEntryForValue != null) {
+      delete(oldEntryForValue);
+    }
+    BiEntry<K, V> newEntry = new BiEntry<K, V>(key, keyHash, value, valueHash);
+    insert(newEntry);
+    rehashIfNecessary();
+    return (oldEntryForValue == null) ? null : oldEntryForValue.key;
+  }
+

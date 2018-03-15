@@ -1,0 +1,73 @@
+(startLine=689 endLine=759 srcPath=/home/sonia/NewExperiment/guavaFilter/00174/guava-tests/test/com/google/common/cache/CacheLoadingTest.java)
+  public void testLoadUncheckedException() throws ExecutionException {
+    Exception e = new RuntimeException();
+    CacheLoader<Object, Object> loader = exceptionLoader(e);
+    LoadingCache<Object, Object> cache = CacheBuilder.newBuilder().build(loader);
+    CacheStats stats = cache.stats();
+    assertEquals(0, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(0, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.get(new Object());
+      fail();
+    } catch (UncheckedExecutionException expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(1, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(1, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.getUnchecked(new Object());
+      fail();
+    } catch (UncheckedExecutionException expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(2, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(2, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.refresh(new Object());
+      fail();
+    } catch (UncheckedExecutionException expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(2, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(3, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    Exception callableException = new RuntimeException();
+    try {
+      cache.get(new Object(), throwing(callableException));
+      fail();
+    } catch (UncheckedExecutionException expected) {
+      assertSame(callableException, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(3, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(4, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+
+    try {
+      cache.getAll(asList(new Object()));
+      fail();
+    } catch (UncheckedExecutionException expected) {
+      assertSame(e, expected.getCause());
+    }
+    stats = cache.stats();
+    assertEquals(4, stats.missCount());
+    assertEquals(0, stats.loadSuccessCount());
+    assertEquals(5, stats.loadExceptionCount());
+    assertEquals(0, stats.hitCount());
+  }
+

@@ -1,0 +1,15 @@
+(startLine=139 endLine=151 srcPath=/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/ldap/org/apache/jmeter/protocol/ldap/sampler/LdapExtClient.java)
+	/***************************************************************************
+	 * Filter the data in the ldap directory
+	 * 
+	 * @param filter
+	 *            filter this value from the base
+	 **************************************************************************/
+	public NamingEnumeration compare(DirContext dirContext, String filter, String entrydn) throws NamingException {
+		if (dirContext == null) {
+			throw new NamingException(CONTEXT_IS_NULL);
+		}
+		SearchControls searchcontrols = new SearchControls(0, 1, 0, new String[0], false, false);
+		return dirContext.search(entrydn, filter, searchcontrols);
+	}
+

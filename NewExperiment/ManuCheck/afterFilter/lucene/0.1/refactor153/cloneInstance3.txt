@@ -1,0 +1,16 @@
+(startLine=411 endLine=424 srcPath=/home/sonia/NewExperiment/luceneFilter/02307/lucene/core/src/java/org/apache/lucene/util/FixedBitSet.java)
+  public void andNot(DocIdSetIterator iter) throws IOException {
+    if (iter instanceof FixedBitSetIterator && iter.docID() == -1) {
+      final FixedBitSetIterator fbs = (FixedBitSetIterator) iter;
+      andNot(fbs.bits, fbs.numWords);
+      // advance after last doc that would be accepted if standard
+      // iteration is used (to exhaust it):
+      fbs.advance(numBits);
+    } else {
+      int doc;
+      while ((doc = iter.nextDoc()) < numBits) {
+        clear(doc);
+      }
+    }
+  }
+

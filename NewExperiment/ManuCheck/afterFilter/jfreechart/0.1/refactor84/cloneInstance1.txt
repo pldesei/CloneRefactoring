@@ -1,0 +1,16 @@
+(startLine=3402 endLine=3415 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00364/source/org/jfree/chart/plot/CategoryPlot.java)
+        if (this.fixedDomainAxisSpace != null) {
+            if (this.orientation == PlotOrientation.HORIZONTAL) {
+                space.ensureAtLeast(
+                    this.fixedDomainAxisSpace.getLeft(), RectangleEdge.LEFT);
+                space.ensureAtLeast(this.fixedDomainAxisSpace.getRight(),
+                        RectangleEdge.RIGHT);
+            }
+            else if (this.orientation == PlotOrientation.VERTICAL) {
+                space.ensureAtLeast(this.fixedDomainAxisSpace.getTop(),
+                        RectangleEdge.TOP);
+                space.ensureAtLeast(this.fixedDomainAxisSpace.getBottom(),
+                        RectangleEdge.BOTTOM);
+            }
+        }
+

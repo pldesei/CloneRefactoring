@@ -1,0 +1,12 @@
+(startLine=59 endLine=68 srcPath=/home/sonia/NewExperiment/luceneFilter/00665/solr/src/java/org/apache/solr/analysis/SnowballPorterFilterFactory.java)
+        } else  {
+          List<String> files = StrUtils.splitFileNames(wordFiles);
+          for (String file : files) {
+            List<String> wlist = loader.getLines(file.trim());
+            if (protectedWords == null)
+              protectedWords = new CharArraySet(wlist, false);
+            else
+              protectedWords.addAll(wlist);
+          }
+        }
+

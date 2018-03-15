@@ -1,0 +1,147 @@
+(startLine=1560 endLine=1704 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  private DocSet getDocListAndSetNC(QueryResult qr,QueryCommand cmd) throws IOException {
+    int len = cmd.getSupersetMaxDoc();
+    int last = len;
+    if (last < 0 || last > maxDoc()) last=maxDoc();
+    final int lastDocRequested = last;
+    int nDocsReturned;
+    int totalHits;
+    float maxScore;
+    int[] ids;
+    float[] scores;
+    DocSet set;
+
+    boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+    boolean terminateEarly = (cmd.getFlags() & TERMINATE_EARLY) == TERMINATE_EARLY;
+    int maxDoc = maxDoc();
+    int smallSetSize = maxDoc>>6;
+
+    ProcessedFilter pf = getProcessedFilter(cmd.getFilter(), cmd.getFilterList());
+    final Filter luceneFilter = pf.filter;
+
+    Query query = QueryUtils.makeQueryable(cmd.getQuery());
+    final long timeAllowed = cmd.getTimeAllowed();
+
+    // handle zero case...
+    if (lastDocRequested<=0) {
+      final float[] topscore = new float[] { Float.NEGATIVE_INFINITY };
+
+      Collector collector;
+      DocSetCollector setCollector;
+
+       if (!needScores) {
+         collector = setCollector = new DocSetCollector(smallSetSize, maxDoc);
+       } else {
+         collector = setCollector = new DocSetDelegateCollector(smallSetSize, maxDoc, new Collector() {
+           Scorer scorer;
+           @Override
+          public void setScorer(Scorer scorer) {
+             this.scorer = scorer;
+           }
+           @Override
+          public void collect(int doc) throws IOException {
+             float score = scorer.score();
+             if (score > topscore[0]) topscore[0]=score;
+           }
+           @Override
+          public void setNextReader(AtomicReaderContext context) {
+           }
+           @Override
+          public boolean acceptsDocsOutOfOrder() {
+             return false;
+           }
+         });
+       }
+       if (terminateEarly) {
+         collector = new EarlyTerminatingCollector(collector, cmd.len);
+       }
+       if( timeAllowed > 0 ) {
+         collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+       }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+
+       try {
+         super.search(query, luceneFilter, collector);
+         if(collector instanceof DelegatingCollector) {
+           ((DelegatingCollector)collector).finish();
+         }
+       }
+       catch( TimeLimitingCollector.TimeExceededException x ) {
+         log.warn( "Query: " + query + "; " + x.getMessage() );
+         qr.setPartialResults(true);
+       }
+
+      set = setCollector.getDocSet();
+
+      nDocsReturned = 0;
+      ids = new int[nDocsReturned];
+      scores = new float[nDocsReturned];
+      totalHits = set.size();
+      maxScore = totalHits>0 ? topscore[0] : 0.0f;
+    } else {
+
+      TopDocsCollector topCollector;
+
+      if (cmd.getSort() == null) {
+        topCollector = TopScoreDocCollector.create(len, true);
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+
+      DocSetCollector setCollector = new DocSetDelegateCollector(maxDoc>>6, maxDoc, topCollector);
+      Collector collector = setCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed );
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      set = setCollector.getDocSet();      
+
+      totalHits = topCollector.getTotalHits();
+      assert(totalHits == set.size());
+
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+    int sliceLen = Math.min(lastDocRequested,nDocsReturned);
+    if (sliceLen < 0) sliceLen=0;
+
+    qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));
+    // TODO: if we collect results before the filter, we just need to intersect with
+    // that filter to generate the DocSet for qr.setDocSet()
+    qr.setDocSet(set);
+
+    // TODO: currently we don't generate the DocSet for the base query,
+    // but the QueryDocSet == CompleteDocSet if filter==null.
+    return pf.filter==null && pf.postFilter==null ? qr.getDocSet() : null;
+  }
+

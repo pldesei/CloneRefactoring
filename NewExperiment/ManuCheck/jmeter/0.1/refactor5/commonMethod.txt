@@ -1,0 +1,44 @@
+(startLine=744 endLine=785 srcPath=/home/sonia/NewExperiment/jmeterFilter/00286/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java)
+    /**
+     * Follow redirects and download page resources if appropriate. this works,
+     * but the container stuff here is what's doing it. followRedirects() is
+     * actually doing the work to make sure we have only one container to make
+     * this work more naturally, I think this method - sample() - needs to take
+     * an HTTPSamplerResult container parameter instead of a
+     * boolean:areFollowingRedirect.
+     * 
+     * @param areFollowingRedirect
+     * @param frameDepth
+     * @param res
+     * @return
+     */
+    protected HTTPSampleResult resultProcessing(boolean areFollowingRedirect,
+            int frameDepth, HTTPSampleResult res) {
+        if (!areFollowingRedirect) {
+            if (res.isRedirect()) {
+                log.debug("Location set to - " + res.getRedirectLocation());
+
+                if (getFollowRedirects()) {
+                    res = followRedirects(res, frameDepth);
+                    areFollowingRedirect = true;
+                }
+            }
+        }
+        if (isImageParser()
+                && (HTTPSampleResult.TEXT).equals(res.getDataType())
+                && res.isSuccessful()) {
+            if (frameDepth > MAX_FRAME_DEPTH) {
+                res.addSubResult(errorResult(new Exception(
+                        "Maximum frame/iframe nesting depth exceeded."), res));
+            } else {
+                // If we followed redirects, we already have a container:
+                HTTPSampleResult container = (HTTPSampleResult) (areFollowingRedirect ? res
+                        .getParent()
+                        : res);
+
+                res = downloadPageResources(res, container, frameDepth);
+            }
+        }
+        return res;
+    }
+

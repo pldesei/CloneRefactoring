@@ -1,0 +1,14 @@
+(startLine=887 endLine=898 srcPath=/home/sonia/NewExperiment/jmeterFilter/00375/src/components/org/apache/jmeter/visualizers/ViewResultsFullVisualizer.java)
+    private void setEnabledButtons(boolean b) {
+        renderLabel.setEnabled(b); 
+        textButton.setEnabled(b);
+        htmlButton.setEnabled(b);
+        jsonButton.setEnabled(b);
+        xmlButton.setEnabled(b);
+        if (b && command.equals(HTML_COMMAND)) {
+            downloadAll.setEnabled(b);
+        } else {
+            downloadAll.setEnabled(false);
+        }
+    }
+

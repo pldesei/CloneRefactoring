@@ -1,0 +1,15 @@
+(startLine=354 endLine=366 srcPath=/home/sonia/NewExperiment/jmeterFilter/00313/src/core/org/apache/jmeter/util/JMeterUtils.java)
+	/**
+	 * Gets the resource string for this key.
+	 * 
+	 * If the resource is not found, a warning is logged
+	 * 
+	 * @param key
+	 *            the key in the resource file
+	 * @return the resource string if the key is found; otherwise, return
+	 *         "[res_key="+key+"]"
+	 */
+	public static String getResString(String key) {
+		return getResStringDefault(key, RES_KEY_PFX + key + "]"); // $NON-NLS-1$
+	}
+

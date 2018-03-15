@@ -1,0 +1,12 @@
+(startLine=125 endLine=134 srcPath=/home/sonia/NewExperiment/jmeterFilter/00060/src/components/org/apache/jmeter/visualizers/TableVisualizer.java)
+    {
+        // Not completely sure if this is the correct way of updating the table
+        table.tableChanged(new TableModelEvent(model));
+        tableScrollPanel.revalidate();
+        tableScrollPanel.repaint();
+        noSamplesField.setText(Long.toString(model.getSampleCount()));
+        dataField.setText(Long.toString(model.getCurrentData()));
+        averageField.setText(Long.toString(model.getCurrentAverage()));
+        deviationField.setText(Long.toString(model.getCurrentDeviation()));
+    }
+

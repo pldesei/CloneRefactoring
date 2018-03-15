@@ -1,0 +1,12 @@
+(startLine=1111 endLine=1120 srcPath=/home/sonia/NewExperiment/guavaFilter/00119/guava/src/com/google/common/util/concurrent/Futures.java)
+  private static <X extends Exception> void wrapAndThrowExceptionOrError(
+      Throwable cause, Class<X> exceptionClass) throws X {
+    if (cause instanceof Error) {
+      throw new ExecutionError((Error) cause);
+    }
+    if (cause instanceof RuntimeException) {
+      throw new UncheckedExecutionException((RuntimeException) cause);
+    }
+    throw newWithCause(exceptionClass, cause);
+  }
+

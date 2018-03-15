@@ -1,0 +1,19 @@
+(startLine=61 endLine=77 srcPath=/home/sonia/NewExperiment/luceneFilter/00857/modules/analysis/stempel/src/java/org/apache/lucene/analysis/stempel/StempelStemmer.java)
+  /**
+   * Load a stemmer table from an inputstream.
+   */
+  public static Trie load(InputStream stemmerTable) throws IOException {
+    DataInputStream in = null;
+    try {
+      in = new DataInputStream(new BufferedInputStream(stemmerTable));
+      String method = in.readUTF().toUpperCase(Locale.ENGLISH);
+      if (method.indexOf('M') < 0) {
+        return new org.egothor.stemmer.Trie(in);
+      } else {
+        return new org.egothor.stemmer.MultiTrie2(in);
+      }
+    } finally {
+      in.close();
+    }
+  }
+

@@ -1,0 +1,44 @@
+(startLine=1428 endLine=1469 srcPath=/home/sonia/NewExperiment/luceneFilter/02017/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  /**
+   * Helper method for extracting the {@link FieldDoc} sort values from a 
+   * {@link TopFieldDocs} when available and making the appropriate call to 
+   * {@link QueryResult#setNextCursorMark} when applicable.
+   *
+   * @param qr <code>QueryResult</code> to modify
+   * @param qc <code>QueryCommand</code> for context of method
+   * @param topDocs May or may not be a <code>TopFieldDocs</code> 
+   */
+  private void populateNextCursorMarkFromTopDocs(QueryResult qr, QueryCommand qc, 
+                                                 TopDocs topDocs) {
+    // TODO: would be nice to rename & generalize this method for non-cursor cases...
+    // ...would be handy to reuse the ScoreDoc/FieldDoc sort vals directly in distrib sort
+    // ...but that has non-trivial queryResultCache implications
+    // See: SOLR-5595
+    
+    if (null == qc.getCursorMark()) {
+      // nothing to do, short circuit out
+      return;
+    }
+
+    final CursorMark lastCursorMark = qc.getCursorMark();
+    
+    // if we have a cursor, then we have a sort that at minimum involves uniqueKey..
+    // so we must have a TopFieldDocs containing FieldDoc[]
+    assert topDocs instanceof TopFieldDocs : "TopFieldDocs cursor constraint violated";
+    final TopFieldDocs topFieldDocs = (TopFieldDocs) topDocs;
+    final ScoreDoc[] scoreDocs = topFieldDocs.scoreDocs;
+
+    if (0 == scoreDocs.length) {
+      // no docs on this page, re-use existing cursor mark
+      qr.setNextCursorMark(lastCursorMark);
+    } else {
+      ScoreDoc lastDoc = scoreDocs[scoreDocs.length-1];
+      assert lastDoc instanceof FieldDoc : "FieldDoc cursor constraint violated";
+      
+      List<Object> lastFields = Arrays.<Object>asList(((FieldDoc)lastDoc).fields);
+      CursorMark nextCursorMark = lastCursorMark.createNext(lastFields);
+      assert null != nextCursorMark : "null nextCursorMark";
+      qr.setNextCursorMark(nextCursorMark);
+    }
+  }
+

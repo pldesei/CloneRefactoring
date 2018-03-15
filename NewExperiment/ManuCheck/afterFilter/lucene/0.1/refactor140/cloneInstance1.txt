@@ -1,0 +1,69 @@
+(startLine=925 endLine=991 srcPath=/home/sonia/NewExperiment/luceneFilter/01995/solr/core/src/test/org/apache/solr/analytics/facet/FieldFacetTest.java)
+  public void uniqueTest() throws Exception { 
+    //Int Date
+    String intDateFacet = getFacetXML(response, "uniquen", "fieldFacets", "date_dtd");    
+    Collection<Long> intDate = (ArrayList<Long>)xmlToList(intDateFacet, "long", "int");
+    ArrayList<Long> intDateTest = (ArrayList<Long>)calculateStat(intDateTestStart, "unique");
+    assertEquals(intDate,intDateTest);
+    //Int String
+    String intStringFacet = getFacetXML(response, "uniquen", "fieldFacets", "string_sd");      
+    Collection<Long> intString = (ArrayList<Long>)xmlToList(intStringFacet, "long", "int");
+    ArrayList<Long> intStringTest = (ArrayList<Long>)calculateStat(intStringTestStart, "unique");
+    assertEquals(intString,intStringTest);
+
+    //Long Date
+    String longDateFacet = getFacetXML(response, "uniquen", "fieldFacets", "date_dtd");      
+    Collection<Long> longDate = (ArrayList<Long>)xmlToList(longDateFacet, "long", "long");
+    ArrayList<Long> longDateTest = (ArrayList<Long>)calculateStat(longDateTestStart, "unique");
+    assertEquals(longDate,longDateTest);
+    //Long String
+    String longStringFacet = getFacetXML(response, "uniquen", "fieldFacets", "string_sd");   
+    Collection<Long> longString = (ArrayList<Long>)xmlToList(longStringFacet, "long", "long");
+    ArrayList<Long> longStringTest = (ArrayList<Long>)calculateStat(longStringTestStart, "unique");
+    assertEquals(longString,longStringTest);
+
+    //Float Date
+    String floatDateFacet = getFacetXML(response, "uniquen", "fieldFacets", "date_dtd");   
+    Collection<Long> floatDate = (ArrayList<Long>)xmlToList(floatDateFacet, "long", "float");
+    ArrayList<Long> floatDateTest = (ArrayList<Long>)calculateStat(floatDateTestStart, "unique");
+    assertEquals(floatDate,floatDateTest);
+    //Float String
+    String floatStringFacet = getFacetXML(response, "uniquen", "fieldFacets", "string_sd");   
+    Collection<Long> floatString = (ArrayList<Long>)xmlToList(floatStringFacet, "long", "float");
+    ArrayList<Long> floatStringTest = (ArrayList<Long>)calculateStat(floatStringTestStart, "unique");
+    assertEquals(floatString,floatStringTest);
+
+    //Double Date
+    String doubleDateFacet = getFacetXML(response, "uniquen", "fieldFacets", "date_dtd");   
+    Collection<Long> doubleDate = (ArrayList<Long>)xmlToList(doubleDateFacet, "long", "double");
+    ArrayList<Long> doubleDateTest = (ArrayList<Long>)calculateStat(doubleDateTestStart, "unique");
+    assertEquals(doubleDate,doubleDateTest);
+    //Double String
+    String doubleStringFacet = getFacetXML(response, "uniquen", "fieldFacets", "string_sd");   
+    Collection<Long> doubleString = (ArrayList<Long>)xmlToList(doubleStringFacet, "long", "double");
+    ArrayList<Long> doubleStringTest = (ArrayList<Long>)calculateStat(doubleStringTestStart, "unique");
+    assertEquals(doubleString,doubleStringTest);
+
+    //Date Int
+    String dateIntFacet = getFacetXML(response, "unique", "fieldFacets", "int_id");    
+    Collection<Long> dateInt = (ArrayList<Long>)xmlToList(dateIntFacet, "long", "date");
+    ArrayList<Long> dateIntTest = (ArrayList<Long>)calculateStat(dateIntTestStart, "unique");
+    assertEquals(dateInt,dateIntTest);
+    //Date Long
+    String dateStringFacet = getFacetXML(response, "unique", "fieldFacets", "long_ld");     
+    Collection<Long> dateString = (ArrayList<Long>)xmlToList(dateStringFacet, "long", "date");
+    ArrayList<Long> dateLongTest = (ArrayList<Long>)calculateStat(dateLongTestStart, "unique");
+    assertEquals(dateString,dateLongTest);
+
+    //String Int
+    String stringIntFacet = getFacetXML(response, "unique", "fieldFacets", "int_id");   
+    Collection<Long> stringInt = (ArrayList<Long>)xmlToList(stringIntFacet, "long", "str");
+    ArrayList<Long> stringIntTest = (ArrayList<Long>)calculateStat(stringIntTestStart, "unique");
+    assertEquals(stringInt,stringIntTest);
+    //String Long
+    String stringLongFacet = getFacetXML(response, "unique", "fieldFacets", "long_ld");    
+    Collection<Long> stringLong = (ArrayList<Long>)xmlToList(stringLongFacet, "long", "str");
+    ArrayList<Long> stringLongTest = (ArrayList<Long>)calculateStat(stringLongTestStart, "unique");
+    assertEquals(stringLong,stringLongTest);
+  }
+

@@ -1,0 +1,62 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/00738
+predFragLineRange:712-737
+predMethodLineRange:694-754
+nextLineRange:824-885
+predStrMethodInvoNames:
+[intern, maxDoc, maxDoc, getTerms, iterator, getDeletedDocs, next, utf8ToString, docs, nextDoc, arraycopy]
+%%%%%%%%%%
+AddedMethodInvo Line:831 InvoName:((Boolean)entryKey.custom).booleanValue()
+PackageName:java.lang
+QualifiedClassName:java.lang.Boolean
+ClassName:Boolean
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/solr/src/java/java/lang/Boolean.java
+InvokedMethodSig:public boolean booleanValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:844 InvoName:terms.getUniqueTermCount()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.Terms
+ClassName:Terms
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/index/Terms.java
+InvokedMethodSig:public long getUniqueTermCount() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:849 InvoName:PackedInts.bitsRequired(numUniqueTerms * 4)
+PackageName:org.apache.lucene.util.packed
+QualifiedClassName:org.apache.lucene.util.packed.PackedInts
+ClassName:PackedInts
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/util/packed/PackedInts.java
+InvokedMethodSig:public static int bitsRequired(long) 
+%%%%%%%%%%
+AddedMethodInvo Line:860 InvoName:bytes.copyUsingLengthPrefix(new BytesRef())
+PackageName:org.apache.lucene.util
+QualifiedClassName:org.apache.lucene.util.PagedBytes
+ClassName:PagedBytes
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/util/PagedBytes.java
+InvokedMethodSig:public long copyUsingLengthPrefix(org.apache.lucene.util.BytesRef) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:871 InvoName:bytes.copyUsingLengthPrefix(term)
+PackageName:org.apache.lucene.util
+QualifiedClassName:org.apache.lucene.util.PagedBytes
+ClassName:PagedBytes
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/util/PagedBytes.java
+InvokedMethodSig:public long copyUsingLengthPrefix(org.apache.lucene.util.BytesRef) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:878 InvoName:docToOffset.set(docID,pointer)
+PackageName:org.apache.lucene.util.packed
+QualifiedClassName:org.apache.lucene.util.packed.GrowableWriter
+ClassName:GrowableWriter
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/util/packed/GrowableWriter.java
+InvokedMethodSig:public void set(int, long) 
+%%%%%%%%%%
+AddedMethodInvo Line:884 InvoName:bytes.freeze()
+PackageName:org.apache.lucene.util
+QualifiedClassName:org.apache.lucene.util.PagedBytes
+ClassName:PagedBytes
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/util/PagedBytes.java
+InvokedMethodSig:public org.apache.lucene.util.PagedBytes.Reader freeze() 
+%%%%%%%%%%
+AddedMethodInvo Line:884 InvoName:docToOffset.getMutable()
+PackageName:org.apache.lucene.util.packed
+QualifiedClassName:org.apache.lucene.util.packed.GrowableWriter
+ClassName:GrowableWriter
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00738/lucene/src/java/org/apache/lucene/util/packed/GrowableWriter.java
+InvokedMethodSig:public org.apache.lucene.util.packed.PackedInts.Mutable getMutable() 

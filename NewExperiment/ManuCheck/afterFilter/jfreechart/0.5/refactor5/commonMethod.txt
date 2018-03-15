@@ -1,0 +1,49 @@
+(startLine=1709 endLine=1755 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00127/source/org/jfree/chart/renderer/xy/AbstractXYItemRenderer.java)
+    /**
+     * Adds an entity to the collection.
+     *
+     * @param entities  the entity collection being populated.
+     * @param area  the entity area (if <code>null</code> a default will be
+     *              used).
+     * @param dataset  the dataset.
+     * @param series  the series.
+     * @param item  the item.
+     * @param entityX  the entity's center x-coordinate in user space (only
+     *                 used if <code>area</code> is <code>null</code>).
+     * @param entityY  the entity's center y-coordinate in user space (only
+     *                 used if <code>area</code> is <code>null</code>).
+     */
+    protected void addEntity(EntityCollection entities, Shape area,
+                             XYDataset dataset, int series, int item,
+                             double entityX, double entityY) {
+        if (!getItemCreateEntity(series, item)) {
+            return;
+        }
+        Shape hotspot = area;
+        if (hotspot == null) {
+        	double w = this.defaultEntityRadius * 2;
+        	if (getPlot().getOrientation() == PlotOrientation.VERTICAL) {
+        		hotspot = new Ellipse2D.Double(
+        				entityX - this.defaultEntityRadius,
+        				entityY - this.defaultEntityRadius, w, w);
+        	}
+        	else {
+        		hotspot = new Ellipse2D.Double(
+        				entityY - this.defaultEntityRadius,
+        	            entityX - this.defaultEntityRadius, w, w);
+        	}
+        }
+        String tip = null;
+        XYToolTipGenerator generator = getToolTipGenerator(series, item);
+        if (generator != null) {
+            tip = generator.generateToolTip(dataset, series, item);
+        }
+        String url = null;
+        if (getURLGenerator() != null) {
+            url = getURLGenerator().generateURL(dataset, series, item);
+        }
+        XYItemEntity entity = new XYItemEntity(hotspot, dataset, series, item,
+                tip, url);
+        entities.add(entity);
+    }
+

@@ -1,0 +1,26 @@
+(startLine=78 endLine=101 srcPath=/home/sonia/NewExperiment/jmeterFilter/00263/src/functions/org/apache/jmeter/functions/LogFunction.java)
+    {
+        String stringToLog = ((CompoundVariable) values[0]).execute();
+        
+		String priorityString;
+        if (values.length > 1){ // We have a default
+        	priorityString= ((CompoundVariable) values[1]).execute();
+        	if (priorityString.length()==0) priorityString= DEFAULT_PRIORITY;
+        } else {
+        	priorityString = DEFAULT_PRIORITY;
+        }
+        
+        Throwable t=null;
+		if (values.length > 2){ // Throwable wanted
+			t = new Throwable(((CompoundVariable) values[2]).execute());
+		}
+		
+		// N.B. if the string is not recognised, DEBUG is assumed
+        Priority p = Priority.getPriorityForName(priorityString);
+
+        log.log(p,stringToLog,t);
+        
+        return stringToLog;
+
+    }
+

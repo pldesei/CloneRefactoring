@@ -1,0 +1,21 @@
+(startLine=262 endLine=280 srcPath=/home/sonia/NewExperiment/jmeterFilter/00405/src/protocol/mail/org/apache/jmeter/protocol/smtp/sampler/SmtpSampler.java)
+    /**
+     * Get the list of addresses or null.
+     * Null is treated differently from an empty list.
+     * @param propName name of property containing addresses separated by ";"
+     * @return the list or null
+     * @throws AddressException 
+     */
+    private List<InternetAddress> getPropNameAsAddresses(String propName) throws AddressException{
+        final String propValue = getPropertyAsString(propName).trim();
+        if (propValue.length() > 0){ // we have at least one potential address
+            List<InternetAddress> addresses = new ArrayList<InternetAddress>();
+            for (String address : propValue.split(";")){
+                addresses.add(new InternetAddress(address.trim()));
+            }
+            return addresses;            
+        } else {
+            return null;            
+        }
+    }
+

@@ -1,0 +1,12 @@
+(startLine=520 endLine=529 srcPath=/home/sonia/NewExperiment/guavaFilter/00374/guava/src/com/google/common/io/CharStreams.java)
+  static <R extends Readable & Closeable> CharSource asCharSource(
+      final InputSupplier<R> supplier) {
+    checkNotNull(supplier);
+    return new CharSource() {
+      @Override
+      public Reader openStream() throws IOException {
+        return asReader(supplier.getInput());
+      }
+    };
+  }
+

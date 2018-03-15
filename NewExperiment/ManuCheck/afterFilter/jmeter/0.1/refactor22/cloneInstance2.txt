@@ -1,0 +1,11 @@
+(startLine=159 endLine=167 srcPath=/home/sonia/NewExperiment/jmeterFilter/00404/src/protocol/mail/org/apache/jmeter/protocol/smtp/sampler/SmtpSampler.java)
+                if (getPropertyAsString(SmtpSampler.RECEIVER_BCC).matches(".*@.*")) {
+                    List<InternetAddress> receiversBCC = new Vector<InternetAddress>();
+                    String[] strReceivers = (getPropertyAsString(SmtpSampler.RECEIVER_BCC))
+                            .split(";");
+                    for (int i = 0; i < strReceivers.length; i++) {
+                        receiversBCC.add(new InternetAddress(strReceivers[i].trim()));
+                    }
+                    instance.setReceiverBCC(receiversBCC);
+                }
+

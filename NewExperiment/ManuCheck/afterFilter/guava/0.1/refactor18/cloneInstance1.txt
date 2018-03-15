@@ -1,0 +1,16 @@
+(startLine=387 endLine=400 srcPath=/home/sonia/NewExperiment/guavaFilter/00383/guava/src/com/google/common/io/CharStreams.java)
+      InputSupplier<R> supplier, LineProcessor<T> callback) throws IOException {
+    checkNotNull(supplier);
+    checkNotNull(callback);
+
+    Closer closer = Closer.create();
+    try {
+      R r = closer.add(supplier.getInput());
+      return readLines(r, callback);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

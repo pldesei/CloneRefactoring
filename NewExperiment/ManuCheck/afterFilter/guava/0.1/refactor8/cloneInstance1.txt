@@ -1,0 +1,25 @@
+(startLine=231 endLine=253 srcPath=/home/sonia/NewExperiment/guavaFilter/00289/guava/src/com/google/common/util/concurrent/AbstractService.java)
+  protected final void notifyStarted() {
+    lock.lock();
+    try {
+      if (state != State.STARTING) {
+        IllegalStateException failure = new IllegalStateException(
+            "Cannot notifyStarted() when the service is " + state);
+        notifyFailed(failure);
+        throw failure;
+      }
+
+      if (shutdownWhenStartupFinishes) {
+        state = State.STOPPING;
+        // We don't call listeners here because we already did that when we set the
+        // shutdownWhenStartupFinishes flag.
+        doStop();
+      } else {
+        state = State.RUNNING;
+        running();
+      }
+    } finally {
+      lock.unlock();
+    }
+  }
+

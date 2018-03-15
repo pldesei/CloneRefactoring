@@ -1,0 +1,23 @@
+(startLine=716 endLine=736 srcPath=/home/sonia/NewExperiment/luceneFilter/00737/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+        while(true) {
+          final BytesRef term = termsEnum.next();
+          if (term == null) {
+            break;
+          }
+
+          // store term text
+          mterms[t] = term.utf8ToString();
+          //System.out.println("FC:  ord=" + t + " term=" + term.toBytesString());
+
+          docs = termsEnum.docs(delDocs, docs);
+          while (true) {
+            final int docID = docs.nextDoc();
+            if (docID == DocsEnum.NO_MORE_DOCS) {
+              break;
+            }
+            //System.out.println("FC:    docID=" + docID);
+            retArray[docID] = t;
+          }
+          t++;
+        }
+

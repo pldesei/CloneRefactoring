@@ -1,0 +1,30 @@
+(startLine=613 endLine=640 srcPath=/home/sonia/NewExperiment/luceneFilter/02395/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+      while((docId = it.nextDoc()) != DocIdSetIterator.NO_MORE_DOCS) {
+
+        if(this.needsScores){
+          int ord = values.getOrd(docId);
+          if(ord > -1) {
+            dummy.score = scores[ord];
+          } else if (boostDocs != null && boostDocs.containsKey(docId)) {
+            //It's an elevated doc so no score is needed
+            dummy.score = 0F;
+          } else if (nullPolicy == CollapsingPostFilter.NULL_POLICY_COLLAPSE) {
+            dummy.score = nullScore;
+          } else if(nullPolicy == CollapsingPostFilter.NULL_POLICY_EXPAND) {
+            dummy.score = nullScores.get(nullScoreIndex++);
+          }
+        }
+
+        while(docId >= nextDocBase) {
+          currentContext++;
+          currentDocBase = contexts[currentContext].docBase;
+          nextDocBase = currentContext+1 < contexts.length ? contexts[currentContext+1].docBase : maxDoc;
+          leafDelegate = delegate.getLeafCollector(contexts[currentContext]);
+          leafDelegate.setScorer(dummy);
+        }
+
+        int contextDoc = docId-currentDocBase;
+        dummy.docId = contextDoc;
+        leafDelegate.collect(contextDoc);
+      }
+

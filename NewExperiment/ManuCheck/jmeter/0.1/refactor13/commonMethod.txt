@@ -1,0 +1,41 @@
+(startLine=539 endLine=577 srcPath=/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/ldap/org/apache/jmeter/protocol/ldap/sampler/LDAPExtSampler.java)
+	/***************************************************************************
+	 * Collect all the value from the table (Arguments), using this create the
+	 * Attributes This will create the Basic Attributes for the User defined
+	 * TestCase for search test
+	 * 
+	 * @return The BasicAttributes
+	 **************************************************************************/
+	private String[] getRequestAttributes(String reqAttr) {
+		int index;
+		String[] mods;
+		int count = 0;
+		if (reqAttr.length() == 0) {
+			return null;
+		}
+		if (!reqAttr.endsWith(SEMI_COLON)) {
+			reqAttr = reqAttr + SEMI_COLON; 
+		}
+		String attr = reqAttr;
+
+		while (attr.length() > 0) {
+			index = attr.indexOf(SEMI_COLON);
+			count += 1;
+			attr = attr.substring(index + 1);
+		}
+		if (count > 0) {
+			mods = new String[count];
+			attr = reqAttr;
+			count = 0;
+			while (attr.length() > 0) {
+				index = attr.indexOf(SEMI_COLON);
+				mods[count] = attr.substring(0, index);
+				count += 1;
+				attr = attr.substring(index + 1);
+			}
+		} else {
+			mods = null;
+		}
+		return mods;
+	}
+

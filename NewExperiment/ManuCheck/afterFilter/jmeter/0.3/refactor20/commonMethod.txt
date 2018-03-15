@@ -1,0 +1,19 @@
+(startLine=85 endLine=101 srcPath=/home/sonia/NewExperiment/jmeterFilter/00398/src/protocol/jms/org/apache/jmeter/protocol/jms/Utils.java)
+    public static StringBuilder messageProperties(StringBuilder sb, Message msg){
+        requestHeaders(sb, msg);
+        sb.append("Properties:\n");
+        Enumeration<?> rme;
+        try {
+            rme = msg.getPropertyNames();
+            while(rme.hasMoreElements()){
+                String name=(String) rme.nextElement();
+                sb.append(name).append('\t');
+                String value=msg.getStringProperty(name);
+                sb.append(value).append('\n');
+            }
+        } catch (JMSException e) {
+            sb.append("\nError: "+e.toString());
+        }
+        return sb;
+    }
+

@@ -1,0 +1,29 @@
+(startLine=1572 endLine=1598 srcPath=/home/sonia/NewExperiment/luceneFilter/00774/lucene/src/test/org/apache/lucene/index/TestIndexReader.java)
+  public void testFieldCacheReuseAfterClone() throws Exception {
+    Directory dir = new MockRAMDirectory();
+    IndexWriter writer = new IndexWriter(dir, new IndexWriterConfig(TEST_VERSION_CURRENT, new MockAnalyzer()));
+    Document doc = new Document();
+    doc.add(new Field("number", "17", Field.Store.NO, Field.Index.NOT_ANALYZED));
+    writer.addDocument(doc);
+    writer.close();
+
+    // Open reader
+    IndexReader r = SegmentReader.getOnlySegmentReader(dir);
+    final int[] ints = FieldCache.DEFAULT.getInts(r, "number");
+    assertEquals(1, ints.length);
+    assertEquals(17, ints[0]);
+
+    // Clone reader
+    IndexReader r2 = (IndexReader) r.clone();
+    r.close();
+    assertTrue(r2 != r);
+    final int[] ints2 = FieldCache.DEFAULT.getInts(r2, "number");
+    r2.close();
+
+    assertEquals(1, ints2.length);
+    assertEquals(17, ints2[0]);
+    assertTrue(ints == ints2);
+
+    dir.close();
+  }
+

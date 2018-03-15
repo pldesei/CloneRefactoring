@@ -1,0 +1,11 @@
+(startLine=107 endLine=115 srcPath=/home/sonia/NewExperiment/luceneFilter/01996/solr/core/src/test/org/apache/solr/analytics/facet/AbstractAnalyticsFacetTest.java)
+  protected ArrayList<Long> getLongList(String n1, String n2, String n3, String element, String n4)
+      throws XPathExpressionException {
+    ArrayList<Long> ret = new ArrayList<Long>();
+    NodeList nodes = getNodes(n1, n2, n3, element, n4);
+    for (int idx = 0; idx < nodes.getLength(); ++idx) {
+      ret.add(Long.parseLong(nodes.item(idx).getTextContent()));
+    }
+    return ret;
+  }
+

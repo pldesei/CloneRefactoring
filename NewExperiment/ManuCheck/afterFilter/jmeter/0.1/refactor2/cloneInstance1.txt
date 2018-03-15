@@ -1,0 +1,42 @@
+(startLine=185 endLine=224 srcPath=/home/sonia/NewExperiment/jmeterFilter/00066/src/core/org/apache/jmeter/control/gui/LoopControlPanel.java)
+    {
+        // The Loop Controller panel can be displayed standalone or inside another panel.
+        // For standalone, we want to display the TITLE, NAME, etc. (everything). However,
+        // if we want to display it within another panel, we just display the Loop Count
+        // fields (not the TITLE and NAME).
+
+        // Standalone
+        if (displayName)
+        {
+            this.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
+
+            // MAIN PANEL
+            JPanel mainPanel = new JPanel();
+            Border margin = new EmptyBorder(10, 10, 5, 10);
+            mainPanel.setBorder(margin);
+            mainPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT));
+
+            // TITLE
+            JLabel panelTitleLabel = new JLabel(JMeterUtils.getResString("loop_controller_title"));
+            Font curFont = panelTitleLabel.getFont();
+            int curFontSize = curFont.getSize();
+            curFontSize += 4;
+            panelTitleLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), curFontSize));
+            mainPanel.add(panelTitleLabel);
+
+            // NAME
+            mainPanel.add(getNamePanel());
+
+            // LOOP
+            mainPanel.add(createLoopCountPanel());
+
+            this.add(mainPanel);
+        }
+
+        // Embedded
+        else
+        {
+            this.add(createLoopCountPanel());
+        }
+    }
+

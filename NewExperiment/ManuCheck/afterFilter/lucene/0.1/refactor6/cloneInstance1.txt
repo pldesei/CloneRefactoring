@@ -1,0 +1,29 @@
+(startLine=254 endLine=280 srcPath=/home/sonia/NewExperiment/luceneFilter/00181/src/java/org/apache/lucene/search/PhraseQuery.java)
+  public String toString(String f) {
+    StringBuffer buffer = new StringBuffer();
+    if (!field.equals(f)) {
+      buffer.append(field);
+      buffer.append(":");
+    }
+
+    buffer.append("\"");
+    for (int i = 0; i < terms.size(); i++) {
+      buffer.append(((Term)terms.elementAt(i)).text());
+      if (i != terms.size()-1)
+    buffer.append(" ");
+    }
+    buffer.append("\"");
+
+    if (slop != 0) {
+      buffer.append("~");
+      buffer.append(slop);
+    }
+
+    if (getBoost() != 1.0f) {
+      buffer.append("^");
+      buffer.append(Float.toString(getBoost()));
+    }
+
+    return buffer.toString();
+  }
+

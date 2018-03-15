@@ -1,0 +1,25 @@
+(startLine=167 endLine=189 srcPath=/home/sonia/NewExperiment/jmeterFilter/00066/src/core/org/apache/jmeter/control/gui/WorkBenchGui.java)
+	{
+		this.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
+
+		// MAIN PANEL
+		JPanel mainPanel = new JPanel();
+		Border margin = new EmptyBorder(10, 10, 5, 10);
+		mainPanel.setBorder(margin);
+		mainPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT));
+
+		// TITLE
+		JLabel panelTitleLabel = new JLabel(JMeterUtils.getResString("workbench_title"));
+
+		Font curFont = panelTitleLabel.getFont();
+		int curFontSize = curFont.getSize();
+		curFontSize += 4;
+		panelTitleLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), curFontSize));
+		mainPanel.add(panelTitleLabel);
+
+		// NAME
+		mainPanel.add(getNamePanel());
+
+		this.add(mainPanel);
+	}
+

@@ -1,0 +1,39 @@
+(startLine=194 endLine=230 srcPath=/home/sonia/NewExperiment/luceneFilter/01692/lucene/facet/src/test/org/apache/lucene/facet/search/TestMultipleCategoryLists.java)
+  public void testDifferentFieldsAndText() throws Exception {
+    Directory[][] dirs = getDirs();
+    // create and open an index writer
+    RandomIndexWriter iw = new RandomIndexWriter(random(), dirs[0][0], newIndexWriterConfig(
+        TEST_VERSION_CURRENT, new MockAnalyzer(random(), MockTokenizer.WHITESPACE, false)));
+    // create and open a taxonomy writer
+    TaxonomyWriter tw = new DirectoryTaxonomyWriter(dirs[0][1], OpenMode.CREATE);
+
+    Map<CategoryPath,CategoryListParams> paramsMap = new HashMap<CategoryPath,CategoryListParams>();
+    paramsMap.put(new CategoryPath("Band"), new CategoryListParams(new Term("$bands", "Bands")));
+    paramsMap.put(new CategoryPath("Composer"), new CategoryListParams(new Term("$composers", "Composers")));
+    PerDimensionIndexingParams iParams = new PerDimensionIndexingParams(paramsMap);
+    seedIndex(iw, tw, iParams);
+
+    IndexReader ir = iw.getReader();
+    tw.commit();
+
+    // prepare index reader and taxonomy.
+    TaxonomyReader tr = new DirectoryTaxonomyReader(dirs[0][1]);
+
+    // prepare searcher to search against
+    IndexSearcher searcher = newSearcher(ir);
+
+    FacetsCollector facetsCollector = performSearch(iParams, tr, ir,
+        searcher);
+
+    // Obtain facets results and hand-test them
+    assertCorrectResults(facetsCollector);
+    assertPostingListExists("$facets", "$fulltree$", ir);
+    assertPostingListExists("$bands", "Bands", ir);
+    assertPostingListExists("$composers", "Composers", ir);
+    tr.close();
+    ir.close();
+    iw.close();
+    tw.close();
+    IOUtils.close(dirs[0]);
+  }
+

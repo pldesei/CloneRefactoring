@@ -1,0 +1,11 @@
+(startLine=145 endLine=153 srcPath=/home/sonia/NewExperiment/luceneFilter/01393/solr/core/src/java/org/apache/solr/update/SolrIndexConfig.java)
+  private void assertWarnOrFail(String reason, boolean assertCondition, boolean failCondition) {
+    if(assertCondition) {
+      return;
+    } else if(failCondition) {
+      throw new SolrException(ErrorCode.FORBIDDEN, reason);
+    } else {
+      log.warn(reason);
+    }
+  }
+

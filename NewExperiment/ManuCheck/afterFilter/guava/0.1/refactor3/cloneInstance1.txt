@@ -1,0 +1,62 @@
+(startLine=1237 endLine=1296 srcPath=/home/sonia/NewExperiment/guavaFilter/00174/guava-tests/test/com/google/common/cache/CacheLoadingTest.java)
+  public void testAsMapDuringLoading() throws InterruptedException, ExecutionException {
+    final CountDownLatch getStartedSignal = new CountDownLatch(2);
+    final CountDownLatch letGetFinishSignal = new CountDownLatch(1);
+    final CountDownLatch getFinishedSignal = new CountDownLatch(2);
+    final String getKey = "get";
+    final String refreshKey = "refresh";
+    final String suffix = "Suffix";
+
+    CacheLoader<String, String> computeFunction = new CacheLoader<String, String>() {
+      @Override
+      public String load(String key) throws InterruptedException {
+        getStartedSignal.countDown();
+        letGetFinishSignal.await();
+        return key + suffix;
+      }
+    };
+
+    final LoadingCache<String, String> cache = CacheBuilder.newBuilder()
+        .build(computeFunction);
+    ConcurrentMap<String,String> map = cache.asMap();
+    map.put(refreshKey, refreshKey);
+    assertEquals(1, map.size());
+    assertFalse(map.containsKey(getKey));
+    assertSame(refreshKey, map.get(refreshKey));
+
+    new Thread() {
+      @Override
+      public void run() {
+        cache.getUnchecked(getKey);
+        getFinishedSignal.countDown();
+      }
+    }.start();
+    new Thread() {
+      @Override
+      public void run() {
+        try {
+          cache.refresh(refreshKey);
+        } catch (ExecutionException e) {
+          throw new UncheckedExecutionException(e);
+        }
+        getFinishedSignal.countDown();
+      }
+    }.start();
+
+    getStartedSignal.await();
+
+    // computation is in progress; asMap shouldn't have changed
+    assertEquals(1, map.size());
+    assertFalse(map.containsKey(getKey));
+    assertSame(refreshKey, map.get(refreshKey));
+
+    // let computation complete
+    letGetFinishSignal.countDown();
+    getFinishedSignal.await();
+
+    // asMap view should have been updated
+    assertEquals(2, cache.size());
+    assertEquals(getKey + suffix, map.get(getKey));
+    assertEquals(refreshKey + suffix, map.get(refreshKey));
+  }
+

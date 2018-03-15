@@ -1,0 +1,59 @@
+(startLine=901 endLine=957 srcPath=/home/sonia/NewExperiment/luceneFilter/01858/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+        throws IOException {
+
+      final LongParser parser = (LongParser) key.custom;
+      if (parser == null) {
+        // Confusing: must delegate to wrapper (vs simply
+        // setting parser =
+        // DEFAULT_LONG_PARSER/NUMERIC_UTILS_LONG_PARSER) so
+        // cache key includes
+        // DEFAULT_LONG_PARSER/NUMERIC_UTILS_LONG_PARSER:
+        try {
+          return wrapper.getLongs(reader, key.field, DEFAULT_LONG_PARSER, setDocsWithField);
+        } catch (NumberFormatException ne) {
+          return wrapper.getLongs(reader, key.field, NUMERIC_UTILS_LONG_PARSER, setDocsWithField);
+        }
+      }
+
+      final HoldsOneThing<long[]> valuesRef = new HoldsOneThing<long[]>();
+
+      Uninvert u = new Uninvert() {
+          private long currentValue;
+          private long[] values;
+
+          @Override
+          public void visitTerm(BytesRef term) {
+            currentValue = parser.parseLong(term);
+            if (values == null) {
+              // Lazy alloc so for the numeric field case
+              // (which will hit a NumberFormatException
+              // when we first try the DEFAULT_INT_PARSER),
+              // we don't double-alloc:
+              values = new long[reader.maxDoc()];
+              valuesRef.set(values);
+            }
+          }
+
+          @Override
+          public void visitDoc(int docID) {
+            values[docID] = currentValue;
+          }
+          
+          @Override
+          protected TermsEnum termsEnum(Terms terms) throws IOException {
+            return parser.termsEnum(terms);
+          }
+        };
+
+      u.uninvert(reader, key.field, setDocsWithField);
+
+      if (setDocsWithField) {
+        wrapper.setDocsWithField(reader, key.field, u.docsWithField);
+      }
+      long[] values = valuesRef.get();
+      if (values == null) {
+        values = new long[reader.maxDoc()];
+      }
+      return new LongsFromArray(values);
+    }
+

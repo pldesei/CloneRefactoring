@@ -1,0 +1,13 @@
+(startLine=159 endLine=169 srcPath=/home/sonia/NewExperiment/jmeterFilter/00480/src/protocol/jms/org/apache/jmeter/protocol/jms/client/Publisher.java)
+            throws JMSException, NamingException {
+        TextMessage msg = session.createTextMessage(text);
+        Utils.addJMSProperties(msg, properties);
+        if (staticDest || destinationName == null) {
+            producer.send(msg);
+        } else {
+            Destination dest = Utils.lookupDestination(ctx, destinationName);
+            producer.send(dest, msg);
+        }
+        return msg;
+    }
+

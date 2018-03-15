@@ -1,0 +1,21 @@
+(startLine=116 endLine=134 srcPath=/home/sonia/NewExperiment/jmeterFilter/00264/src/functions/org/apache/jmeter/functions/LogFunction.java)
+    static void logDetails(Logger l,String s,String prio,Throwable t)
+    {
+		if (prio.equalsIgnoreCase("OUT")) //$NON-NLS-1
+		{
+			printDetails(System.out,s,t);
+		}
+		else 
+		if (prio.equalsIgnoreCase("ERR")) //$NON-NLS-1
+		{
+			printDetails(System.err,s,t);
+		}
+		else
+		{
+			// N.B. if the string is not recognised, DEBUG is assumed
+			Priority p = Priority.getPriorityForName(prio);
+            log.log(p,s,t);
+		}
+    	
+    }
+

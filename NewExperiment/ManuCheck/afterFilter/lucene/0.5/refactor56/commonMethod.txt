@@ -1,0 +1,10 @@
+(startLine=37 endLine=44 srcPath=/home/sonia/NewExperiment/luceneFilter/00838/lucene/src/test/org/apache/lucene/index/TestSizeBoundedOptimize.java)
+  private static IndexWriterConfig newWriterConfig() throws IOException {
+    IndexWriterConfig conf = newIndexWriterConfig(TEST_VERSION_CURRENT, null);
+    conf.setMaxBufferedDocs(IndexWriterConfig.DISABLE_AUTO_FLUSH);
+    conf.setRAMBufferSizeMB(IndexWriterConfig.DEFAULT_RAM_BUFFER_SIZE_MB);
+    // prevent any merges by default.
+    conf.setMergePolicy(NoMergePolicy.COMPOUND_FILES);
+    return conf;
+  }
+

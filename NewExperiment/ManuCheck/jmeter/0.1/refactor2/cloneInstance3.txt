@@ -1,0 +1,25 @@
+(startLine=146 endLine=168 srcPath=/home/sonia/NewExperiment/jmeterFilter/00066/src/core/org/apache/jmeter/control/gui/LogicControllerGui.java)
+	{
+		this.setLayout(new VerticalLayout(5, VerticalLayout.LEFT, VerticalLayout.TOP));
+
+		// MAIN PANEL
+		JPanel mainPanel = new JPanel();
+		Border margin = new EmptyBorder(10, 10, 5, 10);
+		mainPanel.setBorder(margin);
+		mainPanel.setLayout(new VerticalLayout(5, VerticalLayout.LEFT));
+
+		// TITLE
+		JLabel panelTitleLabel = new JLabel(JMeterUtils.getResString("logic_controller_title"));
+		Font curFont = panelTitleLabel.getFont();
+		int curFontSize = curFont.getSize();
+		curFontSize += 4;
+		panelTitleLabel.setFont(new Font(curFont.getFontName(), curFont.getStyle(), curFontSize));
+		mainPanel.add(panelTitleLabel);
+
+		// NAME
+		namePanel = new NamePanel();
+		mainPanel.add(namePanel);
+
+		this.add(mainPanel);
+	}
+

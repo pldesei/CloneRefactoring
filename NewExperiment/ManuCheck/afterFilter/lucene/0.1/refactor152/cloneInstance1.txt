@@ -1,0 +1,26 @@
+(startLine=220 endLine=243 srcPath=/home/sonia/NewExperiment/luceneFilter/02200/lucene/spatial/src/java/org/apache/lucene/spatial/bbox/BBoxStrategy.java)
+    if (!bbox.getCrossesDateLine()) {
+
+      // X Conditions for documents that do not cross the date line,
+      // documents that contain the min X and max X of the query envelope,
+      // docMinX <= queryExtent.getMinX() AND docMaxX >= queryExtent.getMaxX()
+      Query qMinX = NumericRangeQuery.newDoubleRange(field_minX, precisionStep, null, bbox.getMinX(), false, true);
+      Query qMaxX = NumericRangeQuery.newDoubleRange(field_maxX, precisionStep, bbox.getMaxX(), null, true, false);
+      Query qMinMax = this.makeQuery(BooleanClause.Occur.MUST, qMinX, qMaxX);
+      Query qNonXDL = this.makeXDL(false, qMinMax);
+
+      // X Conditions for documents that cross the date line,
+      // the left portion of the document contains the min X of the query
+      // OR the right portion of the document contains the max X of the query,
+      // docMinXLeft <= queryExtent.getMinX() OR docMaxXRight >= queryExtent.getMaxX()
+      Query qXDLLeft = NumericRangeQuery.newDoubleRange(field_minX, precisionStep, null, bbox.getMinX(), false, true);
+      Query qXDLRight = NumericRangeQuery.newDoubleRange(field_maxX, precisionStep, bbox.getMaxX(), null, true, false);
+      Query qXDLLeftRight = this.makeQuery(BooleanClause.Occur.SHOULD, qXDLLeft, qXDLRight);
+      Query qXDL = this.makeXDL(true, qXDLLeftRight);
+
+      // apply the non-XDL and XDL conditions
+      xConditions = this.makeQuery(BooleanClause.Occur.SHOULD, qNonXDL, qXDL);
+
+      // queries that cross the date line
+    } else {
+

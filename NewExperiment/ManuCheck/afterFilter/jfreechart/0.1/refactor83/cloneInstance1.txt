@@ -1,0 +1,13 @@
+(startLine=5034 endLine=5044 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00359/source/org/jfree/chart/plot/CategoryPlot.java)
+        for (int i = 0; i < this.renderers.size(); i++) {
+            CategoryItemRenderer renderer2 = (CategoryItemRenderer)
+                    this.renderers.get(i);
+            if (renderer2 instanceof PublicCloneable) {
+                PublicCloneable pc = (PublicCloneable) renderer2;
+                CategoryItemRenderer rc = (CategoryItemRenderer) pc.clone();
+                clone.renderers.set(i, rc);
+                rc.setPlot(clone);
+                rc.addChangeListener(clone);
+            }
+        }
+

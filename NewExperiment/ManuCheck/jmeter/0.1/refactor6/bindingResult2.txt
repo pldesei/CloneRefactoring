@@ -1,0 +1,44 @@
+ProjectPath:/home/sonia/NewExperiment/jmeterFilter/00289
+predFragLineRange:743-749
+predMethodLineRange:704-834
+nextLineRange:696-711
+predStrMethodInvoNames:
+[setResponseData, getBytes, setResponseMessage, setResponseCode, setSampleLabel, getName, get, getThreadName, get, getThreadName, error, put, getThreadName, debug, getPropertyAsString, equals, getPropertyAsString, setSamplerData, getRootdn, getUserDN, unbindOp, equals, getPropertyAsString, setSamplerData, getUserDN, getRootdn, getUserDN, bindOp, equals, getPropertyAsString, setSamplerData, getSuserDN, getSuserDN, singleBindOp, equals, getPropertyAsString, setSamplerData, getPropertyAsString, getPropertyAsString, getPropertyAsString, getPropertyAsString, compareOp, hasMore, setResponseCode, setResponseMessage, equals, getPropertyAsString, setSamplerData, getPropertyAsString, toString, getArguments, getPropertyAsString, addTest, equals, getPropertyAsString, setSamplerData, getPropertyAsString, getPropertyAsString, deleteTest, equals, getPropertyAsString, setSamplerData, getPropertyAsString, getPropertyAsString, toString, getLDAPArguments, modifyTest, equals, getPropertyAsString, setSamplerData, getPropertyAsString, getPropertyAsString, getPropertyAsString, getPropertyAsString, renameTest, equals, getPropertyAsString, setSamplerData, getPropertyAsString, getPropertyAsString, getPropertyAsString, getPropertyAsString, getPropertyAsString, getPropertyAsString, getPropertyAsString, searchTest, hasMore, next, getName, getPropertyAsString, getRootdn, size, getAttributes, getIDs, getAttributes, hasMore, next, toString, substring, toString, get, getAttributes, toString, length, toString, toString, indexOf, setResponseMessage, substring, indexOf, indexOf, setResponseCode, substring, indexOf, indexOf, setResponseMessage, setResponseCode, getResponseCode, getResponseMessage, setResponseData, getBytes, setDataType, setSuccessful]
+%%%%%%%%%%
+AddedMethodInvo Line:705 InvoName:res.sampleStart()
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00289/src/protocol/ldap/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void sampleStart() 
+%%%%%%%%%%
+AddedMethodInvo Line:706 InvoName:ldap.disconnect(dirContext)
+PackageName:org.apache.jmeter.protocol.ldap.sampler
+QualifiedClassName:org.apache.jmeter.protocol.ldap.sampler.LdapExtClient
+ClassName:LdapExtClient
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00289/src/protocol/ldap/org/apache/jmeter/protocol/ldap/sampler/LdapExtClient.java
+InvokedMethodSig:public void disconnect(javax.naming.directory.DirContext) 
+%%%%%%%%%%
+AddedMethodInvo Line:707 InvoName:res.sampleEnd()
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00289/src/protocol/ldap/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void sampleEnd() 
+%%%%%%%%%%
+AddedMethodInvo Line:708 InvoName:ldapConnections.remove(getThreadName())
+PackageName:java.util
+QualifiedClassName:java.util.Hashtable
+ClassName:Hashtable
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00289/src/protocol/ldap/java/util/Hashtable.java
+InvokedMethodSig:public synchronized V remove(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:709 InvoName:ldapContexts.remove(getThreadName())
+PackageName:java.util
+QualifiedClassName:java.util.Hashtable
+ClassName:Hashtable
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00289/src/protocol/ldap/java/util/Hashtable.java
+InvokedMethodSig:public synchronized V remove(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:710 InvoName:log.info("context and LdapExtClients removed")
+mBinding is null

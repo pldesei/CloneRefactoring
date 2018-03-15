@@ -1,0 +1,31 @@
+(startLine=244 endLine=272 srcPath=/home/sonia/NewExperiment/guavaFilter/00728/guava-tests/test/com/google/common/collect/MapMakerInternalMapTest.java)
+  public void testCopyEntry() {
+    for (MapMaker maker : allKeyValueStrengthMakers()) {
+      MapMakerInternalMap<Object, Object> map = makeMap(maker);
+
+      Object keyOne = new Object();
+      Object valueOne = new Object();
+      int hashOne = map.hash(keyOne);
+      ReferenceEntry<Object, Object> entryOne = map.newEntry(keyOne, hashOne, null);
+      entryOne.setValueReference(map.newValueReference(entryOne, valueOne));
+
+      Object keyTwo = new Object();
+      Object valueTwo = new Object();
+      int hashTwo = map.hash(keyTwo);
+      ReferenceEntry<Object, Object> entryTwo = map.newEntry(keyTwo, hashTwo, entryOne);
+      entryTwo.setValueReference(map.newValueReference(entryTwo, valueTwo));
+
+      ReferenceEntry<Object, Object> copyOne = map.copyEntry(entryOne, null);
+      assertSame(keyOne, entryOne.getKey());
+      assertEquals(hashOne, entryOne.getHash());
+      assertNull(entryOne.getNext());
+      assertSame(valueOne, copyOne.getValueReference().get());
+
+      ReferenceEntry<Object, Object> copyTwo = map.copyEntry(entryTwo, copyOne);
+      assertSame(keyTwo, copyTwo.getKey());
+      assertEquals(hashTwo, copyTwo.getHash());
+      assertSame(copyOne, copyTwo.getNext());
+      assertSame(valueTwo, copyTwo.getValueReference().get());
+    }
+  }
+

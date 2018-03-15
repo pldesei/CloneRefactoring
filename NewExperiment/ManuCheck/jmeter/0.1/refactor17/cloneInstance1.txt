@@ -1,0 +1,80 @@
+(startLine=227 endLine=304 srcPath=/home/sonia/NewExperiment/jmeterFilter/00332/src/protocol/http/org/apache/jmeter/protocol/http/sampler/PostWriter.java)
+        else {
+            // Check if the header manager had a content type header
+            // This allows the user to specify his own content-type for a POST request
+            String contentTypeHeader = connection.getRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE);
+            boolean hasContentTypeHeader = contentTypeHeader != null && contentTypeHeader.length() > 0; 
+            
+            // If there are no arguments, we can send a file as the body of the request
+            if(sampler.getArguments() != null && sampler.getArguments().getArgumentCount() == 0 && sampler.getSendFileAsPostBody()) {
+                if(!hasContentTypeHeader) {
+                    // Allow the mimetype of the file to control the content type
+                    if(sampler.getMimetype() != null && sampler.getMimetype().length() > 0) {
+                        connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE, sampler.getMimetype());
+                    }
+                    else {
+                        connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE, HTTPConstants.APPLICATION_X_WWW_FORM_URLENCODED);
+                    }
+                }
+                
+                // Create the content length we are going to write
+                File inputFile = new File(sampler.getFilename());
+                contentLength = inputFile.length();
+            }
+            else {
+                // We create the post body content now, so we know the size
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                
+                // If none of the arguments have a name specified, we
+                // just send all the values as the post body
+                String postBody = null;
+                if(!sampler.getSendParameterValuesAsPostBody()) {
+                    // Set the content type
+                    if(!hasContentTypeHeader) {
+                        connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE, HTTPConstants.APPLICATION_X_WWW_FORM_URLENCODED);
+                    }
+
+                    // It is a normal post request, with parameter names and values
+                    postBody = sampler.getQueryString(contentEncoding);
+                }
+                else {
+                    // Allow the mimetype of the file to control the content type
+                    // This is not obvious in GUI if you are not uploading any files,
+                    // but just sending the content of nameless parameters
+                    if(!hasContentTypeHeader) {
+                        if(sampler.getMimetype() != null && sampler.getMimetype().length() > 0) {
+                            connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE, sampler.getMimetype());
+                        }
+                        else {
+                            // TODO: is this the correct default?
+                            connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE, HTTPConstants.APPLICATION_X_WWW_FORM_URLENCODED);
+                        }
+                    }
+                    
+                    // Just append all the parameter values, and use that as the post body
+                    StringBuffer postBodyBuffer = new StringBuffer();
+                    PropertyIterator args = sampler.getArguments().iterator();
+                    while (args.hasNext()) {
+                        HTTPArgument arg = (HTTPArgument) args.next().getObjectValue();
+                        postBodyBuffer.append(arg.getEncodedValue(contentEncoding));
+                    }
+                    postBody = postBodyBuffer.toString();
+                }
+
+                // Query string should be encoded in UTF-8
+                bos.write(postBody.getBytes("UTF-8")); // $NON-NLS-1$
+                bos.flush();
+                bos.close();
+
+                // Keep the content, will be sent later
+                formDataUrlEncoded = bos.toByteArray();
+                contentLength = bos.toByteArray().length;
+            }
+            
+            // Set the content length
+            connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_LENGTH, Long.toString(contentLength));
+
+            // Make the connection ready for sending post data
+            connection.setDoOutput(true);
+        }
+

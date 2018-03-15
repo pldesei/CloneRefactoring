@@ -1,0 +1,16 @@
+(startLine=780 endLine=793 srcPath=/home/sonia/NewExperiment/guavaFilter/00383/guava/src/com/google/common/io/ByteStreams.java)
+      ByteProcessor<T> processor) throws IOException {
+    checkNotNull(supplier);
+    checkNotNull(processor);
+
+    Closer closer = Closer.create();
+    try {
+      InputStream in = closer.add(supplier.getInput());
+      return readBytes(in, processor);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

@@ -1,0 +1,15 @@
+(startLine=268 endLine=280 srcPath=/home/sonia/NewExperiment/luceneFilter/00241/src/java/org/apache/lucene/index/SegmentInfo.java)
+  /**
+   * Mark whether this segment is stored as a compound file.
+   *
+   * @param isCompoundFile true if this is a compound file;
+   * else, false
+   */
+  void setUseCompoundFile(boolean isCompoundFile) {
+    if (isCompoundFile) {
+      this.isCompoundFile = 1;
+    } else {
+      this.isCompoundFile = -1;
+    }
+  }
+

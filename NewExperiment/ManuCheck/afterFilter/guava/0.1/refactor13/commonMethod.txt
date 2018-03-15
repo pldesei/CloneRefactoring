@@ -1,0 +1,12 @@
+(startLine=976 endLine=985 srcPath=/home/sonia/NewExperiment/guavaFilter/00374/guava/src/com/google/common/io/ByteStreams.java)
+  static ByteSink asByteSink(
+      final OutputSupplier<? extends OutputStream> supplier) {
+    checkNotNull(supplier);
+    return new ByteSink() {
+      @Override
+      public OutputStream openStream() throws IOException {
+        return supplier.getOutput();
+      }
+    };
+  }
+

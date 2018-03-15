@@ -1,0 +1,13 @@
+(startLine=82 endLine=92 srcPath=/home/sonia/NewExperiment/jmeterFilter/00525/test/src/org/apache/jmeter/engine/DistributedRunnerTest.java)
+    private void initRunner(DistributedRunnerEmul runner, List<String> hosts) {
+        PrintStream origSystemOut = System.out;
+        ByteArrayOutputStream catchingOut = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(catchingOut));
+        try {
+            runner.init(hosts, new HashTree());
+            fail();
+        } catch (RuntimeException ignored) {
+        }
+        System.setOut(origSystemOut);
+    }
+

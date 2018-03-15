@@ -1,0 +1,13 @@
+(startLine=533 endLine=543 srcPath=/home/sonia/NewExperiment/jmeterFilter/00374/src/components/org/apache/jmeter/visualizers/ViewResultsFullVisualizer.java)
+    private void showRenderJSONResponse(String response) {
+        results.setContentType("text/plain"); // $NON-NLS-1$
+        results.setText(response == null ? "" : prettyJSON(response));
+        results.setCaretPosition(0);
+        resultsScrollPane.setViewportView(results);
+
+        textButton.setEnabled(true);
+        htmlButton.setEnabled(true);
+        jsonButton.setEnabled(true);
+        xmlButton.setEnabled(true);
+    }
+

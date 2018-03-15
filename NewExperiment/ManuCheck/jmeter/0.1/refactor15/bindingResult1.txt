@@ -1,0 +1,134 @@
+ProjectPath:/home/sonia/NewExperiment/jmeterFilter/00313
+predFragLineRange:465-482
+predMethodLineRange:393-514
+nextLineRange:712-875
+predStrMethodInvoNames:
+[toString, debug, debug, getPropertyAsBoolean, setMonitor, setMonitor, setSampleLabel, sampleStart, setupConnection, equals, sendPostData, execute, getResponseBody, sampleEnd, setSampleLabel, toString, getURI, setResponseData, setResponseCode, toString, setSuccessful, setResponseMessage, getStatusText, getResponseHeader, getValue, setContentType, toLowerCase, indexOf, setDataEncoding, substring, length, startsWith, setDataType, setDataType, setResponseHeaders, getResponseHeaders, isRedirect, setRedirectLocation, getValue, getResponseHeader, saveConnectionCookies, getCookieManager, resultProcessing, debug, releaseConnection, sampleEnd, errorResult, setSampleLabel, toString, sampleEnd, errorResult, setSampleLabel, toString, releaseConnection]
+%%%%%%%%%%
+AddedMethodInvo Line:741 InvoName:isMonitor()
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSamplerBase
+ClassName:HTTPSamplerBase
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java
+InvokedMethodSig:public boolean isMonitor() 
+%%%%%%%%%%
+AddedMethodInvo Line:744 InvoName:res.setHTTPMethod(method)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSampleResult
+ClassName:HTTPSampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampleResult.java
+InvokedMethodSig:public void setHTTPMethod(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:765 InvoName:log.error("Unexpected method (converted to GET): " + method)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:773 InvoName:res.setQueryString(postBody)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSampleResult
+ClassName:HTTPSampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampleResult.java
+InvokedMethodSig:public void setQueryString(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:775 InvoName:setPutHeaders((PutMethod)httpMethod)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSampler2
+ClassName:HTTPSampler2
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampler2.java
+InvokedMethodSig:private void setPutHeaders(PutMethod) 
+%%%%%%%%%%
+AddedMethodInvo Line:778 InvoName:res.setRequestHeaders(getConnectionHeaders(httpMethod))
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void setRequestHeaders(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:778 InvoName:getConnectionHeaders(httpMethod)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSampler2
+ClassName:HTTPSampler2
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSampler2.java
+InvokedMethodSig:private java.lang.String getConnectionHeaders(HttpMethod) 
+%%%%%%%%%%
+AddedMethodInvo Line:780 InvoName:client.executeMethod(httpMethod)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:783 InvoName:httpMethod.getResponseBodyAsStream()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:799 InvoName:instream.read(buffer)
+PackageName:java.io
+QualifiedClassName:java.io.InputStream
+ClassName:InputStream
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/java/io/InputStream.java
+InvokedMethodSig:public int read(byte[]) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:801 InvoName:res.latencyEnd()
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void latencyEnd() 
+%%%%%%%%%%
+AddedMethodInvo Line:804 InvoName:outstream.write(buffer,0,len)
+PackageName:java.io
+QualifiedClassName:java.io.ByteArrayOutputStream
+ClassName:ByteArrayOutputStream
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/java/io/ByteArrayOutputStream.java
+InvokedMethodSig:public synchronized void write(byte[], int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:807 InvoName:outstream.toByteArray()
+PackageName:java.io
+QualifiedClassName:java.io.ByteArrayOutputStream
+ClassName:ByteArrayOutputStream
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/java/io/ByteArrayOutputStream.java
+InvokedMethodSig:public synchronized byte[] toByteArray() 
+%%%%%%%%%%
+AddedMethodInvo Line:808 InvoName:outstream.close()
+PackageName:java.io
+QualifiedClassName:java.io.ByteArrayOutputStream
+ClassName:ByteArrayOutputStream
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/java/io/ByteArrayOutputStream.java
+InvokedMethodSig:public void close() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:821 InvoName:isSuccessCode(statusCode)
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSamplerBase
+ClassName:HTTPSamplerBase
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java
+InvokedMethodSig:protected boolean isSuccessCode(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:832 InvoName:res.setEncodingAndType(ct)
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void setEncodingAndType(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:845 InvoName:getAutoRedirects()
+PackageName:org.apache.jmeter.protocol.http.sampler
+QualifiedClassName:org.apache.jmeter.protocol.http.sampler.HTTPSamplerBase
+ClassName:HTTPSamplerBase
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java
+InvokedMethodSig:public boolean getAutoRedirects() 
+%%%%%%%%%%
+AddedMethodInvo Line:846 InvoName:res.setURL(new URL(httpMethod.getURI().toString()))
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public void setURL(java.net.URL) 
+%%%%%%%%%%
+AddedMethodInvo Line:850 InvoName:res.getURL()
+PackageName:org.apache.jmeter.samplers
+QualifiedClassName:org.apache.jmeter.samplers.SampleResult
+ClassName:SampleResult
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jmeter/samplers/SampleResult.java
+InvokedMethodSig:public java.net.URL getURL() 
+%%%%%%%%%%
+AddedMethodInvo Line:871 InvoName:JOrphanUtils.closeQuietly(instream)
+PackageName:org.apache.jorphan.util
+QualifiedClassName:org.apache.jorphan.util.JOrphanUtils
+ClassName:JOrphanUtils
+InvokedFilePath:/home/sonia/NewExperiment/jmeterFilter/00313/src/protocol/http/org/apache/jorphan/util/JOrphanUtils.java
+InvokedMethodSig:public static void closeQuietly(java.io.InputStream) 

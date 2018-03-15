@@ -1,0 +1,10 @@
+(startLine=788 endLine=795 srcPath=/home/sonia/NewExperiment/jmeterFilter/00312/src/protocol/ldap/org/apache/jmeter/protocol/ldap/sampler/LDAPExtSampler.java)
+			} else if (getPropertyAsString(TEST).equals("modify")) {
+				res.setSamplerData("Modify object " + getPropertyAsString(BASE_ENTRY_DN));
+				responseData = responseData + "<operation><opertype>modify</opertype>";
+				responseData = responseData + "<dn>" + getPropertyAsString(BASE_ENTRY_DN) + "</dn>";
+				responseData = responseData + "<attributes>" + getLDAPArguments().toString()
+						+ "</attributes></operation>";
+				modifyTest(temp_client, dirContext, res);
+			} else if (getPropertyAsString(TEST).equals("rename")) {
+

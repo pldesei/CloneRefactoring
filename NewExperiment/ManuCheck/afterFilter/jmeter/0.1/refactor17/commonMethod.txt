@@ -1,0 +1,40 @@
+(startLine=1431 endLine=1468 srcPath=/home/sonia/NewExperiment/jmeterFilter/00333/src/protocol/http/org/apache/jmeter/protocol/http/sampler/HTTPSamplerBase.java)
+    /**
+     * Get the collection of files as a list.
+     * The list is built up from the filename/filefield/mimetype properties,
+     * plus any additional entries saved in the FILE_ARGS property.
+     *
+     * If there are no valid file entries, then an empty list is returned.
+     * 
+     * @return an array of file arguments (never null)
+     */
+    public HTTPFileArg[] getHTTPFiles() {
+        if (fileList != null){
+            return fileList;
+        }
+        HTTPFileArg[] outFiles;
+        // Check for original data names
+        String fileName = getFilenameProperty();
+        String paramName = getFileFieldProperty();
+        String mimeType = getMimetypeProperty();
+        HTTPFileArg file = new HTTPFileArg(fileName, paramName, mimeType);
+        if(file.isNotEmpty()) {
+            // Now deal with any additional file arguments
+            final HTTPFileArgs fileArgs = getHTTPFileArgs();
+            if(fileArgs != null) {
+                outFiles = new HTTPFileArg[1+fileArgs.getHTTPFileArgCount()];
+                outFiles[0] = file; // first file
+                HTTPFileArg[] infiles = fileArgs.asArray();
+                for (int i = 0; i < infiles.length; i++){
+                    outFiles[i+1] = infiles[i];
+                }
+            } else {
+                outFiles = new HTTPFileArg[]{file}; // just one file
+            }
+        } else {
+            outFiles = new HTTPFileArg[]{}; // no files, empty array
+        }
+        fileList = outFiles; // update the list cache
+        return fileList;
+    }
+

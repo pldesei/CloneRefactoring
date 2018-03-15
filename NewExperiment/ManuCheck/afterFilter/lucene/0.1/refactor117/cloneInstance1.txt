@@ -1,0 +1,59 @@
+(startLine=608 endLine=664 srcPath=/home/sonia/NewExperiment/luceneFilter/01858/lucene/core/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+        throws IOException {
+
+      final IntParser parser = (IntParser) key.custom;
+      if (parser == null) {
+        // Confusing: must delegate to wrapper (vs simply
+        // setting parser =
+        // DEFAULT_INT_PARSER/NUMERIC_UTILS_INT_PARSER) so
+        // cache key includes
+        // DEFAULT_INT_PARSER/NUMERIC_UTILS_INT_PARSER:
+        try {
+          return wrapper.getInts(reader, key.field, DEFAULT_INT_PARSER, setDocsWithField);
+        } catch (NumberFormatException ne) {
+          return wrapper.getInts(reader, key.field, NUMERIC_UTILS_INT_PARSER, setDocsWithField);
+        }
+      }
+
+      final HoldsOneThing<int[]> valuesRef = new HoldsOneThing<int[]>();
+
+      Uninvert u = new Uninvert() {
+          private int currentValue;
+          private int[] values;
+
+          @Override
+          public void visitTerm(BytesRef term) {
+            currentValue = parser.parseInt(term);
+            if (values == null) {
+              // Lazy alloc so for the numeric field case
+              // (which will hit a NumberFormatException
+              // when we first try the DEFAULT_INT_PARSER),
+              // we don't double-alloc:
+              values = new int[reader.maxDoc()];
+              valuesRef.set(values);
+            }
+          }
+
+          @Override
+          public void visitDoc(int docID) {
+            values[docID] = currentValue;
+          }
+          
+          @Override
+          protected TermsEnum termsEnum(Terms terms) throws IOException {
+            return parser.termsEnum(terms);
+          }
+        };
+
+      u.uninvert(reader, key.field, setDocsWithField);
+
+      if (setDocsWithField) {
+        wrapper.setDocsWithField(reader, key.field, u.docsWithField);
+      }
+      int[] values = valuesRef.get();
+      if (values == null) {
+        values = new int[reader.maxDoc()];
+      }
+      return new IntsFromArray(values);
+    }
+

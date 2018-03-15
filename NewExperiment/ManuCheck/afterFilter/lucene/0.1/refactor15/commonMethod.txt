@@ -1,0 +1,8 @@
+(startLine=128 endLine=133 srcPath=/home/sonia/NewExperiment/luceneFilter/00347/src/java/org/apache/lucene/index/TermVectorsReader.java)
+  final private void seekTvx(final int docNum) throws IOException {
+    if (format < FORMAT_VERSION2)
+      tvx.seek((docNum + docStoreOffset) * 8L + FORMAT_SIZE);
+    else
+      tvx.seek((docNum + docStoreOffset) * 16L + FORMAT_SIZE);
+  }
+

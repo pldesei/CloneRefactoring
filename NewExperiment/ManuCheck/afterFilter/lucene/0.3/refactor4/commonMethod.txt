@@ -1,0 +1,34 @@
+(startLine=222 endLine=253 srcPath=/home/sonia/NewExperiment/luceneFilter/00088/sandbox/projects/appex/src/java/search/DocumentHandler.java)
+    /**
+     * Datasources are basically a collection of data maps to be indexed.
+     * addMapToDoc is invoked for each map.
+     *
+     * @param Datasource to add.
+     */
+    private void addDataSource(DataSource ds) throws Exception
+    {
+        Map[] data = ds.getData();
+        for (int i = 0; i < data.length; i++)
+        {
+            Map map = data[i];
+            if (map.containsKey(DataSource.OBJECT_IDENTIFIER))
+            {
+                /**
+                 * Create a new document because child datasources may need
+                 * to be retrieved independently of parent doc.
+                 */
+                DocumentHandler docHandler = new DocumentHandler(map, null, null);
+                docHandler.process();
+                documents.addAll(docHandler.getDocuments());
+            }
+            else
+            {
+                addMapToDoc(map);
+                /**
+                 * Add nested datasources of this datasource's data
+                 */
+                addNestedDataSource(map);
+            }
+        }
+    }
+

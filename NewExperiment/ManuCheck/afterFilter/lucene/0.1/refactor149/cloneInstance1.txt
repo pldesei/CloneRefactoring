@@ -1,0 +1,18 @@
+(startLine=1674 endLine=1689 srcPath=/home/sonia/NewExperiment/luceneFilter/02049/solr/test-framework/src/java/org/apache/solr/cloud/AbstractFullDistribZkTestBase.java)
+  protected SolrServer createNewSolrServer(int port) {
+    try {
+      // setup the server...
+      String urlScheme = isSSLMode() ? "https" : "http";
+      String url = urlScheme + "://127.0.0.1:" + port + context + 
+        (context.endsWith("/") ? "" : "/") + DEFAULT_COLLECTION;
+      HttpSolrServer s = new HttpSolrServer(url);
+      s.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT);
+      s.setSoTimeout(60000);
+      s.setDefaultMaxConnectionsPerHost(100);
+      s.setMaxTotalConnections(100);
+      return s;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+

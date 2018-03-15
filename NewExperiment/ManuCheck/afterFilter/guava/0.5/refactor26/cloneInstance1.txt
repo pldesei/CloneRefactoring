@@ -1,0 +1,21 @@
+(startLine=102 endLine=120 srcPath=/home/sonia/NewExperiment/guavaFilter/00698/guava-tests/test/com/google/common/graph/GraphEqualsTest.java)
+  public void equals_directedVsUndirected() {
+    graph.addEdge(E12, N1, N2);
+
+    Graph<Integer, String> g2;
+    switch (graphType) {
+      case UNDIRECTED:
+        g2 = Graphs.createDirected();
+        break;
+      case DIRECTED:
+        g2 = Graphs.createUndirected();
+        break;
+      default:
+        throw new IllegalStateException("Unexpected graph type: " + graphType);
+    }
+
+    g2.addEdge(E12, N1, N2);
+
+    new EqualsTester().addEqualityGroup(graph).addEqualityGroup(g2).testEquals();
+  }
+

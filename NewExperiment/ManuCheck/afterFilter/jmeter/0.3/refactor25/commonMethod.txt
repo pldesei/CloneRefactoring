@@ -1,0 +1,10 @@
+(startLine=437 endLine=444 srcPath=/home/sonia/NewExperiment/jmeterFilter/00461/src/core/org/apache/jmeter/engine/StandardJMeterEngine.java)
+    /**
+     * Loop with 1s pause while thread groups have threads running 
+     */
+    private void pauseWhileRemainingThreads() {
+        while (running && groupsHaveThreads()) {
+            pause(1000);
+        }
+    }
+

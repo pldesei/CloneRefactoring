@@ -1,0 +1,17 @@
+(startLine=663 endLine=677 srcPath=/home/sonia/NewExperiment/luceneFilter/00737/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+        while(true) {
+          final BytesRef term = termsEnum.next();
+          if (term == null) {
+            break;
+          }
+          docs = termsEnum.docs(delDocs, docs);
+          final String termval = term.utf8ToString();
+          while (true) {
+            final int docID = docs.nextDoc();
+            if (docID == DocsEnum.NO_MORE_DOCS) {
+              break;
+            }
+            retArray[docID] = termval;
+          }
+        }
+

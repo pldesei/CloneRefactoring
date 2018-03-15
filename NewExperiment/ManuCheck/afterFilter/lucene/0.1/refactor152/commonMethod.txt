@@ -1,0 +1,7 @@
+(startLine=589 endLine=593 srcPath=/home/sonia/NewExperiment/luceneFilter/02201/lucene/spatial/src/java/org/apache/lucene/spatial/bbox/BBoxStrategy.java)
+  private Query makeNumberTermQuery(String field, double number) {
+    BytesRef bytes = new BytesRef();
+    NumericUtils.longToPrefixCodedBytes(NumericUtils.doubleToSortableLong(number), 0, bytes);
+    return new TermQuery(new Term(field, bytes));
+  }
+

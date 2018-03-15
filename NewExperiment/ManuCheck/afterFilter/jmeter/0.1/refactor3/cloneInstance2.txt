@@ -1,0 +1,19 @@
+(startLine=263 endLine=279 srcPath=/home/sonia/NewExperiment/jmeterFilter/00119/src/core/org/apache/jmeter/threads/gui/ThreadGroupGui.java)
+    {
+        JPanel panel = new JPanel(new BorderLayout(5, 0));
+        JLabel label = new JLabel("endtime");//JMeterUtils.getResString("endtime"));
+        label.setLabelFor(endtime);
+        panel.add(label, BorderLayout.WEST);
+
+        Date today = new Date();
+        // Start the spinner today, but don't set a min or max date
+        // The increment should be a month
+        end = new JSpinner(new SpinnerDateModel(today, 
+                                                null, null, Calendar.MONTH));
+        endtime = new DateEditor(end, "dd/MM/yy HH:mm:ss");
+        end.setEditor(endtime);
+
+        panel.add(end, BorderLayout.CENTER);
+        return panel;
+    }
+

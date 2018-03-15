@@ -1,0 +1,12 @@
+(startLine=219 endLine=228 srcPath=/home/sonia/NewExperiment/luceneFilter/03075/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+  /** Wraps a {@link SortedNumericDocValues} as a single-valued view if the field is an instance of {@link SortedNumericSortField},
+   * returns {@link NumericDocValues} for the field otherwise. */
+  static NumericDocValues getOrWrapNumeric(LeafReader reader, SortField sortField) throws IOException {
+    if (sortField instanceof SortedNumericSortField) {
+      SortedNumericSortField sf = (SortedNumericSortField) sortField;
+      return SortedNumericSelector.wrap(DocValues.getSortedNumeric(reader, sf.getField()), sf.getSelector(), sf.getNumericType());
+    } else {
+      return DocValues.getNumeric(reader, sortField.getField());
+    }
+  }
+

@@ -1,0 +1,39 @@
+(startLine=757 endLine=793 srcPath=/home/sonia/NewExperiment/luceneFilter/01524/solr/core/src/java/org/apache/solr/core/CoreContainer.java)
+  public SolrCore create(CoreDescriptor dcore)  throws ParserConfigurationException, IOException, SAXException {
+
+    // :TODO: would be really nice if this method wrapped any underlying errors and only threw SolrException
+
+    final String name = dcore.getName();
+    Exception failure = null;
+    try {
+      // :nocommit: refactor doCreate completley into this method - only did it this way so patch would be straight forward w/o huge amounts of indenting changes
+
+      SolrCore core = doCreate(dcore);
+      coreInitFailures.remove(name);
+      return core;
+
+      // :TODO: Java7...
+      // http://docs.oracle.com/javase/7/docs/technotes/guides/language/catch-multiple.html
+    } catch (ParserConfigurationException e1) {
+      failure = e1;
+      throw e1;
+    } catch (IOException e2) {
+      failure = e2;
+      throw e2;
+    } catch (SAXException e3) {
+      failure = e3;
+      throw e3;
+    } catch (RuntimeException e4) {
+      failure = e4;
+      throw e4;
+    } finally {
+      if (null != failure) {
+        synchronized (coreInitFailures) {
+          // remove first so insertion order is updated and newest is last
+          coreInitFailures.remove(name);
+          coreInitFailures.put(name, failure);
+        }
+      }
+    }
+  }
+

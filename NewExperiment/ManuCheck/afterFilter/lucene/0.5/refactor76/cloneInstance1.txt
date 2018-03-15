@@ -1,0 +1,20 @@
+(startLine=495 endLine=512 srcPath=/home/sonia/NewExperiment/luceneFilter/01378/modules/analysis/common/src/test/org/apache/lucene/analysis/charfilter/HTMLStripCharFilterTest.java)
+  public void testRandom() throws Exception {
+    Analyzer analyzer = new Analyzer() {
+
+      @Override
+      protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
+        Tokenizer tokenizer = new MockTokenizer(reader, MockTokenizer.WHITESPACE, false);
+        return new TokenStreamComponents(tokenizer, tokenizer);
+      }
+
+      @Override
+      protected Reader initReader(Reader reader) {
+        return new HTMLStripCharFilter(CharReader.get(reader));
+      }
+    };
+    
+    int numRounds = RANDOM_MULTIPLIER * 10000;
+    checkRandomData(random, analyzer, numRounds);
+  }
+

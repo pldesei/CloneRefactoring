@@ -1,0 +1,12 @@
+(startLine=47 endLine=56 srcPath=/home/sonia/NewExperiment/luceneFilter/00954/modules/benchmark/src/test/org/apache/lucene/benchmark/byTask/feeds/LineDocSourceTest.java)
+  private void createBZ2LineFile(File file) throws Exception {
+    OutputStream out = new FileOutputStream(file);
+    out = csFactory.createCompressorOutputStream("bzip2", out);
+    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "utf-8"));
+    StringBuilder doc = new StringBuilder();
+    doc.append("title").append(WriteLineDocTask.SEP).append("date").append(WriteLineDocTask.SEP).append("body");
+    writer.write(doc.toString());
+    writer.newLine();
+    writer.close();
+  }
+

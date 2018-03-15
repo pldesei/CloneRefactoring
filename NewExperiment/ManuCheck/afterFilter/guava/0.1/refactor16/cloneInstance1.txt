@@ -1,0 +1,15 @@
+(startLine=108 endLine=120 srcPath=/home/sonia/NewExperiment/guavaFilter/00383/guava/src/com/google/common/io/ByteSink.java)
+  public long writeFrom(InputStream input) throws IOException {
+    checkNotNull(input);
+
+    Closer closer = Closer.create();
+    try {
+      OutputStream out = closer.add(openStream());
+      return ByteStreams.copy(input, out);
+    } catch (Throwable e) {
+      throw closer.rethrow(e, IOException.class);
+    } finally {
+      closer.close();
+    }
+  }
+

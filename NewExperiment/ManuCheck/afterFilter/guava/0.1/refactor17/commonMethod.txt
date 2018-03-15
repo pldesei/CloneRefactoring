@@ -1,0 +1,13 @@
+(startLine=115 endLine=125 srcPath=/home/sonia/NewExperiment/guavaFilter/00384/guava/src/com/google/common/io/Closer.java)
+  /**
+   * Registers the given {@code closeable} to be closed when this {@code Closer} is
+   * {@linkplain #close closed}.
+   *
+   * @return the given {@code closeable}
+   */
+  // close. this word no longer has any meaning to me.
+  public <C extends Closeable> C register(C closeable) {
+    stack.push(closeable);
+    return closeable;
+  }
+

@@ -1,0 +1,24 @@
+(startLine=1279 endLine=1300 srcPath=/home/sonia/NewExperiment/luceneFilter/01909/lucene/core/src/java/org/apache/lucene/index/IndexWriter.java)
+  public void updateDocuments(Term delTerm, Iterable<? extends IndexDocument> docs, Analyzer analyzer) throws IOException {
+    ensureOpen();
+    try {
+      boolean success = false;
+      boolean anySegmentFlushed = false;
+      try {
+        anySegmentFlushed = docWriter.updateDocuments(docs, analyzer, delTerm);
+        success = true;
+      } finally {
+        if (!success) {
+          if (infoStream.isEnabled("IW")) {
+            infoStream.message("IW", "hit exception updating document");
+          }
+        }
+      }
+      if (anySegmentFlushed) {
+        maybeMerge(MergeTrigger.SEGMENT_FLUSH, UNBOUNDED_MAX_MERGE_SEGMENTS);
+      }
+    } catch (OutOfMemoryError oom) {
+      handleOOM(oom, "updateDocuments");
+    }
+  }
+

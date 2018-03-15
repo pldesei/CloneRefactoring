@@ -1,0 +1,21 @@
+(startLine=120 endLine=138 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00318/tests/org/jfree/chart/block/EmptyBlockTest.java)
+    public void testSerialization() {
+        EmptyBlock b1 = new EmptyBlock(1.0, 2.0);
+        EmptyBlock b2 = null;
+        try {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(buffer);
+            out.writeObject(b1);
+            out.close();
+
+            ObjectInput in = new ObjectInputStream(
+                    new ByteArrayInputStream(buffer.toByteArray()));
+            b2 = (EmptyBlock) in.readObject();
+            in.close();
+        }
+        catch (Exception e) {
+            fail(e.toString());
+        }
+        assertEquals(b1, b2);
+    }
+

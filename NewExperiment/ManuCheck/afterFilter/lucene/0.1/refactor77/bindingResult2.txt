@@ -1,0 +1,30 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01393
+predFragLineRange:111-118
+predMethodLineRange:81-134
+nextLineRange:94-138
+predStrMethodInvoNames:
+[onOrAfter, getName, getName, getBool, getInt, getInt, getInt, getDouble, getInt, get, get, length, trim, warn, put, trim, getPluginInfo, get, length, trim, warn, put, trim, getPluginInfo, get, warn, getInt, getBool, get, info]
+%%%%%%%%%%
+AddedMethodInvo Line:97 InvoName:log.debug("Defaulting to prefix \"" + prefix + "\" for index configuration")
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:108 InvoName:assertWarnOrFail("The <mergeScheduler>myclass</mergeScheduler> syntax is no longer supported in solrconfig.xml. Please use syntax <mergeScheduler class=\"myclass\"/> instead.",!((solrConfig.get(prefix + "/mergeScheduler/text()",null) != null) && (solrConfig.get(prefix + "/mergeScheduler/@class",null) == null)),luceneVersion.onOrAfter(Version.LUCENE_36))
+PackageName:org.apache.solr.update
+QualifiedClassName:org.apache.solr.update.SolrIndexConfig
+ClassName:SolrIndexConfig
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01393/solr/core/src/java/org/apache/solr/update/SolrIndexConfig.java
+InvokedMethodSig:private void assertWarnOrFail(java.lang.String, boolean, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:111 InvoName:assertWarnOrFail("The <mergePolicy>myclass</mergePolicy> syntax is no longer supported in solrconfig.xml. Please use syntax <mergePolicy class=\"myclass\"/> instead.",!((solrConfig.get(prefix + "/mergePolicy/text()",null) != null) && (solrConfig.get(prefix + "/mergePolicy/@class",null) == null)),luceneVersion.onOrAfter(Version.LUCENE_36))
+PackageName:org.apache.solr.update
+QualifiedClassName:org.apache.solr.update.SolrIndexConfig
+ClassName:SolrIndexConfig
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01393/solr/core/src/java/org/apache/solr/update/SolrIndexConfig.java
+InvokedMethodSig:private void assertWarnOrFail(java.lang.String, boolean, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:114 InvoName:assertWarnOrFail("The <luceneAutoCommit>true|false</luceneAutoCommit> parameter is no longer valid in solrconfig.xml.",solrConfig.get(prefix + "/luceneAutoCommit",null) == null,luceneVersion.onOrAfter(Version.LUCENE_36))
+PackageName:org.apache.solr.update
+QualifiedClassName:org.apache.solr.update.SolrIndexConfig
+ClassName:SolrIndexConfig
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01393/solr/core/src/java/org/apache/solr/update/SolrIndexConfig.java
+InvokedMethodSig:private void assertWarnOrFail(java.lang.String, boolean, boolean) 

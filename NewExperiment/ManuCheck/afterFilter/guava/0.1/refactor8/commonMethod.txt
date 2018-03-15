@@ -1,0 +1,16 @@
+(startLine=360 endLine=373 srcPath=/home/sonia/NewExperiment/guavaFilter/00290/guava/src/com/google/common/util/concurrent/AbstractService.java)
+  /**
+   * Attempts to execute all the listeners in {@link #queuedListeners} while not holding the
+   * {@link #lock}.
+   */
+  private void executeListeners() {
+    if (!lock.isHeldByCurrentThread()) {
+      synchronized (queuedListeners) {
+        Runnable listener;
+        while ((listener = queuedListeners.poll()) != null) {
+          listener.run();
+        }
+      }
+    }
+  }
+

@@ -1,0 +1,27 @@
+(startLine=274 endLine=298 srcPath=/home/sonia/NewExperiment/jmeterFilter/00120/src/core/org/apache/jmeter/util/JMeterUtils.java)
+	/**
+	 *  Gets the resource string for this key.
+	 *  @param key the key in the resource file
+	 *  @return the resource string if the key is found; otherwise, return an empty string
+	 */
+	public static String getResString(String key)
+	{
+		if (key == null)
+		{
+			return null;
+		}
+		key = key.replace(' ', '_');
+		key = key.toLowerCase();
+		String resString = null;
+		try
+		{
+			resString = resources.getString(key);
+		}
+		catch (MissingResourceException mre)
+		{
+			log.warn("ERROR! Resource string not found: [" + key + "]");
+			resString = "";
+		}
+		return resString;
+	}
+

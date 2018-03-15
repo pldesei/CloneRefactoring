@@ -1,0 +1,42 @@
+(startLine=125 endLine=164 srcPath=/home/sonia/NewExperiment/luceneFilter/01995/solr/core/src/test/org/apache/solr/analytics/facet/RangeFacetTest.java)
+  public void rangeTest() throws Exception {
+    
+    //Int Long
+    String intLongRange = getFacetXML(response, "ri", "rangeFacets", "long_ld");
+    ArrayList<Double> intLong = (ArrayList<Double>)xmlToList(intLongRange, "long", "count");
+    ArrayList<Long> intLongTest = calculateStat(transformLists(intLongTestStart, 5, 30, 5
+                                                        , false, true, false, false, false), "count");
+    assertEquals(intLong,intLongTest);
+    //Int Double
+    String intDoubleRange = getFacetXML(response, "ri", "rangeFacets", "double_dd");    
+    ArrayList<Double> intDouble = (ArrayList<Double>)xmlToList(intDoubleRange, "double", "mean");
+    ArrayList<Double> intDoubleTest = calculateNumberStat(transformLists(intDoubleTestStart, 3, 39, 7
+                                                          , false, false, true, false, true), "mean");
+    assertEquals(intDouble,intDoubleTest);
+    //Int Date
+    String intDateRange = getFacetXML(response, "ri", "rangeFacets", "date_dtd");
+    ArrayList<Long> intDate = (ArrayList<Long>)xmlToList(intDateRange, "long", "count");
+    ArrayList<Long> intDateTest = (ArrayList<Long>)calculateStat(transformLists(intDateTestStart, 7, 44, 7
+                                                      , false, true, false, true, true), "count");
+    assertEquals(intDate,intDateTest);
+    
+    //Float Long
+    String floatLongRange = getFacetXML(response, "rf", "rangeFacets", "long_ld");
+    ArrayList<Double> floatLong = (ArrayList<Double>)xmlToList(floatLongRange, "double", "median");
+    ArrayList<Double> floatLongTest = calculateNumberStat(transformLists(floatLongTestStart, 0, 29, 4
+                                                          , false, true, true, true, true), "median");
+    assertEquals(floatLong,floatLongTest);
+    //Float Double
+    String floatDoubleRange = getFacetXML(response, "rf", "rangeFacets", "double_dd");    
+    ArrayList<Long> floatDouble = (ArrayList<Long>)xmlToList(floatDoubleRange, "long", "count");
+    ArrayList<Long> floatDoubleTest = (ArrayList<Long>)calculateStat(transformLists(floatDoubleTestStart, 4, 47, 11
+                                                                     , false, false, false, true, false), "count");
+    assertEquals(floatDouble,floatDoubleTest);
+    //Float Date                      
+    String floatDateRange = getFacetXML(response, "rf", "rangeFacets", "date_dtd");
+    ArrayList<Double> floatDate = (ArrayList<Double>)xmlToList(floatDateRange, "double", "sumOfSquares");
+    ArrayList<Double> floatDateTest = calculateNumberStat(transformLists(floatDateTestStart, 4, 46, 5
+                                                          , false, false, true, true, false), "sumOfSquares");
+    assertEquals(floatDate,floatDateTest);
+  }
+

@@ -1,0 +1,183 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/02396
+predFragLineRange:497-523
+predMethodLineRange:465-528
+nextLineRange:511-795
+predStrMethodInvoNames:
+[set, set, getLeafCollector, setScorer, nextDoc, getOrd, containsKey, get, getLeafCollector, setScorer, collect, finish]
+%%%%%%%%%%
+AddedMethodInvo Line:523 InvoName:boostOrds.size()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:533 InvoName:mergeBoost.reset()
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.MergeBoost
+ClassName:MergeBoost
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public void reset() 
+%%%%%%%%%%
+AddedMethodInvo Line:549 InvoName:this.ordinalMap.getGlobalOrds(currentContext)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:571 InvoName:this.ordinalMap.getGlobalOrds(currentContext)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:591 InvoName:mergeBoost.boost(docId)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.MergeBoost
+ClassName:MergeBoost
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public boolean boost(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:653 InvoName:boostDocsMap.size()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:654 InvoName:boostDocsMap.iterator()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:656 InvoName:it.hasNext()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:657 InvoName:it.next()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:661 InvoName:Arrays.sort(bd)
+PackageName:java.util
+QualifiedClassName:java.util.Arrays
+ClassName:Arrays
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/java/util/Arrays.java
+InvokedMethodSig:public static void sort(int[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:678 InvoName:DocValues.getNumeric(context.reader(),this.field)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.DocValues
+ClassName:DocValues
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/index/DocValues.java
+InvokedMethodSig:public static org.apache.lucene.index.NumericDocValues getNumeric(org.apache.lucene.index.LeafReader, java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:678 InvoName:context.reader()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReaderContext
+ClassName:LeafReaderContext
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/index/LeafReaderContext.java
+InvokedMethodSig:public org.apache.lucene.index.LeafReader reader() 
+%%%%%%%%%%
+AddedMethodInvo Line:688 InvoName:mergeBoost.boost(globalDoc)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.MergeBoost
+ClassName:MergeBoost
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public boolean boost(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:689 InvoName:boostDocs.add(globalDoc)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:690 InvoName:boostKeys.add(collapseValue)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:695 InvoName:scorer.score()
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.Scorer
+ClassName:Scorer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/search/Scorer.java
+InvokedMethodSig:public abstract float score() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:697 InvoName:cmap.lget()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:699 InvoName:Float.floatToRawIntBits(score)
+PackageName:java.lang
+QualifiedClassName:java.lang.Float
+ClassName:Float
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/java/lang/Float.java
+InvokedMethodSig:public static native int floatToRawIntBits(float) 
+%%%%%%%%%%
+AddedMethodInvo Line:702 InvoName:cmap.lset((((long)currentScore) << 32) + globalDoc)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:706 InvoName:Float.floatToRawIntBits(score)
+PackageName:java.lang
+QualifiedClassName:java.lang.Float
+ClassName:Float
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/java/lang/Float.java
+InvokedMethodSig:public static native int floatToRawIntBits(float) 
+%%%%%%%%%%
+AddedMethodInvo Line:707 InvoName:cmap.put(collapseValue,scoreDoc)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:710 InvoName:scorer.score()
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.Scorer
+ClassName:Scorer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/search/Scorer.java
+InvokedMethodSig:public abstract float score() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:717 InvoName:nullScores.add(scorer.score())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:717 InvoName:scorer.score()
+PackageName:org.apache.lucene.search
+QualifiedClassName:org.apache.lucene.search.Scorer
+ClassName:Scorer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/search/Scorer.java
+InvokedMethodSig:public abstract float score() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:733 InvoName:boostKeys.size()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:737 InvoName:cmap.remove(key)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:744 InvoName:cmap.iterator()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:746 InvoName:it1.hasNext()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:747 InvoName:it1.next()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:755 InvoName:contexts[currentContext].reader().getNumericDocValues(this.field)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReader
+ClassName:LeafReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/index/LeafReader.java
+InvokedMethodSig:public abstract org.apache.lucene.index.NumericDocValues getNumericDocValues(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:755 InvoName:contexts[currentContext].reader()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReaderContext
+ClassName:LeafReaderContext
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/index/LeafReaderContext.java
+InvokedMethodSig:public org.apache.lucene.index.LeafReader reader() 
+%%%%%%%%%%
+AddedMethodInvo Line:771 InvoName:contexts[currentContext].reader().getNumericDocValues(this.field)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReader
+ClassName:LeafReader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/index/LeafReader.java
+InvokedMethodSig:public abstract org.apache.lucene.index.NumericDocValues getNumericDocValues(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:771 InvoName:contexts[currentContext].reader()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LeafReaderContext
+ClassName:LeafReaderContext
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/org/apache/lucene/index/LeafReaderContext.java
+InvokedMethodSig:public org.apache.lucene.index.LeafReader reader() 
+%%%%%%%%%%
+AddedMethodInvo Line:779 InvoName:Float.intBitsToFloat((int)(scoreDoc >> 32))
+PackageName:java.lang
+QualifiedClassName:java.lang.Float
+ClassName:Float
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/lucene/misc/src/test/java/lang/Float.java
+InvokedMethodSig:public static native float intBitsToFloat(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:780 InvoName:mergeBoost.boost(globalDoc)
+PackageName:org.apache.solr.search
+QualifiedClassName:org.apache.solr.search.CollapsingQParserPlugin.MergeBoost
+ClassName:MergeBoost
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java
+InvokedMethodSig:public boolean boost(int) 

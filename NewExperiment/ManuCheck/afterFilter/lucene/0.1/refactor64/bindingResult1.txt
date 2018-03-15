@@ -1,0 +1,37 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01155
+predFragLineRange:173-227
+predMethodLineRange:172-227
+nextLineRange:69-87
+predStrMethodInvoNames:
+[getDataOut, size, get, writePrefixLength, writeBytes, close, close, closeWhileHandlingException, getIndexOut, writeInt, getWriter, bitsRequired, add, add, finish, close, closeWhileHandlingException, addAndGet]
+%%%%%%%%%%
+AddedMethodInvo Line:73 InvoName:getOrCreateDataOut()
+PackageName:org.apache.lucene.index.values
+QualifiedClassName:org.apache.lucene.index.values.Bytes.BytesWriterBase
+ClassName:BytesWriterBase
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01155/lucene/src/java/org/apache/lucene/index/values/Bytes.java
+InvokedMethodSig:protected org.apache.lucene.store.IndexOutput getOrCreateDataOut() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:83 InvoName:getOrCreateIndexOut()
+PackageName:org.apache.lucene.index.values
+QualifiedClassName:org.apache.lucene.index.values.Bytes.BytesWriterBase
+ClassName:BytesWriterBase
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01155/lucene/src/java/org/apache/lucene/index/values/Bytes.java
+InvokedMethodSig:protected org.apache.lucene.store.IndexOutput getOrCreateIndexOut() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:85 InvoName:idxOut.writeLong(addr - 1)
+PackageName:org.apache.lucene.store
+QualifiedClassName:org.apache.lucene.store.DataOutput
+ClassName:DataOutput
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01155/lucene/src/java/org/apache/lucene/store/DataOutput.java
+InvokedMethodSig:public void writeLong(long) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:86 InvoName:writeIndex(idxOut,docCount,addresses[size],addresses,docToEntry)
+PackageName:org.apache.lucene.index.values
+QualifiedClassName:org.apache.lucene.index.values.Bytes.DerefBytesWriterBase
+ClassName:DerefBytesWriterBase
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01155/lucene/src/java/org/apache/lucene/index/values/Bytes.java
+InvokedMethodSig:protected void writeIndex(org.apache.lucene.store.IndexOutput, int, long, long[], int[]) throws java.io.IOException
