@@ -1,0 +1,12 @@
+(startLine=3593 endLine=3602 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00136/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void lcmp() {
+	countLabels = 0;
+	stackDepth -= 3;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_lcmp;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_lcmp);
+	}
+}
+

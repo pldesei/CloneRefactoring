@@ -1,0 +1,21 @@
+(startLine=142 endLine=160 srcPath=/home/sonia/NewExperiment/antFilter/01030/src/main/org/apache/tools/ant/types/optional/ScriptFilter.java)
+        try {
+            addBeans(getProject().getProperties());
+            addBeans(getProject().getUserProperties());
+            addBeans(getProject().getTargets());
+            addBeans(getProject().getReferences());
+
+            beans.put("project", getProject());
+
+            beans.put("self", this);
+
+            manager = new BSFManager ();
+
+            for (Enumeration e = beans.keys(); e.hasMoreElements();) {
+                String key = (String) e.nextElement();
+                Object value = beans.get(key);
+                manager.declareBean(key, value, value.getClass());
+            }
+
+        } catch (BSFException e) {
+

@@ -1,0 +1,27 @@
+(startLine=2234 endLine=2258 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00971/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
+	public void testBug79904() throws JavaModelException, CoreException {
+		ICompilationUnit workingCopy = null;
+		int level = this.astLevel;
+		this.astLevel = AST.JLS3;
+		try {
+			workingCopy = getWorkingCopy("/Converter/src/javadoc/b79904/Test.java",
+				"package javadoc.b79904;\n" +
+				"/**\n" + 
+				" * @param <E>\n" + 
+				" * @see Object\n" + 
+				" */\n" + 
+				"public class Test<E> {\n" + 
+				"	/**\n" + 
+				"	 * @param t\n" + 
+				"	 * @param <T>\n" + 
+				"	 */\n" + 
+				"	<T> void foo(T t) {}\n" + 
+				"}\n");
+			verifyComments(workingCopy);
+		} finally {
+			if (workingCopy != null)
+				workingCopy.discardWorkingCopy();
+			this.astLevel = level;
+		}
+	}
+

@@ -1,0 +1,32 @@
+(startLine=545 endLine=574 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+			if ((firstChar == 'a') && (methodBinding.parameters.length == 1) && (methodBinding.returnType.id == T_JavaLangStringBuffer) && (CharOperation.equals(methodBinding.selector, QualifiedNamesConstants.Append))) {
+				switch (methodBinding.parameters[0].id) {
+					case T_int :
+					case T_byte :
+					case T_short :
+						// This method binding is append(int)
+						return STRINGBUFFER_APPEND_INT_METHOD;
+					case T_float :
+						// This method binding is append(float)
+						return STRINGBUFFER_APPEND_FLOAT_METHOD;
+					case T_long :
+						// This method binding is append(long)
+						return STRINGBUFFER_APPEND_LONG_METHOD;
+					case T_JavaLangObject :
+						// This method binding is append(java.lang.Object)
+						return STRINGBUFFER_APPEND_OBJECT_METHOD;
+					case T_char :
+						// This method binding is append(char)
+						return STRINGBUFFER_APPEND_CHAR_METHOD;
+					case T_JavaLangString :
+						// This method binding is append(java.lang.String)
+						return STRINGBUFFER_APPEND_STRING_METHOD;
+					case T_boolean :
+						// This method binding is append(boolean)
+						return STRINGBUFFER_APPEND_BOOLEAN_METHOD;
+					case T_double :
+						// This method binding is append(double)
+						return STRINGBUFFER_APPEND_DOUBLE_METHOD;
+				}
+			} else
+

@@ -1,0 +1,21 @@
+(startLine=92 endLine=110 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01571/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/indexing/AbstractIndexer.java)
+	public void addEnumDeclaration(int modifiers, char[] packageName, char[] name, char[][] enclosingTypeNames, char[] superclass, char[][] superinterfaces, boolean secondary) {
+		char[] indexKey = TypeDeclarationPattern.createIndexKey(modifiers, name, packageName, enclosingTypeNames, secondary);
+		addIndexEntry(TYPE_DECL, indexKey);
+
+		addIndexEntry(
+			SUPER_REF, 
+			SuperTypeReferencePattern.createIndexKey(
+				modifiers, packageName, name, enclosingTypeNames, null, ENUM_SUFFIX, superclass, CLASS_SUFFIX));
+		if (superinterfaces != null) {
+			for (int i = 0, max = superinterfaces.length; i < max; i++) {
+				char[] superinterface = erasure(superinterfaces[i]);
+				addTypeReference(superinterface);
+				addIndexEntry(
+					SUPER_REF,
+					SuperTypeReferencePattern.createIndexKey(
+						modifiers, packageName, name, enclosingTypeNames, null, ENUM_SUFFIX, superinterface, INTERFACE_SUFFIX));
+			}
+		}
+	}	
+

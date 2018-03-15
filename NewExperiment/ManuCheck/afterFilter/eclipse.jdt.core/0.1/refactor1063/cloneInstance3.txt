@@ -1,0 +1,13 @@
+(startLine=1526 endLine=1536 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTMatcherTest.java)
+	public void testTypeAnnotations6() {	
+		if (this.ast.apiLevel() < AST.JLS8) {
+			return;
+		}
+		// simple type in cast expression
+		CastExpression x1 = this.ast.newCastExpression();
+		SimpleType x2 = this.ast.newSimpleType(this.N1);
+		x2.annotations().add(this.ANO1);
+		x1.setType(x2);
+		basicMatch(x1);
+	}
+

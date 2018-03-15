@@ -1,0 +1,14 @@
+(startLine=2325 endLine=2336 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void iconst_1() {
+	countLabels = 0;
+	stackDepth++;
+	if (stackDepth > stackMax)
+		stackMax = stackDepth;
+	try {
+		position++;
+		bCodeStream[classFileOffset++] = OPC_iconst_1;
+	} catch (IndexOutOfBoundsException e) {
+		resizeByteArray(OPC_iconst_1);
+	}
+}
+

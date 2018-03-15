@@ -1,0 +1,30 @@
+(startLine=3492 endLine=3519 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02025/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/PublicScanner.java)
+				if (getNextChar('e', 'E') >= 0) { // consume next character
+					isInteger = false;
+					this.unicodeAsBackSlash = false;
+					if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+						&& (this.source[this.currentPosition] == 'u')) {
+						getNextUnicodeChar();
+					} else {
+						if (this.withoutUnicodePtr != 0) {
+							unicodeStore();
+						}
+					}
+
+					if ((this.currentCharacter == '-')
+						|| (this.currentCharacter == '+')) { // consume next character
+						this.unicodeAsBackSlash = false;
+						if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+							&& (this.source[this.currentPosition] == 'u')) {
+							getNextUnicodeChar();
+						} else {
+							if (this.withoutUnicodePtr != 0) {
+								unicodeStore();
+							}
+						}
+					}
+					if (!ScannerHelper.isDigit(this.currentCharacter))
+						throw new InvalidInputException(INVALID_FLOAT);
+					while (getNextCharAsDigit()){/*empty*/}
+				}
+

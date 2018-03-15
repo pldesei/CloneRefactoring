@@ -1,0 +1,30 @@
+(startLine=985 endLine=1012 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01595/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/index/DiskIndex.java)
+			} else {
+				// set size to read on file
+				int readSize = this.streamEnd == -1 ? BUFFER_READ_SIZE : this.streamEnd - this.streamPos;
+				if (readSize > bufferSize) readSize = bufferSize;
+				// fill indexes array
+				for (int i = 0; i < arraySize; i++) {
+					int val = (streamBuffer[idx++]&0xFF)<<24;
+					if (idx == bufferSize) {
+						this.streamPos += stream.read(this.streamBuffer, 0, readSize);
+						idx = 0;
+					}
+					val += (streamBuffer[idx++]&0xFF)<<16;
+					if (idx == bufferSize) {
+						this.streamPos += stream.read(this.streamBuffer, 0, readSize);
+						idx = 0;
+					}
+					val += (streamBuffer[idx++]&0xFF)<<8;
+					if (idx == bufferSize) {
+						this.streamPos += stream.read(this.streamBuffer, 0, readSize);
+						idx = 0;
+					}
+					indexes[i] += val + (streamBuffer[idx++]&0xFF);
+					if (idx == bufferSize) {
+						this.streamPos += stream.read(this.streamBuffer, 0, readSize);
+						idx = 0;
+					}
+				}
+			}
+

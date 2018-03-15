@@ -1,0 +1,15 @@
+(startLine=422 endLine=434 srcPath=/home/sonia/NewExperiment/antFilter/01282/src/main/org/apache/tools/ant/AntClassLoader.java)
+        try {
+            String[] pathElements = path.list();
+            for (int i = 0; i < pathElements.length && stream == null; ++i) {
+                File pathComponent = project.resolveFile((String)pathElements[i]);
+                stream = getResourceStream(pathComponent, classFilename);
+            }
+        
+            if (stream == null) {
+                throw new ClassNotFoundException();
+            }
+                
+            return getClassFromStream(stream, name);
+        }
+

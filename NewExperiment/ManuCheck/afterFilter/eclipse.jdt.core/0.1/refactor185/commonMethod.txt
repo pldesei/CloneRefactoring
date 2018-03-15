@@ -1,0 +1,17 @@
+(startLine=2590 endLine=2604 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00136/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void ifle(Label lbl) {
+	countLabels = 0;
+	stackDepth--;
+	if (this.wideMode) {
+		generateWideConditionalBranch(OPC_ifle, lbl);
+	} else {
+		try {
+			position++;
+			bCodeStream[classFileOffset++] = OPC_ifle;
+		} catch (IndexOutOfBoundsException e) {
+			resizeByteArray(OPC_ifle);
+		}
+		lbl.branch();
+	}
+}
+

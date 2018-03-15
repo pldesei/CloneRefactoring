@@ -1,0 +1,30 @@
+ProjectPath:/home/sonia/NewExperiment/antFilter/01078
+predFragLineRange:222-241
+predMethodLineRange:222-241
+nextLineRange:227-239
+predStrMethodInvoNames:
+[executeTarget, getProperty, getProject, readFully, newFileUtils, resolveFile, getProject, readFully, newFileUtils, resolveFile, getProject, assertPropertyEquals, assertPropertyEquals, assertEquals, assertEquals]
+%%%%%%%%%%
+AddedMethodInvo Line:233 InvoName:getProject().replaceProperties("blah y z${line.separator}x blah z${line.separator}x y blah")
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.Project
+ClassName:Project
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01078/src/testcases/org/apache/tools/ant/Project.java
+InvokedMethodSig:public java.lang.String replaceProperties(java.lang.String) throws org.apache.tools.ant.BuildException
+%%%%%%%%%%
+AddedMethodInvo Line:237 InvoName:getFileString("redirect.out")
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.ExecuteOnTest
+ClassName:ExecuteOnTest
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01078/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java
+InvokedMethodSig:private java.lang.String getFileString(java.lang.String) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:238 InvoName:assertNull("unexpected error output",getFileString("redirect.err"))
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:238 InvoName:getFileString("redirect.err")
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.ExecuteOnTest
+ClassName:ExecuteOnTest
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/01078/src/testcases/org/apache/tools/ant/taskdefs/ExecuteOnTest.java
+InvokedMethodSig:private java.lang.String getFileString(java.lang.String) throws java.io.IOException

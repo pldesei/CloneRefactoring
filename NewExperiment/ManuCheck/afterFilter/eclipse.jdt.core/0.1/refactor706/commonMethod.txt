@@ -1,0 +1,16 @@
+(startLine=6495 endLine=6508 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01720/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ *	@bug 124624: [search] Camel case matching routines should support end character
+ *	@test Ensure that camel case pattern may use end character
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=124624"
+ */
+private void setupBug124624() throws JavaModelException {
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/Test.java",
+		"class HashMap {}\n" + 
+		"class HtmlMapper {}\n" + 
+		"class HashMapEntry {}\n" + 
+		"class HaxMapxxxx {}\n"
+	);
+}
+

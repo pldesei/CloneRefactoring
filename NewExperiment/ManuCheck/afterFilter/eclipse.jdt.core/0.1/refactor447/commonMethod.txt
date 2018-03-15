@@ -1,0 +1,21 @@
+(startLine=246 endLine=264 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01046/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/QualifiedType.java)
+	/**
+	 * Sets the name part of this qualified type to the given simple name.
+	 * 
+	 * @param name the identifier of this qualified name
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * </ul>
+	 */ 
+	public void setName(SimpleName name) {
+		if (name == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.name;
+		preReplaceChild(oldChild, name, NAME_PROPERTY);
+		this.name = name;
+		postReplaceChild(oldChild, name, NAME_PROPERTY);
+	}
+

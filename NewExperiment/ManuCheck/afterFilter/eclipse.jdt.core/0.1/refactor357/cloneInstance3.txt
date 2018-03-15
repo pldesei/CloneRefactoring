@@ -1,0 +1,10 @@
+(startLine=317 endLine=324 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedAllocationExpression.java)
+		if (arguments != null) {
+			for (int i = 0; i < arguments.length; i++) {
+				arguments[i].implicitWidening(inheritedBinding.parameters[i], argumentTypes[i]);
+			}
+			if (argsContainCast) {
+				CastExpression.checkNeedForArgumentCasts(scope, null, this.superTypeBinding, inheritedBinding, this.arguments, argumentTypes, this);
+			}
+		}
+

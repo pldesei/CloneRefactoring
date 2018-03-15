@@ -1,0 +1,16 @@
+(startLine=1968 endLine=1981 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void getfield(FieldBinding fieldBinding) {
+	if (DEBUG) System.out.println(position + "\t\tgetfield:"+fieldBinding); //$NON-NLS-1$
+	countLabels = 0;
+	if ((fieldBinding.type.id == T_double) || (fieldBinding.type.id == T_long)) {
+		if (++stackDepth > stackMax)
+			stackMax = stackDepth;
+	}
+	if (classFileOffset + 2 >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_getfield;
+	writeUnsignedShort(constantPool.literalIndex(fieldBinding));
+}
+

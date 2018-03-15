@@ -1,0 +1,20 @@
+(startLine=1620 endLine=1637 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testMethod06() throws JavaModelException {
+		ASTNode node = buildAST(
+			"@X(/*start*/value/*end*/=\"Hello\", count=-1)\n" +
+			"@interface X {\n" +
+			"    String value();\n" +
+			"    int count();\n" +
+			"}"
+		);
+		IBinding binding = ((SimpleName) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"value() [in X [in [Working copy] X.java [in <default> [in src [in P]]]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

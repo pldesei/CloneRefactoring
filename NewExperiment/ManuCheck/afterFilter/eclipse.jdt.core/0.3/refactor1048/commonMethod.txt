@@ -1,0 +1,10 @@
+(startLine=2428 endLine=2435 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02601/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTConverter.java)
+	private void setInfixSourcePositions(InfixExpression infixExpression, int sourceStart) {
+		int n = infixExpression.extendedOperands().size();
+		Expression rightMostExp = n <= 0 ? infixExpression.getRightOperand() : (Expression) infixExpression.extendedOperands().get(n - 1);
+		int rightSourceEnd = rightMostExp.getStartPosition() + rightMostExp.getLength() - 1;
+		int infixSourceEnd = infixExpression.getStartPosition() + infixExpression.getLength() - 1;
+		infixSourceEnd = rightSourceEnd > infixSourceEnd ? rightSourceEnd : infixSourceEnd;
+		infixExpression.setSourceRange(sourceStart, infixSourceEnd - sourceStart + 1);
+	}
+

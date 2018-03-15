@@ -1,0 +1,12 @@
+(startLine=192 endLine=201 srcPath=/home/sonia/NewExperiment/antFilter/00061/src/main/org/apache/tools/ant/taskdefs/Rmic.java)
+        for (int i=0; i<classpathReferences.size(); i++) {
+            Reference r = (Reference) classpathReferences.elementAt(i);
+            Object o = r.getReferencedObject(project);
+            if (o instanceof Path) {
+                classpath.append((Path) o);
+            } else {
+                String msg = r.getRefId()+" doesn\'t denote a classpath";
+                throw new BuildException(msg, location);
+            }
+        }
+

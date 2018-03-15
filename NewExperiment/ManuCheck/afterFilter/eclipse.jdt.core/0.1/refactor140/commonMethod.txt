@@ -1,0 +1,43 @@
+(startLine=253 endLine=293 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00056/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodScope.java)
+public final int recordInitializationStates(FlowInfo flowInfo) {
+	if ((flowInfo == FlowInfo.DeadEnd) || (flowInfo.isFakeReachable())) {
+		return -1;
+	}
+	UnconditionalFlowInfo unconditionalFlowInfo = flowInfo.unconditionalInits();
+	long[] extraInits = unconditionalFlowInfo.extraDefiniteInits;
+	long inits = unconditionalFlowInfo.definiteInits;
+	checkNextEntry : for (int i = lastIndex; --i >= 0;) {
+		if (definiteInits[i] == inits) {
+			long[] otherInits = extraDefiniteInits[i];
+			if ((extraInits != null) && (otherInits != null)) {
+				if (extraInits.length == otherInits.length) {
+					int j, max;
+					for (j = 0, max = extraInits.length; j < max; j++) {
+						if (extraInits[j] != otherInits[j]) {
+							continue checkNextEntry;
+						}
+					}
+					return i;
+				}
+			} else {
+				if ((extraInits == null) && (otherInits == null)) {
+					return i;
+				}
+			}
+		}
+	}
+	
+	// add a new entry
+	if (definiteInits.length == lastIndex) {
+		// need a resize
+		System.arraycopy(definiteInits, 0, (definiteInits = new long[lastIndex + 20]), 0, lastIndex);
+		System.arraycopy(extraDefiniteInits, 0, (extraDefiniteInits = new long[lastIndex + 20][]), 0, lastIndex);
+	}
+	definiteInits[lastIndex] = inits;
+	if (extraInits != null) {
+		extraDefiniteInits[lastIndex] = new long[extraInits.length];
+		System.arraycopy(extraInits, 0, extraDefiniteInits[lastIndex], 0, extraInits.length);
+	}
+	return lastIndex++;
+}
+

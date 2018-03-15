@@ -1,0 +1,16 @@
+(startLine=287 endLine=300 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveConstructorCallOfMemberType() throws JavaModelException {
+	IClassFile cf = getClassFile("Resolve", "class-folder", "", "ResolveConstructorCallOfMemberType.class");
+	
+	String str = cf.getSource();
+	String selectAt = "Inner";
+	String selection = "Inner";
+	int start = str.lastIndexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cf.codeSelect(start, length);
+	
+	assertTrue("should have one method", elements.length == 1 && 
+		elements[0].getElementName().equals("Inner") &&
+		elements[0] instanceof IMethod);	
+}
+

@@ -1,0 +1,12 @@
+(startLine=839 endLine=848 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedNameReference.java)
+	protected void setSyntheticAccessor(FieldBinding fieldBinding, int index, SyntheticAccessMethodBinding syntheticAccessor) {
+		if (index < 0) { // write-access ?
+			syntheticWriteAccessor = syntheticAccessor;
+	    } else {
+			if (syntheticReadAccessors == null) {
+				syntheticReadAccessors = new SyntheticAccessMethodBinding[otherBindings == null ? 1 : otherBindings.length + 1];
+			}
+			syntheticReadAccessors[index] = syntheticAccessor;
+	    }
+	}
+

@@ -1,0 +1,11 @@
+(startLine=228 endLine=236 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00657/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/TypeReferenceLocator.java)
+		while (refBinding != null && lastIndex >= 0) {
+			if (resolveLevelForType(this.pattern.simpleName, this.pattern.qualification, refBinding) == ACCURATE_MATCH) {
+				long[] positions = qTypeRef.sourcePositions;
+				locator.report(positions[this.pattern.qualification == null ? lastIndex : 0], positions[lastIndex], element, accuracy);
+				return;
+			}
+			lastIndex--;
+			refBinding = refBinding.enclosingType();
+		}
+

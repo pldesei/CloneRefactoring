@@ -1,0 +1,12 @@
+(startLine=153 endLine=162 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01572/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/indexing/AbstractIndexer.java)
+	protected void addTypeDeclaration(int modifiers, char[] packageName, char[] name, char[][] enclosingTypeNames, boolean secondary) {
+		char[] indexKey = TypeDeclarationPattern.createIndexKey(modifiers, name, packageName, enclosingTypeNames, secondary);
+		if (secondary)
+			JavaModelManager.getJavaModelManager().secondaryTypeAdding(
+				this.document.getPath(),
+				name == null ? CharOperation.NO_CHAR : name,
+				packageName == null ? CharOperation.NO_CHAR : packageName);
+
+		addIndexEntry(TYPE_DECL, indexKey);
+	}
+

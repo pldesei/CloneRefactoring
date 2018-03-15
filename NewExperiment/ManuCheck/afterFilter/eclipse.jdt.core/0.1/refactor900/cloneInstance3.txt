@@ -1,0 +1,56 @@
+(startLine=3476 endLine=3529 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02025/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+		if (getNextCharAsDigit()) { //-------------potential octal-----------------
+			while (getNextCharAsDigit()){/*empty*/}
+
+			if (getNextChar('l', 'L') >= 0) {
+				return TokenNameLongLiteral;
+			}
+
+			if (getNextChar('f', 'F') >= 0) {
+				return TokenNameFloatingPointLiteral;
+			}
+
+			if (getNextChar('d', 'D') >= 0) {
+				return TokenNameDoubleLiteral;
+			} else { //make the distinction between octal and float ....
+				boolean isInteger = true;
+				if (getNextChar('.')) {
+					isInteger = false;
+					while (getNextCharAsDigit()){/*empty*/}
+				}
+				if (getNextChar('e', 'E') >= 0) { // consume next character
+					isInteger = false;
+					this.unicodeAsBackSlash = false;
+					if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+						&& (this.source[this.currentPosition] == 'u')) {
+						getNextUnicodeChar();
+					} else {
+						if (this.withoutUnicodePtr != 0) {
+							unicodeStore();
+						}
+					}
+
+					if ((this.currentCharacter == '-')
+						|| (this.currentCharacter == '+')) { // consume next character
+						this.unicodeAsBackSlash = false;
+						if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+							&& (this.source[this.currentPosition] == 'u')) {
+							getNextUnicodeChar();
+						} else {
+							if (this.withoutUnicodePtr != 0) {
+								unicodeStore();
+							}
+						}
+					}
+					if (!ScannerHelper.isDigit(this.currentCharacter))
+						throw new InvalidInputException(INVALID_FLOAT);
+					while (getNextCharAsDigit()){/*empty*/}
+				}
+				if (getNextChar('f', 'F') >= 0)
+					return TokenNameFloatingPointLiteral;
+				if (getNextChar('d', 'D') >= 0 || !isInteger)
+					return TokenNameDoubleLiteral;
+				return TokenNameIntegerLiteral;
+			}
+		} else {
+

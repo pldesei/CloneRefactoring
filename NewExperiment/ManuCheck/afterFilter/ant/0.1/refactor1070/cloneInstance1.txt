@@ -1,0 +1,14 @@
+(startLine=126 endLine=137 srcPath=/home/sonia/NewExperiment/antFilter/01359/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitReportTest.java)
+    public void testSpecialSignsInHtmlPath() throws Exception {
+        buildRule.executeTarget("testSpecialSignsInHtmlPath");
+        File reportFile = new File(buildRule.getOutputDir(), "html# $%\u00A7&-!report/index.html");
+        // tests one the file object
+        assertTrue("No index.html present. Not generated?", reportFile.exists() );
+        assertTrue("Cant read the report file.", reportFile.canRead() );
+        assertTrue("File shouldn't be empty.", reportFile.length() > 0 );
+        // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
+        URL reportUrl = new URL( FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()) );
+        InputStream reportStream = reportUrl.openStream();
+        assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
+    }
+

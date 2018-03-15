@@ -1,0 +1,54 @@
+(startLine=475 endLine=526 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00755/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+public final int getNextChar() {
+	try {
+		if (((this.currentCharacter = this.source[this.currentPosition++]) == '\\')
+			&& (this.source[this.currentPosition] == 'u')) {
+			//-------------unicode traitement ------------
+			int c1, c2, c3, c4;
+			int unicodeSize = 6;
+			this.currentPosition++;
+			while (this.source[this.currentPosition] == 'u') {
+				this.currentPosition++;
+				unicodeSize++;
+			}
+
+			if (((c1 = Character.getNumericValue(this.source[this.currentPosition++])) > 15
+				|| c1 < 0)
+				|| ((c2 = Character.getNumericValue(this.source[this.currentPosition++])) > 15 || c2 < 0)
+				|| ((c3 = Character.getNumericValue(this.source[this.currentPosition++])) > 15 || c3 < 0)
+				|| ((c4 = Character.getNumericValue(this.source[this.currentPosition++])) > 15 || c4 < 0)) {
+				return -1;
+			}
+
+			this.currentCharacter = (char) (((c1 * 16 + c2) * 16 + c3) * 16 + c4);
+
+			this.unicodeAsBackSlash = this.currentCharacter == '\\';
+
+			//need the unicode buffer
+			if (this.withoutUnicodePtr == 0) {
+				//buffer all the entries that have been left aside....
+				this.withoutUnicodePtr = this.currentPosition - unicodeSize - this.startPosition;
+				System.arraycopy(
+					this.source, 
+					this.startPosition, 
+					this.withoutUnicodeBuffer, 
+					1, 
+					this.withoutUnicodePtr); 
+			}
+			//fill the buffer with the char
+			this.withoutUnicodeBuffer[++this.withoutUnicodePtr] = this.currentCharacter;
+			return this.currentCharacter;
+
+		} //-------------end unicode traitement--------------
+		else {
+			this.unicodeAsBackSlash = false;
+			if (this.withoutUnicodePtr != 0) {
+				this.withoutUnicodeBuffer[++this.withoutUnicodePtr] = this.currentCharacter;
+			}
+			return this.currentCharacter;
+		}
+	} catch (IndexOutOfBoundsException e) {
+		return -1;
+	}
+}
+

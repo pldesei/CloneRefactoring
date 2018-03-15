@@ -1,0 +1,26 @@
+(startLine=377 endLine=400 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testAnonymousType2() throws JavaModelException {
+		ASTNode node = buildAST(
+			"public class X {\n" +
+			"	public void foo() {\n" +
+			"		new Y(0/*c*/) /*start*/{\n" +
+			"			Object field;\n" +
+			"		}/*end*/;\n" +
+			"	}\n" +
+			"}\n" +
+			"class Y {\n" +
+			"	Y(int i) {\n" +
+			"	}\n" +
+			"}"
+		);
+		IBinding binding = ((AnonymousClassDeclaration) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"<anonymous #1> [in foo() [in X [in [Working copy] X.java [in <default> [in src [in P]]]]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

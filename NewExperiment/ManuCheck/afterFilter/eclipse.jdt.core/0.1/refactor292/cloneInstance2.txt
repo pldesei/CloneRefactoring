@@ -1,0 +1,162 @@
+(startLine=136 endLine=295 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00587/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/OR_OR_Expression.java)
+		boolean valueRequired) {
+		if (constant != Constant.NotAConstant) {
+			super.generateOptimizedBoolean(currentScope, codeStream, trueLabel, falseLabel, valueRequired);
+			return;
+		}
+		Constant condConst;
+		if ((condConst = left.optimizedBooleanConstant()) != NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// <something equivalent to true> || x
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (valueRequired) {
+					if ((bits & OnlyValueRequiredMASK) != 0) {
+						codeStream.iconst_1();
+					} else {
+						if (trueLabel != null) {
+							codeStream.goto_(trueLabel);
+						}
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(codeStream.position);					
+			} else {
+				// <something equivalent to false> || x
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				if ((bits & OnlyValueRequiredMASK) != 0) {
+					right.generateCode(currentScope, codeStream, valueRequired);
+				} else {
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						valueRequired);
+				}
+			}
+			if (mergedInitStateIndex != -1) {
+				codeStream.removeNotDefinitelyAssignedVariables(
+					currentScope,
+					mergedInitStateIndex);
+			}
+			return;
+		}
+		if ((condConst = right.optimizedBooleanConstant()) != NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// x || <something equivalent to true>
+				Label internalTrueLabel = new Label(codeStream);
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					internalTrueLabel,
+					null,
+					true); 
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				internalTrueLabel.place();
+				if (valueRequired) {
+					if ((bits & OnlyValueRequiredMASK) != 0) {
+						codeStream.iconst_1();
+					} else {
+						if (trueLabel != null) {
+							codeStream.goto_(trueLabel);
+						}
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(codeStream.position);					
+			} else {
+				// x || <something equivalent to false>
+				if ((bits & OnlyValueRequiredMASK) != 0) {
+					left.generateCode(currentScope, codeStream, valueRequired);
+				} else {
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						valueRequired);
+				}
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+			}
+			if (mergedInitStateIndex != -1) {
+				codeStream.removeNotDefinitelyAssignedVariables(
+					currentScope,
+					mergedInitStateIndex);
+			}
+			return;
+		}
+		// default case
+		if (falseLabel == null) {
+			if (trueLabel != null) {
+				// implicit falling through the FALSE case
+				left.generateOptimizedBoolean(currentScope, codeStream, trueLabel, null, true); // need value, e.g. if (a == 1 || ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a==1
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					null,
+					valueRequired);
+			}
+		} else {
+			// implicit falling through the TRUE case
+			if (trueLabel == null) {
+				Label internalTrueLabel = new Label(codeStream);
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					internalTrueLabel,
+					null,
+					true);// need value, e.g. if (a == 1 || ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a==1
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					null,
+					falseLabel,
+					valueRequired);
+				internalTrueLabel.place();
+			} else {
+				// no implicit fall through TRUE/FALSE --> should never occur
+			}
+		}
+		if (mergedInitStateIndex != -1) {
+			codeStream.removeNotDefinitelyAssignedVariables(
+				currentScope,
+				mergedInitStateIndex);
+		}
+	}
+

@@ -1,0 +1,18 @@
+(startLine=311 endLine=326 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00002/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MethodDeclarationPattern.java)
+		if (parameterCount > -1) {
+			String[] arguments = Signature.getParameterTypes(methodDescriptor);
+			int argumentCount = arguments.length;
+			if (parameterCount != argumentCount)
+				return false;
+			for (int i = 0; i < parameterCount; i++) {
+				char[] qualification = this.parameterQualifications[i];
+				char[] type = this.parameterSimpleNames[i];
+				if (!this
+					.matchesType(
+						type,
+						qualification,
+						Signature.toString(arguments[i]).toCharArray()))
+					return false;
+			}
+		}
+

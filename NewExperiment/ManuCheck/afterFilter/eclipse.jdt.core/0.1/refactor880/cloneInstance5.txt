@@ -1,0 +1,18 @@
+(startLine=2097 endLine=2112 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testTopLevelType3() throws CoreException {
+		ASTNode node = buildAST(
+			"public class X {\n" +
+			"  /*start*/String/*end*/ field;\n" +
+			"}"
+		);
+		IBinding binding = ((Type) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"String [in String.class [in java.lang [in "+ getExternalJCLPathString("1.5") + "]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

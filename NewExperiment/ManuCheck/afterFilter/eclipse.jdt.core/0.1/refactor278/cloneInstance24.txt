@@ -1,0 +1,17 @@
+(startLine=722 endLine=736 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveConstructorDeclaration() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveConstructorDeclaration.java");
+	
+	String str = cu.getSource();
+	String selectAt = "ResolveConstructorDeclaration(i";
+	String selection = "ResolveConstructorDeclaration";
+	int start = str.indexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one method", elements.length == 1 && 
+		elements[0].getElementName().equals("ResolveConstructorDeclaration") &&
+		elements[0] instanceof IMethod &&
+		((IMethod)elements[0]).getParameterTypes()[0].equals("I"));	
+}
+

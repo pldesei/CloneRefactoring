@@ -1,0 +1,19 @@
+(startLine=362 endLine=378 srcPath=/home/sonia/NewExperiment/antFilter/00950/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSS.java)
+    /**
+     *  Gets the version string. Returns the first specified of version "-V1.0",
+     *  date "-Vd01.01.01", label "-Vlbuild1".
+     *
+     * @return    An empty string if a version is not set.
+     */
+    protected String getVersion() {
+        if (m_Version != null) {
+            return FLAG_VERSION + m_Version;
+        } else if (m_Date != null) {
+            return FLAG_VERSION_DATE + m_Date;
+        } else if (m_Label != null) {
+            return FLAG_VERSION_LABEL + m_Label;
+        } else {
+            return "";
+        }
+    }
+

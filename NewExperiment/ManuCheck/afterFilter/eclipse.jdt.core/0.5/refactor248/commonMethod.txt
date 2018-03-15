@@ -1,0 +1,22 @@
+(startLine=774 endLine=793 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00380/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/JavaModelManager.java)
+	public void notifyListeners(IJavaElementDelta deltaToNotify, int eventType, IElementChangedListener[] listeners, int[] listenerMask, int listenerCount) {
+		final ElementChangedEvent extraEvent = new ElementChangedEvent(deltaToNotify, eventType);
+		for (int i= 0; i < listenerCount; i++) {
+			if ((listenerMask[i] & eventType) != 0){
+				final IElementChangedListener listener = listeners[i];
+				if (DeltaProcessor.VERBOSE) {
+					System.out.println("Listener #" + (i+1) + "=" + listener.toString());//$NON-NLS-1$//$NON-NLS-2$
+				}
+				// wrap callbacks with Safe runnable for subsequent listeners to be called when some are causing grief
+				Platform.run(new ISafeRunnable() {
+					public void handleException(Throwable exception) {
+						Util.log(exception, "Exception occurred in listener of Java element change notification"); //$NON-NLS-1$
+					}
+					public void run() throws Exception {
+						listener.elementChanged(extraEvent);
+					}
+				});
+			}
+		}
+	}
+

@@ -1,0 +1,221 @@
+ProjectPath:/home/sonia/NewExperiment/antFilter/00109
+predFragLineRange:332-349
+predMethodLineRange:297-350
+nextLineRange:720-915
+predStrMethodInvoNames:
+[size, log, size, size, getAbsolutePath, keys, hasMoreElements, nextElement, get, equals, log, log, copyFile, getMessage, elements, hasMoreElements, nextElement, exists, mkdirs, log, getAbsolutePath, log, getAbsolutePath]
+%%%%%%%%%%
+AddedMethodInvo Line:736 InvoName:mapper.mapFileName(fromResources[i].getName())
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.FileNameMapper
+ClassName:FileNameMapper
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/util/FileNameMapper.java
+InvokedMethodSig:public abstract java.lang.String[] mapFileName(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:736 InvoName:fromResources[i].getName()
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.Resource
+ClassName:Resource
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/types/Resource.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:737 InvoName:v.addElement(fromResources[i])
+PackageName:java.util
+QualifiedClassName:java.util.Vector
+ClassName:Vector
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/Vector.java
+InvokedMethodSig:public synchronized void addElement(E) 
+%%%%%%%%%%
+AddedMethodInvo Line:741 InvoName:v.copyInto(toCopy)
+PackageName:java.util
+QualifiedClassName:java.util.Vector
+ClassName:Vector
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/Vector.java
+InvokedMethodSig:public synchronized void copyInto(java.lang.Object[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:744 InvoName:ResourceUtils.selectOutOfDateSources(this,fromResources,mapper,new ResourceFactory(){
+  public Resource getResource(  String name){
+    return new FileResource(toDir,name);
+  }
+}
+,granularity)
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.ResourceUtils
+ClassName:ResourceUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/util/ResourceUtils.java
+InvokedMethodSig:public static org.apache.tools.ant.types.Resource[] selectOutOfDateSources(org.apache.tools.ant.ProjectComponent, org.apache.tools.ant.types.Resource[], org.apache.tools.ant.util.FileNameMapper, org.apache.tools.ant.types.ResourceFactory, long) 
+%%%%%%%%%%
+AddedMethodInvo Line:754 InvoName:mapper.mapFileName(toCopy[i].getName())
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.FileNameMapper
+ClassName:FileNameMapper
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/util/FileNameMapper.java
+InvokedMethodSig:public abstract java.lang.String[] mapFileName(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:754 InvoName:toCopy[i].getName()
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.Resource
+ClassName:Resource
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/types/Resource.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:757 InvoName:map.put(toCopy[i],new String[]{new File(toDir,mappedFiles[0]).getAbsolutePath()})
+PackageName:java.util
+QualifiedClassName:java.util.HashMap
+ClassName:HashMap
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/HashMap.java
+InvokedMethodSig:public V put(K, V) 
+%%%%%%%%%%
+AddedMethodInvo Line:764 InvoName:map.put(toCopy[i],mappedFiles)
+PackageName:java.util
+QualifiedClassName:java.util.HashMap
+ClassName:HashMap
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/HashMap.java
+InvokedMethodSig:public V put(K, V) 
+%%%%%%%%%%
+AddedMethodInvo Line:798 InvoName:executionFilters.addFilterSet(getProject().getGlobalFilterSet())
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.FilterSetCollection
+ClassName:FilterSetCollection
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/types/FilterSetCollection.java
+InvokedMethodSig:public void addFilterSet(org.apache.tools.ant.types.FilterSet) 
+%%%%%%%%%%
+AddedMethodInvo Line:799 InvoName:getProject().getGlobalFilterSet()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.Project
+ClassName:Project
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/Project.java
+InvokedMethodSig:public org.apache.tools.ant.types.FilterSet getGlobalFilterSet() 
+%%%%%%%%%%
+AddedMethodInvo Line:799 InvoName:getProject()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Project getProject() 
+%%%%%%%%%%
+AddedMethodInvo Line:803 InvoName:executionFilters.addFilterSet((FilterSet)filterEnum.nextElement())
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.FilterSetCollection
+ClassName:FilterSetCollection
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/types/FilterSetCollection.java
+InvokedMethodSig:public void addFilterSet(org.apache.tools.ant.types.FilterSet) 
+%%%%%%%%%%
+AddedMethodInvo Line:809 InvoName:getProject()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Project getProject() 
+%%%%%%%%%%
+AddedMethodInvo Line:812 InvoName:getDueTo(ioe)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Copy
+ClassName:Copy
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/taskdefs/Copy.java
+InvokedMethodSig:private java.lang.String getDueTo(java.lang.Exception) 
+%%%%%%%%%%
+AddedMethodInvo Line:814 InvoName:targetFile.delete()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/io/File.java
+InvokedMethodSig:public boolean delete() 
+%%%%%%%%%%
+AddedMethodInvo Line:818 InvoName:getLocation()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Location getLocation() 
+%%%%%%%%%%
+AddedMethodInvo Line:866 InvoName:map.keySet().iterator()
+PackageName:java.util
+QualifiedClassName:java.util.Set
+ClassName:Set
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/Set.java
+InvokedMethodSig:public abstract Iterator#RAW iterator() 
+%%%%%%%%%%
+AddedMethodInvo Line:866 InvoName:map.keySet()
+PackageName:java.util
+QualifiedClassName:java.util.Map
+ClassName:Map
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/Map.java
+InvokedMethodSig:public abstract Set#RAW keySet() 
+%%%%%%%%%%
+AddedMethodInvo Line:867 InvoName:iter.hasNext()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator
+ClassName:Iterator
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/Iterator.java
+InvokedMethodSig:public abstract boolean hasNext() 
+%%%%%%%%%%
+AddedMethodInvo Line:868 InvoName:iter.next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator
+ClassName:Iterator
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/util/Iterator.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:881 InvoName:executionFilters.addFilterSet(getProject().getGlobalFilterSet())
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.FilterSetCollection
+ClassName:FilterSetCollection
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/types/FilterSetCollection.java
+InvokedMethodSig:public void addFilterSet(org.apache.tools.ant.types.FilterSet) 
+%%%%%%%%%%
+AddedMethodInvo Line:882 InvoName:getProject().getGlobalFilterSet()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.Project
+ClassName:Project
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/Project.java
+InvokedMethodSig:public org.apache.tools.ant.types.FilterSet getGlobalFilterSet() 
+%%%%%%%%%%
+AddedMethodInvo Line:882 InvoName:getProject()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Project getProject() 
+%%%%%%%%%%
+AddedMethodInvo Line:886 InvoName:executionFilters.addFilterSet((FilterSet)filterEnum.nextElement())
+PackageName:org.apache.tools.ant.types
+QualifiedClassName:org.apache.tools.ant.types.FilterSetCollection
+ClassName:FilterSetCollection
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/types/FilterSetCollection.java
+InvokedMethodSig:public void addFilterSet(org.apache.tools.ant.types.FilterSet) 
+%%%%%%%%%%
+AddedMethodInvo Line:889 InvoName:ResourceUtils.copyResource(fromResource,new FileResource(destDir,toFile),executionFilters,filterChains,forceOverwrite,preserveLastModified,inputEncoding,outputEncoding,getProject())
+PackageName:org.apache.tools.ant.util
+QualifiedClassName:org.apache.tools.ant.util.ResourceUtils
+ClassName:ResourceUtils
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/util/ResourceUtils.java
+InvokedMethodSig:public static void copyResource(org.apache.tools.ant.types.Resource, org.apache.tools.ant.types.Resource, org.apache.tools.ant.types.FilterSetCollection, Vector#RAW, boolean, boolean, java.lang.String, java.lang.String, org.apache.tools.ant.Project) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:898 InvoName:getProject()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Project getProject() 
+%%%%%%%%%%
+AddedMethodInvo Line:902 InvoName:getDueTo(ioe)
+PackageName:org.apache.tools.ant.taskdefs
+QualifiedClassName:org.apache.tools.ant.taskdefs.Copy
+ClassName:Copy
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/taskdefs/Copy.java
+InvokedMethodSig:private java.lang.String getDueTo(java.lang.Exception) 
+%%%%%%%%%%
+AddedMethodInvo Line:904 InvoName:targetFile.delete()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/java/io/File.java
+InvokedMethodSig:public boolean delete() 
+%%%%%%%%%%
+AddedMethodInvo Line:908 InvoName:getLocation()
+PackageName:org.apache.tools.ant
+QualifiedClassName:org.apache.tools.ant.ProjectComponent
+ClassName:ProjectComponent
+InvokedFilePath:/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/ProjectComponent.java
+InvokedMethodSig:public org.apache.tools.ant.Location getLocation() 

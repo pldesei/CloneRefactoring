@@ -1,0 +1,12 @@
+(startLine=834 endLine=843 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00827/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/NameLookup.java)
+	protected void seekTypesInTopLevelType(String prefix, int firstDot, IType topLevelType, IJavaElementRequestor requestor, int acceptFlags) {
+		if (!topLevelType.getElementName().toLowerCase().startsWith(prefix))
+			return;
+		if (firstDot == -1) {
+			if (acceptType(topLevelType, acceptFlags))
+				requestor.acceptType(topLevelType);
+		} else {
+			seekTypesInType(prefix, firstDot, topLevelType, requestor, acceptFlags);
+		}
+	}
+

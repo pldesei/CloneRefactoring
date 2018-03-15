@@ -1,0 +1,10 @@
+(startLine=199 endLine=206 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/NameEnvironment.java)
+				} else if (target instanceof File) {
+					AccessRuleSet accessRuleSet =
+						(JavaCore.IGNORE.equals(javaProject.getOption(JavaCore.COMPILER_PB_FORBIDDEN_REFERENCE, true))
+							&& JavaCore.IGNORE.equals(javaProject.getOption(JavaCore.COMPILER_PB_DISCOURAGED_REFERENCE, true)))
+								? null
+								: entry.getAccessRuleSet();
+					bLocations.add(ClasspathLocation.forLibrary(path.toString(), accessRuleSet, externalAnnotationPath));
+				}
+

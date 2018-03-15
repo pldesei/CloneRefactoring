@@ -1,0 +1,17 @@
+(startLine=165 endLine=179 srcPath=/home/sonia/NewExperiment/antFilter/00652/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/BaseFilterReader.java)
+    /**
+     * Read till EOL
+     */
+    protected final String readLine() throws IOException {
+        int ch = in.read();
+        String line = (ch == -1) ? null : "";
+        while (ch != -1) {
+            line += (char) ch;
+            if (ch == '\n') {
+                break;
+            }
+            ch = in.read();
+        }
+        return line;
+    }
+

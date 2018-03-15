@@ -1,0 +1,23 @@
+(startLine=223 endLine=243 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01351/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodBinding.java)
+		do {
+			if (currentType.findSuperTypeWithSameErasure(declaringErasure) != null) {
+				if (invocationSite.isSuperAccess()){
+					return true;
+				}
+				// receiverType can be an array binding in one case... see if you can change it
+				if (receiverType instanceof ArrayBinding){
+					return false;
+				}
+				if (isStatic()){
+					if (depth > 0) invocationSite.setDepth(depth);
+					return true; // see 1FMEPDL - return invocationSite.isTypeAccess();
+				}
+				if (currentType == receiverErasure || ((ReferenceBinding)receiverErasure).findSuperTypeWithSameErasure(currentType) != null){
+					if (depth > 0) invocationSite.setDepth(depth);
+					return true;
+				}
+			}
+			depth++;
+			currentType = currentType.enclosingType();
+		} while (currentType != null);
+

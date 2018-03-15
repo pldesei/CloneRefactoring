@@ -1,0 +1,82 @@
+(startLine=188 endLine=267 srcPath=/home/sonia/NewExperiment/antFilter/00947/src/main/org/apache/tools/ant/taskdefs/optional/sos/SOSGet.java)
+    protected Commandline buildCmdLine() {
+        commandLine = new Commandline();
+        // Get the path to the soscmd(.exe)
+        commandLine.setExecutable(getSosCommand());
+        // If we find a "file" attribute then act on a file otherwise act on a project
+        if (getFilename() != null) {
+            // add -command GetFile to the commandline
+            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
+            commandLine.createArgument().setValue(SOSCmd.COMMAND_GET_FILE);
+            // add -file xxxxx to the commandline
+            commandLine.createArgument().setValue(SOSCmd.FLAG_FILE);
+            commandLine.createArgument().setValue(getFilename());
+            // look for a version attribute
+            if (getVersion() != null) {
+                //add -revision xxxxx to the commandline
+                commandLine.createArgument().setValue(SOSCmd.FLAG_VERSION);
+                commandLine.createArgument().setValue(getVersion());
+            }
+        } else {
+            // add -command GetProject to the commandline
+            commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
+            commandLine.createArgument().setValue(SOSCmd.COMMAND_GET_PROJECT);
+            // look for a recursive option
+            commandLine.createArgument().setValue(getRecursive());
+            // look for a label option
+            if (getLabel() != null) {
+                commandLine.createArgument().setValue(SOSCmd.FLAG_LABEL);
+                commandLine.createArgument().setValue(getLabel());
+            }
+        }
+        // SOS server address is required
+        if (getSosServerPath() == null) {
+            throw new BuildException("sosserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
+        commandLine.createArgument().setValue(getSosServerPath());
+        // Login info is required
+        if (getUsername() == null) {
+            throw new BuildException("username attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
+        commandLine.createArgument().setValue(getUsername());
+        // The SOS class knows that the SOS server needs the password flag,
+        // even if there is no password ,so we send a " "
+        commandLine.createArgument().setValue(SOSCmd.FLAG_PASSWORD);
+        commandLine.createArgument().setValue(getPassword());
+        // VSS Info is required
+        if (getVssServerPath() == null) {
+            throw new BuildException("vssserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
+        commandLine.createArgument().setValue(getVssServerPath());
+        // SS project path is required
+        if (getProjectPath() == null) {
+            throw new BuildException("projectpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
+        commandLine.createArgument().setValue(getProjectPath());
+
+        // The following options are optional.
+
+        // -verbose
+        commandLine.createArgument().setValue(getVerbose());
+        // Disable Compression
+        commandLine.createArgument().setValue(getNoCompress());
+        // Path to the SourceOffSite home directory /home/user/.sos
+        if (getSosHome() == null) {
+            // If -soshome was not specified then we can look for nocache
+            commandLine.createArgument().setValue(getNoCache());
+        } else {
+            commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_HOME);
+            commandLine.createArgument().setValue(getSosHome());
+        }
+        //If a working directory was specified then add it to the command line
+        if (getLocalPath() != null) {
+            commandLine.createArgument().setValue(SOSCmd.FLAG_WORKING_DIR);
+            commandLine.createArgument().setValue(getLocalPath());
+        }
+        return commandLine;
+    }
+

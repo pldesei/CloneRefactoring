@@ -1,0 +1,24 @@
+(startLine=2824 endLine=2845 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02177/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+protected void disableAll(int severity) {
+	String checkedValue = null;
+	switch(severity) {
+		case ProblemSeverities.Error :
+			checkedValue = CompilerOptions.ERROR;
+			break;
+		case ProblemSeverities.Warning :
+			checkedValue = CompilerOptions.WARNING;
+			break;
+	}
+	Object[] entries = this.options.entrySet().toArray();
+	for (int i = 0, max = entries.length; i < max; i++) {
+		Map.Entry entry = (Map.Entry) entries[i];
+		if (!(entry.getKey() instanceof String))
+			continue;
+		if (!(entry.getValue() instanceof String))
+			continue;
+		if (((String) entry.getValue()).equals(checkedValue)) {
+			this.options.put(entry.getKey(), CompilerOptions.IGNORE);
+		}
+	}
+}
+

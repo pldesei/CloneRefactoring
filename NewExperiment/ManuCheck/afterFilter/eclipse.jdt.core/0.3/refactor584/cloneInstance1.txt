@@ -1,0 +1,26 @@
+(startLine=1374 endLine=1397 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01393/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+				if (condConst.booleanValue() == true) {
+					// <something equivalent to true> | x
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					BranchLabel internalFalseLabel = new BranchLabel(codeStream);
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						internalFalseLabel,
+						false);
+					internalFalseLabel.place();
+					if (valueRequired) {
+						if (trueLabel != null) {
+							codeStream.goto_(trueLabel);
+						}
+					}
+					// reposition the endPC
+					codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);					
+				} else {
+

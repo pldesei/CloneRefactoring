@@ -1,0 +1,12 @@
+(startLine=1487 endLine=1496 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug82208_ENUM() throws CoreException {
+	resultCollector.showRule = true;
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 1, workingCopies.length);
+	search("B82208*", ENUM, ALL_OCCURRENCES);
+	this.discard = false;
+	assertSearchResults(
+		"src/b82208/Test.java b82208.B82208_E [B82208_E] EXACT_MATCH"
+	);
+}
+

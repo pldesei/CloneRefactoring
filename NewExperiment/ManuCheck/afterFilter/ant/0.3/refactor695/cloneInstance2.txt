@@ -1,0 +1,16 @@
+(startLine=371 endLine=384 srcPath=/home/sonia/NewExperiment/antFilter/01037/src/main/org/apache/tools/ant/taskdefs/ExecuteOn.java)
+                if (!parallel) {
+                    String[] s = new String[fileNames.size()];
+                    fileNames.copyInto(s);
+                    for (int j = 0; j < s.length; j++) {
+                        String[] command = getCommandline(s[j], base);
+                        log(Commandline.describeCommand(command),
+                            Project.MSG_VERBOSE);
+                        exe.setCommandline(command);
+                        runExecute(exe);
+                        haveExecuted = true;
+                    }
+                    fileNames.removeAllElements();
+                    baseDirs.removeAllElements();
+                }
+

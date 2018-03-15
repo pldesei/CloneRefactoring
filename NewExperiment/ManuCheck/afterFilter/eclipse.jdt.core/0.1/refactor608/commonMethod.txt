@@ -1,0 +1,44 @@
+(startLine=4310 endLine=4351 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+private void setUpBug100772_ProjectScope_Complex() throws CoreException {
+	workingCopies = new ICompilationUnit[6];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b100772/X.java",
+		"package b100772;\n" + 
+		"public class X<T> implements IX<T> {\n" + 
+		"	public void foo(T t) {}\n" + 
+		"}\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b100772/XX.java",
+		"package b100772;\n" + 
+		"class XX extends X<String> {\n" + 
+		"	public void foo(String s) {}\n" + 
+		"	public void foo(Exception e) {}\n" + 
+		"}\n"
+	);
+	workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b100772/IX.java",
+		"package b100772;\n" + 
+		"interface IX<U> {\n" + 
+		"	public void foo(U u);\n" + 
+		"}\n"
+	);
+	workingCopies[3] = getWorkingCopy("/JavaSearchBugs/src/b100772/Y.java",
+		"package b100772;\n" + 
+		"class Y implements IX<String> {\n" + 
+		"	public void foo(String s) {}\n" + 
+		"	public void foo(Exception e) {}\n" + 
+		"}\n"
+	);
+	workingCopies[4] = getWorkingCopy("/JavaSearchBugs/src/b100772/IXX.java",
+		"package b100772;\n" + 
+		"interface IXX<V extends Exception> {\n" + 
+		"	public void foo(V v);\n" + 
+		"}\n"
+	);
+	workingCopies[5] = getWorkingCopy("/JavaSearchBugs/src/b100772/Z.java",
+		"package b100772;\n" + 
+		"class Z extends Y implements IXX<Exception> {\n" + 
+		"	public void foo(String s) {}\n" + 
+		"	public void foo(Exception e) {}\n" + 
+		"}\n"
+	);
+}
+

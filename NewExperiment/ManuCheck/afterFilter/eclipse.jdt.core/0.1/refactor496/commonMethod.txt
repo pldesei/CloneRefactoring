@@ -1,0 +1,13 @@
+(startLine=1167 endLine=1177 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01254/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+	/**
+	 * Returns the specified compilation unit in the given project, root, and
+	 * package fragment or <code>null</code> if it does not exist.
+	 */
+	public ICompilationUnit getCompilationUnit(String projectName, String rootPath, String packageName, String cuName) throws JavaModelException {
+		IPackageFragment pkg= getPackageFragment(projectName, rootPath, packageName);
+		if (pkg == null) {
+			return null;
+		}
+		return pkg.getCompilationUnit(cuName);
+	}
+

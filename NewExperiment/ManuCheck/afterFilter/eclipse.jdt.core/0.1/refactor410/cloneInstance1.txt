@@ -1,0 +1,15 @@
+(startLine=1085 endLine=1097 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00847/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/compiler/SourceElementParser.java)
+		if (methodDeclaration instanceof MethodDeclaration) {
+			TypeReference returnType = ((MethodDeclaration) methodDeclaration).returnType;
+			requestor.enterMethod(
+				methodDeclaration.declarationSourceStart, 
+				deprecated ? (currentModifiers & AccJustFlag) | AccDeprecated : currentModifiers & AccJustFlag, 
+				returnType == null ? null : CharOperation.concatWith(returnType.getParameterizedTypeName(), '.'),
+				methodDeclaration.selector, 
+				methodDeclaration.sourceStart, 
+				selectorSourceEnd, 
+				argumentTypes, 
+				argumentNames, 
+				thrownExceptionTypes);
+		} else {
+

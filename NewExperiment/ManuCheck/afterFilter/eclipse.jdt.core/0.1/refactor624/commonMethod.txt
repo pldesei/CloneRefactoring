@@ -1,0 +1,24 @@
+(startLine=2466 endLine=2487 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 86380: [1.5][search][annot] Add support to find references inside annotations on a package declaration
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=86380"
+ */
+private void setUpBug86380() throws CoreException {
+	resultCollector.showInsideDoc = true;
+	workingCopies = new ICompilationUnit[2];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b86380/package-info.java",
+		"/**\n" + 
+		" * @see Annot#field\n" + 
+		" */\n" + 
+		"@Annot(value=11)\n" + 
+		"package b86380;\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b86380/Test.java",
+		"package b86380;\n" + 
+		"@Annot(12) public class Test {\n" + 
+		"	public int field = Annot.field;\n" + 
+		"	public void foo() {}\n" + 
+		"}\n"
+	);
+}
+

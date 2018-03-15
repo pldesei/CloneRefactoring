@@ -1,0 +1,41 @@
+(startLine=808 endLine=846 srcPath=/home/sonia/NewExperiment/antFilter/01261/src/main/org/apache/tools/ant/AntClassLoader.java)
+    /**
+     * Tests whether or not the parent classloader should be checked for a
+     * resource before this one. If the resource matches both the "use parent
+     * classloader first" and the "use this classloader first" lists, the latter
+     * takes priority.
+     *
+     * @param resourceName
+     *            The name of the resource to check. Must not be
+     *            <code>null</code>.
+     *
+     * @return whether or not the parent classloader should be checked for a
+     *         resource before this one is.
+     */
+    private boolean isParentFirst(String resourceName) {
+        // default to the global setting and then see
+        // if this class belongs to a package which has been
+        // designated to use a specific loader first
+        // (this one or the parent one)
+
+        // XXX - shouldn't this always return false in isolated mode?
+
+        boolean useParentFirst = parentFirst;
+
+        for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String) e.nextElement();
+            if (resourceName.startsWith(packageName)) {
+                useParentFirst = true;
+                break;
+            }
+        }
+        for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String) e.nextElement();
+            if (resourceName.startsWith(packageName)) {
+                useParentFirst = false;
+                break;
+            }
+        }
+        return useParentFirst;
+    }
+

@@ -1,0 +1,15 @@
+(startLine=147 endLine=159 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00786/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Javadoc.java)
+			if (this.references[i] instanceof JavadocFieldReference) {
+				JavadocFieldReference fieldRef = (JavadocFieldReference) this.references[i];
+				if (fieldRef.receiverType != null && fieldRef.binding == null) { // binding was reset in case of valid method reference
+					// TODO (frederic) post 3.0 - avoid new instanciation of Compiler AST node
+					JavadocMessageSend msgSend = new JavadocMessageSend(fieldRef.token, fieldRef.nameSourcePosition);
+					msgSend.receiver = fieldRef.receiver;
+					msgSend.receiverType = fieldRef.receiverType;
+					msgSend.qualifyingType = fieldRef.receiverType;
+					msgSend.superAccess = methScope.enclosingSourceType().isCompatibleWith(msgSend.receiverType);
+					msgSend.binding = methScope.findMethod((ReferenceBinding)msgSend.receiverType, msgSend.selector, new TypeBinding[0], msgSend);
+					this.references[i] = msgSend;
+				}
+			}
+

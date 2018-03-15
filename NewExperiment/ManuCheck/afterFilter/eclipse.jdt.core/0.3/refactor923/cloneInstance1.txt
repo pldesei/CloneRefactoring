@@ -1,0 +1,47 @@
+(startLine=2377 endLine=2421 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02093/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+				if (genericLocalVariablesCounter != 0) {
+					// add the local variable type table attribute
+					// reserve enough space
+					int maxOfEntries = 8 + numberOfGenericEntries * 10;
+
+					if (localContentsOffset + maxOfEntries >= this.contents.length) {
+						resizeContents(maxOfEntries);
+					}
+					int localVariableTypeNameIndex =
+						this.constantPool.literalIndex(AttributeNamesConstants.LocalVariableTypeTableName);
+					this.contents[localContentsOffset++] = (byte) (localVariableTypeNameIndex >> 8);
+					this.contents[localContentsOffset++] = (byte) localVariableTypeNameIndex;
+					value = numberOfGenericEntries * 10 + 2;
+					this.contents[localContentsOffset++] = (byte) (value >> 24);
+					this.contents[localContentsOffset++] = (byte) (value >> 16);
+					this.contents[localContentsOffset++] = (byte) (value >> 8);
+					this.contents[localContentsOffset++] = (byte) value;
+					this.contents[localContentsOffset++] = (byte) (numberOfGenericEntries >> 8);
+					this.contents[localContentsOffset++] = (byte) numberOfGenericEntries;
+					for (int i = 0; i < genericLocalVariablesCounter; i++) {
+						LocalVariableBinding localVariable = genericLocalVariables[i];
+						for (int j = 0; j < localVariable.initializationCount; j++) {
+							int startPC = localVariable.initializationPCs[j << 1];
+							int endPC = localVariable.initializationPCs[(j << 1) + 1];
+							if (startPC != endPC) { // only entries for non zero length
+								// now we can safely add the local entry
+								this.contents[localContentsOffset++] = (byte) (startPC >> 8);
+								this.contents[localContentsOffset++] = (byte) startPC;
+								int length = endPC - startPC;
+								this.contents[localContentsOffset++] = (byte) (length >> 8);
+								this.contents[localContentsOffset++] = (byte) length;
+								nameIndex = this.constantPool.literalIndex(localVariable.name);
+								this.contents[localContentsOffset++] = (byte) (nameIndex >> 8);
+								this.contents[localContentsOffset++] = (byte) nameIndex;
+								descriptorIndex = this.constantPool.literalIndex(localVariable.type.genericTypeSignature());
+								this.contents[localContentsOffset++] = (byte) (descriptorIndex >> 8);
+								this.contents[localContentsOffset++] = (byte) descriptorIndex;
+								int resolvedPosition = localVariable.resolvedPosition;
+								this.contents[localContentsOffset++] = (byte) (resolvedPosition >> 8);
+								this.contents[localContentsOffset++] = (byte) resolvedPosition;
+							}
+						}
+					}
+					attributeNumber++;
+				}
+

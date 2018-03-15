@@ -1,0 +1,26 @@
+(startLine=528 endLine=551 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00969/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CopyResourceElementsOperation.java)
+	private void saveContent(PackageFragment dest, String destName, ASTRewrite rewrite, String sourceEncoding, IFile destFile) throws JavaModelException {
+		try {
+			// TODO (frederic) remove when bug 67606 will be fixed (bug 67823)
+			// fix bug 66898
+			if (sourceEncoding != null) destFile.setCharset(sourceEncoding, this.progressMonitor);
+			// end todo
+		}
+		catch (CoreException ce) {
+			// use no encoding
+		}
+		// when the file was copied, its read-only flag was preserved -> temporary set it to false
+		// note this doesn't interfer with repository providers as this is a new resource that cannot be under
+		// version control yet
+		Util.setReadOnly(destFile, false);
+		ICompilationUnit destCU = dest.getCompilationUnit(destName);
+		IDocument document = getDocument(destCU);
+		TextEdit edits = rewrite.rewriteAST(document, null);
+		try {
+			edits.apply(document);
+		} catch (BadLocationException e) {
+			throw new JavaModelException(e, IJavaModelStatusConstants.INVALID_CONTENTS);
+		}
+		destCU.save(getSubProgressMonitor(1), this.force);
+	}
+

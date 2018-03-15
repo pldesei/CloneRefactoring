@@ -1,0 +1,10 @@
+(startLine=1249 endLine=1256 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00972/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
+	protected void verifyWorkingCopiesComments() throws JavaModelException {
+		assumeNotNull("No working copies to verify!", workingCopies);
+		int length = workingCopies.length;
+		assumeTrue("We need to have at least one working copy to verify!", length>0);
+		for (int i=0; i<length; i++) {
+			verifyComments(workingCopies[i]);
+		}
+	}
+

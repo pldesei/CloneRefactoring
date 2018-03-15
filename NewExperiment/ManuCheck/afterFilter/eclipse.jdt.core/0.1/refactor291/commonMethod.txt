@@ -1,0 +1,36 @@
+(startLine=113 endLine=146 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00588/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public final void addDefinitelyAssignedVariables(Scope scope, int initStateIndex) {
+	// Required to fix 1PR0XVS: LFRE:WINNT - Compiler: variable table for method appears incorrect
+	if (!generateLocalVariableTableAttributes)
+		return;
+/*	if (initStateIndex == lastInitStateIndexWhenAddingInits)
+		return;
+	lastInitStateIndexWhenAddingInits = initStateIndex;
+	if (lastInitStateIndexWhenRemovingInits != initStateIndex){
+		lastInitStateIndexWhenRemovingInits = -2; // reinitialize remove index 
+		// remove(1)-add(1)-remove(1) -> ignore second remove
+		// remove(1)-add(2)-remove(1) -> perform second remove
+	}
+	
+*/	for (int i = 0; i < visibleLocalsCount; i++) {
+		LocalVariableBinding localBinding = visibleLocals[i];
+		if (localBinding != null) {
+			// Check if the local is definitely assigned
+			if ((initStateIndex != -1) && isDefinitelyAssigned(scope, initStateIndex, localBinding)) {
+				if ((localBinding.initializationCount == 0) || (localBinding.initializationPCs[((localBinding.initializationCount - 1) << 1) + 1] != -1)) {
+					/* There are two cases:
+					 * 1) there is no initialization interval opened ==> add an opened interval
+					 * 2) there is already some initialization intervals but the last one is closed ==> add an opened interval
+					 * An opened interval means that the value at localBinding.initializationPCs[localBinding.initializationCount - 1][1]
+					 * is equals to -1.
+					 * initializationPCs is a collection of pairs of int:
+					 * 	first value is the startPC and second value is the endPC. -1 one for the last value means that the interval
+					 * 	is not closed yet.
+					 */
+					localBinding.recordInitializationStartPC(position);
+				}
+			}
+		}
+	}
+}
+

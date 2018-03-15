@@ -1,0 +1,5 @@
+(startLine=63 endLine=65 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02312/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/rewrite/describing/ASTRewritingMethodDeclTest.java)
+	private ASTNode createNewExceptionType(AST ast, String name) {
+		return ast.apiLevel() < AST.JLS8 ? ast.newSimpleName(name) : (ASTNode) ast.newSimpleType(ast.newSimpleName(name));
+	}
+

@@ -1,0 +1,95 @@
+(startLine=402 endLine=494 srcPath=/home/sonia/NewExperiment/antFilter/01308/src/main/org/apache/tools/ant/taskdefs/optional/javacc/JavaCC.java)
+    /**
+     * Helper method to retrieve main class which is different from versions.
+     * @param path classpath to search in.
+     * @param type the taskdef.
+     * @throws BuildException thrown if the home directory is invalid
+     * or if the archive could not be found despite attempts to do so.
+     * @return the main class for the taskdef.
+     * @since Ant 1.7
+     */
+    protected static String getMainClass(Path path, int type)
+        throws BuildException {
+        String packagePrefix = null;
+        String mainClass = null;
+
+        AntClassLoader l = null;
+        try {
+            l = AntClassLoader.newAntClassLoader(null, null,
+                                                 path
+                                                 .concatSystemClasspath("ignore"),
+                                                 true);
+            String javaccClass = COM_PACKAGE + COM_JAVACC_CLASS;
+            InputStream is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                                   + ".class");
+            if (is != null) {
+                packagePrefix = COM_PACKAGE;
+                switch (type) {
+                case TASKDEF_TYPE_JAVACC:
+                    mainClass = COM_JAVACC_CLASS;
+
+                    break;
+
+                case TASKDEF_TYPE_JJTREE:
+                    mainClass = COM_JJTREE_CLASS;
+
+                    break;
+
+                case TASKDEF_TYPE_JJDOC:
+                    mainClass = COM_JJDOC_CLASS;
+
+                    break;
+                default:
+                    // Fall Through
+                }
+            } else {
+                javaccClass = ORG_PACKAGE_3_1 + ORG_JAVACC_CLASS;
+                is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                           + ".class");
+                if (is != null) {
+                    packagePrefix = ORG_PACKAGE_3_1;
+                } else {
+                    javaccClass = ORG_PACKAGE_3_0 + ORG_JAVACC_CLASS;
+                    is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                               + ".class");
+                    if (is != null) {
+                        packagePrefix = ORG_PACKAGE_3_0;
+                    }
+                }
+
+                if (is != null) {
+                    switch (type) {
+                    case TASKDEF_TYPE_JAVACC:
+                        mainClass = ORG_JAVACC_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJTREE:
+                        mainClass = ORG_JJTREE_CLASS;
+
+                        break;
+
+                    case TASKDEF_TYPE_JJDOC:
+                        mainClass = ORG_JJDOC_CLASS;
+
+                        break;
+                    default:
+                        // Fall Through
+                    }
+                }
+            }
+
+            if (packagePrefix == null) {
+                throw new BuildException("failed to load JavaCC");
+            }
+            if (mainClass == null) {
+                throw new BuildException("unknown task type " + type);
+            }
+            return packagePrefix + mainClass;
+        } finally {
+            if (l != null) {
+                l.cleanup();
+            }
+        }
+    }
+

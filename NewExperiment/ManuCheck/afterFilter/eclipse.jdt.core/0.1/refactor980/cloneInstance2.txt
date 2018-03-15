@@ -1,0 +1,16 @@
+(startLine=8447 endLine=8460 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02269/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void nullityMismatchIsUnknown(Expression expression, TypeBinding providedType, TypeBinding requiredType, char[][] annotationName) {
+	int problemId = IProblem.RequiredNonNullButProvidedUnknown;
+	String[] arguments = new String[] {
+			String.valueOf(providedType.readableName()),
+			String.valueOf(CharOperation.concatWith(annotationName, '.')),
+			String.valueOf(requiredType.readableName())
+	};
+	String[] argumentsShort = new String[] {
+			String.valueOf(providedType.shortReadableName()),
+			String.valueOf(annotationName[annotationName.length-1]),
+			String.valueOf(requiredType.shortReadableName())
+	};
+	this.handle(problemId, arguments, argumentsShort, expression.sourceStart, expression.sourceEnd);
+}
+

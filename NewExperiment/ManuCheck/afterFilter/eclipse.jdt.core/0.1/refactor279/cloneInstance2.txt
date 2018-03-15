@@ -1,0 +1,10 @@
+(startLine=1218 endLine=1225 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00523/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MatchLocator.java)
+		if (nodes != null) {
+			for (int i = 0, l = nodes.length; i < l; i++) {
+				AstNode node = nodes[i];
+				Integer level = (Integer) nodeSet.matchingNodes.removeKey(node);
+				if ((this.matchContainer & PatternLocator.FIELD_CONTAINER) != 0)
+					reportReference(node, type, field, parent, level.intValue());
+			}
+		}
+

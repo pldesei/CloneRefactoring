@@ -1,0 +1,16 @@
+(startLine=64 endLine=77 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00959/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchGenericMethodTests.java)
+	public void testElementPatternSingleTypeArgument01() throws CoreException {
+		IType type = getCompilationUnit("JavaSearch15/src/g4/m/def/GS.java").getType("GS");
+		IMethod method = type.getMethod("standard", new String[] { "QT;" });
+		IJavaSearchScope scope = getJavaSearchCUScope("JavaSearch15", "g4/m/ref", "R1.java");
+		search(method, REFERENCES, scope, resultCollector);
+		assertSearchResults(
+			"src/g4/m/ref/R1.java void g4.m.ref.R1.testObject() [standard(new Object())] EXACT_MATCH\n" + 
+			"src/g4/m/ref/R1.java void g4.m.ref.R1.testException() [standard(new Exception())] EXACT_MATCH\n" + 
+			"src/g4/m/ref/R1.java void g4.m.ref.R1.testRuntimeException() [standard(new RuntimeException())] EXACT_MATCH\n" + 
+			"src/g4/m/ref/R1.java void g4.m.ref.R1.testUnbound() [standard(null)] EXACT_MATCH\n" + 
+			"src/g4/m/ref/R1.java void g4.m.ref.R1.testExtends() [standard(null)] EXACT_MATCH\n" + 
+			"src/g4/m/ref/R1.java void g4.m.ref.R1.testSuper() [standard(new Exception())] EXACT_MATCH",
+			resultCollector);
+	}
+

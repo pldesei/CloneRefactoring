@@ -1,0 +1,18 @@
+(startLine=423 endLine=438 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01389/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/ParameterizedTypeBinding.java)
+		if ((tagBits & TagBits.AreMethodsComplete) != 0) { // have resolved all arg types & return type of the methods
+			nextMethod : for (int m = methods.length; --m >= 0;) {
+				MethodBinding method = methods[m];
+				if (method.selector.length == selectorLength && CharOperation.equals(method.selector, selector)) {
+					foundNothing = false; // inner type lookups must know that a method with this name exists
+					if (method.parameters.length == argCount) {
+						TypeBinding[] toMatch = method.parameters;
+						for (int p = 0; p < argCount; p++)
+							if (toMatch[p] != argumentTypes[p])
+								continue nextMethod;
+						if (match != null) return null; // collision case
+						match = method;
+					}
+				}
+			}
+		} else {
+

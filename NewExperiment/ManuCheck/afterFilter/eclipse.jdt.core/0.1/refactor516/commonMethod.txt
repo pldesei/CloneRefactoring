@@ -1,0 +1,14 @@
+(startLine=2802 endLine=2813 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01293/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+final public void iconst_1() {
+	if (DEBUG) System.out.println(position + "\t\ticonst_1"); //$NON-NLS-1$
+	countLabels = 0;
+	stackDepth++;
+	if (stackDepth > stackMax)
+		stackMax = stackDepth;
+	if (classFileOffset >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_iconst_1;
+}
+

@@ -1,0 +1,11 @@
+(startLine=5604 endLine=5612 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug122442e() throws CoreException {
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 1, workingCopies.length);
+	search("Interface", INTERFACE, IMPLEMENTORS);
+	this.discard = false;
+	assertSearchResults(
+		"" // expected no result
+	);
+}
+

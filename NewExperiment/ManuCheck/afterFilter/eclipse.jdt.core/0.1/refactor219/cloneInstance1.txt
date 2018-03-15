@@ -1,0 +1,11 @@
+(startLine=134 endLine=142 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00209/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/JavaBuilder.java)
+	} catch (IncompleteClassPathException e) {
+		if (DEBUG){
+			System.out.println("Builder handling IncompleteClassPathException"); //$NON-NLS-1$
+			 e.printStackTrace();
+		}
+		IMarker marker = currentProject.createMarker(ProblemMarkerTag);
+		marker.setAttribute(IMarker.MESSAGE, Util.bind("build.incompleteClassPath", e.missingClassFile)); //$NON-NLS-1$
+		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+	} catch (MissingSourceFileException e) {
+

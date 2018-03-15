@@ -1,0 +1,14 @@
+(startLine=55 endLine=66 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00420/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	private void dumpPcNumber(int pc) {
+		writeTabs();
+		int digitForPC = 0;
+		if (pc != 0) {
+			digitForPC = (int) (Math.log(pc) / Math.log(10));
+		}
+		for (int i = 0, max = this.digitNumberForPC - digitForPC; i < max; i++) {
+			buffer.append(' ');
+		}
+		buffer.append(pc);
+		buffer.append(Util.bind("disassembler.identation")); //$NON-NLS-1$
+	}
+

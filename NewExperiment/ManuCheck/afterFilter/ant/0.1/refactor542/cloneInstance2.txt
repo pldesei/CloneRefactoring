@@ -1,0 +1,42 @@
+(startLine=321 endLine=360 srcPath=/home/sonia/NewExperiment/antFilter/00907/src/testcases/org/apache/tools/ant/taskdefs/optional/sos/SOSTest.java)
+    public void testCheckinProjectFlags() {
+        String[] sTestCmdLine = { "soscmd", "-command", "CheckInProject",
+            "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+            "-password", "", "-database", VSS_SERVER_PATH , "-project",
+            "$"+VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+            project.getBaseDir().getAbsolutePath(), "-log", SRC_COMMENT,  };
+
+        // Set up a SOSCheckin task
+        sosCheckin.setProject(project);
+        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
+        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
+        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
+        sosCheckin.setComment(SRC_COMMENT);
+        sosCheckin.setUsername(SOS_USERNAME);
+        sosCheckin.setSosHome(SOS_HOME);
+        sosCheckin.setNoCache(true);
+        sosCheckin.setNoCompress(false);
+        sosCheckin.setVerbose(false);
+        sosCheckin.setRecursive(true);
+
+        commandline = sosCheckin.buildCmdLine();
+        String[] sGeneratedCmdLine = commandline.getCommandline();
+
+        int i = 0;
+        while (i < sTestCmdLine.length) {
+            try {
+                assertEquals("CheckInProject arg # " + String.valueOf(i),
+                                sTestCmdLine[i],
+                                sGeneratedCmdLine[i]);
+                i++;
+            } catch (ArrayIndexOutOfBoundsException aioob) {
+                fail("CheckInProject missing arg");
+            }
+
+        }
+        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
+            // We have extra elements
+            fail("CheckInProject extra args");
+        }
+    }
+

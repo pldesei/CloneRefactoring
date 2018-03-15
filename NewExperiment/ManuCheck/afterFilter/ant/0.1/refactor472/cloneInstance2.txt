@@ -1,0 +1,19 @@
+(startLine=230 endLine=246 srcPath=/home/sonia/NewExperiment/antFilter/00375/proposal/myrmidon/src/todo/org/apache/tools/ant/taskdefs/optional/ANTLR.java)
+    {
+        Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
+                                                         Project.MSG_WARN ) );
+        if( workingdir != null )
+        {
+            exe.setWorkingDirectory( workingdir );
+        }
+        exe.setCommandline( command );
+        try
+        {
+            return exe.execute();
+        }
+        catch( IOException e )
+        {
+            throw new TaskException( "Error", e );
+        }
+    }
+

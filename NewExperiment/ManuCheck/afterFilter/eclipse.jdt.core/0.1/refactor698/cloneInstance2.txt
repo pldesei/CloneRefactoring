@@ -1,0 +1,34 @@
+(startLine=4896 endLine=4927 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01657/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/MethodVerifyTest.java)
+	public void test074a() {
+		String expectedOutput = new CompilerOptions(getCompilerOptions()).sourceLevel < ClassFileConstants.JDK1_6
+		?	"----------\n" + 
+			"1. WARNING in I.java (at line 1)\n" + 
+			"	interface I { @Override void clone(); }\n" + 
+			"	                        ^^^^\n" + 
+			"The return type is incompatible with Object.clone(), thus this interface cannot be implemented\n" + 
+			"----------\n" + 
+			"2. ERROR in I.java (at line 1)\n" + 
+			"	interface I { @Override void clone(); }\n" + 
+			"	                             ^^^^^^^\n" + 
+			"The method clone() of type I must override a superclass method\n" + 
+			"----------\n"
+		:	"----------\n" + 
+			"1. WARNING in I.java (at line 1)\n" + 
+			"	interface I { @Override void clone(); }\n" + 
+			"	                        ^^^^\n" + 
+			"The return type is incompatible with Object.clone(), thus this interface cannot be implemented\n" + 
+			"----------\n" + 
+			"2. ERROR in I.java (at line 1)\n" + 
+			"	interface I { @Override void clone(); }\n" + 
+			"	                             ^^^^^^^\n" + 
+			"The method clone() of type I must override or implement a supertype method\n" + 
+			"----------\n";		
+		this.runNegativeTest(
+			new String[] {
+				"I.java",
+				"interface I { @Override void clone(); }\n" +
+				"interface J extends I {}"
+			},
+			expectedOutput);
+	}
+

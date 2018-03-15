@@ -1,0 +1,18 @@
+(startLine=2787 endLine=2802 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01253/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+	public void testTypeReference26() throws CoreException { // was testInnacurateTypeReference2
+
+		search(
+			"p.Zork", 
+			TYPE, 
+			REFERENCES,
+			SearchEngine.createJavaSearchScope(new IJavaElement[] {
+				getPackageFragment("JavaSearch", "src", "b5")
+			}), 
+			this.resultCollector);
+		assertSearchResults(
+			"src/b5/A.java b5.A.{} [Zork]\n" +
+			"src/b5/A.java b5.A.{} [Zork]\n" +
+			"src/b5/A.java b5.A.{} [Zork]",
+			this.resultCollector);
+	}
+

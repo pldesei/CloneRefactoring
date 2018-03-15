@@ -1,0 +1,38 @@
+(startLine=76 endLine=111 srcPath=/home/sonia/NewExperiment/antFilter/01034/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSSCHECKOUT.java)
+    protected Commandline buildCmdLine() {
+        Commandline commandLine = new Commandline();
+
+        // first off, make sure that we've got a command and a vssdir ...
+        if (getVsspath() == null) {
+            String msg = "vsspath attribute must be set!";
+            throw new BuildException(msg, getLocation());
+        }
+
+        // build the command line from what we got the format is
+        // ss Checkout VSS items [-G] [-C] [-H] [-I-] [-N] [-O] [-R] [-V] [-Y] [-?]
+        // as specified in the SS.EXE help
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_CHECKOUT);
+
+        // VSS items
+        commandLine.createArgument().setValue(getVsspath());
+        // -GL
+        commandLine.createArgument().setValue(getLocalpath());
+        // -I- or -I-Y or -I-N
+        commandLine.createArgument().setValue(getAutoresponse());
+        // -R
+        commandLine.createArgument().setValue(getRecursive());
+        // -V
+        commandLine.createArgument().setValue(getVersionDateLabel());
+        // -Y
+        commandLine.createArgument().setValue(getLogin());
+        // -G
+        commandLine.createArgument().setValue(getFileTimeStamp());
+        // -GWS or -GWR
+        commandLine.createArgument().setValue(getWritableFiles());
+        // -G-
+        commandLine.createArgument().setValue(getGetLocalCopy());
+
+        return commandLine;
+    }
+

@@ -1,0 +1,52 @@
+(startLine=1214 endLine=1263 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01292/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+			if ((condConst = right.optimizedBooleanConstant()) != Constant.NotAConstant) {
+				if (condConst.booleanValue() == true) {
+					// x & <something equivalent to true>
+					if ((bits & OnlyValueRequired) != 0) {
+						left.generateCode(currentScope, codeStream, valueRequired);
+					} else {
+						left.generateOptimizedBoolean(
+							currentScope,
+							codeStream,
+							trueLabel,
+							falseLabel,
+							valueRequired);
+					}
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+				} else {
+					// x & <something equivalent to false>
+					Label internalTrueLabel = new Label(codeStream);
+					left.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						internalTrueLabel,
+						falseLabel,
+						false);
+					internalTrueLabel.place();
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						false);
+					if (valueRequired) {
+						if ((bits & OnlyValueRequired) != 0) {
+							codeStream.iconst_0();
+						} else {
+							if (falseLabel != null) {
+								// implicit falling through the TRUE case
+								codeStream.goto_(falseLabel);
+							}
+						}
+					}
+					// reposition the endPC
+					codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);					
+				}
+				return;
+			}
+

@@ -1,0 +1,14 @@
+(startLine=674 endLine=685 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00557/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+public void testDeclarationOfReferencedTypes3() throws CoreException {
+	ICompilationUnit unit = getCompilationUnit("JavaSearch", "src", "c1", "A.java");
+	JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
+	new SearchEngine().searchDeclarationsOfReferencedTypes(
+		getWorkspace(), 
+		unit,
+		resultCollector
+	);
+	assertEquals(
+		"src/c1/I.java c1.I [I]", 
+		resultCollector.toString());
+}
+

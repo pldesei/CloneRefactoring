@@ -1,0 +1,25 @@
+(startLine=383 endLine=405 srcPath=/home/sonia/NewExperiment/antFilter/01159/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSS.java)
+    /**
+     * Gets the localpath string. "-GLc:\source" <p>
+     * The localpath is created if it didn't exist.
+     * @return An empty string if localpath is not set.
+     */
+    protected String getLocalpath() {
+        String lclPath = ""; //set to empty str if no local path return
+        if (localPath != null) {
+            //make sure m_LocalDir exists, create it if it doesn't
+            File dir = getProject().resolveFile(localPath);
+            if (!dir.exists()) {
+                boolean done = dir.mkdirs();
+                if (!done) {
+                    String msg = "Directory " + localPath + " creation was not "
+                            + "successful for an unknown reason";
+                    throw new BuildException(msg, getLocation());
+                }
+                getProject().log("Created dir: " + dir.getAbsolutePath());
+            }
+            lclPath = FLAG_OVERRIDE_WORKING_DIR + localPath;
+        }
+        return lclPath;
+    }
+

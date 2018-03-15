@@ -1,0 +1,15 @@
+(startLine=142 endLine=154 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/MessageSend.java)
+	} else if (binding.isProtected()){
+
+		SourceTypeBinding enclosingSourceType;
+		if (((bits & DepthMASK) != 0) 
+				&& binding.declaringClass.getPackage() 
+					!= (enclosingSourceType = currentScope.enclosingSourceType()).getPackage()){
+
+			SourceTypeBinding currentCompatibleType = (SourceTypeBinding)enclosingSourceType.enclosingTypeAt((bits & DepthMASK) >> DepthSHIFT);
+			syntheticAccessor = currentCompatibleType.addSyntheticMethod(binding, isSuperAccess());
+			currentScope.problemReporter().needToEmulateMethodAccess(binding, this);
+			return;
+		}
+	}
+

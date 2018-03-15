@@ -1,0 +1,35 @@
+(startLine=659 endLine=691 srcPath=/home/sonia/NewExperiment/antFilter/00317/src/main/org/apache/tools/ant/taskdefs/optional/ejb/WeblogicDeploymentTool.java)
+                    {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        InputStream is;
+                        JarEntry je = (JarEntry)e.nextElement();
+                        if (je.getCompressedSize() == -1 ||
+                                je.getCompressedSize() == je.getSize()) {
+                            newJarStream.setLevel(0);
+                        }
+                        else {
+                            newJarStream.setLevel(9);
+                        }
+
+                        // Update with changed Bean class
+                        if (replaceEntries.containsKey(je.getName()))
+                        {
+                            log("Updating Bean class from generic Jar " + je.getName(),Project.MSG_VERBOSE);
+                            // Use the entry from the generic jar
+                            je = (JarEntry)replaceEntries.get(je.getName());
+                            is = genericJar.getInputStream(je);
+                        }
+                        else  //use fle from original weblogic jar
+                        {
+                            is = wlJar.getInputStream(je);
+                        }
+                        newJarStream.putNextEntry(new JarEntry(je.getName()));
+
+                        while ((bytesRead = is.read(buffer)) != -1)
+                        {
+                            newJarStream.write(buffer,0,bytesRead);
+                        }
+                        is.close();
+                    }
+

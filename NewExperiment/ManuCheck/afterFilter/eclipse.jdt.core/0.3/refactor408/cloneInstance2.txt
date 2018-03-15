@@ -1,0 +1,18 @@
+(startLine=1687 endLine=1702 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndexForJavaLangFloat() {
+	int index;
+	if ((index = wellKnownTypes[JAVA_LANG_FLOAT_TYPE]) == 0) {
+		int nameIndex;
+		// The entry doesn't exit yet
+		nameIndex = literalIndex(QualifiedNamesConstants.JavaLangFloatConstantPoolName);
+		index = wellKnownTypes[JAVA_LANG_FLOAT_TYPE] = currentIndex++;
+		if (index > 0xFFFF){
+			this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+		}
+		writeU1(ClassTag);
+		// Then add the 8 bytes representing the long
+		writeU2(nameIndex);
+	}
+	return index;
+}
+

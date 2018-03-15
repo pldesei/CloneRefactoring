@@ -1,0 +1,14 @@
+(startLine=330 endLine=341 srcPath=/home/sonia/NewExperiment/antFilter/01310/src/main/org/apache/tools/ant/Project.java)
+    /**
+     * Factory method to create a class loader for loading classes from
+     * a given path.
+     *
+     * @param path the path from which classes are to be loaded.
+     *
+     * @return an appropriate classloader.
+     */
+    public AntClassLoader createClassLoader(Path path) {
+        return AntClassLoader
+            .newAntClassLoader(getClass().getClassLoader(), this, path, true);
+    }
+

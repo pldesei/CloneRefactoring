@@ -1,0 +1,15 @@
+(startLine=432 endLine=444 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00816/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/ClasspathEntry.java)
+	/**
+	 * Encode some patterns into XML parameter tag
+	 */
+	private static void encodePatterns(IPath[] patterns, String tag, Map parameters) {
+		if (patterns != null && patterns.length > 0) {
+			StringBuffer rule = new StringBuffer(10);
+			for (int i = 0, max = patterns.length; i < max; i++){
+				if (i > 0) rule.append('|');
+				rule.append(patterns[i]);
+			}
+			parameters.put(tag, String.valueOf(rule));
+		}
+	}
+

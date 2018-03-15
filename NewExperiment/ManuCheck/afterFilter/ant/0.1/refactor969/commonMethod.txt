@@ -1,0 +1,17 @@
+(startLine=831 endLine=845 srcPath=/home/sonia/NewExperiment/antFilter/01291/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    /**
+     * Get the names of the files that matched at least one of the include
+     * patterns, an matched none of the exclude patterns.
+     * The names are relative to the basedir.
+     *
+     * @return the names of the files
+     */
+    public String[] getIncludedFiles() {
+        int count = filesIncluded.size();
+        String[] files = new String[count];
+        for (int i = 0; i < count; i++) {
+            files[i] = (String)filesIncluded.elementAt(i);
+        }
+        return files;
+    }
+

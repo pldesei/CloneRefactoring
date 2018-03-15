@@ -1,0 +1,11 @@
+(startLine=180 endLine=188 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02617/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/linewrap/WrapPreparator.java)
+		if (!superInterfaceTypes.isEmpty()) {
+			int implementsToken = node.isInterface() ? TokenNameextends : TokenNameimplements;
+			this.wrapParentIndex = this.tm.lastIndexIn(node.getName(), -1);
+			this.wrapGroupEnd = this.tm.lastIndexIn(superInterfaceTypes.get(superInterfaceTypes.size() - 1), -1);
+			this.wrapIndexes.add(this.tm.firstIndexBefore(superInterfaceTypes.get(0), implementsToken));
+			for (Type type : superInterfaceTypes)
+				this.wrapIndexes.add(this.tm.firstIndexIn(type, -1));
+			handleWrap(this.options.alignment_for_superinterfaces_in_type_declaration, PREFERRED);
+		}
+

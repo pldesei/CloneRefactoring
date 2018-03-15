@@ -1,0 +1,12 @@
+(startLine=68 endLine=77 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeBinding.java)
+/**
+ * Returns the type to use for generic cast, or null if none required
+ */
+public TypeBinding genericCast(TypeBinding otherType) {
+    if (this == otherType) return null;
+	if (otherType.isWildcard() && ((WildcardBinding)otherType).kind != Wildcard.EXTENDS) return null;
+	TypeBinding otherErasure = otherType.erasure();
+	if (otherErasure == this.erasure()) return null;
+	return otherErasure;
+}
+

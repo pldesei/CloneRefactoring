@@ -1,0 +1,20 @@
+(startLine=693 endLine=710 srcPath=/home/sonia/NewExperiment/antFilter/01352/src/main/org/apache/tools/ant/taskdefs/Property.java)
+    /**
+     * add a name value pair to the project property set
+     * @param n name of property
+     * @param v value to set
+     * @since Ant 1.8
+     */
+    protected void addProperty(String n, Object v) {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(getProject());
+        if (userProperty) {
+            if (ph.getUserProperty(n) == null) {
+                ph.setInheritedProperty(n, v);
+            } else {
+                log("Override ignored for " + n, Project.MSG_VERBOSE);
+            }
+        } else {
+            ph.setNewProperty(n, v);
+        }
+    }
+

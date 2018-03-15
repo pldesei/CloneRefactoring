@@ -1,0 +1,16 @@
+(startLine=212 endLine=225 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveMethodWithInnerTypeInClassFile() throws JavaModelException {
+	IClassFile cu = getClassFile("Resolve", "zzz.jar", "", "MyClass$Inner.class");
+
+	String str = cu.getSource();
+	String selectAt = "test";
+	String selection = "test";
+	int start = str.indexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+
+	assertTrue("should have one method", elements.length == 1 && 
+		elements[0].getElementName().equals("test") &&
+		elements[0] instanceof IMethod);	
+}
+

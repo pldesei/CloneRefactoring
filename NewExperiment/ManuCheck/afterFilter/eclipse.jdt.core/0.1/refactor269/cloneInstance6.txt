@@ -1,0 +1,15 @@
+(startLine=337 endLine=349 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+			if(optionID.equals(OPTION_ReportHiddenCatchBlock)){
+				if (optionValue.equals(ERROR)) {
+					this.errorThreshold |= MaskedCatchBlock;
+					this.warningThreshold &= ~MaskedCatchBlock;
+				} else if (optionValue.equals(WARNING)) {
+					this.errorThreshold &= ~MaskedCatchBlock;
+					this.warningThreshold |= MaskedCatchBlock;
+				} else if (optionValue.equals(IGNORE)) {
+					this.errorThreshold &= ~MaskedCatchBlock;
+					this.warningThreshold &= ~MaskedCatchBlock;
+				}
+				continue;
+			} 
+

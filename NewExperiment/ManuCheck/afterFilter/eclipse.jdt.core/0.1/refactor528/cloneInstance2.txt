@@ -1,0 +1,33 @@
+(startLine=247 endLine=277 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01351/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodBinding.java)
+	if (isPrivate()) {
+		// answer true if the receiverType is the declaringClass
+		// AND the invocationType and the declaringClass have a common enclosingType
+		receiverCheck: {
+			if (receiverType != declaringClass) {
+				// special tolerance for type variable direct bounds
+				if (receiverType.isTypeVariable() && ((TypeVariableBinding) receiverType).isErasureBoundTo(declaringClass.erasure())) {
+					break receiverCheck;
+				}
+				return false;
+			}
+		}
+
+		if (invocationType != declaringClass) {
+			ReferenceBinding outerInvocationType = invocationType;
+			ReferenceBinding temp = outerInvocationType.enclosingType();
+			while (temp != null) {
+				outerInvocationType = temp;
+				temp = temp.enclosingType();
+			}
+
+			ReferenceBinding outerDeclaringClass = (ReferenceBinding)declaringClass.erasure();
+			temp = outerDeclaringClass.enclosingType();
+			while (temp != null) {
+				outerDeclaringClass = temp;
+				temp = temp.enclosingType();
+			}
+			if (outerInvocationType != outerDeclaringClass) return false;
+		}
+		return true;
+	}
+

@@ -1,0 +1,14 @@
+(startLine=563 endLine=574 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00465/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+	void updateSeverity(long irritant, String severityString) {
+		if (severityString.equals(ERROR)) {
+			this.errorThreshold |= irritant;
+			this.warningThreshold &= ~irritant;
+		} else if (severityString.equals(WARNING)) {
+			this.errorThreshold &= ~irritant;
+			this.warningThreshold |= irritant;
+		} else if (severityString.equals(IGNORE)) {
+			this.errorThreshold &= ~irritant;
+			this.warningThreshold &= ~irritant;
+		}
+	}				
+

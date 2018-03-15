@@ -1,0 +1,24 @@
+(startLine=301 endLine=322 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01686/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/JavaBuilder.java)
+private void createInconsistentBuildMarker(CoreException coreException) throws CoreException {
+	String message = null;
+	IStatus status = coreException.getStatus();
+ 	if (status.isMultiStatus()) {
+ 		IStatus[] children = status.getChildren();
+ 		if (children != null && children.length > 0)
+ 		    message = children[0].getMessage();
+ 	}
+ 	if (message == null)
+ 		message = coreException.getMessage();
+
+	IMarker marker = currentProject.createMarker(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+	marker.setAttributes(
+		new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IJavaModelMarker.CATEGORY_ID, IMarker.SOURCE_ID},
+		new Object[] {
+			Messages.bind(Messages.build_inconsistentProject, message),
+			new Integer(IMarker.SEVERITY_ERROR),
+			new Integer(CategorizedProblem.CAT_BUILDPATH),
+			JavaBuilder.SOURCE_ID
+		}
+	);
+}
+

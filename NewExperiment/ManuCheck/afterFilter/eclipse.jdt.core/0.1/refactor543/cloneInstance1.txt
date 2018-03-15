@@ -1,0 +1,28 @@
+(startLine=77 endLine=102 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01389/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/SyntheticMethodBinding.java)
+		do {
+			check : {
+				needRename = false;
+				// check for collision with known methods
+				MethodBinding[] methods = declaringSourceType.methods;
+				for (int i = 0, length = methods.length; i < length; i++) {
+					if (CharOperation.equals(this.selector, methods[i].selector) && this.areParametersEqual(methods[i])) {
+						needRename = true;
+						break check;
+					}
+				}
+				// check for collision with synthetic accessors
+				if (knownAccessMethods != null) {
+					for (int i = 0, length = knownAccessMethods.length; i < length; i++) {
+						if (knownAccessMethods[i] == null) continue;
+						if (CharOperation.equals(this.selector, knownAccessMethods[i].selector) && this.areParametersEqual(methods[i])) {
+							needRename = true;
+							break check;
+						}
+					}
+				}
+			}
+			if (needRename) { // retry with a selector postfixed by a growing methodId
+				this.setSelector(CharOperation.concat(TypeConstants.SYNTHETIC_ACCESS_METHOD_PREFIX, String.valueOf(++methodId).toCharArray()));
+			}
+		} while (needRename);
+

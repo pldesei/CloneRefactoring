@@ -1,0 +1,44 @@
+(startLine=132 endLine=173 srcPath=/home/sonia/NewExperiment/antFilter/01030/src/main/org/apache/tools/ant/types/optional/ScriptFilter.java)
+    private void init() throws BuildException {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
+        if (language == null) {
+            throw new BuildException(
+                "scriptfilter: language is not defined");
+        }
+
+        try {
+            addBeans(getProject().getProperties());
+            addBeans(getProject().getUserProperties());
+            addBeans(getProject().getTargets());
+            addBeans(getProject().getReferences());
+
+            beans.put("project", getProject());
+
+            beans.put("self", this);
+
+            manager = new BSFManager ();
+
+            for (Enumeration e = beans.keys(); e.hasMoreElements();) {
+                String key = (String) e.nextElement();
+                Object value = beans.get(key);
+                manager.declareBean(key, value, value.getClass());
+            }
+
+        } catch (BSFException e) {
+            Throwable t = e;
+            Throwable te = e.getTargetException();
+            if (te != null) {
+                if (te instanceof BuildException) {
+                    throw (BuildException) te;
+                } else {
+                    t = te;
+                }
+            }
+            throw new BuildException(t);
+        }
+
+    }
+

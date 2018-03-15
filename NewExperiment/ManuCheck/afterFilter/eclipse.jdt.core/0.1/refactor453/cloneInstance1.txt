@@ -1,0 +1,21 @@
+(startLine=835 endLine=853 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01075/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SelectionJavadocModelTests.java)
+	public void testBug90266_String() throws JavaModelException {
+		workingCopies = new ICompilationUnit[1];
+		workingCopies[0] = getWorkingCopy("/Tests/b90266/Test.java",
+			"package b90266;\n" + 
+			"public class Test {\n" + 
+			"	public int field;\n" + 
+			"	public void foo(String str, int i) {}\n" +
+			"	public void bar() {\n" + 
+			"		foo(\"String including / (slash)\", this.field)\n" + 
+			"	}\n" + 
+			"}\n"
+		);
+		int[] selectionPositions = selectionInfo(workingCopies[0], "field", 2);
+		IJavaElement[] elements = workingCopies[0].codeSelect(selectionPositions[0], 0);
+		assertElementsEqual("Invalid selection(s)",
+			"field {key=LTest;.field} [in Test [in [Working copy] Test.java [in <default> [in b90266 [in Tests]]]]]",
+			elements
+		);
+	}
+

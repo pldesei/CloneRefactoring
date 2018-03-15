@@ -1,0 +1,15 @@
+(startLine=682 endLine=694 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01389/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/SourceTypeBinding.java)
+	} else {
+		MethodBinding[] constructors = getMethods(TypeConstants.INIT); // takes care of duplicates & default abstract methods
+		nextConstructor : for (int c = constructors.length; --c >= 0;) {
+			MethodBinding constructor = constructors[c];
+			TypeBinding[] toMatch = constructor.parameters;
+			if (toMatch.length == argCount) {
+				for (int p = 0; p < argCount; p++)
+					if (toMatch[p] != argumentTypes[p])
+						continue nextConstructor;
+				return constructor;
+			}
+		}
+	}
+

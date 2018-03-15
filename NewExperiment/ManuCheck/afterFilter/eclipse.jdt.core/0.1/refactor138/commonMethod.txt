@@ -1,0 +1,6 @@
+(startLine=23 endLine=26 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00056/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/flow/FlowInfo.java)
+public static FlowInfo conditional(FlowInfo initsWhenTrue, FlowInfo initsWhenFalse){
+	// if (initsWhenTrue.equals(initsWhenFalse)) return initsWhenTrue; -- could optimize if #equals is defined
+	return new ConditionalFlowInfo(initsWhenTrue, initsWhenFalse);
+}
+

@@ -1,0 +1,17 @@
+(startLine=1392 endLine=1406 srcPath=/home/sonia/NewExperiment/antFilter/01268/src/main/org/apache/tools/ant/DirectoryScanner.java)
+    protected boolean isExcluded(String name) {
+        ensureNonPatternSetsReady();
+
+        if (isCaseSensitive()
+            ? excludeNonPatterns.contains(name)
+            : excludeNonPatterns.contains(name.toUpperCase())) {
+            return true;
+        }
+        for (int i = 0; i < excludePatterns.length; i++) {
+            if (excludePatterns[i].matchPath(name, isCaseSensitive())) {
+                return true;
+            }
+        }
+        return false;
+    }
+

@@ -1,0 +1,10 @@
+(startLine=274 endLine=281 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/MessageSend.java)
+	if (arguments != null) {
+		for (int i = 0; i < arguments.length; i++) {
+			arguments[i].implicitWidening(binding.parameters[i], argumentTypes[i]);
+		}
+		if (argumentsCast) {
+			CastExpression.checkNeedForArgumentCasts(scope, this.receiver, receiverType, binding, this.arguments, argumentTypes, this);
+		}
+	}
+

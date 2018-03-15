@@ -1,0 +1,16 @@
+(startLine=845 endLine=858 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveInnerClassAsParamater() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveInnerClassAsParamater.java");
+	
+	String str = cu.getSource();
+	String selectAt = "foo";
+	String selection = "foo";
+	int start = str.lastIndexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one method", elements.length == 1 && 
+		elements[0].getElementName().equals("foo") &&
+		elements[0] instanceof IMethod);
+}
+

@@ -1,0 +1,20 @@
+(startLine=211 endLine=228 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testAnnotation2() throws JavaModelException {
+		ASTNode node = buildAST(
+			"public class X {\n" +
+			"  /*start*/@MyAnnot/*end*/\n" +
+			"  int field;\n" +
+			"}\n" +
+			"@interface MyAnnot {\n" +
+			"}"
+		);
+		IBinding binding = ((Annotation) node).resolveAnnotationBinding();
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"@MyAnnot [in field [in X [in [Working copy] X.java [in <default> [in src [in P]]]]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

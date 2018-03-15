@@ -1,0 +1,13 @@
+(startLine=3197 endLine=3207 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void invokeThrowableGetMessage() {
+	// invokevirtual: java.lang.Throwable.getMessage()Ljava.lang.String;
+	if (DEBUG) System.out.println(position + "\t\tinvokevirtual: java.lang.Throwable.getMessage()Ljava.lang.String;"); //$NON-NLS-1$
+	countLabels = 0;
+	if (classFileOffset + 2 >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_invokevirtual;
+	writeUnsignedShort(constantPool.literalIndexForJavaLangThrowableGetMessage());
+}
+

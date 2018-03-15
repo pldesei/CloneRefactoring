@@ -1,0 +1,110 @@
+(startLine=1344 endLine=1451 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02247/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+public void generateOptimizedLogicalOr(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel, BranchLabel falseLabel, boolean valueRequired) {
+	Constant condConst;
+	if ((this.left.implicitConversion & TypeIds.COMPILE_TYPE_MASK) == TypeIds.T_boolean) {
+		if ((condConst = this.left.optimizedBooleanConstant()) != Constant.NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// <something equivalent to true> | x
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				BranchLabel internalFalseLabel = new BranchLabel(codeStream);
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					internalFalseLabel,
+					false);
+				internalFalseLabel.place();
+				if (valueRequired) {
+					if (trueLabel != null) {
+						codeStream.goto_(trueLabel);
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+			} else {
+				// <something equivalent to false> | x
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					valueRequired);
+			}
+			return;
+		}
+		if ((condConst = this.right.optimizedBooleanConstant()) != Constant.NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// x | <something equivalent to true>
+				BranchLabel internalFalseLabel = new BranchLabel(codeStream);
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					internalFalseLabel,
+					false);
+				internalFalseLabel.place();
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (valueRequired) {
+					if (trueLabel != null) {
+						codeStream.goto_(trueLabel);
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+			} else {
+				// x | <something equivalent to false>
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					valueRequired);
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+			}
+			return;
+		}
+	}
+	// default case
+	this.left.generateCode(currentScope, codeStream, valueRequired);
+	this.right.generateCode(currentScope, codeStream, valueRequired);
+	if (valueRequired) {
+		codeStream.ior();
+		if (falseLabel == null) {
+			if (trueLabel != null) {
+				// implicit falling through the FALSE case
+				codeStream.ifne(trueLabel);
+			}
+		} else {
+			// implicit falling through the TRUE case
+			if (trueLabel == null) {
+				codeStream.ifeq(falseLabel);
+			} else {
+				// no implicit fall through TRUE/FALSE --> should never occur
+			}
+		}
+	}
+	// reposition the endPC
+	codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+}
+

@@ -1,0 +1,16 @@
+(startLine=488 endLine=501 srcPath=/home/sonia/NewExperiment/antFilter/01196/src/main/org/apache/tools/ant/taskdefs/Delete.java)
+                } else {
+                    log("Deleting: " + file.getAbsolutePath());
+
+                    if (!delete(file)) {
+                        String message = "Unable to delete file "
+                            + file.getAbsolutePath();
+                        if (failonerror) {
+                            throw new BuildException(message);
+                        } else {
+                            log(message, quiet ? Project.MSG_VERBOSE
+                                               : Project.MSG_WARN);
+                        }
+                    }
+                }
+

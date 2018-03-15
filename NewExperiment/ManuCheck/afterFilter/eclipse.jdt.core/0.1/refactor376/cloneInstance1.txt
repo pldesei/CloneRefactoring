@@ -1,0 +1,23 @@
+(startLine=105 endLine=125 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00786/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Javadoc.java)
+		for (int i = 0; i < seeTagsLength; i++) {
+			
+			// Resolve reference
+			this.references[i].resolveType(classScope);
+
+			// Some unbound field reference might be changed to message send
+			// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=51911
+			if (this.references[i] instanceof JavadocFieldReference) {
+				JavadocFieldReference fieldRef = (JavadocFieldReference) this.references[i];
+				if (fieldRef.receiverType != null && fieldRef.binding == null) { // binding was reset in case of valid method reference
+					// TODO (frederic) post 3.0 - avoid new instanciation of Compiler AST node
+					JavadocMessageSend msgSend = new JavadocMessageSend(fieldRef.token, fieldRef.nameSourcePosition);
+					msgSend.receiver = fieldRef.receiver;
+					msgSend.receiverType = fieldRef.receiverType;
+					msgSend.qualifyingType = fieldRef.receiverType;
+					msgSend.superAccess = classScope.enclosingSourceType().isCompatibleWith(msgSend.receiverType);
+					msgSend.binding = classScope.findMethod((ReferenceBinding)msgSend.receiverType, msgSend.selector, new TypeBinding[0], msgSend);
+					this.references[i] = msgSend;
+				}
+			}
+		}
+

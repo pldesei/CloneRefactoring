@@ -1,0 +1,37 @@
+(startLine=4120 endLine=4154 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01959/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+					if(forAnonymousType){
+						int relevance = computeBaseRelevance();
+						relevance += computeRelevanceForResolution();
+						relevance += computeRelevanceForInterestingProposal();
+						relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
+
+						this.noProposal = false;
+						if(!this.requestor.isIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION)) {
+							InternalCompletionProposal proposal = createProposal(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, this.actualCompletionPosition);
+							proposal.setDeclarationSignature(getSignature(currentType));
+							proposal.setDeclarationKey(currentType.computeUniqueKey());
+							proposal.setSignature(getSignature(constructor));
+							MethodBinding original = constructor.original();
+							if(original != constructor) {
+								proposal.setOriginalSignature(getSignature(original));
+							}
+							proposal.setKey(constructor.computeUniqueKey());
+							proposal.setDeclarationPackageName(currentType.qualifiedPackageName());
+							proposal.setDeclarationTypeName(currentType.qualifiedSourceName());
+							proposal.setParameterPackageNames(parameterPackageNames);
+							proposal.setParameterTypeNames(parameterTypeNames);
+							//proposal.setPackageName(null);
+							//proposal.setTypeName(null);
+							proposal.setCompletion(completion);
+							proposal.setFlags(constructor.modifiers);
+							proposal.setReplaceRange(this.endPosition - this.offset, this.endPosition - this.offset);
+							proposal.setTokenRange(this.tokenEnd - this.offset, this.tokenEnd - this.offset);
+							proposal.setRelevance(relevance);
+							if(parameterNames != null) proposal.setParameterNames(parameterNames);
+							this.requestor.accept(proposal);
+							if(DEBUG) {
+								this.printDebug(proposal);
+							}
+						}
+					} else {
+

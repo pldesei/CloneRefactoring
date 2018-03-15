@@ -1,0 +1,15 @@
+(startLine=35 endLine=47 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01109/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelCompletionTests.java)
+protected CompletionResult complete(String path, String source, String completeBehind) throws JavaModelException {
+	this.wc = getWorkingCopy(path, source);
+
+	CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true);
+	String str = this.wc.getSource();
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	this.wc.codeComplete(cursorLocation, requestor, this.owner);
+	
+	CompletionResult result =  new CompletionResult();
+	result.proposals = requestor.getResults();
+	result.context = requestor.getContext();
+	return result;
+}
+

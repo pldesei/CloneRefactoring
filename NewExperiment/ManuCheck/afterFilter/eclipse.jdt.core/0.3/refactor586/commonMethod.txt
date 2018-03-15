@@ -1,0 +1,22 @@
+(startLine=2637 endLine=2656 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01414/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	protected boolean hasErasedCandidatesCollisions(TypeBinding one, TypeBinding two, Map invocations, ReferenceBinding type, ASTNode typeRef) {
+		invocations.clear();
+		TypeBinding[] mecs = minimalErasedCandidates(new TypeBinding[] {one, two}, invocations);
+		if (mecs != null) {
+			nextCandidate: for (int k = 0, max = mecs.length; k < max; k++) {
+				TypeBinding mec = mecs[k];
+				if (mec == null) continue nextCandidate;
+				Set invalidInvocations = (Set) invocations.get(mec);
+				int invalidSize = invalidInvocations.size();
+				if (invalidSize > 1) {
+					TypeBinding[] collisions;
+					invalidInvocations.toArray(collisions = new TypeBinding[invalidSize]);
+					problemReporter().superinterfacesCollide(collisions[0].erasure(), typeRef, collisions[0], collisions[1]);
+					type.tagBits |= TagBits.HierarchyHasProblems;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+

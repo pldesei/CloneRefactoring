@@ -1,0 +1,10 @@
+(startLine=87 endLine=94 srcPath=/home/sonia/NewExperiment/antFilter/01338/src/tests/junit/org/apache/tools/ant/taskdefs/ReplaceTest.java)
+    public void testPreserveLastModified() throws Exception {
+        executeTarget("lastModifiedSetup");
+        String tmpdir = project.getProperty("tmp.dir");
+        long ts1 = new File(tmpdir, "test.txt").lastModified();
+        Thread.sleep(3000);
+        executeTarget("testPreserve");
+        assertTrue(ts1 == new File(tmpdir, "test.txt").lastModified());
+    }
+

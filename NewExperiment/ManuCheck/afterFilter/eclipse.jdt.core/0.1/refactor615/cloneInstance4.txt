@@ -1,0 +1,14 @@
+(startLine=4213 endLine=4224 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug100772_ProjectScope_InterfacesAndClass03() throws CoreException {
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 3, workingCopies.length);
+	IType type = workingCopies[0].getType("Test");
+	IMethod method = type.getMethod("foo", new String[] { "QClass;" });
+	search(method, UI_DECLARATIONS);
+	this.discard = false;
+	assertSearchResults(
+		"src/b100772/Test.java void b100772.Test.foo(Class) [foo] EXACT_MATCH\n" + 
+		"src/b100772/X.java void b100772.X.foo(Class) [foo] EXACT_MATCH"
+	);
+}
+

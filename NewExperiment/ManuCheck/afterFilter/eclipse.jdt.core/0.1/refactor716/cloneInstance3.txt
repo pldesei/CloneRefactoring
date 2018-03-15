@@ -1,0 +1,13 @@
+(startLine=790 endLine=800 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01851/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AbstractRegressionTest.java)
+			} else {
+				System.out.println(getClass().getName() + '#' + getName());
+				System.out.println(Util.displayString(requestor.problemLog, INDENT, SHIFT));
+				for (int i = 0; i < testFiles.length; i += 2) {
+					System.out.print(testFiles[i]);
+					System.out.println(" ["); //$NON-NLS-1$
+					System.out.println(testFiles[i + 1]);
+					System.out.println("]"); //$NON-NLS-1$
+				}
+				assertTrue("Unexpected problems: " + requestor.problemLog, false);
+			}
+

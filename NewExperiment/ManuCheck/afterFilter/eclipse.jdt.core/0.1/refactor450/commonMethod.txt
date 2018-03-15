@@ -1,0 +1,26 @@
+(startLine=184 endLine=207 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01066/org.eclipse.jdt.core.tests.performance/src/org/eclipse/jdt/core/tests/performance/FullSourceWorkspaceTests.java)
+	protected void runGc() {
+		int iterations = 0;
+		long delta, free;
+		do {
+			free = Runtime.getRuntime().freeMemory();
+			System.gc();
+			delta = Runtime.getRuntime().freeMemory() - free;
+			if (DEBUG) System.out.println("Loop gc "+ ++iterations + " (free="+free+", delta="+delta+")");
+			try {
+				Thread.sleep(TIME_GC);
+			} catch (InterruptedException e) {
+				// do nothing
+			}
+		} while (iterations<MAX_GC && delta>DELTA_GC);
+		if (iterations == MAX_GC && delta > (DELTA_GC*10)) {
+			// perhaps gc was not well executed
+			System.err.println(this.scenarioShortName+": still get "+delta+" unfreeable memory (free="+free+",total="+Runtime.getRuntime().totalMemory()+") after "+MAX_GC+" gc...");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// do nothing
+			}
+		}
+	}
+

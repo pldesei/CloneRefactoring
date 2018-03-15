@@ -1,0 +1,27 @@
+ProjectPath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00943
+predFragLineRange:251-258
+predMethodLineRange:248-258
+nextLineRange:663-724
+predStrMethodInvoNames:
+[getType, getCompilationUnit, getMethod, search, getJavaSearchScopeBugs, assertSearchResults]
+%%%%%%%%%%
+AddedMethodInvo Line:670 InvoName:getWorkingCopy("/JavaSearchBugs/src/b77093/X.java","package b77093;\n" + "public class X {\n" + "	class Z {\n"+ "	}\n"+ "	Z[][] z_arrays;\n"+ "	X() {\n"+ "		this(new Z[10][]);\n"+ "	}\n"+ "	X(Z[][] arrays) {\n"+ "		z_arrays = arrays;\n"+ "	}\n"+ "	private void foo(Z[] args) {\n"+ "	}\n"+ "	void bar() {\n"+ "		for (int i=0; i<z_arrays.length; i++)\n"+ "			foo(z_arrays[i]);\n"+ "	}\n"+ "}")
+PackageName:org.eclipse.jdt.core.tests.model
+QualifiedClassName:org.eclipse.jdt.core.tests.model.JavaSearchBugsTests
+ClassName:JavaSearchBugsTests
+InvokedFilePath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00943/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java
+InvokedMethodSig:public org.eclipse.jdt.core.ICompilationUnit getWorkingCopy(java.lang.String, java.lang.String) throws 
+%%%%%%%%%%
+AddedMethodInvo Line:700 InvoName:workingCopy.discardWorkingCopy()
+PackageName:org.eclipse.jdt.core
+QualifiedClassName:org.eclipse.jdt.core.ICompilationUnit
+ClassName:ICompilationUnit
+InvokedFilePath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00943/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/ICompilationUnit.java
+InvokedMethodSig:public abstract void discardWorkingCopy() throws 
+%%%%%%%%%%
+AddedMethodInvo Line:706 InvoName:type.getField("z_arrays")
+PackageName:org.eclipse.jdt.core
+QualifiedClassName:org.eclipse.jdt.core.IType
+ClassName:IType
+InvokedFilePath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00943/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/IType.java
+InvokedMethodSig:public abstract org.eclipse.jdt.core.IField getField(java.lang.String) 

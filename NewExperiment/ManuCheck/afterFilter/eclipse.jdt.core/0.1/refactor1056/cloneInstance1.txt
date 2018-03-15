@@ -1,0 +1,11 @@
+(startLine=1146 endLine=1154 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02629/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+	} else {
+		this.handle(
+			IProblem.BytecodeExceeds64KLimit,
+			new String[] {new String(location.selector), typesAsString(method, false)},
+			new String[] {new String(location.selector), typesAsString(method, true)},
+			ProblemSeverities.Error | ProblemSeverities.Abort | ProblemSeverities.Fatal,
+			location.sourceStart,
+			location.sourceEnd);
+	}
+

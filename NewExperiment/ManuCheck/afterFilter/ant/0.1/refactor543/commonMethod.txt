@@ -1,0 +1,24 @@
+(startLine=279 endLine=300 srcPath=/home/sonia/NewExperiment/antFilter/00908/src/testcases/org/apache/tools/ant/BuildFileTest.java)
+    /**
+     *  run a target, wait for a build exception 
+     *
+     *@param  target target to run
+     *@param  cause  information string to reader of report
+     *@param  msg    the message value of the build exception we are waiting for
+              set to null for any build exception to be valid
+     */    
+    protected void expectSpecificBuildException(String target, String cause, String msg) { 
+        try {
+            executeTarget(target);
+        } catch (org.apache.tools.ant.BuildException ex) {
+            buildException = ex;
+            if ((null != msg) && (!ex.getMessage().equals(msg))) {
+                fail("Should throw BuildException because '" + cause
+                        + "' with message '" + msg
+                        + "' (actual message '" + ex.getMessage() + "' instead)");
+            }
+            return;
+        }
+        fail("Should throw BuildException because: " + cause);
+    }
+

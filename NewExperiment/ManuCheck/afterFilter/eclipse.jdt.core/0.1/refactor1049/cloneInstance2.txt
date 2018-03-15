@@ -1,0 +1,41 @@
+(startLine=1176 endLine=1214 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02600/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTConverter.java)
+							&& ((rightOperand.bits & org.eclipse.jdt.internal.compiler.ast.ASTNode.ParenthesizedMASK) == 0))) {
+				 	List extendedOperands = infixExpression.extendedOperands();
+				 	InfixExpression temp = new InfixExpression(this.ast);
+					if (this.resolveBindings) {
+						this.recordNodes(temp, expression);
+					}
+				 	temp.setOperator(getOperatorFor(expressionOperatorID));
+				 	Expression leftSide = convert(leftOperand);
+					temp.setLeftOperand(leftSide);
+					temp.setSourceRange(leftSide.getStartPosition(), leftSide.getLength());
+					int size = extendedOperands.size();
+				 	for (int i = 0; i < size - 1; i++) {
+				 		Expression expr = temp;
+				 		temp = new InfixExpression(this.ast);
+
+						if (this.resolveBindings) {
+							this.recordNodes(temp, expression);
+						}
+				 		temp.setLeftOperand(expr);
+					 	temp.setOperator(getOperatorFor(expressionOperatorID));
+						temp.setSourceRange(expr.getStartPosition(), expr.getLength());
+				 	}
+				 	infixExpression = temp;
+				 	for (int i = 0; i < size; i++) {
+				 		Expression extendedOperand = (Expression) extendedOperands.remove(size - 1 - i);
+				 		temp.setRightOperand(extendedOperand);
+				 		int startPosition = temp.getLeftOperand().getStartPosition();
+				 		temp.setSourceRange(startPosition, extendedOperand.getStartPosition() + extendedOperand.getLength() - startPosition);
+				 		if (temp.getLeftOperand().getNodeType() == ASTNode.INFIX_EXPRESSION) {
+				 			temp = (InfixExpression) temp.getLeftOperand();
+				 		}
+				 	}
+					int startPosition = infixExpression.getLeftOperand().getStartPosition();
+					infixExpression.setSourceRange(startPosition, expression.sourceEnd - startPosition + 1);
+					if (this.resolveBindings) {
+						this.recordNodes(infixExpression, expression);
+					}
+					return infixExpression;
+				}
+

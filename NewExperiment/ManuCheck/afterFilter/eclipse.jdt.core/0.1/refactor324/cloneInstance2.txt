@@ -1,0 +1,11 @@
+(startLine=555 endLine=563 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00667/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
+					if (qualifier != null) {
+						text = new String(source, start, qualifier.getLength());
+						assertEquals(this.prefix+"Misplaced or wrong member ref qualifier at "+start, text, qualifier.toString());
+						verifyNamePositions(start, qualifier, source);
+						start += qualifier.getLength();
+						while (source[start] == '*' || Character.isWhitespace(source[start])) {
+							start++; // purge non-stored characters
+						}
+					}
+

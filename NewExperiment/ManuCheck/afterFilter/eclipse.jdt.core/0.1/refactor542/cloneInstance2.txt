@@ -1,0 +1,60 @@
+(startLine=416 endLine=473 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01389/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/ParameterizedTypeBinding.java)
+	public MethodBinding getExactMethod(char[] selector, TypeBinding[] argumentTypes, CompilationUnitScope refScope) {
+		// sender from refScope calls recordTypeReference(this)
+		int argCount = argumentTypes.length;
+		int selectorLength = selector.length;
+		boolean foundNothing = true;
+		MethodBinding match = null;
+
+		if ((tagBits & TagBits.AreMethodsComplete) != 0) { // have resolved all arg types & return type of the methods
+			nextMethod : for (int m = methods.length; --m >= 0;) {
+				MethodBinding method = methods[m];
+				if (method.selector.length == selectorLength && CharOperation.equals(method.selector, selector)) {
+					foundNothing = false; // inner type lookups must know that a method with this name exists
+					if (method.parameters.length == argCount) {
+						TypeBinding[] toMatch = method.parameters;
+						for (int p = 0; p < argCount; p++)
+							if (toMatch[p] != argumentTypes[p])
+								continue nextMethod;
+						if (match != null) return null; // collision case
+						match = method;
+					}
+				}
+			}
+		} else {
+			MethodBinding[] matchingMethods = getMethods(selector); // takes care of duplicates & default abstract methods
+			foundNothing = matchingMethods == Binding.NO_METHODS;
+			nextMethod : for (int m = matchingMethods.length; --m >= 0;) {
+				MethodBinding method = matchingMethods[m];
+				TypeBinding[] toMatch = method.parameters;
+				if (toMatch.length == argCount) {
+					for (int p = 0; p < argCount; p++)
+						if (toMatch[p] != argumentTypes[p])
+							continue nextMethod;
+						if (match != null) return null; // collision case
+						match = method;
+				}
+			}
+		}
+		if (match != null) {
+			// cannot be picked up as an exact match if its a possible anonymous case
+			if (match.hasSubstitutedParameters() && this.arguments != null && this.arguments.length > 1) return null;
+			return match;
+		}
+	
+		if (foundNothing && (this.arguments == null || this.arguments.length <= 1)) {
+			if (isInterface()) {
+				 if (superInterfaces().length == 1) {
+					if (refScope != null)
+						refScope.recordTypeReference(superInterfaces[0]);
+					return superInterfaces[0].getExactMethod(selector, argumentTypes, refScope);
+				 }
+			} else if (superclass() != null) {
+				if (refScope != null)
+					refScope.recordTypeReference(superclass);
+				return superclass.getExactMethod(selector, argumentTypes, refScope);
+			}
+		}
+		return null;
+	}
+

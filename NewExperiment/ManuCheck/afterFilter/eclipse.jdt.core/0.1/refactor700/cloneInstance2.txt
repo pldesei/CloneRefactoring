@@ -1,0 +1,15 @@
+(startLine=1452 endLine=1464 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01681/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests.java)
+public void testCompletionAfterCase2() throws JavaModelException {
+	CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+		ICompilationUnit cu= getCompilationUnit("Completion", "src", "", "CompletionAfterCase2.java");
+
+		String str = cu.getSource();
+		String completeBehind = "zz";
+		int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+		cu.codeComplete(cursorLocation, requestor);
+
+		assertEquals(
+			"element:zzz    completion:zzz    relevance:"+(R_DEFAULT + R_RESOLVED + R_INTERESTING + R_CASE + R_UNQUALIFIED+ R_NON_RESTRICTED),
+			requestor.getResults());
+}
+

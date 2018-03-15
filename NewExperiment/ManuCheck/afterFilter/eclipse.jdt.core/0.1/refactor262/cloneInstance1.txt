@@ -1,0 +1,34 @@
+(startLine=323 endLine=354 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00438/org.eclipse.jdt.core.tests.model/workspace/Converter/junit/awtui/TestRunner.java)
+	public void rerun() {
+		int index= fFailureList.getSelectedIndex();
+		if (index == -1)
+			return;
+	
+		Test test= (Test)fFailedTests.elementAt(index);
+		if (!(test instanceof TestCase)) {
+			showInfo("Could not reload "+ test.toString());
+			return;
+		}
+		Test reloadedTest= null;
+		try {
+			Class reloadedTestClass= getLoader().reload(test.getClass());
+			Class[] classArgs= { String.class };
+			Constructor constructor= reloadedTestClass.getConstructor(classArgs);
+			Object[] args= new Object[]{((TestCase)test).getName()};
+			reloadedTest=(Test)constructor.newInstance(args);
+		} catch(Exception e) {
+			showInfo("Could not reload "+ test.toString());
+			return;
+		}
+		TestResult result= new TestResult();
+		reloadedTest.run(result);
+		
+		String message= reloadedTest.toString();
+		if(result.wasSuccessful())
+			showInfo(message+" was successful");
+		else if (result.errorCount() == 1)
+			showStatus(message+" had an error");
+		else
+			showStatus(message+" had a failure");
+	}
+

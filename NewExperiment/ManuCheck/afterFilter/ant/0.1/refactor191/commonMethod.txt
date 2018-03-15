@@ -1,0 +1,18 @@
+(startLine=367 endLine=382 srcPath=/home/sonia/NewExperiment/antFilter/00166/src/main/org/apache/tools/ant/AntClassLoader.java)
+    /**
+     * Logs a message through the project object if one has been provided.
+     *
+     * @param message The message to log.
+     *                Should not be <code>null</code>.
+     *
+     * @param priority The logging priority of the message.
+     */
+    protected void log(String message, int priority) {
+        if (project != null) {
+            project.log(message, priority);
+        }
+        //         else {
+        //             System.out.println(message);
+        //         }
+    }
+

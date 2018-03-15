@@ -1,0 +1,19 @@
+(startLine=141 endLine=157 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00349/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/TypeDeclaration.java)
+			if (fields != null) {
+				for (int i = 0, count = fields.length; i < count; i++) {
+					FieldDeclaration field = fields[i];
+					/*if (field.isField() && !this.binding.isAnonymousType()){
+						initializerContext.handledExceptions = NoExceptions; // no exception is allowed jls8.3.2, except for anonymous
+					} else {*/
+					initializerContext.handledExceptions = defaultHandledExceptions; // tolerate them all, and record them
+					/*}*/
+					fieldInfo = field.analyseCode(initializerScope, initializerContext, fieldInfo);
+					if (fieldInfo == FlowInfo.DEAD_END) {
+						// in case the initializer is not reachable, use a reinitialized flowInfo and enter a fake reachable
+						// branch, since the previous initializer already got the blame.
+						initializerScope.problemReporter().initializerMustCompleteNormally(field);
+						fieldInfo = FlowInfo.initial(maxFieldCount).setReachMode(FlowInfo.UNREACHABLE);
+					}
+				}
+			}
+

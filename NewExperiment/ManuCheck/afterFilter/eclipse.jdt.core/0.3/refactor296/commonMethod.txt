@@ -1,0 +1,21 @@
+(startLine=39 endLine=57 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00589/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/ClassFileReaderTest.java)
+	private void checkClassFile(String className, String source, String expectedOutput) {
+		compileAndDeploy(source, className);
+		try {
+			File f = new File(EVAL_DIRECTORY + File.separator + className + ".class");
+			byte[] classFileBytes = org.eclipse.jdt.internal.compiler.util.Util.getFileByteContent(f);
+			ClassFileBytesDisassembler disassembler = ToolFactory.createDefaultClassFileBytesDisassembler();
+			String result = disassembler.disassemble(classFileBytes, "\n", ClassFileBytesDisassembler.DETAILED);
+			if (!result.equals(expectedOutput)) {
+				System.out.println(Util.displayString(result, 3));
+			}
+			assertEquals("Wrong contents", expectedOutput, result);
+		} catch (org.eclipse.jdt.core.util.ClassFormatException e) {
+			assertTrue(false);
+		} catch (IOException e) {
+			assertTrue(false);
+		} finally {
+			removeTempClass(className);
+		}
+	}
+

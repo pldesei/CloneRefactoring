@@ -1,0 +1,24 @@
+(startLine=1132 endLine=1153 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00602/org.eclipse.jdt.core/search/org/eclipse/jdt/core/search/SearchPattern.java)
+	/**
+	 * Returns whether the given name matches the given pattern.
+	 */
+	public boolean matchesName(char[] pattern, char[] name) {
+		if (pattern == null) return true; // null is as if it was "*"
+		if (name != null) {
+			switch (matchMode()) {
+				case R_EXACT_MATCH :
+					return CharOperation.equals(pattern, name, isCaseSensitive());
+				case R_PREFIX_MATCH :
+					return CharOperation.prefixEquals(pattern, name, isCaseSensitive());
+				case R_PATTERN_MATCH :
+					if (!isCaseSensitive())
+						pattern = CharOperation.toLowerCase(pattern);
+					return CharOperation.match(pattern, name, isCaseSensitive());
+				case R_REGEXP_MATCH :
+					// TODO (jerome) implement regular expression match
+					return true;
+			}
+		}
+		return false;
+	}
+

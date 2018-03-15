@@ -1,0 +1,19 @@
+(startLine=2634 endLine=2650 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _putstatic(int pc, int index, IConstantPoolEntry constantFieldref) {
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.PUTSTATIC])
+			.append(Util.bind("disassembler.constantpoolindex")) //$NON-NLS-1$
+			.append(index)
+			.append(Util.bind("classformat.putstatic")) //$NON-NLS-1$
+			.append(returnDeclaringClassName(constantFieldref))
+			.append(Util.bind("disassembler.classmemberseparator")) //$NON-NLS-1$
+			.append(constantFieldref.getFieldName())
+			.append(Util.bind("disassembler.space")) //$NON-NLS-1$
+			.append(returnFieldrefDescriptor(constantFieldref))
+			.append(Util.bind("classformat.putstaticclose")); //$NON-NLS-1$
+		writeNewLine();
+	}
+

@@ -1,0 +1,14 @@
+(startLine=617 endLine=628 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00104/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/DeltaProcessor.java)
+				for (int i = 0, length = children.length; i < length; i++) {
+					IResourceDelta child = children[i];
+					IResource resource = child.getResource();
+					if (resource instanceof IFolder) {
+						String subpkgName = 
+							name.length() == 0 ? 
+								resource.getName() : 
+								name + "." + resource.getName(); //$NON-NLS-1$
+						Openable subpkg = (Openable)root.getPackageFragment(subpkgName);
+						this.updateCurrentDeltaAndIndex(subpkg, child);
+					}
+				}
+

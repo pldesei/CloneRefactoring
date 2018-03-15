@@ -1,0 +1,21 @@
+(startLine=135 endLine=153 srcPath=/home/sonia/NewExperiment/antFilter/01051/src/main/org/apache/tools/ant/taskdefs/optional/ccm/CCMCheck.java)
+    public void execute() throws BuildException {
+        Commandline commandLine = new Commandline();
+        Project aProj = getProject();
+        int result = 0;
+
+        // build the command line from what we got the format is
+        // ccm co /t .. files
+        // as specified in the CLEARTOOL.EXE help
+        commandLine.setExecutable(getCcmCommand());
+        commandLine.createArgument().setValue(getCcmAction());
+        
+        checkOptions(commandLine);
+
+        result = run(commandLine);
+        if ( result != 0 ) {
+            String msg = "Failed executing: " + commandLine.toString();
+            throw new BuildException(msg, location);
+        }
+    }
+

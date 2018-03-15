@@ -1,0 +1,15 @@
+(startLine=118 endLine=130 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01280/org.eclipse.jdt.apt.core/src/org/eclipse/jdt/apt/core/AptPlugin.java)
+	/**
+	 * Convenience wrapper around log(IStatus), to log an exception
+	 * with severity of ERROR.
+	 */
+	public static void log(Throwable e, String message) {
+		// TODO: before ship, remove this printing. Instead just log
+		System.err.println(message);
+		if (e != null) {
+			e.printStackTrace();
+		}
+		
+		log(new Status(IStatus.ERROR, PLUGIN_ID, STATUS_EXCEPTION, message, e)); 
+	}
+

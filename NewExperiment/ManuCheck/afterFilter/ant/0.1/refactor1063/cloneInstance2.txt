@@ -1,0 +1,20 @@
+(startLine=402 endLine=419 srcPath=/home/sonia/NewExperiment/antFilter/01335/src/main/org/apache/tools/ant/taskdefs/optional/ReplaceRegExp.java)
+                    } else if (c == '\n') {
+                        // LF -> EOL
+                        line = linebuf.toString();
+                        res  = doReplace(regex, subs, line, options);
+
+                        if (!res.equals(line)) {
+                            changes = true;
+                        }
+
+                        bw.write(res);
+                        if (hasCR) {
+                            bw.write('\r');
+                            hasCR = false;
+                        }
+                        bw.write('\n');
+
+                        linebuf = new StringBuffer();
+                    } else { // any other char
+

@@ -1,0 +1,17 @@
+(startLine=217 endLine=231 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01004/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/FieldLocator.java)
+				} else {
+					switch (matchField(otherBinding, false)) {
+						case ACCURATE_MATCH:
+							accuracies[i] = SearchMatch.A_ACCURATE;
+							break;
+						case INACCURATE_MATCH:
+							if (otherBinding.type.isParameterizedType() && this.pattern.hasTypeArguments())
+								accuracies[i] = refineAccuracy(SearchMatch.A_INACCURATE, (ParameterizedTypeBinding) otherBinding.type, this.pattern.getTypeArguments(), locator);
+							else
+								accuracies[i] = SearchMatch.A_INACCURATE;
+								break;
+						default:
+							accuracies[i] = -1;
+					}
+				}
+

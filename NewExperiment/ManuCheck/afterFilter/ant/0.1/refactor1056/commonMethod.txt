@@ -1,0 +1,12 @@
+(startLine=290 endLine=299 srcPath=/home/sonia/NewExperiment/antFilter/01310/src/main/org/apache/tools/ant/types/Path.java)
+    /**
+     * Creates a nested <code>&lt;path&gt;</code> element.
+     * @return a <code>Path</code> to be configured
+     * @throws BuildException on error
+     */
+    public Path createPath() throws BuildException {
+        Path p = new Path(getProject());
+        add(p);
+        return p;
+    }
+

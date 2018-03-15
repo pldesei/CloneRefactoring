@@ -1,0 +1,9 @@
+(startLine=184 endLine=190 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01960/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/CompilationUnitDeclaration.java)
+public void createPackageInfoType() {
+	TypeDeclaration declaration = new TypeDeclaration(this.compilationResult);
+	declaration.name = TypeConstants.PACKAGE_INFO_NAME;
+	declaration.modifiers = ClassFileConstants.AccDefault | ClassFileConstants.AccInterface;
+	declaration.javadoc = this.javadoc;
+	this.types[0] = declaration; // Assumes the first slot is meant for this type
+}
+

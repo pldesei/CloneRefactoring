@@ -1,0 +1,24 @@
+(startLine=866 endLine=887 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01108/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests_1_5.java)
+public void test0055() throws JavaModelException {
+	this.oldOptions = JavaCore.getOptions();
+	try {
+		Hashtable options = new Hashtable(this.oldOptions);
+		options.put(JavaCore.CODEASSIST_VISIBILITY_CHECK, JavaCore.ENABLED);
+		JavaCore.setOptions(options);
+		
+		CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2();
+		ICompilationUnit cu= getCompilationUnit("Completion", "src3", "test0055", "Test.java");
+	
+		String str = cu.getSource();
+		String completeBehind = "Inner";
+		int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+		cu.codeComplete(cursorLocation, requestor);
+	
+		assertResults(
+				"QQType1.Inner2[TYPE_REF]{Inner2, pkgstaticimport, Lpkgstaticimport.QQType1$Inner2;, null, " + (R_DEFAULT + R_INTERESTING + R_CASE + R_NON_RESTRICTED) + "}",
+				requestor.getResults());
+	} finally {
+		JavaCore.setOptions(oldOptions);
+	}
+}
+

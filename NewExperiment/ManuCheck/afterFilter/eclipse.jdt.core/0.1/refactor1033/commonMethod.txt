@@ -1,0 +1,16 @@
+(startLine=331 endLine=344 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02450/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/Statement.java)
+/**
+ * For all constructor invocations: find the constructor binding; 
+ * if polyExpressionSeen allow for two attempts where the first round may stop
+ * after applicability checking (18.5.1) to include more information into the final
+ * invocation type inference (18.5.2).
+ */
+protected MethodBinding findConstructorBinding(BlockScope scope, Invocation site, ReferenceBinding receiverType, TypeBinding[] argumentTypes, boolean polyExpressionSeen) {
+	MethodBinding ctorBinding = scope.getConstructor(receiverType, argumentTypes, site);
+	if (polyExpressionSeen) {
+		if (resolvePolyExpressionArguments(site, scope, ctorBinding, argumentTypes))
+			return scope.getConstructor(receiverType, argumentTypes, site);
+	}
+	return ctorBinding;
+}
+

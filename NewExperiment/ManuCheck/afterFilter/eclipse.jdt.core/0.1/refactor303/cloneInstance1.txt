@@ -1,0 +1,38 @@
+(startLine=61 endLine=96 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00601/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/QualifiedTypeDeclarationPattern.java)
+protected boolean matchIndexEntry() {
+	switch(this.classOrInterface) {
+		case CLASS_SUFFIX :
+		case INTERFACE_SUFFIX :
+			if (this.classOrInterface != decodedClassOrInterface) return false;
+		case TYPE_SUFFIX : // nothing
+	}
+
+	if (this.qualification != null) {
+		switch(this.matchMode) {
+			case EXACT_MATCH :
+				if (!CharOperation.equals(this.qualification, this.decodedQualification, this.isCaseSensitive))
+					return false;
+				break;
+			case PREFIX_MATCH :
+				if (!CharOperation.prefixEquals(this.qualification, this.decodedQualification, this.isCaseSensitive))
+					return false;
+				break;
+			case PATTERN_MATCH :
+				if (!CharOperation.match(this.qualification, this.decodedQualification, this.isCaseSensitive))
+					return false;
+		}
+	}
+
+	if (this.simpleName != null) {
+		switch(this.matchMode) {
+			case EXACT_MATCH :
+				return CharOperation.equals(this.simpleName, this.decodedSimpleName, this.isCaseSensitive);
+			case PREFIX_MATCH :
+				return CharOperation.prefixEquals(this.simpleName, this.decodedSimpleName, this.isCaseSensitive);
+			case PATTERN_MATCH :
+				return CharOperation.match(this.simpleName, this.decodedSimpleName, this.isCaseSensitive);
+		}
+	}
+	return true;
+}
+

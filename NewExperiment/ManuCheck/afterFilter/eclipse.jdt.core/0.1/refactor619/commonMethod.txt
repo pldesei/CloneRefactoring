@@ -1,0 +1,17 @@
+(startLine=2892 endLine=2906 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 92944: [1.5][search] SearchEngine#searchAllTypeNames doesn't honor enum or annotation element kind
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=92944"
+ */
+private void setUpBug92944() throws CoreException {
+	resultCollector.showRule = true;
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b92944/Test.java",
+		"package b92944;\n" + 
+		"interface B92944_I {}\n" + 
+		"enum B92944_E {}\n" + 
+		"@interface B92944_A {}\n" + 
+		"public class B92944 {}\n"
+	);
+}
+

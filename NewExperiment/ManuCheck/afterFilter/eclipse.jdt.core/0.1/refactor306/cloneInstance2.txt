@@ -1,0 +1,66 @@
+(startLine=2051 endLine=2114 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00631/org.eclipse.jdt.core/model/org/eclipse/jdt/core/JavaCore.java)
+	public static Hashtable getOptions() {
+		
+		Hashtable options = new Hashtable(10);
+
+		// see #initializeDefaultPluginPreferences() for changing default settings
+		Plugin plugin = getPlugin();
+		if (plugin != null) {
+			Preferences preferences = getPlugin().getPluginPreferences();
+			HashSet optionNames = JavaModelManager.OptionNames;
+			
+			// get preferences set to their default
+			String[] defaultPropertyNames = preferences.defaultPropertyNames();
+			for (int i = 0; i < defaultPropertyNames.length; i++){
+				String propertyName = defaultPropertyNames[i];
+				if (optionNames.contains(propertyName)){
+					options.put(propertyName, preferences.getDefaultString(propertyName));
+				}
+			}		
+			// get preferences not set to their default
+			String[] propertyNames = preferences.propertyNames();
+			for (int i = 0; i < propertyNames.length; i++){
+				String propertyName = propertyNames[i];
+				String value = preferences.getString(propertyName).trim();
+				if (optionNames.contains(propertyName)){
+					options.put(propertyName, value);
+				}
+				// bug 45112 backward compatibility.
+				// TODO (frederic) remove after 3.0 M6
+				else if (CompilerOptions.OPTION_ReportInvalidAnnotation.equals(propertyName)) {
+					options.put(COMPILER_PB_INVALID_JAVADOC, value);
+				}
+				else if (CompilerOptions.OPTION_ReportMissingAnnotation.equals(propertyName)) {
+					if (ENABLED.equals(value)) {
+						value = preferences.getString(CompilerOptions.OPTION_ReportInvalidAnnotation);
+					} else {
+						value = IGNORE;
+					}
+					options.put(COMPILER_PB_MISSING_JAVADOC_COMMENTS, value);
+				}
+				// end bug 45112
+				// bug 46854 backward compatibility
+				// TODO (frederic) remove after 3.0 M7
+				else if (CompilerOptions.OPTION_ReportMissingJavadoc.equals(propertyName)) {
+					if (ENABLED.equals(value)) {
+						value = preferences.getString(COMPILER_PB_INVALID_JAVADOC);
+					} else {
+						value = IGNORE;
+					}
+					options.put(COMPILER_PB_MISSING_JAVADOC_COMMENTS, value);
+				}
+				// end bug 46854
+				// TODO (olivier) Remove after M7
+				else if (propertyName.startsWith(JavaCore.PLUGIN_ID + ".formatter")) {//$NON-NLS-1$
+					convertFormatterOptions(propertyName, value, options);
+				}
+			}
+			// get encoding through resource plugin
+			options.put(CORE_ENCODING, ResourcesPlugin.getEncoding());
+			// backward compatibility
+			options.put(COMPILER_PB_INVALID_IMPORT, ERROR);
+			options.put(COMPILER_PB_UNREACHABLE_CODE, ERROR);
+		}
+		return options;
+	}
+

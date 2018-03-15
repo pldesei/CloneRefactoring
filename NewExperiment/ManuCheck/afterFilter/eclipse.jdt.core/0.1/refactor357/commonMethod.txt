@@ -1,0 +1,27 @@
+(startLine=139 endLine=163 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/ASTNode.java)
+	public static void checkInvocationArguments(BlockScope scope, Expression receiver, TypeBinding receiverType, MethodBinding method, Expression[] arguments, TypeBinding[] argumentTypes, boolean argsContainCast, InvocationSite invocationSite) {
+		boolean warnRawArgs = false, wildcardInvocation = false;
+		for (int i = 0; i < arguments.length; i++) {
+		    TypeBinding parameterType = method.parameters[i];
+		    TypeBinding argumentType = argumentTypes[i];
+			arguments[i].computeConversion(scope, parameterType, argumentType);
+			if (parameterType.isWildcard() && argumentType != NullBinding) {
+			    wildcardInvocation = true;
+			} else if (argumentType != parameterType 
+			        && argumentType.isRawType() 
+			        && (parameterType.isParameterizedType() || parameterType.isGenericType())) {
+			    warnRawArgs = true;
+			}
+		}
+		if (argsContainCast) {
+			CastExpression.checkNeedForArgumentCasts(scope, receiver, receiverType, method, arguments, argumentTypes, invocationSite);
+		}
+		if (wildcardInvocation) {
+		    scope.problemReporter().unsafeWildcardInvocation((ASTNode)invocationSite, receiverType, method, argumentTypes);
+		} else if (receiverType.isRawType() && method.hasSubstitutedParameters()) {
+		    scope.problemReporter().unsafeRawInvocation((ASTNode)invocationSite, receiverType, method);
+		} else if (warnRawArgs) {
+		    scope.problemReporter().unsafeInvocationWithRawArguments((ASTNode)invocationSite, receiverType, method, argumentTypes);
+		}
+	}
+

@@ -1,0 +1,15 @@
+(startLine=529 endLine=541 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedNameReference.java)
+	protected FieldBinding getCodegenBinding(FieldBinding fieldBinding, int index) {
+	    if (index < 0) { // write-access ?
+			if (fieldBinding == binding){
+				return (FieldBinding)this.codegenBinding;
+			} else {
+				return this.otherCodegenBindings[this.otherBindings.length-1];
+			}
+	    } else if (index == 0){
+			return (FieldBinding)this.codegenBinding;
+		} else {
+			return this.otherCodegenBindings[index-1];
+		}
+	}
+

@@ -1,0 +1,10 @@
+(startLine=121 endLine=128 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00942/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+	public void testConstructorDeclarationBug77093() throws CoreException {
+		IType type = getCompilationUnit("JavaSearchBugs/src/b77093/X.java").getType("X");
+		IMethod method = type.getMethod("X", new String[] {"[[QZ;"});
+		search(method, DECLARATIONS, getJavaSearchScopeBugs(), resultCollector);
+		assertSearchResults(
+			"src/b77093/X.java b77093.X(Z[][]) [X] EXACT_MATCH",
+			resultCollector);
+	}
+

@@ -1,0 +1,16 @@
+(startLine=493 endLine=506 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00557/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+public void testConstructorReferenceImplicitConstructorCall1() throws JavaModelException, CoreException {
+	IType type = getCompilationUnit("JavaSearch", "src", "c7", "X.java").getType("X");
+	IMethod method = type.getMethod("X", new String[] {});
+	JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
+	new SearchEngine().search(
+		getWorkspace(), 
+		method, 
+		REFERENCES, 
+		getJavaSearchScope(), 
+		resultCollector);
+	assertEquals(
+		"src/c7/Y.java c7.Y() [Y]", 
+		resultCollector.toString());
+}
+

@@ -1,0 +1,14 @@
+(startLine=2561 endLine=2572 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _newarray(int pc, int atype) {
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.NEWARRAY])
+			.append(Util.bind("disassembler.constantpoolindex")) //$NON-NLS-1$
+			.append(atype)
+			.append(Util.bind("disassembler.space")); //$NON-NLS-1$
+		appendGetArrayType(atype);
+		writeNewLine();
+	}
+

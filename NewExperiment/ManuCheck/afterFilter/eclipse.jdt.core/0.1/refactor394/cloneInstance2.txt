@@ -1,0 +1,23 @@
+(startLine=3121 endLine=3141 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void invokeStringConcatenationStringConstructor() {
+	if (DEBUG) {
+		if (this.targetLevel >= JDK1_5) {
+			System.out.println(position + "\t\tjava.lang.StringBuilder.<init>(Ljava.lang.String;)V"); //$NON-NLS-1$
+		} else {
+			System.out.println(position + "\t\tjava.lang.StringBuffer.<init>(Ljava.lang.String;)V"); //$NON-NLS-1$
+		}
+	}
+	countLabels = 0;
+	if (classFileOffset + 2 >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position++;
+	bCodeStream[classFileOffset++] = OPC_invokespecial;
+	if (this.targetLevel >= JDK1_5) {
+		writeUnsignedShort(constantPool.literalIndexForJavaLangStringBuilderConstructor());
+	} else {
+		writeUnsignedShort(constantPool.literalIndexForJavaLangStringBufferConstructor());
+	}
+	stackDepth -= 2;
+}
+

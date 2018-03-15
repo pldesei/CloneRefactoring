@@ -1,0 +1,17 @@
+(startLine=8417 endLine=8431 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02269/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void nullityMismatchSpecdNullable(Expression expression, TypeBinding requiredType, char[][] annotationName) {
+	int problemId = IProblem.RequiredNonNullButProvidedSpecdNullable;
+	char[][] nullableName = this.options.nullableAnnotationName;
+	String[] arguments = new String[] {
+			String.valueOf(CharOperation.concatWith(annotationName, '.')),
+			String.valueOf(requiredType.readableName()),
+			String.valueOf(CharOperation.concatWith(nullableName, '.'))
+	};
+	String[] argumentsShort = new String[] {
+			String.valueOf(annotationName[annotationName.length-1]),
+			String.valueOf(requiredType.shortReadableName()),
+			String.valueOf(nullableName[nullableName.length-1])
+	};
+	this.handle(problemId, arguments, argumentsShort, expression.sourceStart, expression.sourceEnd);
+}
+

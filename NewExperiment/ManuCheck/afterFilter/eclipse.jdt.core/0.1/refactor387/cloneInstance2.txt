@@ -1,0 +1,22 @@
+(startLine=1508 endLine=1527 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00825/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+			)) {
+				
+				int relevance = computeBaseRelevance();
+				relevance += computeRelevanceForInterestingProposal();
+				relevance += computeRelevanceForCaseMatching(token,lengthField);
+				relevance += computeRelevanceForExpectingType(BaseTypes.IntBinding);
+				
+				this.noProposal = false;
+				this.requestor.acceptField(
+					CharOperation.NO_CHAR,
+					CharOperation.NO_CHAR,
+					lengthField,
+					CharOperation.NO_CHAR,
+					CharOperation.NO_CHAR,
+					lengthField,
+					IConstants.AccPublic,
+					this.startPosition - this.offset,
+					this.endPosition - this.offset,
+					relevance);
+			}
+

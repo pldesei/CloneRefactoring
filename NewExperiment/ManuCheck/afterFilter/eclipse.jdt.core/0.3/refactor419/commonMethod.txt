@@ -1,0 +1,13 @@
+(startLine=97 endLine=107 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00943/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+	public ICompilationUnit getWorkingCopy(String fileName, String source) throws JavaModelException {
+		IPath folder = new Path(fileName).removeLastSegments(1);
+		try {
+			createFolder(folder);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		ICompilationUnit workingCopy = super.getWorkingCopy(fileName, source, true/*compute problems*/);
+		workingCopy.commitWorkingCopy(true, null);	// need to commit to index file
+		return workingCopy;
+	}
+

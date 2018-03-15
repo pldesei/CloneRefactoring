@@ -1,0 +1,8 @@
+(startLine=4105 endLine=4110 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00826/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	protected CompletionProposal createProposal(int kind, int compteionOffset) {
+		CompletionProposal proposal = CompletionProposal.create(kind, compteionOffset);
+		proposal.nameLookup = ((SearchableEnvironment)this.nameEnvironment).nameLookup;
+		proposal.completionEngine = this;
+		return proposal;
+	}
+

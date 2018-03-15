@@ -1,0 +1,13 @@
+(startLine=127 endLine=137 srcPath=/home/sonia/NewExperiment/antFilter/00109/src/main/org/apache/tools/ant/util/FileUtils.java)
+    /**
+     * Get the URL for a file taking into account # characters.
+     *
+     * @param file the file whose URL representation is required.
+     * @return The FileURL value.
+     * @throws MalformedURLException if the URL representation cannot be
+     *      formed.
+     */
+    public URL getFileURL(File file) throws MalformedURLException {
+        return new URL(toURI(file.getAbsolutePath()));
+    }
+

@@ -1,0 +1,13 @@
+(startLine=8218 endLine=8228 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02254/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Parser.java)
+	if ((length = this.expressionLengthStack[this.expressionLengthPtr--]) != 0) {
+		type.annotations = new Annotation[type.getAnnotatableLevels()][];
+		System.arraycopy(
+				this.expressionStack,
+				(this.expressionPtr -= length) + 1,
+				type.annotations[0] = new Annotation[length],
+				0,
+				length);
+		type.sourceStart = type.annotations[0][0].sourceStart;
+		type.bits |= ASTNode.HasTypeAnnotations;
+	}
+

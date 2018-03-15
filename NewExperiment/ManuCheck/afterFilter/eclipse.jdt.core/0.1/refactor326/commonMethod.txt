@@ -1,0 +1,25 @@
+(startLine=408 endLine=430 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00670/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterJavadocTest.java)
+	private char getNextChar(char[] source, int idx) {
+			// get next char
+			char ch = source[idx];
+			int charLength = 1;
+			int pos = idx;
+			this.chars = null;
+			if (ch == '\\' && source[idx+1] == 'u') {
+				//-------------unicode traitement ------------
+				int c1, c2, c3, c4;
+				charLength++;
+				while (source[idx+charLength] == 'u') charLength++;
+				if (((c1 = Character.getNumericValue(source[idx+charLength++])) > 15
+					|| c1 < 0)
+					|| ((c2 = Character.getNumericValue(source[idx+charLength++])) > 15 || c2 < 0)
+					|| ((c3 = Character.getNumericValue(source[idx+charLength++])) > 15 || c3 < 0)
+					|| ((c4 = Character.getNumericValue(source[idx+charLength++])) > 15 || c4 < 0)) {
+					return ch;
+				}
+				ch = (char) (((c1 * 16 + c2) * 16 + c3) * 16 + c4);
+				this.chars = new String(source, pos, charLength);
+			}
+			return ch;
+	}
+

@@ -1,0 +1,22 @@
+(startLine=4809 endLine=4828 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug110060_AllTypeNames11() throws CoreException {
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 5, workingCopies.length);
+	TypeNameRequestor requestor =  new SearchTests.SearchTypeNameRequestor();
+	new SearchEngine(this.workingCopies).searchAllTypeNames(
+		null,
+		"aa".toCharArray(),
+		SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH | SearchPattern.R_CASE_SENSITIVE,
+		TYPE,
+		getJavaSearchScopeBugs(),
+		requestor,
+		IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
+		null
+	);
+	this.discard = false;
+	assertSearchResults(
+		"Unexpected all type names",
+		"",
+		requestor);
+}
+

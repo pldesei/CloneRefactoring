@@ -1,0 +1,15 @@
+(startLine=153 endLine=165 srcPath=/home/sonia/NewExperiment/antFilter/00059/src/main/org/apache/tools/ant/taskdefs/ExecuteOn.java)
+                for (int i=0; i<s.length; i++) {
+                    cmd[cmdl.size()] = s[i];
+                    exe.setCommandline(cmd);
+                    err = exe.execute();
+                    if (err != 0) {
+                        if (failOnError) {
+                            throw new BuildException("Exec returned: "+err, 
+                                                     location);
+                        } else {
+                            log("Result: " + err, Project.MSG_ERR);
+                        }
+                    }
+                }
+

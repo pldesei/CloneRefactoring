@@ -1,0 +1,53 @@
+(startLine=3749 endLine=3799 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01030/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		if (this.unitScope != null) {
+			int typeLength = token.length;
+			SourceTypeBinding[] types = this.unitScope.topLevelTypes;
+
+			for (int i = 0, length = types.length; i < length; i++) {
+				SourceTypeBinding sourceType = types[i]; 
+				
+				if (sourceType.sourceName == CompletionParser.FAKE_TYPE_NAME) continue;
+				if (sourceType.sourceName == TypeConstants.PACKAGE_INFO_NAME) continue;
+
+				if (typeLength > sourceType.sourceName.length)	continue;
+				
+				if (!CharOperation.prefixEquals(token, sourceType.sourceName, false))	continue;
+				
+				this.knownTypes.put(CharOperation.concat(sourceType.qualifiedPackageName(), sourceType.sourceName(), '.'), this);
+
+				if(isForbidden(sourceType)) continue;
+					
+				int relevance = computeBaseRelevance();
+				relevance += computeRelevanceForInterestingProposal();
+				relevance += computeRelevanceForCaseMatching(token, sourceType.sourceName);
+				relevance += computeRelevanceForExpectingType(sourceType);
+				relevance += computeRelevanceForQualification(false);
+				relevance += computeRelevanceForRestrictions(false); // no access restriction for type in the current unit
+
+				if (sourceType.isAnnotationType()) {
+					relevance += computeRelevanceForAnnotation();
+				} else if (sourceType.isInterface()) {
+					relevance += computeRelevanceForInterface();
+				} else {
+					relevance += computeRelevanceForClass();
+					relevance += computeRelevanceForException(sourceType.sourceName);
+				}
+				this.noProposal = false;
+				if(!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+					CompletionProposal proposal = this.createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
+					proposal.setDeclarationSignature(sourceType.qualifiedPackageName());
+					proposal.setSignature(getSignature(sourceType));
+					proposal.setPackageName(sourceType.qualifiedPackageName());
+					proposal.setTypeName(sourceType.sourceName());
+					proposal.setCompletion(sourceType.sourceName());
+					proposal.setFlags(sourceType.modifiers);
+					proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+					proposal.setRelevance(relevance);
+					this.requestor.accept(proposal);
+					if(DEBUG) {
+						this.printDebug(proposal);
+					}
+				}
+			}
+		}
+

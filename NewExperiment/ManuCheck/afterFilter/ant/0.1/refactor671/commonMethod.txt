@@ -1,0 +1,25 @@
+(startLine=171 endLine=193 srcPath=/home/sonia/NewExperiment/antFilter/01031/src/main/org/apache/tools/ant/util/ScriptRunner.java)
+    /**
+     * Load the script from an external file ; optional.
+     *
+     * @param file the file containing the script source.
+     */
+    public void setSrc(File file) {
+        if (!file.exists()) {
+            throw new BuildException("file " + file.getPath() + " not found.");
+        }
+
+        int count = (int) file.length();
+        byte[] data = new byte[count];
+
+        try {
+            FileInputStream inStream = new FileInputStream(file);
+            inStream.read(data);
+            inStream.close();
+        } catch (IOException e) {
+            throw new BuildException(e);
+        }
+
+        script += new String(data);
+    }
+

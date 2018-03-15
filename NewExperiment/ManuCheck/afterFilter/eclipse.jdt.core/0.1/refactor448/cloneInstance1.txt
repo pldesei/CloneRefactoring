@@ -1,0 +1,11 @@
+(startLine=2879 endLine=2887 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01045/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTConverter.java)
+					case AST.JLS2_INTERNAL : {
+							char[][] name = ((org.eclipse.jdt.internal.compiler.ast.QualifiedTypeReference) typeReference).getTypeName();
+							int nameLength = name.length;
+							sourceStart = (int)(positions[0]>>>32);
+							length = (int)(positions[nameLength - 1] & 0xFFFFFFFF) - sourceStart + 1;
+							Name qualifiedName = this.setQualifiedNameNameAndSourceRanges(name, positions, typeReference);
+							type = this.ast.newSimpleType(qualifiedName);
+							type.setSourceRange(sourceStart, length);
+						}
+

@@ -1,0 +1,57 @@
+(startLine=769 endLine=823 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00045/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+private void findMethods(
+	char[] selector,
+	TypeBinding[] argTypes,
+	ReferenceBinding receiverType,
+	Scope scope,
+	ObjectVector methodsFound,
+	boolean onlyStaticMethods,
+	boolean exactMatch) {
+
+	if (selector == null) return;
+
+	ReferenceBinding currentType = receiverType;
+	if (currentType.isInterface()) {
+		findMethods(selector, argTypes, currentType.methods(), scope, methodsFound, onlyStaticMethods, exactMatch);
+
+		ReferenceBinding[] itsInterfaces = currentType.superInterfaces();
+		if (itsInterfaces != NoSuperInterfaces) {
+			ReferenceBinding[][] interfacesToVisit = new ReferenceBinding[5][];
+			int lastPosition = 0;
+			interfacesToVisit[lastPosition] = itsInterfaces;
+			
+			for (int i = 0; i <= lastPosition; i++) {
+				ReferenceBinding[] interfaces = interfacesToVisit[i];
+				for (int j = 0, length = interfaces.length; j < length; j++) {
+					currentType = interfaces[j];
+					if ((currentType.tagBits & TagBits.InterfaceVisited) == 0) { // if interface as not already been visited
+						currentType.tagBits |= TagBits.InterfaceVisited;
+
+						findMethods(selector, argTypes, currentType.methods(), scope, methodsFound, onlyStaticMethods, exactMatch);
+
+						itsInterfaces = currentType.superInterfaces();
+						if (itsInterfaces != NoSuperInterfaces) {
+							if (++lastPosition == interfacesToVisit.length)
+								System.arraycopy(interfacesToVisit, 0, interfacesToVisit = new ReferenceBinding[lastPosition * 2][], 0, lastPosition);
+							interfacesToVisit[lastPosition] = itsInterfaces;
+						}
+					}
+				}
+			}
+
+			// bit reinitialization
+			for (int i = 0; i <= lastPosition; i++) {
+				ReferenceBinding[] interfaces = interfacesToVisit[i];
+				for (int j = 0, length = interfaces.length; j < length; j++)
+					interfaces[j].tagBits &= ~TagBits.InterfaceVisited;
+			}
+		}
+		currentType = scope.getJavaLangObject();
+	}
+
+	while (currentType != null) {
+		findMethods(selector, argTypes, currentType.methods(), scope, methodsFound, onlyStaticMethods, exactMatch);
+		currentType = currentType.superclass();
+	}
+}
+

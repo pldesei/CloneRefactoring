@@ -1,0 +1,81 @@
+(startLine=664 endLine=742 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00039/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		Scope invocationScope) {
+
+		if (fieldName == null)
+			return;
+
+		ReferenceBinding currentType = receiverType;
+		ReferenceBinding[][] interfacesToVisit = null;
+		int lastPosition = -1;
+		do {
+			ReferenceBinding[] itsInterfaces = currentType.superInterfaces();
+			if (itsInterfaces != NoSuperInterfaces) {
+				if (interfacesToVisit == null)
+					interfacesToVisit = new ReferenceBinding[5][];
+				if (++lastPosition == interfacesToVisit.length)
+					System.arraycopy(
+						interfacesToVisit,
+						0,
+						interfacesToVisit = new ReferenceBinding[lastPosition * 2][],
+						0,
+						lastPosition);
+				interfacesToVisit[lastPosition] = itsInterfaces;
+			}
+
+			findFields(
+				fieldName,
+				currentType.fields(),
+				scope,
+				fieldsFound,
+				localsFound,
+				onlyStaticFields,
+				receiverType,
+				invocationSite,
+				invocationScope);
+			currentType = currentType.superclass();
+		} while (currentType != null);
+
+		if (interfacesToVisit != null) {
+			for (int i = 0; i <= lastPosition; i++) {
+				ReferenceBinding[] interfaces = interfacesToVisit[i];
+				for (int j = 0, length = interfaces.length; j < length; j++) {
+					ReferenceBinding anInterface = interfaces[j];
+					if ((anInterface.tagBits & TagBits.InterfaceVisited) == 0) {
+						// if interface as not already been visited
+						anInterface.tagBits |= TagBits.InterfaceVisited;
+
+						findFields(
+							fieldName,
+							anInterface.fields(),
+							scope,
+							fieldsFound,
+							localsFound,
+							onlyStaticFields,
+							receiverType,
+							invocationSite,
+							invocationScope);
+
+						ReferenceBinding[] itsInterfaces = anInterface.superInterfaces();
+						if (itsInterfaces != NoSuperInterfaces) {
+							if (++lastPosition == interfacesToVisit.length)
+								System.arraycopy(
+									interfacesToVisit,
+									0,
+									interfacesToVisit = new ReferenceBinding[lastPosition * 2][],
+									0,
+									lastPosition);
+							interfacesToVisit[lastPosition] = itsInterfaces;
+						}
+					}
+				}
+			}
+
+			// bit reinitialization
+			for (int i = 0; i <= lastPosition; i++) {
+				ReferenceBinding[] interfaces = interfacesToVisit[i];
+				for (int j = 0, length = interfaces.length; j < length; j++)
+					interfaces[j].tagBits &= ~TagBits.InterfaceVisited;
+			}
+		}
+	}
+

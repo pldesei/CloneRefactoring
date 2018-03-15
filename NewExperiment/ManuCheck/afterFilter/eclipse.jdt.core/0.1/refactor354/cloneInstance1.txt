@@ -1,0 +1,16 @@
+(startLine=614 endLine=627 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00757/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/QualifiedNameReference.java)
+		if (fieldBinding.isPrivate()) { // private access
+			if (fieldBinding.declaringClass != currentScope.enclosingSourceType()) {
+				if (syntheticReadAccessors == null) {
+					if (otherBindings == null)
+						syntheticReadAccessors = new SyntheticAccessMethodBinding[1];
+					else
+						syntheticReadAccessors =
+							new SyntheticAccessMethodBinding[otherBindings.length + 1];
+				}
+				syntheticReadAccessors[index] = ((SourceTypeBinding) fieldBinding.declaringClass).addSyntheticMethod(fieldBinding, true);
+				currentScope.problemReporter().needToEmulateFieldReadAccess(fieldBinding, this);
+				return;
+			}
+		} else if (fieldBinding.isProtected()){
+

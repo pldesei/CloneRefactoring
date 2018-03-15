@@ -1,0 +1,16 @@
+(startLine=286 endLine=299 srcPath=/home/sonia/NewExperiment/antFilter/00350/src/main/org/apache/tools/ant/types/Commandline.java)
+    public static String toString(String [] line) {
+        // empty path return empty string
+        if (line == null || line.length == 0) return "";
+
+        // path containing one or more elements
+        final StringBuffer result = new StringBuffer();
+        for (int i=0; i < line.length; i++) {
+            if (i > 0) {
+                result.append(' ');
+            }
+            result.append(quoteArgument(line[i]));
+        }
+        return result.toString();
+    }
+

@@ -1,0 +1,10 @@
+(startLine=543 endLine=550 srcPath=/home/sonia/NewExperiment/antFilter/00087/src/main/org/apache/tools/ant/taskdefs/Delete.java)
+            } else if (isDanglingSymlink(file)) {
+                log("Trying to delete file " + file.getAbsolutePath()
+                    + " which looks like a broken symlink.",
+                    quiet ? Project.MSG_VERBOSE : verbosity);
+                if (!delete(file)) {
+                    handle("Unable to delete file " + file.getAbsolutePath());
+                }
+            } else {
+

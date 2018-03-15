@@ -1,0 +1,18 @@
+(startLine=1922 endLine=1937 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01931/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTModelBridgeTests.java)
+	public void testParameterizedBinaryType() throws CoreException {
+		ASTNode node = buildAST(
+			"public class X {\n" +
+			"  /*start*/Comparable<String>/*end*/ field;\n" +
+			"}"
+		);
+		IBinding binding = ((Type) node).resolveBinding();
+		assertNotNull("No binding", binding);
+		IJavaElement element = binding.getJavaElement();
+		assertElementEquals(
+			"Unexpected Java element",
+			"Comparable [in Comparable.class [in java.lang [in "+ getExternalJCLPathString("1.5") + "]]]",
+			element
+		);
+		assertTrue("Element should exist", element.exists());
+	}
+

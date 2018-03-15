@@ -1,0 +1,18 @@
+(startLine=781 endLine=796 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02026/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+	private final void consumeDigits(int radix, boolean expectingDigitFirst) throws InvalidInputException {
+		final int USING_UNDERSCORE = 1;
+		final int INVALID_POSITION = 2;
+		switch(consumeDigits0(radix, USING_UNDERSCORE, INVALID_POSITION, expectingDigitFirst)) {
+			case USING_UNDERSCORE :
+				if (this.sourceLevel < ClassFileConstants.JDK1_7) {
+					throw new InvalidInputException(INVALID_USAGE_OF_UNDERSCORE);
+				}
+				break;
+			case INVALID_POSITION :
+				if (this.sourceLevel < ClassFileConstants.JDK1_7) {
+					throw new InvalidInputException(INVALID_USAGE_OF_UNDERSCORE);
+				}
+				throw new InvalidInputException(INVALID_UNDERSCORE);
+		}
+	}
+

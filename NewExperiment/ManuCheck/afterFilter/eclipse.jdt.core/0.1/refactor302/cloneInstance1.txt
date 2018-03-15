@@ -1,0 +1,16 @@
+(startLine=933 endLine=946 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00601/org.eclipse.jdt.core/search/org/eclipse/jdt/core/search/SearchEngine.java)
+	if (resource instanceof IFile) {
+		if (VERBOSE) {
+			System.out.println("Searching for " + pattern + " in " + resource.getFullPath()); //$NON-NLS-1$//$NON-NLS-2$
+		}
+		MatchLocator locator = new MatchLocator(
+			pattern,
+			resultCollector,
+			scope,
+			resultCollector.getProgressMonitor());
+		locator.locateMatches(
+			new String[] {resource.getFullPath().toString()}, 
+			workspace,
+			this.getWorkingCopies(enclosingElement));
+	} else {
+

@@ -1,0 +1,17 @@
+(startLine=442 endLine=456 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02023/org.eclipse.jdt.core.tests.builder/src/org/eclipse/jdt/core/tests/builder/TestingEnvironment.java)
+	/**
+	 * Safely delete the given resource.
+	 */
+	void deleteResource(IResource resource) {
+		int retryCount = 0; // wait 1 minute at most
+		IStatus status = null;
+		while (++retryCount <= 6) {
+			status = Util.delete(resource);
+			if (status.isOK()) {
+				return;
+			}
+			System.gc();
+		}
+		handleCoreException(new CoreException(status));
+	}
+

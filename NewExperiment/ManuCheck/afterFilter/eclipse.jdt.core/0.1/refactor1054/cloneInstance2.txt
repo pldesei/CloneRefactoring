@@ -1,0 +1,28 @@
+(startLine=256 endLine=281 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02617/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/linewrap/WrapPreparator.java)
+	public boolean visit(EnumDeclaration node) {
+		List<EnumConstantDeclaration> enumConstants = node.enumConstants();
+		if (!enumConstants.isEmpty()) {
+			for (EnumConstantDeclaration constant : enumConstants)
+				this.wrapIndexes.add(this.tm.firstIndexIn(constant, -1));
+			this.wrapParentIndex = this.tm.firstIndexBefore(enumConstants.get(0), TokenNameLBRACE);
+			this.wrapGroupEnd = this.tm.lastIndexIn(enumConstants.get(enumConstants.size() - 1), -1);
+			handleWrap(this.options.alignment_for_enum_constants, node);
+		}
+
+		List<Type> superInterfaceTypes = node.superInterfaceTypes();
+		if (!superInterfaceTypes.isEmpty()) {
+			this.wrapIndexes.add(this.tm.firstIndexBefore(superInterfaceTypes.get(0), TokenNameimplements));
+			for (Type type : superInterfaceTypes)
+				this.wrapIndexes.add(this.tm.firstIndexIn(type, -1));
+			this.wrapParentIndex = this.tm.lastIndexIn(node.getName(), -1);
+			this.wrapGroupEnd = this.tm.lastIndexIn(superInterfaceTypes.get(superInterfaceTypes.size() - 1), -1);
+			this.wrapPenalties.add(PREFERRED);
+			handleWrap(this.options.alignment_for_superinterfaces_in_enum_declaration, node);
+		}
+
+		if (this.options.align_type_members_on_columns)
+			this.fieldAligner.prepareAlign(node.bodyDeclarations());
+
+		return true;
+	}
+

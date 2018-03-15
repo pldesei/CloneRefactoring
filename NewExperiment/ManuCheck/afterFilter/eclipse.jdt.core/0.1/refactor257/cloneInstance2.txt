@@ -1,0 +1,23 @@
+(startLine=2174 endLine=2194 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _ldc(int pc, int index, IConstantPoolEntry constantPoolEntry) {
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.LDC])
+			.append(Util.bind("disassembler.constantpoolindex")) //$NON-NLS-1$
+			.append(index)
+			.append(Util.bind("disassembler.space")); //$NON-NLS-1$
+		switch (constantPoolEntry.getKind()) {
+			case IConstantPoolConstant.CONSTANT_Float :
+				appendOutputforConstantFloat(constantPoolEntry);
+				break;
+			case IConstantPoolConstant.CONSTANT_Integer :
+				appendOutputforConstantInteger(constantPoolEntry);
+				break;
+			case IConstantPoolConstant.CONSTANT_String :
+				appendOutputForConstantString(constantPoolEntry);
+		}
+		writeNewLine();
+	}
+

@@ -1,0 +1,15 @@
+(startLine=110 endLine=122 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00209/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/JavaBuilder.java)
+	} catch (CoreException e) {
+		if (DEBUG){
+			System.out.println("Builder handling CoreException"); //$NON-NLS-1$
+			 e.printStackTrace();
+		}
+		try {
+			IMarker marker = currentProject.createMarker(ProblemMarkerTag);
+			marker.setAttribute(IMarker.MESSAGE, Util.bind("build.inconsistentProject")); //$NON-NLS-1$
+			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+		} catch (CoreException ignore) {
+			throw e;
+		}
+	} catch (ImageBuilderInternalException e) {
+

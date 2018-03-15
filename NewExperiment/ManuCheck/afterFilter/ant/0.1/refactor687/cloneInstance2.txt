@@ -1,0 +1,22 @@
+(startLine=140 endLine=159 srcPath=/home/sonia/NewExperiment/antFilter/01035/src/main/org/apache/tools/ant/types/RegularExpression.java)
+    {
+        if (!checked)
+        {
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, p);
+        }
+
+        
+        Object o = ref.getReferencedObject(p);
+        if (!(o instanceof RegularExpression))
+        {
+            String msg = ref.getRefId() + " doesn\'t denote a regularexpression";
+            throw new BuildException(msg);
+        } 
+        else 
+        {
+            return (RegularExpression) o;
+        }
+    }
+

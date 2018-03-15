@@ -1,0 +1,13 @@
+(startLine=1486 endLine=1496 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTMatcherTest.java)
+	public void testTypeAnnotations3() {		
+		if (this.ast.apiLevel() < AST.JLS8) {
+			return;
+		}
+		// type arguments in constructor invocation
+		ConstructorInvocation x1 = this.ast.newConstructorInvocation();
+		SimpleType x2 = this.ast.newSimpleType(this.N1);
+		x2.annotations().add(this.ANO1);
+		x1.typeArguments().add(x2);
+		basicMatch(x1);
+	}
+

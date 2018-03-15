@@ -1,0 +1,22 @@
+(startLine=213 endLine=232 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02636/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeVariableBinding.java)
+		if (this.superclass.id != TypeIds.T_JavaLangObject) {
+			TypeBinding substitutedSuperType = hasSubstitution ? Scope.substitute(substitution, this.superclass) : this.superclass;
+	    	if (TypeBinding.notEquals(substitutedSuperType, argumentType)) {
+				if (!argumentType.isCompatibleWith(substitutedSuperType, scope)) {
+				    return BoundCheckStatus.MISMATCH;
+				}
+				TypeBinding match = argumentType.findSuperTypeOriginatingFrom(substitutedSuperType);
+				if (match != null){
+					// Enum#RAW is not a substitute for <E extends Enum<E>> (86838)
+					if (match.isRawType() && substitutedSuperType.isBoundParameterizedType())
+						unchecked = true;
+				}
+	    	}
+			if (location != null && checkNullAnnotations) {
+				if (NullAnnotationMatching.analyse(this, argumentType, substitutedSuperType, substitution, -1, null, CheckMode.BOUND_CHECK).isAnyMismatch()) {
+					scope.problemReporter().nullityMismatchTypeArgument(this, argumentType, location);
+					haveReportedNullProblem = true;
+				}
+			}
+		}
+

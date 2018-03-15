@@ -1,0 +1,17 @@
+(startLine=64 endLine=78 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00840/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CharArrayCache.java)
+/** Gets the object associated with the specified key in the
+ * hashtable.
+ * @param key <CODE>char[]</CODE> the specified key
+ * @return int the element for the key or -1 if the key is not
+ *	defined in the hash table.
+ */
+public int get(char[] key) {
+	int index = hashCodeChar(key);
+	while (keyTable[index] != null) {
+		if (CharOperation.equals(keyTable[index], key))
+			return valueTable[index];
+		index = (index + 1) % keyTable.length;
+	}
+	return -1;
+}
+

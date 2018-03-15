@@ -1,0 +1,9 @@
+(startLine=58 endLine=64 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00418/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/SubRoutineStatement.java)
+	public static void reenterExceptionHandlers(SubRoutineStatement[] subroutines, int max, CodeStream codeStream) {
+		if (subroutines == null) return;
+		if (max < 0) max = subroutines.length;
+		for (int i = 0; i < max; i++) {
+			subroutines[i].enterAnyExceptionHandler(codeStream); 
+		}	
+	}
+

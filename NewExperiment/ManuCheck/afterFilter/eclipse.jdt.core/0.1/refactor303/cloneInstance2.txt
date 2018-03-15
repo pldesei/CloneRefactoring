@@ -1,0 +1,37 @@
+(startLine=199 endLine=233 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00601/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/TypeDeclarationPattern.java)
+protected boolean matchIndexEntry() {
+	switch(this.classOrInterface) {
+		case CLASS_SUFFIX :
+		case INTERFACE_SUFFIX :
+			if (this.classOrInterface != this.decodedClassOrInterface) return false;
+		case TYPE_SUFFIX : // nothing
+	}
+
+	/* check qualification - exact match only */
+	if (this.pkg != null && !CharOperation.equals(this.pkg, this.decodedPackage, this.isCaseSensitive))
+		return false;
+	/* check enclosingTypeName - exact match only */
+	if (this.enclosingTypeNames != null) {
+		// empty char[][] means no enclosing type (in which case, the decoded one is the empty char array)
+		if (this.enclosingTypeNames.length == 0) {
+			if (this.decodedEnclosingTypeNames != CharOperation.NO_CHAR_CHAR) return false;
+		} else {
+			if (!CharOperation.equals(this.enclosingTypeNames, this.decodedEnclosingTypeNames, this.isCaseSensitive))
+				if (!CharOperation.equals(this.decodedEnclosingTypeNames, ONE_ZERO_CHAR)) // if not a local or anonymous type
+					return false;
+		}
+	}
+
+	if (this.simpleName != null) {
+		switch(this.matchMode) {
+			case EXACT_MATCH :
+				return CharOperation.equals(this.simpleName, this.decodedSimpleName, this.isCaseSensitive);
+			case PREFIX_MATCH :
+				return CharOperation.prefixEquals(this.simpleName, this.decodedSimpleName, this.isCaseSensitive);
+			case PATTERN_MATCH :
+				return CharOperation.match(this.simpleName, this.decodedSimpleName, this.isCaseSensitive);
+		}
+	}
+	return true;
+}
+

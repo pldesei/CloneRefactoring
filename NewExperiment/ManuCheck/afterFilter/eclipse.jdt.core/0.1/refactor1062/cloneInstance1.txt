@@ -1,0 +1,10 @@
+(startLine=178 endLine=185 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/builder/NameEnvironment.java)
+					} else if (resource instanceof IContainer) {
+						AccessRuleSet accessRuleSet =
+							(JavaCore.IGNORE.equals(javaProject.getOption(JavaCore.COMPILER_PB_FORBIDDEN_REFERENCE, true))
+							&& JavaCore.IGNORE.equals(javaProject.getOption(JavaCore.COMPILER_PB_DISCOURAGED_REFERENCE, true)))
+								? null
+								: entry.getAccessRuleSet();
+						bLocation = ClasspathLocation.forBinaryFolder((IContainer) target, false, accessRuleSet, externalAnnotationPath);	 // is library folder not output folder
+					}
+

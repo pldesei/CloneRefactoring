@@ -1,0 +1,12 @@
+(startLine=357 endLine=366 srcPath=/home/sonia/NewExperiment/antFilter/01192/src/main/org/apache/tools/ant/AntClassLoader.java)
+            if (useSystemFirst) {
+                try {
+                    theClass = findBaseClass(classname);
+                    project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
+                }
+                catch (ClassNotFoundException cnfe) {
+                    theClass = findClass(classname);
+                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
+                }
+            }
+

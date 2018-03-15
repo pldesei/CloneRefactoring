@@ -1,0 +1,17 @@
+(startLine=672 endLine=686 srcPath=/home/sonia/NewExperiment/antFilter/01196/src/main/org/apache/tools/ant/taskdefs/Delete.java)
+                if (dirFiles == null || dirFiles.length == 0) {
+                    log("Deleting " + currDir.getAbsolutePath(), verbosity);
+                    if (!delete(currDir)) {
+                        String message = "Unable to delete directory "
+                                + currDir.getAbsolutePath();
+                        if (failonerror) {
+                            throw new BuildException(message);
+                        } else {
+                            log(message,
+                                quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
+                        }
+                    } else {
+                        dirCount++;
+                    }
+                }
+

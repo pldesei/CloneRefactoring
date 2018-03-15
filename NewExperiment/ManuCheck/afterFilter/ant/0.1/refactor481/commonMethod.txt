@@ -1,0 +1,12 @@
+(startLine=121 endLine=130 srcPath=/home/sonia/NewExperiment/antFilter/00385/src/main/org/apache/tools/ant/taskdefs/optional/vss/MSVSS.java)
+    /**
+     * @return the appropriate login command if the 'login' attribute was specified, otherwise an empty string
+     */
+    public void getLoginCommand(Commandline cmd) {
+        if ( m_vssLogin == null ) {
+            return;
+        } else {
+            cmd.createArgument().setValue(FLAG_LOGIN + m_vssLogin);
+        }
+    }
+

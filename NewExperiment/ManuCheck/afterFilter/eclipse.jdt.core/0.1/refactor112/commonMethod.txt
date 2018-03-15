@@ -1,0 +1,25 @@
+(startLine=2465 endLine=2487 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00042/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+	/**
+	 * INTERNAL USE-ONLY
+	 * That method generates the header of a code attribute.
+	 * - the index inside the constant pool for the attribute name (i.e. Code)
+	 * - leave some space for attribute_length(4), max_stack(2), max_locals(2), code_length(4).
+	 */
+	public void generateCodeAttributeHeader() {
+		int contentsLength;
+		if (contentsOffset + 20 >= (contentsLength = contents.length)) {
+			System.arraycopy(
+				contents,
+				0,
+				(contents = new byte[contentsLength + INCREMENT_SIZE]),
+				0,
+				contentsLength);
+		}
+		int constantValueNameIndex =
+			constantPool.literalIndex(AttributeNamesConstants.CodeName);
+		contents[contentsOffset++] = (byte) (constantValueNameIndex >> 8);
+		contents[contentsOffset++] = (byte) constantValueNameIndex;
+		// leave space for attribute_length(4), max_stack(2), max_locals(2), code_length(4)
+		contentsOffset += 12;
+	}
+

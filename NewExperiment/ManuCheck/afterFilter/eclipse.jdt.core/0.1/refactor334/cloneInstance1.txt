@@ -1,0 +1,27 @@
+(startLine=1385 endLine=1409 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00748/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+			if (!codeStream.methodDeclaration.isStatic()) {
+				numberOfEntries++;
+				if (localContentsOffset + 10 >= (contentsLength = localContents.length)) {
+					System.arraycopy(
+						contents,
+						0,
+						(localContents = contents = new byte[contentsLength + INCREMENT_SIZE]),
+						0,
+						contentsLength);
+				}
+				localContents[localContentsOffset++] = 0; // the startPC for this is always 0
+				localContents[localContentsOffset++] = 0;
+				localContents[localContentsOffset++] = (byte) (code_length >> 8);
+				localContents[localContentsOffset++] = (byte) code_length;
+				nameIndex = constantPool.literalIndex(QualifiedNamesConstants.This);
+				localContents[localContentsOffset++] = (byte) (nameIndex >> 8);
+				localContents[localContentsOffset++] = (byte) nameIndex;
+				descriptorIndex =
+					constantPool.literalIndex(
+						codeStream.methodDeclaration.binding.declaringClass.signature());
+				localContents[localContentsOffset++] = (byte) (descriptorIndex >> 8);
+				localContents[localContentsOffset++] = (byte) descriptorIndex;
+				localContents[localContentsOffset++] = 0;// the resolved position for this is always 0
+				localContents[localContentsOffset++] = 0;
+			}
+

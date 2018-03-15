@@ -1,0 +1,18 @@
+(startLine=344 endLine=359 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02372/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/TryStatement.java)
+private MethodBinding findCloseMethod(final LocalDeclaration resource, LocalVariableBinding resourceBinding) {
+	MethodBinding closeMethod = null;
+	TypeBinding type = resourceBinding.type;
+	if (type != null && type.isValidBinding()) {
+		ReferenceBinding binding = (ReferenceBinding) type;
+		closeMethod = binding.getExactMethod(ConstantPool.Close, new TypeBinding [0], this.scope.compilationUnitScope()); // scope needs to be tighter
+		if(closeMethod == null) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=380112
+			// closeMethod could be null if the binding is from an interface
+			// extending from multiple interfaces.
+			InvocationSite site = new InvocationSite.EmptyWithAstNode(resource);
+			closeMethod = this.scope.compilationUnitScope().findMethod(binding, ConstantPool.Close, new TypeBinding[0], site, false);
+		}
+	}
+	return closeMethod;
+}
+

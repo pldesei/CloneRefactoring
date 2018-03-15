@@ -1,0 +1,46 @@
+(startLine=128 endLine=171 srcPath=/home/sonia/NewExperiment/antFilter/00651/proposal/sandbox/filterreaders/src/main/org/apache/tools/ant/filters/LineContains.java)
+    public final int read() throws IOException {
+        if (!initialized) {
+            initialize();
+            initialized = true;
+        }
+
+        int ch = -1;
+
+        if (line != null) {
+            ch = line.charAt(0);
+            if (line.length() == 1) {
+                line = null;
+            } else {
+                line = line.substring(1);
+            }
+        } else {
+            ch = in.read();
+            while (ch != -1) {
+                if (line == null) {
+                    line = "";
+                }
+                line = line + (char) ch;
+                if (ch == '\n') {
+                    break;
+                }
+                ch = in.read();
+            }
+
+            if (line != null) {
+                int containsSize = contains.size();
+                for (int i = 0; i < containsSize; i++) {
+                    String containsStr = (String) contains.elementAt(i);
+                    if (line.indexOf(containsStr) == -1) {
+                        line = null;
+                        break;
+                    }
+                }
+
+                return read();
+            }
+        }
+
+        return ch;
+    }
+

@@ -1,0 +1,12 @@
+(startLine=77 endLine=86 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01421/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/SimpleSet.java)
+public boolean includes(Object object) {
+	int length = values.length;
+	int index = (object.hashCode() & 0x7FFFFFFF) % length;
+	Object current;
+	while ((current = values[index]) != null) {
+		if (current.equals(object)) return true;
+		if (++index == length) index = 0;
+	}
+	return false;
+}
+

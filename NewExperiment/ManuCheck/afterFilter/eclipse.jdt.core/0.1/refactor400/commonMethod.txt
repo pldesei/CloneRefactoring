@@ -1,0 +1,14 @@
+(startLine=70 endLine=81 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00840/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/util/HashtableOfObject.java)
+	public Object get(char[] key) {
+
+		int index = CharOperation.hashCode(key) % valueTable.length;
+		int keyLength = key.length;
+		char[] currentKey;
+		while ((currentKey = keyTable[index]) != null) {
+			if (currentKey.length == keyLength && CharOperation.equals(currentKey, key))
+				return valueTable[index];
+			index = (index + 1) % keyTable.length;
+		}
+		return null;
+	}
+

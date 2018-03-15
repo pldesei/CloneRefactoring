@@ -1,0 +1,24 @@
+(startLine=1737 endLine=1758 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00654/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/PublicScanner.java)
+									&& (this.source[this.currentPosition] == 'u')) {
+									//-------------unicode traitement ------------
+									isUnicode = true;
+									int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+									this.currentPosition++;
+									while (this.source[this.currentPosition] == 'u') {
+										this.currentPosition++;
+									}
+									if ((c1 = Character.getNumericValue(this.source[this.currentPosition++])) > 15
+										|| c1 < 0
+										|| (c2 = Character.getNumericValue(this.source[this.currentPosition++])) > 15
+										|| c2 < 0
+										|| (c3 = Character.getNumericValue(this.source[this.currentPosition++])) > 15
+										|| c3 < 0
+										|| (c4 = Character.getNumericValue(this.source[this.currentPosition++])) > 15
+										|| c4 < 0) { //error don't care of the value
+										this.currentCharacter = 'A';
+									} //something different from * and /
+									else {
+										this.currentCharacter = (char) (((c1 * 16 + c2) * 16 + c3) * 16 + c4);
+									}
+								} else {
+

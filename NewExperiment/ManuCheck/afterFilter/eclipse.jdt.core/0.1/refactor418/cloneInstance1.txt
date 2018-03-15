@@ -1,0 +1,32 @@
+(startLine=2484 endLine=2513 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00936/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+public void testPotentialMatchInBinary1() throws CoreException {
+	IJavaProject project = this.getJavaProject("JavaSearch");
+	IClasspathEntry[] classpath = project.getRawClasspath();
+	try {
+		// add AbortCompilation.jar to classpath
+		int length = classpath.length;
+		IClasspathEntry[] newClasspath = new IClasspathEntry[length+1];
+		System.arraycopy(classpath, 0, newClasspath, 0, length);
+		newClasspath[length] = JavaCore.newLibraryEntry(new Path("/JavaSearch/AbortCompilation.jar"), null, null);
+		project.setRawClasspath(newClasspath, null);
+		
+		// potential match for a field declaration
+	//	JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
+		resultCollector.showAccuracy = true;
+		search(
+			"MissingFieldType.*",
+			FIELD,
+			DECLARATIONS, 
+			getJavaSearchScope(), 
+			this.resultCollector);
+		assertSearchResults(
+			"AbortCompilation.jar AbortCompilation.MissingFieldType.field [No source] POTENTIAL_MATCH\n" + 
+			"AbortCompilation.jar AbortCompilation.MissingFieldType.missing [No source] POTENTIAL_MATCH\n" + 
+			"AbortCompilation.jar AbortCompilation.MissingFieldType.otherField [No source] POTENTIAL_MATCH",
+			this.resultCollector);
+	} finally {
+		// reset classpath
+		project.setRawClasspath(classpath, null);
+	}
+}	
+

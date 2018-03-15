@@ -1,0 +1,13 @@
+(startLine=852 endLine=862 srcPath=/home/sonia/NewExperiment/antFilter/01293/src/main/org/apache/tools/ant/AntClassLoader.java)
+    /**
+     * Used for isolated resource seaching.
+     * @return the root classloader of AntClassLoader.
+     */
+    private ClassLoader getRootLoader() {
+        ClassLoader ret = getClass().getClassLoader();
+        while (ret != null && ret.getParent() != null) {
+            ret = ret.getParent();
+        }
+        return ret;
+    }
+

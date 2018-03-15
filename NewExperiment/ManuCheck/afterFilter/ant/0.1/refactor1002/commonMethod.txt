@@ -1,0 +1,41 @@
+(startLine=946 endLine=984 srcPath=/home/sonia/NewExperiment/antFilter/01308/src/main/org/apache/tools/ant/AntClassLoader.java)
+    /**
+     * Returns an enumeration of URLs representing all the resources with the
+     * given name by searching the class loader's classpath.
+     *
+     * @param name The resource name to search for.
+     *             Must not be <code>null</code>.
+     * @param parentHasBeenSearched whether ClassLoader.this.parent
+     * has been searched - will be true if the method is (indirectly)
+     * called from ClassLoader.getResources
+     * @return an enumeration of URLs for the resources
+     * @exception IOException if I/O errors occurs (can't happen)
+     */
+    protected Enumeration/*<URL>*/ findResources(String name,
+                                                 boolean parentHasBeenSearched)
+        throws IOException {
+        Enumeration/*<URL>*/ mine = new ResourceEnumeration(name);
+        Enumeration/*<URL>*/ base;
+        if (parent != null && (!parentHasBeenSearched || parent != getParent())) {
+            // Delegate to the parent:
+            base = parent.getResources(name);
+            // Note: could cause overlaps in case
+            // ClassLoader.this.parent has matches and
+            // parentHasBeenSearched is true
+        } else {
+            // ClassLoader.this.parent is already delegated to for example from
+            // ClassLoader.getResources, no need:
+            base = new CollectionUtils.EmptyEnumeration();
+        }
+        if (isParentFirst(name)) {
+            // Normal case.
+            return CollectionUtils.append(base, mine);
+        }
+        if (ignoreBase) {
+            return getRootLoader() == null ? mine : CollectionUtils.append(mine, getRootLoader()
+                    .getResources(name));
+        }
+        // parent last:
+        return CollectionUtils.append(mine, base);
+    }
+
