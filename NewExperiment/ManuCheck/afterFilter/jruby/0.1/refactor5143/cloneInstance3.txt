@@ -1,0 +1,12 @@
+(startLine=3088 endLine=3097 srcPath=/home/sonia/NewExperiment/jrubyFilter/01119/src/org/jruby/parser/DefaultRubyParser.java)
+  public Object execute(ParserSupport support, RubyYaccLexer lexer, Object yyVal, Object[] yyVals, int yyTop) {
+                  if (support.isInDef() || support.isInSingle()) {
+		      support.yyerror("dynamic constant assignment");
+		  }
+			
+		  ISourcePosition position = support.getPosition(((Node)yyVals[-2+yyTop]));
+
+                  yyVal = new ConstDeclNode(position, null, support.new_colon2(position, ((Node)yyVals[-2+yyTop]), (String) ((Token)yyVals[0+yyTop]).getValue()), NilImplicitNode.NIL);
+    return yyVal;
+  }
+

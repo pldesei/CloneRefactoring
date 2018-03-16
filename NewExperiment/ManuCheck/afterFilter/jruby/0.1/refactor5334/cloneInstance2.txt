@@ -1,0 +1,19 @@
+(startLine=1078 endLine=1094 srcPath=/home/sonia/NewExperiment/jrubyFilter/01749/truffle/src/main/java/org/jruby/truffle/nodes/core/StringNodes.java)
+        public DynamicObject eachCharMultiByteEncoding(VirtualFrame frame, DynamicObject string, DynamicObject block) {
+            ByteList strByteList = StringOperations.getByteList(string);
+            byte[] ptrBytes = strByteList.unsafeBytes();
+            int ptr = strByteList.begin();
+            int len = strByteList.getRealSize();
+            Encoding enc = StringOperations.getByteList(string).getEncoding();
+
+            int n;
+
+            for (int i = 0; i < len; i += n) {
+                n = multiByteStringLength(enc, ptrBytes, ptr + i, ptr + len);
+
+                yield(frame, block, substr(string, i, n));
+            }
+
+            return string;
+        }
+

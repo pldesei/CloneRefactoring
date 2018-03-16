@@ -1,0 +1,20 @@
+(startLine=484 endLine=501 srcPath=/home/sonia/NewExperiment/jrubyFilter/00485/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+        try {
+            if(c == null) {
+                String ret = getReturnName(method,new Class[]{IRubyObject[].class, Block.class});
+                ClassWriter cw = createCtor(mnamePath);
+                MethodVisitor mv = startCall(cw);
+                mv.visitVarInsn(ALOAD, 2);
+                mv.visitTypeInsn(CHECKCAST, "[" + IRUB_ID);
+                mv.visitTypeInsn(CHECKCAST, "[" + IRUB_ID);
+                mv.visitVarInsn(ALOAD, 3);
+                mv.visitMethodInsn(INVOKEVIRTUAL, typePath, method, "([" + IRUB_ID + BLOCK_ID + ")L" + ret + ";");
+                mv.visitInsn(ARETURN);
+                mv.visitMaxs(2, 3);
+                c = endCall(cw,mv,mname);
+            }
+            InvocationCallback ic = (InvocationCallback)c.newInstance();
+            ic.setArity(Arity.optional());
+            return ic;
+        } catch(IllegalArgumentException e) {
+

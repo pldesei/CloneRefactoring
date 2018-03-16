@@ -1,0 +1,13 @@
+(startLine=134 endLine=144 srcPath=/home/sonia/NewExperiment/jrubyFilter/00481/src/org/jruby/RubyDigest.java)
+        public static IRubyObject s_digest(IRubyObject recv, IRubyObject str) {
+            String name = ((RubyClass)recv).getClassVar("metadata").toString();
+            try {
+                MessageDigest md = provider == null ? MessageDigest.getInstance(name) : MessageDigest.getInstance(name, provider);
+                return RubyString.newString(recv.getRuntime(), md.digest(str.convertToString().getBytes()));
+            } catch(NoSuchAlgorithmException e) {
+                throw recv.getRuntime().newNotImplementedError("Unsupported digest algorithm (" + name + ")");
+            } catch(NoSuchProviderException e) {
+                throw recv.getRuntime().newNotImplementedError("Unsupported digest algorithm (" + name + ")");
+            }
+        }
+

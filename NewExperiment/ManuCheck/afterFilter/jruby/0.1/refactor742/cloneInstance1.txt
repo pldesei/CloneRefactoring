@@ -1,0 +1,11 @@
+(startLine=3857 endLine=3865 srcPath=/home/sonia/NewExperiment/jrubyFilter/00854/src/org/jruby/RubyString.java)
+        if (rubyRegex.getPattern().numberOfCaptures() == 0) {
+            while (matcher.search(begin + end, range, Option.NONE) >= 0) {
+                end = positionEnd(matcher, enc, begin, range);
+                match = rubyRegex.updateBackRef(context, this, frame, matcher);
+                match.use();
+                block.yield(context, substr(runtime, matcher.getBegin(), matcher.getEnd() - matcher.getBegin()).infectBy(rubyRegex));
+                modifyCheck(bytes, size);
+            }
+        } else {
+

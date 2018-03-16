@@ -1,0 +1,41 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01531
+predFragLineRange:181-190
+predMethodLineRange:142-209
+nextLineRange:145-203
+predStrMethodInvoNames:
+[readX509PEM, getModule, getConstant, getConstant, getInstance, generateCertificate, newCertificateError, newCertificateError, set_serial, str2inum, newString, toString, getSerialNumber, set_not_before, newTime, getTime, getNotBefore, set_not_after, newTime, getTime, getNotAfter, set_subject, callMethod, newString, getEncoded, getSubjectX500Principal, set_issuer, callMethod, newString, getEncoded, getIssuerX500Principal, getAlgorithm, getPublicKey, set_public_key, getEncoded, getPublicKey, callMethod, getConstant, callMethod, getCriticalExtensionOIDs, iterator, hasNext, next, getExtensionValue, callMethod, decode, getConstant, newString, callMethod, getConstant, newString, getTrue, add_extension, getNonCriticalExtensionOIDs, iterator, hasNext, next, getExtensionValue, callMethod, decode, getConstant, newString, callMethod, getConstant, newString, getFalse, add_extension]
+%%%%%%%%%%
+AddedMethodInvo Line:157 InvoName:_X509.getClass("Name")
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyModule
+ClassName:RubyModule
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/RubyModule.java
+InvokedMethodSig:public org.jruby.RubyClass getClass(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:160 InvoName:SecurityHelper.getCertificateFactory("X.509")
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.SecurityHelper
+ClassName:SecurityHelper
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/SecurityHelper.java
+InvokedMethodSig:public static java.security.cert.CertificateFactory getCertificateFactory(java.lang.String) throws java.security.cert.CertificateException
+%%%%%%%%%%
+AddedMethodInvo Line:185 InvoName:_X509.getClass("Extension")
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyModule
+ClassName:RubyModule
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/RubyModule.java
+InvokedMethodSig:public org.jruby.RubyClass getClass(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:190 InvoName:addExtension(context,_ASN1,_Extension,extOID,runtime.getTrue())
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.X509Cert
+ClassName:X509Cert
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Cert.java
+InvokedMethodSig:private void addExtension(org.jruby.runtime.ThreadContext, org.jruby.RubyModule, org.jruby.RubyClass, java.lang.String, org.jruby.RubyBoolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:197 InvoName:addExtension(context,_ASN1,_Extension,extOID,runtime.getFalse())
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.X509Cert
+ClassName:X509Cert
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Cert.java
+InvokedMethodSig:private void addExtension(org.jruby.runtime.ThreadContext, org.jruby.RubyModule, org.jruby.RubyClass, java.lang.String, org.jruby.RubyBoolean) 

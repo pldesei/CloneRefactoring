@@ -1,0 +1,19 @@
+(startLine=117 endLine=133 srcPath=/home/sonia/NewExperiment/jrubyFilter/00168/org/jruby/RubyStruct.java)
+    private IRubyObject setByName(String name, IRubyObject value) {
+        RubyArray member = (RubyArray) getInstanceVariable(classOf(), "__member__");
+
+        if (member.isNil()) {
+            throw new RubyBugException("uninitialized struct");
+        }
+
+        modify();
+
+        for (int i = 0; i < member.getLength(); i++) {
+            if (member.entry(i).toId().equals(name)) {
+                return values[i] = value;
+            }
+        }
+
+        throw new NameError(runtime, name + " is not struct member");
+    }
+

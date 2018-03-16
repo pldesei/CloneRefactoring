@@ -1,0 +1,11 @@
+(startLine=2428 endLine=2436 srcPath=/home/sonia/NewExperiment/jrubyFilter/00559/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+            if (withinProtection || currentLoopLabels == null) {
+                method.newobj(cg.p(JumpException.NextJump.class));
+                method.dup();
+                method.aconst_null();
+                value.compile(this);
+                method.invokespecial(cg.p(JumpException.NextJump.class), "<init>", cg.sig(Void.TYPE, cg.params(Object.class, Object.class)));
+
+                method.athrow();
+            } else {
+

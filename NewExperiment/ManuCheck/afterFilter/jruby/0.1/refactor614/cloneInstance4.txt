@@ -1,0 +1,13 @@
+(startLine=919 endLine=929 srcPath=/home/sonia/NewExperiment/jrubyFilter/00580/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+                if ((c = src.read()) == '&') {
+                    lex_state = LexState.EXPR_BEG;
+                    if ((c = src.read()) == '=') {
+                        yaccValue = new Token("&&", getPosition());
+                        lex_state = LexState.EXPR_BEG;
+                        return Tokens.tOP_ASGN;
+                    }
+                    src.unread(c);
+                    yaccValue = new Token("&&", getPosition());
+                    return Tokens.tANDOP;
+                }
+

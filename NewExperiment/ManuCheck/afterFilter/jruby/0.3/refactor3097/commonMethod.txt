@@ -1,0 +1,9 @@
+(startLine=814 endLine=820 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public AndNode newAndNode(ISourcePosition position, Node left, Node right) {
+        checkExpression(left);
+        
+        if (left == null && right == null) return new AndNode(position, makeNullNil(left), makeNullNil(right));
+        
+        return new AndNode(union(left, right), makeNullNil(left), makeNullNil(right));
+    }
+

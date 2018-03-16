@@ -1,0 +1,24 @@
+(startLine=1076 endLine=1097 srcPath=/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyRegexp.java)
+    static final RubyMatchData updateBackRefLazy(ThreadContext context, RubyString str, Frame frame, Matcher matcher, Regex regex) {
+        Ruby runtime = context.getRuntime();
+        IRubyObject backref = frame.getBackRef();
+        final RubyMatchData match;
+        if (backref.isNil() || ((RubyMatchData)backref).used()) {
+            match = new RubyMatchData(runtime);
+        } else {
+            match = (RubyMatchData)backref;
+            match.setTaint(runtime.getSafeLevel() >= 3);
+        }
+
+        match.regs = matcher.getRegion(); // lazy, null when no groups defined
+        match.begin = matcher.getBegin();
+        match.end = matcher.getEnd();
+        match.pattern = regex;
+        match.str = (RubyString)str.strDup(runtime).freeze(context);
+
+        frame.setBackRef(match);
+
+        match.infectBy(str);
+        return match;
+    }
+

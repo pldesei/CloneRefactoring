@@ -1,0 +1,11 @@
+(startLine=436 endLine=444 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node getMatchNode(Node firstNode, Node secondNode) {
+        if (firstNode instanceof DRegexpNode || firstNode instanceof RegexpNode) {
+            return new Match2Node(firstNode.getPosition(), firstNode, secondNode);
+        } else if (secondNode instanceof DRegexpNode || secondNode instanceof RegexpNode) {
+            return new Match3Node(firstNode.getPosition(), secondNode, firstNode);
+        } 
+
+        return getOperatorCallNode(firstNode, "=~", secondNode);
+    }
+

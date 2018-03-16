@@ -1,0 +1,27 @@
+(startLine=4237 endLine=4261 srcPath=/home/sonia/NewExperiment/jrubyFilter/01846/core/src/main/java/org/jruby/RubyArray.java)
+    public IRubyObject min(ThreadContext context, Block block) {
+        // TODO: check for overwritten <=> on Fixnum and String
+//        struct cmp_opt_data cmp_opt = { 0, 0 };
+        IRubyObject result = UNDEF, v;
+        int i;
+
+        if (block.isGiven()) {
+            for (i = 0; i < realLength; i++) {
+                v = eltOk(i);
+                if (result == UNDEF || RubyComparable.cmpint(context, block.yieldSpecific(context, v, result), v, result) < 0) {
+                    result = v;
+                }
+            }
+        }
+        else {
+            for (i = 0; i < realLength; i++) {
+                v = eltOk(i);
+                if (result == UNDEF || optimizedCmp(context, v, result/*, cmp_opt*/) < 0) {
+                    result = v;
+                }
+            }
+        }
+        if (result == UNDEF) return context.nil;
+        return result;
+    }
+

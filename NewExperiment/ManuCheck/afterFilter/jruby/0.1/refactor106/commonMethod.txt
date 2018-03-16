@@ -1,0 +1,9 @@
+(startLine=168 endLine=174 srcPath=/home/sonia/NewExperiment/jrubyFilter/00309/src/org/jruby/evaluator/EvaluationState.java)
+    public void addBreakableInstruction(InstructionContext ic, Instruction i) {
+        InstructionBundle ib = new InstructionBundle(i, ic);
+        
+        ib.breakable = true;
+        
+        addInstructionBundle(ib);
+    }
+

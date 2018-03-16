@@ -1,0 +1,12 @@
+(startLine=97 endLine=106 srcPath=/home/sonia/NewExperiment/jrubyFilter/01417/src/org/jruby/ext/tempfile/Tempfile.java)
+    private IRubyObject initializeCommon(ThreadContext context, IRubyObject[] args) {
+        BlockCallback body = new TempfileCallback();
+        
+        // #create and #make_tmpname come from Dir::Tmpname, included into
+        // tempfile in lib/ruby/shared/tempfile.rb. We use create here to
+        // match filename algorithm and allow them to be overridden.
+        callMethod(context, "create", args, CallBlock19.newCallClosure(this, this.getMetaClass(), Arity.OPTIONAL, body, context));
+        
+        return context.nil;
+    }
+

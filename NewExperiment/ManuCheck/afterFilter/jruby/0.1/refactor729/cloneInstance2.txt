@@ -1,0 +1,10 @@
+(startLine=1353 endLine=1360 srcPath=/home/sonia/NewExperiment/jrubyFilter/00826/src/org/jruby/RubyBasicObject.java)
+        if ((table = variableTable) != null) {
+            for (int i = table.length; --i >= 0; ) {
+                for (VariableTableEntry e = table[i]; e != null; e = e.next) {
+                    if ((readValue = e.value) == null) readValue = variableTableReadLocked(e);
+                    map.put(e.name, readValue);
+                }
+            }
+        }
+

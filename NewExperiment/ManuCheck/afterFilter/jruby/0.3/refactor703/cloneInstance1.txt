@@ -1,0 +1,12 @@
+(startLine=431 endLine=440 srcPath=/home/sonia/NewExperiment/jrubyFilter/00791/src/org/jruby/RubyEnumerable.java)
+                public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                    if (localContext != ctx) {
+                        throw runtime.newThreadError("Enumerable#max{} cannot be parallelized");
+                    }
+                    if (result[0] == null || RubyComparable.cmpint(ctx, block.yield(ctx, 
+                            runtime.newArray(largs[0], result[0])), largs[0], result[0]) > 0) {
+                        result[0] = largs[0];
+                    }
+                    return runtime.getNil();
+                }
+

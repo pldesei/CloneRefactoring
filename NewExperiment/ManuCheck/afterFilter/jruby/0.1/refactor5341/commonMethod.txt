@@ -1,0 +1,36 @@
+(startLine=153 endLine=186 srcPath=/home/sonia/NewExperiment/jrubyFilter/01811/core/src/main/java/org/jruby/compiler/impl/SkinnyMethodAdapter.java)
+    public void pushInt(int value) {
+        if (value <= Byte.MAX_VALUE && value >= Byte.MIN_VALUE) {
+            switch (value) {
+            case -1:
+                iconst_m1();
+                break;
+            case 0:
+                iconst_0();
+                break;
+            case 1:
+                iconst_1();
+                break;
+            case 2:
+                iconst_2();
+                break;
+            case 3:
+                iconst_3();
+                break;
+            case 4:
+                iconst_4();
+                break;
+            case 5:
+                iconst_5();
+                break;
+            default:
+                bipush(value);
+                break;
+            }
+        } else if (value <= Short.MAX_VALUE && value >= Short.MIN_VALUE) {
+            sipush(value);
+        } else {
+            ldc(value);
+        }
+    }
+

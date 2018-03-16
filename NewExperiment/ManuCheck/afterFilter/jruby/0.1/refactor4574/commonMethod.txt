@@ -1,0 +1,21 @@
+(startLine=370 endLine=388 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node addRootNode(Node topOfAST, ISourcePosition position) {
+        position = topOfAST != null ? topOfAST.getPosition() : position;
+
+        if (result.getBeginNodes().size() == 0) {
+            if (topOfAST == null) topOfAST = NilImplicitNode.NIL;
+            
+            return new RootNode(position, result.getScope(), topOfAST);
+        }
+        
+        BlockNode newTopOfAST = new BlockNode(position);
+        for (Node beginNode: result.getBeginNodes()) {
+            appendToBlock(newTopOfAST, beginNode);
+        }
+        
+        // Add real top to new top (unless this top is empty [only begin/end nodes or truly empty])
+        if (topOfAST != null) newTopOfAST.add(topOfAST);
+        
+        return new RootNode(position, result.getScope(), newTopOfAST);
+    }
+

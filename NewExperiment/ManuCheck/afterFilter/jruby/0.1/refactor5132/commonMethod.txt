@@ -1,0 +1,31 @@
+(startLine=271 endLine=299 srcPath=/home/sonia/NewExperiment/jrubyFilter/01061/src/org/jruby/util/ConvertDouble.java)
+        private boolean parseExponent() {
+            if (eatUnderscores()) return isEOS();
+
+            byte value = next();
+
+            if (value == '-' || value == '+') {
+                addToResult(value);
+            } else {
+                previous();
+            }
+
+            while (!isEOS()) {
+                value = next();
+
+                if (isDigit(value)) {
+                    addToResult(value);
+                } else if (isWhitespace(value)) {
+                    return skipWhitespace();
+                } else if (value == '_') {
+                    verifyNumberAfterUnderscore();
+                } else {
+                    if (isStrict) strictError();
+
+                    return true;
+                }
+            } 
+
+            return true; // Exponent end of double...let's finish.
+        }
+

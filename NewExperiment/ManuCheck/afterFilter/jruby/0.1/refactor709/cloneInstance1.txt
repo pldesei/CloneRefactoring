@@ -1,0 +1,15 @@
+(startLine=274 endLine=286 srcPath=/home/sonia/NewExperiment/jrubyFilter/00802/src/org/jruby/RubyMatchData.java)
+    public IRubyObject begin(IRubyObject index) {
+        int i = backrefNumber(index);
+
+        if (regs == null) {
+            if (i != 0) throw getRuntime().newIndexError("index " + i + " out of matches");
+            if (begin < 0) return getRuntime().getNil();
+            return RubyFixnum.newFixnum(getRuntime(), begin);
+        } else {
+            if (i < 0 || regs.numRegs <= i) throw getRuntime().newIndexError("index " + i + " out of matches");
+            if (regs.beg[i] < 0) return getRuntime().getNil();
+            return RubyFixnum.newFixnum(getRuntime(), regs.beg[i]);
+        }
+    }
+

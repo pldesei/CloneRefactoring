@@ -1,0 +1,11 @@
+(startLine=128 endLine=136 srcPath=/home/sonia/NewExperiment/jrubyFilter/01214/src/org/jruby/util/Pack.java)
+        if(o instanceof RubyString) {
+            String str = o.asJavaString();
+            double d = RubyNumeric.num2dbl(o.convertToFloat());
+            if(str.matches("^\\s*[-+]?\\s*[0-9].*")) {
+                return d;
+            } else {
+                throw runtime.newTypeError("array item not a float");
+            }
+        }
+

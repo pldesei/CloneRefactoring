@@ -1,0 +1,20 @@
+(startLine=127 endLine=144 srcPath=/home/sonia/NewExperiment/jrubyFilter/01544/core/src/main/java/org/jruby/RubyIO.java)
+    public RubyIO(Ruby runtime, OutputStream outputStream, boolean autoclose) {
+        super(runtime, runtime.getIO());
+        
+        // We only want IO objects with valid streams (better to error now). 
+        if (outputStream == null) {
+            throw runtime.newRuntimeError("Opening null stream");
+        }
+        
+        openFile = new OpenFile();
+        
+        try {
+            openFile.setMainStream(ChannelStream.open(runtime, new ChannelDescriptor(Channels.newChannel(outputStream)), autoclose));
+        } catch (InvalidValueException e) {
+            throw getRuntime().newErrnoEINVALError();
+        }
+        
+        openFile.setMode(OpenFile.WRITABLE | OpenFile.APPEND);
+    }
+

@@ -1,0 +1,38 @@
+(startLine=1280 endLine=1315 srcPath=/home/sonia/NewExperiment/jrubyFilter/01087/src/org/jruby/RubyIO.java)
+        synchronized (selectable.blockingLock()) {
+            boolean oldBlocking = selectable.isBlocking();
+            try {
+                selector = Selector.open();
+
+                selectable.configureBlocking(false);
+                int real_ops = selectable.validOps() & SelectionKey.OP_WRITE;
+                SelectionKey key = selectable.keyFor(selector);
+
+                if (key == null) {
+                    selectable.register(selector, real_ops, descriptor);
+                } else {
+                    key.interestOps(key.interestOps()|real_ops);
+                }
+
+                while(selector.select() == 0) {}
+
+                for (Iterator i = selector.selectedKeys().iterator(); i.hasNext(); ) {
+                    SelectionKey skey = (SelectionKey) i.next();
+                    if ((skey.interestOps() & skey.readyOps() & (SelectionKey.OP_WRITE)) != 0) {
+                        if(skey.attachment() == descriptor) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            } finally {
+                if (selector != null) {
+                    try {
+                        selector.close();
+                    } catch (Exception e) {
+                    }
+                }
+                selectable.configureBlocking(oldBlocking);
+            }
+        }
+

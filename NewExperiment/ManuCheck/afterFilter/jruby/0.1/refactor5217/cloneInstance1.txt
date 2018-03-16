@@ -1,0 +1,22 @@
+(startLine=552 endLine=571 srcPath=/home/sonia/NewExperiment/jrubyFilter/01407/src/org/jruby/RubyFile.java)
+    public static IRubyObject chmod(ThreadContext context, IRubyObject recv, IRubyObject[] args) {
+        Ruby runtime = context.runtime;
+        
+        int count = 0;
+        RubyInteger mode = args[0].convertToInteger();
+        for (int i = 1; i < args.length; i++) {
+            JRubyFile filename = file(args[i]);
+            
+            if (!filename.exists()) {
+                throw runtime.newErrnoENOENTError(filename.toString());
+            }
+            
+            boolean result = 0 == runtime.getPosix().chmod(filename.getAbsolutePath(), (int)mode.getLongValue());
+            if (result) {
+                count++;
+            }
+        }
+        
+        return runtime.newFixnum(count);
+    }
+

@@ -1,0 +1,32 @@
+(startLine=2042 endLine=2071 srcPath=/home/sonia/NewExperiment/jrubyFilter/00854/src/org/jruby/RubyIO.java)
+    public IRubyObject readpartial(ThreadContext context, IRubyObject[] args) {
+        Ruby runtime = context.getRuntime();
+
+        openFile.checkClosed(runtime);
+
+        if(!(openFile.getMainStream() instanceof ChannelStream)) {
+            // cryptic for the uninitiated...
+            throw runtime.newNotImplementedError("readpartial only works with Nio based handlers");
+        }
+        try {
+            int maxLength = RubyNumeric.fix2int(args[0]);
+            if (maxLength < 0) {
+                throw runtime.newArgumentError("negative length " + maxLength + " given");
+            }
+            ByteList buf = ((ChannelStream)openFile.getMainStream()).readpartial(RubyNumeric.fix2int(args[0]));
+            IRubyObject strbuf = RubyString.newString(runtime, buf == null ? new ByteList(ByteList.NULL_ARRAY) : buf);
+            if(args.length > 1) {
+                args[1].callMethod(context, "<<", strbuf);
+                return args[1];
+            }
+
+            return strbuf;
+        } catch (BadDescriptorException e) {
+            throw runtime.newErrnoEBADFError();
+        } catch (EOFException e) {
+            return runtime.getNil();
+        } catch (IOException e) {
+            throw runtime.newIOError(e.getMessage());
+        }
+    }
+

@@ -1,0 +1,12 @@
+(startLine=293 endLine=302 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/PKeyRSA.java)
+                if (val instanceof KeyPair) {
+                    PrivateKey privateKey = ((KeyPair) val).getPrivate();
+                    PublicKey publicKey = ((KeyPair) val).getPublic();
+                    if (privateKey instanceof RSAPrivateCrtKey) {
+                        privKey = (RSAPrivateCrtKey) privateKey;
+                        pubKey = (RSAPublicKey) publicKey;
+                    } else {
+                        throw newRSAError(getRuntime(), "Neither PUB key nor PRIV key:");
+                    }
+                } else if (val instanceof RSAPrivateCrtKey) {
+

@@ -1,0 +1,32 @@
+(startLine=182 endLine=211 srcPath=/home/sonia/NewExperiment/jrubyFilter/01119/src/org/jruby/javasupport/util/RuntimeHelpers.java)
+    public static String buildBlockDescriptor(
+            String closureMethod,
+            int arity,
+            StaticScope scope,
+            String file,
+            int line,
+            boolean hasMultipleArgsHead,
+            NodeType argsNodeId,
+            ASTInspector inspector) {
+        
+        // build scope names string
+        StringBuffer scopeNames = new StringBuffer();
+        for (int i = 0; i < scope.getVariables().length; i++) {
+            if (i != 0) scopeNames.append(';');
+            scopeNames.append(scope.getVariables()[i]);
+        }
+
+        // build descriptor string
+        String descriptor =
+                closureMethod + ',' +
+                arity + ',' +
+                scopeNames + ',' +
+                hasMultipleArgsHead + ',' +
+                BlockBody.asArgumentType(argsNodeId) + ',' +
+                file + ',' +
+                line + ',' +
+                !(inspector.hasClosure() || inspector.hasScopeAwareMethods());
+
+        return descriptor;
+    }
+

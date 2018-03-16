@@ -1,0 +1,13 @@
+(startLine=62 endLine=72 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/ast/RootNode.java)
+    /**
+     * Return the dynamic scope for this AST.  The variable backed by this is transient so
+     * for serialization this is null.  In that case we use staticScope to rebuild the dynamic
+     * scope.  The real reason for this method is supporting bindings+eval.  We need to pass
+     * our live dynamic scope in so when we eval we can use that dynamic scope. 
+     * 
+     * @return dynamic scope of this AST
+     */
+    public DynamicScope getScope() {
+        return scope;
+    }
+

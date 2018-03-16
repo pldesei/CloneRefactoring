@@ -1,0 +1,22 @@
+(startLine=2348 endLine=2367 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject rindex(ThreadContext context, Block block) {
+        Ruby runtime = context.getRuntime();
+        if (!block.isGiven()) return enumeratorize(runtime, this, "rindex");
+
+        int i = realLength;
+
+        try {
+            while (i-- > 0) {
+                if (i >= realLength) {
+                    i = realLength;
+                    continue;
+                }
+                if (block.yield(context, values[begin + i]).isTrue()) return runtime.newFixnum(i);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            concurrentModification();
+        }
+
+        return runtime.getNil();
+    }
+

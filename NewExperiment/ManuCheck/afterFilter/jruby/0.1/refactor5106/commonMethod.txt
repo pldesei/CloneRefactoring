@@ -1,0 +1,11 @@
+(startLine=617 endLine=625 srcPath=/home/sonia/NewExperiment/jrubyFilter/00948/src/org/jruby/RubyJRuby.java)
+        private static RubyClass getRubyClass(IRubyObject maybeClass, ThreadContext context) throws RaiseException {
+            RubyClass clazz;
+            if (maybeClass instanceof RubyClass) {
+                clazz = (RubyClass) maybeClass;
+            } else {
+                throw context.getRuntime().newTypeError(maybeClass, context.getRuntime().getClassClass());
+            }
+            return clazz;
+        }
+

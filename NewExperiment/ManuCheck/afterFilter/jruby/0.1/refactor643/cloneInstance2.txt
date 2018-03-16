@@ -1,0 +1,19 @@
+(startLine=1311 endLine=1327 srcPath=/home/sonia/NewExperiment/jrubyFilter/00598/src/org/jruby/RubyHash.java)
+    public boolean containsValue(Object value) {
+        Ruby runtime = getRuntime();
+        ThreadContext context = runtime.getCurrentContext();
+        IRubyObject element = JavaUtil.convertJavaToRuby(runtime, value);
+
+        try {
+            preIter();
+            RubyHashEntry[]ltable = table;
+            for (int i = 0; i < ltable.length; i++) {
+                for (RubyHashEntry entry = ltable[i]; (entry = checkIter(ltable, entry)) != null; entry = entry.next) {
+                    if (equalInternal(context, entry.value, element).isTrue()) return true;
+                }
+            }
+        } finally {postIter();}
+
+        return false;
+    }
+

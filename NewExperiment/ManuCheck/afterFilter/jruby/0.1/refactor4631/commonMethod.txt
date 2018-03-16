@@ -1,0 +1,27 @@
+(startLine=228 endLine=252 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * We know for callers of this that it cannot be any of the specials checked in gettable.
+     * 
+     * @param node to check its variable type
+     * @return an AST node representing this new variable
+     */
+    public Node gettable2(Node node) {
+        switch (node.getNodeType()) {
+        case DASGNNODE: // LOCALVAR
+        case LOCALASGNNODE:
+            return currentScope.declare(node.getPosition(), ((INameNode) node).getName());
+        case CONSTDECLNODE: // CONSTANT
+            return currentScope.declare(node.getPosition(), ((INameNode) node).getName());
+        case INSTASGNNODE: // INSTANCE VARIABLE
+            return new InstVarNode(node.getPosition(), ((INameNode) node).getName());
+        case CLASSVARDECLNODE:
+        case CLASSVARASGNNODE:
+            return new ClassVarNode(node.getPosition(), ((INameNode) node).getName());
+        case GLOBALASGNNODE:
+            return new GlobalVarNode(node.getPosition(), ((INameNode) node).getName());
+        }
+        
+        getterIdentifierError(node.getPosition(), ((INameNode) node).getName());
+        return null;
+    }
+

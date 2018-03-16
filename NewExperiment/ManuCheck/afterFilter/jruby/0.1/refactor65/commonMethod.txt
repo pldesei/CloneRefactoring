@@ -1,0 +1,15 @@
+(startLine=885 endLine=897 srcPath=/home/sonia/NewExperiment/jrubyFilter/00223/src/org/jruby/util/Pack.java)
+		/**
+		 * <p>Backup the pointer occurrences times.</p>
+		 * 
+		 * @throws IllegalArgumentException if it backs up past beginning 
+		 * of buffer	
+		 */
+		public void backup(int occurrences) {
+		    index -= occurrences;
+
+		    if (index < 0) {
+		        throw new IllegalArgumentException();
+		    }
+		}
+

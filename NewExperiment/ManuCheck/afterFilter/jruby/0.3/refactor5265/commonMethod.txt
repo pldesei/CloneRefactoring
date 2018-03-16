@@ -1,0 +1,10 @@
+(startLine=870 endLine=877 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/ASN1.java)
+    private static RubyArray decodeObjects(final ThreadContext context, final RubyModule _ASN1, final Enumeration e)
+        throws IOException {
+        final RubyArray arr = context.runtime.newArray();
+        while ( e.hasMoreElements() ) {
+            arr.append( decodeObject(context, _ASN1, e.nextElement()) );
+        }
+        return arr;
+    }
+

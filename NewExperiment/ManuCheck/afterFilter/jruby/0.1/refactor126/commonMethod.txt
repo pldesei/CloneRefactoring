@@ -1,0 +1,5 @@
+(startLine=1513 endLine=1515 srcPath=/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java)
+    public RaiseException newNameError(String message, String name) {
+        return new RaiseException(new RubyNameError(this, this.getClass("NameError"), message, name), true);
+    }
+

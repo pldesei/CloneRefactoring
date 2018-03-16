@@ -1,0 +1,14 @@
+(startLine=33 endLine=44 srcPath=/home/sonia/NewExperiment/jrubyFilter/01047/src/org/jruby/runtime/callsite/RespondToCallSite.java)
+    public IRubyObject call(ThreadContext context, IRubyObject caller, IRubyObject self, IRubyObject name, IRubyObject bool) {
+        RubyClass klass = self.getMetaClass();
+        if (isDefaultRespondTo(klass, context)) {
+            String newString = name.asJavaString();
+            if (isCacheInvalid(newString, klass)) {
+                recacheRespondsTo(newString, klass, !bool.isTrue(), context);
+            }
+            return respondsTo;
+        } else {
+            return super.call(context, caller, self, name, bool);
+        }
+    }
+

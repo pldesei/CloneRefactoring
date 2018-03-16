@@ -1,0 +1,19 @@
+(startLine=4414 endLine=4430 srcPath=/home/sonia/NewExperiment/jrubyFilter/00837/src/org/jruby/RubyString.java)
+    private IRubyObject smartChopBangCommon(Ruby runtime) {
+        int len = value.realSize;
+        int p = value.begin;
+        byte[]bytes = value.bytes;
+        if (bytes[p + len - 1] == (byte)'\n') {
+            len--;
+            if (len > 0 && bytes[p + len - 1] == (byte)'\r') len--;
+            view(0, len);
+        } else if (bytes[p + len - 1] == (byte)'\r') {
+            len--;
+            view(0, len);
+        } else {
+            modifyCheck();
+            return runtime.getNil();
+        }
+        return this; 
+    }
+

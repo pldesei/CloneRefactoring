@@ -1,0 +1,15 @@
+(startLine=1132 endLine=1144 srcPath=/home/sonia/NewExperiment/jrubyFilter/01575/core/src/main/java/org/jruby/RubyEnumerable.java)
+        if (block.isGiven()) {
+            callEach(runtime, context, self, block.arity(), new BlockCallback() {
+                public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                    IRubyObject larg = packEnumValues(runtime, largs);
+                    checkContext(localContext, ctx, "max{}");
+                    if (result[0] == null || RubyComparable.cmpint(ctx, block.yieldArray(ctx,
+                                                                                         runtime.newArray(larg, result[0]), null), larg, result[0]) > 0) {
+                        result[0] = larg;
+                    }
+                    return runtime.getNil();
+                }
+            });
+        } else {
+

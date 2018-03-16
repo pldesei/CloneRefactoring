@@ -1,0 +1,19 @@
+(startLine=965 endLine=981 srcPath=/home/sonia/NewExperiment/jrubyFilter/01749/truffle/src/main/java/org/jruby/truffle/nodes/core/StringNodes.java)
+        public DynamicObject downcaseSingleByte(DynamicObject string) {
+            final CodeRangeable codeRangeable = StringOperations.getCodeRangeable(string);
+            final ByteList bytes = codeRangeable.getByteList();
+
+            if (bytes.realSize() == 0) {
+                return nil();
+            }
+
+            codeRangeable.modifyAndKeepCodeRange();
+
+            final boolean modified = singleByteDowncase(bytes.unsafeBytes(), bytes.begin(), bytes.realSize());
+            if (modified) {
+                return string;
+            } else {
+                return nil();
+            }
+        }
+

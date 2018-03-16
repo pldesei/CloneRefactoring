@@ -1,0 +1,20 @@
+(startLine=487 endLine=504 srcPath=/home/sonia/NewExperiment/jrubyFilter/00741/src/org/jruby/javasupport/JavaUtil.java)
+        if (isDuckTypeConvertable(argument.getClass(), parameterType)) {
+            RubyObject rubyObject = (RubyObject) argument;
+            if (!rubyObject.respondsTo("java_object")) {
+                IRubyObject javaUtilities = runtime.getJavaSupport().getJavaUtilitiesModule();
+                IRubyObject javaInterfaceModule = Java.get_interface_module(javaUtilities, JavaClass.get(runtime, parameterType));
+                if (!((RubyModule)javaInterfaceModule).isInstance(rubyObject)) {
+                    rubyObject.extend(new IRubyObject[] {javaInterfaceModule});
+                }
+                ThreadContext context = runtime.getCurrentContext();
+                if (rubyObject instanceof RubyProc) {
+                    // Proc implementing an interface, pull in the catch-all code that lets the proc get invoked
+                    // no matter what method is called on the interface
+                    rubyObject.instance_eval(context, runtime.newString("extend Proc::CatchAll"), Block.NULL_BLOCK);
+                }
+                JavaObject jo = (JavaObject) rubyObject.instance_eval(context, runtime.newString("send :__jcreate_meta!"), Block.NULL_BLOCK);
+                return jo.getValue();
+            }
+        }
+

@@ -1,0 +1,27 @@
+(startLine=830 endLine=854 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Ok I admit that this is somewhat ugly.  We post-process a chain of when nodes and analyze
+     * them to re-insert them back into our new CaseNode the way we want.  The grammar is being
+     * difficult and until I go back into the depths of that this is where things are.
+     *
+     * @param expression of the case node (e.g. case foo)
+     * @param firstWhenNode first when (which could also be the else)
+     * @return a new case node
+     */
+    public CaseNode newCaseNode(ISourcePosition position, Node expression, Node firstWhenNode) {
+        ArrayNode cases = new ArrayNode(firstWhenNode != null ? firstWhenNode.getPosition() : position);
+        CaseNode caseNode = new CaseNode(position, expression, cases);
+
+        for (Node current = firstWhenNode; current != null;) {
+            if (current instanceof WhenNode) {
+                cases.add(current);
+                current = ((WhenNode) current).getNextCase();
+            } else {
+                caseNode.setElseNode(current);
+                break;
+            }
+        }
+
+        return caseNode;
+    }
+

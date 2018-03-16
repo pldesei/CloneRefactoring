@@ -1,0 +1,10 @@
+(startLine=366 endLine=373 srcPath=/home/sonia/NewExperiment/jrubyFilter/00460/src/org/jruby/RubyEnumerable.java)
+            } else {
+                for(Iterator iter = arr.iterator();iter.hasNext();) {
+                    IRubyObject item = (IRubyObject)iter.next();
+                    if(result == null || item.callMethod(context,"<=>", result).callMethod(context, "<", RubyFixnum.zero(context.getRuntime())).isTrue()) {
+                        result = item;
+                    }
+                }
+            }
+

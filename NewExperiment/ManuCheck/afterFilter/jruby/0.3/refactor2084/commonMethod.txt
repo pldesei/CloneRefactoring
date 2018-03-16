@@ -1,0 +1,16 @@
+(startLine=349 endLine=362 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public ISourcePosition union(ISourcePositionHolder first, ISourcePositionHolder second) {
+        while (first instanceof NewlineNode) {
+            first = ((NewlineNode) first).getNextNode();
+        }
+
+        while (second instanceof NewlineNode) {
+            second = ((NewlineNode) second).getNextNode();
+        }
+        
+        if (second == null) return first.getPosition();
+        if (first == null) return second.getPosition();
+        
+        return first.getPosition().union(second.getPosition());
+    }
+

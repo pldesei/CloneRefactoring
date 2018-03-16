@@ -1,0 +1,46 @@
+(startLine=181 endLine=224 srcPath=/home/sonia/NewExperiment/jrubyFilter/01748/core/src/main/java/org/jruby/java/codegen/RealClassGenerator.java)
+                        } else {
+                            mv.line(5);
+
+                            int cacheIndex = cacheSize++;
+
+                            // prepare temp locals
+                            mv.aload(0);
+                            mv.getfield(pathName, "$self", ci(IRubyObject.class));
+                            mv.astore(selfIndex);
+                            mv.aload(selfIndex);
+                            mv.invokeinterface(p(IRubyObject.class), "getRuntime", sig(Ruby.class));
+                            mv.astore(rubyIndex);
+
+                            // get method from cache
+                            mv.getstatic(pathName, "$runtimeCache", ci(RuntimeCache.class));
+                            mv.aload(selfIndex);
+                            mv.ldc(cacheIndex);
+                            for (String eachName : nameSet) {
+                                mv.ldc(eachName);
+                            }
+                            mv.invokevirtual(p(RuntimeCache.class), "searchWithCache",
+                                    sig(DynamicMethod.class, params(IRubyObject.class, int.class, String.class, nameSet.size())));
+
+                            // get current context
+                            mv.aload(rubyIndex);
+                            mv.invokevirtual(p(Ruby.class), "getCurrentContext", sig(ThreadContext.class));
+
+                            // load self, class, and name
+                            mv.aloadMany(selfIndex, selfIndex);
+                            mv.invokeinterface(p(IRubyObject.class), "getMetaClass", sig(RubyClass.class));
+                            mv.ldc(simpleName);
+
+                            // coerce arguments
+                            coerceArgumentsToRuby(mv, paramTypes, rubyIndex);
+
+                            // load null block
+                            mv.getstatic(p(Block.class), "NULL_BLOCK", ci(Block.class));
+
+                            // invoke method
+                            mv.line(13);
+                            mv.invokevirtual(p(DynamicMethod.class), "call", sig(IRubyObject.class, ThreadContext.class, IRubyObject.class, RubyModule.class, String.class, IRubyObject[].class, Block.class));
+
+                            coerceResultAndReturn(mv, returnType);
+                        }
+

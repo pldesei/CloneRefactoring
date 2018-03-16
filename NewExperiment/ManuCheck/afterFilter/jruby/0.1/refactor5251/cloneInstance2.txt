@@ -1,0 +1,9 @@
+(startLine=722 endLine=728 srcPath=/home/sonia/NewExperiment/jrubyFilter/01523/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java)
+    public void BNEInstr(BNEInstr bneinstr) {
+        jvm.method().loadLocal(0);
+        visit(bneinstr.getArg1());
+        visit(bneinstr.getArg2());
+        jvm.method().invokeHelper("BNE", boolean.class, ThreadContext.class, IRubyObject.class, IRubyObject.class);
+        jvm.method().adapter.iftrue(getJVMLabel(bneinstr.getJumpTarget()));
+    }
+

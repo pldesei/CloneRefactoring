@@ -1,0 +1,28 @@
+(startLine=1895 endLine=1920 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    private int greaterThan() throws IOException {
+        determineExpressionState();
+
+        int c = src.read();
+
+        switch (c) {
+        case '=':
+            yaccValue = new Token(">=", getPosition());
+            return Tokens.tGEQ;
+        case '>':
+            if ((c = src.read()) == '=') {
+                setState(LexState.EXPR_BEG);
+                yaccValue = new Token(">>=", getPosition());
+                return Tokens.tOP_ASGN;
+            }
+            src.unread(c);
+            yaccValue = new Token(">>", getPosition());
+            
+            return Tokens.tRSHFT;
+        default:
+            src.unread(c);
+            
+            yaccValue = new Token(">", getPosition());
+            return Tokens.tGT;
+        }
+    }
+

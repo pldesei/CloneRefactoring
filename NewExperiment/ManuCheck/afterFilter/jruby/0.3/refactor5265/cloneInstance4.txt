@@ -1,0 +1,11 @@
+(startLine=581 endLine=589 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/ASN1.java)
+        } else if(v instanceof ASN1Set) {
+            //Likely a DERSet returned by bouncycastle libs. Convert to DLSet.
+            RubyClass c = asnM.getClass("Set");
+            List<IRubyObject> l = new ArrayList<IRubyObject>();
+            for(Enumeration enm = ((ASN1Set)v).getObjects(); enm.hasMoreElements(); ) {
+                l.add(decodeObj(asnM,enm.nextElement()));
+            }
+            return c.callMethod(tc,"new",asnM.getRuntime().newArray(l));
+        }
+

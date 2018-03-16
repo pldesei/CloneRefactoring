@@ -1,0 +1,20 @@
+(startLine=58 endLine=75 srcPath=/home/sonia/NewExperiment/jrubyFilter/00901/src/org/jruby/ext/ffi/jffi/FastIntMethodFactory.java)
+    final boolean isFastIntParam(NativeParam paramType) {
+        if (paramType instanceof NativeType) {
+            switch ((NativeType) paramType) {
+                case INT8:
+                case UINT8:
+                case INT16:
+                case UINT16:
+                case INT32:
+                case UINT32:
+//                case FLOAT32:
+                    return true;
+                case LONG:
+                case ULONG:
+                    return Platform.getPlatform().longSize() == 32;
+            }
+        }
+        return false;
+    }
+

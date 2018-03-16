@@ -1,0 +1,7 @@
+(startLine=123 endLine=127 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport19.java)
+    public boolean is_local_id(Token identifier) {
+        String name = (String) identifier.getValue();
+        
+        return getCurrentScope().getLocalScope().isDefined(name) < 0;
+    }
+

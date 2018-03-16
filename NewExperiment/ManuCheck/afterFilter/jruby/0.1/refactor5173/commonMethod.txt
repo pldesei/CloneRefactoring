@@ -1,0 +1,12 @@
+(startLine=1409 endLine=1418 srcPath=/home/sonia/NewExperiment/jrubyFilter/01224/src/org/jruby/parser/ParserSupport.java)
+    public Node new_args(ISourcePosition position, ListNode pre, ListNode optional, RestArgNode rest,
+            ListNode post, BlockArgNode block) {
+        // Zero-Argument declaration
+        if (optional == null && rest == null && post == null && block == null) {
+            if (pre == null || pre.size() == 0) return new ArgsNoArgNode(position);
+            if (pre.size() == 1 && !hasAssignableArgs(pre)) return new ArgsPreOneArgNode(position, pre);
+            if (pre.size() == 2 && !hasAssignableArgs(pre)) return new ArgsPreTwoArgNode(position, pre);
+        }
+        return new ArgsNode(position, pre, optional, rest, post, block);
+    }
+

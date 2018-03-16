@@ -1,0 +1,12 @@
+(startLine=298 endLine=307 srcPath=/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/javasupport/JavaMethod.java)
+    public IRubyObject invokeDirect(Object javaInvokee, Object arg0, Object arg1, Object arg2) {
+        checkArity(3);
+        checkInstanceof(javaInvokee);
+
+        if (mightBeProxy(javaInvokee)) {
+            return tryProxyInvocation(javaInvokee, arg0, arg1, arg2);
+        }
+
+        return invokeWithExceptionHandling(method, javaInvokee, arg0, arg1, arg2);
+    }
+

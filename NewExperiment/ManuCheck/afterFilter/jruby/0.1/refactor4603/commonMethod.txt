@@ -1,0 +1,8 @@
+(startLine=1077 endLine=1082 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node new_super(Node args, Token operation) {
+        if (args != null && args instanceof BlockPassNode) {
+            return new SuperNode(union(operation, args), ((BlockPassNode) args).getArgsNode(), args);
+        }
+        return new SuperNode(operation.getPosition(), args);
+    }
+

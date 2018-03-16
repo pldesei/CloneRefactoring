@@ -1,0 +1,21 @@
+(startLine=1840 endLine=1858 srcPath=/home/sonia/NewExperiment/jrubyFilter/00130/org/jruby/RubyArray.java)
+	/**
+	 * grows a stringbuffer.
+	 * uses the Strings to pad the buffer for a certain length
+	 * @param i2Grow the buffer to grow
+	 * @param iPads the string used as padding
+	 * @param iLength how much padding is needed
+	 * @return the padded buffer
+	 **/
+	private final StringBuffer grow(StringBuffer i2Grow, String iPads, int iLength)
+	{
+		int lPadLength = iPads.length();
+		while(iLength >= lPadLength)
+		{
+			i2Grow.append(iPads);
+			iLength -= lPadLength;
+		}
+		i2Grow.append(iPads.substring(0, iLength));
+		return i2Grow;
+	}
+

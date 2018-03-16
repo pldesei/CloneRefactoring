@@ -1,0 +1,14 @@
+(startLine=742 endLine=753 srcPath=/home/sonia/NewExperiment/jrubyFilter/00236/src/org/jruby/parser/ParserSupport.java)
+    public IListNode list_concat(IListNode first, INode second) {
+        if (second instanceof IListNode == false) {
+            return first.add(second);
+        }
+        IListNode concatee = (IListNode) second;
+        
+        for (Iterator iterator = concatee.iterator(); iterator.hasNext();) {
+            first.add((INode)iterator.next());
+        }
+        
+        return first;
+    }
+

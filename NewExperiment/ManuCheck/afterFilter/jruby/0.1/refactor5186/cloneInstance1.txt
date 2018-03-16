@@ -1,0 +1,22 @@
+(startLine=442 endLine=461 srcPath=/home/sonia/NewExperiment/jrubyFilter/01339/src/org/jruby/RubyTime.java)
+    private IRubyObject opPlusCommon(long adjustment) {
+        long micro = adjustment % 1000;
+        adjustment = adjustment / 1000;
+
+        long time = getTimeInMillis();
+        time += adjustment;
+
+        if ((getUSec() + micro) >= 1000) {
+            time++;
+            micro = (getUSec() + micro) - 1000;
+        } else {
+            micro = getUSec() + micro;
+        }
+
+        RubyTime newTime = new RubyTime(getRuntime(), getMetaClass());
+        newTime.dt = new DateTime(time).withZone(dt.getZone());
+        newTime.setUSec(micro);
+
+        return newTime;
+    }
+

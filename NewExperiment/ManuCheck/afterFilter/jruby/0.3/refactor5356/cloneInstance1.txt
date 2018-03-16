@@ -1,0 +1,21 @@
+(startLine=77 endLine=95 srcPath=/home/sonia/NewExperiment/jrubyFilter/01870/core/src/main/java/org/jruby/java/invokers/StaticMethodInvoker.java)
+    public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, IRubyObject[] args, Block block) {
+        if (block.isGiven()) {
+            int len = args.length;
+            // too much array creation!
+            Object[] convertedArgs = new Object[len + 1];
+            IRubyObject[] intermediate = new IRubyObject[len + 1];
+            System.arraycopy(args, 0, intermediate, 0, len);
+            intermediate[len] = RubyProc.newProc(context.runtime, block, block.type);
+
+            JavaMethod method = (JavaMethod) findCallable(self, name, intermediate, len + 1);
+            final Class<?>[] paramTypes = method.getParameterTypes();
+            for (int i = 0; i < len + 1; i++) {
+                convertedArgs[i] = intermediate[i].toJava(paramTypes[i]);
+            }
+
+            return method.invokeStaticDirect(context, convertedArgs);
+        }
+        return call(context, self, clazz, name, args);
+    }
+

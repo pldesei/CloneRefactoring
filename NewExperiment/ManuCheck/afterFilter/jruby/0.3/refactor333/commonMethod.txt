@@ -1,0 +1,8 @@
+(startLine=77 endLine=82 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/ast/FixnumNode.java)
+    public RubyFixnum getFixnum(Ruby runtime) {
+        if (fixnum == null) {
+            return fixnum = RubyFixnum.newFixnum(runtime, value);
+        }
+        return fixnum;
+    }
+

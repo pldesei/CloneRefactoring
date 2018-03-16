@@ -1,0 +1,7 @@
+(startLine=312 endLine=316 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public void checkUselessStatement(INode node) {
+        if (errorHandler.isHandled(IErrors.VERBOSE)) {
+            new UselessStatementVisitor(errorHandler).acceptNode(node);
+        }
+    }
+

@@ -1,0 +1,15 @@
+(startLine=1783 endLine=1795 srcPath=/home/sonia/NewExperiment/jrubyFilter/01867/core/src/main/java/org/jruby/RubyEnumerable.java)
+                public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                    IRubyObject larg = packEnumValues(ctx, largs);
+                    RubyArray array = runtime.newArray(len);
+                    array.append(larg);
+                    int myIx = ix.getAndIncrement();
+                    for (int i = 0, j = args.length; i < j; i++) {
+                        array.append(zipEnumNext(ctx, args[i]));
+                    }
+                    synchronized (zip) {
+                        zip.append(array);
+                    }
+                    return runtime.getNil();
+                }
+

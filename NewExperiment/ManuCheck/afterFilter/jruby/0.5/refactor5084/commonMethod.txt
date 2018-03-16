@@ -1,0 +1,11 @@
+(startLine=188 endLine=196 srcPath=/home/sonia/NewExperiment/jrubyFilter/00897/src/org/jruby/ext/ffi/MemoryUtil.java)
+    public static final void putArrayOfFloat32(Ruby runtime, MemoryIO io, long offset, RubyArray ary) {
+
+        float[] array = new float[ary.size()];
+        for (int i = 0; i < array.length; ++i) {
+            array[i] = Util.floatValue(ary.entry(i));
+        }
+
+        io.put(offset, array, 0, array.length);
+    }
+

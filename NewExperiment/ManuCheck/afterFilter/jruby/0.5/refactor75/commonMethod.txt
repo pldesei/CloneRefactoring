@@ -1,0 +1,13 @@
+(startLine=1479 endLine=1489 srcPath=/home/sonia/NewExperiment/jrubyFilter/00229/src/org/jruby/RubyModule.java)
+    private void setVisibility(IRubyObject[] args, Visibility visibility) {
+        if (getRuntime().getSafeLevel() >= 4 && !isTaint()) {
+            throw new SecurityError(getRuntime(), "Insecure: can't change method visibility");
+        }
+
+        if (args.length == 0) {
+            getRuntime().setCurrentVisibility(visibility);
+        } else {
+            setMethodVisibility(args, visibility);
+        }
+    }
+

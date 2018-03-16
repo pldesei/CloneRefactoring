@@ -1,0 +1,145 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01531
+predFragLineRange:156-274
+predMethodLineRange:155-274
+nextLineRange:171-274
+predStrMethodInvoNames:
+[checkArgumentCount, getRuntime, fix2int, dsaGenerate, isNil, toCharArray, toString, to_der_if_possible, convertToString, getInstance, newLoadError, getRuntime, readDSAPrivateKey, toString, readDSAPublicKey, toString, readDSAPubKey, toString, readDSAPrivateKey, getBytes, readDSAPublicKey, getBytes, generatePrivate, getBytes, generatePublic, getBytes, newDSAError, getRuntime, getPrivate, getPublic, newDSAError, getRuntime, newDSAError, getRuntime]
+%%%%%%%%%%
+AddedMethodInvo Line:187 InvoName:password(pass)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKey
+ClassName:PKey
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java
+InvokedMethodSig:protected static char[] password(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:188 InvoName:readInitArg(context,arg)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKey
+ClassName:PKey
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java
+InvokedMethodSig:protected static org.jruby.RubyString readInitArg(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:193 InvoName:SecurityHelper.getKeyFactory("DSA")
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.SecurityHelper
+ClassName:SecurityHelper
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/SecurityHelper.java
+InvokedMethodSig:public static java.security.KeyFactory getKeyFactory(java.lang.String) throws java.security.NoSuchAlgorithmException
+%%%%%%%%%%
+AddedMethodInvo Line:195 InvoName:runtime.newRuntimeError("unsupported key algorithm (DSA)")
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/maven/jruby-complete/src/it/bouncycastle/src/test/java/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newRuntimeError(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:197 InvoName:runtime.newRuntimeError("unsupported key algorithm (DSA) " + e)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/maven/jruby-complete/src/it/bouncycastle/src/test/java/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newRuntimeError(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:205 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:206 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:212 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:213 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:219 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:220 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:226 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:227 InvoName:debug(runtime,"PKeyDSA could not read private key",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:228 InvoName:debug(runtime,"PKeyDSA could not read private key",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:230 InvoName:isKeyGenerationFailure(e)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKey
+ClassName:PKey
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java
+InvokedMethodSig:protected static boolean isKeyGenerationFailure(java.lang.RuntimeException) 
+%%%%%%%%%%
+AddedMethodInvo Line:230 InvoName:debug(runtime,"PKeyDSA could not read private key",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:231 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:238 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:239 InvoName:debug(runtime,"PKeyDSA could not read public key",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:240 InvoName:debug(runtime,"PKeyDSA could not read public key",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:242 InvoName:isKeyGenerationFailure(e)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKey
+ClassName:PKey
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java
+InvokedMethodSig:protected static boolean isKeyGenerationFailure(java.lang.RuntimeException) 
+%%%%%%%%%%
+AddedMethodInvo Line:242 InvoName:debug(runtime,"PKeyDSA could not read public key",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:243 InvoName:debugStackTrace(runtime,e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:247 InvoName:tryPKCS8EncodedKey(runtime,dsaFactory,str.getBytes())
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKey
+ClassName:PKey
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java
+InvokedMethodSig:protected java.security.PrivateKey tryPKCS8EncodedKey(org.jruby.Ruby, java.security.KeyFactory, byte[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:248 InvoName:tryX509EncodedKey(runtime,dsaFactory,str.getBytes())
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKey
+ClassName:PKey
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java
+InvokedMethodSig:protected java.security.PublicKey tryX509EncodedKey(org.jruby.Ruby, java.security.KeyFactory, byte[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:259 InvoName:privateKey.getClass().getName()
+PackageName:java.lang
+QualifiedClassName:java.lang.Class
+ClassName:Class
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/maven/jruby-complete/src/it/bouncycastle/src/test/java/java/lang/Class.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:259 InvoName:privateKey.getClass()
+PackageName:java.lang
+QualifiedClassName:java.lang.Object
+ClassName:Object
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/maven/jruby-complete/src/it/bouncycastle/src/test/java/java/lang/Object.java
+InvokedMethodSig:public final native Class#RAW getClass() 
+%%%%%%%%%%
+AddedMethodInvo Line:271 InvoName:key.getClass().getName()
+PackageName:java.lang
+QualifiedClassName:java.lang.Class
+ClassName:Class
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/maven/jruby-complete/src/it/bouncycastle/src/test/java/java/lang/Class.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:271 InvoName:key.getClass()
+PackageName:java.lang
+QualifiedClassName:java.lang.Object
+ClassName:Object
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/maven/jruby-complete/src/it/bouncycastle/src/test/java/java/lang/Object.java
+InvokedMethodSig:public final native Class#RAW getClass() 

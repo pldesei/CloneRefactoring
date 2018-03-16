@@ -1,0 +1,11 @@
+(startLine=38 endLine=46 srcPath=/home/sonia/NewExperiment/jrubyFilter/01279/src/org/jruby/util/io/Sockaddr.java)
+    public static InetSocketAddress addressFromSockaddr_in(ThreadContext context, IRubyObject arg) {
+        RubyArray sockaddr = (RubyArray) unpack_sockaddr_in(context, arg);
+
+        IRubyObject addr = sockaddr.pop(context);
+        IRubyObject port = sockaddr.pop(context);
+
+        return new InetSocketAddress(
+                addr.convertToString().toString(), RubyNumeric.fix2int(port));
+    }
+

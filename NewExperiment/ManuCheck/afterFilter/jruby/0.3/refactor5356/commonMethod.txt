@@ -1,0 +1,15 @@
+(startLine=112 endLine=124 srcPath=/home/sonia/NewExperiment/jrubyFilter/01871/core/src/main/java/org/jruby/util/ArraySupport.java)
+    public static IRubyObject[] newCopy(IRubyObject[] src, IRubyObject last) {
+        switch (src.length) {
+            case 0: return new IRubyObject[] { last };
+            case 1: return new IRubyObject[] { src[0], last };
+            case 2: return new IRubyObject[] { src[0], src[1], last };
+            case 3: return new IRubyObject[] { src[0], src[1], src[2], last };
+            case 4: return new IRubyObject[] { src[0], src[1], src[2], src[3], last };
+        }
+        final IRubyObject[] copy = new IRubyObject[src.length + 1];
+        System.arraycopy(src, 0, copy, 0, src.length);
+        copy[src.length] = last;
+        return copy;
+    }
+

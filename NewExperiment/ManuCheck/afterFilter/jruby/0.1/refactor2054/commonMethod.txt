@@ -1,0 +1,9 @@
+(startLine=220 endLine=226 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node arg_blk_pass(Node firstNode, BlockPassNode secondNode) {
+        if (secondNode != null) {
+            secondNode.setArgsNode(firstNode);
+            return secondNode;
+        }
+        return firstNode;
+    }
+

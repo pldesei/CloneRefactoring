@@ -1,0 +1,14 @@
+(startLine=1946 endLine=1957 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/evaluator/EvaluationState.java)
+    private static RubyModule getClassVariableBase(ThreadContext context, Ruby runtime) {
+        SinglyLinkedList cref = context.peekCRef();
+        RubyModule rubyClass = (RubyModule) cref.getValue();
+        if (rubyClass.isSingleton()) {
+            cref = cref.getNext();
+            rubyClass = (RubyModule) cref.getValue();
+            if (cref.getNext() == null) {
+                runtime.getWarnings().warn("class variable access from toplevel singleton method");
+            }            
+        }
+        return rubyClass;
+    }
+

@@ -1,0 +1,25 @@
+(startLine=1207 endLine=1229 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node new_yield(ISourcePosition position, Node node) {
+        boolean state = true;
+        
+        if (node != null) {
+            if (node instanceof BlockPassNode) {
+                throw new SyntaxException(PID.BLOCK_ARG_UNEXPECTED, node.getPosition(), "Block argument should not be given.");
+            }
+
+            // FIXME: This does not seem to be in 1.9
+            if (node instanceof ArrayNode && ((ArrayNode)node).size() == 1) {
+                node = ((ArrayNode)node).get(0);
+                state = false;
+            }
+            
+            if (node != null && node instanceof SplatNode) {
+                state = true;
+            }
+        } else {
+            state = false;
+        }
+        
+        return new YieldNode(position, node, state);
+    }
+

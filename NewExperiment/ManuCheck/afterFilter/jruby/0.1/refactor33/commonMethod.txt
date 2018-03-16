@@ -1,0 +1,14 @@
+(startLine=265 endLine=276 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+	/**
+	 * @fixme need to handle positions
+	 **/
+    public void backrefAssignError(INode node) {
+        if (node instanceof NthRefNode) {
+            // FIXME: position
+            errorHandler.handleError(IErrors.SYNTAX_ERROR, null, "Can't set variable $" + ((NthRefNode) node).getMatchNumber() + '.', null);
+        } else if (node instanceof BackRefNode) {
+            // FIXME: position
+            errorHandler.handleError(IErrors.SYNTAX_ERROR, null, "Can't set variable $" + ((BackRefNode) node).getType() + '.', null);
+        }
+    }
+

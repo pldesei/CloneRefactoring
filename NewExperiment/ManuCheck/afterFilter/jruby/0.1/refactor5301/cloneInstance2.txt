@@ -1,0 +1,19 @@
+(startLine=86 endLine=102 srcPath=/home/sonia/NewExperiment/jrubyFilter/01595/truffle/src/main/java/org/jruby/truffle/nodes/cast/ArrayCastNode.java)
+    public Object cast(RubyNilClass nil) {
+        switch (nilBehavior) {
+            case EMPTY_ARRAY:
+                return new RubyArray(getContext().getCoreLibrary().getArrayClass());
+
+            case ARRAY_WITH_NIL:
+                return RubyArray.fromObject(getContext().getCoreLibrary().getArrayClass(), getContext().getCoreLibrary().getNilObject());
+
+            case NIL:
+                return nil;
+
+            default: {
+                CompilerAsserts.neverPartOfCompilation();
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+

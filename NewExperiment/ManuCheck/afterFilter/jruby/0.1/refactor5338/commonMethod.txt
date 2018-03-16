@@ -1,0 +1,14 @@
+(startLine=38 endLine=49 srcPath=/home/sonia/NewExperiment/jrubyFilter/01761/truffle/src/main/java/org/jruby/truffle/language/exceptions/SetExceptionVariableNode.java)
+    public Object setLastExceptionAndRun(VirtualFrame frame, RaiseException exception, RubyNode node) {
+        final DynamicObject threadLocals = getThreadLocalsObject(frame);
+
+        final Object lastException = readDollarBang(threadLocals);
+        writeDollarBang(threadLocals, exception.getException());
+
+        try {
+            return node.execute(frame);
+        } finally {
+            writeDollarBang(threadLocals, lastException);
+        }
+    }
+

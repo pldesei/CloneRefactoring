@@ -1,0 +1,15 @@
+(startLine=1144 endLine=1156 srcPath=/home/sonia/NewExperiment/jrubyFilter/01575/core/src/main/java/org/jruby/RubyEnumerable.java)
+        } else {
+            callEach(runtime, context, self, Arity.ONE_REQUIRED, new BlockCallback() {
+                public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                    IRubyObject larg = packEnumValues(runtime, largs);
+                    synchronized (result) {
+                        if (result[0] == null || RubyComparable.cmpint(ctx, invokedynamic(ctx, larg, OP_CMP, result[0]), larg, result[0]) > 0) {
+                            result[0] = larg;
+                        }
+                    }
+                    return runtime.getNil();
+                }
+            });
+        }
+

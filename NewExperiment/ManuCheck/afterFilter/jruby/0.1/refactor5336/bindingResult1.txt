@@ -1,0 +1,48 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01750
+predFragLineRange:965-981
+predMethodLineRange:964-981
+nextLineRange:999-1015
+predStrMethodInvoNames:
+[getCodeRangeable, getByteList, realSize, nil, modifyAndKeepCodeRange, singleByteDowncase, unsafeBytes, begin, realSize, nil]
+%%%%%%%%%%
+AddedMethodInvo Line:1004 InvoName:rope(string)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1005 InvoName:rope.getBytesCopy()
+PackageName:org.jruby.truffle.runtime.rope
+QualifiedClassName:org.jruby.truffle.runtime.rope.Rope
+ClassName:Rope
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01750/truffle/src/main/java/org/jruby/truffle/runtime/rope/Rope.java
+InvokedMethodSig:public byte[] getBytesCopy() 
+%%%%%%%%%%
+AddedMethodInvo Line:1008 InvoName:modifiedProfile.profile(modified)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1009 InvoName:StringOperations.setRope(string,makeLeafRopeNode.executeMake(outputBytes,rope.getEncoding(),rope.getCodeRange()))
+PackageName:org.jruby.truffle.runtime.core
+QualifiedClassName:org.jruby.truffle.runtime.core.StringOperations
+ClassName:StringOperations
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01750/truffle/src/main/java/org/jruby/truffle/runtime/core/StringOperations.java
+InvokedMethodSig:public static void setRope(DynamicObject, org.jruby.truffle.runtime.rope.Rope) 
+%%%%%%%%%%
+AddedMethodInvo Line:1009 InvoName:makeLeafRopeNode.executeMake(outputBytes,rope.getEncoding(),rope.getCodeRange())
+PackageName:org.jruby.truffle.nodes.core
+QualifiedClassName:org.jruby.truffle.nodes.core.RopeNodes.MakeLeafRopeNode
+ClassName:MakeLeafRopeNode
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01750/truffle/src/main/java/org/jruby/truffle/nodes/core/RopeNodes.java
+InvokedMethodSig:public abstract org.jruby.truffle.runtime.rope.LeafRope executeMake(byte[], Encoding, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1009 InvoName:rope.getEncoding()
+PackageName:org.jruby.truffle.runtime.rope
+QualifiedClassName:org.jruby.truffle.runtime.rope.Rope
+ClassName:Rope
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01750/truffle/src/main/java/org/jruby/truffle/runtime/rope/Rope.java
+InvokedMethodSig:public final Encoding getEncoding() 
+%%%%%%%%%%
+AddedMethodInvo Line:1009 InvoName:rope.getCodeRange()
+PackageName:org.jruby.truffle.runtime.rope
+QualifiedClassName:org.jruby.truffle.runtime.rope.Rope
+ClassName:Rope
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01750/truffle/src/main/java/org/jruby/truffle/runtime/rope/Rope.java
+InvokedMethodSig:public final int getCodeRange() 

@@ -1,0 +1,17 @@
+(startLine=1825 endLine=1839 srcPath=/home/sonia/NewExperiment/jrubyFilter/00130/org/jruby/RubyArray.java)
+	/**
+	 * shrinks a stringbuffer.
+	 * shrinks a stringbuffer by a number of characters.
+	 * @param i2Shrink the stringbuffer
+	 * @param iLength how much to shrink
+	 * @return the stringbuffer
+	 **/
+	private final StringBuffer shrink(StringBuffer i2Shrink, int iLength)
+	{
+		iLength = i2Shrink.length() - iLength;
+		if (iLength < 0)
+			throw new ArgumentError(ruby, "X outside of string" );
+		i2Shrink.setLength(iLength);
+		return i2Shrink;
+	}
+

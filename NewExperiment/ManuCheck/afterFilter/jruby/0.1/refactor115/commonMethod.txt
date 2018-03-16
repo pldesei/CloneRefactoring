@@ -1,0 +1,14 @@
+(startLine=191 endLine=202 srcPath=/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyBigDecimal.java)
+    private RubyBigDecimal getVpValue(IRubyObject v, boolean must) {
+        if(v instanceof RubyBigDecimal) {
+            return (RubyBigDecimal)v;
+        } else if(v instanceof RubyFixnum || v instanceof RubyBignum) {
+            String s = v.toString();
+            return newInstance(getRuntime().getClass("BigDecimal"),new IRubyObject[]{getRuntime().newString(s)});
+        }
+        if(must) {
+            throw getRuntime().newTypeError(trueFalseNil(v.getMetaClass().getName() + " can't be coerced into BigDecimal"));
+        }
+        return null;
+    }
+

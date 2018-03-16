@@ -1,0 +1,27 @@
+(startLine=458 endLine=482 srcPath=/home/sonia/NewExperiment/jrubyFilter/00490/src/org/jruby/runtime/ThreadContext.java)
+    public IRubyObject getConstant(String name) {
+        //RubyModule self = state.threadContext.getRubyClass();
+        SinglyLinkedList cbase = peekCRef();
+        RubyClass object = runtime.getObject();
+        IRubyObject result = null;
+        
+        // flipped from while to do to search current class first
+        do {
+            RubyModule klass = (RubyModule) cbase.getValue();
+            
+            // Not sure how this can happen
+            //if (NIL_P(klass)) return rb_const_get(CLASS_OF(self), id);
+            result = klass.getConstantAt(name);
+            if (result == null) {
+                if (runtime.getLoadService().autoload(name) != null) {
+                    continue;
+                }
+            } else {
+                return result;
+            }
+            cbase = cbase.getNext();
+        } while (cbase != null && cbase.getValue() != object);
+        
+        return ((RubyModule) peekCRef().getValue()).getConstant(name);
+    }
+

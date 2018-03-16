@@ -1,0 +1,12 @@
+(startLine=254 endLine=263 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/PKeyDSA.java)
+                if (val instanceof KeyPair) {
+                    PrivateKey privateKey = ((KeyPair) val).getPrivate();
+                    PublicKey publicKey = ((KeyPair) val).getPublic();
+                    if (privateKey instanceof DSAPrivateKey) {
+                        privKey = (DSAPrivateKey) privateKey;
+                        pubKey = (DSAPublicKey) publicKey;
+                    } else {
+                        throw newDSAError(getRuntime(), "Neither PUB key nor PRIV key:");
+                    }
+                } else if (val instanceof DSAPrivateKey) {
+

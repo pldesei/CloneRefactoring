@@ -1,0 +1,13 @@
+(startLine=242 endLine=252 srcPath=/home/sonia/NewExperiment/jrubyFilter/01494/core/src/main/java/org/jruby/ext/socket/SocketUtils.java)
+                if(sock_dgram) {
+                    c = new IRubyObject[7];
+                    c[0] = runtime.newString(is_ipv6 ? "AF_INET6" : "AF_INET");
+                    c[1] = port;
+                    c[2] = runtime.newString(getHostAddress(context, addrs[i]));
+                    c[3] = runtime.newString(addrs[i].getHostAddress());
+                    c[4] = runtime.newFixnum(is_ipv6 ? PF_INET6 : PF_INET);
+                    c[5] = runtime.newFixnum(SOCK_DGRAM);
+                    c[6] = runtime.newFixnum(IPPROTO_UDP);
+                    l.add(runtime.newArrayNoCopy(c));
+                }
+

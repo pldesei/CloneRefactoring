@@ -1,0 +1,8 @@
+(startLine=44 endLine=49 srcPath=/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/java/proxies/JavaProxy.java)
+    public Object getObject() {
+        // FIXME: Added this because marshal_spec seemed to reconstitute objects without calling dataWrapStruct
+        // this resulted in object being null after unmarshalling...
+        if (object == null) object = ((JavaObject)dataGetStruct()).getValue();
+        return object;
+    }
+

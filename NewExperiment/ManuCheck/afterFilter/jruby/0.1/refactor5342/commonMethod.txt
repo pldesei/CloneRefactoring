@@ -1,0 +1,7 @@
+(startLine=86 endLine=90 srcPath=/home/sonia/NewExperiment/jrubyFilter/01812/truffle/src/main/java/org/jruby/truffle/core/array/ArrayBuilderNode.java)
+        @Override
+        public Object start() {
+            CompilerDirectives.transferToInterpreter();
+            return new Object[getContext().getOptions().ARRAY_UNINITIALIZED_SIZE];
+        }
+

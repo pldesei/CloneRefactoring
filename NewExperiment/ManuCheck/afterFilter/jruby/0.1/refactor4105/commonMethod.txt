@@ -1,0 +1,9 @@
+(startLine=1370 endLine=1376 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/Ruby19Parser.java)
+  /** simplified error message.
+      @see #yyerror(java.lang.String, java.lang.String[])
+    */
+  public void yyerror (String message) {
+    //new Exception().printStackTrace();
+    throw new SyntaxException(PID.GRAMMAR_ERROR, getPosition(null), message);
+  }
+

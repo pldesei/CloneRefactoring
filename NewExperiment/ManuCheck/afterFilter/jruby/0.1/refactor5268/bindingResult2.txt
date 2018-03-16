@@ -1,0 +1,74 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01531
+predFragLineRange:93-99
+predMethodLineRange:90-102
+nextLineRange:107-126
+predStrMethodInvoNames:
+[getDigestAlgorithmName, getMac, getBytes, convertToString, getAlgorithm, init, newString, getRuntime, plain, toHex, doFinal, getBytes, convertToString, newNotImplementedError, getRuntime, getMessage]
+%%%%%%%%%%
+AddedMethodInvo Line:111 InvoName:key.asString()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.RubyString asString() 
+%%%%%%%%%%
+AddedMethodInvo Line:112 InvoName:data.asString().getByteList()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/RubyString.java
+InvokedMethodSig:public ByteList getByteList() 
+%%%%%%%%%%
+AddedMethodInvo Line:112 InvoName:data.asString()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.RubyString asString() 
+%%%%%%%%%%
+AddedMethodInvo Line:114 InvoName:getMacInstance(algName)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.HMAC
+ClassName:HMAC
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/HMAC.java
+InvokedMethodSig:private static javax.crypto.Mac getMacInstance(java.lang.String) throws java.security.NoSuchAlgorithmException
+%%%%%%%%%%
+AddedMethodInvo Line:116 InvoName:mac.update(bytes.getUnsafeBytes(),bytes.getBegin(),bytes.getRealSize())
+PackageName:javax.crypto
+QualifiedClassName:javax.crypto.Mac
+ClassName:Mac
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/javax/crypto/Mac.java
+InvokedMethodSig:public final void update(byte[], int, int) throws java.lang.IllegalStateException
+%%%%%%%%%%
+AddedMethodInvo Line:116 InvoName:bytes.getUnsafeBytes()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:116 InvoName:bytes.getBegin()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:116 InvoName:bytes.getRealSize()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:117 InvoName:toHEX(mac.doFinal())
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.HMAC
+ClassName:HMAC
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/HMAC.java
+InvokedMethodSig:private static ByteList toHEX(byte[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:123 InvoName:isDebug(runtime)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:123 InvoName:e.printStackTrace(runtime.getOut())
+PackageName:java.lang
+QualifiedClassName:java.lang.Throwable
+ClassName:Throwable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/java/lang/Throwable.java
+InvokedMethodSig:public void printStackTrace(java.io.PrintStream) 
+%%%%%%%%%%
+AddedMethodInvo Line:123 InvoName:runtime.getOut()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/Ruby.java
+InvokedMethodSig:public java.io.PrintStream getOut() 

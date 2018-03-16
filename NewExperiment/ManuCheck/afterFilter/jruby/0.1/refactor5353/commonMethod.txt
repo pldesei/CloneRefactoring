@@ -1,0 +1,6 @@
+(startLine=114 endLine=117 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/java/util/ArrayUtils.java)
+    private static RaiseException mapArrayStoreException(final Ruby runtime, final Object array, final Class<?> type) {
+        return runtime.newTypeError("wrong element type " + type.getName() + " (array contains " +
+                array.getClass().getComponentType().getName() + ')');
+    }
+

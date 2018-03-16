@@ -1,0 +1,12 @@
+(startLine=3800 endLine=3809 srcPath=/home/sonia/NewExperiment/jrubyFilter/00905/src/org/jruby/parser/DefaultRubyParser.java)
+public Object case88_line624(Object yyVal, Object[] yyVals, int yyTop) {
+                  if (support.isInDef() || support.isInSingle()) {
+		      yyerror("dynamic constant assignment");
+		  }
+
+                  ISourcePosition position = support.union(((Token)yyVals[-1+yyTop]), ((Token)yyVals[0+yyTop]));
+
+                  yyVal = new ConstDeclNode(position, null, support.new_colon3(position, (String) ((Token)yyVals[0+yyTop]).getValue()), NilImplicitNode.NIL);
+    return yyVal;
+}
+

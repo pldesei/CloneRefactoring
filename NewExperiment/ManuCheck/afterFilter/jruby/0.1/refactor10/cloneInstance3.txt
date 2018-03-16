@@ -1,0 +1,11 @@
+(startLine=992 endLine=1000 srcPath=/home/sonia/NewExperiment/jrubyFilter/00073/org/jruby/parser/DefaultRubyParser.java)
+  {
+			    if (((RubyId)yyVals[-1+yyTop]).intValue() == Token.tOROP) {
+			        yyVals[-1+yyTop] = RubyId.newId(ruby, 0);
+			    } else if (((RubyId)yyVals[-1+yyTop]).intValue() == Token.tANDOP) {
+			        yyVals[-1+yyTop] = RubyId.newId(ruby, 1);
+			    }
+			    yyVal = nf.newOpAsgn2(((Node)yyVals[-4+yyTop]), ((RubyId)yyVals[-2+yyTop]), ((RubyId)yyVals[-1+yyTop]), ((Node)yyVals[0+yyTop]));
+		        ph.fixpos(yyVal, ((Node)yyVals[-4+yyTop]));
+		    }
+

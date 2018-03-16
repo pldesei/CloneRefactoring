@@ -1,0 +1,10 @@
+(startLine=870 endLine=877 srcPath=/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/x509store/PEMInputOutput.java)
+    private static void writePemPlain(BufferedWriter out, String pemHeader, byte[] encoding) throws IOException {
+        out.write(BEF_G + pemHeader + AFT);
+        out.newLine();
+        writeEncoded(out, encoding);
+        out.write(BEF_E + pemHeader + AFT);
+        out.newLine();
+        out.flush();
+    }
+

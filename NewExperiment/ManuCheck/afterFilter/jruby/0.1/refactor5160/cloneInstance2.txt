@@ -1,0 +1,20 @@
+(startLine=2322 endLine=2339 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject rindex(ThreadContext context, IRubyObject obj) {
+        Ruby runtime = context.getRuntime();
+        int i = realLength;
+
+        try {
+            while (i-- > 0) {
+                if (i > realLength) {
+                    i = realLength;
+                    continue;
+                }
+                if (equalInternal(context, values[begin + i], obj)) return runtime.newFixnum(i);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            concurrentModification();
+        }
+
+        return runtime.getNil();
+    }
+

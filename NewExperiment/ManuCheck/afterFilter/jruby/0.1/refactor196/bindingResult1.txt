@@ -1,0 +1,750 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00445
+predFragLineRange:1489-1507
+predMethodLineRange:184-1615
+nextLineRange:184-1652
+predStrMethodInvoNames:
+[]
+%%%%%%%%%%
+AddedMethodInvo Line:1386 InvoName:context.getFrameKlazz()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.RubyModule getFrameKlazz() 
+%%%%%%%%%%
+AddedMethodInvo Line:1387 InvoName:context.getFrameName()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public java.lang.String getFrameName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1388 InvoName:runtime.newNameError("superclass method '" + name + "' disabled",name)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newNameError(java.lang.String, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1392 InvoName:getBlock(runtime,context,self,aBlock,((ZSuperNode)node).getIterNode())
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:public static org.jruby.runtime.Block getBlock(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block, org.jruby.ast.Node) 
+%%%%%%%%%%
+AddedMethodInvo Line:1392 InvoName:((ZSuperNode)node).getIterNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.ZSuperNode
+ClassName:ZSuperNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/ZSuperNode.java
+InvokedMethodSig:public org.jruby.ast.Node getIterNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1395 InvoName:block.isGiven()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Block
+ClassName:Block
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/Block.java
+InvokedMethodSig:public boolean isGiven() 
+%%%%%%%%%%
+AddedMethodInvo Line:1395 InvoName:context.getCurrentFrame().getBlock()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Frame
+ClassName:Frame
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/Frame.java
+InvokedMethodSig:public org.jruby.runtime.Block getBlock() 
+%%%%%%%%%%
+AddedMethodInvo Line:1395 InvoName:context.getCurrentFrame()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.runtime.Frame getCurrentFrame() 
+%%%%%%%%%%
+AddedMethodInvo Line:1397 InvoName:self.callSuper(context,context.getFrameArgs(),block)
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.runtime.builtin.IRubyObject callSuper(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject[], org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1397 InvoName:context.getFrameArgs()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject[] getFrameArgs() 
+%%%%%%%%%%
+AddedMethodInvo Line:1403 InvoName:evalInternal(runtime,context,iVisited.getArgsNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1403 InvoName:iVisited.getArgsNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.YieldNode
+ClassName:YieldNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/YieldNode.java
+InvokedMethodSig:public org.jruby.ast.Node getArgsNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1404 InvoName:iVisited.getArgsNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.YieldNode
+ClassName:YieldNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/YieldNode.java
+InvokedMethodSig:public org.jruby.ast.Node getArgsNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1408 InvoName:context.getCurrentFrame().getBlock()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Frame
+ClassName:Frame
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/Frame.java
+InvokedMethodSig:public org.jruby.runtime.Block getBlock() 
+%%%%%%%%%%
+AddedMethodInvo Line:1408 InvoName:context.getCurrentFrame()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.runtime.Frame getCurrentFrame() 
+%%%%%%%%%%
+AddedMethodInvo Line:1410 InvoName:block.yield(context,result,null,null,iVisited.getCheckState())
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Block
+ClassName:Block
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/Block.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject yield(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.builtin.IRubyObject, org.jruby.RubyModule, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:1410 InvoName:iVisited.getCheckState()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.YieldNode
+ClassName:YieldNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/YieldNode.java
+InvokedMethodSig:public boolean getCheckState() 
+%%%%%%%%%%
+AddedMethodInvo Line:1416 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:1417 InvoName:iVisited.evaluateAtStart()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.WhileNode
+ClassName:WhileNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/WhileNode.java
+InvokedMethodSig:public boolean evaluateAtStart() 
+%%%%%%%%%%
+AddedMethodInvo Line:1419 InvoName:(result=evalInternal(runtime,context,iVisited.getConditionNode(),self,aBlock)).isTrue()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract boolean isTrue() 
+%%%%%%%%%%
+AddedMethodInvo Line:1419 InvoName:evalInternal(runtime,context,iVisited.getConditionNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1419 InvoName:iVisited.getConditionNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.WhileNode
+ClassName:WhileNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/WhileNode.java
+InvokedMethodSig:public org.jruby.ast.Node getConditionNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1423 InvoName:evalInternal(runtime,context,iVisited.getBodyNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1423 InvoName:iVisited.getBodyNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.WhileNode
+ClassName:WhileNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/WhileNode.java
+InvokedMethodSig:public org.jruby.ast.Node getBodyNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1426 InvoName:je.getJumpType().getTypeId()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException.JumpType
+ClassName:JumpType
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public int getTypeId() 
+%%%%%%%%%%
+AddedMethodInvo Line:1426 InvoName:je.getJumpType()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public org.jruby.exceptions.JumpException.JumpType getJumpType() 
+%%%%%%%%%%
+AddedMethodInvo Line:1433 InvoName:je.getTarget()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public java.lang.Object getTarget() 
+%%%%%%%%%%
+AddedMethodInvo Line:1434 InvoName:je.setTarget(null)
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public void setTarget(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1452 InvoName:self.getMetaClass()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.RubyClass getMetaClass() 
+%%%%%%%%%%
+AddedMethodInvo Line:1454 InvoName:self.callMethod(context,module,runtime.getSelectorTable().table[module.index][iVisited.index],iVisited.getName(),IRubyObject.NULL_ARRAY,CallType.VARIABLE,Block.NULL_BLOCK)
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.runtime.builtin.IRubyObject callMethod(org.jruby.runtime.ThreadContext, org.jruby.RubyModule, byte, java.lang.String, org.jruby.runtime.builtin.IRubyObject[], org.jruby.runtime.CallType, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1454 InvoName:runtime.getSelectorTable()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.MethodSelectorTable getSelectorTable() 
+%%%%%%%%%%
+AddedMethodInvo Line:1454 InvoName:iVisited.getName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.VCallNode
+ClassName:VCallNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/VCallNode.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1457 InvoName:module.searchMethod(iVisited.getName())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyModule
+ClassName:RubyModule
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyModule.java
+InvokedMethodSig:public org.jruby.internal.runtime.methods.DynamicMethod searchMethod(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1457 InvoName:iVisited.getName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.VCallNode
+ClassName:VCallNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/VCallNode.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1459 InvoName:RubyObject.callMethodMissingIfNecessary(context,self,method,iVisited.getName(),IRubyObject.NULL_ARRAY,self,CallType.VARIABLE,Block.NULL_BLOCK)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyObject
+ClassName:RubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyObject.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callMethodMissingIfNecessary(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.internal.runtime.methods.DynamicMethod, java.lang.String, org.jruby.runtime.builtin.IRubyObject[], org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.CallType, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1459 InvoName:iVisited.getName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.VCallNode
+ClassName:VCallNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/VCallNode.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1464 InvoName:method.call(context,self,module,iVisited.getName(),IRubyObject.NULL_ARRAY,false,Block.NULL_BLOCK)
+PackageName:org.jruby.internal.runtime.methods
+QualifiedClassName:org.jruby.internal.runtime.methods.DynamicMethod
+ClassName:DynamicMethod
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/internal/runtime/methods/DynamicMethod.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject call(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.RubyModule, java.lang.String, org.jruby.runtime.builtin.IRubyObject[], boolean, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1464 InvoName:iVisited.getName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.VCallNode
+ClassName:VCallNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/VCallNode.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1470 InvoName:runtime.getGlobalVariables().alias(iVisited.getNewName(),iVisited.getOldName())
+PackageName:org.jruby.internal.runtime
+QualifiedClassName:org.jruby.internal.runtime.GlobalVariables
+ClassName:GlobalVariables
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/internal/runtime/GlobalVariables.java
+InvokedMethodSig:public void alias(java.lang.String, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1470 InvoName:runtime.getGlobalVariables()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.internal.runtime.GlobalVariables getGlobalVariables() 
+%%%%%%%%%%
+AddedMethodInvo Line:1470 InvoName:iVisited.getNewName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.VAliasNode
+ClassName:VAliasNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/VAliasNode.java
+InvokedMethodSig:public java.lang.String getNewName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1470 InvoName:iVisited.getOldName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.VAliasNode
+ClassName:VAliasNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/VAliasNode.java
+InvokedMethodSig:public java.lang.String getOldName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1472 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:1478 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:1480 InvoName:(result=evalInternal(runtime,context,iVisited.getConditionNode(),self,aBlock)).isTrue()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract boolean isTrue() 
+%%%%%%%%%%
+AddedMethodInvo Line:1480 InvoName:evalInternal(runtime,context,iVisited.getConditionNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1480 InvoName:iVisited.getConditionNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.UntilNode
+ClassName:UntilNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/UntilNode.java
+InvokedMethodSig:public org.jruby.ast.Node getConditionNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1483 InvoName:evalInternal(runtime,context,iVisited.getBodyNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1483 InvoName:iVisited.getBodyNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.UntilNode
+ClassName:UntilNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/UntilNode.java
+InvokedMethodSig:public org.jruby.ast.Node getBodyNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1486 InvoName:je.getJumpType().getTypeId()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException.JumpType
+ClassName:JumpType
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public int getTypeId() 
+%%%%%%%%%%
+AddedMethodInvo Line:1486 InvoName:je.getJumpType()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public org.jruby.exceptions.JumpException.JumpType getJumpType() 
+%%%%%%%%%%
+AddedMethodInvo Line:1493 InvoName:je.getTarget()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public java.lang.Object getTarget() 
+%%%%%%%%%%
+AddedMethodInvo Line:1494 InvoName:je.setTarget(null)
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public void setTarget(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1499 InvoName:je.getValue()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public java.lang.Object getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:1514 InvoName:context.getRubyClass()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.RubyModule getRubyClass() 
+%%%%%%%%%%
+AddedMethodInvo Line:1515 InvoName:runtime.newTypeError("No class to undef method '" + iVisited.getName() + "'.")
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newTypeError(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1516 InvoName:iVisited.getName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.UndefNode
+ClassName:UndefNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/UndefNode.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1518 InvoName:context.getRubyClass().undef(iVisited.getName())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyModule
+ClassName:RubyModule
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyModule.java
+InvokedMethodSig:public void undef(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1518 InvoName:context.getRubyClass()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.RubyModule getRubyClass() 
+%%%%%%%%%%
+AddedMethodInvo Line:1518 InvoName:iVisited.getName()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.UndefNode
+ClassName:UndefNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/UndefNode.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1520 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:1524 InvoName:context.pollThreadEvents()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public void pollThreadEvents() 
+%%%%%%%%%%
+AddedMethodInvo Line:1525 InvoName:runtime.getTrue()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyBoolean getTrue() 
+%%%%%%%%%%
+AddedMethodInvo Line:1531 InvoName:context.getFrameKlazz()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public org.jruby.RubyModule getFrameKlazz() 
+%%%%%%%%%%
+AddedMethodInvo Line:1534 InvoName:context.getFrameName()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public java.lang.String getFrameName() 
+%%%%%%%%%%
+AddedMethodInvo Line:1535 InvoName:runtime.newNameError("Superclass method '" + name + "' disabled.",name)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newNameError(java.lang.String, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1538 InvoName:setupArgs(runtime,context,iVisited.getArgsNode(),self)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject[] setupArgs(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:1538 InvoName:iVisited.getArgsNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.SuperNode
+ClassName:SuperNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/SuperNode.java
+InvokedMethodSig:public org.jruby.ast.Node getArgsNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1539 InvoName:getBlock(runtime,context,self,aBlock,iVisited.getIterNode())
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:public static org.jruby.runtime.Block getBlock(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block, org.jruby.ast.Node) 
+%%%%%%%%%%
+AddedMethodInvo Line:1539 InvoName:iVisited.getIterNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.SuperNode
+ClassName:SuperNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/SuperNode.java
+InvokedMethodSig:public org.jruby.ast.Node getIterNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1542 InvoName:block.isGiven()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Block
+ClassName:Block
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/Block.java
+InvokedMethodSig:public boolean isGiven() 
+%%%%%%%%%%
+AddedMethodInvo Line:1544 InvoName:self.callSuper(context,args,block)
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.runtime.builtin.IRubyObject callSuper(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject[], org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1549 InvoName:iVisited.getScope()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.RootNode
+ClassName:RootNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/RootNode.java
+InvokedMethodSig:public org.jruby.runtime.DynamicScope getScope() 
+%%%%%%%%%%
+AddedMethodInvo Line:1555 InvoName:iVisited.getStaticScope()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.RootNode
+ClassName:RootNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/RootNode.java
+InvokedMethodSig:public org.jruby.parser.StaticScope getStaticScope() 
+%%%%%%%%%%
+AddedMethodInvo Line:1559 InvoName:context.preRootNode(scope)
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public void preRootNode(org.jruby.runtime.DynamicScope) 
+%%%%%%%%%%
+AddedMethodInvo Line:1564 InvoName:eval(runtime,context,iVisited.getBodyNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject eval(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1564 InvoName:iVisited.getBodyNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.RootNode
+ClassName:RootNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/RootNode.java
+InvokedMethodSig:public org.jruby.ast.Node getBodyNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1566 InvoName:context.postRootNode()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public void postRootNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1573 InvoName:evalInternal(runtime,context,iVisited.getValueNode(),self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1573 InvoName:iVisited.getValueNode()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.ReturnNode
+ClassName:ReturnNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/ReturnNode.java
+InvokedMethodSig:public org.jruby.ast.Node getValueNode() 
+%%%%%%%%%%
+AddedMethodInvo Line:1577 InvoName:je.setTarget(iVisited.getTarget())
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public void setTarget(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1577 InvoName:iVisited.getTarget()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.ReturnNode
+ClassName:ReturnNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/ReturnNode.java
+InvokedMethodSig:public java.lang.Object getTarget() 
+%%%%%%%%%%
+AddedMethodInvo Line:1578 InvoName:je.setValue(result)
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public void setValue(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1584 InvoName:context.pollThreadEvents()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public void pollThreadEvents() 
+%%%%%%%%%%
+AddedMethodInvo Line:1592 InvoName:context.pollThreadEvents()
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.ThreadContext
+ClassName:ThreadContext
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/runtime/ThreadContext.java
+InvokedMethodSig:public void pollThreadEvents() 
+%%%%%%%%%%
+AddedMethodInvo Line:1597 InvoName:je.setValue(node)
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public void setValue(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1605 InvoName:iVisited.getOptions()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.RegexpNode
+ClassName:RegexpNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/RegexpNode.java
+InvokedMethodSig:public int getOptions() 
+%%%%%%%%%%
+AddedMethodInvo Line:1614 InvoName:RubyRegexp.newRegexp(runtime,iVisited.getPattern(),iVisited.getFlags(),lang)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyRegexp
+ClassName:RubyRegexp
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyRegexp.java
+InvokedMethodSig:public static org.jruby.RubyRegexp newRegexp(org.jruby.Ruby, jregex.Pattern, int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1614 InvoName:iVisited.getPattern()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.RegexpNode
+ClassName:RegexpNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/RegexpNode.java
+InvokedMethodSig:public jregex.Pattern getPattern() 
+%%%%%%%%%%
+AddedMethodInvo Line:1614 InvoName:iVisited.getFlags()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.RegexpNode
+ClassName:RegexpNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/RegexpNode.java
+InvokedMethodSig:public int getFlags() 
+%%%%%%%%%%
+AddedMethodInvo Line:1618 InvoName:runtime.newRegexpError(e.getMessage())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newRegexpError(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1618 InvoName:e.getMessage()
+PackageName:java.lang
+QualifiedClassName:java.lang.Throwable
+ClassName:Throwable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/java/lang/Throwable.java
+InvokedMethodSig:public java.lang.String getMessage() 
+%%%%%%%%%%
+AddedMethodInvo Line:1625 InvoName:runtime.newString(new ByteList())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyString newString(org.jruby.util.ByteList) 
+%%%%%%%%%%
+AddedMethodInvo Line:1626 InvoName:iVisited.size()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.ListNode
+ClassName:ListNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/ListNode.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:1627 InvoName:iVisited.get(i)
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.ListNode
+ClassName:ListNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/ListNode.java
+InvokedMethodSig:public org.jruby.ast.Node get(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1629 InvoName:string.getByteList().append(((StrNode)iterNode).getValue())
+PackageName:org.jruby.util
+QualifiedClassName:org.jruby.util.ByteList
+ClassName:ByteList
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/util/ByteList.java
+InvokedMethodSig:public void append(org.jruby.util.ByteList) 
+%%%%%%%%%%
+AddedMethodInvo Line:1629 InvoName:string.getByteList()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyString.java
+InvokedMethodSig:public org.jruby.util.ByteList getByteList() 
+%%%%%%%%%%
+AddedMethodInvo Line:1629 InvoName:((StrNode)iterNode).getValue()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.StrNode
+ClassName:StrNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/StrNode.java
+InvokedMethodSig:public org.jruby.util.ByteList getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:1631 InvoName:string.append(evalInternal(runtime,context,iterNode,self,aBlock))
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyString.java
+InvokedMethodSig:public org.jruby.RubyString append(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:1631 InvoName:evalInternal(runtime,context,iterNode,self,aBlock)
+PackageName:org.jruby.evaluator
+QualifiedClassName:org.jruby.evaluator.EvaluationState
+ClassName:EvaluationState
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/evaluator/EvaluationState.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject evalInternal(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.ast.Node, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block) 
+%%%%%%%%%%
+AddedMethodInvo Line:1636 InvoName:iVisited.getOptions()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.DRegexpNode
+ClassName:DRegexpNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/DRegexpNode.java
+InvokedMethodSig:public int getOptions() 
+%%%%%%%%%%
+AddedMethodInvo Line:1646 InvoName:RubyRegexp.newRegexp(runtime,string.toString(),iVisited.getOptions(),lang)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyRegexp
+ClassName:RubyRegexp
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyRegexp.java
+InvokedMethodSig:public static org.jruby.RubyRegexp newRegexp(org.jruby.Ruby, java.lang.String, int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1646 InvoName:string.toString()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyString.java
+InvokedMethodSig:public java.lang.String toString() 
+%%%%%%%%%%
+AddedMethodInvo Line:1646 InvoName:iVisited.getOptions()
+PackageName:org.jruby.ast
+QualifiedClassName:org.jruby.ast.DRegexpNode
+ClassName:DRegexpNode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/ast/DRegexpNode.java
+InvokedMethodSig:public int getOptions() 
+%%%%%%%%%%
+AddedMethodInvo Line:1650 InvoName:runtime.newRegexpError(e.getMessage())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newRegexpError(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1650 InvoName:e.getMessage()
+PackageName:java.lang
+QualifiedClassName:java.lang.Throwable
+ClassName:Throwable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00445/src/java/lang/Throwable.java
+InvokedMethodSig:public java.lang.String getMessage() 

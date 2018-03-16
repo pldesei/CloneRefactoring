@@ -1,0 +1,16 @@
+(startLine=632 endLine=645 srcPath=/home/sonia/NewExperiment/jrubyFilter/00485/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+        try {
+            if(c == null) {
+                String ret = getReturnName(method,new Class[]{RubyKernel.IRUBY_OBJECT});
+                ClassWriter cw = createCtorFast(mnamePath);
+                MethodVisitor mv = startCallSFast(cw);
+                mv.visitMethodInsn(INVOKESTATIC, typePath, method, "(" + IRUB_ID + ")L" + ret +";");
+                mv.visitInsn(ARETURN);
+                mv.visitMaxs(1, 3);
+                c = endCall(cw,mv,mname);
+            }
+            FastInvocationCallback ic = (FastInvocationCallback)c.newInstance();
+            ic.setArity(Arity.noArguments());
+            return ic;
+        } catch(IllegalArgumentException e) {
+

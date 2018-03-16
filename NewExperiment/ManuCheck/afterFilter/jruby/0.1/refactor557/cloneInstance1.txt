@@ -1,0 +1,16 @@
+(startLine=908 endLine=921 srcPath=/home/sonia/NewExperiment/jrubyFilter/00465/src/org/jruby/RubyArray.java)
+    public IRubyObject subseq(long beg, long len) {
+        if (beg > realLength || beg < 0 || len < 0) return getRuntime().getNil();
+
+        if (beg + len > realLength) {
+            len = realLength - beg;
+            
+            if (len < 0) len = 0;
+        }
+        
+        // MRI does klass = rb_obj_class(ary); here, what for ?
+        if (len == 0) return new RubyArray(getRuntime(), 0);
+
+        return makeShared(begin + (int) beg, (int) len);
+    }
+

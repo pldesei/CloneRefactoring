@@ -1,0 +1,32 @@
+(startLine=2606 endLine=2635 srcPath=/home/sonia/NewExperiment/jrubyFilter/00559/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+        public void issueRedoEvent() {
+            if (withinProtection) {
+                method.newobj(cg.p(JumpException.RedoJump.class));
+                method.dup();
+                method.aconst_null();
+                method.aconst_null();
+                method.invokespecial(cg.p(JumpException.RedoJump.class), "<init>", cg.sig(Void.TYPE, cg.params(Object.class, Object.class)));
+
+                method.athrow();
+            } else if (currentLoopLabels != null) {
+                issueLoopRedo();
+            } else {
+                // in method body with no containing loop, issue jump error
+                
+                // load runtime
+                loadRuntime();
+                
+                // load "redo" jump error type
+                method.ldc("redo");
+                
+                loadNil();
+                
+                // load break jump error message
+                method.ldc("unexpected redo");
+                
+                // create and raise local jump error
+                invokeIRuby("newLocalJumpError", cg.sig(RaiseException.class, cg.params(String.class, IRubyObject.class, String.class)));
+                method.athrow();
+            }
+        }
+

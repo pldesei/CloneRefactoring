@@ -1,0 +1,16 @@
+(startLine=1231 endLine=1244 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node negateInteger(Node integerNode) {
+        if (integerNode instanceof FixnumNode) {
+            FixnumNode fixnumNode = (FixnumNode) integerNode;
+            
+            fixnumNode.setValue(-fixnumNode.getValue());
+            return fixnumNode;
+        } else if (integerNode instanceof BignumNode) {
+            BignumNode bignumNode = (BignumNode) integerNode;
+            
+            bignumNode.setValue(bignumNode.getValue().negate());
+        }
+        
+        return integerNode;
+    }
+

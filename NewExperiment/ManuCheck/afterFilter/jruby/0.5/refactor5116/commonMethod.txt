@@ -1,0 +1,22 @@
+(startLine=93 endLine=112 srcPath=/home/sonia/NewExperiment/jrubyFilter/00981/src/org/jruby/javasupport/JavaUtil.java)
+    private static IRubyObject trySimpleConversions(Ruby runtime, Object object) {
+        if (object == null) {
+            return runtime.getNil();
+        }
+
+        if (object instanceof IRubyObject) {
+            return (IRubyObject) object;
+        }
+
+        if (object instanceof InternalJavaProxy) {
+            InternalJavaProxy internalJavaProxy = (InternalJavaProxy) object;
+            IRubyObject orig = internalJavaProxy.___getInvocationHandler().getOrig();
+
+            if (orig != null) {
+                return orig;
+            }
+        }
+
+        return null;
+    }
+

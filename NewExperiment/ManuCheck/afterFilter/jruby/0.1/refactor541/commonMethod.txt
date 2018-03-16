@@ -1,0 +1,23 @@
+(startLine=1866 endLine=1886 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/evaluator/EvaluationState.java)
+    /** Evaluates the body in a class or module definition statement.
+     *
+     */
+    private static IRubyObject evalClassDefinitionBody(Ruby runtime, ThreadContext context, StaticScope scope, 
+            Node bodyNode, RubyModule type, IRubyObject self, Block block) {
+        context.preClassEval(scope, type);
+
+        try {
+            if (isTrace(runtime)) {
+                callTraceFunction(runtime, context, "class", type);
+            }
+
+            return evalInternal(runtime,context, bodyNode, type, block);
+        } finally {
+            context.postClassEval();
+
+            if (isTrace(runtime)) {
+                callTraceFunction(runtime, context, "end", null);
+            }
+        }
+    }
+

@@ -1,0 +1,9 @@
+(startLine=2522 endLine=2528 srcPath=/home/sonia/NewExperiment/jrubyFilter/00606/src/org/jruby/RubyString.java)
+                } else {
+                    RubyArray sub = runtime.newArray(groups);
+                    for (int i=1; i < groups; i++){
+                        sub.append(mat.isCaptured(i) ? substr(runtime, str, mat.start(i), mat.length(i), utf8) : runtime.getNil());
+                    }
+                    result.append(sub);
+                }
+

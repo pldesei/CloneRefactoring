@@ -1,0 +1,25 @@
+(startLine=204 endLine=226 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public INode appendToBlock(INode head, INode tail) {
+        if (tail == null) {
+            return head;
+        } else if (head == null) {
+            return tail;
+        }
+
+        if (!(head instanceof BlockNode)) {
+            head = new BlockNode(head.getPosition()).add(head);
+        }
+
+        if (errorHandler.isHandled(IErrors.VERBOSE) && NodeUtil.isBreakStatement(ListNodeUtil.getLast((IListNode) head))) {
+            errorHandler.handleError(IErrors.WARNING, tail.getPosition(), "Statement not reached.", null);
+        }
+
+        if (tail instanceof BlockNode) {
+            ListNodeUtil.addAll((IListNode) head, (IListNode) tail);
+        } else {
+            ((IListNode) head).add(tail);
+        }
+
+        return head;
+    }
+

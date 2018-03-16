@@ -1,0 +1,22 @@
+(startLine=782 endLine=801 srcPath=/home/sonia/NewExperiment/jrubyFilter/01179/src/org/jruby/compiler/ir/IRBuilder.java)
+    public Operand buildAnd(final AndNode andNode, IRScope m) {
+        if (andNode.getFirstNode().getNodeType().alwaysTrue()) {
+            // build first node (and ignore its result) and then second node
+            build(andNode.getFirstNode(), m);
+            return build(andNode.getSecondNode(), m);
+        } else if (andNode.getFirstNode().getNodeType().alwaysFalse()) {
+            // build first node only and return its value
+            return build(andNode.getFirstNode(), m);
+        } else {
+            Variable ret = m.getNewTemporaryVariable();
+            Label    l   = m.getNewLabel();
+            Operand  v1  = build(andNode.getFirstNode(), m);
+            m.addInstr(new CopyInstr(ret, v1));
+            m.addInstr(new BEQInstr(v1, BooleanLiteral.FALSE, l));
+            Operand  v2  = build(andNode.getSecondNode(), m);
+            m.addInstr(new CopyInstr(ret, v2));
+            m.addInstr(new LABEL_Instr(l));
+            return ret;
+        }
+    }
+

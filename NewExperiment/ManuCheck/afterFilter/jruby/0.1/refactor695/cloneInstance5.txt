@@ -1,0 +1,20 @@
+(startLine=504 endLine=521 srcPath=/home/sonia/NewExperiment/jrubyFilter/00780/src/org/jruby/runtime/CallSite.java)
+        public IRubyObject callIterFrom(ThreadContext context, IRubyObject caller, IRubyObject self, IRubyObject arg1, IRubyObject arg2, Block block) {
+            RubyClass selfType = pollAndGetClass(context, self);
+            try {
+                CacheEntry myCache = cache;
+                if (myCache.isOk(selfType)) {
+                    return myCache.cachedMethod.call(context, self, selfType, methodName, arg1, arg2, block);
+                }
+                return cacheAndCall(caller, selfType, block, context, self, arg1, arg2);
+            } catch (JumpException.BreakJump bj) {
+                return handleBreakJump(context, bj);
+            } catch (JumpException.RetryJump rj) {
+                throw retryJumpError(context);
+            } catch (StackOverflowError soe) {
+                throw systemStackError(context);
+            } finally {
+                block.escape();
+            }
+        }
+

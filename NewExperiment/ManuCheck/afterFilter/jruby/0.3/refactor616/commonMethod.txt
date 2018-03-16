@@ -1,0 +1,12 @@
+(startLine=344 endLine=353 srcPath=/home/sonia/NewExperiment/jrubyFilter/00581/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+    private void determineExpressionState() {
+        switch (lex_state) {
+        case EXPR_FNAME: case EXPR_DOT:
+            lex_state = LexState.EXPR_ARG;
+            break;
+        default:
+            lex_state = LexState.EXPR_BEG;
+            break;
+        }
+    }
+

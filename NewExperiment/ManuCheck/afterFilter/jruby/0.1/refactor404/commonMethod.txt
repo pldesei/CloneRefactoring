@@ -1,0 +1,24 @@
+(startLine=508 endLine=529 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/RubyModule.java)
+    public void addMethod(String name, DynamicMethod method) {
+        if (this == getRuntime().getObject()) {
+            getRuntime().secure(4);
+        }
+
+        if (getRuntime().getSafeLevel() >= 4 && !isTaint()) {
+            throw getRuntime().newSecurityError("Insecure: can't define method");
+        }
+        testFrozen("class/module");
+
+        // We can safely reference methods here instead of doing getMethods() since if we
+        // are adding we are not using a IncludedModuleWrapper.
+        synchronized(getMethods()) {
+            // If we add a method which already is cached in this class, then we should update the 
+            // cachemap so it stays up to date.
+            DynamicMethod existingMethod = (DynamicMethod) getMethods().remove(name);
+            if (existingMethod != null) {
+                getRuntime().getCacheMap().remove(name, existingMethod);
+            }
+            putMethod(name, method);
+        }
+    }
+

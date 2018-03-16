@@ -1,0 +1,8 @@
+(startLine=129 endLine=134 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport19.java)
+    public ListNode list_append(Node list, Node item) {
+        if (list == null) return new ArrayNode(item.getPosition(), item);
+        if (!(list instanceof ListNode)) return new ArrayNode(list.getPosition(), list).add(item);
+
+        return ((ListNode) list).add(item);
+    }
+

@@ -1,0 +1,13 @@
+(startLine=241 endLine=251 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public INode getMatchNode(INode firstNode, INode secondNode) {
+        getLocalNames().getLocalIndex("~");
+
+        if (firstNode instanceof DRegexpNode || firstNode instanceof RegexpNode) {
+            return new Match2Node(firstNode.getPosition(), firstNode, secondNode);
+        } else if (secondNode instanceof DRegexpNode || secondNode instanceof RegexpNode) {
+            return new Match3Node(firstNode.getPosition(), secondNode, firstNode);
+        } else {
+            return getOperatorCallNode(firstNode, "=~", secondNode);
+        }
+    }
+

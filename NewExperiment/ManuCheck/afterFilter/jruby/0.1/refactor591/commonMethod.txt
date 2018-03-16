@@ -1,0 +1,7 @@
+(startLine=650 endLine=654 srcPath=/home/sonia/NewExperiment/jrubyFilter/00494/src/org/jruby/RubyString.java)
+    private static RubyString newEmptyString(Ruby runtime, RubyClass metaClass) {
+        RubyString empty = new RubyString(runtime, metaClass, ByteList.EMPTY_BYTELIST);
+        empty.shareLevel = SHARE_LEVEL_BYTELIST;
+        return empty;
+    }
+

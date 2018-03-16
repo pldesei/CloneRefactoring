@@ -1,0 +1,17 @@
+(startLine=687 endLine=701 srcPath=/home/sonia/NewExperiment/jrubyFilter/00447/src/org/jruby/evaluator/EvaluationState.java)
+            case NodeTypes.DSYMBOLNODE: {
+                DSymbolNode iVisited = (DSymbolNode) node;
+    
+                RubyString string = runtime.newString(new ByteList());
+                for (int i = 0; i < iVisited.size(); i++) {
+                    Node iterNode = iVisited.get(i);
+                    if (iterNode instanceof StrNode) {
+                        string.getByteList().append(((StrNode) iterNode).getValue());
+                    } else {
+                        string.append(evalInternal(runtime,context, iterNode, self, aBlock));
+                    }
+                }
+    
+                return runtime.newSymbol(string.toString());
+            }
+

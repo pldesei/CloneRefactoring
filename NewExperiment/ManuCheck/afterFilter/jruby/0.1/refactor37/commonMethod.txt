@@ -1,0 +1,7 @@
+(startLine=228 endLine=232 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public INode getOperatorCallNode(INode firstNode, String operator) {
+        checkExpression(firstNode);
+
+        return new CallNode(firstNode.getPosition(), firstNode, operator, null);
+    }
+

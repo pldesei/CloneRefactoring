@@ -1,0 +1,10 @@
+(startLine=176 endLine=183 srcPath=/home/sonia/NewExperiment/jrubyFilter/00826/src/org/jruby/runtime/callsite/CachingCallSite.java)
+        try {
+            RubyClass selfType = pollAndGetClass(context, self);
+            CacheEntry myCache = cache;
+            if (myCache.typeOk(selfType)) {
+                return myCache.method.call(context, self, selfType, methodName, arg1, arg2, block);
+            }
+            return cacheAndCall(caller, selfType, block, context, self, arg1, arg2);
+        } catch (JumpException.BreakJump bj) {
+

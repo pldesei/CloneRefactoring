@@ -1,0 +1,16 @@
+(startLine=59 endLine=72 srcPath=/home/sonia/NewExperiment/jrubyFilter/00727/src/org/jruby/ast/CallTwoArgBlockNode.java)
+    public IRubyObject interpret(Ruby runtime, ThreadContext context, IRubyObject self, Block aBlock) {
+        IRubyObject receiver = getReceiverNode().interpret(runtime, context, self, aBlock);
+        Block block = getBlock(context, self);
+            
+        while (true) {
+            try {
+                return callAdapter.call(context, receiver, 
+                        arg1.interpret(runtime, context, self, aBlock), 
+                        arg2.interpret(runtime, context, self, aBlock), block);
+            } catch (JumpException.RetryJump rj) {
+                // allow loop to retry
+            }
+        }    
+    }
+

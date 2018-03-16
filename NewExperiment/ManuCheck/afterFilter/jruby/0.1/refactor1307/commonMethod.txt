@@ -1,0 +1,16 @@
+(startLine=107 endLine=120 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport19.java)
+    public Node arg_append(Node node1, Node node2) {
+        if (node1 == null) return new ArrayNode(node2.getPosition(), node2);
+        if (node1 instanceof ListNode) return ((ListNode) node1).add(node2);
+        if (node1 instanceof BlockPassNode) return arg_append(((BlockPassNode) node1).getBodyNode(), node2);
+        if (node1 instanceof ArgsPushNode) {
+            ArgsPushNode pushNode = (ArgsPushNode) node1;
+            Node body = pushNode.getSecondNode();
+
+            return new ArgsCatNode(pushNode.getPosition(), pushNode.getFirstNode(),
+                    new ArrayNode(body.getPosition(), body).add(node2));
+        }
+
+        return new ArgsPushNode(union(node1, node2), node1, node2);
+    }
+

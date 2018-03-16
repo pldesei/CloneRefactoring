@@ -1,0 +1,10 @@
+(startLine=1540 endLine=1547 srcPath=/home/sonia/NewExperiment/jrubyFilter/00826/src/org/jruby/RubyBasicObject.java)
+        for (int i = table.length; --i >= 0; ) {
+            for (VariableTableEntry e = table[i]; e != null; e = e.next) {
+                if (IdUtil.isInstanceVariable(e.name)) {
+                    if ((readValue = e.value) == null) readValue = variableTableReadLocked(e);
+                    list.add(new VariableEntry<IRubyObject>(e.name, readValue));
+                }
+            }
+        }
+

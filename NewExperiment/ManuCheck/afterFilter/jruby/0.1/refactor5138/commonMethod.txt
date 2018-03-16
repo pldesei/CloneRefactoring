@@ -1,0 +1,7 @@
+(startLine=816 endLine=820 srcPath=/home/sonia/NewExperiment/jrubyFilter/01087/src/org/jruby/util/Dir.java)
+    private static ByteList fixBytesForJarInUTF8(byte[] buf, int offset, int len) {
+        String path = newStringFromUTF8(buf, offset, len);
+        path = path.replace(".jar/", ".jar!");
+        return new ByteList(path.getBytes());
+    }
+

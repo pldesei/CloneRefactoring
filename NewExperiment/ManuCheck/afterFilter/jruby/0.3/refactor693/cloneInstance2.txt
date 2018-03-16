@@ -1,0 +1,13 @@
+(startLine=1162 endLine=1172 srcPath=/home/sonia/NewExperiment/jrubyFilter/00779/src/org/jruby/runtime/ThreadContext.java)
+    public Frame preYieldSpecificBlock(Binding binding, StaticScope scope, RubyModule klass) {
+        Frame lastFrame = getNextFrame();
+        Frame f = pushFrame(binding.getFrame());
+        f.setFile(file);
+        f.setLine(line);
+        f.setVisibility(binding.getVisibility());
+        // new scope for this invocation of the block, based on parent scope
+        pushScope(DynamicScope.newDynamicScope(scope, binding.getDynamicScope()));
+        pushRubyClass((klass != null) ? klass : binding.getKlass());
+        return lastFrame;
+    }
+

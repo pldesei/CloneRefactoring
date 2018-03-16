@@ -1,0 +1,17 @@
+(startLine=2386 endLine=2400 srcPath=/home/sonia/NewExperiment/jrubyFilter/01749/core/src/main/java/org/jruby/RubyArray.java)
+        try {
+            for (i1 = i2 = 0; i1 < size(); len0 = ++i1) {
+                // Do not coarsen the "safe" check, since it will misinterpret
+                // AIOOBE from the yield (see JRUBY-5434)
+                IRubyObject value = safeArrayRef(values, begin + i1);
+
+                if (!block.yield(context, value).isTrue()) continue;
+
+                if (i1 != i2) {
+                    store(i2, value);
+                }
+                len1 = ++i2;
+            }
+            return (i1 == i2) ? context.nil : this;
+        } finally {
+

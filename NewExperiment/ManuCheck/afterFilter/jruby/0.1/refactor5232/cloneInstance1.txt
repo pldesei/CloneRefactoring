@@ -1,0 +1,16 @@
+(startLine=117 endLine=130 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/StringTerm.java)
+        if ((flags & RipperLexer.STR_FUNC_EXPAND) != 0 && c == '#') {
+            c = src.read();
+            switch (c) {
+            case '$':
+            case '@':
+                src.unread(c);
+                lexer.setValue(new Token("#", lexer.getPosition()));
+                return Tokens.tSTRING_DVAR;
+            case '{':
+                lexer.setValue(new Token("#{", lexer.getPosition())); 
+                return Tokens.tSTRING_DBEG;
+            }
+            buffer.append((byte) '#');
+        }
+

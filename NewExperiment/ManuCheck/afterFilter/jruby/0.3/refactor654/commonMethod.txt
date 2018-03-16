@@ -1,0 +1,14 @@
+(startLine=1984 endLine=1995 srcPath=/home/sonia/NewExperiment/jrubyFilter/00614/src/org/jruby/RubyString.java)
+    public IRubyObject substr(int beg, int len) {
+        int length = value.length();
+        if (len < 0 || beg > length) return getRuntime().getNil();
+
+        if (beg < 0) {
+            beg += length;
+            if (beg < 0) return getRuntime().getNil();
+        }
+        
+        int end = Math.min(length, beg + len);
+        return makeShared(beg, end - beg);
+    }
+

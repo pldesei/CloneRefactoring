@@ -1,0 +1,12 @@
+(startLine=125 endLine=134 srcPath=/home/sonia/NewExperiment/jrubyFilter/00287/src/org/jruby/javasupport/Java.java)
+    /**
+     * High-level object conversion utility. 
+     */
+    public static IRubyObject ruby_to_java(final IRubyObject recv, IRubyObject object) {
+    	if (object.respondsTo("to_java_object")) {
+    		return object.callMethod("to_java_object");
+    	}
+    	
+    	return primitive_to_java(recv, object);
+    }    
+

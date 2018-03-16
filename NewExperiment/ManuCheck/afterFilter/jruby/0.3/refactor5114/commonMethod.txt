@@ -1,0 +1,5 @@
+(startLine=1313 endLine=1315 srcPath=/home/sonia/NewExperiment/jrubyFilter/00949/src/org/jruby/RubyIO.java)
+    private void checkDescriptor(Ruby runtime, ChannelDescriptor descriptor) throws IOException {
+        if (!(waitReadable(descriptor))) throw runtime.newIOError("bad file descriptor: " + openFile.getPath());
+    }
+

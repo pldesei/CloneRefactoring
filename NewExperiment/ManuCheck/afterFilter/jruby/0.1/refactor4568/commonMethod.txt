@@ -1,0 +1,14 @@
+(startLine=1064 endLine=1075 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node new_fcall(Token operation, Node args, Node iter) {
+        if (args == null) return new_fcall_noargs(operation, (IterNode) iter);
+        if (args instanceof ArrayNode) return new_fcall_simpleargs(operation, (ArrayNode) args, iter);
+        if (args instanceof BlockPassNode) {
+            if (iter == null) return new_fcall_blockpass(operation, (BlockPassNode) args);
+
+            throw new SyntaxException(PID.BLOCK_ARG_AND_BLOCK_GIVEN, iter.getPosition(), "Both block arg and actual block given.");
+        }
+
+        if (iter != null) new FCallSpecialArgBlockNode(union(operation, args), (String) operation.getValue(), args, (IterNode) iter);
+        return new FCallSpecialArgNode(union(operation, args), (String) operation.getValue(), args);
+    }
+

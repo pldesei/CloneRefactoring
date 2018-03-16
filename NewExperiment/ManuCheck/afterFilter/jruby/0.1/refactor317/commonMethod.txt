@@ -1,0 +1,22 @@
+(startLine=2176 endLine=2195 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/evaluator/EvaluationState.java)
+    private static IRubyObject[] setupArgs(Ruby runtime, ThreadContext context, Node node, IRubyObject self) {
+        if (node == null) return IRubyObject.NULL_ARRAY;
+
+        if (node instanceof ArrayNode) {
+            ArrayNode argsArrayNode = (ArrayNode) node;
+            ISourcePosition position = context.getPosition();
+            int size = argsArrayNode.size();
+            IRubyObject[] argsArray = new IRubyObject[size];
+
+            for (int i = 0; i < size; i++) {
+                argsArray[i] = evalInternal(runtime,context, argsArrayNode.get(i), self, Block.NULL_BLOCK);
+            }
+
+            context.setPosition(position);
+
+            return argsArray;
+        }
+
+        return ArgsUtil.convertToJavaArray(evalInternal(runtime,context, node, self, Block.NULL_BLOCK));
+    }
+

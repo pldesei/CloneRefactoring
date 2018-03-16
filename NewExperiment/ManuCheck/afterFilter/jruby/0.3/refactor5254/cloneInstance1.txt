@@ -1,0 +1,21 @@
+(startLine=452 endLine=470 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/PKeyRSA.java)
+    public IRubyObject private_encrypt(IRubyObject[] args) {
+        int padding = 1;
+        if (org.jruby.runtime.Arity.checkArgumentCount(getRuntime(), args, 1, 2) == 2 && !args[1].isNil()) {
+            padding = RubyNumeric.fix2int(args[1]);
+        }
+        String p = getPadding(padding);
+        RubyString buffer = args[0].convertToString();
+        if (privKey == null) {
+            throw newRSAError(getRuntime(), "private key needed.");
+        }
+        try {
+            Cipher engine = Cipher.getInstance("RSA" + p);
+            engine.init(Cipher.ENCRYPT_MODE, privKey);
+            byte[] outp = engine.doFinal(buffer.getBytes());
+            return RubyString.newString(getRuntime(), outp);
+        } catch (GeneralSecurityException gse) {
+            throw newRSAError(getRuntime(), gse.getMessage());
+        }
+    }
+

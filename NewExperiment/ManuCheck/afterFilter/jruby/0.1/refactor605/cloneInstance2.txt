@@ -1,0 +1,55 @@
+(startLine=1228 endLine=1280 srcPath=/home/sonia/NewExperiment/jrubyFilter/00535/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+        public void rescue(BranchCallback regularCode, Class exception, BranchCallback catchCode) {
+            String mname = getNewRescueName();
+            SkinnyMethodAdapter mv = new SkinnyMethodAdapter(getClassVisitor().visitMethod(ACC_PUBLIC + ACC_STATIC, mname, METHOD_SIGNATURE, null, null));
+            SkinnyMethodAdapter old_method = null;
+            try {
+                old_method = this.method;
+                this.method = mv;
+
+                mv.visitCode();
+                // set up a local IRuby variable
+
+                mv.aload(THREADCONTEXT_INDEX);
+                mv.dup();
+                mv.invokevirtual(cg.p(ThreadContext.class), "getRuntime", cg.sig(Ruby.class));
+                mv.dup();
+                mv.astore(RUNTIME_INDEX);
+            
+                // grab nil for local variables
+                mv.invokevirtual(cg.p(Ruby.class), "getNil", cg.sig(IRubyObject.class));
+                mv.astore(NIL_INDEX);
+            
+                mv.invokevirtual(cg.p(ThreadContext.class), "getCurrentScope", cg.sig(DynamicScope.class));
+                mv.astore(DYNAMIC_SCOPE_INDEX);
+
+                Label l0 = new Label();
+                Label l1 = new Label();
+                Label l2 = new Label();
+                mv.visitTryCatchBlock(l0, l1, l2, cg.p(exception));
+                mv.visitLabel(l0);
+
+                regularCode.branch(this);
+
+                mv.visitLabel(l1);
+                Label l3 = new Label();
+                mv.visitJumpInsn(GOTO, l3);
+                mv.visitLabel(l2);
+                mv.visitVarInsn(ASTORE, 1);
+
+                catchCode.branch(this);
+
+                mv.visitLabel(l3);
+                mv.areturn();
+                mv.visitMaxs(1, 1);
+                mv.visitEnd();
+            } finally {
+                this.method = old_method;
+            }
+            loadThreadContext();
+            loadSelf();
+            method.aload(ARGS_INDEX);
+            loadBlock();
+            method.invokestatic(classname, mname, METHOD_SIGNATURE);
+        }
+

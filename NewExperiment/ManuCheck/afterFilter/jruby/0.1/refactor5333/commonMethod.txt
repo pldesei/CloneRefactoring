@@ -1,0 +1,13 @@
+(startLine=672 endLine=682 srcPath=/home/sonia/NewExperiment/jrubyFilter/01749/core/src/main/java/org/jruby/java/codegen/RealClassGenerator.java)
+    private static void writeClassFile(final String name, final byte[] bytecode) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(name + ".class");
+            fos.write(bytecode);
+        }
+        catch (IOException ex) { ex.printStackTrace(); }
+        finally {
+            try { if ( fos != null ) fos.close(); } catch (Exception e) {}
+        }
+    }
+

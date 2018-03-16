@@ -1,0 +1,36 @@
+(startLine=3715 endLine=3748 srcPath=/home/sonia/NewExperiment/jrubyFilter/01603/core/src/main/java/org/jruby/RubyString.java)
+    private static IRubyObject scanOnce(ThreadContext context, RubyString str, IRubyObject pat, int[] startp) {
+        IRubyObject result;
+        RubyMatchData match;
+        int i;
+
+        if (patternSearch(context, pat, str, startp[0], true) >= 0) {
+            match = (RubyMatchData)context.getBackRef();
+            if (match.begin(0) == match.end(0)) {
+                Encoding enc = str.getEncoding();
+                /*
+                 * Always consume at least one character of the input string
+                 */
+                if (str.size() > match.end(0)) {
+                    startp[0] = match.end(0) + encFastMBCLen(str.value.unsafeBytes(), str.value.begin() + match.end(0),
+                            str.value.begin() + str.value.realSize(), enc);
+                } else {
+                    startp[0] = match.end(0) + 1;
+                }
+            } else {
+                startp[0] = match.end(0);
+            }
+            if (match.numRegs() == 1) {
+                return RubyRegexp.nth_match(0, match);
+            }
+            result = context.runtime.newArray(match.numRegs());
+            for (i = 1; i < match.numRegs(); i++) {
+                ((RubyArray)result).push(RubyRegexp.nth_match(i, match));
+            }
+
+            return result;
+        }
+
+        return context.nil;
+    }
+

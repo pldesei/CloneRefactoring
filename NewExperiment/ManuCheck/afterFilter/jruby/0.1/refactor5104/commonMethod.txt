@@ -1,0 +1,5 @@
+(startLine=25 endLine=27 srcPath=/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/java/invokers/RubyToJavaInvoker.java)
+    static Object convertArg(ThreadContext context, IRubyObject arg, JavaMethod method, int index) {
+        return JavaUtil.convertArgumentToType(context, arg, method.getParameterTypes()[index]);
+    }
+

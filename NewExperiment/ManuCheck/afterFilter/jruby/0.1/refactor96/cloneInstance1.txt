@@ -1,0 +1,10 @@
+(startLine=94 endLine=101 srcPath=/home/sonia/NewExperiment/jrubyFilter/00285/src/org/jruby/javasupport/JavaMethod.java)
+    public static JavaMethod create(Ruby runtime, Class javaClass, String methodName, Class[] argumentTypes) {
+        try {
+            Method method = javaClass.getMethod(methodName, argumentTypes);
+            return create(runtime, method);
+        } catch (NoSuchMethodException e) {
+            throw new NameError(runtime, "undefined method '" + methodName + "' for class '" + javaClass.getName() + "'");
+        }
+    }
+

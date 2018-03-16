@@ -1,0 +1,34 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01545
+predFragLineRange:127-144
+predMethodLineRange:127-144
+nextLineRange:132-144
+predStrMethodInvoNames:
+[getIO, newRuntimeError, setMainStream, open, newChannel, newErrnoEINVALError, getRuntime, setMode]
+%%%%%%%%%%
+AddedMethodInvo Line:140 InvoName:MakeOpenFile()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:public org.jruby.util.io.OpenFile MakeOpenFile() 
+%%%%%%%%%%
+AddedMethodInvo Line:141 InvoName:openFile.setFD(new ChannelFD(Channels.newChannel(outputStream),runtime.getPosix()))
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void setFD(org.jruby.util.io.ChannelFD) 
+%%%%%%%%%%
+AddedMethodInvo Line:141 InvoName:runtime.getPosix()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/Ruby.java
+InvokedMethodSig:public POSIX getPosix() 
+%%%%%%%%%%
+AddedMethodInvo Line:143 InvoName:openFile.setAutoclose(autoclose)
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void setAutoclose(boolean) 

@@ -1,0 +1,9 @@
+(startLine=3540 endLine=3546 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/Ruby19Parser.java)
+  {
+                    if (!support.is_local_id(((Token)yyVals[0+yyTop]))) {
+                        yyerror("duplicate rest argument name");
+                    }
+                    support.shadowing_lvar(((Token)yyVals[0+yyTop]));
+                    yyVal = new RestArgNode(support.union(((Token)yyVals[-1+yyTop]), ((Token)yyVals[0+yyTop])), (String) ((Token)yyVals[0+yyTop]).getValue(), support.arg_var(((Token)yyVals[0+yyTop])));
+                }
+

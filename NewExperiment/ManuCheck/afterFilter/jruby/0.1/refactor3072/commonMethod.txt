@@ -1,0 +1,14 @@
+(startLine=459 endLine=470 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Define an attribute set condition so we can return lhs
+     * 
+     * @param receiver object which contains attribute
+     * @param name of the attribute being set
+     * @return an AttrAssignNode
+     */
+    public Node attrset(Node receiver, String name) {
+        checkExpression(receiver);
+
+        return new_attrassign(receiver.getPosition(), receiver, name + "=", null);
+    }
+

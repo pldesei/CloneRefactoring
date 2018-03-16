@@ -1,0 +1,14 @@
+(startLine=1062 endLine=1073 srcPath=/home/sonia/NewExperiment/jrubyFilter/01701/core/src/main/java/org/jruby/RubyArray.java)
+    public IRubyObject subseq(RubyClass metaClass, long beg, long len, boolean light) {
+        Ruby runtime = getRuntime();
+        if (beg > realLength || beg < 0 || len < 0) return runtime.getNil();
+
+        if (beg + len > realLength) {
+            len = realLength - beg;
+            if (len < 0) len = 0;
+        }
+
+        if (len == 0) return new RubyArray(runtime, metaClass, IRubyObject.NULL_ARRAY, !light);
+        return makeShared(begin + (int) beg, (int) len, new RubyArray(runtime, metaClass, !light));
+    }
+

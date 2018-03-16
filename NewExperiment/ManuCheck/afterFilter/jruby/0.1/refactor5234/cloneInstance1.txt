@@ -1,0 +1,41 @@
+(startLine=2149 endLine=2187 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    private int minus(boolean spaceSeen) throws IOException {
+        int c = src.read();
+        
+        if (lex_state == LexState.EXPR_FNAME || lex_state == LexState.EXPR_DOT) {
+            setState(LexState.EXPR_ARG);
+            if (c == '@') {
+                yaccValue = new Token("-", getPosition());
+                return Tokens.tUMINUS;
+            }
+            src.unread(c);
+            yaccValue = new Token("-", getPosition());
+            return Tokens.tMINUS;
+        }
+        if (c == '=') {
+            setState(LexState.EXPR_BEG);
+            yaccValue = new Token("-=", getPosition());
+            return Tokens.tOP_ASGN;
+        }
+        if (c == '>') {
+            setState(LexState.EXPR_ARG);
+            yaccValue = new Token("->", getPosition());
+            return Tokens.tLAMBDA;
+        }
+        if (isBEG() || isSpaceArg(c, spaceSeen)) {
+            if (isARG()) arg_ambiguous();
+            setState(LexState.EXPR_BEG);
+            src.unread(c);
+            yaccValue = new Token("-", getPosition());
+            if (Character.isDigit(c)) {
+                return Tokens.tUMINUS_NUM;
+            }
+            return Tokens.tUMINUS;
+        }
+        setState(LexState.EXPR_BEG);
+        src.unread(c);
+        yaccValue = new Token("-", getPosition());
+        
+        return Tokens.tMINUS;
+    }
+

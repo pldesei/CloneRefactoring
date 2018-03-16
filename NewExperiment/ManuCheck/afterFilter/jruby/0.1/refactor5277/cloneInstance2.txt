@@ -1,0 +1,13 @@
+(startLine=470 endLine=480 srcPath=/home/sonia/NewExperiment/jrubyFilter/01544/core/src/main/java/org/jruby/RubyConverter.java)
+        public static IRubyObject readagain_bytes(ThreadContext context, IRubyObject self) {
+            RubyCoderResult result = (RubyCoderResult)self.dataGetStruct();
+            
+            if (result != null && result.isError() && result.readagainBytes != null) {
+                // FIXME: do this elsewhere and cache it
+                ByteList errorBytes = new ByteList(result.readagainBytes, ASCIIEncoding.INSTANCE, true);
+                return RubyString.newString(context.runtime, errorBytes);
+            }
+        
+            return context.nil;
+        }
+

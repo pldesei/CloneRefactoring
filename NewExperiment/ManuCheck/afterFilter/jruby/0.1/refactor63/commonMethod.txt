@@ -1,0 +1,21 @@
+(startLine=813 endLine=831 srcPath=/home/sonia/NewExperiment/jrubyFilter/00223/src/org/jruby/util/Pack.java)
+		/**
+		 * <p>Get substring from current point of desired length and advance
+		 * pointer.</p>
+		 * 
+		 * @param length of substring
+		 * @return the substring
+		 */
+		public String nextSubstring(int length) {
+		    // Cannot get substring off end of buffer
+		    if (index + length > buffer.length) {
+		        throw new IllegalArgumentException();
+		    }
+		    
+			String substring = new String(buffer, index, length);
+			
+			index += length;
+			
+			return substring;
+		}
+

@@ -1,0 +1,15 @@
+(startLine=1025 endLine=1037 srcPath=/home/sonia/NewExperiment/jrubyFilter/01666/core/src/main/java/org/jruby/RubyHash.java)
+    protected void op_asetSmallForString(Ruby runtime, RubyString key, IRubyObject value) {
+        final RubyHashEntry entry = internalGetEntry(key);
+        if (entry != NO_ENTRY) {
+            entry.value = value;
+        } else {
+            checkIterating();
+            if (!key.isFrozen()) {
+                key = key.strDup(runtime, key.getMetaClass().getRealClass());
+                key.setFrozen(true);
+            }
+            internalPutSmall(key, value, false);
+        }
+    }
+

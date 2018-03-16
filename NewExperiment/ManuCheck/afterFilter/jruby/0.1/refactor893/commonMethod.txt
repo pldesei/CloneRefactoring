@@ -1,0 +1,8 @@
+(startLine=1256 endLine=1261 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node unwrapNewlineNode(Node node) {
+    	if(node instanceof NewlineNode) {
+    		return ((NewlineNode) node).getNextNode();
+    	}
+    	return node;
+    }
+

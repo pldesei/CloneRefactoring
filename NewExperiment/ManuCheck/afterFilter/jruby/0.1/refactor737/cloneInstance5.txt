@@ -1,0 +1,21 @@
+(startLine=262 endLine=280 srcPath=/home/sonia/NewExperiment/jrubyFilter/00841/src/org/jruby/internal/runtime/methods/DefaultMethod.java)
+    public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, IRubyObject arg0, Block block) {
+        Ruby runtime = context.getRuntime();
+
+        if (jitCompiledScript != null) {
+            try {
+                jitPre(context, self, name, block, 1);
+
+                return jitCompiledScript.__file__(context, self, arg0, block);
+            } catch (JumpException.ReturnJump rj) {
+                return handleReturn(context, rj);
+            } catch (JumpException.RedoJump rj) {
+                return handleRedo(runtime);
+            } finally {
+                jitPost(runtime, context, name);
+            }
+        } else {
+            return call(context, self, clazz, name, new IRubyObject[] {arg0}, block);
+        }
+    }
+

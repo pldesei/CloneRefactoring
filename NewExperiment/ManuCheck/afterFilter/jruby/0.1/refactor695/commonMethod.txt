@@ -1,0 +1,20 @@
+(startLine=86 endLine=103 srcPath=/home/sonia/NewExperiment/jrubyFilter/00781/src/org/jruby/runtime/CallSite.java)
+            /**
+             * Check whether this site's cached type matches the incoming
+             * type closely enough to allow using the cached method as-is.
+             * 
+             * The primary check performed here is whether the incoming type
+             * and the cached type are exactly the same object. This is the
+             * fast path. If that fails, an additional set of checks are
+             * performed in case the incoming type is a singleton, which extends
+             * but may not mask the method in question on the cached type.
+             * 
+             * @see CacheEntry#typeGoodEnough
+             * @param otherType
+             * @return
+             */
+            public boolean typeOk(RubyClass incomingType) {
+                RubyClass cachedType = this.cachedType;
+                return cachedType == incomingType || typeGoodEnough(cachedType, incomingType);
+            }
+

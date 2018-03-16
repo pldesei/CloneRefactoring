@@ -1,0 +1,12 @@
+(startLine=472 endLine=481 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public void backrefAssignError(Node node) {
+        if (node instanceof NthRefNode) {
+            String varName = "$" + ((NthRefNode) node).getMatchNumber();
+            throw new SyntaxException(PID.INVALID_ASSIGNMENT, node.getPosition(), 
+                    "Can't set variable " + varName + '.', varName);
+        } else if (node instanceof BackRefNode) {
+            String varName = "$" + ((BackRefNode) node).getType();
+            throw new SyntaxException(PID.INVALID_ASSIGNMENT, node.getPosition(), "Can't set variable " + varName + '.', varName);
+        }
+    }
+

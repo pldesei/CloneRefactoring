@@ -1,0 +1,195 @@
+(startLine=78 endLine=270 srcPath=/home/sonia/NewExperiment/jrubyFilter/01686/core/src/main/java/org/jruby/ir/interpreter/SimpleMethodInterpreterEngine.java)
+    public IRubyObject interpret(ThreadContext context, IRubyObject self, InterpreterContext interpreterContext, RubyModule implClass, String name, IRubyObject arg1, Block block, Block.Type blockType) {
+        Instr[] instrs = interpreterContext.getInstructions();
+        Object[] temp = interpreterContext.allocateTemporaryVariables();
+        int n = instrs.length;
+        int ipc = 0;
+        Object exception = null;
+
+        StaticScope currScope = interpreterContext.getStaticScope();
+        DynamicScope currDynScope = context.getCurrentScope();
+        IRScope scope = currScope.getIRScope();
+
+        // Init profiling this scope
+        boolean debug = IRRuntimeHelpers.isDebug();
+
+        // Enter the looooop!
+        while (ipc < n) {
+            Instr instr = instrs[ipc];
+
+            ipc++;
+
+            Operation operation = instr.getOperation();
+            if (debug) {
+                Interpreter.LOG.info("I: {}", instr);
+                Interpreter.interpInstrsCount++;
+            }
+
+            try {
+                switch (operation) {
+                    case RECV_PRE_REQD_ARG:
+                        setResult(temp, currDynScope, ((ResultInstr) instr).getResult(), arg1);
+                        break;
+                    case CHECK_ARITY:
+                        break;
+                    case RETURN:
+                        return (IRubyObject) retrieveOp(((ReturnBase) instr).getReturnValue(), context, self, currDynScope, currScope, temp);
+                    case LINE_NUM:
+                        context.setLine(((LineNumberInstr) instr).lineNumber);
+                        break;
+                    case RECV_SELF:
+                        break;
+                    case RECV_JRUBY_EXC:
+                        setResult(temp, currDynScope, ((ResultInstr) instr).getResult(), exception);
+                        break;
+                    case THROW:
+                        instr.interpret(context, currScope, currDynScope, self, temp);
+                        break;
+                    case PUSH_FRAME:
+                        context.preMethodFrameOnly(implClass, name, self, block);
+                        // Only the top-level script scope has PRIVATE visibility.
+                        // This is already handled as part of Interpreter.execute above.
+                        // Everything else is PUBLIC by default.
+                        context.setCurrentVisibility(Visibility.PUBLIC);
+                        break;
+                    case POP_FRAME:
+                        context.popFrame();
+                        break;
+                    case PUSH_BINDING:
+                        // IMPORTANT: Preserve this update of currDynScope.
+                        // This affects execution of all instructions in this scope
+                        // which will now use the updated value of currDynScope.
+                        currDynScope = interpreterContext.newDynamicScope(context);
+                        context.pushScope(currDynScope);
+                        break;
+                    case POP_BINDING:
+                        context.popScope();
+                        break;
+                    case NORESULT_CALL_1O: {
+                        OneOperandArgNoBlockNoResultCallInstr call = (OneOperandArgNoBlockNoResultCallInstr) instr;
+                        IRubyObject r = (IRubyObject) retrieveOp(call.getReceiver(), context, self, currDynScope, currScope, temp);
+                        IRubyObject o = (IRubyObject) call.getArg1().retrieve(context, self, currScope, currDynScope, temp);
+                        call.getCallSite().call(context, self, r, o);
+                        break;
+                    }
+                    case SEARCH_CONST: {
+                        SearchConstInstr sci = (SearchConstInstr) instr;
+                        ConstantCache cache = sci.getConstantCache();
+                        Object result;
+                        if (!ConstantCache.isCached(cache)) {
+                            result = sci.cache(context, currScope, currDynScope, self, temp);
+                        } else {
+                            result = cache.value;
+                        }
+                        setResult(temp, currDynScope, sci.getResult(), result);
+                        break;
+                    }
+                    case INHERITANCE_SEARCH_CONST:
+                        setResult(temp, currDynScope, ((ResultInstr) instr).getResult(),
+                                instr.interpret(context, currScope, currDynScope, self, temp));
+                        break;
+                    case NORESULT_CALL:
+                        instr.interpret(context, currScope, currDynScope, self, temp);
+                        break;
+                    case CALL:
+                        setResult(temp, currDynScope, instr,
+                                instr.interpret(context, currScope, currDynScope, self, temp));
+                        break;
+                    case CALL_0O: {
+                        ZeroOperandArgNoBlockCallInstr call = (ZeroOperandArgNoBlockCallInstr)instr;
+                        IRubyObject r = (IRubyObject)retrieveOp(call.getReceiver(), context, self, currDynScope, currScope, temp);
+                        setResult(temp, currDynScope, call.getResult(), call.getCallSite().call(context, self, r));
+                        break;
+                    }
+                    case CALL_1O: {
+                        OneOperandArgNoBlockCallInstr call = (OneOperandArgNoBlockCallInstr) instr;
+                        IRubyObject r = (IRubyObject) retrieveOp(call.getReceiver(), context, self, currDynScope, currScope, temp);
+                        IRubyObject o = (IRubyObject) call.getArg1().retrieve(context, self, currScope, currDynScope, temp);
+                        setResult(temp, currDynScope, call.getResult(), call.getCallSite().call(context, self, r, o));
+                        break;
+                    }
+                    case B_NIL:
+                        ipc = instr.interpretAndGetNewIPC(context, currDynScope, currScope, self, temp, ipc);
+                        break;
+                    case B_FALSE:
+                        ipc = instr.interpretAndGetNewIPC(context, currDynScope, currScope, self, temp, ipc);
+                        break;
+                    case B_TRUE:
+                        ipc = instr.interpretAndGetNewIPC(context, currDynScope, currScope, self, temp, ipc);
+                        break;
+                    case BNE:
+                        ipc = instr.interpretAndGetNewIPC(context, currDynScope, currScope, self, temp, ipc);
+                        break;
+                    case LOAD_IMPLICIT_CLOSURE:
+                        setResult(temp, currDynScope, ((ResultInstr) instr).getResult(), block);
+                        break;
+                    case COPY: // NO INTERP
+                        setResult(temp, currDynScope, ((CopyInstr) instr).getResult(),
+                                retrieveOp(((CopyInstr) instr).getSource(), context, self, currDynScope, currScope, temp));
+                        break;
+                    case JUMP: // NO INTERP
+                        ipc = ((JumpInstr)instr).getJumpTarget().getTargetPC();
+                        break;
+                    case RUNTIME_HELPER: { // NO INTERP
+                        RuntimeHelperCall rhc = (RuntimeHelperCall)instr;
+                        setResult(temp, currDynScope, rhc.getResult(),
+                                rhc.callHelper(context, currScope, currDynScope, self, temp, blockType));
+                        break;
+                    }
+                    case GET_FIELD: { // NO INTERP
+                        GetFieldInstr gfi = (GetFieldInstr)instr;
+                        IRubyObject object = (IRubyObject)gfi.getSource().retrieve(context, self, currScope, currDynScope, temp);
+                        VariableAccessor a = gfi.getAccessor(object);
+                        Object result = a == null ? null : (IRubyObject)a.get(object);
+                        if (result == null) {
+                            if (context.runtime.isVerbose()) {
+                                context.runtime.getWarnings().warning(IRubyWarnings.ID.IVAR_NOT_INITIALIZED, "instance variable " + gfi.getRef() + " not initialized");
+                            }
+                            result = context.nil;
+                        }
+                        setResult(temp, currDynScope, gfi.getResult(), result);
+                        break;
+                    }
+                    case PUT_FIELD: {
+                        PutFieldInstr putField = (PutFieldInstr) instr;
+                        IRubyObject object = (IRubyObject) putField.getTarget().retrieve(context, self, currScope, currDynScope, temp);
+
+                        // We store instance variable offsets on the real class, since instance var tables are associated with the
+                        // natural type of an object.
+                        RubyClass clazz = object.getMetaClass().getRealClass();
+
+                        // FIXME: Should add this as a field for instruction
+                        clazz.getVariableAccessorForWrite(putField.getRef()).set(object,
+                                putField.getValue().retrieve(context, self, currScope, currDynScope, temp));
+                        break;
+                    }
+
+                    case BUILD_COMPOUND_STRING: case CONST_MISSING:
+                    default:
+                        if (instr.getOperation().opClass == OpClass.BRANCH_OP) {
+                            ipc = instr.interpretAndGetNewIPC(context, currDynScope, currScope, self, temp, ipc);
+                        } else {
+                            Object result = instr.interpret(context, currScope, currDynScope, self, temp);
+
+                            if (instr instanceof ResultInstr) {
+                                setResult(temp, currDynScope, ((ResultInstr) instr).getResult(), result);
+                            }
+                        }
+                }
+            } catch (Throwable t) {
+                ipc = instr.getRPC();
+                if (debug) {
+                    Interpreter.LOG.info("in : " + interpreterContext.getStaticScope().getIRScope() + ", caught Java throwable: " + t + "; excepting instr: " + instr);
+                    Interpreter.LOG.info("ipc for rescuer: " + ipc);
+                }
+
+                if (ipc == -1) {
+                    Helpers.throwException(t);
+                } else {
+                    exception = t;
+                }
+            }
+        }
+        throw context.runtime.newRuntimeError("BUG: interpreter fell through to end unexpectedly");
+    }
+

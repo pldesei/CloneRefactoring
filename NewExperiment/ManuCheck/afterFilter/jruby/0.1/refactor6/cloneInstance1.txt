@@ -1,0 +1,14 @@
+(startLine=950 endLine=961 srcPath=/home/sonia/NewExperiment/jrubyFilter/00068/org/jruby/RubyArray.java)
+    public RubyObject m_assoc(RubyObject arg) {
+        for (int i = 0, len = length(); i < len; i++) {
+            if (!((entry(i) instanceof RubyArray) && ((RubyArray) entry(i)).length() > 0)) {
+                continue;
+            }
+            RubyArray ary = (RubyArray) entry(i);
+            if (arg.funcall(equals, ary.entry(0)).isTrue()) {
+                return ary;
+            }
+        }
+        return getRuby().getNil();
+    }
+

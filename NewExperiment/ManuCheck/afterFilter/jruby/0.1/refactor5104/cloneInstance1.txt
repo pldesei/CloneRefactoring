@@ -1,0 +1,10 @@
+(startLine=92 endLine=99 srcPath=/home/sonia/NewExperiment/jrubyFilter/00930/src/org/jruby/java/invokers/StaticMethodInvoker.java)
+        if (block.isGiven()) {
+            Object[] convertedArgs = new Object[1];
+            RubyProc proc = RubyProc.newProc(self.getRuntime(), block, Block.Type.LAMBDA);
+            JavaMethod method = (JavaMethod)findCallableArityOne(self, name, proc);
+            convertedArgs[0] = JavaUtil.convertArgumentToType(context, proc, method.getParameterTypes()[0]);
+
+            return Java.java_to_ruby(self, method.invoke_static(convertedArgs), Block.NULL_BLOCK);
+        } else {
+

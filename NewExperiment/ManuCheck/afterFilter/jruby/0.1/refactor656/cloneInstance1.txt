@@ -1,0 +1,26 @@
+(startLine=628 endLine=651 srcPath=/home/sonia/NewExperiment/jrubyFilter/00661/src/org/jruby/RubyIO.java)
+                    do {
+                        readCheck(readStream);
+                        readStream.clearerr();
+
+                        try {
+                            c = readStream.fgetc();
+                        } catch (EOFException e) {
+                            c = -1;
+                        }
+
+                        if (c == -1) {
+                            // TODO: clear error, wait for it to become readable
+                            if (c == -1) {
+                                if (update) {
+                                    return RubyString.newString(getRuntime(), buf);
+                                }
+                                break;
+                            }
+                        }
+                        
+                        buf.append(c);
+            
+                        update = true;
+                    } while (c != newline); // loop until we see the nth separator char
+

@@ -1,0 +1,10 @@
+(startLine=347 endLine=354 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java)
+    protected static RubyString readInitArg(final ThreadContext context, IRubyObject arg) {
+        arg = OpenSSLImpl.to_der_if_possible(context, arg);
+        if ( arg instanceof RubyFile ) {
+            return (RubyString)( (RubyFile) arg.dup() ).read(context);
+        } else {
+            return arg.convertToString();
+        }
+    }
+

@@ -1,0 +1,9 @@
+(startLine=591 endLine=597 srcPath=/home/sonia/NewExperiment/jrubyFilter/00302/src/org/jruby/runtime/ThreadContext.java)
+    public void postNodeEval(RubyModule wrapper) {
+        popScope();
+        popFrame();
+        popRubyClass();
+        setWrapper(wrapper);
+        popDynamicVars();
+    }
+

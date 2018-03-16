@@ -1,0 +1,11 @@
+(startLine=772 endLine=780 srcPath=/home/sonia/NewExperiment/jrubyFilter/01872/core/src/main/java/org/jruby/ext/socket/Addrinfo.java)
+    AddressFamily getAddressFamily() {
+        if (socketAddress instanceof InetSocketAddress) {
+            if (getInetAddress() instanceof Inet4Address) return AF_INET;
+            return AF_INET6;
+        } else if (socketAddress instanceof UnixSocketAddress) {
+            return AF_UNIX;
+        }
+        return AF_UNSPEC;
+    }
+

@@ -1,0 +1,51 @@
+(startLine=221 endLine=269 srcPath=/home/sonia/NewExperiment/jrubyFilter/01061/src/org/jruby/util/ConvertDouble.java)
+        private boolean parseDecimalDigits() {
+            if (isEOS()) {
+                if (isStrict) strictError();
+                
+                return true;
+            }
+            
+            byte value = next();
+
+            if (isDigit(value)) {
+                addToResult(value);
+            } else if (value == '_') {
+                if (isStrict) strictError();
+                while (!isEOS()) {    // Wonky, but 12._2e2 is 1200.0 and 12.__e2 is 12.0
+                    value = next();
+
+                    if (isDigit(value)) {
+                        addToResult(value);
+                        break;
+                    } else if (value != '_') {
+                        return true;
+                    }
+                }
+            } else {
+                if (isStrict) strictError();
+                return true; // Found garbage must be at end of string.
+            } 
+
+            while (!isEOS()) {
+                value = next();
+
+                if (isDigit(value)) {
+                    addToResult(value);
+                } else if (isExponent(value)) {
+                    addToResult(value);
+                    return parseExponent();
+                } else if (value == '_') {
+                    verifyNumberAfterUnderscore();
+                } else if (isWhitespace(value)) {
+                    return skipWhitespace();
+                } else {
+                    if (isStrict) strictError();
+
+                    return true;
+                }
+            }
+
+            return true;
+        }
+

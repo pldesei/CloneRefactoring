@@ -1,0 +1,13 @@
+(startLine=1150 endLine=1160 srcPath=/home/sonia/NewExperiment/jrubyFilter/00779/src/org/jruby/runtime/ThreadContext.java)
+    public Frame preForBlock(Binding binding, RubyModule klass) {
+        Frame lastFrame = getNextFrame();
+        Frame f = binding.getFrame();
+        f.setFile(file);
+        f.setLine(line);
+        pushFrame(f);
+        getCurrentFrame().setVisibility(binding.getVisibility());
+        pushScope(binding.getDynamicScope());
+        pushRubyClass((klass != null) ? klass : binding.getKlass());
+        return lastFrame;
+    }
+

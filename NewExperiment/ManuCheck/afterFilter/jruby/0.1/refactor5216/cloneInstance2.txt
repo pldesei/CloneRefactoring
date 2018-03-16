@@ -1,0 +1,16 @@
+(startLine=114 endLine=127 srcPath=/home/sonia/NewExperiment/jrubyFilter/01405/src/org/jruby/ext/zlib/JZlibRubyGzipReader.java)
+        if (realIo.respondsTo("path")) {
+            obj.getSingletonClass().defineMethod("path", new Callback() {
+
+                @Override
+                public IRubyObject execute(IRubyObject recv, IRubyObject[] args, Block block) {
+                    return ((JZlibRubyGzipReader) recv).realIo.callMethod(recv.getRuntime().getCurrentContext(), "path");
+                }
+
+                @Override
+                public Arity getArity() {
+                    return Arity.NO_ARGUMENTS;
+                }
+            });
+        }
+

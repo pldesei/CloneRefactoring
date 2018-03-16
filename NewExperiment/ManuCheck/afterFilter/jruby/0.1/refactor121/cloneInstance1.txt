@@ -1,0 +1,13 @@
+(startLine=142 endLine=152 srcPath=/home/sonia/NewExperiment/jrubyFilter/00422/src/org/jruby/RubyDigest.java)
+        public static IRubyObject s_hexdigest(IRubyObject recv, IRubyObject str) {
+            String name = ((RubyClass)recv).getClassVar("metadata").toString();
+            try {
+                MessageDigest md = MessageDigest.getInstance(name);
+                return recv.getRuntime().newString(toHex(md.digest(str.toString().getBytes("PLAIN"))));
+            } catch(NoSuchAlgorithmException e) {
+                throw recv.getRuntime().newNotImplementedError("Unsupported digest algorithm (" + name + ")");
+            } catch(java.io.UnsupportedEncodingException e) {
+                throw recv.getRuntime().newNotImplementedError("Unsupported digest algorithm (" + name + ")");
+            }
+        }
+

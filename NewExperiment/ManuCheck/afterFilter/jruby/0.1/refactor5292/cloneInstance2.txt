@@ -1,0 +1,14 @@
+(startLine=126 endLine=137 srcPath=/home/sonia/NewExperiment/jrubyFilter/01584/core/src/main/java/org/jruby/embed/IsolatedScriptingContainer.java)
+    public void addGemPath( ClassLoader cl, String ref ) {
+        URL url = cl.getResource( ref );
+        if ( url == null && ref.startsWith( "/" ) ) {
+            url = cl.getResource( ref.substring( 1 ) );
+        }
+        if ( url == null ) {
+            throw new RuntimeException( "reference " + ref + " not found on classloader " + cl );
+        }
+
+        String uri = "uri:" + url.toString().replaceFirst( ref + "$", "" );
+        runScriptlet( "Gem::Specification.add_dir '" + uri + "' unless Gem::Specification.dirs.member?( '" + uri + "' )" );
+    }
+

@@ -1,0 +1,22 @@
+(startLine=70 endLine=89 srcPath=/home/sonia/NewExperiment/jrubyFilter/01811/truffle/src/main/java/org/jruby/truffle/core/array/ArrayConcatNode.java)
+    private DynamicObject executeRubyArray(VirtualFrame frame, Object store, int length) {
+        for (int n = 0; n < children.length; n++) {
+            final Object childObject = children[n].execute(frame);
+
+            if (RubyGuards.isRubyArray(childObject)) {
+                appendArrayProfile.enter();
+                final DynamicObject childArray = (DynamicObject) childObject;
+                store = arrayBuilderNode.ensure(store, length + Layouts.ARRAY.getSize(childArray));
+                store = arrayBuilderNode.appendArray(store, length, childArray);
+                length += Layouts.ARRAY.getSize(childArray);
+            } else {
+                appendObjectProfile.enter();
+                store = arrayBuilderNode.ensure(store, length + 1);
+                store = arrayBuilderNode.appendValue(store, length, childObject);
+                length++;
+            }
+        }
+
+        return Layouts.ARRAY.createArray(coreLibrary().getArrayFactory(), arrayBuilderNode.finish(store, length), length);
+    }
+

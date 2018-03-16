@@ -1,0 +1,5 @@
+(startLine=264 endLine=266 srcPath=/home/sonia/NewExperiment/jrubyFilter/00715/src/org/jruby/runtime/CallSite.java)
+        private boolean methodMissing(DynamicMethod method, ThreadContext context) {
+            return method.isUndefined() || (!methodName.equals("method_missing") && !method.isCallableFrom(context.getFrameSelf(), callType));
+        }
+

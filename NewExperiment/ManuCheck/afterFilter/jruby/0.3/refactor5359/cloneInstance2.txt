@@ -1,0 +1,15 @@
+(startLine=235 endLine=247 srcPath=/home/sonia/NewExperiment/jrubyFilter/01877/core/src/main/java/org/jruby/runtime/encoding/EncodingService.java)
+    public void defineAliases(EncodingAliasVisitor visitor) {
+        HashEntryIterator hei = aliases.entryIterator();
+        while (hei.hasNext()) {
+            CaseInsensitiveBytesHash.CaseInsensitiveBytesHashEntry<Entry> e =
+                    ((CaseInsensitiveBytesHash.CaseInsensitiveBytesHashEntry<Entry>)hei.next());
+            Entry ee = e.value;
+
+            for (String constName : encodingNames(e.bytes, e.p, e.end)) {
+                visitor.defineAlias(ee.getIndex(), constName);
+                visitor.defineConstant(ee.getIndex(), constName);
+            }
+        }
+    }
+

@@ -1,0 +1,7 @@
+(startLine=2424 endLine=2428 srcPath=/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/runtime/Helpers.java)
+    public static IRubyObject getInstanceVariableNoWarn(IRubyObject self, ThreadContext context, String internedName) {
+        IRubyObject result = self.getInstanceVariables().getInstanceVariable(internedName);
+        if (result != null) return result;
+        return context.nil;
+    }
+

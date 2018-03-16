@@ -1,0 +1,24 @@
+(startLine=391 endLine=412 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node appendToBlock(Node head, Node tail) {
+        if (tail == null) return head;
+        if (head == null) return tail;
+
+        // Reduces overhead in interp by not set position every single line we encounter. 
+        if (!configuration.hasExtraPositionInformation()) {
+            head = compactNewlines(head);
+        }
+
+        if (!(head instanceof BlockNode)) {
+            head = new BlockNode(head.getPosition()).add(head);
+        }
+
+        if (warnings.isVerbose() && isBreakStatement(((ListNode) head).getLast())) {
+            warnings.warning(ID.STATEMENT_NOT_REACHED, tail.getPosition(), "Statement not reached.");
+        }
+
+        // Assumption: tail is never a list node
+        ((ListNode) head).addAll(tail);
+        head.setPosition(union(head, tail));
+        return head;
+    }
+

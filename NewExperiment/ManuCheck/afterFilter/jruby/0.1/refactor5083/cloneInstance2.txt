@@ -1,0 +1,10 @@
+(startLine=4502 endLine=4509 srcPath=/home/sonia/NewExperiment/jrubyFilter/00894/src/org/jruby/RubyString.java)
+            while (matcher.search(begin + end, range, Option.NONE) >= 0) {
+                end = positionEnd(matcher, enc, begin, range);
+                match = RubyRegexp.updateBackRef19(context, this, frame, matcher, pattern);
+                match.regexp = regexp;
+                if (tainted) match.setTaint(true);
+                block.yield(context, populateCapturesForScan(runtime, matcher, range, tainted, true));
+                modifyCheck(bytes, len, enc);
+            }
+

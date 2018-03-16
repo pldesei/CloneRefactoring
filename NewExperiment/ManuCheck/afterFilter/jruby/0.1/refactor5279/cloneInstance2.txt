@@ -1,0 +1,9 @@
+(startLine=177 endLine=183 srcPath=/home/sonia/NewExperiment/jrubyFilter/01551/core/src/main/java/org/jruby/ir/targets/IRBytecodeAdapter.java)
+    public void invokeInstanceSuper(String name, int arity, boolean hasClosure) {
+        if (hasClosure) {
+            adapter.invokedynamic("invokeInstanceSuper:" + JavaNameMangler.mangleMethodName(name), sig(JVM.OBJECT, params(ThreadContext.class, JVM.OBJECT, arity + 2, Block.class)), Bootstrap.invokeSelf());
+        } else {
+            adapter.invokedynamic("invokeInstanceSuper:" + JavaNameMangler.mangleMethodName(name), sig(JVM.OBJECT, params(ThreadContext.class, JVM.OBJECT, JVM.OBJECT, JVM.OBJECT, arity)), Bootstrap.invokeSelf());
+        }
+    }
+

@@ -1,0 +1,51 @@
+(startLine=86 endLine=134 srcPath=/home/sonia/NewExperiment/jrubyFilter/00087/org/jruby/javasupport/JavaSupport.java)
+		{
+			Map.Entry entry = (Map.Entry) iter.next();
+
+			String javaName = (String)entry.getKey();
+			String lRubyStyleName = null;
+			//make sure we add the method and not replace a previously existing version
+			if (javaName.equals("getElementAt"))
+			{
+				lRubyStyleName = "[]";
+			} else if (javaName.equals("getValueAt"))
+			{
+				lRubyStyleName = "[]";
+			} else if (javaName.equals("setValueAt"))
+			{
+				lRubyStyleName = "[]=";
+			} else if (javaName.startsWith("get"))
+			{
+				lRubyStyleName = Character.toLowerCase(javaName.charAt(3)) + javaName.substring(4);
+			} else if (javaName.startsWith("is"))
+			{
+				lRubyStyleName = Character.toLowerCase(javaName.charAt(2)) + javaName.substring(3) + "?";
+			} else if (javaName.startsWith("can"))
+			{
+				lRubyStyleName = Character.toLowerCase(javaName.charAt(3)) + javaName.substring(4) + "?";
+			} else if (javaName.startsWith("has"))
+			{
+				lRubyStyleName = Character.toLowerCase(javaName.charAt(3)) + javaName.substring(4) + "?";
+			} else if (javaName.startsWith("set"))
+			{
+				lRubyStyleName = Character.toLowerCase(javaName.charAt(3)) + javaName.substring(4) + "=";
+			} else if (javaName.equals("compareTo"))
+			{
+				newRubyClass.includeModule(ruby.getClasses().getComparableModule());
+				lRubyStyleName = "<=>";
+			}
+			if (lRubyStyleName != null) //need to treat the case where the javaName was modified specially 
+			{ 
+				List lMethodList = (List)methodMap.get(javaName);
+				if (lMethodList != null)
+					lMethodList.addAll((List)entry.getValue());
+				else 
+					lMethodList = (List)entry.getValue();
+				methods = (Method[]) lMethodList.toArray(new Method[lMethodList.size()]);
+				newRubyClass.defineMethod(lRubyStyleName, new JavaMethod(methods));
+			}
+			List lMethodList = (List) entry.getValue();
+			methods = (Method[]) lMethodList.toArray(new Method[lMethodList.size()]);
+			newRubyClass.defineMethod(javaName, new JavaMethod(methods));
+		}
+

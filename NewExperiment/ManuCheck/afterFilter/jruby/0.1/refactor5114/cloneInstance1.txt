@@ -1,0 +1,27 @@
+(startLine=666 endLine=690 srcPath=/home/sonia/NewExperiment/jrubyFilter/00948/src/org/jruby/RubyIO.java)
+                    do {
+                        readCheck(readStream);
+                        readStream.clearerr();
+                        
+                        try {
+                            n = readStream.getline(buf, (byte) newline);
+                            c = buf.length() > 0 ? buf.get(buf.length() - 1) & 0xff : -1;
+                        } catch (EOFException e) {
+                            n = -1;
+                        }
+
+                        if (n == -1) {
+                            if (!readStream.isBlocking() && (readStream instanceof ChannelStream)) {
+                                if(!(waitReadable(((ChannelStream)readStream).getDescriptor()))) {
+                                    throw runtime.newIOError("bad file descriptor: " + openFile.getPath());
+                                }
+
+                                continue;
+                            } else {
+                                break;
+                            }
+                        }
+            
+                        update = true;
+                    } while (c != newline); // loop until we see the nth separator char
+

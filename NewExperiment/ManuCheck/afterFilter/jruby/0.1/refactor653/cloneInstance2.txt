@@ -1,0 +1,19 @@
+(startLine=246 endLine=262 srcPath=/home/sonia/NewExperiment/jrubyFilter/00613/src/org/jruby/RubyStringScanner.java)
+    public IRubyObject search_full(IRubyObject rx, IRubyObject adv_ptr, IRubyObject ret_str) {
+        if (!(rx instanceof RubyRegexp)) throw getRuntime().newTypeError(rx, getRuntime().getRegexp());
+        RubyRegexp reg = (RubyRegexp)rx;
+        if (adv_ptr.isTrue()) {
+            if (ret_str.isTrue()) {
+                return stringOrNil(scanner.scanUntil(reg.getPattern()));
+            } else {
+                return positiveFixnumOrNil(scanner.skipUntil(reg.getPattern()));
+            }
+        } else {
+            if (ret_str.isTrue()) {
+                return stringOrNil(scanner.checkUntil(reg.getPattern()));
+            } else {
+                return positiveFixnumOrNil(scanner.exists(reg.getPattern()));
+            }
+        }
+    }
+

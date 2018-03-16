@@ -1,0 +1,54 @@
+(startLine=333 endLine=384 srcPath=/home/sonia/NewExperiment/jrubyFilter/01455/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    public int nextc() {
+        if (lex_p == lex_pend) {
+            ByteList v = lex_nextline;
+            lex_nextline = null;
+            
+            if (v == null) {
+                if (eofp) return EOF;
+                
+                if (src == null || (v = src.gets()) == null) {
+                    eofp = true;
+                    lex_goto_eol();
+                    return EOF;
+                } 
+            }
+        
+            // Left over stuffs...Add to delayed for later processing.
+            if (tokp < lex_pend) {
+                if (delayed == null) {
+                    delayed = new ByteList();
+                    delayed.setEncoding(current_enc);
+                    delayed.append(lexb, tokp, lex_pend - tokp);
+                    delayed_line = ruby_sourceline;
+                    delayed_col = tokp - lex_pbeg;
+                } else {
+                    delayed.append(lexb, tokp, lex_pend - tokp);
+                }
+            }
+        
+            if (heredoc_end > 0) {
+                ruby_sourceline = heredoc_end;
+                heredoc_end = 0;
+            }
+            ruby_sourceline++;
+            line_count++;
+            lex_pbeg = lex_p = 0;
+//            System.out.println("VLEN: " + v.length() + "V = (" + v.toString() + ")");
+            lex_pend = lex_p + v.length();
+            lexb = v;
+            flush();
+            lex_lastline = v;
+        }
+        
+        int c = p(lex_p);
+        lex_p++;
+        if (c == '\r' && peek('\n')) {
+            lex_p++;
+            c = '\n';
+        }
+
+//        System.out.println("C: " + (char) c + ", LEXP: " + lex_p + ", PEND: "+ lex_pend);
+        return c;
+    }
+

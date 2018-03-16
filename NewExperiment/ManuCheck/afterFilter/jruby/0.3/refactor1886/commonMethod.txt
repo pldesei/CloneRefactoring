@@ -1,0 +1,40 @@
+(startLine=1151 endLine=1188 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node literal_concat(ISourcePosition position, Node head, Node tail) { 
+        if (head == null) return tail;
+        if (tail == null) return head;
+        
+        if (head instanceof EvStrNode) {
+            head = new DStrNode(union(head.getPosition(), position)).add(head);
+        } 
+
+        if (tail instanceof StrNode) {
+            if (head instanceof StrNode) {
+        	    return new StrNode(union(head, tail), (StrNode) head, (StrNode) tail);
+            } 
+            head.setPosition(union(head, tail));
+            return ((ListNode) head).add(tail);
+        	
+        } else if (tail instanceof DStrNode) {
+            if (head instanceof StrNode){
+                ((DStrNode)tail).prepend(head);
+                return tail;
+            } 
+
+            return ((ListNode) head).addAll(tail);
+        } 
+
+        // tail must be EvStrNode at this point 
+        if (head instanceof StrNode) {
+        	
+            //Do not add an empty string node
+            if(((StrNode) head).getValue().length() == 0) {
+                head = new DStrNode(head.getPosition());
+            } else {
+                // All first element StrNode's do not include syntacical sugar.
+                head.getPosition().adjustStartOffset(-1);
+                head = new DStrNode(head.getPosition()).add(head);
+            }
+        }
+        return ((DStrNode) head).add(tail);
+    }
+

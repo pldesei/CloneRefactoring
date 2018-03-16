@@ -1,0 +1,7 @@
+(startLine=259 endLine=263 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public INode getAttributeAssignmentNode(INode recv, String name) {
+        checkExpression(recv);
+
+        return new CallNode(recv.getPosition(), recv, name + "=", null);
+    }
+

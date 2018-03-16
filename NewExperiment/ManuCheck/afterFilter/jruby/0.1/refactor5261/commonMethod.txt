@@ -1,0 +1,19 @@
+(startLine=285 endLine=301 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java)
+    protected static boolean isKeyGenerationFailure(final RuntimeException e) {
+        // NOTE handle "common-failure" more gently (no need for stack trace) :
+        // java.lang.ClassCastException: org.bouncycastle.asn1.DLSequence cannot be cast to org.bouncycastle.asn1.ASN1Integer
+        //   at org.bouncycastle.asn1.pkcs.PrivateKeyInfo.<init>(Unknown Source)
+        //	 at org.bouncycastle.asn1.pkcs.PrivateKeyInfo.getInstance(Unknown Source)
+        //   at org.bouncycastle.jcajce.provider.asymmetric.util.BaseKeyFactorySpi.engineGeneratePrivate(Unknown Source)
+        //   at org.bouncycastle.jcajce.provider.asymmetric.dsa.KeyFactorySpi.engineGeneratePrivate(Unknown Source)
+        //   at java.security.KeyFactory.generatePrivate(KeyFactory.java:366)
+        if ( e instanceof ClassCastException ) {
+            // RSA :
+            final String msg = e.getMessage();
+            if ( msg != null && msg.contains("DLSequence cannot be cast to") ) {
+                return true;
+            }
+        }
+        return false;
+    }
+

@@ -1,0 +1,11 @@
+(startLine=172 endLine=180 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/RubyString.java)
+    /**
+     * Remembers toString value, which is expensive for StringBuffer.
+     */
+    public String toString() {
+        if (stringValue == null) {
+            stringValue = new String(ByteList.plain(value.bytes),0,value.realSize);
+        }
+        return stringValue;
+    }
+

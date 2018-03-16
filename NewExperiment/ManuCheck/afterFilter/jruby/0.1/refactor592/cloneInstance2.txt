@@ -1,0 +1,12 @@
+(startLine=1748 endLine=1757 srcPath=/home/sonia/NewExperiment/jrubyFilter/00504/src/org/jruby/evaluator/EvaluationState.java)
+        } else {
+            DynamicMethod method = module.searchMethod(iVisited.getName());
+
+            IRubyObject mmResult = RubyObject.callMethodMissingIfNecessary(context, self, method, iVisited.getName(), iVisited.index, IRubyObject.NULL_ARRAY, self, CallType.VARIABLE, Block.NULL_BLOCK);
+            if (mmResult != null) {
+                return mmResult;
+            }
+
+            return method.call(context, self, module, iVisited.getName(), IRubyObject.NULL_ARRAY, false, Block.NULL_BLOCK);
+        }
+

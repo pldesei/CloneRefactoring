@@ -1,0 +1,733 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01236
+predFragLineRange:1175-1184
+predMethodLineRange:1038-1204
+nextLineRange:1052-1203
+predStrMethodInvoNames:
+[]
+%%%%%%%%%%
+AddedMethodInvo Line:1060 InvoName:getEntryBB()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:public org.jruby.compiler.ir.representations.BasicBlock getEntryBB() 
+%%%%%%%%%%
+AddedMethodInvo Line:1061 InvoName:getMaxNodeID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:public int getMaxNodeID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1062 InvoName:bbSet.set(root.getID())
+PackageName:java.util
+QualifiedClassName:java.util.BitSet
+ClassName:BitSet
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/BitSet.java
+InvokedMethodSig:public void set(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1062 InvoName:root.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1068 InvoName:cfg.edgesOfType(EdgeType.EXCEPTION_EDGE)
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Iterable<Edge<T>> edgesOfType(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1069 InvoName:pushBBOnStack(stack,bbSet,edge.getDestination().getData())
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1069 InvoName:edge.getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1069 InvoName:edge.getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1073 InvoName:stack.push(root)
+PackageName:java.util
+QualifiedClassName:java.util.Stack<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Stack<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Stack<org.java
+InvokedMethodSig:public E push(E) 
+%%%%%%%%%%
+AddedMethodInvo Line:1075 InvoName:stack.empty()
+PackageName:java.util
+QualifiedClassName:java.util.Stack<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Stack<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Stack<org.java
+InvokedMethodSig:public boolean empty() 
+%%%%%%%%%%
+AddedMethodInvo Line:1076 InvoName:stack.pop()
+PackageName:java.util
+QualifiedClassName:java.util.Stack<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Stack<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Stack<org.java
+InvokedMethodSig:public synchronized E pop() 
+%%%%%%%%%%
+AddedMethodInvo Line:1078 InvoName:linearizedBBList.add(b)
+PackageName:java.util
+QualifiedClassName:java.util.List<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:List<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/List<org.java
+InvokedMethodSig:public abstract boolean add(E) 
+%%%%%%%%%%
+AddedMethodInvo Line:1084 InvoName:cfg.vertexFor(b).getOutgoingEdges().iterator()
+PackageName:java.util
+QualifiedClassName:java.util.Set<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Set<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Set<org.java
+InvokedMethodSig:public abstract Iterator#RAW iterator() 
+%%%%%%%%%%
+AddedMethodInvo Line:1084 InvoName:cfg.vertexFor(b).getOutgoingEdges()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public Set<Edge<T>> getOutgoingEdges() 
+%%%%%%%%%%
+AddedMethodInvo Line:1084 InvoName:cfg.vertexFor(b)
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Vertex<T> vertexFor(T) 
+%%%%%%%%%%
+AddedMethodInvo Line:1085 InvoName:edges.next().getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1085 InvoName:edges.next().getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1085 InvoName:edges.next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Iterator<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Iterator<org.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:1086 InvoName:edges.next().getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1086 InvoName:edges.next().getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1086 InvoName:edges.next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Iterator<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Iterator<org.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:1088 InvoName:b1.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1088 InvoName:b2.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1089 InvoName:pushBBOnStack(stack,bbSet,b2)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1090 InvoName:pushBBOnStack(stack,bbSet,b1)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1092 InvoName:pushBBOnStack(stack,bbSet,b1)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1093 InvoName:pushBBOnStack(stack,bbSet,b2)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1097 InvoName:b.isEmpty()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public boolean isEmpty() 
+%%%%%%%%%%
+AddedMethodInvo Line:1100 InvoName:cfg.vertexFor(b).getOutgoingEdges()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public Set<Edge<T>> getOutgoingEdges() 
+%%%%%%%%%%
+AddedMethodInvo Line:1100 InvoName:cfg.vertexFor(b)
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Vertex<T> vertexFor(T) 
+%%%%%%%%%%
+AddedMethodInvo Line:1102 InvoName:e.getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1102 InvoName:e.getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1104 InvoName:e.getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1104 InvoName:e.getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1106 InvoName:System.err.println("============= ERROR ================")
+PackageName:java.io
+QualifiedClassName:java.io.PrintStream
+ClassName:PrintStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/io/PrintStream.java
+InvokedMethodSig:public void println(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1107 InvoName:System.err.println("Encountered bb: " + b.getID() + " with no instrs. and more than 2 targets!!")
+PackageName:java.io
+QualifiedClassName:java.io.PrintStream
+ClassName:PrintStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/io/PrintStream.java
+InvokedMethodSig:public void println(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1107 InvoName:b.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1108 InvoName:System.err.println("\nGraph:\n" + getGraph().toString())
+PackageName:java.io
+QualifiedClassName:java.io.PrintStream
+ClassName:PrintStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/io/PrintStream.java
+InvokedMethodSig:public void println(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1108 InvoName:getGraph().toString()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph
+ClassName:DirectedGraph
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/util/DirectedGraph.java
+InvokedMethodSig:public java.lang.String toString() 
+%%%%%%%%%%
+AddedMethodInvo Line:1108 InvoName:getGraph()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:public DirectedGraph#RAW getGraph() 
+%%%%%%%%%%
+AddedMethodInvo Line:1109 InvoName:System.err.println("\nInstructions:\n" + toStringInstrs())
+PackageName:java.io
+QualifiedClassName:java.io.PrintStream
+ClassName:PrintStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/io/PrintStream.java
+InvokedMethodSig:public void println(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1109 InvoName:toStringInstrs()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:public java.lang.String toStringInstrs() 
+%%%%%%%%%%
+AddedMethodInvo Line:1110 InvoName:System.err.println("====================================")
+PackageName:java.io
+QualifiedClassName:java.io.PrintStream
+ClassName:PrintStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/io/PrintStream.java
+InvokedMethodSig:public void println(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1111 InvoName:b.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1116 InvoName:pushBBOnStack(stack,bbSet,b1)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1117 InvoName:b1.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1117 InvoName:b2.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1118 InvoName:pushBBOnStack(stack,bbSet,b2)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1119 InvoName:pushBBOnStack(stack,bbSet,b1)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1121 InvoName:pushBBOnStack(stack,bbSet,b1)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1122 InvoName:pushBBOnStack(stack,bbSet,b2)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1125 InvoName:b.getLastInstr()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public org.jruby.compiler.ir.instructions.Instr getLastInstr() 
+%%%%%%%%%%
+AddedMethodInvo Line:1129 InvoName:bbMap.get(((JumpInstr)lastInstr).getJumpTarget())
+PackageName:java.util
+QualifiedClassName:java.util.Map<org.jruby.compiler.ir.operands.Label,org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Map<Label,BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Map<org.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1129 InvoName:((JumpInstr)lastInstr).getJumpTarget()
+PackageName:org.jruby.compiler.ir.instructions
+QualifiedClassName:org.jruby.compiler.ir.instructions.JumpInstr
+ClassName:JumpInstr
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/instructions/JumpInstr.java
+InvokedMethodSig:public org.jruby.compiler.ir.operands.Label getJumpTarget() 
+%%%%%%%%%%
+AddedMethodInvo Line:1132 InvoName:isOnlyReachableFromJumpInstrs(blockToIgnore)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private boolean isOnlyReachableFromJumpInstrs(org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1135 InvoName:bbMap.get(((BranchInstr)lastInstr).getJumpTarget())
+PackageName:java.util
+QualifiedClassName:java.util.Map<org.jruby.compiler.ir.operands.Label,org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Map<Label,BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Map<org.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1135 InvoName:((BranchInstr)lastInstr).getJumpTarget()
+PackageName:org.jruby.compiler.ir.instructions
+QualifiedClassName:org.jruby.compiler.ir.instructions.BranchInstr
+ClassName:BranchInstr
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/instructions/BranchInstr.java
+InvokedMethodSig:public org.jruby.compiler.ir.operands.Label getJumpTarget() 
+%%%%%%%%%%
+AddedMethodInvo Line:1136 InvoName:pushBBOnStack(stack,bbSet,blockToIgnore)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1140 InvoName:cfg.vertexFor(b).getOutgoingEdges()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public Set<Edge<T>> getOutgoingEdges() 
+%%%%%%%%%%
+AddedMethodInvo Line:1140 InvoName:cfg.vertexFor(b)
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Vertex<T> vertexFor(T) 
+%%%%%%%%%%
+AddedMethodInvo Line:1141 InvoName:e.getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1141 InvoName:e.getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1142 InvoName:pushBBOnStack(stack,bbSet,x)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.CFG
+ClassName:CFG
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java
+InvokedMethodSig:private void pushBBOnStack(Stack<org.jruby.compiler.ir.representations.BasicBlock>, java.util.BitSet, org.jruby.compiler.ir.representations.BasicBlock) 
+%%%%%%%%%%
+AddedMethodInvo Line:1149 InvoName:cfg.allData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Collection<T> allData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1150 InvoName:bbSet.get(b.getID())
+PackageName:java.util
+QualifiedClassName:java.util.BitSet
+ClassName:BitSet
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/BitSet.java
+InvokedMethodSig:public boolean get(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1150 InvoName:b.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1151 InvoName:b.getID()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public int getID() 
+%%%%%%%%%%
+AddedMethodInvo Line:1156 InvoName:linearizedBBList.size()
+PackageName:java.util
+QualifiedClassName:java.util.List<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:List<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/List<org.java
+InvokedMethodSig:public abstract int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:1158 InvoName:linearizedBBList.get(i)
+PackageName:java.util
+QualifiedClassName:java.util.List<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:List<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/List<org.java
+InvokedMethodSig:public abstract E get(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1159 InvoName:curr.getLastInstr()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public org.jruby.compiler.ir.instructions.Instr getLastInstr() 
+%%%%%%%%%%
+AddedMethodInvo Line:1161 InvoName:linearizedBBList.get(i + 1)
+PackageName:java.util
+QualifiedClassName:java.util.List<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:List<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/List<org.java
+InvokedMethodSig:public abstract E get(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1165 InvoName:bbMap.get(((JumpInstr)li).target)
+PackageName:java.util
+QualifiedClassName:java.util.Map<org.jruby.compiler.ir.operands.Label,org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Map<Label,BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Map<org.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:1167 InvoName:curr.removeInstr(li)
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public boolean removeInstr(org.jruby.compiler.ir.instructions.Instr) 
+%%%%%%%%%%
+AddedMethodInvo Line:1171 InvoName:cfg.vertexFor(curr).getOutgoingEdges()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public Set<Edge<T>> getOutgoingEdges() 
+%%%%%%%%%%
+AddedMethodInvo Line:1171 InvoName:cfg.vertexFor(curr)
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Vertex<T> vertexFor(T) 
+%%%%%%%%%%
+AddedMethodInvo Line:1172 InvoName:succs.size()
+PackageName:java.util
+QualifiedClassName:java.util.Set<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Set<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Set<org.java
+InvokedMethodSig:public abstract int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:1173 InvoName:succs.iterator().next().getDestination().getData()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1173 InvoName:succs.iterator().next().getDestination()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1173 InvoName:succs.iterator().next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator
+ClassName:Iterator
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Iterator.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:1173 InvoName:succs.iterator()
+PackageName:java.util
+QualifiedClassName:java.util.Set<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Set<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Set<org.java
+InvokedMethodSig:public abstract Iterator#RAW iterator() 
+%%%%%%%%%%
+AddedMethodInvo Line:1174 InvoName:li.getOperation().transfersControl()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1174 InvoName:li.getOperation()
+PackageName:org.jruby.compiler.ir.instructions
+QualifiedClassName:org.jruby.compiler.ir.instructions.Instr
+ClassName:Instr
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/instructions/Instr.java
+InvokedMethodSig:public Operation getOperation() 
+%%%%%%%%%%
+AddedMethodInvo Line:1176 InvoName:curr.addInstr(new JumpInstr(tgt.getLabel()))
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public void addInstr(org.jruby.compiler.ir.instructions.Instr) 
+%%%%%%%%%%
+AddedMethodInvo Line:1176 InvoName:tgt.getLabel()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public org.jruby.compiler.ir.operands.Label getLabel() 
+%%%%%%%%%%
+AddedMethodInvo Line:1184 InvoName:curr.addInstr(new ReturnInstr(Nil.NIL))
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public void addInstr(org.jruby.compiler.ir.instructions.Instr) 
+%%%%%%%%%%
+AddedMethodInvo Line:1187 InvoName:cfg.vertexFor(curr).getOutgoingEdges().iterator()
+PackageName:java.util
+QualifiedClassName:java.util.Set<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Set<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Set<org.java
+InvokedMethodSig:public abstract Iterator#RAW iterator() 
+%%%%%%%%%%
+AddedMethodInvo Line:1187 InvoName:cfg.vertexFor(curr).getOutgoingEdges()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public Set<Edge<T>> getOutgoingEdges() 
+%%%%%%%%%%
+AddedMethodInvo Line:1187 InvoName:cfg.vertexFor(curr)
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.DirectedGraph<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:DirectedGraph<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/DirectedGraph<org.java
+InvokedMethodSig:public Vertex<T> vertexFor(T) 
+%%%%%%%%%%
+AddedMethodInvo Line:1188 InvoName:edges.next().getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1188 InvoName:edges.next().getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1188 InvoName:edges.next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Iterator<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Iterator<org.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:1189 InvoName:edges.hasNext()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Iterator<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Iterator<org.java
+InvokedMethodSig:public abstract boolean hasNext() 
+%%%%%%%%%%
+AddedMethodInvo Line:1190 InvoName:edges.next().getDestination().getData()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Vertex<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Vertex<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Vertex<org.java
+InvokedMethodSig:public T getData() 
+%%%%%%%%%%
+AddedMethodInvo Line:1190 InvoName:edges.next().getDestination()
+PackageName:org.jruby.compiler.ir.util
+QualifiedClassName:org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>
+ClassName:Edge<BasicBlock>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/org/jruby/compiler/ir/util/Edge<org.java
+InvokedMethodSig:public Vertex<T> getDestination() 
+%%%%%%%%%%
+AddedMethodInvo Line:1190 InvoName:edges.next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator<org.jruby.compiler.ir.util.Edge<org.jruby.compiler.ir.representations.BasicBlock>>
+ClassName:Iterator<Edge<BasicBlock>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/bench/java/util/Iterator<org.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:1191 InvoName:assert(other == exitBB || tgt == exitBB)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1194 InvoName:li.getOperation().transfersControl()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:1194 InvoName:li.getOperation()
+PackageName:org.jruby.compiler.ir.instructions
+QualifiedClassName:org.jruby.compiler.ir.instructions.Instr
+ClassName:Instr
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/instructions/Instr.java
+InvokedMethodSig:public Operation getOperation() 
+%%%%%%%%%%
+AddedMethodInvo Line:1196 InvoName:curr.addInstr(new JumpInstr(tgt.getLabel()))
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public void addInstr(org.jruby.compiler.ir.instructions.Instr) 
+%%%%%%%%%%
+AddedMethodInvo Line:1196 InvoName:tgt.getLabel()
+PackageName:org.jruby.compiler.ir.representations
+QualifiedClassName:org.jruby.compiler.ir.representations.BasicBlock
+ClassName:BasicBlock
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/BasicBlock.java
+InvokedMethodSig:public org.jruby.compiler.ir.operands.Label getLabel() 

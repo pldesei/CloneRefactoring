@@ -1,0 +1,13 @@
+(startLine=103 endLine=113 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/StaticScope.java)
+    public int addVariable(String name) {
+        int slot = isDefined(name); 
+
+        if (slot >= 0) return slot;
+            
+        // This is perhaps innefficient timewise?  Optimal spacewise
+        growVariableNames(name);
+        
+        // Returns slot of variable
+        return variableNames.length - 1;
+    }
+

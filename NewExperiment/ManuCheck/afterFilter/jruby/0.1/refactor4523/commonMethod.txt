@@ -1,0 +1,41 @@
+(startLine=254 endLine=292 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Create AST node representing variable type it represents.
+     * 
+     * @param token to check its variable type
+     * @return an AST node representing this new variable
+     */
+    public Node gettable(Token token) {
+        switch (token.getType()) {
+        case Tokens.kSELF:
+            return new SelfNode(token.getPosition());
+        case Tokens.kNIL:
+            return new NilNode(token.getPosition());
+        case Tokens.kTRUE:
+            return new TrueNode(token.getPosition());
+        case Tokens.kFALSE:
+            return new FalseNode(token.getPosition());
+        case Tokens.k__FILE__:
+            return new FileNode(token.getPosition(), ByteList.create(token.getPosition().getFile()));
+        case Tokens.k__LINE__:
+            return new FixnumNode(token.getPosition(), token.getPosition().getEndLine()+1);
+        case Tokens.k__ENCODING__:
+            // ENEBO: 1.8 will never see this, but 1.9 can
+            // TODO: Replace with proper encoding support
+            return new FixnumNode(token.getPosition(), token.getPosition().getEndLine()+1);            
+        case Tokens.tIDENTIFIER:
+            return currentScope.declare(token.getPosition(), (String) token.getValue());
+        case Tokens.tCONSTANT:
+            return new ConstNode(token.getPosition(), (String) token.getValue());
+        case Tokens.tIVAR:
+            return new InstVarNode(token.getPosition(), (String) token.getValue());
+        case Tokens.tCVAR:
+            return new ClassVarNode(token.getPosition(), (String) token.getValue());
+        case Tokens.tGVAR:
+            return new GlobalVarNode(token.getPosition(), (String) token.getValue());
+        }
+
+        getterIdentifierError(token.getPosition(), (String) token.getValue());
+        return null;
+    }
+

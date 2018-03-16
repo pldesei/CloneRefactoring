@@ -1,0 +1,20 @@
+(startLine=695 endLine=712 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Check all nodes but the last one in a BlockNode for useless (void context) statements.
+     * 
+     * @param blockNode to be checked.
+     */
+    public void checkUselessStatements(BlockNode blockNode) {
+        if (warnings.isVerbose()) {
+            Node lastNode = blockNode.getLast();
+
+            for (int i = 0; i < blockNode.size(); i++) {
+                Node currentNode = blockNode.get(i);
+        		
+                if (lastNode != currentNode ) {
+                    checkUselessStatement(currentNode);
+                }
+            }
+        }
+    }
+

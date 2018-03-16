@@ -1,0 +1,22 @@
+(startLine=782 endLine=801 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/RubyArray.java)
+    /** rb_ary_store
+     *
+     */
+    public IRubyObject store(long index, IRubyObject value) {
+        if (index < 0 && (index += realLength) < 0) {
+            throw getRuntime().newIndexError("index " + (index - realLength) + " out of array");
+        }
+
+        modify();
+
+        if (index >= realLength) {
+            int valuesLength = values.length - begin;
+            if (index >= valuesLength) storeRealloc(index, valuesLength);
+            realLength = (int) index + 1;
+        }
+
+        safeArraySet(values, begin + (int) index, value);
+
+        return value;
+    }
+

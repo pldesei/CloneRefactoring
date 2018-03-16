@@ -1,0 +1,38 @@
+(startLine=1557 endLine=1592 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    private int ampersand(boolean spaceSeen) throws IOException {
+        int c = src.read();
+        
+        switch (c) {
+        case '&':
+            setState(LexState.EXPR_BEG);
+            if ((c = src.read()) == '=') {
+                setState(LexState.EXPR_BEG);
+                yaccValue = new Token("&&=", getPosition());
+                return Tokens.tOP_ASGN;
+            }
+            src.unread(c);
+            yaccValue = new Token("&&", getPosition());
+            return Tokens.tANDOP;
+        case '=':
+            setState(LexState.EXPR_BEG);
+            yaccValue = new Token("&=", getPosition());
+            return Tokens.tOP_ASGN;
+        }
+        src.unread(c);
+
+        yaccValue = new Token("&", getPosition());
+        
+        if (isSpaceArg(c, spaceSeen)) {
+            if (isVerbose()) warning(Warnings.ID.ARGUMENT_AS_PREFIX, getPosition(), "`&' interpreted as argument prefix");
+            c = Tokens.tAMPER;
+        } else if (isBEG()) {
+            c = Tokens.tAMPER;
+        } else {
+            c = Tokens.tAMPER2;
+        }
+        
+        determineExpressionState();
+        
+        return c;
+    }
+

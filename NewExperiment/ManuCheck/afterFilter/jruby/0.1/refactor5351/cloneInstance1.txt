@@ -1,0 +1,20 @@
+(startLine=96 endLine=113 srcPath=/home/sonia/NewExperiment/jrubyFilter/01867/core/src/main/java/org/jruby/java/util/ArrayUtils.java)
+    public static IRubyObject asetDirect(Ruby runtime, Object array, JavaUtil.JavaConverter javaConverter, int intIndex, IRubyObject value) {
+        try {
+            javaConverter.set(runtime, array, intIndex, value);
+        } catch (IndexOutOfBoundsException e) {
+            throw runtime.newArgumentError(
+                    "index out of bounds for java array (" + intIndex +
+                            " for length " + Array.getLength(array) + ')');
+        } catch (ArrayStoreException e) {
+            throw runtime.newTypeError(
+                    "wrong element type " + value.getClass() + "(array contains " +
+                            array.getClass().getComponentType().getName() + ')');
+        } catch (IllegalArgumentException iae) {
+            throw runtime.newArgumentError(
+                    "wrong element type " + value.getClass() + "(array contains " +
+                            array.getClass().getComponentType().getName() + ')');
+        }
+        return value;
+    }
+

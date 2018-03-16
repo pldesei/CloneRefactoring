@@ -1,0 +1,13 @@
+(startLine=3707 endLine=3717 srcPath=/home/sonia/NewExperiment/jrubyFilter/01602/core/src/main/java/org/jruby/RubyString.java)
+        } else {
+            while (RubyRegexp.matcherSearch(runtime, matcher, begin + end, range, Option.NONE) >= 0) {
+                end = StringSupport.positionEndForScan(value, matcher, enc, begin, range);
+                match = RubyRegexp.createMatchData19(context, this, matcher, pattern);
+                match.regexp = regexp;
+                match.infectBy(tuFlags);
+                context.setBackRef(match);
+                block.yield(context, populateCapturesForScan(runtime, matcher, range, tuFlags, true));
+                modifyCheck(bytes, len, enc);
+            }
+        }
+

@@ -1,0 +1,9 @@
+(startLine=2592 endLine=2598 srcPath=/home/sonia/NewExperiment/jrubyFilter/00494/src/org/jruby/RubyString.java)
+    private final RubyMatchData matchdata(Ruby runtime, String str, Matcher mat, boolean utf8) { 
+        if (utf8) {
+            return new RubyMatchData.JavaString(runtime, str, mat);
+        } else {
+            return new RubyMatchData.RString(runtime, this, mat);
+        }        
+    }
+

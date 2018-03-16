@@ -1,0 +1,19 @@
+(startLine=623 endLine=639 srcPath=/home/sonia/NewExperiment/jrubyFilter/01691/core/src/main/java/org/jruby/java/proxies/MapJavaProxy.java)
+    @SuppressWarnings("unchecked")
+    private MapJavaProxy dupImpl(final String method) {
+        final Map map = getMapObject();
+        try {
+            Map newMap = (Map) map.getClass().newInstance();
+            newMap.putAll(map);
+            MapJavaProxy proxy = new MapJavaProxy(getRuntime(), metaClass);
+            proxy.setObject(newMap);
+            return proxy;
+        }
+        catch (InstantiationException ex) {
+            throw initCause( getRuntime().newNotImplementedError("can't "+ method +" Map of type " + getObject().getClass().getName()), ex);
+        }
+        catch (IllegalAccessException ex) {
+            throw initCause( getRuntime().newNotImplementedError("can't "+ method +" Map of type " + getObject().getClass().getName()), ex);
+        }
+    }
+

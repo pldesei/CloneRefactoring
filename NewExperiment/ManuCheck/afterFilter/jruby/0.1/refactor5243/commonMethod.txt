@@ -1,0 +1,67 @@
+(startLine=285 endLine=349 srcPath=/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/ext/socket/SocketUtils.java)
+    public static void buildAddrinfoList(ThreadContext context, IRubyObject[] args, AddrinfoCallback callback) {
+        Ruby runtime = context.runtime;
+        IRubyObject host = args[0];
+        IRubyObject port = args[1];
+        boolean emptyHost = host.isNil() || host.convertToString().isEmpty();
+
+        try {
+            if(port instanceof RubyString) {
+                port = getservbyname(context, new IRubyObject[]{port});
+            }
+
+            IRubyObject family = args.length > 2 ? args[2] : context.nil;
+            IRubyObject socktype = args.length > 3 ? args[3] : context.nil;
+            //IRubyObject protocol = args[4];
+            IRubyObject flags = args.length > 5 ? args[5] : context.nil;
+
+            AddressFamily addressFamily = AF_INET;
+            if (!family.isNil()) {
+                addressFamily = addressFamilyFromArg(family);
+            }
+            boolean is_ipv6 = addressFamily == AddressFamily.AF_INET6;
+            boolean sock_stream = true;
+            boolean sock_dgram = true;
+
+            Sock sock = SOCK_STREAM;
+            if(!socktype.isNil()) {
+                sockFromArg(socktype);
+
+                if(sock == SOCK_STREAM) {
+                    sock_dgram = false;
+
+                } else if (sock == SOCK_DGRAM) {
+                    sock_stream = false;
+
+                }
+            }
+
+            // When Socket::AI_PASSIVE and host is nil, return 'any' address.
+            InetAddress[] addrs = null;
+
+            if(!flags.isNil() && RubyFixnum.fix2int(flags) > 0) {
+                // The value of 1 is for Socket::AI_PASSIVE.
+                int flag = RubyNumeric.fix2int(flags);
+
+                if ((flag == 1) && emptyHost ) {
+                    // use RFC 2732 style string to ensure that we get Inet6Address
+                    addrs = InetAddress.getAllByName(is_ipv6 ? "[::]" : "0.0.0.0");
+                }
+
+            }
+
+            if (addrs == null) {
+                addrs = InetAddress.getAllByName(emptyHost ? (is_ipv6 ? "[::1]" : null) : host.convertToString().toString());
+            }
+
+            for(int i = 0; i < addrs.length; i++) {
+                int p = port.isNil() ? 0 : (int)port.convertToInteger().getLongValue();
+                callback.addrinfo(addrs[i], p, sock);
+            }
+
+        } catch(UnknownHostException e) {
+            throw sockerr(runtime, "getaddrinfo: name or service not known");
+
+        }
+    }
+

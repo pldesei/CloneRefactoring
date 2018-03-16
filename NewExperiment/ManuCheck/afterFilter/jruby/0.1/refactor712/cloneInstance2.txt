@@ -1,0 +1,20 @@
+(startLine=915 endLine=932 srcPath=/home/sonia/NewExperiment/jrubyFilter/00813/src/org/jruby/RubyArray.java)
+        } else {
+            if (beg + len > realLength) len = realLength - beg;
+
+            int alen = realLength + 1 - (int)len;
+            if (alen >= values.length) {
+                int tryNewLength = values.length + (values.length >> 1);
+                realloc(alen > tryNewLength ? alen : tryNewLength);
+            }
+
+            if (len != 1) {
+                try {
+                    System.arraycopy(values, (int) (beg + len), values, (int) beg + 1, realLength - (int) (beg + len));
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    concurrentModification();
+                }
+                realLength = alen;
+            }
+        }
+

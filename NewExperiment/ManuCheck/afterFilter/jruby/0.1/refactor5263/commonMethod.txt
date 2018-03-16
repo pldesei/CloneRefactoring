@@ -1,0 +1,14 @@
+(startLine=155 endLine=166 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/SecurityHelper.java)
+    /**
+     * @note code calling this should not assume BC provider internals !
+     */
+    public static KeyFactory getKeyFactory(final String algorithm)
+        throws NoSuchAlgorithmException {
+        try {
+            final Provider provider = getSecurityProvider();
+            if ( provider != null ) return getKeyFactory(algorithm, provider);
+        }
+        catch (NoSuchAlgorithmException e) { }
+        return KeyFactory.getInstance(algorithm);
+    }
+

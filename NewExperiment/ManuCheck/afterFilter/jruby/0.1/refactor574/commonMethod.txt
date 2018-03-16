@@ -1,0 +1,36 @@
+(startLine=281 endLine=314 srcPath=/home/sonia/NewExperiment/jrubyFilter/00491/src/org/jruby/RubyModule.java)
+    /**
+     * Generate a fully-qualified class name or a #-style name for anonymous and singleton classes.
+     * 
+     * Ruby C equivalent = "classname"
+     * 
+     * @return The generated class name
+     */
+    public String getName() {
+        if (getBaseName() == null) {
+            if (isClass()) {
+                return "#<" + "Class" + ":01x" + Integer.toHexString(System.identityHashCode(this)) + ">";
+            } else {
+                return "#<" + "Module" + ":01x" + Integer.toHexString(System.identityHashCode(this)) + ">";
+            }
+        }
+
+        StringBuffer result = new StringBuffer(getBaseName());
+        RubyClass objectClass = getRuntime().getObject();
+
+        for (RubyModule p = this.getParent(); p != null && p != objectClass; p = p.getParent()) {
+            String pName = p.getBaseName();
+            // This is needed when the enclosing class or module is a singleton.
+            // In that case, we generated a name such as null::Foo, which broke 
+            // Marshalling, among others. The correct thing to do in this situation 
+            // is to insert the generate the name of form #<Class:01xasdfasd> if 
+            // it's a singleton module/class, which this code accomplishes.
+            if(pName == null) {
+                pName = p.getName();
+            }
+            result.insert(0, "::").insert(0, pName);
+        }
+
+        return result.toString();
+    }
+

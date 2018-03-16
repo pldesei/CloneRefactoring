@@ -1,0 +1,12 @@
+(startLine=416 endLine=425 srcPath=/home/sonia/NewExperiment/jrubyFilter/01538/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Extensions.java)
+            else if ( valuex.startsWith("IP Address:") ) {
+                String[] numbers = valuex.substring(11).split("\\.");
+                byte[] bs = new byte[4];
+                bs[0] = (byte) (Integer.parseInt(numbers[0]) & 0xff);
+                bs[1] = (byte) (Integer.parseInt(numbers[1]) & 0xff);
+                bs[2] = (byte) (Integer.parseInt(numbers[2]) & 0xff);
+                bs[3] = (byte) (Integer.parseInt(numbers[3]) & 0xff);
+                GeneralNames gn = new GeneralNames(new GeneralName(GeneralName.iPAddress,new DEROctetString(bs)));
+                return new String(ByteList.plain(gn.getEncoded(ASN1Encoding.DER)));
+            }
+

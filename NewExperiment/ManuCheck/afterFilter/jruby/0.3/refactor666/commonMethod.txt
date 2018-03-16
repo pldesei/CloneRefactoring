@@ -1,0 +1,9 @@
+(startLine=268 endLine=274 srcPath=/home/sonia/NewExperiment/jrubyFilter/00716/src/org/jruby/runtime/CallSite.java)
+        private RubyClass pollAndGetClass(ThreadContext context, IRubyObject self) {
+            context.callThreadPoll();
+
+            RubyClass selfType = self.getMetaClass();
+
+            return selfType;
+        }
+

@@ -1,0 +1,8 @@
+(startLine=262 endLine=267 srcPath=/home/sonia/NewExperiment/jrubyFilter/00826/src/org/jruby/RubyString.java)
+    private Encoding checkDummyEncoding() {
+        Encoding enc = value.encoding;
+        if (enc.isDummy()) throw getRuntime().newEncodingCompatibilityError(
+                "incompatible encoding with this operation: " + enc);
+        return enc;
+    }
+

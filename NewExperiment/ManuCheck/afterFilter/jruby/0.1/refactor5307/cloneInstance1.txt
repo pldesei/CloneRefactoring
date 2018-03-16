@@ -1,0 +1,15 @@
+(startLine=3695 endLine=3707 srcPath=/home/sonia/NewExperiment/jrubyFilter/01602/core/src/main/java/org/jruby/RubyString.java)
+        if (pattern.numberOfCaptures() == 0) {
+            while (RubyRegexp.matcherSearch(runtime, matcher, begin + end, range, Option.NONE) >= 0) {
+                end = StringSupport.positionEndForScan(value, matcher, enc, begin, range);
+                match = RubyRegexp.createMatchData19(context, this, matcher, pattern);
+                match.regexp = regexp;
+                RubyString substr = makeShared19(runtime, matcher.getBegin(), matcher.getEnd() - matcher.getBegin());
+                substr.infectBy(tuFlags);
+                match.infectBy(tuFlags);
+                context.setBackRef(match);
+                block.yield(context, substr);
+                modifyCheck(bytes, len, enc);
+            }
+        } else {
+

@@ -1,0 +1,16 @@
+(startLine=118 endLine=131 srcPath=/home/sonia/NewExperiment/jrubyFilter/01061/src/org/jruby/util/ConvertDouble.java)
+        private double completeCalculation() {
+            // ENEBO: Not sure about the '-' check here.
+            if (charsIndex == 0 || (charsIndex == 1 && chars[0] == '-')) {
+                if (isStrict) strictError(); // Strict requires at least one digit.
+                return 0.0;
+            } else if (chars[charsIndex - 1] == 'e') { // Covers 12.0efrog
+                if (isStrict) strictError();
+                addToResult((byte) '0');
+            } else if (isStrict && !isEOS()) {
+                strictError(); // We know it is not whitespace at this point
+            }
+
+            return Double.parseDouble(new String(chars));
+        }
+

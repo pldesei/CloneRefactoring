@@ -1,0 +1,16 @@
+(startLine=146 endLine=159 srcPath=/home/sonia/NewExperiment/jrubyFilter/01736/core/src/main/java/org/jruby/java/proxies/MapJavaProxy.java)
+        public RubyHashEntry internalDelete(final IRubyObject key) {
+            final Map map = getMap();
+            Object convertedKey = key.toJava(Object.class);
+            Object value = map.get(convertedKey);
+
+            if (value != null) {
+                RubyHashEntry rubyEntry = new RubyHashEntry(key.hashCode(), key, JavaUtil.convertJavaToUsableRubyObject(getRuntime(), value), null, null);
+                map.remove(convertedKey);
+                this.size = map.size();
+                return rubyEntry;
+            }
+
+            return NO_ENTRY;
+        }
+

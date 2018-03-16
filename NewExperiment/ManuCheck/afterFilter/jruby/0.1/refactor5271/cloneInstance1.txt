@@ -1,0 +1,18 @@
+(startLine=81 endLine=96 srcPath=/home/sonia/NewExperiment/jrubyFilter/01538/core/src/main/java/org/jruby/truffle/nodes/supercall/GeneralSuperCallNode.java)
+        if (method == null || !unmodifiedAssumption.isValid()) {
+            CompilerDirectives.transferToInterpreterAndInvalidate();
+
+            // Lookup method
+
+            final RubyModule declaringModule = getMethod().getDeclaringModule();
+
+            method = ((RubyClass) declaringModule).getSuperclass().lookupMethod(getMethod().getName());
+
+            if (method == null || method.isUndefined()) {
+                method = null;
+                throw new RaiseException(getContext().getCoreLibrary().nameErrorNoMethod(getMethod().getName(), self.toString()));
+            }
+
+            unmodifiedAssumption = declaringModule.getUnmodifiedAssumption();
+        }
+

@@ -1,0 +1,10 @@
+(startLine=693 endLine=700 srcPath=/home/sonia/NewExperiment/jrubyFilter/00662/src/org/jruby/RubyIO.java)
+    private void incrementLineno(OpenFile myOpenFile) {
+        Ruby runtime = getRuntime();
+        int lineno = myOpenFile.getLineNumber() + 1;
+        myOpenFile.setLineNumber(lineno);
+        runtime.getGlobalVariables().set("$.", runtime.newFixnum(lineno));
+        // this is for a range check, near as I can tell
+        RubyNumeric.int2fix(getRuntime(), myOpenFile.getLineNumber());
+    }
+

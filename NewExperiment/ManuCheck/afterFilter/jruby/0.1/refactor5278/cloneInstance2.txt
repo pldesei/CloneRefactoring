@@ -1,0 +1,19 @@
+(startLine=146 endLine=162 srcPath=/home/sonia/NewExperiment/jrubyFilter/01544/core/src/main/java/org/jruby/RubyIO.java)
+    public RubyIO(Ruby runtime, InputStream inputStream) {
+        super(runtime, runtime.getIO());
+        
+        if (inputStream == null) {
+            throw runtime.newRuntimeError("Opening null stream");
+        }
+        
+        openFile = new OpenFile();
+        
+        try {
+            openFile.setMainStream(ChannelStream.open(runtime, new ChannelDescriptor(Channels.newChannel(inputStream))));
+        } catch (InvalidValueException e) {
+            throw getRuntime().newErrnoEINVALError();
+        }
+        
+        openFile.setMode(OpenFile.READABLE);
+    }
+

@@ -1,0 +1,26 @@
+(startLine=2912 endLine=2935 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    private int scanHex(int count, boolean strict, String errorMessage) throws IOException {
+        int i = 0;
+        int hexValue = '\0';
+
+        for (; i < count; i++) {
+            int h1 = src.read();
+
+            if (!isHexChar(h1)) {
+                src.unread(h1);
+                break;
+            }
+
+            hexValue <<= 4;
+            hexValue |= Integer.parseInt("" + (char) h1, 16) & 15;
+        }
+
+        // No hex value after the 'x'.
+        if (i == 0 || (strict && count != i)) {
+            throw new SyntaxException(SyntaxException.PID.INVALID_ESCAPE_SYNTAX, getPosition(),
+                    getCurrentLine(), errorMessage);
+        }
+
+        return hexValue;
+    }
+

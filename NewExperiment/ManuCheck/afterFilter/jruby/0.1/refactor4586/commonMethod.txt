@@ -1,0 +1,21 @@
+(startLine=856 endLine=874 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public WhenNode newWhenNode(ISourcePosition position, Node expressionNodes, Node bodyNode, Node nextCase) {
+        if (bodyNode == null) bodyNode = NilImplicitNode.NIL;
+
+        if (expressionNodes instanceof SplatNode || expressionNodes instanceof ArgsCatNode) {
+            return new WhenNode(position, expressionNodes, bodyNode, nextCase);
+        }
+
+        ListNode list = (ListNode) expressionNodes;
+        
+        if (list.size() == 1) {
+            Node element = list.get(0);
+            
+            if (!(element instanceof SplatNode)) {
+                return new WhenOneArgNode(position, element, bodyNode, nextCase);
+            }
+        }
+
+        return new WhenNode(position, expressionNodes, bodyNode, nextCase);
+    }
+

@@ -1,0 +1,5 @@
+(startLine=299 endLine=301 srcPath=/home/sonia/NewExperiment/jrubyFilter/00761/src/org/jruby/RubyClass.java)
+    public boolean notVisibleAndNotMethodMissing(DynamicMethod method, String name, IRubyObject caller, CallType callType) {
+        return !method.isCallableFrom(caller, callType) && !name.equals("method_missing");
+    }
+

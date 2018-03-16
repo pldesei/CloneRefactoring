@@ -1,0 +1,11 @@
+(startLine=3708 endLine=3716 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                  String identifier = (String) ((Token)yyVals[0+yyTop]).getValue();
+
+                  if (support.getCurrentScope().getLocalScope().isDefined(identifier) >= 0) {
+                      yyerror("duplicate rest argument name");
+                  }
+
+                  yyVal = new RestArgNode(support.union(((Token)yyVals[-1+yyTop]), ((Token)yyVals[0+yyTop])), (String) ((Token)yyVals[0+yyTop]).getValue(), support.getCurrentScope().getLocalScope().addVariable(identifier));
+              }
+

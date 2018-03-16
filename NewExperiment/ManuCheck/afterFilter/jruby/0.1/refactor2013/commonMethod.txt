@@ -1,0 +1,13 @@
+(startLine=337 endLine=347 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     *  Wraps node with NEWLINE node.
+     *
+     *@param node
+     *@return a NewlineNode or null if node is null.
+     */
+    public Node newline_node(Node node, ISourcePosition position) {
+        if (node == null) return null;
+        
+        return node instanceof NewlineNode ? node : new NewlineNode(position, node); 
+    }
+

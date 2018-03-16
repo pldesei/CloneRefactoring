@@ -1,0 +1,22 @@
+(startLine=169 endLine=188 srcPath=/home/sonia/NewExperiment/jrubyFilter/01606/core/src/main/java/org/jruby/java/invokers/RubyToJavaInvoker.java)
+    public static Object[] convertArguments(final ParameterTypes method, final IRubyObject[] args) {
+        final Class<?>[] paramTypes = method.getParameterTypes();
+        final Object[] javaArgs; final int len = args.length;
+
+        if ( method.isVarArgs() ) {
+            final int last = paramTypes.length - 1;
+            javaArgs = new Object[ last + 1 ];
+            for ( int i = 0; i < last; i++ ) {
+                javaArgs[i] = args[i].toJava(paramTypes[i]);
+            }
+            javaArgs[ last ] = convertVarArgumentsOnly(paramTypes[ last ], last, args);
+        }
+        else {
+            javaArgs = new Object[len];
+            for ( int i = 0; i < len; i++ ) {
+                javaArgs[i] = args[i].toJava(paramTypes[i]);
+            }
+        }
+        return javaArgs;
+    }
+

@@ -1,0 +1,9 @@
+(startLine=798 endLine=804 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/RubyString.java)
+    /** rb_str_append
+     *
+     */
+    public RubyString append(IRubyObject other) {
+        infectBy(other);
+        return cat(stringValue(other).value);
+    }
+

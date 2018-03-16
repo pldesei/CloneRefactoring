@@ -1,0 +1,14 @@
+(startLine=446 endLine=457 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Define an array set condition so we can return lhs
+     * 
+     * @param receiver array being set
+     * @param index node which should evalute to index of array set
+     * @return an AttrAssignNode
+     */
+    public Node aryset(Node receiver, Node index) {
+        checkExpression(receiver);
+
+        return new_attrassign(receiver.getPosition(), receiver, "[]=", index);
+    }
+

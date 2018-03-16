@@ -1,0 +1,30 @@
+(startLine=1234 endLine=1261 srcPath=/home/sonia/NewExperiment/jrubyFilter/00825/src/org/jruby/RubyString.java)
+    public IRubyObject swapcase_bang(ThreadContext context) {
+        if (value.realSize == 0) {
+            modifyCheck();
+            return context.getRuntime().getNil();        
+        }
+        
+        modify();
+        
+        int s = value.begin;
+        int send = s + value.realSize;
+        byte[]buf = value.bytes;
+        
+        boolean modify = false;
+        while (s < send) {
+            int c = buf[s] & 0xff;
+            if (ASCII.isUpper(c)) {
+                buf[s] = (byte)ASCIIEncoding.asciiToLower(c);
+                modify = true;
+            } else if (ASCII.isLower(c)) {
+                buf[s] = (byte)ASCIIEncoding.asciiToUpper(c);
+                modify = true;
+            }
+            s++;
+        }
+
+        if (modify) return this;
+        return context.getRuntime().getNil();
+    }
+

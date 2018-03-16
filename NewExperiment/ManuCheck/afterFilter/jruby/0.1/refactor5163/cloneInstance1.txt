@@ -1,0 +1,18 @@
+(startLine=21 endLine=36 srcPath=/home/sonia/NewExperiment/jrubyFilter/01144/src/org/jruby/ext/ffi/jffi/DefaultMethodOneArg.java)
+            IRubyObject arg1) {
+        HeapInvocationBuffer buffer = new HeapInvocationBuffer(function);
+        if (needsInvocationSession) {
+            Invocation invocation = new Invocation(context, postInvokeCount, referenceCount);
+            try {
+                m1.marshal(invocation, buffer, arg1);
+                return functionInvoker.invoke(context, function, buffer);
+            } finally {
+                invocation.finish();
+            }
+        } else {
+            m1.marshal(context, buffer, arg1);
+            return functionInvoker.invoke(context, function, buffer);
+        }
+        
+    }
+

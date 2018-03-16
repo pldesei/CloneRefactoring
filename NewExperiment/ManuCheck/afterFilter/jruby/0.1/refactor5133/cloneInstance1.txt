@@ -1,0 +1,13 @@
+(startLine=569 endLine=579 srcPath=/home/sonia/NewExperiment/jrubyFilter/01060/src/org/jruby/util/ConvertDouble.java)
+                if ( i < buflen ) {
+                    switch(ival = bytes[i++]) {
+                    case '0': case '1': case '2': case '3': case '4':
+                    case '5': case '6': case '7': case '8': case '9':
+                        expSpec = (int)ival-(int)'0';
+                        break; //switch
+                    default:
+                        state = SERR_NOT_STRICT;
+                        break states;
+                    }
+                } else {
+

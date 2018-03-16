@@ -1,0 +1,16 @@
+(startLine=1680 endLine=1693 srcPath=/home/sonia/NewExperiment/jrubyFilter/01748/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java)
+    @Interp @JIT
+    public static IRubyObject updateBlockState(Block block, IRubyObject self) {
+        // SSS FIXME: Why is self null in non-binding-eval contexts?
+        if (self == null || block.getEvalType() == EvalType.BINDING_EVAL) {
+            // Update self to the binding's self
+            self = useBindingSelf(block.getBinding());
+        }
+
+        // Clear block's eval type
+        block.setEvalType(EvalType.NONE);
+
+        // Return self in case it has been updated
+        return self;
+    }
+

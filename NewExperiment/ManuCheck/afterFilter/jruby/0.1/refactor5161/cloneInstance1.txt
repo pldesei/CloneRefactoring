@@ -1,0 +1,11 @@
+(startLine=2884 endLine=2892 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+        try {
+            for (int i = begin; i < begin + realLength; i++) {
+                IRubyObject v = values[i];
+                if (v instanceof RubyArray) {
+                    RubyArray arr = (RubyArray)v;
+                    if (arr.realLength > 0 && equalInternal(context, arr.values[arr.begin], key)) return arr;
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException aioob) {
+

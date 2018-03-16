@@ -1,0 +1,23 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01230
+predFragLineRange:296-316
+predMethodLineRange:295-316
+nextLineRange:289-308
+predStrMethodInvoNames:
+[isGiven, enumeratorize, getRuntime, getRuntime, newArray, callEach, arity, checkArgs, isTrue, yield, append, getNil]
+%%%%%%%%%%
+AddedMethodInvo Line:297 InvoName:each(context,self,new JavaInternalBlockBody(context,"Enumerable#drop_while",block.arity()){
+  boolean memo=false;
+  public IRubyObject yield(  ThreadContext context,  IRubyObject arg){
+    if (!memo && !block.yield(context,arg).isTrue())     memo=true;
+    if (memo) synchronized (result) {
+      result.append(arg);
+    }
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01230/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject each(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockBody) 

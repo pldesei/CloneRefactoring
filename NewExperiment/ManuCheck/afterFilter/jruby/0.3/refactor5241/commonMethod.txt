@@ -1,0 +1,18 @@
+(startLine=482 endLine=497 srcPath=/home/sonia/NewExperiment/jrubyFilter/01457/core/src/main/java/org/jruby/ir/interpreter/Interpreter.java)
+    private static Object retrieveOp(Operand r, ThreadContext context, IRubyObject self, DynamicScope currDynScope, Object[] temp) {
+        Object res;
+        if (r instanceof Self) {
+            return self;
+        } else if (r instanceof TemporaryVariable) {
+            res = temp[((TemporaryVariable)r).offset];
+            return res == null ? context.nil : res;
+        } else if (r instanceof LocalVariable) {
+            LocalVariable lv = (LocalVariable)r;
+            res = currDynScope.getValue(lv.getLocation(), lv.getScopeDepth());
+            return res == null ? context.nil : res;
+        } else {
+            return r.retrieve(context, self, currDynScope, temp);
+        }
+
+    }
+

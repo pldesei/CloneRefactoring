@@ -1,0 +1,7 @@
+(startLine=1860 endLine=1864 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/evaluator/EvaluationState.java)
+    private static void callTraceFunction(Ruby runtime, ThreadContext context, String event, IRubyObject zelf) {
+        String name = context.getFrameName();
+        RubyModule type = context.getFrameKlazz();
+        runtime.callTraceFunction(context, event, context.getPosition(), zelf, name, type);
+    }
+

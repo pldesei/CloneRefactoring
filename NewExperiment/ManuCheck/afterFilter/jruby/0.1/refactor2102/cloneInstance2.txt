@@ -1,0 +1,12 @@
+(startLine=3625 endLine=3634 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/Ruby19Parser.java)
+  {
+                    ISourcePosition position;
+                    if (((Node)yyVals[-2+yyTop]) == null && ((Node)yyVals[0+yyTop]) == null) {
+                        position = getPosition(((Token)yyVals[-1+yyTop]));
+                    } else {
+                        position = support.union(((Node)yyVals[-2+yyTop]), ((Node)yyVals[0+yyTop]));
+                    }
+
+                    yyVal = support.newArrayNode(position, ((Node)yyVals[-2+yyTop])).add(((Node)yyVals[0+yyTop]));
+                }
+

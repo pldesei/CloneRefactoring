@@ -1,0 +1,14 @@
+(startLine=420 endLine=431 srcPath=/home/sonia/NewExperiment/jrubyFilter/01078/src/org/jruby/parser/ParserSupport.java)
+    public Node getOperatorCallNode(Node firstNode, String operator, Node secondNode, ISourcePosition defaultPosition) {
+        if (defaultPosition != null) {
+            firstNode = checkForNilNode(firstNode, defaultPosition);
+            secondNode = checkForNilNode(secondNode, defaultPosition);
+        }
+        
+        checkExpression(firstNode);
+        checkExpression(secondNode);
+
+        return new_call_one_arg(firstNode.getPosition(), firstNode, operator, secondNode);
+//        return new CallOneArgNode(firstNode.getPosition(), firstNode, operator, new ArrayNode(secondNode.getPosition(), secondNode));
+    }
+

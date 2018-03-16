@@ -1,0 +1,18 @@
+(startLine=488 endLine=503 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKeyRSA.java)
+    private RubyString doCipherRSA(final Ruby runtime,
+        final IRubyObject content, final int padding,
+        final int initMode, final Key initKey) {
+
+        final String cipherPadding = getPadding(padding);
+        final RubyString buffer = content.convertToString();
+        try {
+            Cipher engine = SecurityHelper.getCipher("RSA" + cipherPadding);
+            engine.init(initMode, initKey);
+            byte[] output = engine.doFinal(buffer.getBytes());
+            return RubyString.newString(runtime, output);
+        }
+        catch (GeneralSecurityException gse) {
+            throw newRSAError(runtime, gse.getMessage());
+        }
+    }
+

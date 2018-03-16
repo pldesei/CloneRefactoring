@@ -1,0 +1,12 @@
+(startLine=68 endLine=77 srcPath=/home/sonia/NewExperiment/jrubyFilter/00793/src/org/jruby/ast/DStrNode.java)
+    public static RubyString buildDynamicString(Ruby runtime, ThreadContext context, IRubyObject self, Block aBlock, ListNode list) {
+        RubyString string = runtime.newString(new ByteList());
+        
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            DStrNode.appendToString(runtime, context, self, aBlock, string, list.get(i));
+        }
+   
+        return string;
+    }
+

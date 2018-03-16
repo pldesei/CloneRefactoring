@@ -1,0 +1,12 @@
+(startLine=374 endLine=383 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public INode getConditionNode(INode node) {
+        if (node == null) {
+            return null;
+        } else if (node instanceof NewlineNode) {
+            ((NewlineNode) node).setNextNode(cond0(((NewlineNode) node).getNextNode()));
+            return node;
+        } else {
+            return cond0(node);
+        }
+    }
+

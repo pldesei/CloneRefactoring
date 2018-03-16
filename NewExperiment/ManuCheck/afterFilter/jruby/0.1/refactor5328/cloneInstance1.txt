@@ -1,0 +1,16 @@
+(startLine=196 endLine=209 srcPath=/home/sonia/NewExperiment/jrubyFilter/01730/truffle/src/main/java/org/jruby/truffle/nodes/core/MethodNodes.java)
+        public Object sourceLocation(DynamicObject method) {
+            CompilerDirectives.transferToInterpreter();
+
+            SourceSection sourceSection = Layouts.METHOD.getMethod(method).getSharedMethodInfo().getSourceSection();
+
+            if (sourceSection instanceof NullSourceSection) {
+                return nil();
+            } else {
+                DynamicObject file = createString(sourceSection.getSource().getName());
+                DynamicObject arrayClass = getContext().getCoreLibrary().getArrayClass();
+                Object[] objects = new Object[]{file, sourceSection.getStartLine()};
+                return ArrayNodes.createGeneralArray(arrayClass, objects, objects.length);
+            }
+        }
+

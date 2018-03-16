@@ -1,0 +1,6 @@
+(startLine=397 endLine=400 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public AndNode newAndNode(INode left, INode right) {
+        checkExpression(left);
+        return new AndNode(left.getPosition(), getConditionNode(left), getConditionNode(right));
+    }
+

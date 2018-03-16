@@ -1,0 +1,8 @@
+(startLine=340 endLine=345 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java)
+    protected static char[] password(final IRubyObject pass) {
+        if ( pass != null && ! pass.isNil() ) {
+            return pass.toString().toCharArray();
+        }
+        return null;
+    }
+

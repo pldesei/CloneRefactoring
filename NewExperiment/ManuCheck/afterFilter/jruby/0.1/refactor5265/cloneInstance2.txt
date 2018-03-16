@@ -1,0 +1,9 @@
+(startLine=534 endLine=540 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/ASN1.java)
+            } else if(v instanceof ASN1Set) {
+                List<IRubyObject> l = new ArrayList<IRubyObject>();
+                for(Enumeration enm = ((ASN1Set)v).getObjects(); enm.hasMoreElements(); ) {
+                    l.add(decodeObj(asnM,enm.nextElement()));
+                }
+                return c.callMethod(tc,"new",asnM.getRuntime().newArray(l));
+            } else if(v instanceof DERNull) {
+

@@ -1,0 +1,22 @@
+(startLine=496 endLine=515 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+	/**
+	 * @fixme position
+	 **/
+    public Node node_assign(Node lhs, Node rhs) {
+        if (lhs == null) return null;
+
+        Node newNode = lhs;
+
+        checkExpression(rhs);
+        if (lhs instanceof AssignableNode) {
+    	    ((AssignableNode) lhs).setValueNode(rhs);
+    	    lhs.setPosition(union(lhs, rhs));
+        } else if (lhs instanceof IArgumentNode) {
+            IArgumentNode invokableNode = (IArgumentNode) lhs;
+            
+            return invokableNode.setArgsNode(arg_add(lhs.getPosition(), invokableNode.getArgsNode(), rhs));
+        }
+        
+        return newNode;
+    }
+

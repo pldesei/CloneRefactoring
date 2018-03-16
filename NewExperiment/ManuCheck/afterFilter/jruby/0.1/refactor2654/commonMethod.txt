@@ -1,0 +1,16 @@
+(startLine=103 endLine=116 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/ast/ListNode.java)
+    /**
+     * Add all elements in other list to this list node.
+     * 
+     * @param other list which has elements
+     * @return this instance for method chaining
+     */
+    public ListNode addAll(ListNode other) {
+        if (other != null && other.size() > 0) {
+            list.addAll(other.list);
+            
+            setPosition(getPosition().union(getLast().getPosition()));
+        }
+        return this;
+    }
+

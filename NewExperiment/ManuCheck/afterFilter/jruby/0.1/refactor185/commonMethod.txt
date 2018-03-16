@@ -1,0 +1,9 @@
+(startLine=187 endLine=193 srcPath=/home/sonia/NewExperiment/jrubyFilter/00445/src/org/jruby/RubyRegexp.java)
+    public static RubyRegexp newRegexp(Ruby runtime, Pattern pattern, int flags, String lang) {
+        RubyRegexp re = new RubyRegexp(runtime);
+        re.code = KCode.create(runtime, lang);
+        re.pattern = pattern;
+        re.flags = flags;
+        return re;
+    }
+

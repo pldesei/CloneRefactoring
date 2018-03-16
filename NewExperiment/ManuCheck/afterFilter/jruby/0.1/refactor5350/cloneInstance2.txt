@@ -1,0 +1,20 @@
+(startLine=1761 endLine=1778 srcPath=/home/sonia/NewExperiment/jrubyFilter/01867/core/src/main/java/org/jruby/RubyEnumerable.java)
+        if (block.isGiven()) {
+            callEach(runtime, context, self, block.getSignature(), new BlockCallback() {
+                AtomicInteger ix = new AtomicInteger(0);
+
+                public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                    IRubyObject larg = packEnumValues(ctx, largs);
+                    RubyArray array = runtime.newArray(len);
+                    int myIx = ix.getAndIncrement();
+                    array.append(larg);
+                    for (int i = 0, j = args.length; i < j; i++) {
+                        array.append(zipEnumNext(ctx, args[i]));
+                    }
+                    block.yield(ctx, array);
+                    return runtime.getNil();
+                }
+            });
+            return runtime.getNil();
+        } else {
+

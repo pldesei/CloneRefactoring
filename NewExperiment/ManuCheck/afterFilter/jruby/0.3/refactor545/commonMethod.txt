@@ -1,0 +1,10 @@
+(startLine=1959 endLine=1966 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/evaluator/EvaluationState.java)
+    private static String getDefinition(Ruby runtime, ThreadContext context, Node node, IRubyObject self, Block aBlock) {
+        try {
+            context.setWithinDefined(true);
+            return getDefinitionInner(runtime, context, node, self, aBlock);
+        } finally {
+            context.setWithinDefined(false);
+        }
+    }
+

@@ -1,0 +1,52 @@
+(startLine=943 endLine=992 srcPath=/home/sonia/NewExperiment/jrubyFilter/00614/src/org/jruby/RubyString.java)
+    /** rb_str_inspect
+     *
+     */
+    @JRubyMethod(name = "inspect")
+    public IRubyObject inspect() {
+        final int length = value.length();
+        Ruby runtime = getRuntime();
+        ByteList sb = new ByteList(length + 2 + length / 100);
+
+        sb.append('\"');
+
+        // FIXME: This may not be unicode-safe
+        for (int i = 0; i < length; i++) {
+            int c = value.get(i) & 0xFF;
+            if (isAlnum(c)) {
+                sb.append((char)c);
+            } else if (runtime.getKCode() == KCode.UTF8 && c == 0xEF) {
+                // don't escape encoded UTF8 characters, leave them as bytes
+                // append byte order mark plus two character bytes
+                sb.append((char)c);
+                sb.append((char)(value.get(++i) & 0xFF));
+                sb.append((char)(value.get(++i) & 0xFF));
+            } else if (c == '\"' || c == '\\') {
+                sb.append('\\').append((char)c);
+            } else if (c == '#' && isEVStr(i, length)) {
+                sb.append('\\').append((char)c);
+            } else if (isPrint(c)) {
+                sb.append((char)c);
+            } else if (c == '\n') {
+                sb.append('\\').append('n');
+            } else if (c == '\r') {
+                sb.append('\\').append('r');
+            } else if (c == '\t') {
+                sb.append('\\').append('t');
+            } else if (c == '\f') {
+                sb.append('\\').append('f');
+            } else if (c == '\u000B') {
+                sb.append('\\').append('v');
+            } else if (c == '\u0007') {
+                sb.append('\\').append('a');
+            } else if (c == '\u001B') {
+                sb.append('\\').append('e');
+            } else {
+                sb.append(ByteList.plain(Sprintf.sprintf(runtime,"\\%.3o",c)));
+            }
+        }
+
+        sb.append('\"');
+        return getRuntime().newString(sb);
+    }
+

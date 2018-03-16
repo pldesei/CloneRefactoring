@@ -1,0 +1,19 @@
+(startLine=909 endLine=925 srcPath=/home/sonia/NewExperiment/jrubyFilter/00581/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+    private char getIdentifier(char c) throws IOException {
+        do {
+            tokenBuffer.append(c);
+            /* no special multibyte character handling is needed in Java
+             * if (ismbchar(c)) {
+                int i, len = mbclen(c)-1;
+
+                for (i = 0; i < len; i++) {
+                    c = src.read();
+                    tokenBuffer.append(c);
+                }
+            }*/
+            c = src.read();
+        } while (isIdentifierChar(c));
+        
+        return c;
+    }
+

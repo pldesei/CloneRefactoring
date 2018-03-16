@@ -1,0 +1,23 @@
+(startLine=63 endLine=83 srcPath=/home/sonia/NewExperiment/jrubyFilter/01498/core/src/main/java/org/jruby/runtime/callsite/RespondToCallSite.java)
+    protected IRubyObject cacheAndCall(IRubyObject caller, RubyClass selfType, ThreadContext context, IRubyObject self, IRubyObject arg) {
+        CacheEntry entry = selfType.searchWithCache(methodName);
+        DynamicMethod method = entry.method;
+        if (methodMissing(method, caller)) {
+            return callMethodMissing(context, self, method, arg);
+        }
+
+        // alternate logic to cache the result of respond_to if it's the standard one
+        // FIXME: 1.9's respond_to_missing breaks this, so we have to bail out
+        if (false &&
+                entry.method.equals(context.runtime.getRespondToMethod())) {
+            String name = arg.asJavaString();
+            RespondToTuple tuple = recacheRespondsTo(entry, name, selfType, true, context);
+            respondToTuple = tuple;
+            return tuple.respondsTo;
+        }
+
+        // normal logic if it's not the builtin respond_to? method
+        cache = entry;
+        return method.call(context, self, selfType, methodName, arg);
+    }
+

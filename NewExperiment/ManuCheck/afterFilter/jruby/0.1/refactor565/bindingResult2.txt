@@ -1,0 +1,73 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00480
+predFragLineRange:372-393
+predMethodLineRange:372-393
+nextLineRange:493-526
+predStrMethodInvoNames:
+[getCurrentContext, getRuntime, eachToList, isGiven, iterator, hasNext, isTrue, yield, next, iterator, hasNext, isTrue, next, getTrue, getRuntime, getFalse, getRuntime]
+%%%%%%%%%%
+AddedMethodInvo Line:497 InvoName:callEach(runtime,context,self,new BlockCallback(){
+  public IRubyObject call(  ThreadContext ctx,  IRubyObject[] largs,  Block blk){
+    IRubyObject arg=largs.length > 1 ? runtime.newArrayNoCopy(largs) : largs[0];
+    if (block.yield(context,arg).isTrue()) {
+      throw new JumpException(JumpException.JumpType.SpecialJump);
+    }
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callEach(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:499 InvoName:runtime.newArrayNoCopy(largs)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArrayNoCopy(org.jruby.runtime.builtin.IRubyObject[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:504 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:508 InvoName:callEach(runtime,context,self,new BlockCallback(){
+  public IRubyObject call(  ThreadContext ctx,  IRubyObject[] largs,  Block blk){
+    IRubyObject arg=largs.length > 1 ? runtime.newArrayNoCopy(largs) : largs[0];
+    if (arg.isTrue()) {
+      throw new JumpException(JumpException.JumpType.SpecialJump);
+    }
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callEach(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:510 InvoName:runtime.newArrayNoCopy(largs)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArrayNoCopy(org.jruby.runtime.builtin.IRubyObject[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:515 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:520 InvoName:je.getJumpType()
+PackageName:org.jruby.exceptions
+QualifiedClassName:org.jruby.exceptions.JumpException
+ClassName:JumpException
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/exceptions/JumpException.java
+InvokedMethodSig:public org.jruby.exceptions.JumpException.JumpType getJumpType() 

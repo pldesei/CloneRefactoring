@@ -1,0 +1,16 @@
+(startLine=44 endLine=57 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/common/RubyWarnings.java)
+    public void warn(ISourcePosition position, String message) {
+    	assert position != null;
+
+        if(runtime.getVerbose().isNil()) {
+            return;
+        }
+    	
+        StringBuffer buffer = new StringBuffer(100);
+
+        buffer.append(position.getFile()).append(':').append(position.getEndLine()).append(' ');
+        buffer.append("warning: ").append(message).append('\n');
+        IRubyObject errorStream = runtime.getGlobalVariables().get("$stderr");
+        errorStream.callMethod(runtime.getCurrentContext(), "write", runtime.newString(buffer.toString()));
+    }
+

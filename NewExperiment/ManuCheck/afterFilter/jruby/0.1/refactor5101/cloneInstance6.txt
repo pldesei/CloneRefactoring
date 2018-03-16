@@ -1,0 +1,18 @@
+(startLine=135 endLine=150 srcPath=/home/sonia/NewExperiment/jrubyFilter/00930/src/org/jruby/java/invokers/StaticMethodInvoker.java)
+    public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, IRubyObject arg0, IRubyObject arg1, IRubyObject arg2, Block block) {
+        createJavaMethods(self.getRuntime());
+        if (block.isGiven()) {
+            Object[] convertedArgs = new Object[4];
+            RubyProc proc = RubyProc.newProc(self.getRuntime(), block, Block.Type.LAMBDA);
+            JavaMethod method = (JavaMethod)findCallableArityFour(self, name, arg0, arg1, arg2, proc);
+            convertedArgs[0] = JavaUtil.convertArgumentToType(context, arg0, method.getParameterTypes()[0]);
+            convertedArgs[1] = JavaUtil.convertArgumentToType(context, arg1, method.getParameterTypes()[1]);
+            convertedArgs[2] = JavaUtil.convertArgumentToType(context, arg2, method.getParameterTypes()[2]);
+            convertedArgs[3] = JavaUtil.convertArgumentToType(context, proc, method.getParameterTypes()[3]);
+
+            return Java.java_to_ruby(self, method.invoke_static(convertedArgs), Block.NULL_BLOCK);
+        } else {
+            return call(context, self, clazz, name, arg0, arg1, arg2);
+        }
+    }
+

@@ -1,0 +1,16 @@
+(startLine=2427 endLine=2440 srcPath=/home/sonia/NewExperiment/jrubyFilter/00559/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+        public void issueNextEvent(ClosureCallback value) {
+            if (withinProtection || currentLoopLabels == null) {
+                method.newobj(cg.p(JumpException.NextJump.class));
+                method.dup();
+                method.aconst_null();
+                value.compile(this);
+                method.invokespecial(cg.p(JumpException.NextJump.class), "<init>", cg.sig(Void.TYPE, cg.params(Object.class, Object.class)));
+
+                method.athrow();
+            } else {
+                value.compile(this);
+                issueLoopNext();
+            }
+        }
+

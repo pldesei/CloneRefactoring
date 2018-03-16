@@ -1,0 +1,13 @@
+(startLine=158 endLine=168 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport19.java)
+    public ListNode list_concat(Node first, Node second) {
+        if (first instanceof ListNode) {
+            if (second instanceof ListNode) {
+                return ((ListNode) first).addAll((ListNode) second);
+            } else {
+                return ((ListNode) first).addAll(second);
+            }
+        }
+
+        return new ArrayNode(first.getPosition(), first).add(second);
+    }
+

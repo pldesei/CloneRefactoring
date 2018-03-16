@@ -1,0 +1,19 @@
+(startLine=857 endLine=873 srcPath=/home/sonia/NewExperiment/jrubyFilter/00859/src/org/jruby/javasupport/util/RuntimeHelpers.java)
+    public static IRubyObject isJavaExceptionHandled(Exception currentException, IRubyObject exception0, IRubyObject exception1, IRubyObject exception2, Ruby runtime, ThreadContext context, IRubyObject self) {
+        if (currentException instanceof RaiseException) {
+            return isExceptionHandled(((RaiseException)currentException).getException(), exception0, exception1, exception2, runtime, context, self);
+        } else {
+            if (checkJavaException(currentException, exception0)) {
+                return runtime.getTrue();
+            }
+            if (checkJavaException(currentException, exception1)) {
+                return runtime.getTrue();
+            }
+            if (checkJavaException(currentException, exception2)) {
+                return runtime.getTrue();
+            }
+
+            return runtime.getFalse();
+        }
+    }
+

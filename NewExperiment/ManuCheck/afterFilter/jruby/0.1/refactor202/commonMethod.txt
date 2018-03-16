@@ -1,0 +1,19 @@
+(startLine=299 endLine=315 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/RubyObject.java)
+    /** rb_singleton_class
+     *
+     */    
+    public RubyClass getSingletonClass() {
+        RubyClass klass;
+        
+        if (getMetaClass().isSingleton() && getMetaClass().getInstanceVariable("__attached__") == this) {
+            klass = getMetaClass();            
+        } else {
+            klass = makeMetaClass(getMetaClass(), getMetaClass().getCRef());
+        }
+        
+        klass.setTaint(isTaint());
+        klass.setFrozen(isFrozen());
+        
+        return klass;
+    }
+

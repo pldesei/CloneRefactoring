@@ -1,0 +1,7 @@
+(startLine=306 endLine=310 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public void checkExpression(INode node) {
+        if (!NodeUtil.isExpression(node)) {
+            errorHandler.handleError(IErrors.SYNTAX_ERROR, node.getPosition(), "Void value expression.", null);
+        }
+    }
+

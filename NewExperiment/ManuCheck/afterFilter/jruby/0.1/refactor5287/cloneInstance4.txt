@@ -1,0 +1,36 @@
+(startLine=1118 endLine=1151 srcPath=/home/sonia/NewExperiment/jrubyFilter/01575/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java)
+    public void InstanceSuperInstr(InstanceSuperInstr instancesuperinstr) {
+        IRBytecodeAdapter m = jvmMethod();
+        String name = instancesuperinstr.getMethodAddr().getName();
+        Operand[] args = instancesuperinstr.getCallArgs();
+
+        m.loadContext();
+        m.loadSelf(); // TODO: get rid of caller
+        m.loadSelf();
+        visit(instancesuperinstr.getDefiningModule());
+
+        // TODO: CON: is this safe?
+        jvmAdapter().checkcast(p(RubyClass.class));
+
+        // process args
+        for (int i = 0; i < args.length; i++) {
+            Operand operand = args[i];
+            visit(operand);
+        }
+
+        // if there's splats, provide a map and let the call site sort it out
+        boolean[] splatMap = IRRuntimeHelpers.buildSplatMap(args, instancesuperinstr.containsArgSplat());
+
+        Operand closure = instancesuperinstr.getClosureArg(null);
+        boolean hasClosure = closure != null;
+        if (hasClosure) {
+            m.loadContext();
+            visit(closure);
+            m.invokeIRHelper("getBlockFromObject", sig(Block.class, ThreadContext.class, Object.class));
+        }
+
+        m.invokeInstanceSuper(name, args.length, hasClosure, splatMap);
+
+        jvmStoreLocal(instancesuperinstr.getResult());
+    }
+

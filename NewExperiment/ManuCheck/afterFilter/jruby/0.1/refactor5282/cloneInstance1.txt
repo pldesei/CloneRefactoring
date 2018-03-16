@@ -1,0 +1,41 @@
+(startLine=21 endLine=59 srcPath=/home/sonia/NewExperiment/jrubyFilter/01561/core/src/main/java/org/jruby/runtime/InterpretedIRBlockBody.java)
+    protected IRubyObject commonYieldPath(ThreadContext context, IRubyObject[] args, IRubyObject self, Binding binding, Type type, Block block) {
+        // SSS: Important!  Use getStaticScope() to use a copy of the static-scope stored in the block-body.
+        // Do not use 'closure.getStaticScope()' -- that returns the original copy of the static scope.
+        // This matters because blocks created for Thread bodies modify the static-scope field of the block-body
+        // that records additional state about the block body.
+        //
+        // FIXME: Rather than modify static-scope, it seems we ought to set a field in block-body which is then
+        // used to tell dynamic-scope that it is a dynamic scope for a thread body.  Anyway, to be revisited later!
+        Visibility oldVis = binding.getFrame().getVisibility();
+        Frame prevFrame = context.preYieldNoScope(binding);
+
+        // SSS FIXME: Why is self null in non-binding-eval contexts?
+        if (self == null || this.evalType.get() == EvalType.BINDING_EVAL) {
+            self = useBindingSelf(binding);
+        }
+
+        DynamicScope newScope = null;
+        DynamicScope prevScope = binding.getDynamicScope();
+
+        // SSS FIXME: Maybe, we should allocate a NoVarsScope/DummyScope for for-loop bodies because the static-scope here
+        // probably points to the parent scope? To be verified and fixed if necessary. There is no harm as it is now. It
+        // is just wasteful allocation since the scope is not used at all.
+
+        // Pass on eval state info to the dynamic scope and clear it on the block-body
+        newScope  = DynamicScope.newDynamicScope(getStaticScope(), prevScope, this.evalType.get());
+        this.evalType.set(EvalType.NONE);
+        context.pushScope(newScope);
+
+        try {
+            return Interpreter.INTERPRET_BLOCK(context, self, closure, args, binding.getMethod(), block, type);
+        }
+        finally {
+            // IMPORTANT: Do not clear eval-type in case this is reused in bindings!
+            // Ex: eval("...", foo.instance_eval { binding })
+            // The dyn-scope used for binding needs to have its eval-type set to INSTANCE_EVAL
+            binding.getFrame().setVisibility(oldVis);
+            context.postYield(binding, prevFrame);
+        }
+    }
+

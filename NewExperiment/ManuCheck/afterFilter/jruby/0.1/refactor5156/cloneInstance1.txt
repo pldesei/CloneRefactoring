@@ -1,0 +1,19 @@
+(startLine=2881 endLine=2897 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject assoc(ThreadContext context, IRubyObject key) {
+        Ruby runtime = context.getRuntime();
+
+        try {
+            for (int i = begin; i < begin + realLength; i++) {
+                IRubyObject v = values[i];
+                if (v instanceof RubyArray) {
+                    RubyArray arr = (RubyArray)v;
+                    if (arr.realLength > 0 && equalInternal(context, arr.values[arr.begin], key)) return arr;
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException aioob) {
+            concurrentModification();
+        }
+
+        return runtime.getNil();
+    }
+

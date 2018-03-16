@@ -1,0 +1,22 @@
+(startLine=508 endLine=527 srcPath=/home/sonia/NewExperiment/jrubyFilter/00728/src/org/jruby/runtime/CallSite.java)
+        public IRubyObject callIter(ThreadContext context, IRubyObject self, IRubyObject arg1, IRubyObject arg2, IRubyObject arg3, Block block) {
+            RubyClass selfType = pollAndGetClass(context, self);
+
+            try {
+                CacheEntry myCache = cache;
+                if (myCache.cachedType == selfType) {
+                    return myCache.cachedMethod.call(context, self, selfType, methodName, arg1, arg2, arg3, block);
+                }
+
+                return cacheAndCall(selfType, block, context, self, arg1, arg2, arg3);
+            } catch (JumpException.BreakJump bj) {
+                return handleBreakJump(context, bj);
+            } catch (JumpException.RetryJump rj) {
+                throw context.getRuntime().newLocalJumpError("retry", context.getRuntime().getNil(), "retry outside of rescue not yet supported");
+            } catch (StackOverflowError soe) {
+                throw context.getRuntime().newSystemStackError("stack level too deep");
+            } finally {
+                block.escape();
+            }
+        }
+

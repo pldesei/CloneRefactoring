@@ -1,0 +1,12 @@
+(startLine=96 endLine=105 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport19.java)
+    /**
+     * If node is a splat and it is splatting a literal array then return the literal array.
+     * Otherwise return null.  This allows grammar to not splat into a Ruby Array if splatting
+     * a literal array.
+     */
+    public Node splat_array(Node node) {
+        if (node instanceof SplatNode) node = ((SplatNode) node).getValue();
+        if (node instanceof ArrayNode) return node;
+        return null;
+    }
+

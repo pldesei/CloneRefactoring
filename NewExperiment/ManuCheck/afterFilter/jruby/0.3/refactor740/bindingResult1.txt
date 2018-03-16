@@ -1,0 +1,27 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00855
+predFragLineRange:2290-2304
+predMethodLineRange:2290-2304
+nextLineRange:2289-2302
+predStrMethodInvoNames:
+[isTaint, getPattern, matcher, getPreviousFrame, search, regsub, updateBackRef, subBangCommon, setBackRef, getNil, getRuntime]
+%%%%%%%%%%
+AddedMethodInvo Line:2296 InvoName:context.getRuntime().getKCode().getEncoding()
+PackageName:org.jruby.util
+QualifiedClassName:org.jruby.util.KCode
+ClassName:KCode
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/util/KCode.java
+InvokedMethodSig:public Encoding getEncoding() 
+%%%%%%%%%%
+AddedMethodInvo Line:2296 InvoName:context.getRuntime().getKCode()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.util.KCode getKCode() 
+%%%%%%%%%%
+AddedMethodInvo Line:2297 InvoName:RubyRegexp.updateBackRefLazy(context,this,frame,matcher,regex)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyRegexp
+ClassName:RubyRegexp
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyRegexp.java
+InvokedMethodSig:static final org.jruby.RubyMatchData updateBackRefLazy(org.jruby.runtime.ThreadContext, org.jruby.RubyString, org.jruby.runtime.Frame, Matcher, Regex) 

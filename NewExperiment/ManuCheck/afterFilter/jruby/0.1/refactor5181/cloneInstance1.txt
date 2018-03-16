@@ -1,0 +1,12 @@
+(startLine=1175 endLine=1184 srcPath=/home/sonia/NewExperiment/jrubyFilter/01235/src/org/jruby/compiler/ir/representations/CFG.java)
+                else {
+                    Set<Edge<BasicBlock>> succs = cfg.vertexFor(curr).getOutgoingEdges();
+                    if (succs.size() == 1) {
+                        BasicBlock tgt = succs.iterator().next().getDestination().getData();
+                        if ((tgt != next) && ((li == null) || !li.operation.transfersControl())) {
+//                            System.out.println("BB " + curr.getID() + " doesn't fall through to " + next.getID() + ".  Adding a jump to " + tgt._label);
+                            curr.addInstr(new JumpInstr(tgt.getLabel()));
+                        }
+                    }
+                }
+

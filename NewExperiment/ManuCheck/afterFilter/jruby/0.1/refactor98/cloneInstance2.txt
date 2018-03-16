@@ -1,0 +1,11 @@
+(startLine=218 endLine=226 srcPath=/home/sonia/NewExperiment/jrubyFilter/00286/src/org/jruby/javasupport/bsf/JRubyEngine.java)
+        public IRubyObject getValue() {
+            IRubyObject result = JavaUtil.convertJavaToRuby(runtime, bean.bean, bean.type);
+            if (result instanceof JavaObject) {
+                runtime.getLoadService().require("java");
+                result = runtime.getObject().getConstant("JavaUtilities").callMethod("wrap",
+                    new IRubyObject[] { result, runtime.newString(bean.type.getName())});
+            }
+            return result;
+        }
+

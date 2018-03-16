@@ -1,0 +1,21 @@
+(startLine=364 endLine=382 srcPath=/home/sonia/NewExperiment/jrubyFilter/00981/src/org/jruby/javasupport/JavaUtil.java)
+    /**
+     * Returns a usable RubyObject; for types that are not converted to Ruby native
+     * types, a Java proxy will be returned. 
+     * 
+     * @param runtime
+     * @param object
+     * @return corresponding Ruby type, or a functional Java proxy
+     */
+    public static IRubyObject convertJavaToUsableRubyObject(Ruby runtime, Object object) {
+        IRubyObject result = trySimpleConversions(runtime, object);
+
+        if (result != null) return result;
+
+        JavaConverter converter = getJavaConverter(object.getClass());
+        if (converter == null || converter == JAVA_DEFAULT_CONVERTER) {
+            return Java.getInstance(runtime, object);
+        }
+        return converter.convert(runtime, object);
+    }
+

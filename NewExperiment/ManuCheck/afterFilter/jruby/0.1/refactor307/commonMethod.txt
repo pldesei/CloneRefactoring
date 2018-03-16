@@ -1,0 +1,20 @@
+(startLine=85 endLine=102 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/runtime/DynamicScope.java)
+    /**
+     * Set value in current dynamic scope or one of its captured scopes.
+     * 
+     * @param offset zero-indexed value that represents where variable lives
+     * @param value to set
+     * @param depth how many captured scopes down this variable should be set
+     */
+    public void setValue(int offset, IRubyObject value, int depth) {
+        if (depth > 0) {
+            assert parent != null : "If depth > 0, then parent should not ever be null";
+            
+            parent.setValue(offset, value, depth - 1);
+        } else {
+            assert offset < variableValues.length : "Setting " + offset + " to " + value + ", O: " + this; 
+
+            variableValues[offset] = value;
+        }
+    }
+

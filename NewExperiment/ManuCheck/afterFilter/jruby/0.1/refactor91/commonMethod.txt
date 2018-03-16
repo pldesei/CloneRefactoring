@@ -1,0 +1,24 @@
+(startLine=719 endLine=740 srcPath=/home/sonia/NewExperiment/jrubyFilter/00236/src/org/jruby/parser/ParserSupport.java)
+    public INode new_yield(ISourcePosition position, INode node) {
+        boolean state = true;
+        
+        if (node != null) {
+            if (node instanceof BlockPassNode) {
+                errorHandler.handleError(IErrors.SYNTAX_ERROR, null, "Block argument should not be given.", null);
+            }
+            
+            if (node instanceof ArrayNode && ((ArrayNode)node).size() == 1) {
+                node = (INode) ((ArrayNode)node).iterator().next();
+                state = false;
+            }
+            
+            if (node != null && node instanceof SplatNode) {
+                state = true;
+            }
+        } else {
+            state = false;
+        }
+
+        return new YieldNode(position, node, state);
+    }
+

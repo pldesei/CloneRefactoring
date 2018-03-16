@@ -1,0 +1,21 @@
+(startLine=303 endLine=321 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKey.java)
+    protected PublicKey tryX509EncodedKey(final Ruby runtime, final KeyFactory keyFactory, final byte[] encodedKey) {
+        try {
+            return keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+        }
+        catch (InvalidKeySpecException e) {
+            if ( isDebug(runtime) ) {
+                debug(runtime, getClass().getSimpleName() + " could not generate (X509) public key", e);
+            }
+        }
+        catch (RuntimeException e) {
+            if ( isKeyGenerationFailure(e) ) { // NOTE: not (yet) detected with X.509
+                if( isDebug(runtime) ) {
+                    debug(runtime, getClass().getSimpleName() + " could not generate (X509) public key", e);
+                }
+            }
+            else debugStackTrace(runtime, e);
+        }
+        return null;
+    }
+

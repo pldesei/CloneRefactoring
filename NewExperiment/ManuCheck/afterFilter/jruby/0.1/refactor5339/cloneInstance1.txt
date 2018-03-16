@@ -1,0 +1,25 @@
+(startLine=38 endLine=60 srcPath=/home/sonia/NewExperiment/jrubyFilter/01809/truffle/src/main/java/org/jruby/truffle/core/thread/ThreadBacktraceLocationNodes.java)
+        public DynamicObject absolutePath(DynamicObject threadBacktraceLocation) {
+            final Activation activation = ThreadBacktraceLocationLayoutImpl.INSTANCE.getActivation(threadBacktraceLocation);
+
+            if (activation.getCallNode() == null) {
+                return createString(StringOperations.encodeRope(BacktraceFormatter.OMITTED_LIMIT, UTF8Encoding.INSTANCE));
+            }
+
+            final SourceSection sourceSection = activation.getCallNode().getEncapsulatingSourceSection();
+
+            if (sourceSection.getSource() == null) {
+                return createString(StringOperations.encodeRope(sourceSection.getShortDescription(), UTF8Encoding.INSTANCE));
+            }
+
+            // TODO CS 30-Apr-15: not absolute - not sure how to solve that
+
+            String path = sourceSection.getSource().getPath();
+
+            if (path == null) {
+                path = "(unknown)";
+            }
+
+            return createString(StringOperations.encodeRope(path, UTF8Encoding.INSTANCE));
+        }
+

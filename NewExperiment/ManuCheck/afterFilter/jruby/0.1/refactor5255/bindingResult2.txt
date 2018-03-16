@@ -1,0 +1,20 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01531
+predFragLineRange:512-527
+predMethodLineRange:511-527
+nextLineRange:479-503
+predStrMethodInvoNames:
+[checkArgumentCount, getRuntime, isNil, fix2int, getPadding, convertToString, getInstance, init, doFinal, getBytes, newString, getRuntime, newRSAError, getRuntime, getMessage]
+%%%%%%%%%%
+AddedMethodInvo Line:485 InvoName:doCipherRSA(context.runtime,args[0],padding,Cipher.DECRYPT_MODE,pubKey)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.PKeyRSA
+ClassName:PKeyRSA
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/PKeyRSA.java
+InvokedMethodSig:private org.jruby.RubyString doCipherRSA(org.jruby.Ruby, org.jruby.runtime.builtin.IRubyObject, int, int, java.security.Key) 
+%%%%%%%%%%
+AddedMethodInvo Line:495 InvoName:SecurityHelper.getCipher("RSA" + cipherPadding)
+PackageName:org.jruby.ext.openssl
+QualifiedClassName:org.jruby.ext.openssl.SecurityHelper
+ClassName:SecurityHelper
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/SecurityHelper.java
+InvokedMethodSig:public static javax.crypto.Cipher getCipher(java.lang.String) throws java.security.NoSuchAlgorithmException, javax.crypto.NoSuchPaddingException

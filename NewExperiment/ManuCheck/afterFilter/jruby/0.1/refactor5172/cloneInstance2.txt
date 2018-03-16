@@ -1,0 +1,19 @@
+(startLine=286 endLine=302 srcPath=/home/sonia/NewExperiment/jrubyFilter/01217/src/org/jruby/javasupport/util/RuntimeHelpers.java)
+            String[] staticScopeNames, boolean hasMultipleArgsHead, int argsNodeType, String file, int line, boolean light, String parameterList) {
+        StaticScope staticScope =
+            new BlockStaticScope(context.getCurrentScope().getStaticScope(), staticScopeNames);
+        staticScope.determineModule();
+
+        if (light) {
+            return CompiledBlockLight19.newCompiledBlockLight(
+                    Arity.createArity(arity), staticScope,
+                    createBlockCallback19(scriptObject, closureMethod, file, line),
+                    hasMultipleArgsHead, argsNodeType, parameterList.split(";"));
+        } else {
+            return CompiledBlock19.newCompiledBlock(
+                    Arity.createArity(arity), staticScope,
+                    createBlockCallback19(scriptObject, closureMethod, file, line),
+                    hasMultipleArgsHead, argsNodeType, parameterList.split(";"));
+        }
+    }
+

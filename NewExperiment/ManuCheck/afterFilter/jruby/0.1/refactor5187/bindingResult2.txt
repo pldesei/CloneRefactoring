@@ -1,0 +1,69 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01344
+predFragLineRange:849-890
+predMethodLineRange:827-898
+nextLineRange:852-911
+predStrMethodInvoNames:
+[assert, makeBuffered, getModulus, getPublicExponent, getPrivateExponent, getPrimeP, getPrimeQ, getPrimeExponentP, getPrimeExponentQ, getCrtCoefficient, writeObject, close, toByteArray, nextBytes, init, PKCS5PasswordToBytes, startsWith, equalsIgnoreCase, generateDerivedParameters, getKey, split, getInstance, init, doFinal, toString, write, newLine, write, newLine, write, writeHexEncoded, newLine, newLine, writeEncoded, write, flush, write, newLine, writeEncoded, write, newLine, flush]
+%%%%%%%%%%
+AddedMethodInvo Line:864 InvoName:writePemEncrypted(out,PEM_STRING_RSA,encoding,cipher,passwd)
+PackageName:org.jruby.ext.openssl.x509store
+QualifiedClassName:org.jruby.ext.openssl.x509store.PEMInputOutput
+ClassName:PEMInputOutput
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/x509store/PEMInputOutput.java
+InvokedMethodSig:private static void writePemEncrypted(java.io.BufferedWriter, java.lang.String, byte[], org.jruby.ext.openssl.impl.CipherSpec, char[]) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:866 InvoName:writePemPlain(out,PEM_STRING_RSA,encoding)
+PackageName:org.jruby.ext.openssl.x509store
+QualifiedClassName:org.jruby.ext.openssl.x509store.PEMInputOutput
+ClassName:PEMInputOutput
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/x509store/PEMInputOutput.java
+InvokedMethodSig:private static void writePemPlain(java.io.BufferedWriter, java.lang.String, byte[]) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:880 InvoName:cipher.getCipher()
+PackageName:org.jruby.ext.openssl.impl
+QualifiedClassName:org.jruby.ext.openssl.impl.CipherSpec
+ClassName:CipherSpec
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/impl/CipherSpec.java
+InvokedMethodSig:public javax.crypto.Cipher getCipher() 
+%%%%%%%%%%
+AddedMethodInvo Line:881 InvoName:c.getAlgorithm()
+PackageName:javax.crypto
+QualifiedClassName:javax.crypto.Cipher
+ClassName:Cipher
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/javax/crypto/Cipher.java
+InvokedMethodSig:public final java.lang.String getAlgorithm() 
+%%%%%%%%%%
+AddedMethodInvo Line:882 InvoName:algoBase.indexOf('/')
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/java/lang/String.java
+InvokedMethodSig:public int indexOf(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:885 InvoName:c.getBlockSize()
+PackageName:javax.crypto
+QualifiedClassName:javax.crypto.Cipher
+ClassName:Cipher
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/javax/crypto/Cipher.java
+InvokedMethodSig:public final int getBlockSize() 
+%%%%%%%%%%
+AddedMethodInvo Line:888 InvoName:System.arraycopy(iv,0,salt,0,8)
+PackageName:java.lang
+QualifiedClassName:java.lang.System
+ClassName:System
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/java/lang/System.java
+InvokedMethodSig:public static native void arraycopy(java.lang.Object, int, java.lang.Object, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:891 InvoName:cipher.getKeyLenInBits()
+PackageName:org.jruby.ext.openssl.impl
+QualifiedClassName:org.jruby.ext.openssl.impl.CipherSpec
+ClassName:CipherSpec
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/impl/CipherSpec.java
+InvokedMethodSig:public int getKeyLenInBits() 
+%%%%%%%%%%
+AddedMethodInvo Line:904 InvoName:cipher.getOsslName()
+PackageName:org.jruby.ext.openssl.impl
+QualifiedClassName:org.jruby.ext.openssl.impl.CipherSpec
+ClassName:CipherSpec
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/impl/CipherSpec.java
+InvokedMethodSig:public java.lang.String getOsslName() 

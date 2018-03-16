@@ -1,0 +1,21 @@
+(startLine=1551 endLine=1569 srcPath=/home/sonia/NewExperiment/jrubyFilter/00444/src/org/jruby/evaluator/EvaluationState.java)
+                        } catch (JumpException je) {
+                            switch (je.getJumpType().getTypeId()) {
+                            case JumpType.REDO:
+                                continue;
+                            case JumpType.NEXT:
+                                break loop;
+                            case JumpType.BREAK:
+                                // JRUBY-530, while case
+                                if (je.getTarget() == aBlock) {
+                                    je.setTarget(null);
+                                    
+                                    throw je;
+                                }
+                                
+                                return result;
+                            default:
+                                throw je;
+                            }
+                        }
+

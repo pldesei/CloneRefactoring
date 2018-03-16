@@ -1,0 +1,16 @@
+(startLine=79 endLine=92 srcPath=/home/sonia/NewExperiment/jrubyFilter/00509/src/org/jruby/util/CodegenUtils.java)
+    /**
+     * Create a method signature from the given param types and return values
+     */
+    public String sig(Class retval, Class[] params) {
+        StringBuffer signature = new StringBuffer("(");
+        
+        for (int i = 0; i < params.length; i++) {
+            signature.append(ci(params[i]));
+        }
+        
+        signature.append(")").append(ci(retval));
+        
+        return signature.toString();
+    }
+

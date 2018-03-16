@@ -1,0 +1,10 @@
+(startLine=289 endLine=296 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+    /**
+     * How the parser advances to the next token.
+     * 
+     * @return true if not at end of file (EOF).
+     */
+    public boolean advance() throws IOException {
+        return (token = yylex()) != EOF;
+    }
+

@@ -1,0 +1,20 @@
+(startLine=69 endLine=86 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/ast/ListNode.java)
+    public ListNode add(Node node) {
+        // Ruby Grammar productions return plenty of nulls.
+        if (node == null || node == NilImplicitNode.NIL) {
+            list.add(NilImplicitNode.NIL);
+
+            return this;
+        }
+
+        list.add(node);
+
+        if (getPosition() == null) {
+            setPosition(node.getPosition());
+        } else {
+            setPosition(getPosition().union(node.getPosition()));
+        }
+
+        return this;
+    }
+

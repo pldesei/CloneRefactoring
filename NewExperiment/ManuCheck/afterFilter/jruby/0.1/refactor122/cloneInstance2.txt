@@ -1,0 +1,18 @@
+(startLine=112 endLine=127 srcPath=/home/sonia/NewExperiment/jrubyFilter/00439/src/org/jruby/RubyBignum.java)
+            IRubyObject[] args, CallType callType, Block block) {
+        switch (switchvalue) {
+        case OP_PLUS_SWITCHVALUE:
+            Arity.singleArgument().checkArity(context.getRuntime(), args);
+            return plus(args[0]);
+        case OP_MINUS_SWITCHVALUE:
+            Arity.singleArgument().checkArity(context.getRuntime(), args);
+            return minus(args[0]);
+        case TO_S_SWITCHVALUE:
+            Arity.optional().checkArity(context.getRuntime(), args);
+            return to_s(args);
+        case 0:
+        default:
+            return super.callMethod(context, rubyclass, name, args, callType, block);
+        }
+    }
+

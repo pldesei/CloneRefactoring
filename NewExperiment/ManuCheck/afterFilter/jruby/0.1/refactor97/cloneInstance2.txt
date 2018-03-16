@@ -1,0 +1,12 @@
+(startLine=228 endLine=237 srcPath=/home/sonia/NewExperiment/jrubyFilter/00286/src/org/jruby/javasupport/bsf/JRubyEngine.java)
+        public IRubyObject setValue(IRubyObject value) {
+            runtime.getLoadService().require("java");
+            if (value.isKindOf(runtime.getModule("JavaProxy"))) {
+            	IRubyObject variable = value.getInstanceVariable("@java_object"); 
+                value = variable == null ? runtime.getNil() : variable;
+            }
+            value = Java.primitive_to_java(value, value);
+            bean.bean = JavaUtil.convertArgument(value, bean.type);
+            return value;
+        }
+

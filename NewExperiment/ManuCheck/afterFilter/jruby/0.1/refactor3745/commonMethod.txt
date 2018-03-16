@@ -1,0 +1,9 @@
+(startLine=3920 endLine=3926 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/DefaultRubyParser.java)
+    private ISourcePosition getPosition(ISourcePositionHolder start, boolean inclusive) {
+        if (start != null) {
+	    return lexer.getPosition(start.getPosition(), inclusive);
+	} 
+	
+	return lexer.getPosition(null, inclusive);
+    }
+

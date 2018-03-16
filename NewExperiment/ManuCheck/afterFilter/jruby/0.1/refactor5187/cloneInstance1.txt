@@ -1,0 +1,40 @@
+(startLine=780 endLine=817 srcPath=/home/sonia/NewExperiment/jrubyFilter/01343/src/org/jruby/ext/openssl/x509store/PEMInputOutput.java)
+        if(algo != null && f != null) {
+            byte[] salt = new byte[8];
+            byte[] encData = null;
+            random.nextBytes(salt);
+            OpenSSLPBEParametersGenerator pGen = new OpenSSLPBEParametersGenerator();
+            pGen.init(PBEParametersGenerator.PKCS5PasswordToBytes(f), salt);
+            SecretKey secretKey = null;
+            if (algo.equalsIgnoreCase("DESede/CBC/PKCS5Padding")) {
+                // generate key
+                int keyLength = 24;
+                KeyParameter param = (KeyParameter) pGen.generateDerivedParameters(keyLength * 8);
+                secretKey = new SecretKeySpec(param.getKey(), "DESede");
+            } else {
+                throw new IOException("unknown algorithm in write_DSAPrivateKey: " + algo);
+            }
+
+            // cipher  
+            try {
+                Cipher c = Cipher.getInstance("DESede/CBC/PKCS5Padding");
+                c.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(salt));
+                encData = c.doFinal(encoding);
+            } catch (Exception e) {
+                throw new IOException("exception using cipher: " + e.toString());
+            }
+       
+            // write the data
+            out.write(BEF_G + PEM_STRING_DSA + AFT);
+            out.newLine();
+            out.write("Proc-Type: 4,ENCRYPTED");
+            out.newLine();
+            out.write("DEK-Info: DES-EDE3-CBC,");
+            writeHexEncoded(out,salt);
+            out.newLine();
+            out.newLine();
+            writeEncoded(out,encData);
+            out.write(BEF_E + PEM_STRING_DSA + AFT);   
+            out.flush();
+        } else {
+

@@ -1,0 +1,19 @@
+(startLine=860 endLine=876 srcPath=/home/sonia/NewExperiment/jrubyFilter/00223/src/org/jruby/util/Pack.java)
+		/**
+		 * @return char at the pointer (advancing the pointer) or '\0' if at end.
+		 *
+		 * Note: the pointer gets advanced one past last character to indicate
+		 * that the whole buffer has been read.
+		 */
+		public char nextChar() {
+		    char next = '\0';
+		    		    
+		    if (index < buffer.length) {
+		        next = buffer[index++];
+		    } else if (index == buffer.length) {
+		        index++;
+		    }
+		    		        
+    		return next;
+    	}
+

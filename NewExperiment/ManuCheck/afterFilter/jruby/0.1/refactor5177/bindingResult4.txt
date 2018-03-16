@@ -1,0 +1,23 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01230
+predFragLineRange:229-241
+predMethodLineRange:219-243
+nextLineRange:215-240
+predStrMethodInvoNames:
+[getRuntime, num2long, newArgumentError, newEmptyArray, newArray, callEach, checkArgs, append, getNil]
+%%%%%%%%%%
+AddedMethodInvo Line:226 InvoName:each(context,self,new JavaInternalBlockBody(Arity.ONE_REQUIRED){
+  long i=len;
+  public IRubyObject yield(  ThreadContext context,  IRubyObject arg){
+synchronized (result) {
+      result.append(arg);
+      if (--i == 0)       throw JumpException.SPECIAL_JUMP;
+    }
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01230/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject each(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockBody) 

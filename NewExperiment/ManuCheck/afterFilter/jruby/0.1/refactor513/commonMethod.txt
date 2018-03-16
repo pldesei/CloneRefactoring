@@ -1,0 +1,14 @@
+(startLine=395 endLine=406 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/Ruby.java)
+    /** Returns a class from the instance pool.
+     *
+     * @param name The name of the class.
+     * @return The class.
+     */
+    public RubyClass getClass(String name) {
+        try {
+            return objectClass.getClass(name);
+        } catch (ClassCastException e) {
+            throw newTypeError(name + " is not a Class");
+        }
+    }
+

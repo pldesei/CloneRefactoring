@@ -1,0 +1,26 @@
+(startLine=583 endLine=606 srcPath=/home/sonia/NewExperiment/jrubyFilter/01060/src/org/jruby/util/ConvertDouble.java)
+                for ( ; i < buflen ; ) {
+                    switch(ival = bytes[i++]) {
+                    case '0': case '1': case '2': case '3': case '4':
+                    case '5': case '6': case '7': case '8': case '9':
+                        if ((expSpec = expSpec * 10 + ((int)ival-(int)'0')) >= MAX_EXP) {
+                            // too big for us
+                            state = SDIGIT;
+                            break states;
+                        }
+                        break; //switch
+                    case '_':
+                        if (i >= buflen || bytes[i] < '0' || bytes[i] > '9') {
+                            state = SERR_NOT_STRICT;
+                            break states;
+                        }
+                        break; //switch
+                    default:
+                        exponent += expSign * expSpec;
+                        // only whitespace allowed after value for strict
+                        for ( --i; i < buflen && isWhitespace(bytes[i]);  i++);
+                        state = i < buflen ? SERR_NOT_STRICT : SOPTCALC; 
+                        break states;
+                    } // switch
+                } // for
+

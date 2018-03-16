@@ -1,0 +1,6 @@
+(startLine=124 endLine=127 srcPath=/home/sonia/NewExperiment/jrubyFilter/01276/src/org/jruby/runtime/InterpretedIRBlockBody.java)
+    protected IRubyObject[] convertToRubyArray(ThreadContext context, IRubyObject[] args) {
+        return (args.length == 0) ? context.getRuntime().getSingleNilArray()
+                                  : new IRubyObject[] {context.getRuntime().newArrayNoCopy(args)};
+    }
+

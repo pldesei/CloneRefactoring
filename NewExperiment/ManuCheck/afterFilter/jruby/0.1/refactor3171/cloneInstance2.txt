@@ -1,0 +1,10 @@
+(startLine=3726 endLine=3733 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                  String identifier = (String) ((Token)yyVals[0+yyTop]).getValue();
+
+                  if (support.getCurrentScope().getLocalScope().isDefined(identifier) >= 0) {
+                      yyerror("duplicate block argument name");
+                  }
+                  yyVal = new BlockArgNode(support.union(((Token)yyVals[-1+yyTop]), ((Token)yyVals[0+yyTop])), support.getCurrentScope().getLocalScope().addVariable(identifier), identifier);
+              }
+

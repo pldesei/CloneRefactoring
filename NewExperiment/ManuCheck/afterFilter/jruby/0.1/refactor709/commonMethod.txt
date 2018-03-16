@@ -1,0 +1,11 @@
+(startLine=133 endLine=141 srcPath=/home/sonia/NewExperiment/jrubyFilter/00803/src/org/jruby/RubyNumeric.java)
+    /** rb_num2int, NUM2INT
+     * 
+     */
+    public static int num2int(IRubyObject arg) {
+        long num = num2long(arg);
+
+        checkInt(arg, num);
+        return (int)num;
+    }
+

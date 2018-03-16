@@ -1,0 +1,38 @@
+(startLine=182 endLine=217 srcPath=/home/sonia/NewExperiment/jrubyFilter/00528/src/org/jruby/internal/runtime/methods/DefaultMethod.java)
+                        public void compile(MethodCompiler context) {
+                            Arity arity = argsNode.getArity();
+                            
+                            context.lineNumber(argsNode.getPosition());
+                            int required = expectedArgsCount;
+                            
+                            if (argsNode.getBlockArgNode() != null) {
+                                context.processBlockArgument(argsNode.getBlockArgNode().getCount());
+                            }
+                            
+                            if (hasOptArgs) {
+                                if (restArg > -1) {
+                                    int opt = argsNode.getOptArgs().size();
+                                    context.processRequiredArgs(arity, required, opt, restArg);
+                                    
+                                    ListNode optArgs = argsNode.getOptArgs();
+                                    context.assignOptionalArgs(optArgs, required, opt, evalOptionalValue);
+                                    
+                                    context.processRestArg(required + opt, restArg);
+                                } else {
+                                    int opt = argsNode.getOptArgs().size();
+                                    context.processRequiredArgs(arity, required, opt, restArg);
+                                    
+                                    ListNode optArgs = argsNode.getOptArgs();
+                                    context.assignOptionalArgs(optArgs, required, opt, evalOptionalValue);
+                                }
+                            } else {
+                                if (restArg > -1) {
+                                    context.processRequiredArgs(arity, required, 0, restArg);
+                                    
+                                    context.processRestArg(required, restArg);
+                                } else {
+                                    context.processRequiredArgs(arity, required, 0, restArg);
+                                }
+                            }
+                        }
+

@@ -1,0 +1,13 @@
+(startLine=171 endLine=181 srcPath=/home/sonia/NewExperiment/jrubyFilter/01276/src/org/jruby/compiler/ir/IRBuilder19.java)
+            for (int j = 0; j < opt; j++, argIndex++) {
+                // Jump to 'l' if this arg is not null.  If null, fall through and build the default value!
+                Label l = s.getNewLabel();
+                OptArgNode n = (OptArgNode)optArgs.get(j);
+                Variable av = s.getNewLocalVariable(n.getName());
+                // You need at least required+j+1 incoming args for this opt arg to get an arg at all
+                s.addInstr(new ReceiveOptArgInstr(av, argIndex, required+j+1));
+                s.addInstr(BNEInstr.create(av, UndefinedValue.UNDEFINED, l)); // if 'av' is not undefined, go to default
+                build(n.getValue(), s);
+                s.addInstr(new LabelInstr(l));
+            }
+

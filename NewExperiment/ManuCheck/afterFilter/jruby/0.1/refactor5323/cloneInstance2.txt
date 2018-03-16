@@ -1,0 +1,26 @@
+(startLine=2936 endLine=2959 srcPath=/home/sonia/NewExperiment/jrubyFilter/01685/core/src/main/java/org/jruby/lexer/yacc/RubyLexer.java)
+    private int scanHex(int count, boolean strict, String errorMessage) throws IOException {
+        int i = 0;
+        int hexValue = '\0';
+
+        for (; i < count; i++) {
+            int h1 = nextc();
+
+            if (!isHexChar(h1)) {
+                pushback(h1);
+                break;
+            }
+
+            hexValue <<= 4;
+            hexValue |= Integer.parseInt("" + (char) h1, 16) & 15;
+        }
+
+        // No hex value after the 'x'.
+        if (i == 0 || (strict && count != i)) {
+            throw new SyntaxException(PID.INVALID_ESCAPE_SYNTAX, getPosition(),
+                    getCurrentLine(), errorMessage);
+        }
+
+        return hexValue;
+    }
+

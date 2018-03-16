@@ -1,0 +1,18 @@
+(startLine=942 endLine=957 srcPath=/home/sonia/NewExperiment/jrubyFilter/00598/src/org/jruby/RubyHash.java)
+    public RubyArray keys() {
+        Ruby runtime = getRuntime();
+        RubyArray keys = RubyArray.newArray(runtime, size);
+
+        try {
+            preIter();
+            RubyHashEntry[]ltable = table;
+            for (int i = 0; i < ltable.length; i++) {
+                for (RubyHashEntry entry = ltable[i]; (entry = checkIter(ltable, entry)) != null; entry = entry.next) {
+                    keys.append(entry.key);
+                }
+            }
+        } finally {postIter();}
+
+        return keys;
+    }
+

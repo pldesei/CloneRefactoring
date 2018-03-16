@@ -1,0 +1,16 @@
+(startLine=1330 endLine=1343 srcPath=/home/sonia/NewExperiment/jrubyFilter/00826/src/org/jruby/RubyBasicObject.java)
+    protected Map variableTableGetMap() {
+        HashMap map = new HashMap();
+        VariableTableEntry[] table;
+        IRubyObject readValue;
+        if ((table = variableTable) != null) {
+            for (int i = table.length; --i >= 0; ) {
+                for (VariableTableEntry e = table[i]; e != null; e = e.next) {
+                    if ((readValue = e.value) == null) readValue = variableTableReadLocked(e);
+                    map.put(e.name, readValue);
+                }
+            }
+        }
+        return map;
+    }
+

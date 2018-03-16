@@ -1,0 +1,39 @@
+(startLine=299 endLine=335 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public AssignableNode assignable(Token lhs, Node value) {
+        checkExpression(value);
+
+        switch (lhs.getType()) {
+            case Tokens.kSELF:
+                throw new SyntaxException(PID.CANNOT_CHANGE_SELF, lhs.getPosition(), "Can't change the value of self");
+            case Tokens.kNIL:
+                throw new SyntaxException(PID.INVALID_ASSIGNMENT, lhs.getPosition(), "Can't assign to nil", "nil");
+            case Tokens.kTRUE:
+                throw new SyntaxException(PID.INVALID_ASSIGNMENT, lhs.getPosition(), "Can't assign to true", "true");
+            case Tokens.kFALSE:
+                throw new SyntaxException(PID.INVALID_ASSIGNMENT, lhs.getPosition(), "Can't assign to false", "false");
+            case Tokens.k__FILE__:
+                throw new SyntaxException(PID.INVALID_ASSIGNMENT, lhs.getPosition(), "Can't assign to __FILE__", "__FILE__");
+            case Tokens.k__LINE__:
+                throw new SyntaxException(PID.INVALID_ASSIGNMENT, lhs.getPosition(), "Can't assign to __LINE__", "__LINE__");
+            case Tokens.tIDENTIFIER:
+                return currentScope.assign(value != NilImplicitNode.NIL ? union(lhs, value) : lhs.getPosition(), (String) lhs.getValue(), makeNullNil(value));
+            case Tokens.tCONSTANT:
+                if (isInDef() || isInSingle()) {
+                    throw new SyntaxException(PID.DYNAMIC_CONSTANT_ASSIGNMENT, lhs.getPosition(), "dynamic constant assignment");
+                }
+                return new ConstDeclNode(lhs.getPosition(), (String) lhs.getValue(), null, value);
+            case Tokens.tIVAR:
+                return new InstAsgnNode(lhs.getPosition(), (String) lhs.getValue(), value);
+            case Tokens.tCVAR:
+                if (isInDef() || isInSingle()) {
+                    return new ClassVarAsgnNode(lhs.getPosition(), (String) lhs.getValue(), value);
+                }
+                return new ClassVarDeclNode(lhs.getPosition(), (String) lhs.getValue(), value);
+            case Tokens.tGVAR:
+                return new GlobalAsgnNode(lhs.getPosition(), (String) lhs.getValue(), value);
+        }
+
+        throw new SyntaxException(PID.BAD_IDENTIFIER, lhs.getPosition(), "identifier " + 
+                (String) lhs.getValue() + " is not valid", lhs.getValue());
+    }
+

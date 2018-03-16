@@ -1,0 +1,6 @@
+(startLine=119 endLine=122 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/java/util/ArrayUtils.java)
+    private static RaiseException mapIllegalArgumentException(final Ruby runtime, final Object array, final Class<?> type) {
+        return runtime.newArgumentError("wrong element type " + type.getName() + " (array contains " +
+                array.getClass().getComponentType().getName() + ')');
+    }
+

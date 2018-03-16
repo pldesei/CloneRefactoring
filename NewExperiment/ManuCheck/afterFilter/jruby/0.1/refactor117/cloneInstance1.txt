@@ -1,0 +1,13 @@
+(startLine=263 endLine=273 srcPath=/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyFixnum.java)
+        if(other instanceof RubyFixnum) {
+            long otherValue = ((RubyNumeric) other).getLongValue();
+            long result = value - otherValue;
+            
+            if ((value <= 0 && otherValue >= 0 && (result > 0 || result < -MAX)) || 
+                (value >= 0 && otherValue <= 0 && (result < 0 || result > MAX))) {
+                return RubyBignum.newBignum(getRuntime(), value).op_minus(other);
+            }
+            
+            return newFixnum(result);
+        } else if (other instanceof RubyFloat) {
+

@@ -1,0 +1,7 @@
+(startLine=253 endLine=257 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public INode getElementAssignmentNode(INode recv, IListNode idx) {
+        checkExpression(recv);
+
+        return new CallNode(recv.getPosition(), recv, "[]=", idx);
+    }
+

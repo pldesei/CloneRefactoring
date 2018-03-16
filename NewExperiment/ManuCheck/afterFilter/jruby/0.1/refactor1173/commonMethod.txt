@@ -1,0 +1,12 @@
+(startLine=566 endLine=575 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Does this node represent an expression?
+     * @param node to be checked
+     * @return true if an expression, false otherwise
+     */
+    public void checkExpression(Node node) {
+        if (warnings.isVerbose() && !isExpression(node)) {
+            warnings.warning(ID.VOID_VALUE_EXPRESSION, node.getPosition(), "void value expression");
+        }
+    }
+

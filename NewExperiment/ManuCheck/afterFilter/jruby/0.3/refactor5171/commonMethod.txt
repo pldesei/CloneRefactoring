@@ -1,0 +1,12 @@
+(startLine=614 endLine=623 srcPath=/home/sonia/NewExperiment/jrubyFilter/01218/src/org/jruby/compiler/ir/IRBuilder.java)
+    public List<Operand> setupCallArgs(Node args, IRScope s) {
+        List<Operand> argsList = new ArrayList<Operand>();
+        if (args != null) {
+           // unwrap newline nodes to get their actual type
+           args = skipOverNewlines(s, args);
+           buildArgs(argsList, args, s);
+        }
+
+        return argsList;
+    }
+

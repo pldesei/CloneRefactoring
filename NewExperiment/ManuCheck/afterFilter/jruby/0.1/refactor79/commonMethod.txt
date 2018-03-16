@@ -1,0 +1,19 @@
+(startLine=439 endLine=455 srcPath=/home/sonia/NewExperiment/jrubyFilter/00234/src/org/jruby/parser/ParserSupport.java)
+    public INode ret_args(INode node, ISourcePosition position) {
+        if (node != null) {
+            if (node instanceof BlockPassNode) {
+                errorHandler.handleError(IErrors.COMPILE_ERROR, position, "Dynamic constant assignment.");
+            }
+
+            if (node instanceof ArrayNode && ((ArrayNode)node).size() == 1) {
+        	    node = (INode) ((ArrayNode)node).iterator().next();
+        	}
+        	/* TODO: SPLAT rule...
+        	if (node != null && node instanceof RestArgsNode) {
+        	    node = NEW_SVALUE(node);
+        	}*/
+        }
+        
+        return node;
+    }
+

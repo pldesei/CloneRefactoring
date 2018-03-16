@@ -1,0 +1,14 @@
+(startLine=370 endLine=381 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Extensions.java)
+            if(valuex.startsWith("keyid:always")) {
+                IRubyObject pkey = getInstanceVariable("@issuer_certificate").callMethod(tc,"public_key");
+                IRubyObject val;
+                if(pkey instanceof PKeyRSA) {
+                    val = pkey.callMethod(tc,"to_der");
+                } else {
+                    val = ASN1.decode(getRuntime().getClassFromPath("OpenSSL::ASN1"), pkey.callMethod(tc, "to_der")).callMethod(tc, "value")
+                            .callMethod(tc, "[]", getRuntime().newFixnum(1)).callMethod(tc, "value");
+                }
+                byte[] b = getSHA1Digest(getRuntime(), val.convertToString().getBytes());
+                asnv.add(new DEROctetString(b));
+            } else if(valuex.startsWith("keyid")) {
+

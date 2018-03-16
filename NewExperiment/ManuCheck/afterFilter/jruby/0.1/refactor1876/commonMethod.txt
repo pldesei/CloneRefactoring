@@ -1,0 +1,59 @@
+(startLine=637 endLine=693 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    /**
+     * Check to see if current node is an useless statement.  If useless a warning if printed.
+     * 
+     * @param node to be checked.
+     */
+    public void checkUselessStatement(Node node) {
+        if (!warnings.isVerbose()) return;
+        
+        uselessLoop: do {
+            if (node == null) return;
+            
+            switch (node.getNodeType()) {
+            case NEWLINENODE:
+                node = ((NewlineNode) node).getNextNode();
+                continue uselessLoop;
+            case CALLNODE: {
+                String name = ((CallNode) node).getName();
+                
+                if (name == "+" || name == "-" || name == "*" || name == "/" || name == "%" || 
+                    name == "**" || name == "+@" || name == "-@" || name == "|" || name == "^" || 
+                    name == "&" || name == "<=>" || name == ">" || name == ">=" || name == "<" || 
+                    name == "<=" || name == "==" || name == "!=") {
+                    handleUselessWarn(node, name);
+                }
+                return;
+            }
+            case BACKREFNODE: case DVARNODE: case GLOBALVARNODE:
+            case LOCALVARNODE: case NTHREFNODE: case CLASSVARNODE:
+            case INSTVARNODE:
+                handleUselessWarn(node, "a variable"); return;
+            // FIXME: Temporarily disabling because this fires way too much running Rails tests. JRUBY-518
+            /*case CONSTNODE:
+                handleUselessWarn(node, "a constant"); return;*/
+            case BIGNUMNODE: case DREGEXPNODE: case DSTRNODE: case DSYMBOLNODE:
+            case FIXNUMNODE: case FLOATNODE: case REGEXPNODE:
+            case STRNODE: case SYMBOLNODE:
+                handleUselessWarn(node, "a literal"); return;
+            // FIXME: Temporarily disabling because this fires way too much running Rails tests. JRUBY-518
+            /*case CLASSNODE: case COLON2NODE:
+                handleUselessWarn(node, "::"); return;*/
+            case DOTNODE:
+                handleUselessWarn(node, ((DotNode) node).isExclusive() ? "..." : ".."); return;
+            case DEFINEDNODE:
+                handleUselessWarn(node, "defined?"); return;
+            case FALSENODE:
+                handleUselessWarn(node, "false"); return;
+            case NILNODE: 
+                handleUselessWarn(node, "nil"); return;
+            // FIXME: Temporarily disabling because this fires way too much running Rails tests. JRUBY-518
+            /*case SELFNODE:
+                handleUselessWarn(node, "self"); return;*/
+            case TRUENODE:
+                handleUselessWarn(node, "true"); return;
+            default: return;
+            }
+        } while (true);
+    }
+

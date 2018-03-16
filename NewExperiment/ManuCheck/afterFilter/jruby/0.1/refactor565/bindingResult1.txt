@@ -1,0 +1,160 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00480
+predFragLineRange:395-416
+predMethodLineRange:395-416
+nextLineRange:530-574
+predStrMethodInvoNames:
+[getCurrentContext, getRuntime, eachToList, isGiven, iterator, hasNext, isTrue, yield, next, iterator, hasNext, isTrue, next, getTrue, getRuntime, getFalse, getRuntime]
+%%%%%%%%%%
+AddedMethodInvo Line:533 InvoName:args[i].convertToArray()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.RubyArray convertToArray() 
+%%%%%%%%%%
+AddedMethodInvo Line:539 InvoName:callEach(runtime,context,self,new BlockCallback(){
+  int ix=0;
+  public IRubyObject call(  ThreadContext ctx,  IRubyObject[] largs,  Block blk){
+    IRubyObject arg=largs.length > 1 ? runtime.newArrayNoCopy(largs) : largs[0];
+    RubyArray array=runtime.newArray(aLen);
+    array.append(arg);
+    for (int i=0, j=args.length; i < j; i++) {
+      array.append(((RubyArray)args[i]).entry(ix));
+    }
+    block.yield(context,array);
+    ix++;
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callEach(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:543 InvoName:runtime.newArrayNoCopy(largs)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArrayNoCopy(org.jruby.runtime.builtin.IRubyObject[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:544 InvoName:runtime.newArray(aLen)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArray(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:545 InvoName:array.append(arg)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public org.jruby.RubyArray append(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:547 InvoName:array.append(((RubyArray)args[i]).entry(ix))
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public org.jruby.RubyArray append(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:547 InvoName:((RubyArray)args[i]).entry(ix)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public final org.jruby.runtime.builtin.IRubyObject entry(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:551 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:554 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:556 InvoName:runtime.newArray()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArray() 
+%%%%%%%%%%
+AddedMethodInvo Line:557 InvoName:callEach(runtime,context,self,new BlockCallback(){
+  int ix=0;
+  public IRubyObject call(  ThreadContext ctx,  IRubyObject[] largs,  Block blk){
+    IRubyObject arg=largs.length > 1 ? runtime.newArrayNoCopy(largs) : largs[0];
+    RubyArray array=runtime.newArray(aLen);
+    array.append(arg);
+    for (int i=0, j=args.length; i < j; i++) {
+      array.append(((RubyArray)args[i]).entry(ix));
+    }
+    zip.append(array);
+    ix++;
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callEach(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:561 InvoName:runtime.newArrayNoCopy(largs)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArrayNoCopy(org.jruby.runtime.builtin.IRubyObject[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:562 InvoName:runtime.newArray(aLen)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArray(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:563 InvoName:array.append(arg)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public org.jruby.RubyArray append(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:565 InvoName:array.append(((RubyArray)args[i]).entry(ix))
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public org.jruby.RubyArray append(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:565 InvoName:((RubyArray)args[i]).entry(ix)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public final org.jruby.runtime.builtin.IRubyObject entry(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:567 InvoName:zip.append(array)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyArray
+ClassName:RubyArray
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyArray.java
+InvokedMethodSig:public org.jruby.RubyArray append(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:569 InvoName:runtime.getNil()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject getNil() 

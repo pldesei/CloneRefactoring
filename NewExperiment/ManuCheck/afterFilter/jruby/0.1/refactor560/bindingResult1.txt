@@ -1,0 +1,66 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00480
+predFragLineRange:326-331
+predMethodLineRange:320-344
+nextLineRange:386-416
+predStrMethodInvoNames:
+[getCurrentContext, getRuntime, eachToList, isGiven, iterator, hasNext, next, isTrue, callMethod, yield, newArray, getRuntime, zero, getRuntime, iterator, hasNext, next, isTrue, callMethod, callMethod, zero, getRuntime, getNil, getRuntime]
+%%%%%%%%%%
+AddedMethodInvo Line:389 InvoName:callEach(runtime,context,self,new BlockCallback(){
+  public IRubyObject call(  ThreadContext ctx,  IRubyObject[] largs,  Block blk){
+    IRubyObject arg=largs.length > 1 ? runtime.newArrayNoCopy(largs) : largs[0];
+    if (result[0] == null || RubyComparable.cmpint(block.yield(context,runtime.newArray(arg,result[0])),arg,result[0]) > 0) {
+      result[0]=arg;
+    }
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callEach(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:391 InvoName:runtime.newArrayNoCopy(largs)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArrayNoCopy(org.jruby.runtime.builtin.IRubyObject[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:393 InvoName:RubyComparable.cmpint(block.yield(context,runtime.newArray(arg,result[0])),arg,result[0])
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyComparable
+ClassName:RubyComparable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyComparable.java
+InvokedMethodSig:public static int cmpint(org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:402 InvoName:callEach(runtime,context,self,new BlockCallback(){
+  public IRubyObject call(  ThreadContext ctx,  IRubyObject[] largs,  Block blk){
+    IRubyObject arg=largs.length > 1 ? runtime.newArrayNoCopy(largs) : largs[0];
+    if (result[0] == null || RubyComparable.cmpint(arg.callMethod(context,MethodIndex.OP_SPACESHIP,"<=>",result[0]),arg,result[0]) > 0) {
+      result[0]=arg;
+    }
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject callEach(org.jruby.Ruby, org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:404 InvoName:runtime.newArrayNoCopy(largs)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyArray newArrayNoCopy(org.jruby.runtime.builtin.IRubyObject[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:405 InvoName:RubyComparable.cmpint(arg.callMethod(context,MethodIndex.OP_SPACESHIP,"<=>",result[0]),arg,result[0])
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyComparable
+ClassName:RubyComparable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyComparable.java
+InvokedMethodSig:public static int cmpint(org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.builtin.IRubyObject) 

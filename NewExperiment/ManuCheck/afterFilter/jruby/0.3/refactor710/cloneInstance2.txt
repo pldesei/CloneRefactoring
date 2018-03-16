@@ -1,0 +1,22 @@
+(startLine=946 endLine=965 srcPath=/home/sonia/NewExperiment/jrubyFilter/00810/src/org/jruby/javasupport/JavaUtil.java)
+    public static Object coerceBignumToType(RubyBignum bignum, Class target) {
+        if (target.isPrimitive()) {
+            if (target == Integer.TYPE) {
+                return Integer.valueOf((int)bignum.getLongValue());
+            } else if (target == Double.TYPE) {
+                return Double.valueOf(bignum.getLongValue());
+            } else if (target == Byte.TYPE) {
+                return Byte.valueOf((byte)bignum.getLongValue());
+            } else if (target == Character.TYPE) {
+                return Character.valueOf((char)bignum.getLongValue());
+            } else if (target == Float.TYPE) {
+                return Float.valueOf((float)bignum.getLongValue());
+            } else if (target == Long.TYPE) {
+                return Long.valueOf(bignum.getLongValue());
+            } else if (target == Short.TYPE) {
+                return Short.valueOf((short)bignum.getLongValue());
+            }
+        }
+        return bignum.getValue();
+    }
+

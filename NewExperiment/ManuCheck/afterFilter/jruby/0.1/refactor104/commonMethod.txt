@@ -1,0 +1,12 @@
+(startLine=126 endLine=135 srcPath=/home/sonia/NewExperiment/jrubyFilter/00309/src/org/jruby/evaluator/EvaluationState.java)
+	/**
+	 * Add a node and visitor to the top node and visitor stacks, using the default visitor for the given node.
+	 * The default visitor is determined by calling node.accept() with the current state's evaluator.
+	 * 
+	 * @param ctx
+	 */
+	public void addNodeInstruction(InstructionContext ctx) {
+        Node node = (Node)ctx;
+		addInstruction(node, node.accept(evaluator));
+	}
+

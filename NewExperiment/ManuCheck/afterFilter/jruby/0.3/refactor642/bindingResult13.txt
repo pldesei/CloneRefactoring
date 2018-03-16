@@ -1,0 +1,31 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00599
+predFragLineRange:1268-1277
+predMethodLineRange:1266-1280
+nextLineRange:1219-1237
+predStrMethodInvoNames:
+[writeInt, preIter, checkIter, dumpObject, dumpObject, postIter, isNil, dumpObject]
+%%%%%%%%%%
+AddedMethodInvo Line:1222 InvoName:hash.visitAll(new Visitor(){
+  public void visit(  IRubyObject key,  IRubyObject value){
+    try {
+      output.dumpObject(key);
+      output.dumpObject(value);
+    }
+ catch (    IOException e) {
+      throw new VisitorIOException(e);
+    }
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyHash
+ClassName:RubyHash
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java
+InvokedMethodSig:public void visitAll(org.jruby.RubyHash.Visitor) 
+%%%%%%%%%%
+AddedMethodInvo Line:1233 InvoName:e.getCause()
+PackageName:java.lang
+QualifiedClassName:java.lang.Throwable
+ClassName:Throwable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00599/src/java/lang/Throwable.java
+InvokedMethodSig:public synchronized java.lang.Throwable getCause() 

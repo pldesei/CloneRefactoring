@@ -1,0 +1,9 @@
+(startLine=421 endLine=427 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/runtime/ThreadContext.java)
+    public RubyModule getRubyClass() {
+        assert !(parentIndex == -1) : "Trying to get RubyClass from empty stack";
+        
+        RubyModule parentModule = (RubyModule)parentStack[parentIndex];
+
+        return parentModule.getNonIncludedClass();
+    }
+

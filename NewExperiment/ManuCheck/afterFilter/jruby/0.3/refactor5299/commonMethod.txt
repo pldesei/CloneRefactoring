@@ -1,0 +1,12 @@
+(startLine=267 endLine=276 srcPath=/home/sonia/NewExperiment/jrubyFilter/01594/core/src/main/java/org/jruby/internal/runtime/methods/InterpretedIRMethod.java)
+    protected void promoteToFullBuild(ThreadContext context) {
+        Ruby runtime = context.runtime;
+
+        // don't Promote to full build during runtime boot
+        if (runtime.isBooting()) return;
+
+        if (callCount++ >= Options.JIT_THRESHOLD.load()) {
+            runtime.getJITCompiler().fullBuildThresholdReached(this, context.runtime.getInstanceConfig());
+        }
+    }
+

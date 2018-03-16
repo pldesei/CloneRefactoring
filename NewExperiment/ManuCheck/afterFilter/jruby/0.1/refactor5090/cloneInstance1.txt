@@ -1,0 +1,20 @@
+(startLine=162 endLine=179 srcPath=/home/sonia/NewExperiment/jrubyFilter/00928/src/org/jruby/runtime/InterpretedBlock.java)
+    public IRubyObject yield(ThreadContext context, IRubyObject value, Binding binding, Block.Type type) {
+        IRubyObject self = prepareSelf(binding);
+        
+        Visibility oldVis = binding.getFrame().getVisibility();
+        Frame lastFrame = pre(context, null, binding);
+
+        try {
+            if (hasVarNode) {
+                setupBlockArg(context, varNode, value, self);
+            }
+            
+            return evalBlockBody(context, self);
+        } catch (JumpException.NextJump nj) {
+            return handleNextJump(context, nj, type);
+        } finally {
+            post(context, binding, oldVis, lastFrame);
+        }
+    }
+

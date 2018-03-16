@@ -1,0 +1,13 @@
+(startLine=1089 endLine=1099 srcPath=/home/sonia/NewExperiment/jrubyFilter/01884/core/src/main/java/org/jruby/RubyComplex.java)
+    private static IRubyObject convertString(ThreadContext context, final IRubyObject s, IRubyObject def) {
+        if (s == context.nil) return def;
+        final Ruby runtime = context.runtime;
+        if (s.callMethod(context, "include?", RubyString.newStringShared(runtime, SEP)).isTrue()) {
+            return f_to_r(context, s);
+        }
+        if (f_gt_p(context, s.callMethod(context, "count", RubyString.newStringShared(runtime, _eE)), RubyFixnum.zero(runtime)).isTrue()) {
+            return f_to_f(context, s);
+        }
+        return f_to_i(context, s);
+    }
+

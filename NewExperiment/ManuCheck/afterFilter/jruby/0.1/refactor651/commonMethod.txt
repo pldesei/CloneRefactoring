@@ -1,0 +1,7 @@
+(startLine=613 endLine=617 srcPath=/home/sonia/NewExperiment/jrubyFilter/00609/src/org/jruby/RubyRegexp.java)
+    final int adjustStartPos(RubyString str, int pos, boolean reverse) {
+        check();
+        ByteList value = str.getByteList();
+        return re.adjustStartPosition(value.bytes, value.begin, value.realSize, pos, reverse);
+    }
+

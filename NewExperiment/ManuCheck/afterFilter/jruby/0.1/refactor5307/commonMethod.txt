@@ -1,0 +1,23 @@
+(startLine=3751 endLine=3771 srcPath=/home/sonia/NewExperiment/jrubyFilter/01603/core/src/main/java/org/jruby/RubyString.java)
+    private static int patternSearch(ThreadContext context, IRubyObject pat, RubyString str, int pos, boolean setBackrefStr) {
+        if (pat instanceof RubyString) {
+            pos = str.strseqIndex(context, (RubyString) pat, pos, true);
+            if (setBackrefStr) {
+                if (pos >= 0) {
+                    IRubyObject match;
+                    str = str.newFrozen();
+                    setBackrefString(context, str, pos, ((RubyString) pat).size());
+                    match = context.getBackRef();
+                    match.infectBy(pat);
+                }
+                else {
+                    context.setBackRef(context.nil);
+                }
+            }
+            return pos;
+        }
+        else {
+            return ((RubyRegexp)pat).search19(context, str, pos, false);
+        }
+    }
+

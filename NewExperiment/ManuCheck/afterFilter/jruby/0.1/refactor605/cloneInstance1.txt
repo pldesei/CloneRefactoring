@@ -1,0 +1,65 @@
+(startLine=1158 endLine=1220 srcPath=/home/sonia/NewExperiment/jrubyFilter/00535/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+        public void protect(BranchCallback regularCode, BranchCallback protectedCode) {
+            String mname = getNewEnsureName();
+            SkinnyMethodAdapter mv = new SkinnyMethodAdapter(getClassVisitor().visitMethod(ACC_PUBLIC + ACC_STATIC, mname, METHOD_SIGNATURE, null, null));
+            SkinnyMethodAdapter old_method = null;
+            try {
+                old_method = this.method;
+                this.method = mv;
+
+                mv.visitCode();
+                // set up a local IRuby variable
+
+                mv.aload(THREADCONTEXT_INDEX);
+                mv.dup();
+                mv.invokevirtual(cg.p(ThreadContext.class), "getRuntime", cg.sig(Ruby.class));
+                mv.dup();
+                mv.astore(RUNTIME_INDEX);
+            
+                // grab nil for local variables
+                mv.invokevirtual(cg.p(Ruby.class), "getNil", cg.sig(IRubyObject.class));
+                mv.astore(NIL_INDEX);
+            
+                mv.invokevirtual(cg.p(ThreadContext.class), "getCurrentScope", cg.sig(DynamicScope.class));
+                mv.astore(DYNAMIC_SCOPE_INDEX);
+
+                Label l0 = new Label();
+                Label l1 = new Label();
+                Label l2 = new Label();
+                method.visitTryCatchBlock(l0, l1, l2, null);
+                Label l3 = new Label();
+                method.visitTryCatchBlock(l2, l3, l2, null);
+                method.visitLabel(l0);
+
+                regularCode.branch(this);
+
+                method.visitLabel(l1);
+
+                protectedCode.branch(this);
+
+                Label l4 = new Label();
+                method.visitJumpInsn(GOTO, l4);
+                method.visitLabel(l2);
+                method.visitVarInsn(ASTORE, 1);
+                method.visitLabel(l3);
+
+                protectedCode.branch(this);
+
+                method.visitVarInsn(ALOAD, 1);
+                method.visitInsn(ATHROW);
+                method.visitLabel(l4);
+
+                mv.areturn();
+                mv.visitMaxs(1, 1);
+                mv.visitEnd();
+            } finally {
+                this.method = old_method;
+            }
+
+            loadThreadContext();
+            loadSelf();
+            method.aload(ARGS_INDEX);
+            loadBlock();
+            method.invokestatic(classname, mname, METHOD_SIGNATURE);
+        }
+

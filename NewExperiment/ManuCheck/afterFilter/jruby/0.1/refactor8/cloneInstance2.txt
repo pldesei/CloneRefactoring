@@ -1,0 +1,13 @@
+(startLine=121 endLine=131 srcPath=/home/sonia/NewExperiment/jrubyFilter/00073/org/jruby/RubyInteger.java)
+    public RubyObject times() {
+        RubyNumeric i = RubyFixnum.newFixnum(getRuby(), 0);
+        while (true) {
+            if (i.funcall(getRuby().intern("<"), this).isFalse()) {
+                break;
+            }
+            getRuby().yield(i);
+            i = (RubyNumeric) i.funcall(getRuby().intern("+"), RubyFixnum.newFixnum(getRuby(), 1));
+        }
+        return this;
+    }
+

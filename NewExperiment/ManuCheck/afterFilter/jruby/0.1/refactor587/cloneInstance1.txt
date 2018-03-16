@@ -1,0 +1,22 @@
+(startLine=2287 endLine=2306 srcPath=/home/sonia/NewExperiment/jrubyFilter/00493/src/org/jruby/RubyString.java)
+                if (endOfCurrentHit != 0 || !isWhitespace) {
+                    // not a non-regex whitespace split, proceed
+
+                    numberOfHits++;
+
+                    // skip first positive lookahead match
+                    if (matt.end() != 0) {
+
+                        // add the first hit
+                        list.add(splitee.substring(startOfCurrentHit, endOfCurrentHit));
+
+                        // add any matched groups found while splitting the first hit
+                        for (int groupIndex = 1; groupIndex < matt.groupCount(); groupIndex++) {
+                            group = matt.group(groupIndex);
+                            if (group == null) continue;
+                            
+                            list.add(group);
+                        }
+                    }
+                }
+

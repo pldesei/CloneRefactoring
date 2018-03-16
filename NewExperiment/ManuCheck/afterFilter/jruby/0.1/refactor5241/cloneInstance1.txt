@@ -1,0 +1,10 @@
+(startLine=547 endLine=554 srcPath=/home/sonia/NewExperiment/jrubyFilter/01456/core/src/main/java/org/jruby/ir/interpreter/Interpreter.java)
+        case CALL_1F: {
+            if (profile) updateCallSite(instr, scope, scopeVersion);
+            OneFixnumArgNoBlockCallInstr x = (OneFixnumArgNoBlockCallInstr)instr;
+            IRubyObject r = (IRubyObject) x.getReceiver().retrieve(context, self, currDynScope, temp);
+            result = x.getCallSite().call(context, self, r, x.getFixnumArg());
+            setResult(temp, currDynScope, x.getResult(), result);
+            break;
+        }
+

@@ -1,0 +1,33 @@
+(startLine=244 endLine=274 srcPath=/home/sonia/NewExperiment/jrubyFilter/01060/src/org/jruby/util/ConvertDouble.java)
+                if (i < buflen) {
+                    switch(ival = bytes[i++]) {
+                    case '0':
+                        if (nDigits > 0) {
+                            nTrailingZeroes++;
+                        } else {
+                            exponent--;
+                        }
+                        break; // switch
+                    case '1': case '2': case '3': case '4':
+                    case '5': case '6': case '7': case '8': case '9':
+                        if (nTrailingZeroes > 0) {
+                            if ((nDigits += nTrailingZeroes) < MAX_DECIMAL_DIGITS) {
+                                significand *= LONG_10_POWERS[nTrailingZeroes];
+                                nTrailingZeroes = 0;
+                            } // else catch oversize below
+                        }
+                        if (nDigits++ < MAX_DECIMAL_DIGITS) {
+                            significand = significand*10L + (long)((int)ival-(int)'0');
+                            break; // switch
+                        } else {
+                            state = SDIGIT;
+                            break states;
+                        }
+                    default:
+                        // no dec digits, end of parseable data, go to calc
+                        state = SOPTCALC;
+                        break states;
+                        
+                    } // switch
+                } // if
+

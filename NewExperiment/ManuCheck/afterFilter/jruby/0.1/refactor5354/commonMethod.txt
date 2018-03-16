@@ -1,0 +1,11 @@
+(startLine=407 endLine=415 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java)
+    private static IRubyObject wrapJavaException(final ThreadContext context, final IRubyObject excType, final Throwable throwable) {
+        final Ruby runtime = context.runtime;
+        if (excType == runtime.getNativeException()) { // wrap Throwable in a NativeException object
+            NativeException exception = new NativeException(runtime, runtime.getNativeException(), throwable);
+            exception.prepareIntegratedBacktrace(context, throwable.getStackTrace());
+            return exception;
+        }
+        return Helpers.wrapJavaException(runtime, throwable); // wrap as normal JI object
+    }
+

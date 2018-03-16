@@ -1,0 +1,18 @@
+(startLine=885 endLine=900 srcPath=/home/sonia/NewExperiment/jrubyFilter/00886/src/org/jruby/parser/ParserSupport.java)
+    public Node new_opElementAsgnNode(ISourcePosition position, Node receiverNode, String operatorName, Node argsNode, Node valueNode) {
+        if (argsNode instanceof ArrayNode) {
+            ArrayNode array = (ArrayNode) argsNode;
+            
+            if (array.size() == 1) {
+                if (operatorName.equals("||")) {
+                    return new OpElementOneArgOrAsgnNode(position, receiverNode, operatorName, array, valueNode);
+                } else if (operatorName.equals("&&")) {
+                    return new OpElementOneArgAndAsgnNode(position, receiverNode, operatorName, array, valueNode);                    
+                } else {
+                    return new OpElementOneArgAsgnNode(position, receiverNode, operatorName, array, valueNode);
+                }
+            }
+        }
+        return new OpElementAsgnNode(position, receiverNode, operatorName, argsNode, valueNode);
+    }
+

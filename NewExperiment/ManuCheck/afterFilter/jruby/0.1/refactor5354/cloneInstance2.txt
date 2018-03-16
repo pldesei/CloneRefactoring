@@ -1,0 +1,16 @@
+(startLine=398 endLine=411 srcPath=/home/sonia/NewExperiment/jrubyFilter/01867/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java)
+        } else if (Helpers.checkJavaException(throwable, excType, context)) {
+            IRubyObject exceptionObj;
+            if (excType == runtime.getNativeException()) {
+                // wrap Throwable in a NativeException object
+                exceptionObj = new NativeException(runtime, runtime.getNativeException(), throwable);
+                ((NativeException)exceptionObj).prepareIntegratedBacktrace(context, throwable.getStackTrace());
+            } else {
+                // wrap as normal JI object
+                exceptionObj = JavaUtil.convertJavaToUsableRubyObject(runtime, throwable);
+            }
+
+            runtime.getGlobalVariables().set("$!", exceptionObj);
+            return true;
+        }
+

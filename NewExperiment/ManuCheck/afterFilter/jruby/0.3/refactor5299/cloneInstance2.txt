@@ -1,0 +1,15 @@
+(startLine=120 endLine=132 srcPath=/home/sonia/NewExperiment/jrubyFilter/01593/core/src/main/java/org/jruby/internal/runtime/methods/InterpretedIRMethod.java)
+    public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, Block block) {
+        if (IRRuntimeHelpers.isDebug()) doDebug();
+
+        DynamicMethodBox box = this.box;
+        if (box.callCount >= 0) tryJit(context, box);
+        DynamicMethod jittedMethod = box.actualMethod;
+
+        if (jittedMethod != null) {
+            return jittedMethod.call(context, self, clazz, name, block);
+        } else {
+            return INTERPRET_METHOD(context, ensureInstrsReady(), getImplementationClass().getMethodLocation(), self, name, block);
+        }
+    }
+

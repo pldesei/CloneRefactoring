@@ -1,0 +1,6 @@
+(startLine=446 endLine=449 srcPath=/home/sonia/NewExperiment/jrubyFilter/01539/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Extensions.java)
+        private static String derEncoded(final GeneralName name) throws IOException {
+            final GeneralNames names = new GeneralNames(name);
+            return new String( ByteList.plain( names.getEncoded(ASN1Encoding.DER) ) );
+        }
+

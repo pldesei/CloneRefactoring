@@ -1,0 +1,11 @@
+(startLine=1080 endLine=1088 srcPath=/home/sonia/NewExperiment/jrubyFilter/01883/core/src/main/java/org/jruby/RubyComplex.java)
+        if (!sr.isNil()) {
+            if (sr.callMethod(context, "include?", runtime.newString(new ByteList(new byte[]{'/'}))).isTrue()) {
+                r = f_to_r(context, sr);
+            } else if (f_gt_p(context, sr.callMethod(context, "count", runtime.newString(".eE")), RubyFixnum.zero(runtime)).isTrue()) {
+                r = f_to_f(context, sr); 
+            } else {
+                r = f_to_i(context, sr);
+            }
+        }
+

@@ -1,0 +1,16 @@
+(startLine=4201 endLine=4214 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject any_p(ThreadContext context, Block block) {
+        if (!isBuiltin("each")) return RubyEnumerable.any_pCommon(context, this, block);
+        if (!block.isGiven()) return any_pBlockless(context);
+
+        try {
+            for (int i = begin; i < begin + realLength; i++) {
+                if (block.yield(context, values[i]).isTrue()) return context.getRuntime().getTrue();
+            }
+        } catch (ArrayIndexOutOfBoundsException aioob) {
+            concurrentModification();
+        }
+
+        return context.getRuntime().getFalse();
+    }
+

@@ -1,0 +1,19 @@
+(startLine=30 endLine=46 srcPath=/home/sonia/NewExperiment/jrubyFilter/01491/core/src/main/java/org/jruby/ir/persistence/IRReader.java)
+    public static IRScope load(IRManager manager, IRReaderDecoder file) throws IOException {
+        int headersOffset = file.decodeIntRaw();
+        if (DEBUG) System.out.println("header_offset = " + headersOffset);
+        int poolOffset = file.decodeIntRaw();
+        if (DEBUG) System.out.println("pool_offset = " + headersOffset);
+        
+        file.seek(headersOffset);
+        int scopesToRead  = file.decodeInt();
+        if (DEBUG) System.out.println("scopes to read = " + scopesToRead);
+        
+        IRScope script = decodeScopeHeader(manager, file);
+        for (int i = 1; i < scopesToRead; i++) {
+            decodeScopeHeader(manager, file);
+        }
+        
+        return script;
+    }
+

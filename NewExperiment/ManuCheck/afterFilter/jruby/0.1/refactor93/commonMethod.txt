@@ -1,0 +1,10 @@
+(startLine=211 endLine=218 srcPath=/home/sonia/NewExperiment/jrubyFilter/00237/src/org/jruby/RubyObject.java)
+    /** rb_frozen_class_p
+    *
+    */
+   protected void testFrozen(String message) {
+       if (isFrozen()) {
+           throw new FrozenError(getRuntime(), message);
+       }
+   }
+

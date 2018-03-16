@@ -1,0 +1,20 @@
+(startLine=54 endLine=71 srcPath=/home/sonia/NewExperiment/jrubyFilter/00901/src/org/jruby/ext/ffi/jffi/FastLongMethodFactory.java)
+    final boolean isFastLongParam(NativeParam paramType) {
+        if (paramType instanceof NativeType) {
+            switch ((NativeType) paramType) {
+                case INT8:
+                case UINT8:
+                case INT16:
+                case UINT16:
+                case INT32:
+                case UINT32:
+                case INT64:
+                case UINT64:
+                case LONG:
+                case ULONG:
+                    return true;
+            }
+        }
+        return false;
+    }
+

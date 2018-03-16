@@ -1,0 +1,13 @@
+(startLine=4517 endLine=4527 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/RubyArray.java)
+    private int getArg0Generation(CachingCallSite op_cmp) {
+        IRubyObject arg0 = eltInternal(0);
+        RubyClass metaclass = arg0.getMetaClass();
+        CacheEntry entry = op_cmp.retrieveCache(metaclass);
+        int generation = -1;
+
+        if (entry.method.isBuiltin()) {
+            generation = entry.token;
+        }
+        return generation;
+    }
+

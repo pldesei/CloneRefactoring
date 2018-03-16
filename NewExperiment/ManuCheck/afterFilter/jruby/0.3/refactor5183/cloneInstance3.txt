@@ -1,0 +1,10 @@
+(startLine=167 endLine=174 srcPath=/home/sonia/NewExperiment/jrubyFilter/01275/src/org/jruby/runtime/InterpretedIRBlockBody.java)
+            } else if (argumentType == ARRAY) {
+                context.getRuntime().getWarnings().warn(ID.MULTIPLE_VALUES_FOR_BLOCK, "multiple values for a block parameter (" + args.length + " for " + blockArity + ")");
+                if (args.length == 0) {
+                    args = context.getRuntime().getSingleNilArray();
+                } else {
+                    args = new IRubyObject[] {context.getRuntime().newArrayNoCopy(args)};
+                }
+            }
+

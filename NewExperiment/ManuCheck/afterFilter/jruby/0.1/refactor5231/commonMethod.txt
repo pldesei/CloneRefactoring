@@ -1,0 +1,13 @@
+(startLine=317 endLine=327 srcPath=/home/sonia/NewExperiment/jrubyFilter/01455/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    protected void flush_string_content(Encoding encoding) {
+        if (delayed != null) {
+            int len = lex_p - tokp;
+            if (len > 0) {
+                delayed.setEncoding(encoding);
+                delayed.append(lexb.makeShared(tokp, len));
+            }
+            dispatchDelayedToken(Tokens.tSTRING_CONTENT);
+            tokp = lex_p;
+        }
+    }
+

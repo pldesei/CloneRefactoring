@@ -1,0 +1,16 @@
+(startLine=118 endLine=131 srcPath=/home/sonia/NewExperiment/jrubyFilter/00048/org/jruby/RubyMatchData.java)
+        if (args.length == 1) {
+            if (args[0] instanceof RubyFixnum) {
+                return group(((RubyFixnum)args[0]).getValue());
+            }
+            if (args[0] instanceof RubyBignum) {
+                throw new RubyIndexException("index too big");
+            }
+            if (args[0] instanceof RubyRange) {
+                long[] begLength = ((RubyRange)args[0]).getBeginLength(size());
+                if (begLength != null) {
+                    return subseq(begLength[0], begLength[1]);
+                }
+            }
+        }
+

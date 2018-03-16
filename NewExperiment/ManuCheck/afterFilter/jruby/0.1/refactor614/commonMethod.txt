@@ -1,0 +1,12 @@
+(startLine=898 endLine=907 srcPath=/home/sonia/NewExperiment/jrubyFilter/00581/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+    private int identifierToken(LexState last_state, int result, String value) {
+
+        if (result == Tokens.tIDENTIFIER && last_state != LexState.EXPR_DOT &&
+                parserSupport.getCurrentScope().isDefined(value) >= 0) {
+            lex_state = LexState.EXPR_END;
+        }
+
+        yaccValue = new Token(value, result, getPosition());
+        return result;
+    }
+

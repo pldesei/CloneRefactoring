@@ -1,0 +1,24 @@
+(startLine=2312 endLine=2333 srcPath=/home/sonia/NewExperiment/jrubyFilter/00493/src/org/jruby/RubyString.java)
+                if (numberOfHits + 1 != limit) {
+                    // loop over the remaining matches
+                    while (matt.find()) {
+                        // end of current hit is start of the next match
+                        endOfCurrentHit = matt.start();
+                        numberOfHits++;
+
+                        // add the current hit
+                        list.add(splitee.substring(startOfCurrentHit, endOfCurrentHit));
+
+                        // add any matched groups found while splitting the current hit
+                        for (int groupIndex = 1; groupIndex < matt.groupCount(); groupIndex++) {
+                            group = matt.group(groupIndex);
+                            if (group == null) continue;
+                            
+                            list.add(group);
+                        }
+
+                        // advance start to the end of the current hit
+                        startOfCurrentHit = matt.end();
+                    }
+                }
+

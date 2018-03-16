@@ -1,0 +1,11 @@
+(startLine=1267 endLine=1275 srcPath=/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java)
+    public RubyIO GetWriteIO() {
+        RubyIO writeIO;
+        checkInitialized();
+        writeIO = openFile.tiedIOForWriting;
+        if (writeIO != null) {
+            return writeIO;
+        }
+        return this;
+    }
+

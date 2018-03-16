@@ -1,0 +1,12 @@
+(startLine=186 endLine=195 srcPath=/home/sonia/NewExperiment/jrubyFilter/00256/src/org/jruby/javasupport/JavaClass.java)
+	private RubyArray java_methods(Method[] methods, boolean isStatic) {
+        RubyArray result = getRuntime().newArray(methods.length);
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if (isStatic == Modifier.isStatic(method.getModifiers())) {
+                result.append(JavaMethod.create(getRuntime(), method));
+            }
+        }
+        return result;
+	}
+

@@ -1,0 +1,24 @@
+(startLine=372 endLine=393 srcPath=/home/sonia/NewExperiment/jrubyFilter/00479/src/org/jruby/RubyEnumerable.java)
+    public static IRubyObject all_p(IRubyObject self, Block block) {
+        ThreadContext context = self.getRuntime().getCurrentContext();
+        boolean all = true;
+        List arr = eachToList(self);
+
+        if (block.isGiven()) {
+            for(Iterator iter = arr.iterator();iter.hasNext();) {
+                if(!block.yield(context, (IRubyObject)iter.next()).isTrue()) {
+                    all = false;
+                    break;
+                }
+            }
+        } else {
+            for(Iterator iter = arr.iterator();iter.hasNext();) {
+                if(!((IRubyObject)iter.next()).isTrue()) {
+                    all = false;
+                    break;
+                }
+            }
+        }
+        return all ? context.getRuntime().getTrue() : context.getRuntime().getFalse();
+    }
+

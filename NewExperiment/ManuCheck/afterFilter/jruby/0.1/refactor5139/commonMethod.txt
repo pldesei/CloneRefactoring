@@ -1,0 +1,16 @@
+(startLine=742 endLine=755 srcPath=/home/sonia/NewExperiment/jrubyFilter/01087/src/org/jruby/RubyFile.java)
+    /**
+     * Get the fully-qualified JRubyFile object for the path, taking into
+     * account the runtime's current directory.
+     */
+    public static JRubyFile file(IRubyObject pathOrFile) {
+        Ruby runtime = pathOrFile.getRuntime();
+
+        if (pathOrFile instanceof RubyFile) {
+            return JRubyFile.create(runtime.getCurrentDirectory(), ((RubyFile) pathOrFile).getPath());
+        } else {
+            RubyString path = get_path(runtime.getCurrentContext(), pathOrFile);
+            return JRubyFile.create(runtime.getCurrentDirectory(), path.getUnicodeValue());
+        }
+    }
+

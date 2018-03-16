@@ -1,0 +1,11 @@
+(startLine=2195 endLine=2203 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/core/src/main/java/org/jruby/RubyRegexp.java)
+    public static IRubyObject match_pre(IRubyObject match) {
+        if (match.isNil()) return match;
+        RubyMatchData m = (RubyMatchData)match;
+        m.check();
+
+        Ruby runtime = m.getRuntime();
+        if (m.begin == -1) runtime.getNil(); 
+        return m.str.makeShared(runtime, m.str.getType(), 0,  m.begin).infectBy(m);
+    }
+

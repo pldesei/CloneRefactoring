@@ -1,0 +1,11 @@
+(startLine=1642 endLine=1650 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                  support.checkExpression(((Node)yyVals[0+yyTop]));
+		  if (((MultipleAsgnNode)yyVals[-2+yyTop]).getHeadNode() != null) {
+		      ((MultipleAsgnNode)yyVals[-2+yyTop]).setValueNode(new ToAryNode(getPosition(((MultipleAsgnNode)yyVals[-2+yyTop])), ((Node)yyVals[0+yyTop])));
+		  } else {
+		      ((MultipleAsgnNode)yyVals[-2+yyTop]).setValueNode(support.newArrayNode(getPosition(((MultipleAsgnNode)yyVals[-2+yyTop])), ((Node)yyVals[0+yyTop])));
+		  }
+		  yyVal = ((MultipleAsgnNode)yyVals[-2+yyTop]);
+              }
+

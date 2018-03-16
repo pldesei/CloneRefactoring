@@ -1,0 +1,9 @@
+(startLine=62 endLine=68 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/BlockNamesStack.java)
+    /**
+     * @see AbstractStack#pop()
+     */
+    public StackElement pop() {
+        localNames.setBlockLevel(localNames.getBlockLevel() - 1);
+        return super.pop();
+    }
+

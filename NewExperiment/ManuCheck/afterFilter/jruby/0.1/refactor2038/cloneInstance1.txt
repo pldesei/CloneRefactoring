@@ -1,0 +1,17 @@
+(startLine=3233 endLine=3247 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                  yyVal = ((Node)yyVals[-1+yyTop]);
+                  ((ISourcePositionHolder)yyVal).setPosition(support.union(((Token)yyVals[-2+yyTop]), ((Token)yyVals[0+yyTop])));
+		  int extraLength = ((String) ((Token)yyVals[-2+yyTop]).getValue()).length() - 1;
+
+                  /* We may need to subtract addition offset off of first */
+		  /* string fragment (we optimistically take one off in*/
+		  /* ParserSupport.literal_concat).  Check token length*/
+		  /* and subtract as neeeded.*/
+		  if ((((Node)yyVals[-1+yyTop]) instanceof DStrNode) && extraLength > 0) {
+		     Node strNode = ((DStrNode)((Node)yyVals[-1+yyTop])).get(0);
+		     assert strNode != null;
+		     strNode.getPosition().adjustStartOffset(-extraLength);
+		  }
+              }
+

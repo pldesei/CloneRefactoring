@@ -1,0 +1,55 @@
+(startLine=644 endLine=696 srcPath=/home/sonia/NewExperiment/jrubyFilter/00529/src/org/jruby/compiler/NodeCompilerFactory.java)
+    public static void compileArgs(Node node, MethodCompiler context) {
+        ArgsNode argsNode = (ArgsNode)node;
+        
+        int required = argsNode.getArgsCount();
+        int restArg = argsNode.getRestArg();
+        boolean hasOptArgs = argsNode.getOptArgs() != null;
+        Arity arity = argsNode.getArity();
+        
+        NodeCompilerFactory.confirmNodeIsSafe(argsNode);
+
+        context.lineNumber(argsNode.getPosition());
+        
+        final ArrayCallback evalOptionalValue = new ArrayCallback() {
+            public void nextValue(MethodCompiler context, Object object, int index) {
+                ListNode optArgs = (ListNode)object;
+                
+                Node node = optArgs.get(index);
+
+                compile(node, context);
+            }
+        };
+
+        if (argsNode.getBlockArgNode() != null) {
+            context.getVariableCompiler().processBlockArgument(argsNode.getBlockArgNode().getCount());
+        }
+
+        if (hasOptArgs) {
+            if (restArg > -1) {
+                int opt = argsNode.getOptArgs().size();
+                context.getVariableCompiler().processRequiredArgs(arity, required, opt, restArg);
+
+                ListNode optArgs = argsNode.getOptArgs();
+                context.getVariableCompiler().assignOptionalArgs(optArgs, required, opt, evalOptionalValue);
+
+                context.getVariableCompiler().processRestArg(required + opt, restArg);
+            } else {
+                int opt = argsNode.getOptArgs().size();
+                context.getVariableCompiler().processRequiredArgs(arity, required, opt, restArg);
+
+                ListNode optArgs = argsNode.getOptArgs();
+                context.getVariableCompiler().assignOptionalArgs(optArgs, required, opt, evalOptionalValue);
+            }
+        } else {
+            if (restArg > -1) {
+                context.getVariableCompiler().processRequiredArgs(arity, required, 0, restArg);
+
+                context.getVariableCompiler().processRestArg(required, restArg);
+            } else {
+                context.getVariableCompiler().processRequiredArgs(arity, required, 0, restArg);
+            }
+        }
+        
+    }
+

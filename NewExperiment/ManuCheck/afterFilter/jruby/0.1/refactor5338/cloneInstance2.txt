@@ -1,0 +1,14 @@
+(startLine=72 endLine=83 srcPath=/home/sonia/NewExperiment/jrubyFilter/01760/truffle/src/main/java/org/jruby/truffle/language/exceptions/EnsureNode.java)
+    private RaiseException setLastExceptionAndRunEnsure(VirtualFrame frame, RaiseException exception) {
+        final DynamicObject threadLocals = Layouts.THREAD.getThreadLocals(getContext().getThreadManager().getCurrentThread());
+
+        final Object lastException = threadLocals.get("$!", nil());
+        threadLocals.set("$!", exception.getException());
+        try {
+            ensurePart.executeVoid(frame);
+            return exception;
+        } finally {
+            threadLocals.set("$!", lastException);
+        }
+    }
+

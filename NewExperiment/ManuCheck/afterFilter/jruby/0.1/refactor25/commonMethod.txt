@@ -1,0 +1,11 @@
+(startLine=49 endLine=57 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/util/collections/AbstractStack.java)
+    public StackElement pop() {
+        if (!isEmpty()) {
+        	StackElement result = top;
+            top = top.getNext();
+            return result;
+        } else {
+			throw new StackEmptyException("Cannot pop empty Stack.");
+        }
+    }
+

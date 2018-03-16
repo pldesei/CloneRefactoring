@@ -1,0 +1,49 @@
+(startLine=190 endLine=236 srcPath=/home/sonia/NewExperiment/jrubyFilter/01060/src/org/jruby/util/ConvertDouble.java)
+                for ( ; i < buflen ;  ) {
+                    switch(ival = bytes[i++]) {
+                    case '0':
+                        // ignore leading zeroes
+                        if (nDigits > 0) {
+                            // just save a count of zeroes for now; if no digit
+                            // ends up following them, they'll be applied to the
+                            // exponent rather than the significand (and our max
+                            // length for optimistic calc).
+                            nTrailingZeroes++;
+                        }
+                        break; // switch
+                    case '1': case '2': case '3': case '4':
+                    case '5': case '6': case '7': case '8': case '9':
+                         // ok, got a non-zero, have to own up to our horded zeroes
+                        if (nTrailingZeroes > 0) {
+                            if ((nDigits += nTrailingZeroes) < MAX_DECIMAL_DIGITS) {
+                                significand *= LONG_10_POWERS[nTrailingZeroes];
+                                nTrailingZeroes = 0;
+                            } // else catch oversize below
+                        }
+                        if (nDigits++ < MAX_DECIMAL_DIGITS) {
+                            significand = significand*10L + (long)((int)ival-(int)'0');
+                            break; // switch
+                        } else {
+                            // oh, well, it was worth a try. go let
+                            // Double/FloatingDecimal handle it 
+                            state = SDIGIT;
+                            break states;
+                        }
+                    case '.':
+                        state = SOPTDECDIGIT;
+                        break states;
+                    case 'e':
+                    case 'E':
+                        state = SOPTEXP;
+                        break states;
+                    case '_':
+                        // ignore
+                        break; // switch
+                    default:
+                        // end of parseable data, go to calc
+                        state = SOPTCALC;
+                        break states;
+                        
+                    } // switch
+                } // for
+

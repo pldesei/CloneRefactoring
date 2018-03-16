@@ -1,0 +1,12 @@
+(startLine=3485 endLine=3494 srcPath=/home/sonia/NewExperiment/jrubyFilter/00812/src/org/jruby/RubyString.java)
+    /** used by ar-jdbc
+     * 
+     */
+    public String getUnicodeValue() {
+        try {
+            return new String(value.bytes, value.begin, value.realSize, "UTF-8");
+        } catch (Exception e) {
+            throw new RuntimeException("Something's seriously broken with encodings", e);
+        }
+    }
+

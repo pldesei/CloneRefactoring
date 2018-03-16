@@ -1,0 +1,6 @@
+(startLine=402 endLine=405 srcPath=/home/sonia/NewExperiment/jrubyFilter/00120/org/jruby/parser/ParserSupport.java)
+    public OrNode newOrNode(INode left, INode right) {
+        checkExpression(left);
+        return new OrNode(left.getPosition(), getConditionNode(left), getConditionNode(right));
+    }
+

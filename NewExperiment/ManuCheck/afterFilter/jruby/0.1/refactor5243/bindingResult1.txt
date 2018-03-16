@@ -1,0 +1,128 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01495
+predFragLineRange:242-252
+predMethodLineRange:182-273
+nextLineRange:182-349
+predStrMethodInvoNames:
+[isNil, isEmpty, convertToString, getservbyname, isNil, fix2int, intValue, intValue, isNil, fix2int, intValue, intValue, isNil, fix2int, fix2int, getAllByName, getAllByName, toString, convertToString, newString, newString, getHostAddress, newString, getHostAddress, newFixnum, newFixnum, newFixnum, add, newArrayNoCopy, newString, newString, getHostAddress, newString, getHostAddress, newFixnum, newFixnum, newFixnum, add, newArrayNoCopy, newArray, sockerr]
+%%%%%%%%%%
+AddedMethodInvo Line:191 InvoName:buildAddrinfoList(context,args,new AddrinfoCallback(){
+  @Override public void addrinfo(  InetAddress address,  int port,  Sock sock){
+    boolean is_ipv6=address instanceof Inet6Address;
+    boolean sock_stream=true;
+    boolean sock_dgram=true;
+    if (sock != null) {
+      if (sock == SOCK_STREAM) {
+        sock_dgram=false;
+      }
+ else       if (sock == SOCK_DGRAM) {
+        sock_stream=false;
+      }
+    }
+    IRubyObject[] c;
+    if (sock_dgram) {
+      c=new IRubyObject[7];
+      c[0]=runtime.newString(is_ipv6 ? "AF_INET6" : "AF_INET");
+      c[1]=runtime.newFixnum(port);
+      c[2]=runtime.newString(getHostAddress(context,address));
+      c[3]=runtime.newString(address.getHostAddress());
+      c[4]=runtime.newFixnum(is_ipv6 ? PF_INET6 : PF_INET);
+      c[5]=runtime.newFixnum(SOCK_DGRAM);
+      c[6]=runtime.newFixnum(IPPROTO_UDP);
+      l.add(runtime.newArrayNoCopy(c));
+    }
+    if (sock_stream) {
+      c=new IRubyObject[7];
+      c[0]=runtime.newString(is_ipv6 ? "AF_INET6" : "AF_INET");
+      c[1]=runtime.newFixnum(port);
+      c[2]=runtime.newString(getHostAddress(context,address));
+      c[3]=runtime.newString(address.getHostAddress());
+      c[4]=runtime.newFixnum(is_ipv6 ? PF_INET6 : PF_INET);
+      c[5]=runtime.newFixnum(SOCK_STREAM);
+      c[6]=runtime.newFixnum(IPPROTO_TCP);
+      l.add(runtime.newArrayNoCopy(c));
+    }
+  }
+}
+)
+PackageName:org.jruby.ext.socket
+QualifiedClassName:org.jruby.ext.socket.SocketUtils
+ClassName:SocketUtils
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/ext/socket/SocketUtils.java
+InvokedMethodSig:public static void buildAddrinfoList(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject[], org.jruby.ext.socket.SocketUtils.AddrinfoCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:243 InvoName:buildAddrinfoList(context,args,new AddrinfoCallback(){
+  @Override public void addrinfo(  InetAddress address,  int port,  Sock sock){
+    boolean sock_stream=true;
+    boolean sock_dgram=true;
+    if (sock != null) {
+      if (sock == SOCK_STREAM) {
+        sock_dgram=false;
+      }
+ else       if (sock == SOCK_DGRAM) {
+        sock_stream=false;
+      }
+    }
+    if (sock_dgram) {
+      l.add(new Addrinfo(runtime,runtime.getClass("Addrinfo"),address,port,SocketType.DATAGRAM));
+    }
+    if (sock_stream) {
+      l.add(new Addrinfo(runtime,runtime.getClass("Addrinfo"),address,port,SocketType.SOCKET));
+    }
+  }
+}
+)
+PackageName:org.jruby.ext.socket
+QualifiedClassName:org.jruby.ext.socket.SocketUtils
+ClassName:SocketUtils
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/ext/socket/SocketUtils.java
+InvokedMethodSig:public static void buildAddrinfoList(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject[], org.jruby.ext.socket.SocketUtils.AddrinfoCallback) 
+%%%%%%%%%%
+AddedMethodInvo Line:260 InvoName:runtime.getClass("Addrinfo")
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyClass getClass(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:267 InvoName:runtime.getClass("Addrinfo")
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.RubyClass getClass(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:303 InvoName:addressFamilyFromArg(family)
+PackageName:org.jruby.ext.socket
+QualifiedClassName:org.jruby.ext.socket.SocketUtils
+ClassName:SocketUtils
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/ext/socket/SocketUtils.java
+InvokedMethodSig:static AddressFamily addressFamilyFromArg(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:311 InvoName:sockFromArg(socktype)
+PackageName:org.jruby.ext.socket
+QualifiedClassName:org.jruby.ext.socket.SocketUtils
+ClassName:SocketUtils
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/ext/socket/SocketUtils.java
+InvokedMethodSig:static Sock sockFromArg(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:341 InvoName:port.convertToInteger().getLongValue()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyNumeric
+ClassName:RubyNumeric
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/RubyNumeric.java
+InvokedMethodSig:public long getLongValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:341 InvoName:port.convertToInteger()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.RubyInteger convertToInteger() 
+%%%%%%%%%%
+AddedMethodInvo Line:342 InvoName:callback.addrinfo(addrs[i],p,sock)
+PackageName:org.jruby.ext.socket
+QualifiedClassName:org.jruby.ext.socket.SocketUtils.AddrinfoCallback
+ClassName:AddrinfoCallback
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01495/core/src/main/java/org/jruby/ext/socket/SocketUtils.java
+InvokedMethodSig:public abstract void addrinfo(java.net.InetAddress, int, Sock) 

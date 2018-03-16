@@ -1,0 +1,16 @@
+(startLine=373 endLine=386 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Extensions.java)
+        private byte[] derDigest(final ThreadContext context) {
+            final Ruby runtime = context.runtime;
+            IRubyObject pkey = getInstanceVariable("@issuer_certificate").callMethod(context, "public_key");
+            IRubyObject der;
+            if ( pkey instanceof PKeyRSA ) {
+                der = pkey.callMethod(context, "to_der");
+            } else {
+                der = ASN1.decode(context, _ASN1(runtime), pkey.callMethod(context, "to_der"));
+                der = der.callMethod(context, "value")
+                         .callMethod(context, "[]", runtime.newFixnum(1))
+                         .callMethod(context, "value");
+            }
+            return getSHA1Digest( runtime, der.convertToString().getBytes() );
+        }
+

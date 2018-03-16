@@ -1,0 +1,27 @@
+(startLine=219 endLine=243 srcPath=/home/sonia/NewExperiment/jrubyFilter/00299/src/org/jruby/evaluator/EvaluationState.java)
+    public IRubyObject begin(Node node) {
+        clearResult();
+        
+        if (node != null) {
+        	try {
+        		// for each call to internalEval, push down new stacks (to isolate eval runs that still want to be logically separate
+                pushCurrentNodeStacks();
+                
+                addNodeInstruction(node);
+        		
+                // TODO: once we're ready to have an external entity run this loop (i.e. thread scheduler) move this out
+        		while (hasNext()) {        	        
+        	        // invoke the next instruction
+        	        executeNext();
+        		}
+        	} catch (StackOverflowError soe) {
+        		// TODO: perhaps a better place to catch this (although it will go away)
+        		throw runtime.newSystemStackError("stack level too deep");
+        	} finally {
+        		popCurrentNodeStacks();
+        	}
+        }
+        
+        return getResult();
+    }
+

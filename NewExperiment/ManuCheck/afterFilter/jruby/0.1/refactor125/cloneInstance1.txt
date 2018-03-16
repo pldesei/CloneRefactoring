@@ -1,0 +1,28 @@
+(startLine=1484 endLine=1509 srcPath=/home/sonia/NewExperiment/jrubyFilter/00444/src/org/jruby/evaluator/EvaluationState.java)
+                while (!(result = evalInternal(runtime,context, iVisited.getConditionNode(), self, aBlock)).isTrue()) {
+                    loop: while (true) { // Used for the 'redo' command
+                        try {
+                            result = evalInternal(runtime,context, iVisited.getBodyNode(), self, aBlock);
+                            break loop;
+                        } catch (JumpException je) {
+                            switch (je.getJumpType().getTypeId()) {
+                            case JumpType.REDO:
+                                continue;
+                            case JumpType.NEXT:
+                                break loop;
+                            case JumpType.BREAK:
+                                // JRUBY-530 until case
+                                if (je.getTarget() == aBlock) {
+                                     je.setTarget(null);
+                                     
+                                     throw je;
+                                }
+                                
+                                return (IRubyObject) je.getValue();
+                            default:
+                                throw je;
+                            }
+                        }
+                    }
+                }
+

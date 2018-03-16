@@ -1,0 +1,24 @@
+(startLine=900 endLine=921 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/RubyArray.java)
+    /** rb_ary_push - specialized rb_ary_store 
+     *
+     */
+    public RubyArray append(IRubyObject item) {
+        modify();
+        
+        if (realLength == values.length) {
+        if (realLength == Integer.MAX_VALUE) throw getRuntime().newArgumentError("index too big");
+            
+            long newLength = values.length + (values.length >> 1);
+            if ( newLength > Integer.MAX_VALUE ) {
+                newLength = Integer.MAX_VALUE;
+            }else if ( newLength < ARRAY_DEFAULT_SIZE ) {
+                newLength = ARRAY_DEFAULT_SIZE;
+            }
+
+            realloc((int) newLength);
+        }
+        
+        values[realLength++] = item;
+        return this;
+    }
+

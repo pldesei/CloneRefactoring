@@ -1,0 +1,11 @@
+(startLine=1484 endLine=1492 srcPath=/home/sonia/NewExperiment/jrubyFilter/00885/src/org/jruby/parser/Ruby19Parser.java)
+  {
+                    if (support.isInDef() || support.isInSingle()) {
+                        yyerror("dynamic constant assignment");
+                    }
+
+                    ISourcePosition position = support.union(((Token)yyVals[-1+yyTop]), ((Token)yyVals[0+yyTop]));
+
+                    yyVal = new ConstDeclNode(position, null, support.new_colon3(position, (String) ((Token)yyVals[0+yyTop]).getValue()), NilImplicitNode.NIL);
+                }
+

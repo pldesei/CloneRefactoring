@@ -1,0 +1,10 @@
+(startLine=2018 endLine=2025 srcPath=/home/sonia/NewExperiment/jrubyFilter/00881/src/org/jruby/RubyString.java)
+    private int checkIndex(int beg, int len) {
+        if (beg > len) raiseIndexOutOfString(beg);
+        if (beg < 0) {
+            if (-beg > len) raiseIndexOutOfString(beg);
+            beg += len;
+        }
+        return beg;
+    }
+

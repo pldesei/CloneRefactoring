@@ -1,0 +1,10 @@
+(startLine=4462 endLine=4469 srcPath=/home/sonia/NewExperiment/jrubyFilter/01750/core/src/main/java/org/jruby/RubyArray.java)
+    private static IRubyObject safeArraySet(Ruby runtime, IRubyObject[] values, int i, IRubyObject value) {
+        try {
+            return values[i] = value;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            concurrentModification(runtime, ex);
+            return null; // not reached
+        }
+    }
+

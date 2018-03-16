@@ -1,0 +1,15 @@
+(startLine=4248 endLine=4260 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject find_index(ThreadContext context, IRubyObject cond) {
+        if (!isBuiltin("each")) return RubyEnumerable.find_indexCommon(context, this, cond);
+
+        try {
+            for (int i = 0; i < realLength; i++) {
+                if (values[begin + i].equals(cond)) return context.getRuntime().newFixnum(i);
+            }
+        } catch (ArrayIndexOutOfBoundsException aioob) {
+            concurrentModification();
+        }
+
+        return context.getRuntime().getNil();
+    }
+

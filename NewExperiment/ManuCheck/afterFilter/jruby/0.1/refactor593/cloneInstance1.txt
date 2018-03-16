@@ -1,0 +1,17 @@
+(startLine=1011 endLine=1025 srcPath=/home/sonia/NewExperiment/jrubyFilter/00504/src/org/jruby/evaluator/EvaluationState.java)
+        if (!block.isGiven()) {
+            RubyModule module = self.getMetaClass();
+            if (module.index != 0 && iVisited.index != 0) {
+                return self.callMethod(context, module, iVisited.index, iVisited.getName(), args, CallType.FUNCTIONAL, Block.NULL_BLOCK);
+            } else {
+                DynamicMethod method = module.searchMethod(iVisited.getName());
+
+                IRubyObject mmResult = RubyObject.callMethodMissingIfNecessary(context, self, method, iVisited.getName(), args, self, CallType.FUNCTIONAL, Block.NULL_BLOCK);
+                if (mmResult != null) {
+                    return mmResult;
+                }
+
+                return method.call(context, self, module, iVisited.getName(), args, false, Block.NULL_BLOCK);
+            }
+        }
+

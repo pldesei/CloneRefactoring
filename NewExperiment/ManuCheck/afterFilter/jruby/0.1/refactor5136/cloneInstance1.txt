@@ -1,0 +1,9 @@
+(startLine=3497 endLine=3503 srcPath=/home/sonia/NewExperiment/jrubyFilter/01077/src/org/jruby/parser/DefaultRubyParser.java)
+private Object case313_line1204(Object yyVal, Object[] yyVals, int yyTop) {
+                  Node body = ((Node)yyVals[-1+yyTop]) == null ? NilImplicitNode.NIL : ((Node)yyVals[-1+yyTop]);
+
+                  yyVal = new ModuleNode(((Token)yyVals[-4+yyTop]).getPosition(), ((Colon3Node)yyVals[-3+yyTop]), support.getCurrentScope(), body);
+                  support.popCurrentScope();
+    return yyVal;
+}
+

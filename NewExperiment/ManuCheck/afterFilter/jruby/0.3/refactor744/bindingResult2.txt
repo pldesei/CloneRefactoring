@@ -1,0 +1,86 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00855
+predFragLineRange:2051-2064
+predMethodLineRange:2041-2071
+nextLineRange:2025-2068
+predStrMethodInvoNames:
+[getRuntime, checkClosed, getMainStream, newNotImplementedError, fix2int, newArgumentError, readpartial, getMainStream, fix2int, newString, callMethod, newErrnoEBADFError, getNil, newIOError, getMessage]
+%%%%%%%%%%
+AddedMethodInvo Line:2027 InvoName:getPartial(context,args,false)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyIO.java
+InvokedMethodSig:private org.jruby.runtime.builtin.IRubyObject getPartial(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject[], boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:2029 InvoName:value.isNil()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract boolean isNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:2029 InvoName:context.getRuntime().newEOFError()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newEOFError() 
+%%%%%%%%%%
+AddedMethodInvo Line:2042 InvoName:RubyString.newEmptyString(runtime)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyString.java
+InvokedMethodSig:public static org.jruby.RubyString newEmptyString(org.jruby.Ruby) 
+%%%%%%%%%%
+AddedMethodInvo Line:2043 InvoName:stringArg.isNil()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract boolean isNil() 
+%%%%%%%%%%
+AddedMethodInvo Line:2043 InvoName:RubyString.newEmptyString(runtime)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyString.java
+InvokedMethodSig:public static org.jruby.RubyString newEmptyString(org.jruby.Ruby) 
+%%%%%%%%%%
+AddedMethodInvo Line:2043 InvoName:stringArg.convertToString()
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.IRubyObject
+ClassName:IRubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/runtime/builtin/IRubyObject.java
+InvokedMethodSig:public abstract org.jruby.RubyString convertToString() 
+%%%%%%%%%%
+AddedMethodInvo Line:2053 InvoName:stream.readnonblock(length)
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.ChannelStream
+ClassName:ChannelStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/util/io/ChannelStream.java
+InvokedMethodSig:public synchronized ByteList readnonblock(int) throws java.io.IOException, org.jruby.util.io.BadDescriptorException, java.io.EOFException
+%%%%%%%%%%
+AddedMethodInvo Line:2054 InvoName:buf.length()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:2056 InvoName:string.view(empty ? ByteList.EMPTY_BYTELIST : buf)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyString
+ClassName:RubyString
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyString.java
+InvokedMethodSig:final void view(ByteList) 
+%%%%%%%%%%
+AddedMethodInvo Line:2058 InvoName:stream.feof()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.ChannelStream
+ClassName:ChannelStream
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/util/io/ChannelStream.java
+InvokedMethodSig:public boolean feof() throws java.io.IOException, org.jruby.util.io.BadDescriptorException
+%%%%%%%%%%
+AddedMethodInvo Line:2064 InvoName:runtime.newEOFError(e.getMessage())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newEOFError(java.lang.String) 

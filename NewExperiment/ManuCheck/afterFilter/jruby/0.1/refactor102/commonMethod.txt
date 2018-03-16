@@ -1,0 +1,9 @@
+(startLine=583 endLine=589 srcPath=/home/sonia/NewExperiment/jrubyFilter/00302/src/org/jruby/runtime/ThreadContext.java)
+    public void preNodeEval(RubyModule wrapper, RubyModule rubyClass, IRubyObject self) {
+        pushDynamicVars();
+        setWrapper(wrapper);
+        pushRubyClass(rubyClass);
+        pushFrame(self, IRubyObject.NULL_ARRAY, null, null);
+        pushScope();
+    }
+

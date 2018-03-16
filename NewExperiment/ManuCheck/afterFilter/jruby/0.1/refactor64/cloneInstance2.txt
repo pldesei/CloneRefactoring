@@ -1,0 +1,19 @@
+(startLine=627 endLine=643 srcPath=/home/sonia/NewExperiment/jrubyFilter/00222/src/org/jruby/util/Pack.java)
+                    {
+                        int lPadLength = 0;
+                        if (lLength > (lValueLength - lCurValueIdx) / 2) {
+                            if (lFmt[i - 1] != '*')
+                                lPadLength = lLength - (lValueLength - lCurValueIdx) / 2;
+                            lLength = (lValueLength - lCurValueIdx) / 2;
+                        }
+                        for (; lLength-- > 0;) {
+                            short tmp = (short) (value.charAt(lCurValueIdx++) & 0xff);
+                            int s = (short) (value.charAt(lCurValueIdx++) & 0xff);
+                            s <<= 8;
+                            s |= tmp;
+                            lResult.append(RubyFixnum.newFixnum(ruby, s));
+                        }
+                        for (; lPadLength-- > 0;)
+                            lResult.append(ruby.getNil());
+                    }
+

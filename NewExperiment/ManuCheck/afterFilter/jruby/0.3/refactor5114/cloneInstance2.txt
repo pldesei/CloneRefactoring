@@ -1,0 +1,26 @@
+(startLine=779 endLine=802 srcPath=/home/sonia/NewExperiment/jrubyFilter/00948/src/org/jruby/RubyIO.java)
+        do {
+            readCheck(readStream);
+            readStream.clearerr();
+            int n;
+            try {
+                n = readStream.getline(buf, (byte) delim);
+                c = buf.length() > 0 ? buf.get(buf.length() - 1) & 0xff : -1;
+            } catch (EOFException e) {
+                n = -1;
+            }
+            
+            if (n == -1) {
+                if (!readStream.isBlocking() && (readStream instanceof ChannelStream)) {
+                    if(!(waitReadable(((ChannelStream)readStream).getDescriptor()))) {
+                        throw runtime.newIOError("bad file descriptor: " + openFile.getPath());
+                    }
+                    continue;
+                } else {
+                    break;
+                }
+            }
+            
+            update = true;
+        } while (c != delim);
+

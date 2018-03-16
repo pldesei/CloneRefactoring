@@ -1,0 +1,19 @@
+(startLine=3905 endLine=3921 srcPath=/home/sonia/NewExperiment/jrubyFilter/00836/src/org/jruby/RubyString.java)
+        if (rslen == 1 && newline == (byte)'\n') {
+            int len2 = value.realSize;
+            if (bytes[p + len - 1] == (byte)'\n') {
+                len2--;
+                if (len2 > 0 && bytes[p + len2 - 1] == (byte)'\r') {
+                    len2--;
+                }
+                view(0, len2);
+            } else if (bytes[p + len - 1] == (byte) '\r') {
+                len2--;
+                view(0, len2);
+            } else {
+                modifyCheck();
+                return runtime.getNil();
+            }
+            return this;
+        }
+
