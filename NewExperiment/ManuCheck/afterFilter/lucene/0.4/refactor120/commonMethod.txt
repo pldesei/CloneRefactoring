@@ -1,0 +1,16 @@
+(startLine=939 endLine=952 srcPath=/home/sonia/NewExperiment/luceneFilter/01877/solr/test-framework/src/java/org/apache/solr/SolrTestCaseJ4.java)
+  /** Converts "test JSON" and returns standard JSON.
+   *  Currently this only consists of changing unescaped single quotes to double quotes,
+   *  and escaped single quotes to single quotes.
+   *
+   * The primary purpose is to be able to easily embed JSON strings in a JAVA string
+   * with the best readability.
+   *
+   * This transformation is automatically applied to JSON test srings (like assertJQ).
+   */
+  public static String json(String testJSON) {
+    testJSON = nonEscapedSingleQuotePattern.matcher(testJSON).replaceAll("\"");
+    testJSON = escapedSingleQuotePattern.matcher(testJSON).replaceAll("'");
+    return testJSON;
+  }
+

@@ -1,0 +1,13 @@
+(startLine=89 endLine=99 srcPath=/home/sonia/NewExperiment/jrubyFilter/01760/truffle/src/main/java/org/jruby/truffle/language/exceptions/TryNode.java)
+    private Object setLastExceptionAndRunRescue(VirtualFrame frame, RaiseException exception, RescueNode rescue) {
+        final DynamicObject threadLocals = Layouts.THREAD.getThreadLocals(getContext().getThreadManager().getCurrentThread());
+
+        final Object lastException = threadLocals.get("$!", nil());
+        threadLocals.set("$!", exception.getException());
+        try {
+            return rescue.execute(frame);
+        } finally {
+            threadLocals.set("$!", lastException);
+        }
+    }
+

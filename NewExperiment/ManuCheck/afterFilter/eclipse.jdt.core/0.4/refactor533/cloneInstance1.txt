@@ -1,0 +1,12 @@
+(startLine=38 endLine=47 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01376/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionContextTests.java)
+	if (true) {
+		Class c = CompletionContextTests.class;
+		Method[] methods = c.getMethods();
+		for (int i = 0, max = methods.length; i < max; i++) {
+			if (methods[i].getName().startsWith("test")) { //$NON-NLS-1$
+				suite.addTest(new CompletionContextTests(methods[i].getName()));
+			}
+		}
+		return suite;
+	}
+

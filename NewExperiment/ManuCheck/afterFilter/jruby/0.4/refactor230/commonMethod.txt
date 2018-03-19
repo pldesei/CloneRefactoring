@@ -1,0 +1,19 @@
+(startLine=245 endLine=261 srcPath=/home/sonia/NewExperiment/jrubyFilter/00448/src/org/jruby/RubyModule.java)
+    /**
+     * Set the named class variable to the given value, provided taint and freeze allow setting it.
+     * 
+     * Ruby C equivalent = "rb_cvar_set"
+     * 
+     * @param name The variable name to set
+     * @param value The value to set it to
+     */
+    public IRubyObject setClassVar(String name, IRubyObject value) {
+        RubyModule module = getModuleWithInstanceVar(name);
+
+        if (module == null) {
+            module = this;
+        }
+
+        return module.setInstanceVariable(name, value, CVAR_TAINT_ERROR, CVAR_FREEZE_ERROR);
+    }
+

@@ -1,0 +1,33 @@
+(startLine=1503 endLine=1533 srcPath=/home/sonia/NewExperiment/jrubyFilter/00150/org/jruby/RubyModule.java)
+    private RubyArray instance_methods(RubyObject[] args, final int noex) {
+        boolean includeSuper = false;
+
+        if (args.length > 0) {
+            includeSuper = args[0].isTrue();
+        }
+
+        return methodList(includeSuper, new RubyMapMethod() {
+            public int execute(Object key, Object value, Object arg) {
+                // cast args
+                String id = (String) key;
+                ICallable method = (ICallable) value;
+                RubyArray ary = (RubyArray) arg;
+
+                if ((method.getNoex() & noex) == 0) {
+                    RubyString name = RubyString.newString(getRuby(), id);
+
+                    if (! ary.includes(name)) {
+                        if (method == null) {
+                            ary.append(getRuby().getNil());
+                        }
+                        ary.append(name);
+                    }
+                } else if (method instanceof EvaluateMethod && ((EvaluateMethod) method).getNode() instanceof ZSuperNode) {
+                    ary.append(getRuby().getNil());
+                    ary.append(RubyString.newString(getRuby(), id));
+                }
+                return RubyMapMethod.CONTINUE;
+            }
+        });
+    }
+

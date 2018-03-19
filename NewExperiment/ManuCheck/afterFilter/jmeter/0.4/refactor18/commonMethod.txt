@@ -1,0 +1,26 @@
+(startLine=204 endLine=227 srcPath=/home/sonia/NewExperiment/jmeterFilter/00353/src/protocol/http/org/apache/jmeter/protocol/http/config/gui/UrlConfigGui.java)
+    protected final JPanel getWebServerTimeoutPanel() {
+        // WEB SERVER PANEL
+        JPanel webServerPanel = new HorizontalPanel();
+        webServerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                JMeterUtils.getResString("web_server"))); // $NON-NLS-1$
+        final JPanel domainPanel = getDomainPanel();
+        final JPanel portPanel = getPortPanel();
+        webServerPanel.add(domainPanel);
+        webServerPanel.add(portPanel);
+        
+        JPanel timeOut = new HorizontalPanel();
+        timeOut.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                JMeterUtils.getResString("web_server_timeout_title"))); // $NON-NLS-1$
+        final JPanel connPanel = getConnectTimeOutPanel();
+        final JPanel reqPanel = getResponseTimeOutPanel();
+        timeOut.add(connPanel);
+        timeOut.add(reqPanel);
+        
+        
+        JPanel webServerTimeoutPanel = new VerticalPanel();
+        webServerTimeoutPanel.add(webServerPanel, BorderLayout.CENTER);
+        webServerTimeoutPanel.add(timeOut, BorderLayout.EAST);
+        return webServerTimeoutPanel;
+    }
+

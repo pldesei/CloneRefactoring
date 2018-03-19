@@ -1,0 +1,19 @@
+(startLine=140 endLine=156 srcPath=/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java)
+  private int indexDocs(CloudSolrClient sourceSolrClient, String collection, int batches) throws IOException, SolrServerException {
+    sourceSolrClient.setDefaultCollection(collection);
+    int numDocs = 0;
+    for (int k = 0; k < batches; k++) {
+      UpdateRequest req = new UpdateRequest();
+      for (; numDocs < (k + 1) * 100; numDocs++) {
+        SolrInputDocument doc = new SolrInputDocument();
+        doc.addField("id", "source_" + numDocs);
+        doc.addField("xyz", numDocs);
+        req.add(doc);
+      }
+      req.setAction(AbstractUpdateRequest.ACTION.COMMIT, true, true);
+      req.process(sourceSolrClient);
+    }
+    log.info("Adding numDocs=" + numDocs);
+    return numDocs;
+  }
+

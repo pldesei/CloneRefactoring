@@ -1,0 +1,18 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00599
+predFragLineRange:835-851
+predMethodLineRange:831-851
+nextLineRange:817-833
+predStrMethodInvoNames:
+[getRuntime, getCurrentContext, preIter, checkIter, yield, newArray, postIter]
+%%%%%%%%%%
+AddedMethodInvo Line:825 InvoName:visitAll(new Visitor(){
+  public void visit(  IRubyObject key,  IRubyObject value){
+    block.yield(context,RubyArray.newArray(runtime,key,value),null,null,true);
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyHash
+ClassName:RubyHash
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java
+InvokedMethodSig:public void visitAll(org.jruby.RubyHash.Visitor) 

@@ -1,0 +1,35 @@
+(startLine=879 endLine=911 srcPath=/home/sonia/NewExperiment/jrubyFilter/01344/src/org/jruby/ext/openssl/x509store/PEMInputOutput.java)
+    private static void writePemEncrypted(BufferedWriter out, String pemHeader, byte[] encoding, CipherSpec cipher, char[] passwd) throws IOException {
+        Cipher c = cipher.getCipher();
+        String algoBase = c.getAlgorithm();
+        if (algoBase.indexOf('/') != -1) {
+            algoBase = algoBase.split("/")[0];
+        }
+        byte[] iv = new byte[c.getBlockSize()];
+        random.nextBytes(iv);
+        byte[] salt = new byte[8];
+        System.arraycopy(iv, 0, salt, 0, 8);
+        OpenSSLPBEParametersGenerator pGen = new OpenSSLPBEParametersGenerator();
+        pGen.init(PBEParametersGenerator.PKCS5PasswordToBytes(passwd), salt);
+        KeyParameter param = (KeyParameter) pGen.generateDerivedParameters(cipher.getKeyLenInBits());
+        SecretKey secretKey = new SecretKeySpec(param.getKey(), algoBase);
+        byte[] encData = null;
+        try {
+            c.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+            encData = c.doFinal(encoding);
+        } catch (GeneralSecurityException gse) {
+            throw new IOException("exception using cipher: " + gse.toString());
+        }
+        out.write(BEF_G + pemHeader + AFT);
+        out.newLine();
+        out.write("Proc-Type: 4,ENCRYPTED");
+        out.newLine();
+        out.write("DEK-Info: " + cipher.getOsslName() + ",");
+        writeHexEncoded(out, iv);
+        out.newLine();
+        out.newLine();
+        writeEncoded(out, encData);
+        out.write(BEF_E + pemHeader + AFT);
+        out.flush();
+    }
+

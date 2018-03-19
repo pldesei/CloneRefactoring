@@ -1,0 +1,25 @@
+(startLine=1176 endLine=1198 srcPath=/home/sonia/NewExperiment/jrubyFilter/01576/core/src/main/java/org/jruby/RubyEnumerable.java)
+    private static IRubyObject singleExtent(ThreadContext context, IRubyObject self, final String op, final int sortDirection, final Block block) {
+        final Ruby runtime = context.runtime;
+        final IRubyObject result[] = new IRubyObject[] { null };
+        final ThreadContext localContext = context;
+
+        callEach(runtime, context, self, block.isGiven() ? block.arity() : Arity.ONE_REQUIRED, new BlockCallback() {
+            public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                IRubyObject larg = packEnumValues(runtime, largs);
+                checkContext(localContext, ctx, op + "{}");
+
+                if (result[0] == null ||
+                        (block.isGiven() &&
+                                RubyComparable.cmpint(ctx, block.yieldArray(ctx, runtime.newArray(larg, result[0]), null), larg, result[0]) * sortDirection > 0) ||
+                        (!block.isGiven() &&
+                                RubyComparable.cmpint(ctx, invokedynamic(ctx, larg, OP_CMP, result[0]), larg, result[0]) * sortDirection > 0)) {
+                    result[0] = larg;
+                }
+                return runtime.getNil();
+            }
+        });
+
+        return result[0] == null ? runtime.getNil() : result[0];
+    }
+

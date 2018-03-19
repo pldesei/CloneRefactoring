@@ -1,0 +1,15 @@
+(startLine=476 endLine=488 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+			if(optionID.equals(OPTION_ReportPossibleAccidentalBooleanAssignment)){
+				if (optionValue.equals(ERROR)) {
+					this.errorThreshold |= AccidentalBooleanAssign;
+					this.warningThreshold &= ~AccidentalBooleanAssign;
+				} else if (optionValue.equals(WARNING)) {
+					this.errorThreshold &= ~AccidentalBooleanAssign;
+					this.warningThreshold |= AccidentalBooleanAssign;
+				} else if (optionValue.equals(IGNORE)) {
+					this.errorThreshold &= ~AccidentalBooleanAssign;
+					this.warningThreshold &= ~AccidentalBooleanAssign;
+				}
+				continue;
+			}
+

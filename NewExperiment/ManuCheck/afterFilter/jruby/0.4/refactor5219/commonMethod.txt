@@ -1,0 +1,9 @@
+(startLine=430 endLine=436 srcPath=/home/sonia/NewExperiment/jrubyFilter/01441/core/src/main/java/org/jruby/RubyStruct.java)
+    private static RubyArray __member__(RubyClass clazz) {
+        RubyArray member = (RubyArray) getInternalVariable(clazz, "__member__");
+
+        assert !member.isNil() : "uninitialized struct";
+        
+        return member;
+    }
+

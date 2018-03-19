@@ -1,0 +1,11 @@
+(startLine=3204 endLine=3212 srcPath=/home/sonia/NewExperiment/jrubyFilter/00887/src/org/jruby/parser/Ruby19Parser.java)
+public Object case491_line1887(Object yyVal, Object[] yyVals, int yyTop) {
+                    if (!support.is_local_id(((Token)yyVals[-2+yyTop]))) {
+                        yyerror("formal argument must be local variable");
+                    }
+                    support.shadowing_lvar(((Token)yyVals[-2+yyTop]));
+                    support.arg_var(((Token)yyVals[-2+yyTop]));
+                    yyVal = new OptArgNode(getPosition(((Token)yyVals[-2+yyTop])), support.assignable(((Token)yyVals[-2+yyTop]), ((Node)yyVals[0+yyTop])));
+    return yyVal;
+}
+

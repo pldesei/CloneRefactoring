@@ -1,0 +1,18 @@
+(startLine=69 endLine=84 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/HMAC.java)
+    private static Mac getMacInstance(final String algorithmName) throws NoSuchAlgorithmException {
+        // final String algorithmSuffix = algorithmName.replaceAll("-", "");
+        final StringBuilder algName = new StringBuilder(5 + algorithmName.length());
+        algName.append("HMAC"); // .append(algorithmSuffix);
+        for ( int i = 0; i < algorithmName.length(); i++ ) {
+            char c = algorithmName.charAt(i);
+            if ( c != '-' ) algName.append(c);
+        }
+        try {
+            return SecurityHelper.getMac(algName.toString());
+        } // some algorithms need the - removed; this is ugly, I know.
+        catch (NoSuchAlgorithmException e) {
+            algName.insert(5, '-'); // "HMAC-" + algorithmSuffix
+            return SecurityHelper.getMac(algName.toString());
+        }
+    }
+

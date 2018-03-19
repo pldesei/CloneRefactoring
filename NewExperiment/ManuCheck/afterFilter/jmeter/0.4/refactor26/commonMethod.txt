@@ -1,0 +1,22 @@
+(startLine=213 endLine=232 srcPath=/home/sonia/NewExperiment/jmeterFilter/00481/src/protocol/jms/org/apache/jmeter/protocol/jms/client/Publisher.java)
+    /**
+     * @param destinationName 
+     * @param properties Map<String, String>
+     * @param msg Message
+     * @return Message
+     * @throws JMSException
+     * @throws NamingException
+     */
+    private Message setPropertiesAndSend(String destinationName,
+            Map<String, String> properties, Message msg)
+            throws JMSException, NamingException {
+        Utils.addJMSProperties(msg, properties);
+        if (staticDest || destinationName == null) {
+            producer.send(msg);
+        } else {
+            Destination dest = Utils.lookupDestination(ctx, destinationName);
+            producer.send(dest, msg);
+        }
+        return msg;
+    }
+

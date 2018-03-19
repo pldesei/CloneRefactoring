@@ -1,0 +1,25 @@
+(startLine=162 endLine=184 srcPath=/home/sonia/NewExperiment/jmeterFilter/00455/src/protocol/jms/org/apache/jmeter/protocol/jms/control/gui/JMSPublisherGui.java)
+    public void modifyTestElement(TestElement s) {
+        PublisherSampler sampler = (PublisherSampler) s;
+        this.configureTestElement(sampler);
+        sampler.setUseJNDIProperties(String.valueOf(useProperties.isSelected()));
+        sampler.setJNDIIntialContextFactory(jndiICF.getText());
+        sampler.setProviderUrl(urlField.getText());
+        sampler.setConnectionFactory(jndiConnFac.getText());
+        sampler.setDestination(jmsDestination.getText());
+        sampler.setUsername(jmsUser.getText());
+        sampler.setPassword(jmsPwd.getText());
+        sampler.setTextMessage(textMessage.getText());
+        sampler.setInputFile(messageFile.getFilename());
+        sampler.setRandomPath(randomFile.getFilename());
+        sampler.setConfigChoice(configChoice.getText());
+        sampler.setMessageChoice(msgChoice.getText());
+        sampler.setIterations(iterations.getText());
+        sampler.setUseAuth(useAuth.isSelected());
+        sampler.setDestinationStatic(destSetup.getText().equals(DEST_SETUP_STATIC));
+        sampler.setUseNonPersistentDelivery(useNonPersistentDelivery.isSelected());
+        Arguments args = (Arguments) jmsPropertiesPanel.createTestElement();
+        sampler.setJMSProperties(args);
+
+    }
+

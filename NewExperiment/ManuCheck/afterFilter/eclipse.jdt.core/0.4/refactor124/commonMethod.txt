@@ -1,0 +1,38 @@
+(startLine=2597 endLine=2632 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00044/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+	/**
+	 * INTERNAL USE-ONLY
+	 * That method generates the header of a method info:
+	 * The header consists in:
+	 * - the access flags
+	 * - the name index of the method name inside the constant pool
+	 * - the descriptor index of the signature of the method inside the constant pool.
+	 *
+	 * @param methodBinding org.eclipse.jdt.internal.compiler.lookup.MethodBinding
+	 */
+	public void generateMethodInfoHeader(MethodBinding methodBinding) {
+		// check that there is enough space to write all the bytes for the method info corresponding
+		// to the @methodBinding
+		int contentsLength;
+		methodCount++; // add one more method
+		if (contentsOffset + 10 >= (contentsLength = contents.length)) {
+			System.arraycopy(
+				contents,
+				0,
+				(contents = new byte[contentsLength + INCREMENT_SIZE]),
+				0,
+				contentsLength);
+		}
+		int accessFlags = methodBinding.getAccessFlags();
+		if (methodBinding.isRequiredToClearPrivateModifier()) {
+			accessFlags &= ~AccPrivate;
+		}
+		contents[contentsOffset++] = (byte) (accessFlags >> 8);
+		contents[contentsOffset++] = (byte) accessFlags;
+		int nameIndex = constantPool.literalIndex(methodBinding.selector);
+		contents[contentsOffset++] = (byte) (nameIndex >> 8);
+		contents[contentsOffset++] = (byte) nameIndex;
+		int descriptorIndex = constantPool.literalIndex(methodBinding.signature());
+		contents[contentsOffset++] = (byte) (descriptorIndex >> 8);
+		contents[contentsOffset++] = (byte) descriptorIndex;
+	}
+

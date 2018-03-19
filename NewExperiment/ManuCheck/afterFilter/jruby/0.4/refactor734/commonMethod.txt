@@ -1,0 +1,10 @@
+(startLine=75 endLine=82 srcPath=/home/sonia/NewExperiment/jrubyFilter/00827/src/org/jruby/runtime/callsite/CachingCallSite.java)
+    private IRubyObject callBlock(ThreadContext context, IRubyObject caller, IRubyObject self, Block block) {
+        RubyClass selfType = pollAndGetClass(context, self);
+        CacheEntry myCache = cache;
+        if (myCache.typeOk(selfType)) {
+            return myCache.method.call(context, self, selfType, methodName, block);
+        }
+        return cacheAndCall(caller, selfType, block, context, self);
+    }
+

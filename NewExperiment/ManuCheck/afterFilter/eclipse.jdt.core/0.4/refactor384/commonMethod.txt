@@ -1,0 +1,20 @@
+(startLine=217 endLine=234 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00816/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/ClasspathEntry.java)
+	/**
+	 * Decode some element tag containing a sequence of patterns into IPath[]
+	 */
+	private static IPath[] decodePatterns(Element element, String tag) {
+		String sequence = element.getAttribute(tag);
+		if (!sequence.equals("")) { //$NON-NLS-1$ 
+			char[][] patterns = CharOperation.splitOn('|', sequence.toCharArray());
+			int patternCount;
+			if ((patternCount  = patterns.length) > 0) {
+				IPath[] paths = new IPath[patternCount];
+				for (int j = 0; j < patterns.length; j++){
+					paths[j] = new Path(new String(patterns[j]));
+				}
+				return paths;
+			}
+		}
+		return null;
+	}
+

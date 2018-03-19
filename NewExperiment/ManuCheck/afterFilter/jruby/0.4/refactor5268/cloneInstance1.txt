@@ -1,0 +1,9 @@
+(startLine=78 endLine=84 srcPath=/home/sonia/NewExperiment/jrubyFilter/01530/ext/openssl/src/main/java/org/jruby/ext/openssl/HMAC.java)
+        try {
+            Mac mac = getMac(algoName);
+            byte[] key = kay.convertToString().getBytes();
+            SecretKey keysp = new SecretKeySpec(key, mac.getAlgorithm());
+            mac.init(keysp);
+            return RubyString.newString(recv.getRuntime(), mac.doFinal(data.convertToString().getBytes()));
+        } catch (Exception e) {
+

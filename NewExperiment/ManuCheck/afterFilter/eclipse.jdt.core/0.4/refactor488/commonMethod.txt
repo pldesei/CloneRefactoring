@@ -1,0 +1,22 @@
+(startLine=420 endLine=439 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01207/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor2.java)
+	private void formatAction(final int line, final Statement action) {
+		if (action != null) {
+			switch(action.getNodeType()) {
+				case ASTNode.BLOCK :
+	                formatLeftCurlyBrace(line, this.preferences.brace_position_for_block);
+					action.accept(this);
+					break;
+				case ASTNode.EMPTY_STATEMENT :
+					action.accept(this);
+					break;
+				default :
+					this.scribe.printNewLine();
+					this.scribe.indent();
+					action.accept(this);
+					this.scribe.unIndent();			
+			}
+		} else {
+			action.accept(this);
+		}
+	}
+

@@ -1,0 +1,15 @@
+(startLine=411 endLine=423 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+			if(optionID.equals(OPTION_ReportUnusedImport)){
+				if (optionValue.equals(ERROR)) {
+					this.errorThreshold |= UnusedImport;
+					this.warningThreshold &= ~UnusedImport;
+				} else if (optionValue.equals(WARNING)) {
+					this.errorThreshold &= ~UnusedImport;
+					this.warningThreshold |= UnusedImport;
+				} else if (optionValue.equals(IGNORE)) {
+					this.errorThreshold &= ~UnusedImport;
+					this.warningThreshold &= ~UnusedImport;
+				}
+				continue;
+			} 
+

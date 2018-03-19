@@ -1,0 +1,24 @@
+(startLine=124 endLine=145 srcPath=/home/sonia/NewExperiment/antFilter/01077/src/testcases/org/apache/tools/ant/taskdefs/ExecTaskTest.java)
+    public void testRedirect4() {
+        executeTarget("redirect4");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+        String expectedErr = getProject().getProperty("ant.file") + " err\n";
+
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", expectedOut, actualOut);
+        assertPropertyEquals("redirect.out", expectedOut.trim());
+        assertEquals("unexpected error output", expectedErr, actualErr);
+        assertPropertyEquals("redirect.err", expectedErr.trim());
+    }
+

@@ -1,0 +1,16 @@
+(startLine=892 endLine=905 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01716/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeBinding.java)
+/**
+ * Returns the orignal generic type instantiated by the receiver type, or itself if not.
+ * This is similar to erasure process, except it doesn't erase type variable, wildcard, intersection types etc...
+ */
+public TypeBinding original() {
+	switch(kind()) {
+		case Binding.PARAMETERIZED_TYPE :
+		case Binding.RAW_TYPE :
+		case Binding.ARRAY_TYPE : 
+			return erasure();
+		default :
+			return this;
+	}	
+}
+
