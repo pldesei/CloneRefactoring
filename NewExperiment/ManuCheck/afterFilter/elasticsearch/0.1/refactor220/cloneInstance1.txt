@@ -1,0 +1,32 @@
+(startLine=327 endLine=356 srcPath=/root/NewExperiment/elasticsearchFilter/01151/src/main/java/org/elasticsearch/index/search/MatchQuery.java)
+        } else if (type == Type.PHRASE_PREFIX) {
+            MultiPhrasePrefixQuery mpq = new MultiPhrasePrefixQuery();
+            mpq.setSlop(phraseSlop);
+            mpq.setMaxExpansions(maxExpansions);
+            List<Term> multiTerms = new ArrayList<Term>();
+            int position = -1;
+            for (int i = 0; i < numTokens; i++) {
+                int positionIncrement = 1;
+                boolean hasNext = buffer.incrementToken();
+                assert hasNext == true;
+                positionIncrement = posIncrAtt.getPositionIncrement();
+
+                if (positionIncrement > 0 && multiTerms.size() > 0) {
+                    if (enablePositionIncrements) {
+                        mpq.add(multiTerms.toArray(new Term[multiTerms.size()]), position);
+                    } else {
+                        mpq.add(multiTerms.toArray(new Term[multiTerms.size()]));
+                    }
+                    multiTerms.clear();
+                }
+                position += positionIncrement;
+                multiTerms.add(new Term(field, termToByteRef(termAtt)));
+            }
+            if (enablePositionIncrements) {
+                mpq.add(multiTerms.toArray(new Term[multiTerms.size()]), position);
+            } else {
+                mpq.add(multiTerms.toArray(new Term[multiTerms.size()]));
+            }
+            return wrapSmartNameQuery(mpq, smartNameFieldMappers, parseContext);
+        }
+

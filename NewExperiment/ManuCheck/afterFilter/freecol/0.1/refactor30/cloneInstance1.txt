@@ -1,0 +1,17 @@
+(startLine=354 endLine=368 srcPath=/root/NewExperiment/freecolFilter/00176/src/net/sf/freecol/client/gui/panel/FreeColDialog.java)
+        for (int index = 0; index < offense.size(); index++) {
+            Modifier modifier = offense.get(index);
+            preCombatDialog.add(new JLabel(Messages.message(modifier.id)), 
+                                higConst.rc(row, labelColumn));
+            String value;
+            if (modifier.addend == 0 && modifier.numerator != 0) {
+                value = String.valueOf(modifier.numerator) + "/" + 
+                        String.valueOf(modifier.denominator);
+            } else {
+                value = String.valueOf(modifier.addend);
+            }
+            preCombatDialog.add(new JLabel(value),
+                                higConst.rc(row, valueColumn, "r"));
+            row += 2;
+        }
+

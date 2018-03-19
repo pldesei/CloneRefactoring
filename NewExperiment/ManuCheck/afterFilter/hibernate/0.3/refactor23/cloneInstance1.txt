@@ -1,0 +1,10 @@
+(startLine=80 endLine=87 srcPath=/root/NewExperiment/hibernateFilter/00348/core/src/main/java/org/hibernate/id/SequenceHiLoGenerator.java)
+		if ( lo > maxLo ) {
+			IntegralDataTypeHolder hiVal = generateHolder( session );
+			lo = ( hiVal.eq( 0 ) ) ? 1 : 0;
+			value = hiVal.copy().multiplyBy( maxLo+1 ).add( lo );
+			if ( log.isDebugEnabled() ) {
+				log.debug("new hi value: " + hiVal);
+			}
+		}
+

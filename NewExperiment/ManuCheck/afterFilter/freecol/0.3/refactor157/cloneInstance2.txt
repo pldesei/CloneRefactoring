@@ -1,0 +1,21 @@
+(startLine=45 endLine=63 srcPath=/root/NewExperiment/freecolFilter/00695/src/net/sf/freecol/client/gui/plaf/FreeColPopupMenuUI.java)
+    public void paint(java.awt.Graphics g, javax.swing.JComponent c) {
+        if (c.isOpaque()) {
+            int width = c.getWidth();
+            int height = c.getHeight();
+
+            Image tempImage = ResourceManager.getImage("BackgroundImage");
+
+            if (tempImage != null) {
+                for (int x=0; x<width; x+=tempImage.getWidth(null)) {
+                    for (int y=0; y<height; y+=tempImage.getHeight(null)) {
+                        g.drawImage(tempImage, x, y, null);
+                    }
+                }
+            } else {
+                g.setColor(c.getBackground());
+                g.fillRect(0, 0, width, height);
+            }
+        }
+    }
+

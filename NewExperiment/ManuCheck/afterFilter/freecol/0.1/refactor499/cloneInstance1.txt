@@ -1,0 +1,13 @@
+(startLine=1790 endLine=1800 srcPath=/root/NewExperiment/freecolFilter/01357/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+            for (AIUnit aiUnit : aiUnits) {
+                Mission m = getBuildColonyMission(aiUnit, bcm.getTarget(), lb);
+                if (m == null) continue;
+                done.add(aiUnit);
+                lb.add(", ");
+                if (requestsTransport(aiUnit)) {
+                    Utils.appendToMapList(transportSupply,
+                        upLoc(aiUnit.getTransportSource()), aiUnit);
+                }
+                reasons.put(aiUnit.getUnit(), "0Builder");
+            }
+

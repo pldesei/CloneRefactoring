@@ -1,0 +1,11 @@
+(startLine=533 endLine=541 srcPath=/root/NewExperiment/freecolFilter/00867/src/net/sf/freecol/client/gui/panel/ReportColonyPanel.java)
+                } else if (turns >= 0) {
+                    turns++;
+                    name += " " + Integer.toString(turns);
+                    b = colourButton(name, action, Color.BLUE);
+                    b.setToolTipText(Messages.message(StringTemplate
+                        .template("report.colony.making.constructing.description")
+                            .add("%buildable%", build.getNameKey())
+                            .addAmount("%turns%", turns)));
+                } else if (turns < 0) {
+

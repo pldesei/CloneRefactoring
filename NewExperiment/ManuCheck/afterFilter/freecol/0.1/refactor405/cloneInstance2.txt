@@ -1,0 +1,14 @@
+(startLine=618 endLine=629 srcPath=/root/NewExperiment/freecolFilter/01072/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+            while (unit == null && !availableUnits.isEmpty()) {
+                Unit u = availableUnits.get(Utils.randomInt(logger,
+                        "Choose demand unit", getAIRandom(),
+                        availableUnits.size()));
+                availableUnits.remove(u);
+                aiUnit = getAIUnit(u);
+                if (IndianDemandMission.invalidReason(aiUnit) == null
+                    && u.findPath(u.getTile(), is.getTile(), null,
+                                  CostDeciders.numberOfLegalTiles()) != null) {
+                    unit = u;
+                }
+            }
+

@@ -1,0 +1,10 @@
+(startLine=493 endLine=500 srcPath=/root/NewExperiment/elasticsearchFilter/01024/src/test/java/org/elasticsearch/search/highlight/HighlighterSearchTests.java)
+        for (int i = 0; i < 5; i++) {
+            client().prepareIndex("test", "type1", Integer.toString(i))
+                    .setSource(XContentFactory.jsonBuilder().startObject()
+                            .field("title", "This is a test on the highlighting bug present in elasticsearch")
+                            .startArray("attachments").startObject().field("body", "attachment 1").endObject().startObject().field("body", "attachment 2").endObject().endArray()
+                            .endObject())
+                    .setRefresh(true).execute().actionGet();
+        }
+

@@ -1,0 +1,62 @@
+(startLine=188 endLine=247 srcPath=/root/NewExperiment/freecolFilter/00447/test/src/net/sf/freecol/common/model/IndianSettlementTest.java)
+	public void testHorseBreedingFoodAvail(){
+		GoodsType horsesType = FreeCol.getSpecification().getGoodsType("model.goods.horses");
+		GoodsType foodType = FreeCol.getSpecification().getGoodsType("model.goods.food");
+		
+		Game game = getStandardGame();
+
+        Player indianPlayer = game.getPlayer("model.nation.tupi");
+
+        TileType desertType = FreeCol.getSpecification().getTileType("model.tile.desert");
+        Map map = getTestMap(desertType);
+        game.setMap(map);
+        
+        //////////////////////
+        // Setting test settlement and braves
+        Tile settlementTile = map.getTile(5, 8);
+        UnitType skillToTeach = FreeCol.getSpecification().getUnitType("model.unit.masterCottonPlanter");
+        boolean isCapital = false;
+        boolean isVisited = false;
+        Unit residentMissionary = null;
+        IndianSettlement camp1 = new IndianSettlement(game,indianPlayer,settlementTile,isCapital,skillToTeach,isVisited,residentMissionary);
+        
+        int initialBravesInCamp = 3;
+        
+        for(int i=0; i < initialBravesInCamp; i++){
+        	UnitType indianBraveType = FreeCol.getSpecification().getUnitType("model.unit.brave");
+        	Unit brave = new Unit(game, camp1, indianPlayer, indianBraveType, UnitState.ACTIVE,
+                indianBraveType.getDefaultEquipment());
+        	camp1.addOwnedUnit(brave);
+        }
+
+        assertEquals(initialBravesInCamp, camp1.getUnitCount());
+        assertEquals(0, camp1.getFoodCount());
+        
+        //////////////////////
+        // Simulate that only the center tile is owned by camp 1
+        IndianSettlement camp2 = new IndianSettlement(game,indianPlayer,settlementTile,isCapital,skillToTeach,isVisited,residentMissionary);
+        
+        CircleIterator tilesAroundCamp = map.getCircleIterator(settlementTile.getPosition(), true, camp1.getRadius());
+        
+        while(tilesAroundCamp.hasNext()){
+        	Position p = tilesAroundCamp.next();
+        	Tile t = map.getTile(p);
+        	t.setOwningSettlement(camp2);
+        	
+        }
+           
+        int foodProduced = camp1.getProductionOf(foodType);
+        int foodConsumed = camp1.getFoodConsumption();
+        assertTrue("Food Produced should be less the food consumed",foodProduced < foodConsumed);
+        
+        //add horses
+        int initialHorses = 2;
+        camp1.addGoods(horsesType, initialHorses);
+        
+        camp1.newTurn();
+        
+        int expectedHorsesBreeded = 0;
+        int horsesBreeded = camp1.getGoodsCount(horsesType) - initialHorses;
+        assertEquals("No horses should be bred",expectedHorsesBreeded,horsesBreeded);
+	}
+

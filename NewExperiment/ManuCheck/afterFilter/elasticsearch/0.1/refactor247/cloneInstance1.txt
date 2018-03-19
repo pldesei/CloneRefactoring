@@ -1,0 +1,18 @@
+(startLine=53 endLine=68 srcPath=/root/NewExperiment/elasticsearchFilter/01689/src/main/java/org/elasticsearch/search/highlight/vectorhighlight/SourceSimpleFragmentsBuilder.java)
+    protected Field[] getFields(IndexReader reader, int docId, String fieldName) throws IOException {
+        // we know its low level reader, and matching docId, since that's how we call the highlighter with
+        SearchLookup lookup = searchContext.lookup();
+        lookup.setNextReader((LeafReaderContext) reader.getContext());
+        lookup.setNextDocId(docId);
+
+        List<Object> values = lookup.source().extractRawValues(hitContext.getSourcePath(mapper.names().sourcePath()));
+        if (values.isEmpty()) {
+            return EMPTY_FIELDS;
+        }
+        Field[] fields = new Field[values.size()];
+        for (int i = 0; i < values.size(); i++) {
+            fields[i] = new Field(mapper.names().indexName(), values.get(i).toString(), TextField.TYPE_NOT_STORED);
+        }
+        return fields;
+    }
+

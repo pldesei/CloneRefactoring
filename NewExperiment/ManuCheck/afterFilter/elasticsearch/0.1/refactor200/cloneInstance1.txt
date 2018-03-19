@@ -1,0 +1,16 @@
+(startLine=77 endLine=90 srcPath=/root/NewExperiment/elasticsearchFilter/01111/src/main/java/org/elasticsearch/action/admin/indices/close/TransportCloseIndexAction.java)
+    protected void doExecute(CloseIndexRequest request, ActionListener<CloseIndexResponse> listener) {
+        ClusterState state = clusterService.state();
+        String[] indicesOrAliases = request.indices();
+        request.indices(state.metaData().concreteIndices(indicesOrAliases, request.indicesOptions()));
+
+        if (disableCloseAllIndices) {
+            if (state.metaData().isExplicitAllIndices(indicesOrAliases) ||
+                    state.metaData().isPatternMatchingAllIndices(indicesOrAliases, request.indices())) {
+                throw new ElasticsearchIllegalArgumentException("closing all indices is disabled");
+            }
+        }
+
+        super.doExecute(request, listener);
+    }
+

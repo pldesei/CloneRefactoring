@@ -1,0 +1,9 @@
+(startLine=477 endLine=483 srcPath=/root/NewExperiment/freecolFilter/00032/src/net/sf/freecol/client/gui/ImageLibrary.java)
+                else {
+                    File tmpFile = new File(filePath);
+                    if ((tmpFile == null) || !tmpFile.exists() || !tmpFile.isFile() || !tmpFile.canRead()) {
+                        throw new FreeColException("The data file \"" + filePath + "\" could not be found.");
+                    }
+                    tempImage = new ImageIcon(filePath);
+                }
+

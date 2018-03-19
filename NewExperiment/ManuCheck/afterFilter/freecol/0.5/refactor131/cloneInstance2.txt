@@ -1,0 +1,36 @@
+(startLine=2848 endLine=2881 srcPath=/root/NewExperiment/freecolFilter/00453/src/net/sf/freecol/server/control/InGameInputHandler.java)
+    private Element buy(Connection connection, Element element) {
+        ServerPlayer player = getFreeColServer().getPlayer(connection);
+        Unit unit = (Unit) getGame().getFreeColGameObject(element.getAttribute("unit"));
+        Goods goods = new Goods(getGame(), Message.getChildElement(element, Goods.getXMLElementTagName()));
+        IndianSettlement settlement = (IndianSettlement) goods.getLocation();
+        int gold = Integer.parseInt(element.getAttribute("gold"));
+        if (gold <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (goods.getAmount() > 100) {
+            throw new IllegalArgumentException();
+        }
+        if (unit == null) {
+            throw new IllegalArgumentException("Could not find 'Unit' with specified ID: "
+                    + element.getAttribute("unit"));
+        }
+        if (settlement == null) {
+            throw new IllegalArgumentException("Goods are not in a settlement");
+        }
+        if (unit.getOwner() != player) {
+            throw new IllegalStateException("Not your unit!");
+        }
+        if (unit.getTile().getDistanceTo(settlement.getTile()) > 1) {
+            throw new IllegalStateException("Not adjacent to settlemen!");
+        }
+        int returnGold = ((AIPlayer) getFreeColServer().getAIMain().getAIObject(settlement.getOwner()))
+                .buyProposition(unit, goods, gold);
+        if (returnGold != gold) {
+            throw new IllegalArgumentException("This was not the price we agreed upon! Cheater?");
+        }
+        unit.buy(settlement, goods, gold);
+        
+        return null;
+    }
+

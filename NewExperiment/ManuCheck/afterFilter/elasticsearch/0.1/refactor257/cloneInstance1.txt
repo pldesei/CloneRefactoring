@@ -1,0 +1,13 @@
+(startLine=50 endLine=60 srcPath=/root/NewExperiment/elasticsearchFilter/01768/core/src/main/java/org/elasticsearch/index/query/ExistsQueryParser.java)
+            } else if (token.isValue()) {
+                if ("field".equals(currentFieldName)) {
+                    fieldPattern = parser.text();
+                } else if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else {
+                    throw new ParsingException(parser.getTokenLocation(), "[" + ExistsQueryBuilder.NAME + "] query does not support [" + currentFieldName + "]");
+                }
+            } else {
+

@@ -1,0 +1,10 @@
+(startLine=1211 endLine=1218 srcPath=/root/NewExperiment/elasticsearchFilter/01268/src/test/java/org/elasticsearch/nested/SimpleNestedTests.java)
+    /**
+     */
+    private void assertDocumentCount(String index, long numdocs) {
+        IndicesStatsResponse stats = admin().indices().prepareStats(index).clear().setDocs(true).get();
+        assertNoFailures(stats);
+        assertThat(stats.getIndex(index).getPrimaries().docs.getCount(), is(numdocs));
+
+    }
+

@@ -1,0 +1,23 @@
+(startLine=86 endLine=106 srcPath=/root/NewExperiment/elasticsearchFilter/01140/src/test/java/org/elasticsearch/benchmark/search/child/ChildSearchBenchmark.java)
+            for (; i <= ITERS; i++) {
+                BulkRequestBuilder request = client.prepareBulk();
+                for (int j = 0; j < BATCH; j++) {
+                    counter++;
+                    request.add(Requests.indexRequest(indexName).type("parent").id(Integer.toString(counter))
+                            .source(parentSource(counter, "test" + counter)));
+                    for (int k = 0; k < CHILD_COUNT; k++) {
+                        request.add(Requests.indexRequest(indexName).type("child").id(Integer.toString(counter) + "_" + k)
+                                .parent(Integer.toString(counter))
+                                .source(childSource(counter, "tag" + k)));
+                    }
+                }
+                BulkResponse response = request.execute().actionGet();
+                if (response.hasFailures()) {
+                    System.err.println("--> failures...");
+                }
+                if (((i * BATCH) % 10000) == 0) {
+                    System.out.println("--> Indexed " + (i * BATCH) * (1 + CHILD_COUNT) + " took " + stopWatch.stop().lastTaskTime());
+                    stopWatch.start();
+                }
+            }
+

@@ -1,0 +1,18 @@
+(startLine=297 endLine=312 srcPath=/root/NewExperiment/freecolFilter/00380/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java)
+        if (unitOnLand[unitIndex] > 0) {
+            JLabel onLandLabel = new JLabel(Messages.message("report.onLand"));
+            onLandLabel.setForeground(Color.GRAY);
+            detailPanel.add(onLandLabel,
+                            higConst.rc(row, column * columnsPerColumn + colonyColumn, "l"));
+            JLabel countLabel = new JLabel(String.valueOf(unitOnLand[unitIndex]));
+            countLabel.setForeground(Color.GRAY);
+            detailPanel.add(countLabel,
+                            higConst.rc(row, column * columnsPerColumn + countColumn, "r"));
+            if (row == heights.length) {
+                row = startRow;
+                column++;
+            } else {
+                row++;
+            }
+        }
+

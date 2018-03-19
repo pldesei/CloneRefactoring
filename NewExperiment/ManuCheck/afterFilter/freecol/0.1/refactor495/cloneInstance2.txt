@@ -1,0 +1,20 @@
+(startLine=1839 endLine=1856 srcPath=/root/NewExperiment/freecolFilter/01357/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+        if (nPioneers > 0) {
+            Collections.sort(aiUnits, pioneerComparator);
+            for (AIUnit aiUnit : aiUnits) {
+                final Unit unit = aiUnit.getUnit();
+                Mission m = getPioneeringMission(aiUnit, lb);
+                if (m == null) continue;
+                done.add(aiUnit);
+                lb.add(", ");
+                if (requestsTransport(aiUnit)) {
+                    Utils.appendToMapList(transportSupply,
+                        upLoc(aiUnit.getTransportSource()), aiUnit);
+                }
+                reasons.put(unit, "Pioneer" + nPioneers);
+                if (--nPioneers <= 0) break;
+            }
+            aiUnits.removeAll(done);
+            done.clear();
+        }
+

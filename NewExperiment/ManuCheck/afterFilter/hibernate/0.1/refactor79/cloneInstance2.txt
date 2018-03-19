@@ -1,0 +1,14 @@
+(startLine=257 endLine=268 srcPath=/root/NewExperiment/hibernateFilter/01201/hibernate-core/src/main/java/org/hibernate/type/ComponentType.java)
+    public int getHashCode(Object x, SessionFactoryImplementor factory) {
+		int result = 17;
+		Object[] values = getPropertyValues( x, entityMode );
+		for ( int i = 0; i < propertySpan; i++ ) {
+			Object y = values[i];
+			result *= 37;
+			if ( y != null ) {
+				result += propertyTypes[i].getHashCode( y, factory );
+			}
+		}
+		return result;
+	}
+

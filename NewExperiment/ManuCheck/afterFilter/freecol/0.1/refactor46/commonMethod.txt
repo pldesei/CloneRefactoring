@@ -1,0 +1,13 @@
+(startLine=4314 endLine=4324 srcPath=/root/NewExperiment/freecolFilter/00201/src/net/sf/freecol/common/model/Unit.java)
+	public static int getNextHammers(int type) {
+
+		UnitType unitType = FreeCol.specification.unitType(type);
+
+		if (unitType.canBeBuilt()) {
+
+			return unitType.hammersRequired;
+		}
+
+		return -1;
+	}
+

@@ -1,0 +1,13 @@
+(startLine=48 endLine=58 srcPath=/root/NewExperiment/freecolFilter/00654/src/net/sf/freecol/client/gui/action/DisbandUnitAction.java)
+    DisbandUnitAction(FreeColClient freeColClient) {
+        super(freeColClient, "unit.state.8", null, KeyStroke.getKeyStroke('D', 0));
+        putValue(BUTTON_IMAGE, freeColClient.getImageLibrary().getUnitButtonImageIcon(ImageLibrary.UNIT_BUTTON_DISBAND,
+                0));
+        putValue(BUTTON_ROLLOVER_IMAGE, freeColClient.getImageLibrary().getUnitButtonImageIcon(
+                ImageLibrary.UNIT_BUTTON_DISBAND, 1));
+        putValue(BUTTON_PRESSED_IMAGE, freeColClient.getImageLibrary().getUnitButtonImageIcon(
+                ImageLibrary.UNIT_BUTTON_DISBAND, 2));
+        putValue(BUTTON_DISABLED_IMAGE, freeColClient.getImageLibrary().getUnitButtonImageIcon(
+                ImageLibrary.UNIT_BUTTON_DISBAND, 3));
+    }
+

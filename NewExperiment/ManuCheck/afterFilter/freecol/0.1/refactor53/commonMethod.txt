@@ -1,0 +1,13 @@
+(startLine=4321 endLine=4331 srcPath=/root/NewExperiment/freecolFilter/00213/src/net/sf/freecol/common/model/Unit.java)
+	public static int getNextTools(int type) {
+
+		UnitType unitType = FreeCol.specification.unitType(type);
+
+		if (unitType.canBeBuilt()) {
+
+			return unitType.toolsRequired;
+		}
+
+		return -1;
+	}
+

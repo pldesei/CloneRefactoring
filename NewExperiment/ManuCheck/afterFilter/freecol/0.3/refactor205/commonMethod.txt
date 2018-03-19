@@ -1,0 +1,25 @@
+(startLine=737 endLine=759 srcPath=/root/NewExperiment/freecolFilter/00790/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Returns true if the Unit, or its owner has the ability
+     * identified by <code>id</code>.
+     *
+     * @param id a <code>String</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean hasAbility(String id) {
+        Set<Ability> result = new HashSet<Ability>();
+        // UnitType abilities always apply
+        result.addAll(unitType.getFeatureContainer().getAbilitySet(id));
+        // the player's abilities may not apply
+        result.addAll(getOwner().getFeatureContainer()
+                      .getAbilitySet(id, unitType, getGame().getTurn()));
+        // EquipmentType abilities always apply
+        for (EquipmentType equipmentType : equipment.keySet()) {
+            result.addAll(equipmentType.getFeatureContainer().getAbilitySet(id));
+            // player abilities may also apply to equipment (missionary) 
+            result.addAll(getOwner().getFeatureContainer()
+                          .getAbilitySet(id, equipmentType, getGame().getTurn()));
+        }
+        return FeatureContainer.hasAbility(result);
+    }
+

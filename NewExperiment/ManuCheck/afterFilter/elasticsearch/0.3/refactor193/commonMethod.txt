@@ -1,0 +1,10 @@
+(startLine=475 endLine=482 srcPath=/root/NewExperiment/elasticsearchFilter/01066/src/main/java/org/elasticsearch/cluster/routing/RoutingNodes.java)
+    public RoutingNodeIterator routingNodeIter(String nodeId) {
+        final RoutingNode routingNode = nodesToShards.get(nodeId);
+        if (routingNode == null) {
+            return null;
+        }
+        assert assertShardStats(this);
+        return new RoutingNodeIterator(routingNode);
+    }
+

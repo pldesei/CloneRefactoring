@@ -1,0 +1,11 @@
+(startLine=3892 endLine=3900 srcPath=/root/NewExperiment/freecolFilter/01150/src/net/sf/freecol/common/model/Player.java)
+            } else if (in.getLocalName().equals(OFFERED_FATHER_TAG)) {
+                int length = Integer.parseInt(in.getAttributeValue(null, ARRAY_SIZE));
+                for (int index = 0; index < length; index++) {
+                    String fatherId = in.getAttributeValue(null, "x" + String.valueOf(index));
+                    FoundingFather father = getSpecification().getFoundingFather(fatherId);
+                    offeredFathers.add(father);
+                }
+                in.nextTag();
+            } else if (in.getLocalName().equals(STANCE_TAG)) {
+

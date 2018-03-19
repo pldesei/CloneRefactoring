@@ -1,0 +1,955 @@
+ProjectPath:/root/NewExperiment/freecolFilter/00381
+predFragLineRange:297-312
+predMethodLineRange:209-330
+nextLineRange:294-581
+predStrMethodInvoNames:
+[getIndex, size, get, setOpaque, add, getName, rc, add, valueOf, rc, get, get, add, createColonyButton, rc, toString, get, get, setForeground, add, rc, getName, getEurope, setMargin, setOpaque, setForeground, setBorder, createEmptyBorder, setActionCommand, getName, getEurope, addActionListener, add, rc, valueOf, setForeground, add, rc, message, setForeground, add, rc, valueOf, setForeground, add, rc, message, setForeground, add, rc, valueOf, setForeground, add, rc]
+%%%%%%%%%%
+AddedMethodInvo Line:294 InvoName:addLocationData(colonyData,colony,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addLocationData(net.sf.freecol.client.gui.panel.LabourData.LocationData, net.sf.freecol.common.model.Colony, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:297 InvoName:unitData.getUnitsInEurope()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.LocationData getUnitsInEurope() 
+%%%%%%%%%%
+AddedMethodInvo Line:298 InvoName:europe.getRowCount()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getRowCount() 
+%%%%%%%%%%
+AddedMethodInvo Line:299 InvoName:createButton(player.getEurope().getName(),new ActionListener(){
+  public void actionPerformed(  ActionEvent e){
+    getCanvas().showEuropePanel();
+  }
+}
+)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JButton createButton(java.lang.String, java.awt.event.ActionListener) 
+%%%%%%%%%%
+AddedMethodInvo Line:301 InvoName:getCanvas().showEuropePanel()
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.Canvas
+ClassName:Canvas
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/Canvas.java
+InvokedMethodSig:public void showEuropePanel() 
+%%%%%%%%%%
+AddedMethodInvo Line:301 InvoName:getCanvas()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.FreeColPanel
+ClassName:FreeColPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/FreeColPanel.java
+InvokedMethodSig:public final net.sf.freecol.client.gui.Canvas getCanvas() 
+%%%%%%%%%%
+AddedMethodInvo Line:304 InvoName:higConst.rcwh(row,COLONY_COLUMN,1,europe.getRowCount())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:304 InvoName:europe.getRowCount()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getRowCount() 
+%%%%%%%%%%
+AddedMethodInvo Line:305 InvoName:addLocationData(europe,null,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addLocationData(net.sf.freecol.client.gui.panel.LabourData.LocationData, net.sf.freecol.common.model.Colony, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:307 InvoName:addNonLinkedLocation(unitData.getUnitsOnLand(),"report.onLand",row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addNonLinkedLocation(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:307 InvoName:unitData.getUnitsOnLand()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.LocationData getUnitsOnLand() 
+%%%%%%%%%%
+AddedMethodInvo Line:308 InvoName:addNonLinkedLocation(unitData.getUnitsAtSea(),"report.atSea",row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addNonLinkedLocation(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:308 InvoName:unitData.getUnitsAtSea()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.LocationData getUnitsAtSea() 
+%%%%%%%%%%
+AddedMethodInvo Line:310 InvoName:higConst.rcwh(row,1,COLUMNS,1)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:314 InvoName:isSummary()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private boolean isSummary() 
+%%%%%%%%%%
+AddedMethodInvo Line:314 InvoName:unitData.getUnitType().getExpertProduction()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.UnitType
+ClassName:UnitType
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/UnitType.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExpertProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:314 InvoName:unitData.getUnitType()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.common.model.UnitType getUnitType() 
+%%%%%%%%%%
+AddedMethodInvo Line:329 InvoName:isOverview()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private boolean isOverview() 
+%%%%%%%%%%
+AddedMethodInvo Line:329 InvoName:unitData.isSummary()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean isSummary() 
+%%%%%%%%%%
+AddedMethodInvo Line:347 InvoName:higConst.rcwh(row,COLONIST_COLUMN,2,1)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:349 InvoName:isOverview()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private boolean isOverview() 
+%%%%%%%%%%
+AddedMethodInvo Line:352 InvoName:higConst.rcwh(row,PRODUCTION_SYMBOL_COLUMN,4,1)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:355 InvoName:unit.getExpertProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExpertProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:357 InvoName:getCanvas().getGUI().getImageLibrary()
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.GUI
+ClassName:GUI
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/GUI.java
+InvokedMethodSig:public net.sf.freecol.client.gui.ImageLibrary getImageLibrary() 
+%%%%%%%%%%
+AddedMethodInvo Line:357 InvoName:getCanvas().getGUI()
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.Canvas
+ClassName:Canvas
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/Canvas.java
+InvokedMethodSig:public net.sf.freecol.client.gui.GUI getGUI() 
+%%%%%%%%%%
+AddedMethodInvo Line:357 InvoName:getCanvas()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.FreeColPanel
+ClassName:FreeColPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/FreeColPanel.java
+InvokedMethodSig:public final net.sf.freecol.client.gui.Canvas getCanvas() 
+%%%%%%%%%%
+AddedMethodInvo Line:358 InvoName:imageLibrary.getGoodsImageIcon(goods)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.ImageLibrary
+ClassName:ImageLibrary
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/ImageLibrary.java
+InvokedMethodSig:public javax.swing.ImageIcon getGoodsImageIcon(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:361 InvoName:goods.getStoredAs()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.GoodsType
+ClassName:GoodsType
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/GoodsType.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getStoredAs() 
+%%%%%%%%%%
+AddedMethodInvo Line:363 InvoName:higConst.rcwh(row,PRODUCTION_SYMBOL_COLUMN,storedAs == null ? 4 : 3,1)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:366 InvoName:imageLibrary.getGoodsImageIcon(storedAs)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.ImageLibrary
+ClassName:ImageLibrary
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/ImageLibrary.java
+InvokedMethodSig:public javax.swing.ImageIcon getGoodsImageIcon(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:372 InvoName:isSummary()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private boolean isSummary() 
+%%%%%%%%%%
+AddedMethodInvo Line:373 InvoName:getUnitIcon(unitData.getUnitType())
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.ImageIcon getUnitIcon(net.sf.freecol.common.model.UnitType) 
+%%%%%%%%%%
+AddedMethodInvo Line:373 InvoName:unitData.getUnitType()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.common.model.UnitType getUnitType() 
+%%%%%%%%%%
+AddedMethodInvo Line:374 InvoName:header.setIcon(icon)
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JLabel
+ClassName:JLabel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JLabel.java
+InvokedMethodSig:public void setIcon(javax.swing.Icon) 
+%%%%%%%%%%
+AddedMethodInvo Line:375 InvoName:header.setIconTextGap(20)
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JLabel
+ClassName:JLabel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JLabel.java
+InvokedMethodSig:public void setIconTextGap(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:380 InvoName:data.getRowCount()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getRowCount() 
+%%%%%%%%%%
+AddedMethodInvo Line:385 InvoName:higConst.rcwh(row,COLONY_COLUMN,1,rows)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:386 InvoName:addLocationData(data,null,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addLocationData(net.sf.freecol.client.gui.panel.LabourData.LocationData, net.sf.freecol.common.model.Colony, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:399 InvoName:data.getUnitData().isSummary()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean isSummary() 
+%%%%%%%%%%
+AddedMethodInvo Line:399 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:401 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:402 InvoName:unit.getUnitType()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.common.model.UnitType getUnitType() 
+%%%%%%%%%%
+AddedMethodInvo Line:403 InvoName:unit.getUnitName()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public java.lang.String getUnitName() 
+%%%%%%%%%%
+AddedMethodInvo Line:409 InvoName:unitType.getId()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.FreeColObject
+ClassName:FreeColObject
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/FreeColObject.java
+InvokedMethodSig:public java.lang.String getId() 
+%%%%%%%%%%
+AddedMethodInvo Line:411 InvoName:unitType.getExpertProduction()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.UnitType
+ClassName:UnitType
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/UnitType.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExpertProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:413 InvoName:colony.getBuildingForProducing(expert)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:public net.sf.freecol.common.model.Building getBuildingForProducing(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:417 InvoName:addLocationSummary(data,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private void addLocationSummary(net.sf.freecol.client.gui.panel.LabourData.LocationData, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:423 InvoName:data.getOtherWorkingAmateurs().getColonists()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.ProductionData
+ClassName:ProductionData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getColonists() 
+%%%%%%%%%%
+AddedMethodInvo Line:423 InvoName:data.getOtherWorkingAmateurs()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.ProductionData getOtherWorkingAmateurs() 
+%%%%%%%%%%
+AddedMethodInvo Line:425 InvoName:addRow(data,Messages.message("report.labour.otherUnitType"),workingAs,createNonCountedLabel(otherAmateurs),data.getOtherWorkingAmateurs().getProduction(),row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private void addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, javax.swing.JLabel, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:428 InvoName:createNonCountedLabel(otherAmateurs)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNonCountedLabel(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:429 InvoName:data.getOtherWorkingAmateurs().getProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.ProductionData
+ClassName:ProductionData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:429 InvoName:data.getOtherWorkingAmateurs()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.ProductionData getOtherWorkingAmateurs() 
+%%%%%%%%%%
+AddedMethodInvo Line:434 InvoName:addRow(data,unitName,allColonists ? Messages.message("report.labour.expertsWorking") : workingAs,data.getWorkingProfessionals().getColonists(),data.getWorkingProfessionals().getProduction(),row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, int, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:437 InvoName:data.getWorkingProfessionals().getColonists()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.ProductionData
+ClassName:ProductionData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getColonists() 
+%%%%%%%%%%
+AddedMethodInvo Line:437 InvoName:data.getWorkingProfessionals()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.ProductionData getWorkingProfessionals() 
+%%%%%%%%%%
+AddedMethodInvo Line:438 InvoName:data.getWorkingProfessionals().getProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.ProductionData
+ClassName:ProductionData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:438 InvoName:data.getWorkingProfessionals()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.ProductionData getWorkingProfessionals() 
+%%%%%%%%%%
+AddedMethodInvo Line:446 InvoName:higConst.rcwh(buildingStartRow,BUILDING_COLUMN,1,row - buildingStartRow)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:450 InvoName:addRow(data,unitName,Messages.message(allColonists ? "report.labour.amateursWorking" : "report.labour.workingAsOther"),data.getWorkingAmateurs(),0,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, int, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:455 InvoName:data.getWorkingAmateurs()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getWorkingAmateurs() 
+%%%%%%%%%%
+AddedMethodInvo Line:457 InvoName:data.getNotWorking()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getNotWorking() 
+%%%%%%%%%%
+AddedMethodInvo Line:458 InvoName:addRow(data,unitName,Messages.message("report.labour.notWorking"),createNumberLabel(data.getNotWorking(),"report.labour.notWorking.tooltip"),0,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private void addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, javax.swing.JLabel, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:461 InvoName:createNumberLabel(data.getNotWorking(),"report.labour.notWorking.tooltip")
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNumberLabel(int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:461 InvoName:data.getNotWorking()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getNotWorking() 
+%%%%%%%%%%
+AddedMethodInvo Line:466 InvoName:data.isTraining()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean isTraining() 
+%%%%%%%%%%
+AddedMethodInvo Line:466 InvoName:colony.getBuilding("model.ability.teach")
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:public net.sf.freecol.common.model.Building getBuilding(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:469 InvoName:createEmptyLabel()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createEmptyLabel() 
+%%%%%%%%%%
+AddedMethodInvo Line:469 InvoName:higConst.rcwh(buildingStartRow,BUILDING_COLUMN,1,row - buildingStartRow)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:473 InvoName:addRow(data,unitName,Messages.message("report.labour.teacher"),data.getTeachers(),0,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, int, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:476 InvoName:data.getTeachers()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getTeachers() 
+%%%%%%%%%%
+AddedMethodInvo Line:479 InvoName:addRow(data,data.getOtherStudentsName(),Messages.message("report.labour.learning","%unit%",data.getUnitData().getUnitName()),data.getOtherStudents(),0,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private int addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, int, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:data.getOtherStudentsName()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public java.lang.String getOtherStudentsName() 
+%%%%%%%%%%
+AddedMethodInvo Line:483 InvoName:data.getUnitData().getUnitName()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public java.lang.String getUnitName() 
+%%%%%%%%%%
+AddedMethodInvo Line:483 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:484 InvoName:data.getOtherStudents()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getOtherStudents() 
+%%%%%%%%%%
+AddedMethodInvo Line:488 InvoName:data.getStudents()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getStudents() 
+%%%%%%%%%%
+AddedMethodInvo Line:491 InvoName:addRow(data,null,Messages.message("report.labour.sutdent"),createNonCountedLabel(studentCount),0,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private void addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, javax.swing.JLabel, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:491 InvoName:createNonCountedLabel(studentCount)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNonCountedLabel(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:494 InvoName:colony.getTeachers()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:public List<net.sf.freecol.common.model.Unit> getTeachers() 
+%%%%%%%%%%
+AddedMethodInvo Line:495 InvoName:teacher.getStudent()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public final net.sf.freecol.common.model.Unit getStudent() 
+%%%%%%%%%%
+AddedMethodInvo Line:496 InvoName:student.getType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public final net.sf.freecol.common.model.UnitType getType() 
+%%%%%%%%%%
+AddedMethodInvo Line:497 InvoName:Unit.getUnitTypeTeaching(teacher.getType(),student.getType())
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public static net.sf.freecol.common.model.UnitType getUnitTypeTeaching(net.sf.freecol.common.model.UnitType, net.sf.freecol.common.model.UnitType) 
+%%%%%%%%%%
+AddedMethodInvo Line:497 InvoName:teacher.getType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public final net.sf.freecol.common.model.UnitType getType() 
+%%%%%%%%%%
+AddedMethodInvo Line:497 InvoName:student.getType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public final net.sf.freecol.common.model.UnitType getType() 
+%%%%%%%%%%
+AddedMethodInvo Line:504 InvoName:resultOfTraining.iterator().next()
+PackageName:java.util
+QualifiedClassName:java.util.Iterator
+ClassName:Iterator
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/java/util/Iterator.java
+InvokedMethodSig:public abstract E next() 
+%%%%%%%%%%
+AddedMethodInvo Line:504 InvoName:resultOfTraining.iterator()
+PackageName:java.util
+QualifiedClassName:java.util.Set<net.sf.freecol.common.model.UnitType>
+ClassName:Set<UnitType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/java/util/Set<net.java
+InvokedMethodSig:public abstract Iterator#RAW iterator() 
+%%%%%%%%%%
+AddedMethodInvo Line:506 InvoName:addRow(data,data.getUnitData().getUnitName(),student,createNumberLabel(-studentCount,"report.labour.subtracted.tooltip"),0,row)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private void addRow(net.sf.freecol.client.gui.panel.LabourData.LocationData, java.lang.String, java.lang.String, javax.swing.JLabel, int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:507 InvoName:data.getUnitData().getUnitName()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public java.lang.String getUnitName() 
+%%%%%%%%%%
+AddedMethodInvo Line:507 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:509 InvoName:createNumberLabel(-studentCount,"report.labour.subtracted.tooltip")
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNumberLabel(int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:518 InvoName:higConst.rcwh(buildingStartRow,BUILDING_COLUMN,1,row - buildingStartRow)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:521 InvoName:data.getUnitData().showProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean showProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:521 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:522 InvoName:createEmptyLabel()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createEmptyLabel() 
+%%%%%%%%%%
+AddedMethodInvo Line:522 InvoName:higConst.rcwh(notProducingStartRow,PRODUCTION_COLUMN,1,row - notProducingStartRow)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:529 InvoName:data.getRowCount()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getRowCount() 
+%%%%%%%%%%
+AddedMethodInvo Line:531 InvoName:createNumberLabel(data.getTotalColonists(),null)
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNumberLabel(int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:531 InvoName:data.getTotalColonists()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getTotalColonists() 
+%%%%%%%%%%
+AddedMethodInvo Line:532 InvoName:data.getUnitData().isSummary()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean isSummary() 
+%%%%%%%%%%
+AddedMethodInvo Line:532 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:533 InvoName:isOverview()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private boolean isOverview() 
+%%%%%%%%%%
+AddedMethodInvo Line:534 InvoName:createEmptyLabel()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createEmptyLabel() 
+%%%%%%%%%%
+AddedMethodInvo Line:534 InvoName:higConst.rcwh(row,UNIT_TYPE_COLUMN,1,rows)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:537 InvoName:colonistsLabel.setToolTipText(Messages.message("report.labour.unitTotal.tooltip","%unit%",data.getUnitData().getUnitName()))
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JComponent
+ClassName:JComponent
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JComponent.java
+InvokedMethodSig:public void setToolTipText(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:537 InvoName:data.getUnitData().getUnitName()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public java.lang.String getUnitName() 
+%%%%%%%%%%
+AddedMethodInvo Line:537 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:540 InvoName:higConst.rcwh(row,COLONIST_SUMMARY_COLUMN,1,data.getRowCount())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:540 InvoName:data.getRowCount()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getRowCount() 
+%%%%%%%%%%
+AddedMethodInvo Line:542 InvoName:data.getUnitData().showProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean showProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:542 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:543 InvoName:createEmptyLabel()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createEmptyLabel() 
+%%%%%%%%%%
+AddedMethodInvo Line:543 InvoName:higConst.rcwh(row,PRODUCTION_SYMBOL_COLUMN,4,rows)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:548 InvoName:createNumberLabel(data.getTotalProduction(),"report.labour.potentialProduction.tooltip")
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNumberLabel(int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:548 InvoName:data.getTotalProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getTotalProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:549 InvoName:data.isTotal()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean isTotal() 
+%%%%%%%%%%
+AddedMethodInvo Line:549 InvoName:data.getTotalProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getTotalProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:550 InvoName:productionLabel.setText("")
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JLabel
+ClassName:JLabel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JLabel.java
+InvokedMethodSig:public void setText(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:553 InvoName:higConst.rcwh(row,PRODUCTION_SUMMARY_COLUMN,1,rows)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:557 InvoName:data.getNetProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public int getNetProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:558 InvoName:createNumberLabel(net,"report.labour.netProduction.tooltip")
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.ReportLabourPanel
+ClassName:ReportLabourPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java
+InvokedMethodSig:private javax.swing.JLabel createNumberLabel(int, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:560 InvoName:data.getUnitData().showNetProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean showNetProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:560 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:560 InvoName:data.isTotal()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public boolean isTotal() 
+%%%%%%%%%%
+AddedMethodInvo Line:561 InvoName:netProductionLabel.setText("")
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JLabel
+ClassName:JLabel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JLabel.java
+InvokedMethodSig:public void setText(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:562 InvoName:netProductionLabel.setToolTipText("")
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JComponent
+ClassName:JComponent
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JComponent.java
+InvokedMethodSig:public void setToolTipText(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:564 InvoName:netProductionLabel.setText("+" + net)
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JLabel
+ClassName:JLabel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JLabel.java
+InvokedMethodSig:public void setText(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:568 InvoName:higConst.rcwh(row,NETPRODUCTION_SUMMARY_COLUMN,1,rows)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:574 InvoName:data.getUnitData().getExpertProduction()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.UnitData
+ClassName:UnitData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExpertProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:574 InvoName:data.getUnitData()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.LabourData.LocationData
+ClassName:LocationData
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java
+InvokedMethodSig:public net.sf.freecol.client.gui.panel.LabourData.UnitData getUnitData() 
+%%%%%%%%%%
+AddedMethodInvo Line:576 InvoName:getCanvas().getGUI().getImageLibrary()
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.GUI
+ClassName:GUI
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/GUI.java
+InvokedMethodSig:public net.sf.freecol.client.gui.ImageLibrary getImageLibrary() 
+%%%%%%%%%%
+AddedMethodInvo Line:576 InvoName:getCanvas().getGUI()
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.Canvas
+ClassName:Canvas
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/Canvas.java
+InvokedMethodSig:public net.sf.freecol.client.gui.GUI getGUI() 
+%%%%%%%%%%
+AddedMethodInvo Line:576 InvoName:getCanvas()
+PackageName:net.sf.freecol.client.gui.panel
+QualifiedClassName:net.sf.freecol.client.gui.panel.FreeColPanel
+ClassName:FreeColPanel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/FreeColPanel.java
+InvokedMethodSig:public final net.sf.freecol.client.gui.Canvas getCanvas() 
+%%%%%%%%%%
+AddedMethodInvo Line:577 InvoName:icon.setIcon(imageLibrary.getGoodsImageIcon(goods))
+PackageName:javax.swing
+QualifiedClassName:javax.swing.JLabel
+ClassName:JLabel
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/test/src/javax/swing/JLabel.java
+InvokedMethodSig:public void setIcon(javax.swing.Icon) 
+%%%%%%%%%%
+AddedMethodInvo Line:577 InvoName:imageLibrary.getGoodsImageIcon(goods)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.ImageLibrary
+ClassName:ImageLibrary
+InvokedFilePath:/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/ImageLibrary.java
+InvokedMethodSig:public javax.swing.ImageIcon getGoodsImageIcon(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:579 InvoName:higConst.rcwh(row,PRODUCTION_SYMBOL_COLUMN,1,rows)
+mBinding is null

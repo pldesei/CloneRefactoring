@@ -1,0 +1,38 @@
+(startLine=879 endLine=914 srcPath=/root/NewExperiment/freecolFilter/00725/src/net/sf/freecol/server/ai/AIColony.java)
+            if (food >= 2) {
+                for (int i = 0; i < workLocationPlans.size(); i++) {
+                    WorkLocationPlan wlp = workLocationPlans.get(i);
+                    if (wlp.getGoodsType() != foodType) {
+                        Unit bestUnit = null;
+                        int bestProduction = 0;
+                        Iterator<Unit> unitIterator = units.iterator();
+                        while (unitIterator.hasNext()) {
+                            Unit unit = unitIterator.next();
+                            int production = 0;
+                            WorkLocation location = wlp.getWorkLocation();
+                            if (location instanceof ColonyTile) {
+                                production = ((ColonyTile) wlp.getWorkLocation()).getProductionOf(unit,
+                                                                                                  wlp.getGoodsType());
+                            } else if (location instanceof Building) {
+                                production = ((Building) location).getUnitProductivity(unit);
+                            }
+                            if (bestUnit == null || production > bestProduction || production == bestProduction
+                                && unit.getSkillLevel() < bestUnit.getSkillLevel()) {
+                                bestUnit = unit;
+                                bestProduction = production;
+                            }
+                        }
+                        if (bestUnit != null && wlp.getWorkLocation().canAdd(bestUnit)) {
+                            //use work() instead of setLocation()
+                            //to make sure that unitState is properly updated!
+                            bestUnit.work(wlp.getWorkLocation());
+                            bestUnit.setWorkType(wlp.getGoodsType());
+                            units.remove(bestUnit);
+                            workLocationPlans.remove(wlp);
+                            workerAdded = true;
+                            food = colony.getFoodProduction() - colony.getFoodConsumption();
+                        }
+                    }
+                }
+            }
+

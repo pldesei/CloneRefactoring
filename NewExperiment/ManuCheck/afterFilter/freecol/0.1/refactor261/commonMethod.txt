@@ -1,0 +1,11 @@
+(startLine=798 endLine=806 srcPath=/root/NewExperiment/freecolFilter/00868/src/net/sf/freecol/client/gui/panel/ReportColonyPanel.java)
+    private void addSuggestion(HashMap<UnitType, Suggestion> suggestions,
+                               UnitType old, UnitType expert,
+                               GoodsType work, int amount) {
+        Suggestion suggestion = suggestions.get(expert);
+        // Keep it simple for now.
+        if (suggestion == null || suggestion.amount < amount) {
+            suggestions.put(expert, new Suggestion(old, expert, work, amount));
+        }
+    }
+

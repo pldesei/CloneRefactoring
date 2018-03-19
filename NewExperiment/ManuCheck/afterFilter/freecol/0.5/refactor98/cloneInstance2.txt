@@ -1,0 +1,17 @@
+(startLine=706 endLine=720 srcPath=/root/NewExperiment/freecolFilter/00365/src/net/sf/freecol/server/ai/mission/TransportMission.java)
+                player.getGold() >= europe.getUnitPrice(unitType)) {
+            Element trainUnitInEuropeElement = Message.createNewRootElement("trainUnitInEurope");
+            trainUnitInEuropeElement.setAttribute("unitType", Integer.toString(unitType.getIndex()));
+            try {
+                Element reply = connection.ask(trainUnitInEuropeElement);
+                if (reply.getTagName().equals("trainUnitInEuropeConfirmed")) {
+                    return (AIUnit) getAIMain().getAIObject(
+                            ((Element) reply.getChildNodes().item(0)).getAttribute("ID"));
+                } else {
+                    logger.warning("Could not train the specified unit in europe.");
+                }
+            } catch (IOException e) {
+                logger.warning("Could not send \"trainUnitInEurope\"-message to the server.");
+            }
+        }
+

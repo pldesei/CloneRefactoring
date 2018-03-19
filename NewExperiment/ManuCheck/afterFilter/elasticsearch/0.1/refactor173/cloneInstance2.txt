@@ -1,0 +1,15 @@
+(startLine=202 endLine=214 srcPath=/root/NewExperiment/elasticsearchFilter/00994/src/main/java/org/elasticsearch/index/search/geo/GeoDistanceRangeFilter.java)
+            if (values.isMultiValued()) {
+                GeoPointValues.Iter iter = values.getIter(doc);
+                while (iter.hasNext()) {
+                    GeoPoint point = iter.next();
+                    if (distanceBoundingCheck.isWithin(point.lat(), point.lon())) {
+                        double d = fixedSourceDistance.calculate(point.lat(), point.lon());
+                        if (d >= inclusiveLowerPoint && d <= inclusiveUpperPoint) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            } else {
+

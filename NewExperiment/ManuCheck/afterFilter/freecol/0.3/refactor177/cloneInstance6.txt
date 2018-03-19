@@ -1,0 +1,47 @@
+(startLine=288 endLine=332 srcPath=/root/NewExperiment/freecolFilter/00747/test/src/net/sf/freecol/server/ai/ContactTest.java)
+    public void testNativeMeetsNative() throws Exception {
+        if (server == null) {
+            server = ServerTestHelper.startServer(false, true);
+        }
+        Map map = getTestMap(plains);
+        server.setMapGenerator(new MockMapGenerator(map));
+        Controller c = server.getController();
+        PreGameController pgc = (PreGameController)c;
+        try {
+            pgc.startGame();
+        } catch (FreeColException e) {
+            fail("Failed to start game");
+        }
+        Game game = server.getGame();
+        FreeColTestCase.setGame(game);
+
+        ServerPlayer apache = (ServerPlayer) game.getPlayer("model.nation.apache");
+        ServerPlayer iroquois = (ServerPlayer) game.getPlayer("model.nation.iroquois");
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExploredBy(apache, true);
+        tile1.setExploredBy(iroquois, false);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExploredBy(apache, true);
+        tile2.setExploredBy(iroquois, true);
+        Tile tile3 = map.getTile(3, 8);
+        tile3.setExploredBy(apache, false);
+        tile3.setExploredBy(iroquois, true);
+
+        assertFalse(iroquois.hasContacted(apache));
+        assertFalse(apache.hasContacted(iroquois));
+
+        Unit brave1 = new Unit(game, tile1, apache, braveType, UnitState.FORTIFIED);
+        @SuppressWarnings("unused")
+        Unit brave2 = new Unit(game, tile3, iroquois, braveType, UnitState.ACTIVE);
+        InGameController igc = (InGameController) server.getController();
+        igc.move(apache, brave1, tile2);
+
+        assertTrue(iroquois.hasContacted(apache));
+        assertTrue(apache.hasContacted(iroquois));
+        assertEquals(Stance.PEACE, iroquois.getStance(apache));
+        assertEquals(Stance.PEACE, apache.getStance(iroquois));
+
+        // TODO: do we need this?
+        // assertNotNull(iroquois.getTension(apache));
+    }
+

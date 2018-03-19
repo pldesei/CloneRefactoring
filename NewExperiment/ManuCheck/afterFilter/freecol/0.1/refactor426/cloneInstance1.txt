@@ -1,0 +1,17 @@
+(startLine=1234 endLine=1248 srcPath=/root/NewExperiment/freecolFilter/01179/src/net/sf/freecol/common/model/FreeColObject.java)
+        try {
+            try {
+                TransformerFactory factory = TransformerFactory.newInstance();
+                Transformer xmlTransformer = factory.newTransformer();
+                StringWriter stringWriter = new StringWriter();
+                xmlTransformer.transform(new DOMSource(element), new StreamResult(stringWriter));
+                String xml = stringWriter.toString();
+                XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(xml));
+                xsr.nextTag();
+                readFromXML(xsr);
+            } catch (TransformerException e) {
+                logger.log(Level.WARNING, "TransformerException", e);
+                throw new IllegalStateException("TransformerException");
+            }
+        } catch (XMLStreamException e) {
+

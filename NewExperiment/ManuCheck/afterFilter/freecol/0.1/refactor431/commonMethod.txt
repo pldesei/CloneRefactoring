@@ -1,0 +1,33 @@
+(startLine=304 endLine=334 srcPath=/root/NewExperiment/freecolFilter/01223/src/net/sf/freecol/server/model/ServerIndianSettlement.java)
+    /**
+     * Modifies the alarm level towards the given player due to an event
+     * at this settlement, and propagate the alarm upwards through the
+     * tribe.
+     *
+     * +til: Handles tile visibility changes.
+     *
+     * @param serverPlayer The <code>ServerPlayer</code> to modify alarm for.
+     * @param add The amount to add to the current alarm level.
+     * @param propagate If true, propagate the alarm change upward to the
+     *     owning player.
+     * @param cs A <code>ChangeSet</code> to update.
+     */
+    public void csModifyAlarm(Player player, int add, boolean propagate,
+                              ChangeSet cs) {
+        boolean change = changeAlarm(player, add);//-til
+        if (change && player.hasExplored(getTile())) {
+            cs.add(See.perhaps(), this);
+            getTile().updatePlayerExploredTiles();//+til
+        }
+
+        if (propagate) {
+            // Propagate alarm upwards.  Capital has a greater impact.
+            ((ServerPlayer)getOwner()).csModifyTension(player,
+                ((isCapital()) ? add : add/2), this, cs);
+        }
+        logger.finest("Alarm at " + getName()
+            + " toward " + player.getName()
+            + " modified by " + add
+            + " now = " + getAlarm(player).getValue());
+    }
+

@@ -1,0 +1,9 @@
+(startLine=223 endLine=229 srcPath=/root/NewExperiment/elasticsearchFilter/00906/src/test/java/org/elasticsearch/test/integration/indexlifecycle/IndexLifecycleActionTests.java)
+    private String getLocalNodeId(String name) {
+        assert node(name) != null : "no node for name: " + name;
+        Discovery discovery = ((InternalNode) node(name)).injector().getInstance(Discovery.class);
+        String nodeId = discovery.localNode().getId();
+        assertThat(nodeId, not(nullValue()));
+        return nodeId;
+    }
+

@@ -1,0 +1,32 @@
+(startLine=55 endLine=84 srcPath=/root/NewExperiment/freecolFilter/00187/src/net/sf/freecol/client/gui/panel/ReportPanel.java)
+    public ReportPanel(Canvas parent, String title) {
+        super(new FlowLayout(FlowLayout.CENTER, 1000, 10));
+        this.parent = parent;
+        this.library = (ImageLibrary) parent.getImageProvider();
+
+        setLayout(new BorderLayout());
+        
+        header = new JLabel(title, JLabel.CENTER);
+        header.setFont(((Font) UIManager.get("HeaderFont")).deriveFont(0, 48));
+        header.setBorder(new EmptyBorder(20, 0, 20, 0));
+        add(header, BorderLayout.NORTH);
+
+        reportPanel = new JPanel();
+        reportPanel.setOpaque(true);
+        reportPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        scrollPane = new JScrollPane(reportPanel,
+                                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        add(scrollPane, BorderLayout.CENTER);
+
+        ok = new JButton(Messages.message("ok"));
+        ok.setActionCommand(String.valueOf(OK));
+        ok.addActionListener(this);
+        enterPressesWhenFocused(ok);
+        setCancelComponent(ok);
+        add(ok, BorderLayout.SOUTH);
+
+        setSize(850, 600);
+    }
+

@@ -1,0 +1,20 @@
+(startLine=947 endLine=964 srcPath=/root/NewExperiment/freecolFilter/00137/src/net/sf/freecol/common/model/Building.java)
+        for (int i=0; i<unitNodeList.getLength(); i++) {
+            Node node = unitNodeList.item(i);
+            if (!(node instanceof Element)) {
+                continue;
+            }
+            Element unitElement = (Element) node;
+
+            Unit unit = (Unit) getGame().getFreeColGameObject(unitElement.getAttribute("ID"));
+            if (unit != null) {
+                unit.readFromXMLElement(unitElement);
+                if (!units.contains(unit)) {
+                    units.add(unit);
+                }
+            } else {
+                unit = new Unit(getGame(), unitElement);
+                units.add(unit);
+            }
+        }
+

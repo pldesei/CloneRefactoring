@@ -1,0 +1,12 @@
+(startLine=279 endLine=288 srcPath=/root/NewExperiment/freecolFilter/00516/src/net/sf/freecol/client/gui/panel/ReportProductionPanel.java)
+                if (newValue > 0 && percentage < 100) {
+                    int required = Colony.LIBERTY_PER_REBEL * count;
+                    int turns = required / newValue;
+                    if (required % newValue > 0) {
+                        turns++;
+                    }
+                    newLabel = new JLabel(String.valueOf(turns), JLabel.TRAILING);
+                    newLabel.setBorder(FreeColPanel.CELLBORDER);
+                    add(newLabel, higConst.rc(row, percent100Column));
+                } else {
+

@@ -1,0 +1,10 @@
+(startLine=215 endLine=222 srcPath=/root/NewExperiment/hibernateFilter/00348/core/src/main/java/org/hibernate/id/MultipleHiLoPerTableGenerator.java)
+		if ( lo > maxLo ) {
+			IntegralDataTypeHolder hiVal = (IntegralDataTypeHolder) doWorkInNewTransaction( session );
+			lo = ( hiVal.eq( 0 ) ) ? 1 : 0;
+			value = hiVal.copy().multiplyBy( maxLo+1 ).add( lo );
+			if ( log.isDebugEnabled() ) {
+				log.debug("new hi value: " + hiVal);
+			}
+		}
+

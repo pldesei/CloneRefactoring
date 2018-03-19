@@ -1,0 +1,20 @@
+(startLine=275 endLine=292 srcPath=/root/NewExperiment/hibernateFilter/01556/hibernate-core/src/main/java/org/hibernate/dialect/PostgreSQL81Dialect.java)
+	public String getForUpdateString(String aliases, LockOptions lockOptions) {
+		/*
+		 * Parent's implementation for (aliases, lockOptions) ignores aliases.
+		 */
+		if ( "".equals( aliases ) ) {
+			LockMode lockMode = lockOptions.getLockMode();
+			final Iterator<Map.Entry<String, LockMode>> itr = lockOptions.getAliasLockIterator();
+			while ( itr.hasNext() ) {
+				// seek the highest lock mode
+				final Map.Entry<String, LockMode> entry = itr.next();
+				final LockMode lm = entry.getValue();
+				if ( lm.greaterThan( lockMode ) ) {
+					aliases = entry.getKey();
+				}
+			}
+		}
+		return getForUpdateString( aliases );
+	}
+

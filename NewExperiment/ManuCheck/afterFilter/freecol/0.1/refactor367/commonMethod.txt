@@ -1,0 +1,15 @@
+(startLine=504 endLine=516 srcPath=/root/NewExperiment/freecolFilter/00940/src/net/sf/freecol/common/model/Colony.java)
+    /**
+     * Return whether this colony is connected to the HighSeas, or
+     * not. A colony next to a lake would not be landlocked, for
+     * example, but it might well be disconnected from Europe.
+     *
+     * @return a <code>boolean</code> value
+     */
+    public boolean isConnected() {
+        for (Tile t : getTile().getSurroundingTiles(1)) {
+            if (t.isConnected()) return true;
+        }
+        return false;
+    }
+

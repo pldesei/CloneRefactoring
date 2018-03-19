@@ -1,0 +1,16 @@
+(startLine=449 endLine=462 srcPath=/root/NewExperiment/elasticsearchFilter/01065/src/main/java/org/elasticsearch/cluster/routing/allocation/AllocationService.java)
+                if (dirty) {
+                    // now, find the node that we are relocating *from*, and cancel its relocation
+                    RoutingNode relocatingFromNode = routingNodes.node(failedShard.relocatingNodeId());
+                    if (relocatingFromNode != null) {
+                        for (Iterator<MutableShardRouting> it = relocatingFromNode.iterator(); it.hasNext(); ) {
+                            MutableShardRouting shardRouting = it.next();
+                            if (shardRouting.shardId().equals(failedShard.shardId()) && shardRouting.state() == RELOCATING) {
+                                dirty = true;
+                                routingNodes.cancelRelocationForShard( shardRouting );
+                                break;
+                            }
+                        }
+                    }
+                }
+

@@ -1,0 +1,12 @@
+(startLine=88 endLine=97 srcPath=/root/NewExperiment/elasticsearchFilter/01140/src/test/java/org/elasticsearch/benchmark/search/child/ChildSearchBenchmark.java)
+                for (int j = 0; j < BATCH; j++) {
+                    counter++;
+                    request.add(Requests.indexRequest(indexName).type("parent").id(Integer.toString(counter))
+                            .source(parentSource(counter, "test" + counter)));
+                    for (int k = 0; k < CHILD_COUNT; k++) {
+                        request.add(Requests.indexRequest(indexName).type("child").id(Integer.toString(counter) + "_" + k)
+                                .parent(Integer.toString(counter))
+                                .source(childSource(counter, "tag" + k)));
+                    }
+                }
+

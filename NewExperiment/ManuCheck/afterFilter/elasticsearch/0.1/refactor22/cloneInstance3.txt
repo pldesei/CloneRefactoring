@@ -1,0 +1,43 @@
+(startLine=122 endLine=162 srcPath=/root/NewExperiment/elasticsearchFilter/00390/modules/elasticsearch/src/main/java/org/elasticsearch/action/support/single/shard/TransportShardSingleOperationAction.java)
+        private void performFirst() {
+            while (shardIt.hasNextActive()) {
+                final ShardRouting shard = shardIt.nextActive();
+                if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                    if (request.operationThreaded()) {
+                        threadPool.execute(new Runnable() {
+                            @Override public void run() {
+                                try {
+                                    Response response = shardOperation(request, shard.id());
+                                    listener.onResponse(response);
+                                } catch (Exception e) {
+                                    onFailure(shard, e);
+                                }
+                            }
+                        });
+                        return;
+                    } else {
+                        try {
+                            final Response response = shardOperation(request, shard.id());
+                            if (request.listenerThreaded()) {
+                                threadPool.execute(new Runnable() {
+                                    @Override public void run() {
+                                        listener.onResponse(response);
+                                    }
+                                });
+                            } else {
+                                listener.onResponse(response);
+                            }
+                            return;
+                        } catch (Exception e) {
+                            onFailure(shard, e);
+                        }
+                    }
+                }
+            }
+            if (!shardIt.hasNextActive()) {
+                // no local node get, go remote
+                shardIt.reset();
+                perform(null);
+            }
+        }
+

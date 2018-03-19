@@ -1,0 +1,16 @@
+(startLine=165 endLine=178 srcPath=/root/NewExperiment/freecolFilter/00645/src/net/sf/freecol/client/gui/option/OptionGroupUI.java)
+            } else if (o instanceof SelectOption) {
+                final SelectOptionUI soi = new SelectOptionUI((SelectOption) o, editable);
+                if (soi.getLabel().getText().length() > 30) {
+                    add(soi.getLabel(), "newline, span 3, right");
+                } else {
+                    add(soi.getLabel(), "right");
+                }
+                add(soi);
+                ou.add(soi);
+                buttonAdded = false;
+                if (!o.getId().equals(Option.NO_ID)) {
+                    optionUIs.put(o.getId(), soi);
+                }
+            } else if (o instanceof LanguageOption) {
+

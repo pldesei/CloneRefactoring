@@ -1,0 +1,39 @@
+(startLine=1708 endLine=1744 srcPath=/root/NewExperiment/freecolFilter/00790/src/net/sf/freecol/common/model/Tile.java)
+     /**
+      * Returns all the tiles surrounding the given tile within the
+      * given range. The center tile itself is not included.
+      *
+      * @param t
+      *            The tile that lies on the center of the tiles to return.
+      * @param range
+      *            How far away do we need to go starting from the center tile.
+      * @return The tiles surrounding the given tile.
+      */
+     public Iterable<Tile> getSurroundingTiles(final int range) {
+         return new Iterable<Tile>(){
+             public Iterator<Tile> iterator(){
+                 final Iterator<Position> m;
+
+                 if (range == 1)
+                     m = getMap().getAdjacentIterator(getPosition());
+                 else
+                     m = getMap().getCircleIterator(getPosition(), true, range);
+
+                 return new Iterator<Tile>(){
+                     public boolean hasNext() {
+                         return m.hasNext();
+}
+
+                     public Tile next() {
+                         return getMap().getTile(m.next());
+         }
+
+                     public void remove() {
+                         m.remove();
+     }
+                 };
+             }
+         };
+
+     }
+

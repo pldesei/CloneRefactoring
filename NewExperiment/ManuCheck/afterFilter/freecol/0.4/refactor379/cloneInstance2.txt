@@ -1,0 +1,14 @@
+(startLine=297 endLine=308 srcPath=/root/NewExperiment/freecolFilter/00986/src/net/sf/freecol/server/ai/mission/UnitSeekAndDestroyMission.java)
+    public static PathNode findTarget(AIUnit aiUnit, int range) {
+        Unit unit;
+        Tile startTile;
+        if (aiUnit == null
+            || (unit = aiUnit.getUnit()) == null || unit.isDisposed() 
+            || (startTile = unit.getPathStartTile()) == null) return null;
+
+        return unit.search(startTile,
+            getMissionGoalDecider(aiUnit, UnitSeekAndDestroyMission.class),
+            CostDeciders.avoidIllegal(), range,
+            ((unit.isOnCarrier()) ? ((Unit)unit.getLocation()) : null));
+    }
+

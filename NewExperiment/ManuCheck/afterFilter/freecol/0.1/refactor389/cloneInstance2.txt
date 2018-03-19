@@ -1,0 +1,26 @@
+(startLine=184 endLine=207 srcPath=/root/NewExperiment/freecolFilter/01048/src/net/sf/freecol/server/ai/mission/ScoutingMission.java)
+    public static PathNode findTargetPath(AIUnit aiUnit, boolean deferOK) {
+        if (invalidAIUnitReason(aiUnit) != null) return null;
+        final Unit unit = aiUnit.getUnit();
+        final Tile startTile = unit.getPathStartTile();
+        if (startTile == null) return null;
+
+        PathNode path;
+        final Unit carrier = unit.getCarrier();
+        final GoalDecider gd = getGoalDecider(aiUnit, deferOK);
+        final CostDecider standardCd = CostDeciders.avoidIllegal();
+        final CostDecider relaxedCd = CostDeciders.numberOfTiles();
+
+        // Can the scout legally reach a valid target from where it
+        // currently is?
+        path = unit.searchFullPath(startTile, gd, standardCd,
+                                   MAX_TURNS, carrier);
+        if (path != null) return path;
+
+        // Search again, purely on distance in tiles, which allows
+        // water tiles and thus potentially finds targets that require
+        // a carrier to reach.
+        return unit.searchFullPath(startTile, gd, relaxedCd,
+                                   INFINITY, carrier);
+    }
+

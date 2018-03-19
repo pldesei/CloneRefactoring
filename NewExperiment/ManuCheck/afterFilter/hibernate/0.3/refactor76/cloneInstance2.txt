@@ -1,0 +1,26 @@
+(startLine=87 endLine=110 srcPath=/root/NewExperiment/hibernateFilter/01164/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/returns/AbstractCollectionReference.java)
+			ExpandingCollectionQuerySpace collectionQuerySpace) {
+		final CollectionPersister persister = collectionQuerySpace.getCollectionPersister();
+		final Type type = persister.getElementType();
+		if ( type.isAssociationType() ) {
+			if ( type.isEntityType() ) {
+				final EntityPersister elementPersister = persister.getFactory().getEntityPersister(
+						( (EntityType) type ).getAssociatedEntityName()
+				);
+
+				final ExpandingEntityQuerySpace entityQuerySpace = collectionQuerySpace.addElementEntityQuerySpace(
+						elementPersister
+				);
+				return new CollectionFetchableElementEntityGraph( this, entityQuerySpace );
+			}
+		}
+		else if ( type.isComponentType() ) {
+			final ExpandingCompositeQuerySpace compositeQuerySpace = collectionQuerySpace.addElementCompositeQuerySpace(
+					(CompositeType) type
+			);
+			return new CollectionFetchableElementCompositeGraph( this, compositeQuerySpace );
+		}
+
+		return null;
+	}
+

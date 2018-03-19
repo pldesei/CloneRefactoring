@@ -1,0 +1,66 @@
+(startLine=2141 endLine=2204 srcPath=/root/NewExperiment/freecolFilter/00340/src/net/sf/freecol/client/control/InGameController.java)
+    /**
+     * Equips or unequips a <code>Unit</code> with a certain type of
+     * <code>Goods</code>.
+     * 
+     * @param unit The <code>Unit</code>.
+     * @param type an <code>EquipmentType</code> value
+     * @param amount How many of these goods the unit should have.
+     */
+    public void equipUnit(Unit unit, EquipmentType type, int amount) {
+        if (freeColClient.getGame().getCurrentPlayer() != freeColClient.getMyPlayer()) {
+            freeColClient.getCanvas().showInformationMessage("notYourTurn");
+            return;
+        }
+        if (amount == 0) {
+            // no changes
+            return;
+        }
+
+        Client client = freeColClient.getClient();
+        Player myPlayer = freeColClient.getMyPlayer();
+
+        Unit carrier = null;
+        if (unit.getLocation() instanceof Unit) {
+            carrier = (Unit) unit.getLocation();
+            leaveShip(unit);
+        }
+
+        Element equipUnitElement = Message.createNewRootElement("equipUnit");
+        equipUnitElement.setAttribute("unit", unit.getId());
+        equipUnitElement.setAttribute("type", type.getId());
+        equipUnitElement.setAttribute("amount", Integer.toString(amount));
+
+        if (amount > 0) {
+            for (AbstractGoods requiredGoods : type.getGoodsRequired()) {
+                GoodsType goodsType = requiredGoods.getType();
+                if (unit.isInEurope()) {
+                    if (!myPlayer.canTrade(goodsType)) {
+                        payArrears(goodsType);
+                        if (!myPlayer.canTrade(goodsType)) {
+                            return; // The user cancelled the action.
+                        }
+                    }
+                }
+            }
+            for (int count = 0; count < amount; count++) {
+                unit.equipWith(type);
+            }
+        } else {
+            for (int count = 0; count > amount; count--) {
+                unit.removeEquipment(type);
+            }
+        }
+
+        freeColClient.getCanvas().updateGoldLabel();
+
+        client.sendAndWait(equipUnitElement);
+
+        if (unit.getLocation() instanceof Colony || unit.getLocation() instanceof Building
+                || unit.getLocation() instanceof ColonyTile) {
+            putOutsideColony(unit);
+        } else if (carrier != null) {
+            boardShip(unit, carrier);
+        }
+    }
+

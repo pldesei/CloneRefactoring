@@ -1,0 +1,122 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/00483
+predFragLineRange:195-233
+predMethodLineRange:194-257
+nextLineRange:231-289
+predStrMethodInvoNames:
+[dropTemporaryTableAfterUse, getDialect, getFactory, getDropTemporaryTableString, getDialect, getFactory, getTemporaryIdTableName, createStatement, createStatement, executeUpdate, close, unableToDropTemporaryIdTable, getMessage, shouldIsolateTemporaryTableDDL, isDataDefinitionInTransactionSupported, getSettings, getFactory, doIsolatedWork, doNonTransactedWork, doWork, getConnection, getConnectionManager, getJDBCContext, afterStatement, getConnectionManager, getJDBCContext, prepareStatement, getConnectionManager, getJDBCContext, getTemporaryIdTableName, executeUpdate, unableToCleanupTemporaryIdTable, close]
+%%%%%%%%%%
+AddedMethodInvo Line:241 InvoName:LOG.warn("unable to drop temporary id table after use [" + e.getMessage() + "]")
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:250 InvoName:session.getTransactionCoordinator().getTransaction().createIsolationDelegate().delegateWork(work,getFactory().getSettings().isDataDefinitionInTransactionSupported())
+PackageName:org.hibernate.engine.transaction.spi
+QualifiedClassName:org.hibernate.engine.transaction.spi.IsolationDelegate
+ClassName:IsolationDelegate
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/transaction/spi/IsolationDelegate.java
+InvokedMethodSig:public abstract void delegateWork(org.hibernate.jdbc.Work, boolean) throws org.hibernate.HibernateException
+%%%%%%%%%%
+AddedMethodInvo Line:250 InvoName:session.getTransactionCoordinator().getTransaction().createIsolationDelegate()
+PackageName:org.hibernate.engine.transaction.spi
+QualifiedClassName:org.hibernate.engine.transaction.spi.TransactionImplementor
+ClassName:TransactionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/transaction/spi/TransactionImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.transaction.spi.IsolationDelegate createIsolationDelegate() 
+%%%%%%%%%%
+AddedMethodInvo Line:250 InvoName:session.getTransactionCoordinator().getTransaction()
+PackageName:org.hibernate.engine.transaction.spi
+QualifiedClassName:org.hibernate.engine.transaction.spi.TransactionCoordinator
+ClassName:TransactionCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/transaction/spi/TransactionCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.transaction.spi.TransactionImplementor getTransaction() 
+%%%%%%%%%%
+AddedMethodInvo Line:250 InvoName:session.getTransactionCoordinator()
+PackageName:org.hibernate.engine
+QualifiedClassName:org.hibernate.engine.SessionImplementor
+ClassName:SessionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/SessionImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.transaction.spi.TransactionCoordinator getTransactionCoordinator() 
+%%%%%%%%%%
+AddedMethodInvo Line:256 InvoName:session.getTransactionCoordinator().getJdbcCoordinator().getLogicalConnection().getShareableConnectionProxy()
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.LogicalConnection
+ClassName:LogicalConnection
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/jdbc/spi/LogicalConnection.java
+InvokedMethodSig:public abstract java.sql.Connection getShareableConnectionProxy() 
+%%%%%%%%%%
+AddedMethodInvo Line:256 InvoName:session.getTransactionCoordinator().getJdbcCoordinator().getLogicalConnection()
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.JdbcCoordinator
+ClassName:JdbcCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/jdbc/spi/JdbcCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.LogicalConnectionImplementor getLogicalConnection() 
+%%%%%%%%%%
+AddedMethodInvo Line:256 InvoName:session.getTransactionCoordinator().getJdbcCoordinator()
+PackageName:org.hibernate.engine.transaction.spi
+QualifiedClassName:org.hibernate.engine.transaction.spi.TransactionCoordinator
+ClassName:TransactionCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/transaction/spi/TransactionCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.JdbcCoordinator getJdbcCoordinator() 
+%%%%%%%%%%
+AddedMethodInvo Line:256 InvoName:session.getTransactionCoordinator()
+PackageName:org.hibernate.engine
+QualifiedClassName:org.hibernate.engine.SessionImplementor
+ClassName:SessionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/SessionImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.transaction.spi.TransactionCoordinator getTransactionCoordinator() 
+%%%%%%%%%%
+AddedMethodInvo Line:260 InvoName:work.execute(connection)
+PackageName:org.hibernate.hql.ast.exec
+QualifiedClassName:org.hibernate.hql.ast.exec.AbstractStatementExecutor.TemporaryTableDropWork
+ClassName:TemporaryTableDropWork
+InnerClass
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/hql/ast/exec/AbstractStatementExecutor.java
+InvokedMethodSig:public void execute(java.sql.Connection) 
+%%%%%%%%%%
+AddedMethodInvo Line:261 InvoName:session.getTransactionCoordinator().getJdbcCoordinator().getLogicalConnection().afterStatementExecution()
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.LogicalConnectionImplementor
+ClassName:LogicalConnectionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/jdbc/spi/LogicalConnectionImplementor.java
+InvokedMethodSig:public abstract void afterStatementExecution() 
+%%%%%%%%%%
+AddedMethodInvo Line:261 InvoName:session.getTransactionCoordinator().getJdbcCoordinator().getLogicalConnection()
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.JdbcCoordinator
+ClassName:JdbcCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/jdbc/spi/JdbcCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.LogicalConnectionImplementor getLogicalConnection() 
+%%%%%%%%%%
+AddedMethodInvo Line:261 InvoName:session.getTransactionCoordinator().getJdbcCoordinator()
+PackageName:org.hibernate.engine.transaction.spi
+QualifiedClassName:org.hibernate.engine.transaction.spi.TransactionCoordinator
+ClassName:TransactionCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/transaction/spi/TransactionCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.JdbcCoordinator getJdbcCoordinator() 
+%%%%%%%%%%
+AddedMethodInvo Line:261 InvoName:session.getTransactionCoordinator()
+PackageName:org.hibernate.engine
+QualifiedClassName:org.hibernate.engine.SessionImplementor
+ClassName:SessionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/SessionImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.transaction.spi.TransactionCoordinator getTransactionCoordinator() 
+%%%%%%%%%%
+AddedMethodInvo Line:272 InvoName:session.getTransactionCoordinator().getJdbcCoordinator().getStatementPreparer()
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.JdbcCoordinator
+ClassName:JdbcCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/jdbc/spi/JdbcCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.StatementPreparer getStatementPreparer() 
+%%%%%%%%%%
+AddedMethodInvo Line:272 InvoName:session.getTransactionCoordinator().getJdbcCoordinator()
+PackageName:org.hibernate.engine.transaction.spi
+QualifiedClassName:org.hibernate.engine.transaction.spi.TransactionCoordinator
+ClassName:TransactionCoordinator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/transaction/spi/TransactionCoordinator.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.JdbcCoordinator getJdbcCoordinator() 
+%%%%%%%%%%
+AddedMethodInvo Line:272 InvoName:session.getTransactionCoordinator()
+PackageName:org.hibernate.engine
+QualifiedClassName:org.hibernate.engine.SessionImplementor
+ClassName:SessionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/engine/SessionImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.transaction.spi.TransactionCoordinator getTransactionCoordinator() 

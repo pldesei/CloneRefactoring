@@ -1,0 +1,18 @@
+(startLine=3913 endLine=3928 srcPath=/root/NewExperiment/freecolFilter/01270/src/net/sf/freecol/server/model/ServerPlayer.java)
+        if (isIndian()) {
+            // Ignore native-to-native contacts.
+            if (other.isIndian()) {
+                return false;
+            } else {
+                String key = other.getContactKey(this);
+                if (key != null) {
+                    cs.addMessage(See.only(other),
+                        new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                            key, other, this));
+                }
+                cs.addHistory(other, new HistoryEvent(turn,
+                        HistoryEvent.EventType.MEET_NATION, other)
+                    .addStringTemplate("%nation%", getNationName()));
+            }
+        } else { // (serverPlayer.isEuropean)
+

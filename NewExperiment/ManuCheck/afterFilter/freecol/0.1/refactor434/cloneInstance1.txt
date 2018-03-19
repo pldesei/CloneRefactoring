@@ -1,0 +1,11 @@
+(startLine=426 endLine=434 srcPath=/root/NewExperiment/freecolFilter/01238/src/net/sf/freecol/client/control/InGameInputHandler.java)
+        } else {
+            if ((attacker = game.getFreeColGameObject(str, Unit.class)) == null
+                && (attacker = selectUnitFromElement(game, element, str)) == null) {
+                logger.warning("Attack animation"
+                    + " for: " + client.getMyPlayer().getId()
+                    + " incorrectly omitted attacker: " + str);
+                return null;
+            }
+        }
+

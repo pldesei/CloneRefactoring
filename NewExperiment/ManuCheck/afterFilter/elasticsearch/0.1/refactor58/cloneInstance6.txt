@@ -1,0 +1,13 @@
+(startLine=149 endLine=159 srcPath=/root/NewExperiment/elasticsearchFilter/00643/src/main/java/org/elasticsearch/action/admin/indices/validate/query/ValidateQueryRequest.java)
+    public ValidateQueryRequest query(XContentBuilder builder) {
+        try {
+            this.querySource = builder.underlyingBytes();
+            this.querySourceOffset = 0;
+            this.querySourceLength = builder.underlyingBytesLength();
+            this.querySourceUnsafe = false;
+            return this;
+        } catch (IOException e) {
+            throw new ElasticSearchGenerationException("Failed to generate [" + builder + "]", e);
+        }
+    }
+

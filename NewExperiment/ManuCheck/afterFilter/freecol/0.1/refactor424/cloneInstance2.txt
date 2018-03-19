@@ -1,0 +1,12 @@
+(startLine=423 endLine=432 srcPath=/root/NewExperiment/freecolFilter/01170/src/net/sf/freecol/server/ai/AIMain.java)
+        while (fit.hasNext()) {
+            FreeColGameObject f = fit.next();
+            if ((f instanceof Unit
+                 || f instanceof Colony
+                 || (f instanceof Player && !((Player)f).isUnknownEnemy()))
+                && !aiObjects.containsKey(f.getId())) {
+                logger.warning("Added missing AIObject for: " + f.getId());
+                setFreeColGameObject(f.getId(), f);
+            }
+        }
+

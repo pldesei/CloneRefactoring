@@ -1,0 +1,11 @@
+(startLine=780 endLine=788 srcPath=/root/NewExperiment/freecolFilter/00091/src/net/sf/freecol/common/model/Colony.java)
+        while (colonyTileIterator.hasNext()) {
+            ColonyTile colonyTile = (ColonyTile) colonyTileIterator.next();
+            if (colonyTile.canAdd(unit) && unit.getFarmedPotential(goodsType, colonyTile.getWorkTile()) > highestProduction
+                    && (colonyTile.getWorkTile().isLand() || getBuilding(Building.DOCK).isBuilt())
+                    && (colonyTile.getWorkTile().getNationOwner() == Player.NO_NATION || colonyTile.getWorkTile().getNationOwner() == unit.getNation())) {
+                highestProduction = unit.getFarmedPotential(goodsType, colonyTile.getWorkTile());
+                bestPick = colonyTile;
+            }
+        }
+

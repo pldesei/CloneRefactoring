@@ -1,0 +1,9 @@
+(startLine=124 endLine=130 srcPath=/root/NewExperiment/hibernateFilter/00563/hibernate-core/src/main/java/org/hibernate/metamodel/source/hbm/HbmHelper.java)
+	public static String getPropertyAccessorName(Element element, boolean isEmbedded, String defaultAccess) {
+		return DomHelper.extractAttributeValue(
+				element,
+				"access",
+				isEmbedded ? "embedded" : defaultAccess
+		);
+	}
+

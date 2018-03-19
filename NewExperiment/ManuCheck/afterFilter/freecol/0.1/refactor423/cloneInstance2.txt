@@ -1,0 +1,12 @@
+(startLine=298 endLine=307 srcPath=/root/NewExperiment/freecolFilter/01169/src/net/sf/freecol/common/model/StringTemplate.java)
+    public StringTemplate addName(String value) {
+        if (templateType == TemplateType.LABEL) {
+            requireReplacements();
+            replacements.add(new StringTemplate(value, TemplateType.NAME));
+        } else {
+            throw new IllegalArgumentException("Cannot add a single string to StringTemplate type "
+                                               + templateType.toString());
+        }
+        return this;
+    }
+

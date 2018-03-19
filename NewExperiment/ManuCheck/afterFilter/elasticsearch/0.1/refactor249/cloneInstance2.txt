@@ -1,0 +1,14 @@
+(startLine=96 endLine=107 srcPath=/root/NewExperiment/elasticsearchFilter/01698/src/main/java/org/elasticsearch/index/search/child/ParentIdsFilter.java)
+        if (numFoundParents == 1) {
+            BytesRef id = globalValues.lookupOrd((int) parentIdxs.get(0));
+            if (nonNestedDocsFilter != null) {
+                List<Filter> filters = Arrays.asList(
+                        new TermFilter(new Term(UidFieldMapper.NAME, Uid.createUidAsBytes(parentType, id))),
+                        nonNestedDocsFilter
+                );
+                return new AndFilter(filters);
+            } else {
+                return new TermFilter(new Term(UidFieldMapper.NAME, Uid.createUidAsBytes(parentType, id)));
+            }
+        } else {
+

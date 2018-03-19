@@ -1,0 +1,27 @@
+(startLine=122 endLine=146 srcPath=/root/NewExperiment/elasticsearchFilter/00686/src/main/java/org/elasticsearch/index/cache/id/simple/SimpleIdCache.java)
+                    try {
+                        do {
+                            Term term = termEnum.term();
+                            if (term == null || term.field() != field) break;
+                            // TODO we can optimize this, since type is the prefix, and we get terms ordered
+                            // so, only need to move to the next type once its different
+                            Uid uid = Uid.createUid(term.text());
+
+                            TypeBuilder typeBuilder = readerBuilder.get(uid.type());
+                            if (typeBuilder == null) {
+                                typeBuilder = new TypeBuilder(reader);
+                                readerBuilder.put(StringHelper.intern(uid.type()), typeBuilder);
+                            }
+
+                            HashedBytesArray idAsBytes = checkIfCanReuse(builders, new HashedBytesArray(uid.id()));
+                            termDocs.seek(termEnum);
+                            while (termDocs.next()) {
+                                // when traversing, make sure to ignore deleted docs, so the key->docId will be correct
+                                if (!reader.isDeleted(termDocs.doc())) {
+                                    typeBuilder.idToDoc.put(idAsBytes, termDocs.doc());
+                                    typeBuilder.docToId[termDocs.doc()] = idAsBytes;
+                                }
+                            }
+                        } while (termEnum.next());
+                    } finally {
+

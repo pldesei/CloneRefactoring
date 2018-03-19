@@ -1,0 +1,33 @@
+(startLine=914 endLine=944 srcPath=/root/NewExperiment/freecolFilter/01375/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+    /**
+     * Update the transport of a unit following a target change.
+     *
+     * If the target has changed
+     * - drop all non-boarded transport unless the target is the same
+     * - dump boarded transport with no target
+     * - requeue all boarded transport unless the target is the same
+     *
+     * @param aiu The <code>AIUnit</code> to check.
+     * @param oldTarget The old target <code>Location</code>.
+     * @param lb A <code>LogBuilder</code> to log to.
+     */
+    public void updateTransport(AIUnit aiu, Location oldTarget, LogBuilder lb) {
+        final AIUnit aiCarrier = aiu.getTransport();
+        final Mission newMission = aiu.getMission();
+        final Location newTarget = (newMission == null) ? null
+            : newMission.getTarget();
+        TransportMission tm;
+        if (aiCarrier != null
+            && (tm = aiCarrier.getMission(TransportMission.class)) != null
+            && !Map.isSameLocation(oldTarget, newTarget)) {
+            if (aiu.getUnit().getLocation() != aiCarrier.getUnit()) {
+                lb.add(", drop transport ", aiCarrier.getUnit());
+                aiu.dropTransport();
+            } else if (newTarget == null) {
+                tm.dumpTransportable(aiu, lb);
+            } else {
+                tm.requeueTransportable(aiu, lb);
+            }
+        }
+    }
+

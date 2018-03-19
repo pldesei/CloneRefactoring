@@ -1,0 +1,13 @@
+(startLine=1359 endLine=1369 srcPath=/root/NewExperiment/freecolFilter/00136/src/net/sf/freecol/client/gui/Canvas.java)
+    /**
+     * Adds a component centered on this Canvas. Removes the statuspanel if visible
+     * (and <code>comp != statusPanel</code>).
+     * @param comp The component to add to this ToEuropePanel.
+     * @param i The layer to add the component to (see JLayeredPane).
+     */
+    public void addCentered(Component comp, Integer i) { 
+        comp.setLocation(getWidth() / 2 - comp.getWidth() / 2,
+                (getHeight() + getMenuBarHeight()) / 2 - comp.getHeight() / 2);
+        add(comp, i);
+    }
+

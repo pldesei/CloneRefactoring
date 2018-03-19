@@ -1,0 +1,102 @@
+(startLine=99 endLine=198 srcPath=/root/NewExperiment/freecolFilter/00517/src/net/sf/freecol/client/gui/panel/ReportProductionPanel.java)
+    private void update() {
+
+        List<GoodsType> selectedTypes = new ArrayList<GoodsType>();
+
+        reportPanel.removeAll();
+
+        reportPanel.add(selectLabel, "span, split " + (NUMBER_OF_GOODS + 2));
+
+        for (int index = 0; index < NUMBER_OF_GOODS; index++) {
+            reportPanel.add(boxes[index]);
+            int selectedIndex = boxes[index].getSelectedIndex();
+            if (selectedIndex > 0) {
+                selectedTypes.add(goodsTypes.get(selectedIndex - 1));
+            }
+        }
+
+        reportPanel.add(selectButton, "wrap 20");
+
+        if (!selectedTypes.isEmpty()) {
+            Player player = getCanvas().getClient().getMyPlayer();
+            List<Colony> colonies = new ArrayList<Colony>(player.getColonies());
+
+            TypeCountMap<BuildingType> buildingCount = new TypeCountMap<BuildingType>();
+            List<List<BuildingType>> basicBuildingTypes = new ArrayList<List<BuildingType>>();
+            for (GoodsType goodsType : selectedTypes) {
+                List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
+                for (BuildingType buildingType : FreeCol.getSpecification().getBuildingTypeList()) {
+                    if (goodsType.equals(buildingType.getProducedGoodsType())
+                        || !buildingType.getModifierSet(goodsType.getId()).isEmpty()) {
+                        BuildingType firstLevel = buildingType.getFirstLevel();
+                        if (!buildingTypes.contains(firstLevel)) {
+                            buildingTypes.add(firstLevel);
+                        }
+                    }
+                }
+                basicBuildingTypes.add(buildingTypes);
+            }
+
+            JLabel newLabel;
+
+            // labels
+            newLabel = new JLabel(Messages.message("Colony"));
+            newLabel.setBorder(FreeColPanel.TOPLEFTCELLBORDER);
+            reportPanel.add(newLabel, "newline 20");
+
+            for (int index = 0; index < selectedTypes.size(); index++) {
+                newLabel = new JLabel(selectedTypes.get(index).getName());
+                newLabel.setBorder(FreeColPanel.TOPCELLBORDER);
+                reportPanel.add(newLabel);
+
+                for (BuildingType buildingType : basicBuildingTypes.get(index)) {
+                    newLabel = new JLabel(buildingType.getName());
+                    newLabel.setBorder(FreeColPanel.TOPCELLBORDER);
+                    reportPanel.add(newLabel);
+                }
+            }
+
+
+            Collections.sort(colonies, getCanvas().getClient().getClientOptions().getColonyComparator());
+
+            int[] totalProduction = new int[selectedTypes.size()];
+
+            for (Colony colony : colonies) {
+
+                // colonyButton
+                JButton colonyButton = getLinkButton(colony.getName(), null, colony.getId());
+                colonyButton.setBorder(FreeColPanel.LEFTCELLBORDER);
+                reportPanel.add(colonyButton, "newline");
+
+                // production
+                for (int index = 0; index < selectedTypes.size(); index++) {
+                    GoodsType goodsType = selectedTypes.get(index);
+                    int newValue = colony.getProductionNetOf(goodsType);
+                    totalProduction[index] += newValue;
+                    Goods goods = new Goods(colony.getGame(), colony, goodsType, newValue);
+                    GoodsLabel goodsLabel = new GoodsLabel(goods, getCanvas());
+                    goodsLabel.setHorizontalAlignment(JLabel.LEADING);
+                    goodsLabel.setBorder(FreeColPanel.CELLBORDER);
+                    reportPanel.add(goodsLabel);
+
+                    for (BuildingType buildingType : basicBuildingTypes.get(index)) {
+                        Building building = colony.getBuilding(buildingType);
+                        if (building == null) {
+                            newLabel = new JLabel();
+                            newLabel.setBorder(FreeColPanel.CELLBORDER);
+                            reportPanel.add(newLabel);
+                        } else {
+                            buildingCount.incrementCount(building.getType(), 1);
+                            BuildingPanel buildingPanel = new BuildingPanel(building, getCanvas());
+                            buildingPanel.setBorder(FreeColPanel.CELLBORDER);
+                            reportPanel.add(buildingPanel);
+                        }
+                    }
+                }
+            }
+
+        }
+        revalidate();
+        repaint();
+    }
+

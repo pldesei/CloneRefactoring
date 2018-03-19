@@ -1,0 +1,17 @@
+(startLine=247 endLine=261 srcPath=/root/NewExperiment/elasticsearchFilter/00028/modules/elasticsearch/src/main/java/org/elasticsearch/index/mapper/MapperService.java)
+        if (dotIndex != -1) {
+            String possibleType = smartName.substring(0, dotIndex);
+            DocumentMapper possibleDocMapper = mappers.get(possibleType);
+            if (possibleDocMapper != null) {
+                String possibleName = smartName.substring(dotIndex + 1);
+                FieldMappers mappers = possibleDocMapper.mappers().fullName(possibleName);
+                if (mappers != null) {
+                    return mappers;
+                }
+                mappers = possibleDocMapper.mappers().indexName(possibleName);
+                if (mappers != null) {
+                    return mappers;
+                }
+            }
+        }
+

@@ -1,0 +1,17 @@
+(startLine=1445 endLine=1459 srcPath=/root/NewExperiment/freecolFilter/00199/src/net/sf/freecol/client/control/InGameController.java)
+    public void clearSpeciality(Unit unit) {
+        if (freeColClient.getGame().getCurrentPlayer() != freeColClient.getMyPlayer()) {
+            freeColClient.getCanvas().showInformationMessage("notYourTurn");
+            return;
+        }
+        
+        Client client = freeColClient.getClient();
+
+        Element clearSpecialityElement = Message.createNewRootElement("clearSpeciality");
+        clearSpecialityElement.setAttribute("unit", unit.getID());
+
+        unit.clearSpeciality();
+
+        client.sendAndWait(clearSpecialityElement);
+    }
+

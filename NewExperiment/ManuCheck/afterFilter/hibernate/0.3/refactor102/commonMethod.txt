@@ -1,0 +1,18 @@
+(startLine=465 endLine=480 srcPath=/root/NewExperiment/hibernateFilter/01685/hibernate-core/src/main/java/org/hibernate/cfg/AbstractPropertyHolder.java)
+	private static AssociationOverride[] buildAssociationOverrides(XAnnotatedElement element, String path) {
+		AssociationOverride singleOverride = element.getAnnotation( AssociationOverride.class );
+		AssociationOverrides pluralOverrides = element.getAnnotation( AssociationOverrides.class );
+
+		AssociationOverride[] overrides;
+		if ( singleOverride != null ) {
+			overrides = new AssociationOverride[] { singleOverride };
+		}
+		else if ( pluralOverrides != null ) {
+			overrides = pluralOverrides.value();
+		}
+		else {
+			overrides = null;
+		}
+		return overrides;
+	}
+

@@ -1,0 +1,22 @@
+(startLine=250 endLine=269 srcPath=/root/NewExperiment/elasticsearchFilter/01181/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
+        public void collect(int doc) throws IOException {
+            final Query query = getQuery(doc);
+            if (query == null) {
+                // log???
+                return;
+            }
+            // run the query
+            try {
+                collector.reset();
+                searcher.search(query, collector);
+                if (collector.exists()) {
+                    topDocsCollector.collect(doc);
+                    if (facetAndAggregatorCollector != null) {
+                        facetAndAggregatorCollector.collect(doc);
+                    }
+                }
+            } catch (IOException e) {
+                logger.warn("[" + spare.bytes.utf8ToString() + "] failed to execute query", e);
+            }
+        }
+

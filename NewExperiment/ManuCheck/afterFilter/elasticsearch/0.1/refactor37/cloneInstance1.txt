@@ -1,0 +1,13 @@
+(startLine=65 endLine=75 srcPath=/root/NewExperiment/elasticsearchFilter/00513/modules/elasticsearch/src/main/java/org/apache/lucene/index/TrackingConcurrentMergeScheduler.java)
+        } finally {
+            currentMerges.decrementAndGet();
+            totalMerges.incrementAndGet();
+            long took = System.currentTimeMillis() - time;
+            totalMergeTime.addAndGet(took);
+            if (took > 20000) { // if more than 20 seconds, DEBUG log it
+                logger.debug("merge [{}] done, took [{}]", merge.info.name, TimeValue.timeValueMillis(took));
+            } else if (logger.isTraceEnabled()) {
+                logger.trace("merge [{}] done, took [{}]", merge.info.name, TimeValue.timeValueMillis(took));
+            }
+        }
+

@@ -1,0 +1,10 @@
+(startLine=566 endLine=573 srcPath=/root/NewExperiment/freecolFilter/00693/src/net/sf/freecol/FreeCol.java)
+        if (saveDirectory.exists()) {
+            if (saveDirectory.isFile()) {
+                System.out.println("Could not create freecol/save under "
+                        + userHome + " because there "
+                        + "already exists a regular file with the same name.");
+                return null;
+            }
+        } else {
+

@@ -1,0 +1,27 @@
+(startLine=3043 endLine=3067 srcPath=/root/NewExperiment/freecolFilter/00103/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Promotes this unit.
+     */
+    public void promote() {
+        String oldName = getName();
+        String nation = owner.getNationAsString();
+
+        if (getType() == PETTY_CRIMINAL) {
+            setType(INDENTURED_SERVANT);
+        } else if (getType() == INDENTURED_SERVANT) {
+            setType(FREE_COLONIST);
+        } else if (getType() == FREE_COLONIST) {
+            setType(VETERAN_SOLDIER);
+        } else if (getType() == VETERAN_SOLDIER && getOwner().getRebellionState() > 1) {
+            setType(COLONIAL_REGULAR);
+        }
+
+        String newName = getName();
+        if (!newName.equals(oldName)) {
+            addModelMessage(this, "model.unit.unitImproved",
+                            new String[][] {{"%oldName%", oldName},
+                                            {"%newName%", getName()},
+                                            {"%nation%", nation}});
+        }
+    }
+

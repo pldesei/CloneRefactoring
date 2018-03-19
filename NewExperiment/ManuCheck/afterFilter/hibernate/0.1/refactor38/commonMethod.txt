@@ -1,0 +1,10 @@
+(startLine=158 endLine=165 srcPath=/root/NewExperiment/hibernateFilter/00837/hibernate-entitymanager/src/test/java/org/hibernate/ejb/test/ejb3configuration/InterceptorTest.java)
+    protected Map basicSettings() {
+		return SettingsGenerator.generateSettings(
+				Environment.HBM2DDL_AUTO, "create-drop",
+				Environment.USE_NEW_ID_GENERATOR_MAPPINGS, "true",
+				Environment.DIALECT, Dialect.getDialect().getClass().getName(),
+				AvailableSettings.LOADED_CLASSES, Arrays.asList( getAnnotatedClasses() )
+		);
+    }
+

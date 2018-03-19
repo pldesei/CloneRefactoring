@@ -1,0 +1,6 @@
+(startLine=75 endLine=78 srcPath=/root/NewExperiment/hibernateFilter/00319/testsuite/src/test/java/org/hibernate/test/readonly/AbstractReadOnlyTest.java)
+	protected void assertDeleteCount(int expected) {
+		int deletes = ( int ) getSessions().getStatistics().getEntityDeleteCount();
+		assertEquals( "unexpected delete counts", expected, deletes );
+	}
+

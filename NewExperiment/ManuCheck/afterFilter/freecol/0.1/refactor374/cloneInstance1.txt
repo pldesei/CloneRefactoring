@@ -1,0 +1,15 @@
+(startLine=754 endLine=766 srcPath=/root/NewExperiment/freecolFilter/00939/src/net/sf/freecol/server/ai/ColonyPlan.java)
+                secondaryWorkers <= MAX_LEVEL) {
+                GoodsType producedGoods = secondaryRawMaterial.getProducedMaterial();
+                Building b = colony.getBuildingForProducing(producedGoods);
+                if (producedGoods != null && b != null) {
+                    WorkLocationPlan wlp = new WorkLocationPlan(getAIMain(), b, producedGoods);
+                    workLocationPlans.add(wlp);
+                    colonistAdded = true;
+                    secondaryWorkers++;
+                    if (secondaryRawMaterial == ore) {
+                        blacksmithAdded = true;
+                    }
+                }
+            }
+

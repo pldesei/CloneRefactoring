@@ -1,0 +1,15 @@
+(startLine=86 endLine=98 srcPath=/root/NewExperiment/elasticsearchFilter/00544/modules/elasticsearch/src/main/java/org/elasticsearch/search/facet/terms/doubles/TermsDoubleOrdinalsFacetCollector.java)
+        } else {
+            // add type filter if there is exact doc mapper associated with it
+            if (smartMappers.hasDocMapper()) {
+                setFilter(context.filterCache().cache(smartMappers.docMapper().typeFilter()));
+            }
+
+            if (smartMappers.mapper().fieldDataType() != FieldDataType.DefaultTypes.DOUBLE) {
+                throw new ElasticSearchIllegalArgumentException("Field [" + fieldName + "] is not of double type, can't run terms double facet collector on it");
+            }
+
+            this.indexFieldName = smartMappers.mapper().names().indexName();
+            this.fieldDataType = smartMappers.mapper().fieldDataType();
+        }
+

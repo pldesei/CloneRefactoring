@@ -1,0 +1,24 @@
+(startLine=475 endLine=496 srcPath=/root/NewExperiment/freecolFilter/00135/src/net/sf/freecol/client/gui/Canvas.java)
+            !colonyPanel.isShowing()) {
+
+            FreeColDialog confirmDialog = FreeColDialog.createConfirmDialog(messageText, okText, cancelText);
+            confirmDialog.setLocation(getWidth() / 2 - confirmDialog.getWidth() / 2,
+                                      getHeight() / 2 - confirmDialog.getHeight() / 2);
+            add(confirmDialog, MODEL_MESSAGE_LAYER);
+            confirmDialog.requestFocus();
+
+            if (!confirmDialog.getResponseBoolean()) {
+                remove(confirmDialog);
+                if (source instanceof Europe) {
+                    showEuropePanel();
+                } else if (source instanceof Colony) {
+                    showColonyPanel((Colony) source);
+                } else if (source instanceof WorkLocation) {
+                    showColonyPanel(((WorkLocation) source).getColony());
+                }
+            } else {
+                remove(confirmDialog);
+                freeColClient.getInGameController().nextModelMessage();
+            }
+        } else {
+

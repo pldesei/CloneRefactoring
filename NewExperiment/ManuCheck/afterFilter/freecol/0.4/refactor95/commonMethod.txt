@@ -1,0 +1,31 @@
+(startLine=143 endLine=171 srcPath=/root/NewExperiment/freecolFilter/00349/src/net/sf/freecol/server/ai/mission/Mission.java)
+    protected void moveRandomly(Connection connection) {
+        Tile thisTile = getUnit().getTile();
+        Unit unit = getUnit();
+        Direction[] randomDirections = unit.getGame().getMap().getRandomDirectionArray();
+        while (unit.getMovesLeft() > 0) {
+            Direction direction = Direction.N;
+            int j;
+            for (j = 0; j < randomDirections.length; j++) {
+                direction = randomDirections[j];
+                if (unit.getGame().getMap().getNeighbourOrNull(direction, thisTile) != null &&
+                    unit.getMoveType(direction) == MoveType.MOVE) {
+                    break;
+                }
+            }
+            if (j == randomDirections.length)
+                break;
+            thisTile = unit.getGame().getMap().getNeighbourOrNull(direction, thisTile);
+
+            Element moveElement = Message.createNewRootElement("move");
+            moveElement.setAttribute("unit", unit.getId());
+            moveElement.setAttribute("direction", direction.toString());
+
+            try {
+                connection.sendAndWait(moveElement);
+            } catch (IOException e) {
+                logger.warning("Could not send \"move\"-message!");
+            }
+        }
+    }
+

@@ -1,0 +1,13 @@
+(startLine=107 endLine=117 srcPath=/root/NewExperiment/elasticsearchFilter/00716/src/main/java/org/elasticsearch/index/query/GeoBoundingBoxFilterParser.java)
+                                } else if (token.isValue()) {
+                                    if (currentFieldName.equals(GeoPointFieldMapper.Names.LAT)) {
+                                        point.lat = parser.doubleValue();
+                                    } else if (currentFieldName.equals(GeoPointFieldMapper.Names.LON)) {
+                                        point.lon = parser.doubleValue();
+                                    } else if (currentFieldName.equals(GeoPointFieldMapper.Names.GEOHASH)) {
+                                        double[] values = GeoHashUtils.decode(parser.text());
+                                        point.lat = values[0];
+                                        point.lon = values[1];
+                                    }
+                                }
+

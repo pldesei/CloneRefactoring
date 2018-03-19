@@ -1,0 +1,7 @@
+(startLine=163 endLine=167 srcPath=/root/NewExperiment/hibernateFilter/01164/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/QuerySpacesImpl.java)
+	private void checkQuerySpaceDoesNotExist(String uid) {
+		if ( querySpaceByUid.containsKey( uid ) ) {
+			throw new IllegalStateException( "Encountered duplicate QuerySpace uid : " + uid );
+		}
+	}
+

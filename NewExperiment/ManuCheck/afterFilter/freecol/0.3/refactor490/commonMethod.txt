@@ -1,0 +1,15 @@
+(startLine=717 endLine=729 srcPath=/root/NewExperiment/freecolFilter/01343/src/net/sf/freecol/common/model/FreeColObject.java)
+    /**
+     * Shorten a string buffer by a trailing delimiter.
+     *
+     * (Cheats, does not really check that the delimiter is there)
+     *
+     * @param sb The <code>StringBuilder</code> to shorten.
+     * @param delim The delimiter to remove.
+     */
+    public static void sbShrink(StringBuilder sb, String delim) {
+        if (sb != null && delim != null) {
+            sb.setLength(sb.length() - delim.length());
+        }
+    }
+

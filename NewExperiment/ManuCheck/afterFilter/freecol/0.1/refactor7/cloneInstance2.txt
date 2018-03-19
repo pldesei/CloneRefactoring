@@ -1,0 +1,11 @@
+(startLine=489 endLine=497 srcPath=/root/NewExperiment/freecolFilter/00056/src/net/sf/freecol/server/control/InGameInputHandler.java)
+                    } else if (!enemyPlayer.canSee(newTile)) {
+                        Element updateElement = Message.createNewRootElement("update");
+                        updateElement.appendChild(newTile.toXMLElement(enemyPlayer, updateElement.getOwnerDocument()));
+                        try {
+                            enemyPlayer.getConnection().send(updateElement);
+                        } catch (IOException e) {
+                            logger.warning("Could not send message to: " + enemyPlayer.getName() + " with connection " + enemyPlayer.getConnection());
+                        }
+                    }
+

@@ -1,0 +1,128 @@
+@relation cloneEval
+
+@attribute numInstance real
+@attribute minLeveDis real
+@attribute localOrClassFamily{true, false}
+@attribute followControlStat {true, false}
+@attribute numMonthOfFile real
+@attribute numLineOfMethod real
+@attribute sizeProForFragVsMethod real
+@attribute numLineOfFrag real
+@attribute numTokenOfFrag real
+@attribute containControlBlock {true, false}
+@attribute cycComplexity real
+@attribute callPro real
+@attribute arithPro real
+@attribute beginControlStat {true, false}
+@attribute sameFile {true, false}
+@attribute samePkg {true, false}
+@attribute sameMethod {true, false}
+@attribute isTest {true, false}
+@attribute globalVars real
+@attribute treeDis real
+@attribute cloneEval {refactored, unrefactored}
+
+@data
+2,6,true,false,0,96,1.0,96,490,true,12,0.484375,0.0,false,true,true,false,true,14,1.0,refactored
+2,14,true,false,0,44,1.0,44,274,true,2,0.40625,0.0,false,true,true,false,true,1,1.0,refactored
+2,0,true,true,0,49,0.3673469387755102,18,92,true,3,0.35714285714285715,0.07142857142857142,true,true,true,true,false,4,1.0,refactored
+2,0,true,true,0,49,0.3673469387755102,18,92,true,3,0.35714285714285715,0.07142857142857142,true,true,true,true,false,4,1.0,refactored
+2,0,false,false,0,21,1.0,21,76,false,3,0.0,0.0,false,false,false,false,false,12,0.375,refactored
+2,0,false,false,0,21,1.0,21,76,false,3,0.0,0.0,false,false,false,false,false,12,0.375,refactored
+2,0,false,false,0,21,1.0,21,76,false,3,0.0,0.0,false,false,false,false,false,12,0.375,refactored
+2,12,false,false,0,37,0.6486486486486487,24,95,true,4,0.23529411764705882,0.0,false,false,false,false,false,5,0.6666666666666666,refactored
+2,12,false,false,0,37,0.972972972972973,36,128,true,6,0.19047619047619047,0.0,false,false,false,false,false,8,0.6666666666666666,refactored
+2,12,false,false,0,37,0.972972972972973,36,128,true,6,0.19047619047619047,0.0,false,false,false,false,false,8,0.6666666666666666,refactored
+2,15,true,false,0,27,1.0,27,149,false,0,0.5714285714285714,0.0,false,true,true,false,true,0,1.0,refactored
+2,15,true,false,0,38,1.0,38,182,false,2,0.5,0.0,false,true,true,false,true,0,1.0,refactored
+2,8,true,false,0,36,1.0,36,306,false,0,0.7096774193548387,0.0,false,true,true,false,true,3,1.0,refactored
+2,8,true,false,0,36,1.0,36,306,false,0,0.7096774193548387,0.0,false,true,true,false,true,3,1.0,refactored
+2,8,true,false,0,36,1.0,36,306,false,0,0.7096774193548387,0.0,false,true,true,false,true,3,1.0,refactored
+2,0,false,false,0,56,0.9285714285714286,52,283,true,11,0.14705882352941177,0.0,false,false,false,false,false,12,1.0,refactored
+2,0,false,false,0,22,1.0,22,134,true,6,0.058823529411764705,0.0,false,false,false,false,false,2,1.0,refactored
+2,0,false,false,0,22,1.0,22,134,true,6,0.058823529411764705,0.0,false,false,false,false,false,2,1.0,refactored
+2,0,false,false,0,22,1.0,22,134,true,6,0.058823529411764705,0.0,false,false,false,false,false,2,1.0,refactored
+2,0,false,false,0,22,1.0,22,134,true,6,0.058823529411764705,0.0,false,false,false,false,false,2,1.0,refactored
+2,0,false,true,0,22,0.36363636363636365,8,70,true,2,0.125,0.0,true,false,false,false,false,5,1.0,refactored
+2,0,false,true,0,22,0.36363636363636365,8,70,true,2,0.125,0.0,true,false,false,false,false,5,1.0,refactored
+2,0,false,true,0,22,0.36363636363636365,8,70,true,2,0.125,0.0,true,false,false,false,false,5,1.0,refactored
+2,0,false,true,0,22,0.36363636363636365,8,70,true,2,0.125,0.0,true,false,false,false,false,5,1.0,refactored
+2,15,true,false,0,33,1.0,33,153,false,0,0.6521739130434783,0.0,false,true,true,false,true,0,1.0,refactored
+2,15,true,false,0,33,1.0,33,153,false,0,0.6521739130434783,0.0,false,true,true,false,true,0,1.0,refactored
+2,24,false,false,0,26,0.9615384615384616,25,148,true,4,0.3684210526315789,0.0,false,false,false,false,true,4,0.0,refactored
+2,0,true,true,0,38,0.4473684210526316,17,82,true,5,0.16666666666666666,0.0,true,true,true,true,false,4,1.0,refactored
+2,5,true,true,0,64,0.609375,39,211,true,7,0.25,0.03571428571428571,true,true,true,false,false,6,1.0,refactored
+2,5,true,true,0,64,0.609375,39,211,true,7,0.25,0.03571428571428571,true,true,true,false,false,6,1.0,refactored
+2,0,false,false,0,13,1.0,13,76,true,5,0.2727272727272727,0.0,false,false,false,false,false,5,0.9054054054054054,refactored
+2,0,false,false,0,13,1.0,13,76,true,5,0.2727272727272727,0.0,false,false,false,false,false,5,0.9054054054054054,refactored
+2,0,true,false,0,18,0.8333333333333334,15,81,true,2,0.0,0.0,false,true,true,true,false,7,1.0,refactored
+2,0,true,true,0,67,0.14925373134328357,10,89,true,4,0.1,0.0,true,true,true,true,false,3,1.0,refactored
+4,92,true,false,0,41,0.9512195121951219,39,187,true,5,0.4166666666666667,0.0,false,true,true,false,true,2,1.0,refactored
+2,0,true,true,0,74,0.28378378378378377,21,127,true,3,0.06666666666666667,0.0,true,true,true,true,false,5,1.0,refactored
+2,3,true,false,0,60,0.9833333333333333,59,268,false,0,0.72,0.0,false,true,true,false,true,1,1.0,refactored
+3,79,true,false,0,26,0.9615384615384616,25,159,true,3,0.47368421052631576,0.0,false,true,true,false,true,3,1.0,refactored
+4,0,false,false,0,11,1.0,11,83,true,3,0.3,0.0,false,false,false,false,false,1,0.8181818181818182,refactored
+2,1,false,false,0,13,0.9230769230769231,12,86,true,3,0.3,0.0,false,false,false,false,false,1,0.5204081632653061,refactored
+2,14,true,false,0,51,0.9215686274509803,47,168,false,0,0.35714285714285715,0.0,false,false,false,false,false,12,1.0,refactored
+3,32,true,false,0,53,0.9056603773584906,48,168,false,0,0.35714285714285715,0.07142857142857142,false,false,false,false,false,10,1.0,refactored
+2,0,true,false,0,13,0.6153846153846154,8,75,true,1,0.0,0.0,false,true,true,true,false,7,1.0,refactored
+2,0,true,false,0,13,0.6153846153846154,8,75,true,1,0.0,0.0,false,true,true,true,false,7,1.0,refactored
+2,3,false,false,0,135,0.9925925925925926,134,830,true,11,0.47191011235955055,0.0,false,false,false,false,true,9,1.0,refactored
+9,559,false,false,0,135,0.6,81,474,true,6,0.4772727272727273,0.0,false,false,false,false,true,13,1.0,refactored
+9,559,false,false,0,58,1.0,58,290,false,2,0.34782608695652173,0.0,false,false,false,false,true,7,1.0,refactored
+2,6,true,false,0,95,0.9894736842105263,94,550,false,1,0.5294117647058824,0.0,false,true,true,false,true,9,1.0,refactored
+9,559,false,false,0,83,0.7710843373493976,64,339,false,1,0.42857142857142855,0.0,false,false,false,false,true,8,1.0,refactored
+3,0,false,false,0,55,1.0,55,242,false,2,0.38095238095238093,0.0,false,false,false,false,true,5,1.0,refactored
+5,176,false,false,0,80,0.325,26,114,false,0,0.0,0.0,false,false,false,false,true,8,1.0,refactored
+2,3,false,false,0,123,0.991869918699187,122,784,true,11,0.4827586206896552,0.0,false,false,false,false,true,7,1.0,refactored
+2,3,false,false,0,123,0.5609756097560976,69,428,true,6,0.5,0.0,false,false,false,false,true,11,1.0,refactored
+2,6,true,false,0,83,0.9879518072289156,82,504,false,1,0.5510204081632653,0.0,false,true,true,false,true,7,1.0,refactored
+4,88,false,false,0,80,0.7,56,343,false,1,0.5333333333333333,0.0,false,false,false,false,true,8,1.0,refactored
+2,0,false,false,0,29,0.9655172413793104,28,135,false,1,0.2857142857142857,0.0,false,false,false,false,false,3,1.0,refactored
+5,60,true,true,0,85,0.16470588235294117,14,106,true,4,0.15384615384615385,0.0,true,true,true,false,false,5,1.0,refactored
+5,60,true,true,0,85,0.16470588235294117,14,106,true,4,0.15384615384615385,0.0,true,true,true,false,false,5,1.0,refactored
+2,0,true,true,0,76,0.18421052631578946,14,106,true,4,0.15384615384615385,0.0,true,true,true,true,false,5,1.0,refactored
+5,60,true,true,0,85,0.16470588235294117,14,106,true,4,0.15384615384615385,0.0,true,true,true,false,false,5,1.0,refactored
+6,90,true,true,0,76,0.18421052631578946,14,106,true,4,0.15384615384615385,0.0,true,true,true,false,false,5,1.0,refactored
+6,90,true,true,0,76,0.18421052631578946,14,106,true,4,0.15384615384615385,0.0,true,true,true,false,false,5,1.0,refactored
+3,0,true,true,0,76,0.18421052631578946,14,106,true,4,0.15384615384615385,0.0,true,true,true,true,false,5,1.0,refactored
+6,90,true,true,0,76,0.18421052631578946,14,106,true,4,0.15384615384615385,0.0,true,true,true,false,false,5,1.0,refactored
+2,10,true,false,0,85,1.0,85,634,true,20,0.13333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+2,10,true,false,0,85,1.0,85,634,true,20,0.13333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+2,10,true,false,0,85,1.0,85,634,true,20,0.13333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+2,10,true,false,0,85,1.0,85,634,true,20,0.13333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+2,10,true,false,0,85,1.0,85,634,true,20,0.13333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+2,10,true,false,0,85,1.0,85,634,true,20,0.13333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+3,33,true,false,0,29,1.0,29,189,true,7,0.08333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+3,33,true,false,0,29,1.0,29,189,true,7,0.08333333333333333,0.0,false,true,true,false,false,2,1.0,refactored
+2,8,true,false,0,18,0.9444444444444444,17,65,true,3,0.25,0.0,false,true,true,false,false,5,1.0,refactored
+2,6,true,false,0,26,1.0,26,109,false,1,0.25,0.0,false,true,true,false,false,3,1.0,refactored
+2,6,true,false,0,26,1.0,26,140,true,8,0.0,0.0,false,true,true,false,false,0,1.0,refactored
+2,6,true,false,0,26,1.0,26,140,true,8,0.0,0.0,false,true,true,false,false,0,1.0,refactored
+2,20,false,false,0,52,0.28846153846153844,15,103,true,3,0.3,0.0,false,false,false,false,false,5,1.0,refactored
+3,10,true,false,0,18,0.8888888888888888,16,99,true,8,0.0,0.0,false,true,true,false,false,6,1.0,refactored
+2,0,true,false,0,13,0.9230769230769231,12,77,true,3,0.0,0.0,false,true,true,true,false,4,1.0,refactored
+2,0,true,true,0,134,0.08208955223880597,11,84,true,1,0.0,0.0,true,true,true,true,false,7,1.0,refactored
+2,11,true,false,0,22,0.9545454545454546,21,101,false,0,0.42857142857142855,0.0,false,true,true,false,true,2,1.0,refactored
+2,0,false,false,0,23,0.782608695652174,18,108,false,1,0.14285714285714285,0.0,false,false,false,false,false,6,0.8823529411764706,refactored
+2,0,true,false,0,19,0.9473684210526315,18,86,false,4,0.21428571428571427,0.0,false,true,true,true,false,5,1.0,refactored
+2,0,true,false,0,19,0.9473684210526315,18,86,false,4,0.21428571428571427,0.0,false,true,true,true,false,5,1.0,refactored
+2,0,true,false,0,24,0.7083333333333334,17,90,true,4,0.21428571428571427,0.0,false,true,true,true,false,2,1.0,refactored
+2,0,true,false,0,24,0.7083333333333334,17,90,true,4,0.21428571428571427,0.0,false,true,true,true,false,2,1.0,refactored
+2,0,true,true,0,453,0.039735099337748346,18,165,true,2,0.35714285714285715,0.0,true,true,true,true,false,10,1.0,refactored
+3,20,true,false,0,44,1.0,44,193,true,14,0.07407407407407407,0.0,false,false,false,false,false,4,1.0,refactored
+3,20,true,true,0,44,0.36363636363636365,16,87,true,6,0.09090909090909091,0.0,true,false,false,false,false,2,1.0,refactored
+3,27,true,false,0,30,1.0,30,119,true,8,0.06666666666666667,0.0,false,false,false,false,false,3,1.0,refactored
+2,6,false,false,0,27,1.0,27,95,false,2,0.2,0.0,false,false,false,false,false,4,1.0,refactored
+2,6,false,false,0,27,1.0,27,95,false,2,0.2,0.0,false,false,false,false,false,4,1.0,refactored
+2,6,false,false,0,27,1.0,27,95,false,2,0.2,0.0,false,false,false,false,false,4,1.0,refactored
+2,6,false,false,0,27,1.0,27,95,false,2,0.2,0.0,false,false,false,false,false,4,1.0,refactored
+2,4,true,false,0,58,1.0,58,345,true,6,0.5909090909090909,0.0,false,true,true,false,true,1,1.0,refactored
+2,7,true,false,0,31,0.967741935483871,30,172,false,0,0.5,0.0,false,true,true,false,true,1,1.0,refactored
+2,0,true,false,0,18,0.9444444444444444,17,121,true,5,0.1111111111111111,0.0,false,false,false,false,false,7,1.0,refactored
+2,0,true,false,0,31,0.9354838709677419,29,184,true,8,0.2222222222222222,0.0,false,false,false,false,false,9,1.0,refactored
+2,0,true,false,0,31,0.9354838709677419,29,184,true,8,0.2222222222222222,0.0,false,false,false,false,false,9,1.0,refactored
+2,0,false,false,0,19,0.9473684210526315,18,114,true,4,0.0,0.0,false,false,false,false,false,2,1.0,refactored
+2,0,true,false,0,20,0.95,19,103,true,5,0.17647058823529413,0.0,false,true,true,true,true,5,1.0,refactored
+2,6,true,false,0,27,1.0,27,166,true,9,0.047619047619047616,0.0,false,true,true,false,false,1,1.0,refactored
+2,0,true,true,0,131,0.20610687022900764,27,117,true,5,0.0,0.0,true,true,true,true,false,6,1.0,refactored

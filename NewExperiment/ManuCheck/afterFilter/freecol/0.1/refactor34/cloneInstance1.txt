@@ -1,0 +1,26 @@
+(startLine=95 endLine=118 srcPath=/root/NewExperiment/freecolFilter/00187/src/net/sf/freecol/client/gui/panel/GameOptionsDialog.java)
+    public void initialize(boolean editable) {
+        removeAll();
+
+        // Header:
+        header = new JLabel(freeColClient.getGame().getGameOptions().getName(), JLabel.CENTER);
+        header.setFont(((Font) UIManager.get("HeaderFont")).deriveFont(0, 48));
+        header.setBorder(new EmptyBorder(20, 0, 0, 0));
+        add(header, BorderLayout.NORTH);
+
+        // Options:
+        JPanel uiPanel = new JPanel(new BorderLayout());
+        uiPanel.setOpaque(false);
+        ui = new OptionMapUI(freeColClient.getGame().getGameOptions(), editable);
+        uiPanel.add(ui, BorderLayout.CENTER);
+        uiPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(uiPanel, BorderLayout.CENTER);
+
+        // Buttons:
+        add(buttons, BorderLayout.SOUTH);
+        
+        ok.setEnabled(editable);
+        save.setEnabled(editable);
+        load.setEnabled(editable);
+    }
+

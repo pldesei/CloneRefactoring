@@ -1,0 +1,27 @@
+(startLine=442 endLine=466 srcPath=/root/NewExperiment/freecolFilter/01312/src/net/sf/freecol/common/model/Colony.java)
+            } else {
+                ProductionType pt = wl.getProductionType();
+                if (sb != null) {
+                    sb.append("\n      fixed=").append(pt);
+                }
+                for (GoodsType gt : workTypes) {
+                    if (sb != null) {
+                        sb.append(" ").append(gt.getSuffix());
+                    }
+                    if (pt.getOutput(gt) == null) continue;
+                    int amount = getMinimumGoodsCount(pt.getInputs());
+                    amount = Math.min(amount, 
+                        wl.getPotentialProduction(gt, type));
+                    if (sb != null) {
+                        sb.append("=").append(amount);
+                        if (bestAmount < amount) sb.append("!");
+                    }
+                    if (bestAmount < amount) {
+                        bestAmount = amount;
+                        best.workLocation = wl;
+                        best.productionType = pt;
+                        best.workType = gt;
+                    }
+                }
+            }
+

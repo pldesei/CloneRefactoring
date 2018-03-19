@@ -1,0 +1,9 @@
+(startLine=79 endLine=85 srcPath=/root/NewExperiment/hibernateFilter/00464/hibernate-envers/src/test/java/org/hibernate/envers/test/AbstractOneSessionTest.java)
+	/**
+	 * Creates a new session and auditReader.
+	 */
+	public void forceNewSession() {
+	      session = getSessionFactory().openSession();
+	      auditReader = AuditReaderFactory.get(session);
+	}	
+

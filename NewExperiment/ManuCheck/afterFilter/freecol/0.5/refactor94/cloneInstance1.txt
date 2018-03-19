@@ -1,0 +1,31 @@
+(startLine=120 endLine=148 srcPath=/root/NewExperiment/freecolFilter/00347/src/net/sf/freecol/server/ai/mission/IndianDemandMission.java)
+        if (!hasGift()) {
+            if (getUnit().getTile() != getUnit().getIndianSettlement().getTile()) {
+                // Move to the owning settlement:
+                int r = moveTowards(connection, getUnit().getIndianSettlement().getTile());
+                if (r >= 0) {
+                    final int mt = getUnit().getMoveType(r);
+                    if (mt != Unit.ILLEGAL_MOVE && mt != Unit.ATTACK) {
+                        move(connection, r);
+                    }
+                }
+            } else {
+                // Load the goods:
+                ArrayList<Goods> goodsList = new ArrayList<Goods>();
+                GoodsContainer gc = getUnit().getIndianSettlement().getGoodsContainer();
+                // Come back to clean up - takes SUGAR, TOBACCO, COTTON, FURS
+                for (int i = 1; i <= 4; i++) {
+                    if (gc.getGoodsCount(i) >= IndianSettlement.KEEP_RAW_MATERIAL + 25) {
+                        goodsList.add(new Goods(getGame(), getUnit().getIndianSettlement(), 
+                                FreeCol.getSpecification().getGoodsType(i),
+                                getRandom().nextInt(15) + 10));
+                    }
+                }
+
+                if (goodsList.size() > 0) {
+                    Goods goods = goodsList.get(getRandom().nextInt(goodsList.size()));
+                    goods.setLocation(getUnit());
+                }
+            }
+        } else {
+

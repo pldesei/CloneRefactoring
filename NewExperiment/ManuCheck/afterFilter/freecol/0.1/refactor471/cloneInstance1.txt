@@ -1,0 +1,16 @@
+(startLine=274 endLine=287 srcPath=/root/NewExperiment/freecolFilter/01339/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+        for (Unit u : new ArrayList<Unit>(units)) {
+            AIUnit aiu = aiMain.getAIUnit(u);
+            if (aiu == null) {
+                units.remove(u);
+            } else if (aiu.getMission() instanceof DefendSettlementMission
+                && (((DefendSettlementMission)aiu.getMission())
+                    .getTarget() == is)) {
+                sb.append(" ").append(u.getId());
+                defenders.add(u);
+                units.remove(u);
+            } else if (Mission.invalidNewMissionReason(aiu) != null) {
+                units.remove(u);
+            }
+        }
+

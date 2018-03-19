@@ -1,0 +1,14 @@
+(startLine=496 endLine=507 srcPath=/root/NewExperiment/freecolFilter/01339/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+        if (sb != null) {
+            for (AIUnit aiu : getAIUnits()) {
+                Unit u = aiu.getUnit();
+                String reason = reasons.get(u);
+                if (reason == null) reason = "OMITTED";
+                Mission m = aiu.getMission();
+                sb.append("\n  ").append(u.getLocation())
+                    .append(" ").append(reason)
+                    .append("-").append((m == null) ? "NONE" : m.toString());
+            }
+            logger.fine(sb.toString());
+        }
+

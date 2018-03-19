@@ -1,0 +1,42 @@
+(startLine=808 endLine=847 srcPath=/root/NewExperiment/freecolFilter/00868/src/net/sf/freecol/client/gui/panel/ReportColonyPanel.java)
+    /**
+     * Is it a good idea to produce goods at this work location using a
+     * better unit type?
+     *
+     * Always true for colony tiles, but for buildings we need to be
+     * more conservative or we will end up recommending packing each
+     * building to capacity.
+     *
+     * FTM then:
+     * - assume that if we have upgraded the building we really do
+     *   want to use it
+     * - we should produce hammers if we are not, or if we can upgrade
+     *   and existing unit
+     * - we should produce liberty until we max out the colony SoL
+     *
+     * @param wl The <code>WorkLocation</code> where production is to occur.
+     * @param goodsType The <code>GoodsType</code> to produce.
+     * @param unit The <code>Unit</code> that is doing the job at present,
+     *     which may be null if none is at work.
+     * @param expert The expert <code>UnitType</code> to put to work.
+     * @return True if it is a good idea to use the expert.
+     */
+    private boolean wantGoods(WorkLocation wl, GoodsType goodsType,
+                              Unit unit, UnitType expert) {
+        boolean ret = false;
+        if (wl instanceof ColonyTile) {
+            ret = true;
+        } else if (wl instanceof Building) {
+            Building bu = (Building) wl;
+            Colony colony = wl.getColony();
+            ret = bu.canAdd(expert)
+                && (bu.getLevel() > 1
+                    || ("model.goods.hammers".equals(goodsType.getId())
+                        && (colony.getProductionOf(goodsType) == 0
+                            || (unit != null && unit.getType() != expert)))
+                    || (goodsType.isLibertyType()
+                        && colony.getSoL() < 100));
+        }
+        return ret;
+    }
+

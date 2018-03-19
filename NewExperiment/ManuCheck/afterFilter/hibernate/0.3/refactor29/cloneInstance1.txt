@@ -1,0 +1,41 @@
+(startLine=195 endLine=233 srcPath=/root/NewExperiment/hibernateFilter/00482/hibernate-core/src/main/java/org/hibernate/hql/ast/exec/AbstractStatementExecutor.java)
+		if ( getFactory().getDialect().dropTemporaryTableAfterUse() ) {
+			IsolatedWork work = new IsolatedWork() {
+				public void doWork(Connection connection) throws HibernateException {
+					final String command = session.getFactory().getDialect().getDropTemporaryTableString()
+							+ ' ' + persister.getTemporaryIdTableName();
+					try {
+						Statement statement = connection.createStatement();
+						try {
+							statement = connection.createStatement();
+							statement.executeUpdate( command );
+						}
+						finally {
+							try {
+								statement.close();
+							}
+							catch( Throwable ignore ) {
+								// ignore
+							}
+						}
+					}
+					catch( Exception e ) {
+                        LOG.unableToDropTemporaryIdTable(e.getMessage());
+					}
+				}
+			};
+
+			if ( shouldIsolateTemporaryTableDDL() ) {
+				if ( getFactory().getSettings().isDataDefinitionInTransactionSupported() ) {
+					Isolater.doIsolatedWork( work, session );
+				}
+				else {
+					Isolater.doNonTransactedWork( work, session );
+				}
+			}
+			else {
+				work.doWork( session.getJDBCContext().getConnectionManager().getConnection() );
+				session.getJDBCContext().getConnectionManager().afterStatement();
+			}
+		}
+

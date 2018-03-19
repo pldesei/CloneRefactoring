@@ -1,0 +1,219 @@
+(startLine=1495 endLine=1711 srcPath=/root/NewExperiment/freecolFilter/00837/src/net/sf/freecol/server/ai/StandardAIPlayer.java)
+    private void giveNormalMissions() {
+        logger.finest("Entering method giveNormalMissions");
+
+        // Create a datastructure for the worker wishes:
+        java.util.Map<UnitType, ArrayList<Wish>> workerWishes =
+            new HashMap<UnitType, ArrayList<Wish>>();
+        for (UnitType unitType : getAIMain().getGame().getSpecification().getUnitTypeList()) {
+            workerWishes.put(unitType, new ArrayList<Wish>());
+        }
+        if (getPlayer().isEuropean()) {
+            Iterator<AIColony> aIterator = getAIColonyIterator();
+            while (aIterator.hasNext()) {
+                Iterator<Wish> wIterator = aIterator.next().getWishIterator();
+                while (wIterator.hasNext()) {
+                    Wish w = wIterator.next();
+                    if (w instanceof WorkerWish && w.getTransportable() == null) {
+                        workerWishes.get(((WorkerWish) w).getUnitType()).add(w);
+                    }
+                }
+            }
+        }
+
+        final boolean fewColonies = hasFewColonies();
+        boolean isPioneerReq = PioneeringMission.getPlayerPioneers(this).size() == 0;
+        Iterator<AIUnit> aiUnitsIterator = getAIUnitIterator();
+        while (aiUnitsIterator.hasNext()) {
+            AIUnit aiUnit = aiUnitsIterator.next();
+
+            if (aiUnit.hasMission()) {
+                continue;
+            }
+
+            Unit unit = aiUnit.getUnit();
+
+            if (unit.isUninitialized()) {
+                logger.warning("Trying to assign a mission to an uninitialized object: " + unit.getId());
+                continue;
+            }
+
+            if (unit.getState() == UnitState.IN_COLONY
+                && unit.getSettlement().getUnitCount() <= 1) {
+                // The unit has its hand full keeping the colony alive.
+                continue;
+            }
+            
+            // only processing naval units
+            if(unit.isNaval()){
+            	continue;
+            }
+
+            if (unit.canCarryTreasure()) {
+                aiUnit.setMission(new CashInTreasureTrainMission(getAIMain(), aiUnit));
+                continue;
+            }
+
+            if (unit.hasAbility("model.ability.scoutIndianSettlement") &&
+                       ScoutingMission.isValid(aiUnit)) {
+                aiUnit.setMission(new ScoutingMission(getAIMain(), aiUnit));
+                continue;
+            }
+
+            if (unit.isOffensiveUnit() || unit.isDefensiveUnit()){
+            	Player owner = unit.getOwner();
+            	boolean isPastStart = getGame().getTurn().getNumber() > 5
+            			&& !owner.getSettlements().isEmpty();
+            
+            	if(!unit.isColonist() 
+            			|| isPastStart
+            			|| owner.isIndian()
+            			|| owner.isREF()){
+            		giveMilitaryMission(aiUnit);
+            		continue;
+            	}
+            }
+
+            // Setup as a pioneer if unit is:
+            //      - already with tools, or
+            //      - an expert pioneer, or
+            //      - a non-expert unit and there are no other units assigned as pioneers
+            boolean isPioneer = unit.hasAbility("model.ability.improveTerrain")
+                                || unit.hasAbility("model.ability.expertPioneer");
+            boolean isExpert = unit.getSkillLevel() > 0;
+            if ((isPioneer || (isPioneerReq && !isExpert)) && PioneeringMission.isValid(aiUnit)) {
+                aiUnit.setMission(new PioneeringMission(getAIMain(), aiUnit));
+                isPioneerReq = false;
+                continue;
+            }
+
+            if (unit.isColonist() && unit.getOwner().isEuropean()) {
+                /*
+                 * Motivated by (speed) performance: This map stores the
+                 * distance between the unit and the destination of a Wish:
+                 */
+                HashMap<Location, Integer> distances = new HashMap<Location, Integer>(121);
+                for (ArrayList<Wish> al : workerWishes.values()) {
+                    for (Wish w : al) {
+                        if (!distances.containsKey(w.getDestination())) {
+                            distances.put(w.getDestination(), unit.getTurnsToReach(w.getDestination()));
+                        }
+                    }
+                }
+
+                // Check if this unit is needed as an expert (using:
+                // "WorkerWish"):
+                ArrayList<Wish> wishList = workerWishes.get(unit.getType());
+                WorkerWish bestWish = null;
+                int bestTurns = Integer.MAX_VALUE;
+                for (int i = 0; i < wishList.size(); i++) {
+                    WorkerWish ww = (WorkerWish) wishList.get(i);
+                    if (ww.getTransportable() != null) {
+                        wishList.remove(i);
+                        i--;
+                        continue;
+                    }
+                    int turns = distances.get(ww.getDestination());
+                    if (turns == Integer.MAX_VALUE) {
+                        if (ww.getDestination().getTile() == null) {
+                            turns = 5;
+                        } else {
+                            turns = 10;
+                        }
+                    } else if (turns > 5) {
+                        turns = 5;
+                    }
+                    if (bestWish == null
+                            || ww.getValue() - (turns * 2) > bestWish.getValue() - (bestTurns * 2)) {
+                        bestWish = ww;
+                        bestTurns = turns;
+                    }
+                }
+                if (bestWish != null) {
+                    bestWish.setTransportable(aiUnit);
+                    aiUnit.setMission(new WishRealizationMission(getAIMain(), aiUnit, bestWish));
+                    continue;
+                }
+                // Find a site for a new colony:
+                Tile colonyTile = null;
+                if (getPlayer().canBuildColonies()) {
+                    colonyTile = BuildColonyMission.findColonyLocation(aiUnit.getUnit());
+                    if (colonyTile != null) {
+                        bestTurns = unit.getTurnsToReach(colonyTile);
+                    }
+                }
+
+                // Check if we can find a better site to work than a new colony:
+                if (!fewColonies || colonyTile == null || bestTurns > 10) {
+                    for (List<Wish> wishes : workerWishes.values()) {
+                        for (int j = 0; j < wishes.size(); j++) {
+                            WorkerWish ww = (WorkerWish) wishes.get(j);
+                            if (ww.getTransportable() != null) {
+                                wishes.remove(j);
+                                j--;
+                                continue;
+                            }
+                            int turns = distances.get(ww.getDestination());
+                            if (turns == Integer.MAX_VALUE) {
+                                if (ww.getDestination().getTile() == null) {
+                                    turns = 5;
+                                } else {
+                                    turns = 10;
+                                }
+                            } else if (turns > 5) {
+                                turns = 5;
+                            }
+                            // TODO: Choose to build colony if the value of the
+                            // wish is low.
+                            if (bestWish == null
+                                    || ww.getValue() - (turns * 2) > bestWish.getValue() - (bestTurns * 2)) {
+                                bestWish = ww;
+                                bestTurns = turns;
+                            }
+                        }
+                    }
+                }
+                if (bestWish != null) {
+                    bestWish.setTransportable(aiUnit);
+                    aiUnit.setMission(new WishRealizationMission(getAIMain(), aiUnit, bestWish));
+                    continue;
+                }
+                // Choose to build a new colony:
+                if (colonyTile != null) {
+                    Mission mission = new BuildColonyMission(getAIMain(),
+                                                             aiUnit,
+                                                             colonyTile,
+                                                             getPlayer().getColonyValue(colonyTile));
+                    aiUnit.setMission(mission);
+
+                    boolean isUnitOnCarrier = aiUnit.getUnit().isOnCarrier();
+                    if (isUnitOnCarrier) {
+                        AIUnit carrier = (AIUnit) getAIMain().getAIObject(
+                                (FreeColGameObject) aiUnit.getUnit().getLocation());
+
+                        //make verification of carrier mission
+                        Mission carrierMission = carrier.getMission();
+
+                        boolean isCarrierMissionToTransport = carrierMission instanceof TransportMission;
+                        if(!isCarrierMissionToTransport){
+                        	throw new IllegalStateException("Carrier carrying unit not on a transport mission");
+                        }
+                        //transport unit to carrier destination (is this what is truly wanted?)
+                        ((TransportMission) carrierMission).addToTransportList(aiUnit);
+                    }
+                    continue;
+                }
+            }
+
+            if (!aiUnit.hasMission()) {
+                if (aiUnit.getUnit().isOffensiveUnit()) {
+                    aiUnit.setMission(new UnitWanderHostileMission(getAIMain(), aiUnit));
+                } else {
+                    //non-offensive units should take shelter in a nearby colony,
+                    //not try to be hostile
+                    aiUnit.setMission(new IdleAtColonyMission(getAIMain(), aiUnit));
+                }
+            }
+        }
+    }
+

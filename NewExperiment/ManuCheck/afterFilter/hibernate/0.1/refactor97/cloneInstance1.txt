@@ -1,0 +1,19 @@
+(startLine=40 endLine=56 srcPath=/root/NewExperiment/hibernateFilter/01549/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/access/ReadWriteEntityRegionAccessStrategy.java)
+	public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
+		return region.invoke(
+				key, new EntryProcessor<Object, Object, Boolean>() {
+					@Override
+					public Boolean process(MutableEntry<Object, Object> entry, Object... args)
+							throws EntryProcessorException {
+						if ( !entry.exists() ) {
+							entry.setValue( new Item( args[0], args[1], (Long) args[2] ) );
+							return true;
+						}
+						else {
+							return false;
+						}
+					}
+				}, value, version, region.nextTimestamp()
+		);
+	}
+

@@ -1,0 +1,45 @@
+(startLine=177 endLine=219 srcPath=/root/NewExperiment/freecolFilter/00502/src/net/sf/freecol/client/gui/panel/PreCombatDialog.java)
+    private boolean addModifier(Modifier modifier, boolean newline, int skip) {
+        String constraint = null;
+        if (newline) {
+            constraint = "newline";
+        }
+        if (skip > 0) {
+            if (constraint == null) {
+                constraint = "skip " + skip;
+            } else {
+                constraint += ", skip " + skip;
+            }
+        }
+        FreeColGameObjectType source = modifier.getSource();
+        String sourceName = "???";
+        if (source != null) {
+            sourceName = source.getName();
+        }
+        add(new JLabel(sourceName), constraint);
+        String bonus = getModifierFormat().format(modifier.getValue());
+        boolean percent = false;
+        switch(modifier.getType()) {
+        case ADDITIVE:
+            if (modifier.getValue() > 0) {
+                bonus = "+" + bonus;
+            }
+            break;
+        case PERCENTAGE:
+            if (modifier.getValue() > 0) {
+                bonus = "+" + bonus;
+            }
+            percent = true;
+            break;
+        case MULTIPLICATIVE:
+            bonus = "\u00D7" + bonus;
+            break;
+        default:
+        }                
+        add(new JLabel(bonus));
+        if (percent) {
+            add(new JLabel("%"));
+        }
+        return percent;
+    }
+

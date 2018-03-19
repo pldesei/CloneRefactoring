@@ -1,0 +1,26 @@
+(startLine=330 endLine=353 srcPath=/root/NewExperiment/freecolFilter/00177/src/net/sf/freecol/common/model/Modifier.java)
+    /**
+     * Return a formatted string appropriate for the value this
+     * modifier represents.
+     *
+     * @return a <code>String</code> value
+     */
+    public String getFormattedResult() {
+        if (isAdditive) {
+            if (addend == Integer.MIN_VALUE) {
+                return "?";
+            } else if (addend > 0) {
+                return "+" + String.valueOf(addend);
+            } else {
+                return String.valueOf(addend);
+            }
+        } else {
+            float modifier = (100 * numerator / denominator) - 100;
+            if (modifier > 0) {
+                return "+" + String.valueOf(modifier) + "%";
+            } else {
+                return String.valueOf(modifier) + "%";
+            }
+        }
+    }
+

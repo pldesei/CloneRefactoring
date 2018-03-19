@@ -1,0 +1,16 @@
+(startLine=93 endLine=106 srcPath=/root/NewExperiment/hibernateFilter/01415/hibernate-core/src/main/java/org/hibernate/cfg/AbstractPropertyHolder.java)
+		for ( AttributeConverterDefinition attributeConverterDefinition : context.getMetadataCollector().getAttributeConverters() ) {
+			if ( ! attributeConverterDefinition.isAutoApply() ) {
+				continue;
+			}
+			log.debugf(
+					"Checking auto-apply AttributeConverter [%s] type [%s] for match [%s]",
+					attributeConverterDefinition.toString(),
+					attributeConverterDefinition.getEntityAttributeType().getSimpleName(),
+					propertyType.getSimpleName()
+			);
+			if ( areTypeMatch( attributeConverterDefinition.getEntityAttributeType(), propertyType ) ) {
+				return attributeConverterDefinition;
+			}
+		}
+

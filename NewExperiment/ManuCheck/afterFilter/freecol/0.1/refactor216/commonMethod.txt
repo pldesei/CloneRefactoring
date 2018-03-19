@@ -1,0 +1,16 @@
+(startLine=717 endLine=730 srcPath=/root/NewExperiment/freecolFilter/00790/src/net/sf/freecol/common/model/Game.java)
+    /**
+     * Returns all the European players known by the player of this game.
+     *
+     * @return All the European players known by the player of this game.
+     */
+    public List<Player> getEuropeanPlayers() {
+        List<Player> europeans = new ArrayList<Player>();
+        for (Player player : players) {
+            if (player.isEuropean()) {
+                europeans.add(player);
+            }
+        }
+        return europeans;
+    }
+

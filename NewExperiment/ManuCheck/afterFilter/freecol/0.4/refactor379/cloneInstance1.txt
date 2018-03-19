@@ -1,0 +1,14 @@
+(startLine=182 endLine=193 srcPath=/root/NewExperiment/freecolFilter/00986/src/net/sf/freecol/server/ai/mission/DefendSettlementMission.java)
+    public static PathNode findTarget(AIUnit aiUnit, int range) {
+        Unit unit;
+        Tile startTile;
+        return (aiUnit == null
+            || (unit = aiUnit.getUnit()) == null || unit.isDisposed()
+            || (startTile = unit.getPathStartTile()) == null)
+            ? null
+            : unit.search(startTile,
+                getMissionGoalDecider(aiUnit, DefendSettlementMission.class),
+                CostDeciders.avoidIllegal(), range, 
+                ((unit.isOnCarrier()) ? ((Unit)unit.getLocation()) : null));
+    }
+

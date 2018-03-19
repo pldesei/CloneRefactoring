@@ -1,0 +1,28 @@
+(startLine=865 endLine=890 srcPath=/root/NewExperiment/freecolFilter/00013/src/net/sf/freecol/common/model/Unit.java)
+    /**
+    * Sets the unit to be a missionary.
+    *
+    * @param b <i>true</i> if the unit should be a missionary and <i>false</i> otherwise.
+    */
+    public void setMissionary(boolean b) {
+        if (!(getLocation() instanceof Europe) && !getTile().getColony().getBuilding(Building.CHURCH).isBuilt()) {
+            throw new IllegalStateException("Can only dress as a missionary when the unit is located in Europe or a Colony with a church.");
+        }
+
+        if (b) {
+            if (isPioneer()) {
+                setNumberOfTools(0);
+            }
+
+            if (isArmed()) {
+                setArmed(false);
+            }
+
+            if (isMounted()) {
+                setMounted(false);
+            }
+        }
+
+        missionary = b;
+    }
+

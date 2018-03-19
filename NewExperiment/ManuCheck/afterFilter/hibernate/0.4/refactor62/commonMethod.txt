@@ -1,0 +1,11 @@
+(startLine=486 endLine=494 srcPath=/root/NewExperiment/hibernateFilter/01138/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+	private void parseManyToOne(ManyToOne manyToOne) {
+		XmlMetaSingleAttribute attribute;
+		ElementKind elementKind = getElementKind( manyToOne.getAccess() );
+		String type = getType( manyToOne.getName(), manyToOne.getTargetEntity(), elementKind );
+		if ( type != null ) {
+			attribute = new XmlMetaSingleAttribute( this, manyToOne.getName(), type );
+			members.add( attribute );
+		}
+	}
+

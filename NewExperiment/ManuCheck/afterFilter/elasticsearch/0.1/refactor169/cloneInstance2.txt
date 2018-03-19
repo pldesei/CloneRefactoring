@@ -1,0 +1,47 @@
+(startLine=94 endLine=138 srcPath=/root/NewExperiment/elasticsearchFilter/00994/src/main/java/org/elasticsearch/index/fielddata/AbstractAtomicNumericFieldData.java)
+        } else {
+            final LongValues values = getLongValues();
+            return new BytesValues(values.isMultiValued()) {
+
+                @Override
+                public boolean hasValue(int docId) {
+                    return values.hasValue(docId);
+                }
+
+                @Override
+                public BytesRef getValueScratch(int docId, BytesRef ret) {
+                    if (values.hasValue(docId)) {
+                        ret.copyChars(Long.toString(values.getValue(docId)));
+                    } else {
+                        ret.length = 0;
+                    }
+                    return ret;
+                }
+
+                @Override
+                public Iter getIter(int docId) {
+                    final LongValues.Iter iter = values.getIter(docId);
+                    return new BytesValues.Iter() {
+                        private final BytesRef spare = new BytesRef();
+
+                        @Override
+                        public boolean hasNext() {
+                            return iter.hasNext();
+                        }
+
+                        @Override
+                        public BytesRef next() {
+                            spare.copyChars(Long.toString(iter.next()));
+                            return spare;
+                        }
+
+                        @Override
+                        public int hash() {
+                            return spare.hashCode();
+                        }
+
+                    };
+                }
+            };
+        }
+

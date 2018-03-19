@@ -1,0 +1,21 @@
+(startLine=788 endLine=806 srcPath=/root/NewExperiment/freecolFilter/00374/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Get a modifier that applies to this Unit.
+     *
+     * @param id a <code>String</code> value
+     * @return a <code>Modifier</code> value
+     */
+    public Set<Modifier> getModifierSet(String id) {
+        Set<Modifier> result = new HashSet<Modifier>();
+        // UnitType modifiers always apply
+        result.addAll(unitType.getFeatureContainer().getModifierSet(id));
+        // the player's modifiers may not apply
+        result.addAll(getOwner().getFeatureContainer()
+                      .getModifierSet(id, unitType, getGame().getTurn()));
+        // EquipmentType modifiers always apply
+        for (EquipmentType equipmentType : equipment) {
+            result.addAll(equipmentType.getFeatureContainer().getModifierSet(id));
+        }
+        return result;
+    }
+

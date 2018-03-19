@@ -1,0 +1,10 @@
+(startLine=311 endLine=318 srcPath=/root/NewExperiment/freecolFilter/00847/src/net/sf/freecol/client/gui/panel/ReportRequirementsPanel.java)
+    private void insertColonyButtons(StyledDocument doc, List<Colony> colonies) throws Exception {
+        for (Colony colony : colonies) {
+            StyleConstants.setComponent(doc.getStyle("button"), createColonyButton(colony, false));
+            doc.insertString(doc.getLength(), " ", doc.getStyle("button"));
+            doc.insertString(doc.getLength(), ", ", doc.getStyle("regular"));
+        }
+        doc.remove(doc.getLength() - 2, 2);
+    }
+

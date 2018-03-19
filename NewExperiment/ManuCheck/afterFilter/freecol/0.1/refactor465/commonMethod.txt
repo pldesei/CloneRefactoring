@@ -1,0 +1,14 @@
+(startLine=707 endLine=718 srcPath=/root/NewExperiment/freecolFilter/01329/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Get the change in goods required to change to a new role/count.
+     *
+     * @param role The new <code>Role</code> to change to.
+     * @param roleCount The new role count.
+     * @return A list of <code>AbstractGoods</code> defining the change
+     *     in goods required.
+     */
+    public List<AbstractGoods> getGoodsDifference(Role role, int roleCount) {
+        return Role.getGoodsDifference(getRole(), getRoleCount(),
+                                       role, roleCount);
+    }
+

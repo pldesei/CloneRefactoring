@@ -1,0 +1,14 @@
+(startLine=263 endLine=274 srcPath=/root/NewExperiment/elasticsearchFilter/00774/src/main/java/org/elasticsearch/index/fielddata/plain/PagedBytesAtomicFieldData.java)
+            public void forEachValueInDoc(int docId, ValueInDocProc proc) {
+                Ordinals.Docs.Iter iter = ordinals.getIter(docId);
+                int ord = iter.next();
+                if (ord == 0) {
+                    proc.onMissing(docId);
+                    return;
+                }
+                do {
+                    bytes.fill(scratch, termOrdToBytesOffset.get(ord));
+                    proc.onValue(docId, scratch);
+                } while ((ord = iter.next()) != 0);
+            }
+

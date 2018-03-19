@@ -1,0 +1,12 @@
+(startLine=102 endLine=111 srcPath=/root/NewExperiment/elasticsearchFilter/01690/src/main/java/org/elasticsearch/search/lookup/SourceLookup.java)
+    public void setSegmentAndDocument(LeafReaderContext context, int docId) {
+        if (this.reader == context.reader() && this.docId == docId) {
+            // if we are called with the same document, don't invalidate source
+            return;
+        }
+        this.reader = context.reader();
+        this.source = null;
+        this.sourceAsBytes = null;
+        this.docId = docId;
+    }
+

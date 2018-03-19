@@ -1,0 +1,11 @@
+(startLine=1841 endLine=1849 srcPath=/root/NewExperiment/freecolFilter/00940/src/net/sf/freecol/common/model/Colony.java)
+    /**
+     * Returns true if this Colony can build the given BuildableType.
+     *
+     * @param buildableType a <code>BuildableType</code> value
+     * @return a <code>boolean</code> value
+     */
+    public boolean canBuild(BuildableType buildableType) {
+        return (getNoBuildReason(buildableType) == NoBuildReason.NONE);
+    }
+

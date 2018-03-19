@@ -1,0 +1,19 @@
+(startLine=89 endLine=105 srcPath=/root/NewExperiment/hibernateFilter/01163/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/QuerySpacesImpl.java)
+	public ExpandingEntityQuerySpace makeEntityQuerySpace(String uid, EntityPersister entityPersister) {
+		if ( querySpaceByUid.containsKey( uid ) ) {
+			throw new IllegalStateException( "Encountered duplicate QuerySpace uid : " + uid );
+		}
+
+		final EntityQuerySpaceImpl space = new EntityQuerySpaceImpl(
+				entityPersister,
+				uid,
+				this,
+				true,
+				sessionFactory
+		);
+		registerQuerySpace( space );
+		roots.add( space );
+
+		return space;
+	}
+

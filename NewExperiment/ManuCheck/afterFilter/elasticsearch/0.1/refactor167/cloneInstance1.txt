@@ -1,0 +1,14 @@
+(startLine=289 endLine=300 srcPath=/root/NewExperiment/elasticsearchFilter/00991/src/main/java/org/elasticsearch/cluster/metadata/MetaDataIndexStateService.java)
+        public void onIndexStateUpdated(NodeIndicesStateUpdatedAction.NodeIndexStateUpdatedResponse response) {
+            if (version <= response.version()) {
+                logger.trace("Received NodeIndexStateUpdatedResponse with version [{}] from [{}]", response.version(), response.nodeId());
+                if (countDown.decrementAndGet() == 0) {
+                    indicesStateUpdatedAction.remove(this);
+                    if (notified.compareAndSet(false, true)) {
+                        logger.trace("NodeIndexStateUpdated was acknowledged by all expected nodes, returning");
+                        listener.onResponse(new Response(true));
+                    }
+                }
+            }
+        }
+

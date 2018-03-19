@@ -1,0 +1,13 @@
+(startLine=901 endLine=911 srcPath=/root/NewExperiment/freecolFilter/00939/src/net/sf/freecol/server/ai/AIColony.java)
+                    while (unitIterator.hasNext()) {
+                        Unit unit = unitIterator.next();
+                        int production = ((ColonyTile) wlp.getWorkLocation()).getProductionOf(unit,
+                                                                                              foodType);
+                        if (production > 1
+                            && (bestUnit == null || production > bestProduction || production == bestProduction
+                                && unit.getSkillLevel() < bestUnit.getSkillLevel())) {
+                            bestUnit = unit;
+                            bestProduction = production;
+                        }
+                    }
+

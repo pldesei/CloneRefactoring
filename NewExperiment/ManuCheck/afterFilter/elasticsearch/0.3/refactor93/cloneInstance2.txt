@@ -1,0 +1,16 @@
+(startLine=98 endLine=111 srcPath=/root/NewExperiment/elasticsearchFilter/00740/src/main/java/org/elasticsearch/action/admin/indices/cache/clear/ClearIndicesCacheRequest.java)
+    public void writeTo(StreamOutput out) throws IOException {
+        super.writeTo(out);
+        out.writeBoolean(filterCache);
+        out.writeBoolean(fieldDataCache);
+        out.writeBoolean(idCache);
+        if (fields == null) {
+            out.writeVInt(0);
+        } else {
+            out.writeVInt(fields.length);
+            for (String field : fields) {
+                out.writeString(field);
+            }
+        }
+    }
+

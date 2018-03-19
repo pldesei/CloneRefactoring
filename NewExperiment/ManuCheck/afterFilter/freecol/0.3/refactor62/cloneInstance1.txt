@@ -1,0 +1,20 @@
+(startLine=7 endLine=24 srcPath=/root/NewExperiment/freecolFilter/00236/test/src/net/sf/freecol/common/model/BuildingTest.java)
+    public void test_canBuildNext_FalseAboveMaxLevel() {
+       
+        Game game = getStandardGame();
+        Player dutch = game.getPlayer(Player.DUTCH);
+
+        Map map = getTestMap(Tile.PLAINS);
+        game.setMap(map);
+        map.getTile(5, 8).setExploredBy(dutch, true);
+       
+        Colony colony = new Colony(game, dutch, "New Amsterdam",
+                                   map.getTile(5, 8));
+       
+        Building new_building = new Building(game, colony,
+                                             Building.BLACKSMITH,
+                                             Building.MAX_LEVEL +  1);
+       
+        assertFalse(new_building.canBuildNext());
+    }
+

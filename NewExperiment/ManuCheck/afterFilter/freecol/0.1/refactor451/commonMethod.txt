@@ -1,0 +1,17 @@
+(startLine=455 endLine=469 srcPath=/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/GoodsType.java)
+    /**
+     * Get all the equivalent goods types, in the sense that they are
+     * stored as this type.
+     *
+     * @return A set of equivalent <code>GoodsType</code>s, which
+     *     must include this one.
+     */
+    public Set<GoodsType> getEquivalentTypes() {
+        Set<GoodsType> result = new HashSet<GoodsType>();
+        for (GoodsType type : getSpecification().getGoodsTypeList()) {
+            if (type == this
+                || type.getStoredAs() == this) result.add(type);
+        }
+        return result;
+    }
+

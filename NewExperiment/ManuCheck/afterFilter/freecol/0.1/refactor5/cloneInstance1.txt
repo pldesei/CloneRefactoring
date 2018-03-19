@@ -1,0 +1,12 @@
+(startLine=2474 endLine=2483 srcPath=/root/NewExperiment/freecolFilter/00056/src/net/sf/freecol/common/model/Unit.java)
+                if (getOwner().isEuropean()) {
+                    int plunderGold = (int) (newTile.getSettlement().getOwner().getGold() * 0.1); // 10% of their gold
+                    getOwner().modifyGold(plunderGold);
+                    newTile.getSettlement().getOwner().modifyGold(-plunderGold);
+
+                    targetcolony = (Colony)(newTile.getSettlement());
+                    targetcolony.setOwner(getOwner()); // This also changes over all of the units...
+                    setLocation(newTile);
+                    addModelMessage(this, "model.unit.colonyCaptured", new String[][] {{"%colony%", newTile.getColony().getName()}, {"%amount%", Integer.toString(plunderGold)}});
+                } else { // Indian:
+

@@ -1,0 +1,11 @@
+(startLine=589 endLine=597 srcPath=/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java)
+    private JLabel createNumberLabel(int number, String toolTipKey) {
+        JLabel label = new JLabel(String.valueOf(number));
+        label.setHorizontalAlignment(SwingConstants.TRAILING);
+        label.setBorder(CELLBORDER);
+        if (toolTipKey != null) {
+            label.setToolTipText(Messages.message(toolTipKey));
+        }
+        return label;
+    }
+

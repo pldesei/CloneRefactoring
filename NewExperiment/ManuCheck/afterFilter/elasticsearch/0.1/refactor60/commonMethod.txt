@@ -1,0 +1,30 @@
+(startLine=194 endLine=221 srcPath=/root/NewExperiment/elasticsearchFilter/00683/src/main/java/org/elasticsearch/common/io/stream/StreamInput.java)
+    public String readString() throws IOException {
+        int charCount = readVInt();
+        char[] chars = CachedStreamInput.getCharArray(charCount);
+        int c, charIndex = 0;
+        while (charIndex < charCount) {
+            c = readByte() & 0xff;
+            switch (c >> 4) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                    chars[charIndex++] = (char) c;
+                    break;
+                case 12:
+                case 13:
+                    chars[charIndex++] = (char) ((c & 0x1F) << 6 | readByte() & 0x3F);
+                    break;
+                case 14:
+                    chars[charIndex++] = (char) ((c & 0x0F) << 12 | (readByte() & 0x3F) << 6 | (readByte() & 0x3F) << 0);
+                    break;
+            }
+        }
+        return new String(chars, 0, charCount);
+    }
+

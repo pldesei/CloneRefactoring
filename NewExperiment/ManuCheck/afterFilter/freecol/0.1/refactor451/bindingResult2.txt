@@ -1,0 +1,321 @@
+ProjectPath:/root/NewExperiment/freecolFilter/01313
+predFragLineRange:442-466
+predMethodLineRange:380-473
+nextLineRange:384-590
+predStrMethodInvoNames:
+[isEmpty, getType, getCurrentWorkLocations, getLocation, append, append, canAdd, append, canAdd, isEmpty, getUnitCount, getAvailableProductionTypes, append, append, append, append, getSuffix, getOutput, getMinimumGoodsCount, getInputs, min, getPotentialProduction, append, append, append, getProductionType, append, append, append, append, getSuffix, getOutput, getMinimumGoodsCount, getInputs, min, getPotentialProduction, append, append, append, append, append]
+%%%%%%%%%%
+AddedMethodInvo Line:417 InvoName:Math.max(getGoodsCount(ag.getType()),getNetProductionOf(ag.getType()))
+PackageName:java.lang
+QualifiedClassName:java.lang.Math
+ClassName:Math
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/lang/Math.java
+InvokedMethodSig:public static int max(int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:417 InvoName:getGoodsCount(ag.getType())
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.GoodsLocation
+ClassName:GoodsLocation
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/GoodsLocation.java
+InvokedMethodSig:public final int getGoodsCount(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:418 InvoName:getNetProductionOf(ag.getType())
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:public int getNetProductionOf(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:428 InvoName:sb.setLength(sb.length() - 1)
+PackageName:java.lang
+QualifiedClassName:java.lang.StringBuffer
+ClassName:StringBuffer
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/lang/StringBuffer.java
+InvokedMethodSig:public synchronized void setLength(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:428 InvoName:sb.length()
+PackageName:java.lang
+QualifiedClassName:java.lang.StringBuffer
+ClassName:StringBuffer
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/lang/StringBuffer.java
+InvokedMethodSig:public synchronized int length() 
+%%%%%%%%%%
+AddedMethodInvo Line:435 InvoName:workTypes.removeAll(tried)
+PackageName:java.util
+QualifiedClassName:java.util.Collection<net.sf.freecol.common.model.GoodsType>
+ClassName:Collection<GoodsType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/Collection<net.java
+InvokedMethodSig:public abstract boolean removeAll(Collection#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:437 InvoName:result.add(workTypes)
+PackageName:java.util
+QualifiedClassName:java.util.List<java.util.Collection<net.sf.freecol.common.model.GoodsType>>
+ClassName:List<Collection<GoodsType>>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/List<java.java
+InvokedMethodSig:public abstract boolean add(E) 
+%%%%%%%%%%
+AddedMethodInvo Line:438 InvoName:tried.addAll(workTypes)
+PackageName:java.util
+QualifiedClassName:java.util.Collection<net.sf.freecol.common.model.GoodsType>
+ClassName:Collection<GoodsType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/Collection<net.java
+InvokedMethodSig:public abstract boolean addAll(Collection#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:446 InvoName:accumulateChoices(workType.getEquivalentTypes(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:446 InvoName:workType.getEquivalentTypes()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.GoodsType
+ClassName:GoodsType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/GoodsType.java
+InvokedMethodSig:public Set<net.sf.freecol.common.model.GoodsType> getEquivalentTypes() 
+%%%%%%%%%%
+AddedMethodInvo Line:460 InvoName:getSpecification()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.FreeColGameObject
+ClassName:FreeColGameObject
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/FreeColGameObject.java
+InvokedMethodSig:public net.sf.freecol.common.model.Specification getSpecification() 
+%%%%%%%%%%
+AddedMethodInvo Line:468 InvoName:unit.getType().getConsumedGoods()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.UnitType
+ClassName:UnitType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/UnitType.java
+InvokedMethodSig:public List<net.sf.freecol.common.model.AbstractGoods> getConsumedGoods() 
+%%%%%%%%%%
+AddedMethodInvo Line:469 InvoName:productionCache.getNetProductionOf(ag.getType())
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.ProductionCache
+ClassName:ProductionCache
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/ProductionCache.java
+InvokedMethodSig:public int getNetProductionOf(net.sf.freecol.common.model.GoodsType) 
+%%%%%%%%%%
+AddedMethodInvo Line:470 InvoName:ag.getAmount()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.AbstractGoods
+ClassName:AbstractGoods
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/AbstractGoods.java
+InvokedMethodSig:public final int getAmount() 
+%%%%%%%%%%
+AddedMethodInvo Line:471 InvoName:ag.getType().isFoodType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.GoodsType
+ClassName:GoodsType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/GoodsType.java
+InvokedMethodSig:public boolean isFoodType() 
+%%%%%%%%%%
+AddedMethodInvo Line:472 InvoName:food.addAll(ag.getType().getEquivalentTypes())
+PackageName:java.util
+QualifiedClassName:java.util.Set<net.sf.freecol.common.model.GoodsType>
+ClassName:Set<GoodsType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/Set<net.java
+InvokedMethodSig:public abstract boolean addAll(Collection#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:472 InvoName:ag.getType().getEquivalentTypes()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.GoodsType
+ClassName:GoodsType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/GoodsType.java
+InvokedMethodSig:public Set<net.sf.freecol.common.model.GoodsType> getEquivalentTypes() 
+%%%%%%%%%%
+AddedMethodInvo Line:474 InvoName:nonFood.addAll(ag.getType().getEquivalentTypes())
+PackageName:java.util
+QualifiedClassName:java.util.Set<net.sf.freecol.common.model.GoodsType>
+ClassName:Set<GoodsType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/Set<net.java
+InvokedMethodSig:public abstract boolean addAll(Collection#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:474 InvoName:ag.getType().getEquivalentTypes()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.GoodsType
+ClassName:GoodsType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/GoodsType.java
+InvokedMethodSig:public Set<net.sf.freecol.common.model.GoodsType> getEquivalentTypes() 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:accumulateChoice(unit.getWorkType(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoice(net.sf.freecol.common.model.GoodsType, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:unit.getWorkType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getWorkType() 
+%%%%%%%%%%
+AddedMethodInvo Line:481 InvoName:accumulateChoice(unit.getType().getExpertProduction(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoice(net.sf.freecol.common.model.GoodsType, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:481 InvoName:unit.getType().getExpertProduction()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.UnitType
+ClassName:UnitType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/UnitType.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExpertProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:482 InvoName:accumulateChoice(unit.getExperienceType(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoice(net.sf.freecol.common.model.GoodsType, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:482 InvoName:unit.getExperienceType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExperienceType() 
+%%%%%%%%%%
+AddedMethodInvo Line:483 InvoName:accumulateChoices(food,tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:484 InvoName:accumulateChoices(nonFood,tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:486 InvoName:accumulateChoices(food,tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:487 InvoName:accumulateChoices(nonFood,tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:488 InvoName:accumulateChoice(unit.getWorkType(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoice(net.sf.freecol.common.model.GoodsType, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:488 InvoName:unit.getWorkType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getWorkType() 
+%%%%%%%%%%
+AddedMethodInvo Line:489 InvoName:accumulateChoice(unit.getType().getExpertProduction(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoice(net.sf.freecol.common.model.GoodsType, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:489 InvoName:unit.getType().getExpertProduction()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.UnitType
+ClassName:UnitType
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/UnitType.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExpertProduction() 
+%%%%%%%%%%
+AddedMethodInvo Line:490 InvoName:accumulateChoice(unit.getExperienceType(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoice(net.sf.freecol.common.model.GoodsType, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:490 InvoName:unit.getExperienceType()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public net.sf.freecol.common.model.GoodsType getExperienceType() 
+%%%%%%%%%%
+AddedMethodInvo Line:492 InvoName:accumulateChoices(spec.getFoodGoodsTypeList(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:492 InvoName:spec.getFoodGoodsTypeList()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Specification
+ClassName:Specification
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Specification.java
+InvokedMethodSig:public List<net.sf.freecol.common.model.GoodsType> getFoodGoodsTypeList() 
+%%%%%%%%%%
+AddedMethodInvo Line:493 InvoName:accumulateChoices(spec.getNewWorldLuxuryGoodsTypeList(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:493 InvoName:spec.getNewWorldLuxuryGoodsTypeList()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Specification
+ClassName:Specification
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Specification.java
+InvokedMethodSig:public List<net.sf.freecol.common.model.GoodsType> getNewWorldLuxuryGoodsTypeList() 
+%%%%%%%%%%
+AddedMethodInvo Line:494 InvoName:accumulateChoices(spec.getGoodsTypeList(),tried,result)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private void accumulateChoices(Collection<net.sf.freecol.common.model.GoodsType>, Collection<net.sf.freecol.common.model.GoodsType>, List<Collection<net.sf.freecol.common.model.GoodsType>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:494 InvoName:spec.getGoodsTypeList()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Specification
+ClassName:Specification
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Specification.java
+InvokedMethodSig:public List<net.sf.freecol.common.model.GoodsType> getGoodsTypeList() 
+%%%%%%%%%%
+AddedMethodInvo Line:536 InvoName:productionTypes.addAll(wl.getAvailableProductionTypes(false))
+PackageName:java.util
+QualifiedClassName:java.util.List<net.sf.freecol.common.model.ProductionType>
+ClassName:List<ProductionType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/List<net.java
+InvokedMethodSig:public abstract boolean addAll(Collection#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:538 InvoName:productionTypes.add(wl.getProductionType())
+PackageName:java.util
+QualifiedClassName:java.util.List<net.sf.freecol.common.model.ProductionType>
+ClassName:List<ProductionType>
+InnerClass
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/java/util/List<net.java
+InvokedMethodSig:public abstract boolean add(E) 
+%%%%%%%%%%
+AddedMethodInvo Line:582 InvoName:getOccupationAt(unit,wl,best,bestAmount,workTypes,sb)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Colony
+ClassName:Colony
+InvokedFilePath:/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java
+InvokedMethodSig:private int getOccupationAt(net.sf.freecol.common.model.Unit, net.sf.freecol.common.model.WorkLocation, net.sf.freecol.common.model.Colony.Occupation, int, Collection<net.sf.freecol.common.model.GoodsType>, java.lang.StringBuffer) 

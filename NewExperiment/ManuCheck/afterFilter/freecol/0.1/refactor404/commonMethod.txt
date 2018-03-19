@@ -1,0 +1,26 @@
+(startLine=616 endLine=639 srcPath=/root/NewExperiment/freecolFilter/01071/src/net/sf/freecol/server/control/InGameController.java)
+    /**
+     * Visits a native settlement, possibly scouting it full if it is
+     * as a result of a scout actually asking to speak to the chief,
+     * or for other settlement-contacting events such as missionary
+     * actions, demanding tribute, learning skills and trading if the
+     * settlementActionsContactChief game option is enabled.  It is
+     * still unclear what Col1 did here.
+     *
+     * @param serverPlayer The <code>ServerPlayer</code> that is contacting
+     *     the settlement.
+     * @param is The <code>IndianSettlement</code> to contact.
+     * @param scout True if this contact is due to a scout asking to
+     *     speak to the chief.
+     * @param cs A <code>ChangeSet</code> to update.
+     */
+    private void csVisit(ServerPlayer serverPlayer, IndianSettlement is,
+                         boolean scout, ChangeSet cs) {
+        serverPlayer.csContact((ServerPlayer) is.getOwner(), null, cs);
+        is.setVisited(serverPlayer);
+        if (scout || getGame().getSpecification()
+            .getBoolean("model.option.settlementActionsContactChief")) {
+            is.setScouted(serverPlayer);
+        }
+    }
+

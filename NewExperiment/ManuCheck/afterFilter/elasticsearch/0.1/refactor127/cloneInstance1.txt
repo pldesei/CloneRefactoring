@@ -1,0 +1,19 @@
+(startLine=1414 endLine=1430 srcPath=/root/NewExperiment/elasticsearchFilter/00855/src/main/java/jsr166e/ConcurrentHashMapV8.java)
+            else if ((f = tabAt(tab, i = (tab.length - 1) & h)) == null) {
+                Node<V> node = new Node<V>(h, k, null, null);
+                synchronized (node) {
+                    if (casTabAt(tab, i, null, node)) {
+                        len = 1;
+                        try {
+                            if ((val = mf.apply(k)) != null)
+                                node.val = val;
+                        } finally {
+                            if (val == null)
+                                setTabAt(tab, i, null);
+                        }
+                    }
+                }
+                if (len != 0)
+                    break;
+            }
+

@@ -1,0 +1,11 @@
+(startLine=348 endLine=356 srcPath=/root/NewExperiment/freecolFilter/01021/src/net/sf/freecol/client/gui/panel/DefaultTransferHandler.java)
+    private void restoreSelection(UnitLabel oldSelectedUnit) {
+        if (oldSelectedUnit != null) {
+            if ((oldSelectedUnit).getParent() instanceof EuropePanel.EuropeInPortPanel) {
+                ((EuropePanel) parentPanel).setSelectedUnit(oldSelectedUnit.getUnit());
+            } else {
+                ((ColonyPanel) parentPanel).setSelectedUnit(oldSelectedUnit.getUnit());
+            }
+        }
+    }
+

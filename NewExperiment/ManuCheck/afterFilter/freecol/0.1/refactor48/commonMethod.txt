@@ -1,0 +1,19 @@
+(startLine=275 endLine=291 srcPath=/root/NewExperiment/freecolFilter/00201/src/net/sf/freecol/common/model/Building.java)
+    /**
+     * Gets the number of hammers required for the improved 
+     * building of the same type.
+     *
+     * @return The number of hammers required for the improved 
+     *      building of the same type, or <code>-1</code> if 
+     *      the building does not exist.
+     */
+    public int getNextHammers() {
+        if (!canBuildNext()) {
+            return -1;
+        }
+
+        return level < buildingType.numberOfLevels() 
+                ? buildingType.level(level).hammersRequired 
+                : -1;
+    }
+

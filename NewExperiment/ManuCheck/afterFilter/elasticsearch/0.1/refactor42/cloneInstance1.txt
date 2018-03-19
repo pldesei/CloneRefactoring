@@ -1,0 +1,19 @@
+(startLine=75 endLine=91 srcPath=/root/NewExperiment/elasticsearchFilter/00532/modules/elasticsearch/src/main/java/org/elasticsearch/common/lucene/search/XBooleanFilter.java)
+        if (shouldFilters != null) {
+            for (int i = 0; i < shouldFilters.size(); i++) {
+                if (res == null) {
+                    res = new OpenBitSetDISI(getDISI(shouldFilters, i, reader), reader.maxDoc());
+                } else {
+                    DocIdSet dis = shouldFilters.get(i).getDocIdSet(reader);
+                    if (dis instanceof OpenBitSet) {
+                        // optimized case for OpenBitSets
+                        res.or((OpenBitSet) dis);
+                    } else if (dis instanceof OpenBitDocSet) {
+                        res.or(((OpenBitDocSet) dis).set());
+                    } else {
+                        res.inPlaceOr(getDISI(shouldFilters, i, reader));
+                    }
+                }
+            }
+        }
+

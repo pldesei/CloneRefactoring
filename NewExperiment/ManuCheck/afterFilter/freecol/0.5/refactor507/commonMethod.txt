@@ -1,0 +1,21 @@
+(startLine=307 endLine=325 srcPath=/root/NewExperiment/freecolFilter/01380/src/net/sf/freecol/common/model/SimpleCombatModel.java)
+    /**
+     * Add the popular support bonus to the result set if applicable.
+     *
+     * @param colony The <code>Colony</code> under attack.
+     * @param attacker The attacking <code>Unit</code>.
+     * @param result The set of modifiers to add to.
+     */
+    private void addPopularSupportBonus(Colony colony, Unit attacker,
+                                        Set<Modifier> result) {
+        int bonus = colony.getSoL();
+        if (bonus >= 0) {
+            if (attacker.getOwner().isREF()) bonus = 100 - bonus;
+            if (bonus > 0) {
+                result.add(new Modifier(Modifier.POPULAR_SUPPORT,
+                                        bonus, ModifierType.PERCENTAGE, colony,
+                                        Modifier.GENERAL_COMBAT_INDEX));
+            }
+        }
+    }
+

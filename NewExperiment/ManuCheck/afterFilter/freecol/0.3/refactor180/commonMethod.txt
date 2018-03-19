@@ -1,0 +1,21 @@
+(startLine=158 endLine=176 srcPath=/root/NewExperiment/freecolFilter/00748/test/src/net/sf/freecol/server/ServerTestHelper.java)
+    public static Game startServerGame(Map map) {
+        stopServerGame();
+        FreeColServer serv = startServer(false, true);
+        serv.setMapGenerator(new MockMapGenerator(map));
+        PreGameController pgc = (PreGameController) serv.getController();
+        try {
+            pgc.startGame();
+        } catch (FreeColException e) {
+            fail("Failed to start game");
+        }
+
+        Game game = serv.getGame();
+        FreeColTestCase.setGame(game);
+        if (game.getCurrentPlayer() == null) {
+            game.setCurrentPlayer(game.getFirstPlayer());
+        }
+        random = new Random();
+        return game;
+    }
+

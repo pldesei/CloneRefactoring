@@ -1,0 +1,22 @@
+(startLine=517 endLine=536 srcPath=/root/NewExperiment/freecolFilter/00406/src/net/sf/freecol/common/model/FreeColGameObject.java)
+    public <T extends FreeColGameObject> T updateFreeColGameObject(XMLStreamReader in, Class<T> returnClass) {
+        final String attributeString = in.getAttributeValue(null, ID_ATTRIBUTE);
+        if (attributeString == null) {
+            return null;
+        } else {
+            T returnValue = returnClass.cast(getGame().getFreeColGameObject(attributeString));
+            try {
+                if (returnValue == null) {
+                    Constructor c = returnClass.getConstructor(Game.class, XMLStreamReader.class);
+                    returnValue = returnClass.cast(c.newInstance(getGame(), in));
+                } else {
+                    returnValue.readFromXML(in);
+                }
+                return returnValue;
+            } catch(Exception e) {
+                logger.warning("Failed to update FreeColGameObject with ID " + attributeString);
+                return null;
+            }
+        }
+    }
+

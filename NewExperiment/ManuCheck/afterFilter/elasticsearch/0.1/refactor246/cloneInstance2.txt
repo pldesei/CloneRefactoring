@@ -1,0 +1,13 @@
+(startLine=87 endLine=97 srcPath=/root/NewExperiment/elasticsearchFilter/01627/src/main/java/org/elasticsearch/search/aggregations/metrics/stats/extended/ExtendedStatsAggregator.java)
+        if (owningBucketOrdinal >= counts.size()) {
+            final long from = counts.size();
+            final long overSize = BigArrays.overSize(owningBucketOrdinal + 1);
+            counts = bigArrays.resize(counts, overSize);
+            sums = bigArrays.resize(sums, overSize);
+            mins = bigArrays.resize(mins, overSize);
+            maxes = bigArrays.resize(maxes, overSize);
+            sumOfSqrs = bigArrays.resize(sumOfSqrs, overSize);
+            mins.fill(from, overSize, Double.POSITIVE_INFINITY);
+            maxes.fill(from, overSize, Double.NEGATIVE_INFINITY);
+        }
+

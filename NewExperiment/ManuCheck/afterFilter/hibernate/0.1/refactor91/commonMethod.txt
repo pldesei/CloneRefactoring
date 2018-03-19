@@ -1,0 +1,70 @@
+(startLine=162 endLine=229 srcPath=/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/internal/HibernateSchemaManagementTool.java)
+	public JdbcContext resolveJdbcContext(Map configurationValues) {
+		final JdbcContextBuilder jdbcContextBuilder = new JdbcContextBuilder( serviceRegistry );
+
+		// see if a specific connection has been provided
+		final Connection providedConnection = (Connection) configurationValues.get( HBM2DDL_CONNECTION );
+		if ( providedConnection != null ) {
+			jdbcContextBuilder.jdbcConnectionAccess = new JdbcConnectionAccessProvidedConnectionImpl( providedConnection );
+		}
+
+		// see if a specific Dialect override has been provided...
+		final String explicitDbName = (String) configurationValues.get( AvailableSettings.HBM2DDL_DB_NAME );
+		if ( StringHelper.isNotEmpty( explicitDbName ) ) {
+			final String explicitDbMajor = (String) configurationValues.get( AvailableSettings.HBM2DDL_DB_MAJOR_VERSION );
+			final String explicitDbMinor = (String) configurationValues.get( AvailableSettings.HBM2DDL_DB_MINOR_VERSION );
+
+			final Dialect indicatedDialect = serviceRegistry.getService( DialectResolver.class ).resolveDialect(
+					new DialectResolutionInfo() {
+						@Override
+						public String getDatabaseName() {
+							return explicitDbName;
+						}
+
+						@Override
+						public int getDatabaseMajorVersion() {
+							return StringHelper.isEmpty( explicitDbMajor )
+									? NO_VERSION
+									: Integer.parseInt( explicitDbMajor );
+						}
+
+						@Override
+						public int getDatabaseMinorVersion() {
+							return StringHelper.isEmpty( explicitDbMinor )
+									? NO_VERSION
+									: Integer.parseInt( explicitDbMinor );
+						}
+
+						@Override
+						public String getDriverName() {
+							return null;
+						}
+
+						@Override
+						public int getDriverMajorVersion() {
+							return NO_VERSION;
+						}
+
+						@Override
+						public int getDriverMinorVersion() {
+							return NO_VERSION;
+						}
+					}
+			);
+
+			if ( indicatedDialect == null ) {
+				log.debugf(
+						"Unable to resolve indicated Dialect resolution info (%s, %s, %s)",
+						explicitDbName,
+						explicitDbMajor,
+						explicitDbMinor
+				);
+			}
+			else {
+				jdbcContextBuilder.dialect = indicatedDialect;
+			}
+		}
+
+		return jdbcContextBuilder.buildJdbcContext();
+	}
+

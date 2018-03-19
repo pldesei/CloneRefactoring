@@ -1,0 +1,20 @@
+(startLine=138 endLine=155 srcPath=/root/NewExperiment/freecolFilter/00974/src/net/sf/freecol/client/gui/panel/ReportCargoPanel.java)
+        for (Unit unit : player.getUnits()) {
+            if (unit.isCarrier()) {
+                carriers.incrementCount(unit.getType(), 1);
+                capacity += unit.getType().getSpace();
+
+                String locationName = getLocationNameFor(unit);
+
+                ArrayList<Unit> unitList = locations.get(locationName);
+                if (unitList == null) {
+                    unitList = new ArrayList<Unit>();
+                    locations.put(locationName, unitList);
+                }
+                unitList.add(unit);
+                if (!(colonyNames.contains(locationName) || otherNames.contains(locationName))) {
+                    otherNames.add(locationName);
+                }
+            }
+        }
+

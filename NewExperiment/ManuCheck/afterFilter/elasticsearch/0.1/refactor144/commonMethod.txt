@@ -1,0 +1,10 @@
+(startLine=51 endLine=58 srcPath=/root/NewExperiment/elasticsearchFilter/00915/src/main/java/org/elasticsearch/index/fielddata/BytesValues.java)
+    /**
+     * Converts the provided bytes to "safe" ones from a "non" safe call made (if needed). Note,
+     * this calls makes the bytes safe for *reads*, not writes (into the same BytesRef). For example,
+     * it makes it safe to be placed in a map.
+     */
+    public BytesRef makeSafe(BytesRef bytes) {
+        return BytesRef.deepCopyOf(bytes);
+    }
+

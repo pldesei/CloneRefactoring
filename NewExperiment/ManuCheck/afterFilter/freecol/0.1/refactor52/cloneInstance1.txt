@@ -1,0 +1,12 @@
+(startLine=1676 endLine=1685 srcPath=/root/NewExperiment/freecolFilter/00212/src/net/sf/freecol/common/model/Colony.java)
+			if (sonsOfLiberty > oldSonsOfLiberty) {
+				addModelMessage(
+						this,
+						"model.colony.SoLIncrease",
+						new String[][] {
+								{ "%oldSoL%", String.valueOf(oldSonsOfLiberty) },
+								{ "%newSoL%", String.valueOf(sonsOfLiberty) },
+								{ "%colony%", getName() } },
+						ModelMessage.SONS_OF_LIBERTY, new Goods(Goods.BELLS));
+			} else {
+

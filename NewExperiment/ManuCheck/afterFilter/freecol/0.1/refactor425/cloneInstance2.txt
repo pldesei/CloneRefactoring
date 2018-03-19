@@ -1,0 +1,18 @@
+(startLine=609 endLine=624 srcPath=/root/NewExperiment/freecolFilter/01179/src/net/sf/freecol/client/ClientOptions.java)
+    public void updateOptions(InputStream in) {
+        try {
+            XMLStreamReader xsr = XMLInputFactory.newInstance()
+                .createXMLStreamReader(in, "UTF-8");
+            xsr.nextTag();
+            readFromXML(xsr);
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Exception when loading options.", e);
+        } finally {
+            try {
+                if (in != null) in.close();
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Exception when closing stream.", e);
+            }
+        }
+    }
+

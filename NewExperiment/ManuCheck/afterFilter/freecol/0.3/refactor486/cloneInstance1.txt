@@ -1,0 +1,18 @@
+(startLine=1585 endLine=1600 srcPath=/root/NewExperiment/freecolFilter/01339/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+        if (logger.isLoggable(Level.FINE)) {
+            for (AIUnit aiu : getAIUnits()) {
+                Unit u = aiu.getUnit();
+                String reason = reasons.get(u);
+                if (reason == null) reason = "OMITTED";
+                Mission m = aiu.getMission();
+                sb.append("\n  ").append(u.getLocation())
+                    .append(" ").append(reason)
+                    .append("-").append((m == null)
+                        ? "NoMission"
+                        : (m instanceof TransportMission)
+                        ? ((TransportMission)m).toFullString()
+                        : m.toString());
+            }
+            logger.fine(sb.toString());
+        }
+

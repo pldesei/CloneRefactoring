@@ -1,0 +1,10 @@
+(startLine=162 endLine=169 srcPath=/root/NewExperiment/freecolFilter/00348/src/net/sf/freecol/server/ai/mission/Mission.java)
+    protected void moveButDontAttack(Connection connection, int direction) {
+        if (direction >= 0) {
+            final MoveType mt = getUnit().getMoveType(direction);
+            if (mt != MoveType.ILLEGAL_MOVE && mt != MoveType.ATTACK) {
+                move(connection, direction);                    
+            }
+        }
+    }
+

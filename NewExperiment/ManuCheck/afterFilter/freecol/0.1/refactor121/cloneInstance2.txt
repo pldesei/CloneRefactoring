@@ -1,0 +1,20 @@
+(startLine=141 endLine=158 srcPath=/root/NewExperiment/freecolFilter/00400/src/net/sf/freecol/server/ai/mission/IndianBringGiftMission.java)
+            } else {
+                // Load the goods:
+                List<Goods> goodsList = new ArrayList<Goods>();
+                GoodsContainer gc = getUnit().getIndianSettlement().getGoodsContainer();
+                // Come back to change - takes SUGAR, TOBACCO, COTTON, FURS
+                for (GoodsType goodsType : new GoodsType[] {Goods.SUGAR, Goods.TOBACCO, Goods.COTTON, Goods.FURS}) {
+                    if (gc.getGoodsCount(goodsType) >= IndianSettlement.KEEP_RAW_MATERIAL + 25) {
+                        goodsList.add(new Goods(getGame(), getUnit().getIndianSettlement(),
+                                                goodsType,
+                                                getRandom().nextInt(15) + 10));
+                    }
+                }
+
+                if (goodsList.size() > 0) {
+                    Goods goods = goodsList.get(getRandom().nextInt(goodsList.size()));
+                    goods.setLocation(getUnit());
+                }
+            }
+

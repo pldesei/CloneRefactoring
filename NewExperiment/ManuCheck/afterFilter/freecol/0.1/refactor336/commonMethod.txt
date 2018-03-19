@@ -1,0 +1,32 @@
+(startLine=699 endLine=728 srcPath=/root/NewExperiment/freecolFilter/00940/src/net/sf/freecol/server/ai/ColonyPlan.java)
+    /**
+     * Given a buildable that improves production of a goods type,
+     * prioritize it.
+     *
+     * @param type The <code>BuildableType</code> to consider.
+     * @param goodsType The <code>GoodsType</code> improved by the buildable.
+     * @return True if this type was prioritized.
+     */
+    private boolean prioritizeProduction(BuildableType type,
+                                         GoodsType goodsType) {
+        boolean ret = false;
+        if (goodsType.isMilitaryGoods()) {
+            ret = prioritize(type, MILITARY_WEIGHT,
+                1.0/*FIXME: amount present wrt amount to equip*/);
+        } else if (goodsType.isBuildingMaterial()) {
+            ret = prioritize(type, BUILDING_WEIGHT,
+                1.0/*FIXME: need for this type*/);
+        } else if (goodsType.isLibertyType()) {
+            ret = prioritize(type, LIBERTY_WEIGHT,
+                (colony.getSoL() >= 100) ? 0.01 : 1.0);
+        } else if (goodsType.isImmigrationType()) {
+            ret = prioritize(type, IMMIGRATION_WEIGHT,
+                1.0/*FIXME: Brewster?*/);
+        } else if (produce.contains(goodsType)) {
+            double f = 0.1 * colony.getProductionOf(goodsType.getRawMaterial());
+            ret = prioritize(type, PRODUCTION_WEIGHT,
+                f/*FIXME: improvement?*/);
+        }
+        return ret;
+    }
+

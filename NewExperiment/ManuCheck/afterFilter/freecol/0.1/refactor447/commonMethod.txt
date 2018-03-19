@@ -1,0 +1,14 @@
+(startLine=912 endLine=923 srcPath=/root/NewExperiment/freecolFilter/01294/src/net/sf/freecol/client/gui/panel/Flag.java)
+    /**
+     * Centers the given path on the given point (x,y).
+     *
+     * @param path The path to center.
+     * @param x The x coordinate of the center.
+     * @param y The y coordinate of the center.
+     */
+    private void center(GeneralPath path, double x, double y) {
+        double dx = x - path.getBounds().getX() - path.getBounds().getWidth() / 2;
+        double dy = y - path.getBounds().getY() - path.getBounds().getHeight() / 2;
+        path.transform(AffineTransform.getTranslateInstance(dx, dy));
+    }
+

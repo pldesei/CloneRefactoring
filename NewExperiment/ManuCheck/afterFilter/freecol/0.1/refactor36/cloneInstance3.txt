@@ -1,0 +1,17 @@
+(startLine=2290 endLine=2304 srcPath=/root/NewExperiment/freecolFilter/00199/src/net/sf/freecol/client/control/InGameController.java)
+    public void moveToAmerica(Unit unit) {
+        if (freeColClient.getGame().getCurrentPlayer() != freeColClient.getMyPlayer()) {
+            freeColClient.getCanvas().showInformationMessage("notYourTurn");
+            return;
+        }
+        
+        Client client = freeColClient.getClient();
+
+        unit.moveToAmerica();
+
+        Element moveToAmericaElement = Message.createNewRootElement("moveToAmerica");
+        moveToAmericaElement.setAttribute("unit", unit.getID());
+
+        client.sendAndWait(moveToAmericaElement);
+    }
+

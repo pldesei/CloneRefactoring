@@ -1,0 +1,46 @@
+(startLine=422 endLine=465 srcPath=/root/NewExperiment/hibernateFilter/01415/hibernate-core/src/main/java/org/hibernate/cfg/CollectionPropertyHolder.java)
+	public AttributeConverterDefinition keyElementAttributeConverterDefinition(XClass keyXClass) {
+		AttributeConversionInfo info = locateAttributeConversionInfo( "key" );
+		if ( info != null ) {
+			if ( info.isConversionDisabled() ) {
+				return null;
+			}
+			else {
+				try {
+					return makeAttributeConverterDefinition( info );
+				}
+				catch (Exception e) {
+					throw new IllegalStateException(
+							String.format( "Unable to instantiate AttributeConverter [%s", info.getConverterClass().getName() ),
+							e
+					);
+				}
+			}
+		}
+
+		log.debugf(
+				"Attempting to locate auto-apply AttributeConverter for collection key [%s]",
+				collection.getRole()
+		);
+
+		final Class elementClass = determineKeyClass( keyXClass );
+		if ( elementClass != null ) {
+			for ( AttributeConverterDefinition attributeConverterDefinition : getContext().getMetadataCollector().getAttributeConverters() ) {
+				if ( ! attributeConverterDefinition.isAutoApply() ) {
+					continue;
+				}
+				log.debugf(
+						"Checking auto-apply AttributeConverter [%s] type [%s] for match [%s]",
+						attributeConverterDefinition.toString(),
+						attributeConverterDefinition.getEntityAttributeType().getSimpleName(),
+						elementClass.getSimpleName()
+				);
+				if ( areTypeMatch( attributeConverterDefinition.getEntityAttributeType(), elementClass ) ) {
+					return attributeConverterDefinition;
+				}
+			}
+		}
+
+		return null;
+	}
+

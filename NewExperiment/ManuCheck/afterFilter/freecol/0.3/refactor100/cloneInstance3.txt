@@ -1,0 +1,11 @@
+(startLine=766 endLine=774 srcPath=/root/NewExperiment/freecolFilter/00365/src/net/sf/freecol/server/ai/mission/TransportMission.java)
+            try {
+                Element reply = connection.ask(recruitUnitInEuropeElement);
+                if (reply.getTagName().equals("recruitUnitInEuropeConfirmed")) {
+                    return (AIUnit) getAIMain().getAIObject(
+                            ((Element) reply.getChildNodes().item(0)).getAttribute("ID"));
+                } else {
+                    logger.warning("Could not recruit the specified unit in europe.");
+                }
+            } catch (IOException e) {
+

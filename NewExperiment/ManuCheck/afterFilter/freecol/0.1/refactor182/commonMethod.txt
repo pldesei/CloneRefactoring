@@ -1,0 +1,14 @@
+(startLine=368 endLine=379 srcPath=/root/NewExperiment/freecolFilter/00786/src/net/sf/freecol/server/ai/AIMessage.java)
+    /**
+     * Train unit in Europe.
+     *
+     * @param connection The <code>Connection</code> to the server.
+     * @param unitType The <code>UnitType</code> to train.
+     * @return True if the message was sent, and a non-error reply returned.
+     */
+    public static boolean askTrainUnitInEurope(Connection connection,
+                                               UnitType type) {
+        return sendMessage(connection,
+                           new TrainUnitInEuropeMessage(type));
+    }
+

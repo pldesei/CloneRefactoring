@@ -1,0 +1,51 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/01491
+predFragLineRange:69-95
+predMethodLineRange:62-95
+nextLineRange:96-121
+predStrMethodInvoNames:
+[doCreation, add]
+%%%%%%%%%%
+AddedMethodInvo Line:108 InvoName:targetDescriptor.getTargetTypes().isEmpty()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:108 InvoName:targetDescriptor.getTargetTypes()
+PackageName:org.hibernate.tool.schema.spi
+QualifiedClassName:org.hibernate.tool.schema.spi.TargetDescriptor
+ClassName:TargetDescriptor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/spi/TargetDescriptor.java
+InvokedMethodSig:public abstract EnumSet<TargetType> getTargetTypes() 
+%%%%%%%%%%
+AddedMethodInvo Line:112 InvoName:tool.resolveJdbcContext(options.getConfigurationValues())
+PackageName:org.hibernate.tool.schema.internal
+QualifiedClassName:org.hibernate.tool.schema.internal.HibernateSchemaManagementTool
+ClassName:HibernateSchemaManagementTool
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/internal/HibernateSchemaManagementTool.java
+InvokedMethodSig:public org.hibernate.tool.schema.internal.exec.JdbcContext resolveJdbcContext(Map#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:112 InvoName:options.getConfigurationValues()
+PackageName:org.hibernate.tool.schema.spi
+QualifiedClassName:org.hibernate.tool.schema.spi.ExecutionOptions
+ClassName:ExecutionOptions
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/spi/ExecutionOptions.java
+InvokedMethodSig:public abstract Map#RAW getConfigurationValues() 
+%%%%%%%%%%
+AddedMethodInvo Line:113 InvoName:tool.buildGenerationTargets(targetDescriptor,jdbcContext,options.getConfigurationValues(),true)
+PackageName:org.hibernate.tool.schema.internal
+QualifiedClassName:org.hibernate.tool.schema.internal.HibernateSchemaManagementTool
+ClassName:HibernateSchemaManagementTool
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/internal/HibernateSchemaManagementTool.java
+InvokedMethodSig:org.hibernate.tool.schema.internal.exec.GenerationTarget[] buildGenerationTargets(org.hibernate.tool.schema.spi.TargetDescriptor, org.hibernate.tool.schema.internal.exec.JdbcContext, Map#RAW, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:116 InvoName:options.getConfigurationValues()
+PackageName:org.hibernate.tool.schema.spi
+QualifiedClassName:org.hibernate.tool.schema.spi.ExecutionOptions
+ClassName:ExecutionOptions
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/spi/ExecutionOptions.java
+InvokedMethodSig:public abstract Map#RAW getConfigurationValues() 
+%%%%%%%%%%
+AddedMethodInvo Line:120 InvoName:jdbcContext.getDialect()
+PackageName:org.hibernate.tool.schema.internal.exec
+QualifiedClassName:org.hibernate.tool.schema.internal.exec.JdbcContext
+ClassName:JdbcContext
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01491/hibernate-core/src/main/java/org/hibernate/tool/schema/internal/exec/JdbcContext.java
+InvokedMethodSig:public abstract org.hibernate.dialect.Dialect getDialect() 

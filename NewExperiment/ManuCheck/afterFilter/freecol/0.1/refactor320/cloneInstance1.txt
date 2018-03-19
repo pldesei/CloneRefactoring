@@ -1,0 +1,17 @@
+(startLine=656 endLine=670 srcPath=/root/NewExperiment/freecolFilter/00939/src/net/sf/freecol/server/ai/ColonyPlan.java)
+                && secondaryRawMaterial.isNewWorldGoodsType()) {
+            Iterator<WorkLocationPlan> wlpIterator2 = workLocationPlans.iterator();
+            while (wlpIterator2.hasNext()) {
+                WorkLocationPlan wlp = wlpIterator2.next();
+                if (wlp.getWorkLocation() instanceof ColonyTile && wlp.getGoodsType() == secondaryRawMaterial) {
+                    Tile t = ((ColonyTile) wlp.getWorkLocation()).getWorkTile();
+                    // TODO: find out about unit working here, if any (?)
+                    if (t.getMaximumPotential(food, null) > 2) {
+                        wlp.setGoodsType(food);
+                    } else {
+                        wlpIterator2.remove();
+                    }
+                }
+            }
+        }
+

@@ -1,0 +1,15 @@
+(startLine=3439 endLine=3451 srcPath=/root/NewExperiment/freecolFilter/01340/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * {@inheritDoc}
+     */
+    public String toShortString() {
+        StringBuffer sb = new StringBuffer(32);
+        sb.append(getId()).append("-").append(getType().getSuffix());
+        if (!hasDefaultRole()) {
+            sb.append("-").append(getRoleSuffix());
+            int count = getRoleCount();
+            if (count > 1) sb.append(".").append(count);
+        }
+        return sb.toString();
+    }
+

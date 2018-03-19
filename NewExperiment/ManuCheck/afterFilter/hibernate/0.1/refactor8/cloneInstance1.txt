@@ -1,0 +1,26 @@
+(startLine=104 endLine=127 srcPath=/root/NewExperiment/hibernateFilter/00308/core/src/main/java/org/hibernate/id/SequenceGenerator.java)
+		try {
+
+			PreparedStatement st = session.getBatcher().prepareSelectStatement(sql);
+			try {
+				ResultSet rs = st.executeQuery();
+				try {
+					rs.next();
+					Serializable result = IdentifierGeneratorHelper.get(
+							rs, identifierType
+						);
+					if ( log.isDebugEnabled() ) {
+						log.debug("Sequence identifier generated: " + result);
+					}
+					return result;
+				}
+				finally {
+					rs.close();
+				}
+			}
+			finally {
+				session.getBatcher().closeStatement(st);
+			}
+			
+		}
+

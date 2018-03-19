@@ -1,0 +1,33 @@
+(startLine=97 endLine=127 srcPath=/root/NewExperiment/freecolFilter/00187/src/net/sf/freecol/client/gui/panel/ColopediaPanel.java)
+    public ColopediaPanel(Canvas parent) {
+        super(new FlowLayout(FlowLayout.CENTER, 1000, 10));
+        this.parent = parent;
+        this.library = (ImageLibrary) parent.getImageProvider();
+        
+        setLayout(new BorderLayout());
+        
+        header = new JLabel(Messages.message("menuBar.colopedia"), SwingConstants.CENTER);
+        header.setFont(((Font) UIManager.get("HeaderFont")).deriveFont(0, 48));
+        header.setBorder(new EmptyBorder(20, 0, 0, 0));
+        add(header, BorderLayout.NORTH);
+
+        listPanel = new JPanel();
+        listPanel.setOpaque(false);
+        //listPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        add(listPanel, BorderLayout.WEST);
+
+        detailPanel = new JPanel();
+        detailPanel.setOpaque(false);
+        detailPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        add(detailPanel, BorderLayout.CENTER);
+
+        ok = new JButton(Messages.message("ok"));
+        ok.setActionCommand(String.valueOf(OK));
+        ok.addActionListener(this);
+        enterPressesWhenFocused(ok);
+        setCancelComponent(ok);
+        add(ok, BorderLayout.SOUTH);
+
+        setSize(850, 600);
+    }
+

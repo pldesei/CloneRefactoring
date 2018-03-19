@@ -1,0 +1,7 @@
+(startLine=114 endLine=118 srcPath=/root/NewExperiment/elasticsearchFilter/01182/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
+    public void postMatch(int doc) throws IOException {
+        for (Collector collector : facetAndAggregatorCollector) {
+            collector.collect(doc);
+        }
+    }
+

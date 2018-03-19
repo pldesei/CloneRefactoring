@@ -1,0 +1,7 @@
+(startLine=127 endLine=131 srcPath=/root/NewExperiment/elasticsearchFilter/00751/src/test/java/org/elasticsearch/test/unit/index/engine/AbstractSimpleEngineTests.java)
+    private ParsedDocument testParsedDocument(String uid, String id, String type, String routing, long timestamp, long ttl, Document document, Analyzer analyzer, BytesReference source, boolean mappingsModified) {
+        UidField uidField = new UidField("_uid", uid, 0);
+        document.add(uidField);
+        return new ParsedDocument(uidField, id, type, routing, timestamp, ttl, Arrays.asList(document), analyzer, source, mappingsModified);
+    }
+

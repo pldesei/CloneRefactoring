@@ -1,0 +1,14 @@
+(startLine=1112 endLine=1123 srcPath=/root/NewExperiment/freecolFilter/01223/src/net/sf/freecol/server/model/ServerPlayer.java)
+    /**
+     * Modifies the hostility against the given player.
+     *
+     * +til: Handles tile modifications.
+     *
+     * @param player The <code>Player</code>.
+     * @param add The amount to add to the current tension level.
+     * @param cs A <code>ChangeSet</code> to update.
+     */
+    public void csModifyTension(Player player, int add, ChangeSet cs) {
+        csModifyTension(player, add, null, cs);
+    }
+

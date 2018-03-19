@@ -1,0 +1,16 @@
+(startLine=130 endLine=143 srcPath=/root/NewExperiment/hibernateFilter/00349/core/src/main/java/org/hibernate/id/enhanced/OptimizerFactory.java)
+		/**
+		 * {@inheritDoc}
+		 */
+		public Serializable generate(AccessCallback callback) {
+			if ( lastSourceValue == null ) {
+				do {
+					lastSourceValue = callback.getNextValue();
+				} while ( lastSourceValue.lt( 1 ) );
+			}
+			else {
+				lastSourceValue = callback.getNextValue();
+			}
+			return lastSourceValue.makeValue();
+		}
+

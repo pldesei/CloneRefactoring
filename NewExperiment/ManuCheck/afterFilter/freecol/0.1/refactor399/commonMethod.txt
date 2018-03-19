@@ -1,0 +1,12 @@
+(startLine=1366 endLine=1375 srcPath=/root/NewExperiment/freecolFilter/01061/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+    private void putReason(AIUnit aiUnit, String reason) {
+        final Unit unit = aiUnit.getUnit();
+        final Mission mission = aiUnit.getMission();
+        reasons.put(unit, unit.getLocation() + " " + reason + "-"
+            + ((mission == null)
+                ? "NoMission"
+                : (mission instanceof TransportMission)
+                ? ((TransportMission)mission).toFullString()
+                : mission.toString()));
+    }
+

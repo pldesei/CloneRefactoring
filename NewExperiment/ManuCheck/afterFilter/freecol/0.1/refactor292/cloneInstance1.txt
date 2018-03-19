@@ -1,0 +1,19 @@
+(startLine=319 endLine=335 srcPath=/root/NewExperiment/freecolFilter/00935/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+        if (registered == null) {
+            Set<Modifier> modifiers = new HashSet<Modifier>();
+            int price = is.getPriceToSell(goods)
+                + getPlayer().getTension(buyer).getValue();
+            Unit missionary = is.getMissionary(buyer);
+            if (missionary != null
+                && spec.getBoolean(GameOptions.ENHANCED_MISSIONARIES)) {
+                modifiers.addAll(getMissionaryTradeBonuses(missionary, false));
+            }
+            if (unit.isNaval()) {
+                modifiers.addAll(getShipTradePenalties(false));
+            }
+            price = (int) FeatureContainer.applyModifierSet((float)price,
+                getGame().getTurn(), modifiers);
+            sessionRegister.put(goldKey, new Integer(price));
+            return price;
+        } else {
+

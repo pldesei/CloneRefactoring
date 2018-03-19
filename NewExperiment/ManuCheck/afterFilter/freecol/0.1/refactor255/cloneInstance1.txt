@@ -1,0 +1,11 @@
+(startLine=376 endLine=384 srcPath=/root/NewExperiment/freecolFilter/00867/src/net/sf/freecol/client/gui/panel/ReportColonyPanel.java)
+                    if (amount < low) {
+                        int turns = amount / p + 1;
+                        c = Color.RED;
+                        tip = Messages.message(StringTemplate
+                            .template("report.colony.production.low.description")
+                                .add("%goods%", g.getNameKey())
+                                .addAmount("%amount%", p)
+                                .addAmount("%turns%", turns));
+                    } else {
+

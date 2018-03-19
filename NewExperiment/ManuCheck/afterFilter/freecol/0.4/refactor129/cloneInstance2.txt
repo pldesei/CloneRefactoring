@@ -1,0 +1,48 @@
+(startLine=101 endLine=146 srcPath=/root/NewExperiment/freecolFilter/00447/test/src/net/sf/freecol/common/model/IndianSettlementTest.java)
+	public void testHorseBreeding(){
+		GoodsType horsesType = FreeCol.getSpecification().getGoodsType("model.goods.horses");
+        GoodsType foodType = FreeCol.getSpecification().getGoodsType("model.goods.food");
+        
+		Game game = getStandardGame();
+
+        Player indianPlayer = game.getPlayer("model.nation.tupi");
+
+        Map map = getEmptyMap();
+        game.setMap(map);
+        
+        //////////////////////
+        // Setting test settlement and brave
+        Tile settlementTile = map.getTile(5, 8);
+        UnitType skillToTeach = FreeCol.getSpecification().getUnitType("model.unit.masterCottonPlanter");
+        boolean isCapital = true;
+        boolean isVisited = false;
+        Unit residentMissionary = null;
+        IndianSettlement camp = new IndianSettlement(game,indianPlayer,settlementTile,isCapital,skillToTeach,isVisited,residentMissionary);
+        
+        UnitType indianBraveType = FreeCol.getSpecification().getUnitType("model.unit.brave");
+        Unit brave = new Unit(game, camp, indianPlayer, indianBraveType, UnitState.ACTIVE,
+                indianBraveType.getDefaultEquipment());
+        camp.addOwnedUnit(brave);
+        
+        assertEquals(1, camp.getUnitCount());
+        assertEquals(0, camp.getFoodCount());
+
+        //add horses
+        int initialHorses = 2;
+        camp.addGoods(horsesType, initialHorses);
+        
+        // verify that there is food production for the horses
+        int foodProduced = camp.getProductionOf(foodType);
+        int foodConsumed = camp.getFoodConsumption();
+        int foodAvail = foodProduced - foodConsumed;
+        assertTrue("Food Produced should be more the food consumed",foodProduced > foodConsumed);
+        
+        camp.newTurn();
+        
+        int expectedHorseProd = Math.min(IndianSettlement.MAX_HORSES_PER_TURN, foodAvail);
+        assertTrue("Horses should breed", expectedHorseProd > 0);
+        
+        int horsesBreeded = camp.getGoodsCount(horsesType) - initialHorses;
+        assertEquals("Wrong number of horses breeded",expectedHorseProd,horsesBreeded);
+	}
+

@@ -1,0 +1,31 @@
+(startLine=62 endLine=90 srcPath=/root/NewExperiment/hibernateFilter/01490/hibernate-core/src/main/java/org/hibernate/tool/schema/internal/SchemaDropperImpl.java)
+			Dialect dialect) {
+		final ArrayList<String> commands = new ArrayList<String>();
+		doDrop(
+				metadata,
+				dropNamespaces,
+				dialect,
+				new Target() {
+
+					@Override
+					public boolean acceptsImportScriptActions() {
+						return true;
+					}
+
+					@Override
+					public void prepare() {
+					}
+
+					@Override
+					public void accept(String action) {
+						commands.add( action );
+					}
+
+					@Override
+					public void release() {
+					}
+				}
+		);
+		return commands;
+	}
+

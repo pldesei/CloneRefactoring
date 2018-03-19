@@ -1,0 +1,28 @@
+(startLine=96 endLine=121 srcPath=/root/NewExperiment/elasticsearchFilter/00682/src/main/java/org/elasticsearch/action/deletebyquery/ShardDeleteByQueryRequest.java)
+    public void readFrom(StreamInput in) throws IOException {
+        super.readFrom(in);
+        querySource = in.readBytesReference();
+        shardId = in.readVInt();
+        int typesSize = in.readVInt();
+        if (typesSize > 0) {
+            types = new String[typesSize];
+            for (int i = 0; i < typesSize; i++) {
+                types[i] = in.readUTF();
+            }
+        }
+        int routingSize = in.readVInt();
+        if (routingSize > 0) {
+            routing = new THashSet<String>(routingSize);
+            for (int i = 0; i < routingSize; i++) {
+                routing.add(in.readUTF());
+            }
+        }
+        int aliasesSize = in.readVInt();
+        if (aliasesSize > 0) {
+            filteringAliases = new String[aliasesSize];
+            for (int i = 0; i < aliasesSize; i++) {
+                filteringAliases[i] = in.readUTF();
+            }
+        }
+    }
+

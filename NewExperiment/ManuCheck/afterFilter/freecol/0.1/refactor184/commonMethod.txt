@@ -1,0 +1,13 @@
+(startLine=251 endLine=261 srcPath=/root/NewExperiment/freecolFilter/00786/src/net/sf/freecol/server/ai/AIMessage.java)
+    /**
+     * A unit in Europe emigrates.
+     *
+     * @param connection The <code>Connection</code> to the server.
+     * @param slot The slot to emigrate from.
+     * @return True if the message was sent, and a non-error reply returned.
+     */
+    public static boolean askEmigrate(Connection connection, int slot) {
+        return sendMessage(connection,
+                           new EmigrateUnitMessage(slot));
+    }
+

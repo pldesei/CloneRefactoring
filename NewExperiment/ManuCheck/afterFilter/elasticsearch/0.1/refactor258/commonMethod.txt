@@ -1,0 +1,13 @@
+(startLine=49 endLine=59 srcPath=/root/NewExperiment/elasticsearchFilter/01769/core/src/main/java/org/elasticsearch/common/ParseFieldMatcher.java)
+    /**
+     * Matches a {@link ParseField} against a field name, and throws deprecation exception depending on the current
+     * value of the {@link #PARSE_STRICT} setting.
+     * @param fieldName the field name found in the request while parsing
+     * @param parseField the parse field that we are looking for
+     * @throws IllegalArgumentException whenever we are in strict mode and the request contained a deprecated field
+     * @return true whenever the parse field that we are looking for was found, false otherwise
+     */
+    public boolean match(String fieldName, ParseField parseField) {
+        return parseField.match(fieldName, parseFlags);
+    }
+

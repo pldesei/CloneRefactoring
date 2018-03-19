@@ -1,0 +1,21 @@
+(startLine=476 endLine=494 srcPath=/root/NewExperiment/hibernateFilter/01556/hibernate-core/src/main/java/org/hibernate/dialect/AbstractHANADialect.java)
+	public String getForUpdateString(final String aliases, final LockOptions lockOptions) {
+		LockMode lockMode = lockOptions.getLockMode();
+		final Iterator<Map.Entry<String, LockMode>> itr = lockOptions.getAliasLockIterator();
+		while ( itr.hasNext() ) {
+			// seek the highest lock mode
+			final Map.Entry<String, LockMode> entry = itr.next();
+			final LockMode lm = entry.getValue();
+			if ( lm.greaterThan( lockMode ) ) {
+				lockMode = lm;
+			}
+		}
+
+		// not sure why this is sometimes empty
+		if ( aliases == null || "".equals( aliases ) ) {
+			return getForUpdateString( lockMode );
+		}
+
+		return getForUpdateString( lockMode ) + " of " + aliases;
+	}
+

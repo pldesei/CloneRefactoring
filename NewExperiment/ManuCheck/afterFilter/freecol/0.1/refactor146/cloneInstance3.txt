@@ -1,0 +1,10 @@
+(startLine=724 endLine=731 srcPath=/root/NewExperiment/freecolFilter/00614/src/net/sf/freecol/client/control/InGameInputHandler.java)
+                if (goods.getType().isFoodType()) {
+                    m = new ModelMessage(colony, ModelMessage.MessageType.ACCEPTED_DEMANDS,
+                                         unit,
+                                         "indianDemand.food.text",
+                                         "%nation%", unit.getOwner().getNationAsString(),
+                                         "%colony%", colony.getName(),
+                                         "%amount%", String.valueOf(goods.getAmount()));
+                } else {
+

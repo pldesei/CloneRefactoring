@@ -1,0 +1,15 @@
+(startLine=508 endLine=520 srcPath=/root/NewExperiment/freecolFilter/00693/src/net/sf/freecol/common/model/GoodsContainer.java)
+    private void writeStorage(XMLStreamWriter out, String tag, Map<GoodsType, Integer> storage)
+        throws XMLStreamException {
+        if (!storage.isEmpty()) {
+            out.writeStartElement(tag);
+            for (Map.Entry<GoodsType, Integer> entry : storage.entrySet()) {
+                out.writeStartElement(Goods.getXMLElementTagName());
+                out.writeAttribute("type", entry.getKey().getId());
+                out.writeAttribute("amount", entry.getValue().toString());
+                out.writeEndElement();
+            }
+            out.writeEndElement();
+        }
+    }
+

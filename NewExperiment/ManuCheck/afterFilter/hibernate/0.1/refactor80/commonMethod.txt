@@ -1,0 +1,11 @@
+(startLine=400 endLine=408 srcPath=/root/NewExperiment/hibernateFilter/01230/hibernate-entitymanager/src/main/java/org/hibernate/jpa/spi/BaseQueryImpl.java)
+	private <T extends Enum<T>> T getHint(String key, Class<T> hintClass) {
+		Object hint = hints != null ? hints.get( key ) : null;
+
+		if ( hint == null ) {
+			hint = entityManager.getProperties().get( key );
+		}
+
+		return hint != null ? Enum.valueOf( hintClass, hint.toString() ) : null;
+	}
+

@@ -1,0 +1,10 @@
+(startLine=104 endLine=111 srcPath=/root/NewExperiment/hibernateFilter/00234/annotations/src/main/java/org/hibernate/cfg/EJB3DTDEntityResolver.java)
+	private InputStream getStreamFromClasspath(String fileName) {
+		log.trace(
+							"recognized JPA ORM namespace; attempting to resolve on classpath under org/hibernate/ejb"
+		);
+		String path = "org/hibernate/ejb/" + fileName;
+		InputStream dtdStream = resolveInHibernateNamespace( path );
+		return dtdStream;
+	}
+

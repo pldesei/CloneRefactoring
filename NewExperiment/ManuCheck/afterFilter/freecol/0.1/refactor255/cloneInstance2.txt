@@ -1,0 +1,12 @@
+(startLine=401 endLine=410 srcPath=/root/NewExperiment/freecolFilter/00867/src/net/sf/freecol/client/gui/panel/ReportColonyPanel.java)
+                } else if (g != foodType && amount > high) {
+                    int turns = 1 + (colony.getWarehouseCapacity() - amount)
+                        / p;
+                    c = Color.RED;
+                    tip = Messages.message(StringTemplate
+                        .template("report.colony.production.high.description")
+                            .add("%goods%", g.getNameKey())
+                            .addAmount("%amount%", p)
+                            .addAmount("%turns%", turns));
+                } else {
+

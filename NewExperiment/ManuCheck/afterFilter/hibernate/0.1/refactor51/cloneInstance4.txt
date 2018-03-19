@@ -1,0 +1,28 @@
+(startLine=102 endLine=127 srcPath=/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/loader/EntityAssociationResultSetProcessorTest.java)
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = connection.prepareStatement( sql );
+							ps.setInt( 1, 1 );
+							ResultSet resultSet = ps.executeQuery();
+							results.addAll(
+									resultSetProcessor.extractResults(
+											NoOpLoadPlanAdvisor.INSTANCE,
+											resultSet,
+											(SessionImplementor) workSession,
+											new QueryParameters(),
+											new NamedParameterContext() {
+												@Override
+												public int[] getNamedParameterLocations(String name) {
+													return new int[0];
+												}
+											},
+											aliasResolutionContext,
+											true,
+											false,
+											null,
+											null
+									)
+							);
+							resultSet.close();
+							ps.close();
+						}
+

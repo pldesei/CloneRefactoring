@@ -1,0 +1,11 @@
+(startLine=452 endLine=460 srcPath=/root/NewExperiment/freecolFilter/01238/src/net/sf/freecol/client/control/InGameInputHandler.java)
+        } else {
+            attackerTile = game.getFreeColGameObject(str, Tile.class);
+            if (attackerTile == null) {
+                logger.warning("Attack animation"
+                    + " for: " + client.getMyPlayer().getId()
+                    + " can not find attacker tile: " + str);
+                return null;
+            }
+        }
+

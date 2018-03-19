@@ -1,0 +1,8 @@
+(startLine=44 endLine=49 srcPath=/root/NewExperiment/elasticsearchFilter/01772/modules/lang-painless/src/main/java/org/elasticsearch/painless/node/SBlock.java)
+    @Override
+    void extractVariables(Set<String> variables) {
+        for (AStatement statement : statements) {
+            statement.extractVariables(variables);
+        }
+    }
+

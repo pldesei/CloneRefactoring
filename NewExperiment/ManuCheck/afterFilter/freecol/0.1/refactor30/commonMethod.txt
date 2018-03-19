@@ -1,0 +1,71 @@
+(startLine=2115 endLine=2183 srcPath=/root/NewExperiment/freecolFilter/00177/src/net/sf/freecol/common/model/Unit.java)
+    /**
+    * Returns the name of a unit in a human readable format. The return
+    * value can be used when communicating with the user.
+    *
+    * @return The given unit type as a String
+    * @throws IllegalArgumentException
+    */
+    public String getName() {
+        if (name != null) {
+            return name;
+        }
+        String name = "";
+        boolean addP = false;
+
+        if (isPioneer() && getType() != HARDY_PIONEER) {
+            name = Messages.message("model.unit.pioneer") + " (";
+            addP = true;
+        } else if (isArmed() && getType() != KINGS_REGULAR && getType() != COLONIAL_REGULAR && getType() != BRAVE && getType() != VETERAN_SOLDIER) {
+            if (!isMounted()) {
+                name = Messages.message("model.unit.soldier") + " (";
+            } else {
+                name = Messages.message("model.unit.dragoon") + " (";
+            }
+            addP = true;
+        } else if (isMounted() && getType() != SEASONED_SCOUT && getType() != BRAVE) {
+            name = Messages.message("model.unit.scout") +  " (";
+            addP = true;
+        } else if (isMissionary() && getType() != JESUIT_MISSIONARY) {
+            name = Messages.message("model.unit.missionary") + " (";
+            addP = true;
+        }
+
+        if (!isArmed() && !isMounted() && (getType() == KINGS_REGULAR || getType() == COLONIAL_REGULAR || getType() == VETERAN_SOLDIER)) {
+            name = Messages.message("model.unit.unarmed") + " ";
+        }
+
+        if (getType() == BRAVE) {
+            name = getOwner().getNationAsString() + " ";
+            if (isArmed() && !isMounted()) {
+                name += Messages.message("model.unit.armed") + " ";
+            } else if (isMounted()) {
+                name += Messages.message("model.unit.mounted") + " ";
+            }            
+        }
+
+        name += getName(getType());
+
+        if (isArmed() && isMounted()) {
+            if (getType() == KINGS_REGULAR) {
+                name = Messages.message("model.unit.kingsCavalry");
+                addP = false;
+            } else if (getType() == COLONIAL_REGULAR) {
+                name = Messages.message("model.unit.colonialCavalry");
+                addP = false;
+            } else if (getType() == VETERAN_SOLDIER) {
+                name = Messages.message("model.unit.veteranDragoon");
+                addP = false;
+            } else if (getType() == BRAVE) {
+                name = getOwner().getNationAsString() + " " + Messages.message("model.unit.indianDragoon");
+                addP = false;
+            }
+        }
+
+        if (addP) {
+            name += ")";
+        }
+
+        return name;
+    }
+

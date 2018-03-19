@@ -1,0 +1,21 @@
+(startLine=4338 endLine=4356 srcPath=/root/NewExperiment/freecolFilter/00200/src/net/sf/freecol/common/model/Unit.java)
+	/**
+	 * Removes all references to this object.
+	 */
+	public void dispose() {
+		if (isCarrier()) {
+			unitContainer.dispose();
+			goodsContainer.dispose();
+		}
+
+		if (location != null) {
+			location.remove(this);
+		}
+
+		setIndianSettlement(null);
+
+		getOwner().invalidateCanSeeTiles();
+
+		super.dispose();
+	}
+

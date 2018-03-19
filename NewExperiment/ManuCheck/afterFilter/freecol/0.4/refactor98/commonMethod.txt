@@ -1,0 +1,28 @@
+(startLine=348 endLine=373 srcPath=/root/NewExperiment/freecolFilter/00366/src/net/sf/freecol/server/ai/AIPlayer.java)
+    /**
+     * Ask the server to recruit a unit in Europe on behalf of the AIPlayer
+     */
+    public AIUnit recruitAIUnitInEurope(int slot) {
+        
+        AIUnit unit = null;
+        Element recruitUnitInEuropeElement = Message.createNewRootElement("recruitUnitInEurope");
+        recruitUnitInEuropeElement.setAttribute("slot", Integer.toString(slot));
+        try {
+            Element reply = this.getConnection().ask(recruitUnitInEuropeElement);
+            if (reply!=null && reply.getTagName().equals("recruitUnitInEuropeConfirmed")) {
+                Element unitElement = (Element) reply.getChildNodes().item(0);
+                String unitID = unitElement.getAttribute("ID");
+                unit = (AIUnit) getAIMain().getAIObject(unitID);
+                if (unit==null) {
+                    logger.warning("Could not recruit the specified AI unit in europe");
+                }
+                return unit;
+            } else {
+                logger.warning("Could not recruit the specified AI unit in europe.");
+            }
+        } catch (IOException e) {
+            logger.warning("Could not send \"recruitUnitInEurope\"-message to the server.");
+        }
+        return unit;
+    }
+

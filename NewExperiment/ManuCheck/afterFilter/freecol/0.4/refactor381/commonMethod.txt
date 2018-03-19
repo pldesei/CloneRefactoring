@@ -1,0 +1,15 @@
+(startLine=1226 endLine=1238 srcPath=/root/NewExperiment/freecolFilter/01005/src/net/sf/freecol/server/FreeColServer.java)
+    private void addOption(AbstractOption option) {
+        Specification spec = game.getSpecification();
+        if (!spec.hasOption(option.getId())) {
+            spec.addAbstractOption(option);
+            if ("".equals(option.getGroup())) {
+                for (OptionGroup level : spec.getDifficultyLevels()) {
+                    level.add(option);
+                }
+            } else {
+                spec.getOptionGroup(option.getGroup()).add(option);
+            }
+        }
+    }
+

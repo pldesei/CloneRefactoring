@@ -1,0 +1,26 @@
+(startLine=1868 endLine=1891 srcPath=/root/NewExperiment/freecolFilter/01381/src/net/sf/freecol/common/model/Specification.java)
+        if (allOptions.get(id) == null) {
+            UnitListOption mercenaryForce = new UnitListOption(id, this);
+            AbstractUnitOption regulars
+                = new AbstractUnitOption(id + ".regulars", this);
+            regulars.setValue(new AbstractUnit("model.unit.veteranSoldier",
+                                               "model.role.soldier", 2));
+            mercenaryForce.getValue().add(regulars);
+            AbstractUnitOption dragoons
+                = new AbstractUnitOption(id + ".dragoons", this);
+            dragoons.setValue(new AbstractUnit("model.unit.veteranSoldier",
+                                               "model.role.dragoon", 2));
+            mercenaryForce.getValue().add(dragoons);
+            AbstractUnitOption artillery
+                = new AbstractUnitOption(id + ".artillery", this);
+            artillery.setValue(new AbstractUnit("model.unit.artillery",
+                                                DEFAULT_ROLE_ID, 2));
+            mercenaryForce.getValue().add(artillery);
+            AbstractUnitOption menOfWar
+                = new AbstractUnitOption(id + ".menOfWar", this);
+            menOfWar.setValue(new AbstractUnit("model.unit.manOWar",
+                                               DEFAULT_ROLE_ID, 2));
+            mercenaryForce.getValue().add(menOfWar);
+            allOptions.put(id, mercenaryForce);
+        }
+

@@ -1,0 +1,14 @@
+(startLine=347 endLine=358 srcPath=/root/NewExperiment/freecolFilter/01136/src/net/sf/freecol/server/ai/mission/IndianBringGiftMission.java)
+        throws XMLStreamException {
+        super.readAttributes(in);
+
+        String str = in.getAttributeValue(null, "target");
+        target = getGame().getFreeColGameObject(str, Colony.class);
+
+        str = in.getAttributeValue(null, "completed");
+        // @compat 0.9.x
+        if (str == null) str = in.getAttributeValue(null, "giftDelivered");
+        // end compatibility code
+        completed = Boolean.valueOf(str).booleanValue();
+    }
+

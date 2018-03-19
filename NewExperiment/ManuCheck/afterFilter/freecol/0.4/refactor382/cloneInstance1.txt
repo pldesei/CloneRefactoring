@@ -1,0 +1,12 @@
+(startLine=193 endLine=202 srcPath=/root/NewExperiment/freecolFilter/01020/src/net/sf/freecol/client/gui/panel/DefaultTransferHandler.java)
+                    && unitLabel.getParent() instanceof EuropePanel.InPortPanel) {
+                    if (data instanceof UnitLabel
+                        && ((UnitLabel) data).getUnit().isOnCarrier()
+                        || data instanceof GoodsLabel
+                        && ((GoodsLabel) data).getGoods().getLocation() instanceof Unit) {
+                        oldSelectedUnit = ((EuropePanel) parentPanel).getSelectedUnitLabel();
+                    }
+                    ((EuropePanel) parentPanel).setSelectedUnitLabel(unitLabel);
+                    comp = ((EuropePanel) parentPanel).getCargoPanel();
+                } else if (unitLabel.getUnit().isCarrier()
+

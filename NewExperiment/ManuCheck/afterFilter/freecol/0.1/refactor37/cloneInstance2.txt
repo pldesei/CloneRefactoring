@@ -1,0 +1,17 @@
+(startLine=1467 endLine=1481 srcPath=/root/NewExperiment/freecolFilter/00199/src/net/sf/freecol/client/control/InGameController.java)
+    public void leaveShip(Unit unit) {
+        if (freeColClient.getGame().getCurrentPlayer() != freeColClient.getMyPlayer()) {
+            freeColClient.getCanvas().showInformationMessage("notYourTurn");
+            return;
+        }
+        
+        Client client = freeColClient.getClient();
+
+        unit.leaveShip();
+
+        Element leaveShipElement = Message.createNewRootElement("leaveShip");
+        leaveShipElement.setAttribute("unit", unit.getID());
+
+        client.sendAndWait(leaveShipElement);
+    }
+

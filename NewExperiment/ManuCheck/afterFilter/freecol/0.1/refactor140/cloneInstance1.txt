@@ -1,0 +1,13 @@
+(startLine=157 endLine=167 srcPath=/root/NewExperiment/freecolFilter/00553/src/net/sf/freecol/server/ai/mission/UnitSeekAndDestroyMission.java)
+                        || ((Ownable) target).getOwner() == enemy) {
+                        Element element = Message.createNewRootElement("attack");
+                        element.setAttribute("unit", unit.getId());
+                        element.setAttribute("direction", direction.toString());
+
+                        try {
+                            connection.ask(element);
+                        } catch (IOException e) {
+                            logger.warning("Could not send message!");
+                        }
+                    }
+

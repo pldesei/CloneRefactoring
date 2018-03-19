@@ -1,0 +1,83 @@
+(startLine=52 endLine=132 srcPath=/root/NewExperiment/elasticsearchFilter/00801/src/main/java/org/elasticsearch/index/query/HasChildFilterParser.java)
+    public Filter parse(QueryParseContext parseContext) throws IOException, QueryParsingException {
+        XContentParser parser = parseContext.parser();
+
+        Query query = null;
+        boolean queryFound = false;
+        String childType = null;
+
+        String filterName = null;
+        String currentFieldName = null;
+        XContentParser.Token token;
+        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+            if (token == XContentParser.Token.FIELD_NAME) {
+                currentFieldName = parser.currentName();
+            } else if (token == XContentParser.Token.START_OBJECT) {
+                if ("query".equals(currentFieldName)) {
+                    // TODO we need to set the type, but, `query` can come before `type`...
+                    // since we switch types, make sure we change the context
+                    String[] origTypes = QueryParseContext.setTypesWithPrevious(childType == null ? null : new String[]{childType});
+                    try {
+                        query = parseContext.parseInnerQuery();
+                        queryFound = true;
+                    } finally {
+                        QueryParseContext.setTypes(origTypes);
+                    }
+                } else if ("filter".equals(currentFieldName)) {
+                    // TODO handle `filter` element before `type` element...
+                    String[] origTypes = QueryParseContext.setTypesWithPrevious(childType == null ? null : new String[]{childType});
+                    try {
+                        Filter innerFilter = parseContext.parseInnerFilter();
+                        query = new XConstantScoreQuery(innerFilter);
+                        queryFound = true;
+                    } finally {
+                        QueryParseContext.setTypes(origTypes);
+                    }
+                } else {
+                    throw new QueryParsingException(parseContext.index(), "[has_child] filter does not support [" + currentFieldName + "]");
+                }
+            } else if (token.isValue()) {
+                if ("type".equals(currentFieldName) || "child_type".equals(currentFieldName) || "childType".equals(currentFieldName)) {
+                    childType = parser.text();
+                } else if ("_scope".equals(currentFieldName)) {
+                    throw new QueryParsingException(parseContext.index(), "the [_scope] support in [has_child] filter has been removed, use a filter as a facet_filter in the relevant global facet");
+                } else if ("_name".equals(currentFieldName)) {
+                    filterName = parser.text();
+                } else {
+                    throw new QueryParsingException(parseContext.index(), "[has_child] filter does not support [" + currentFieldName + "]");
+                }
+            }
+        }
+        if (!queryFound) {
+            throw new QueryParsingException(parseContext.index(), "[child] filter requires 'query' field");
+        }
+        if (query == null) {
+            return null;
+        }
+        if (childType == null) {
+            throw new QueryParsingException(parseContext.index(), "[child] filter requires 'type' field");
+        }
+
+        DocumentMapper childDocMapper = parseContext.mapperService().documentMapper(childType);
+        if (childDocMapper == null) {
+            throw new QueryParsingException(parseContext.index(), "No mapping for for type [" + childType + "]");
+        }
+        if (childDocMapper.parentFieldMapper() == null) {
+            throw new QueryParsingException(parseContext.index(), "Type [" + childType + "] does not have parent mapping");
+        }
+        String parentType = childDocMapper.parentFieldMapper().type();
+
+        // wrap the query with type query
+        query = new XFilteredQuery(query, parseContext.cacheFilter(childDocMapper.typeFilter(), null));
+
+        SearchContext searchContext = SearchContext.current();
+
+        HasChildFilter childFilter = HasChildFilter.create(query, parentType, childType, searchContext);
+        searchContext.addRewrite(childFilter);
+
+        if (filterName != null) {
+            parseContext.addNamedFilter(filterName, childFilter);
+        }
+        return childFilter;
+    }
+

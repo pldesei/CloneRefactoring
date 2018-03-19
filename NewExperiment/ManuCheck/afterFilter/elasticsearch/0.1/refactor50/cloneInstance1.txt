@@ -1,0 +1,28 @@
+(startLine=126 endLine=151 srcPath=/root/NewExperiment/elasticsearchFilter/00585/src/main/java/org/elasticsearch/action/deletebyquery/ShardDeleteByQueryRequest.java)
+    public void writeTo(StreamOutput out) throws IOException {
+        super.writeTo(out);
+        out.writeVInt(querySource.length);
+        out.writeBytes(querySource);
+        out.writeVInt(shardId);
+        out.writeVInt(types.length);
+        for (String type : types) {
+            out.writeUTF(type);
+        }
+        if (routing != null) {
+            out.writeVInt(routing.size());
+            for (String r : routing) {
+                out.writeUTF(r);
+            }
+        } else {
+            out.writeVInt(0);
+        }
+        if (filteringAliases != null) {
+            out.writeVInt(filteringAliases.length);
+            for (String alias : filteringAliases) {
+                out.writeUTF(alias);
+            }
+        } else {
+            out.writeVInt(0);
+        }
+    }
+

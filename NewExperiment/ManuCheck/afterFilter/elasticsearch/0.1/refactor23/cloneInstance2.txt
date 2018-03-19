@@ -1,0 +1,55 @@
+(startLine=165 endLine=217 srcPath=/root/NewExperiment/elasticsearchFilter/00390/modules/elasticsearch/src/main/java/org/elasticsearch/action/support/broadcast/TransportBroadcastOperationAction.java)
+        public void start() {
+            if (shardsIts.size() == 0) {
+                // no shards
+                listener.onResponse(newResponse(request, new AtomicReferenceArray(0), clusterState));
+            }
+            // count the local operations, and perform the non local ones
+            int localOperations = 0;
+            for (final ShardIterator shardIt : shardsIts) {
+                final ShardRouting shard = nextShardOrNull(shardIt);
+                if (shard != null) {
+                    if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                        localOperations++;
+                    } else {
+                        // do the remote operation here, the localAsync flag is not relevant
+                        performOperation(shardIt.reset(), true);
+                    }
+                } else {
+                    // really, no shards active in this group
+                    onOperation(null, shardIt, null, false);
+                }
+            }
+            // we have local operations, perform them now
+            if (localOperations > 0) {
+                if (request.operationThreading() == BroadcastOperationThreading.SINGLE_THREAD) {
+                    request.beforeLocalFork();
+                    threadPool.execute(new Runnable() {
+                        @Override public void run() {
+                            for (final ShardIterator shardIt : shardsIts) {
+                                final ShardRouting shard = nextShardOrNull(shardIt.reset());
+                                if (shard != null) {
+                                    if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                                        performOperation(shardIt.reset(), false);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    boolean localAsync = request.operationThreading() == BroadcastOperationThreading.THREAD_PER_SHARD;
+                    if (localAsync) {
+                        request.beforeLocalFork();
+                    }
+                    for (final ShardIterator shardIt : shardsIts) {
+                        final ShardRouting shard = nextShardOrNull(shardIt.reset());
+                        if (shard != null) {
+                            if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                                performOperation(shardIt.reset(), localAsync);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+

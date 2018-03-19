@@ -1,0 +1,18 @@
+(startLine=1307 endLine=1322 srcPath=/root/NewExperiment/freecolFilter/01339/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+            < nCarrier) {
+            rc.clear();
+            List<UnitType> navalUnits = new ArrayList<UnitType>();
+            for (UnitType unitType : spec.getUnitTypeList()) {
+                if (unitType.hasAbility(Ability.NAVAL_UNIT)
+                    && unitType.isAvailableTo(player)
+                    && unitType.hasPrice()
+                    && unitType.getSpace() > 0) {
+                    navalUnits.add(unitType);
+                    int weight = unitType.getSpace()
+                        * 100000 / europe.getUnitPrice(unitType);
+                    rc.add(new RandomChoice<UnitType>(unitType, weight));
+                }
+            }
+            cheatUnit(rc);
+        }
+

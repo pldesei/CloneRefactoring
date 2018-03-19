@@ -1,0 +1,15 @@
+(startLine=110 endLine=122 srcPath=/root/NewExperiment/elasticsearchFilter/00953/src/main/java/org/elasticsearch/plugins/PluginManager.java)
+        if (url != null) {
+            URL pluginUrl = new URL(url);
+            System.out.println("Trying " + pluginUrl.toExternalForm() + "...");
+            try {
+                downloadHelper.download(pluginUrl, pluginFile, new HttpDownloadHelper.VerboseProgress(System.out));
+                downloaded = true;
+            } catch (IOException e) {
+                // ignore
+                if (verbose) {
+                    System.out.println("Failed: " + ExceptionsHelper.detailedMessage(e));
+                }
+            }
+        }
+

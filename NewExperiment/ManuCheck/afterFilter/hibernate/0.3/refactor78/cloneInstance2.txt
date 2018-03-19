@@ -1,0 +1,18 @@
+(startLine=205 endLine=220 srcPath=/root/NewExperiment/hibernateFilter/01201/hibernate-core/src/main/java/org/hibernate/type/ComponentType.java)
+			throws HibernateException {
+		if ( x == y ) {
+			return true;
+		}
+		if ( x == null || y == null ) {
+			return false;
+		}
+		Object[] xvalues = getPropertyValues( x, entityMode );
+		Object[] yvalues = getPropertyValues( y, entityMode );
+		for ( int i = 0; i < propertySpan; i++ ) {
+			if ( !propertyTypes[i].isEqual( xvalues[i], yvalues[i], factory ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+

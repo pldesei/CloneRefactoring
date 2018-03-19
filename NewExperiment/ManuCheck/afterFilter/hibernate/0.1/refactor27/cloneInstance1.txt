@@ -1,0 +1,27 @@
+(startLine=124 endLine=148 srcPath=/root/NewExperiment/hibernateFilter/00463/hibernate-envers/src/test/java/org/hibernate/envers/test/integration/entityNames/oneToManyNotAudited/ReadEntityWithAuditedCollectionTest.java)
+    public void testObtainCollectionWithEntityNameAndNotAuditedModeWithNewSession() {
+    	// force new session and AR
+    	super.newSessionFactory();
+    	
+    	Car car1_1 = getAuditReader().find(Car.class, id_car1, 2);
+    	Car car2 = getAuditReader().find(Car.class, id_car2, 2);
+
+    	for (Person owner : car1_1.getOwners()) {
+    		owner.getName();
+    		owner.getAge();
+		}
+    	for (Person owner : car2.getOwners()) {
+    		owner.getName();
+    		owner.getAge();
+		}
+    	
+    	if(getAuditReader().isEntityNameNotAudited("Personaje")) {
+    		person1_1 = (Person)getSession().get("Personaje", id_pers1); 
+    	} else {
+    		assert(false);
+    	}
+    	person1_1.getName();
+    	person1_1.getAge();
+    	
+    }
+

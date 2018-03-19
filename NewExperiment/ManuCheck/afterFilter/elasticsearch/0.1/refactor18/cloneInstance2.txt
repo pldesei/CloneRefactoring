@@ -1,0 +1,10 @@
+(startLine=238 endLine=245 srcPath=/root/NewExperiment/elasticsearchFilter/00335/modules/elasticsearch/src/main/java/org/elasticsearch/indices/cluster/IndicesClusterStateService.java)
+                        if (!mappingSource.equals(existingMapper.mappingSource())) {
+                            // mapping changed, update it
+                            if (logger.isDebugEnabled()) {
+                                logger.debug("[{}] updating mapping [{}], source [{}]", index, mappingType, mappingSource.string());
+                            }
+                            mapperService.add(mappingType, mappingSource.string());
+                            nodeMappingCreatedAction.nodeMappingCreated(new NodeMappingCreatedAction.NodeMappingCreatedResponse(index, mappingType, event.state().nodes().localNodeId()));
+                        }
+

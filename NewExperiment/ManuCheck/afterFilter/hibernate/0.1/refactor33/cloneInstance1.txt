@@ -1,0 +1,17 @@
+(startLine=78 endLine=92 srcPath=/root/NewExperiment/hibernateFilter/00562/hibernate-core/src/main/java/org/hibernate/metamodel/source/hbm/state/domain/HbmSimpleAttributeDomainState.java)
+										 XMLVersion version) {
+
+		super( defaults, attribute, entityMetaAttributes, version );
+		this.isLazy = false;
+
+		// for version properties marked as being generated, make sure they are "always"
+		// generated; aka, "insert" is invalid; this is dis-allowed by the DTD,
+		// but just to make sure.
+		this.propertyGeneration = PropertyGeneration.parse(  version.getGenerated().value()  );
+		if ( propertyGeneration == PropertyGeneration.INSERT ) {
+			throw new MappingException( "'generated' attribute cannot be 'insert' for versioning property" );
+		}
+		this.isInsertable = MappingHelper.getBooleanValue( version.isInsert(), true );
+		this.isUpdateable = true;
+	}
+

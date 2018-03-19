@@ -1,0 +1,15 @@
+(startLine=328 endLine=340 srcPath=/root/NewExperiment/hibernateFilter/01229/hibernate-entitymanager/src/main/java/org/hibernate/jpa/spi/BaseQueryImpl.java)
+			else if ( AvailableSettings.SHARED_CACHE_STORE_MODE.equals( hintName ) ) {
+				final CacheStoreMode storeMode = (CacheStoreMode) value;
+
+				CacheRetrieveMode retrieveMode = hints != null
+						? (CacheRetrieveMode) hints.get( AvailableSettings.SHARED_CACHE_RETRIEVE_MODE )
+						: null;
+				if ( retrieveMode == null ) {
+					retrieveMode = (CacheRetrieveMode) entityManager.getProperties().get( AvailableSettings.SHARED_CACHE_RETRIEVE_MODE );
+				}
+				applied = applyCacheModeHint(
+						CacheModeHelper.interpretCacheMode( storeMode, retrieveMode )
+				);
+			}
+

@@ -1,0 +1,16 @@
+(startLine=178 endLine=191 srcPath=/root/NewExperiment/freecolFilter/00645/src/net/sf/freecol/client/gui/option/OptionGroupUI.java)
+            } else if (o instanceof LanguageOption) {
+                final LanguageOptionUI soi = new LanguageOptionUI((LanguageOption) o, editable);
+                if (soi.getLabel().getText().length() > 30) {
+                    add(soi.getLabel(), "newline, span 3");
+                } else {
+                    add(soi.getLabel());
+                }
+                add(soi);
+                ou.add(soi);
+                buttonAdded = false;
+                if (!o.getId().equals(Option.NO_ID)) {
+                    optionUIs.put(o.getId(), soi);
+                }
+            } else if (o instanceof AudioMixerOption) {
+

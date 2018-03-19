@@ -1,0 +1,14 @@
+(startLine=1790 endLine=1801 srcPath=/root/NewExperiment/freecolFilter/01340/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+    /**
+     * Evaluate goods for trade purposes.
+     *
+     * @param goods The <code>Goods</code> to evaluate.
+     * @return The score.
+     */
+    private int evaluateGoods(AbstractGoods ag) {
+        final Market market = getPlayer().getMarket();
+
+        return (market == null) ? 0
+            : market.getSalePrice(ag.getType(), ag.getAmount());
+    }
+

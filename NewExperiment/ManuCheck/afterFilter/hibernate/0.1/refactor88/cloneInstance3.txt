@@ -1,0 +1,41 @@
+(startLine=71 endLine=109 srcPath=/root/NewExperiment/hibernateFilter/01415/hibernate-core/src/main/java/org/hibernate/cfg/AbstractPropertyHolder.java)
+	public AttributeConverterDefinition resolveAttributeConverterDefinition(XProperty property) {
+		AttributeConversionInfo info = locateAttributeConversionInfo( property );
+		if ( info != null ) {
+			if ( info.isConversionDisabled() ) {
+				return null;
+			}
+			else {
+				try {
+					return makeAttributeConverterDefinition( info );
+				}
+				catch (Exception e) {
+					throw new IllegalStateException(
+							String.format( "Unable to instantiate AttributeConverter [%s", info.getConverterClass().getName() ),
+							e
+					);
+				}
+			}
+		}
+
+		log.debugf( "Attempting to locate auto-apply AttributeConverter for property [%s:%s]", path, property.getName() );
+
+		final Class propertyType = context.getBuildingOptions().getReflectionManager().toClass( property.getType() );
+		for ( AttributeConverterDefinition attributeConverterDefinition : context.getMetadataCollector().getAttributeConverters() ) {
+			if ( ! attributeConverterDefinition.isAutoApply() ) {
+				continue;
+			}
+			log.debugf(
+					"Checking auto-apply AttributeConverter [%s] type [%s] for match [%s]",
+					attributeConverterDefinition.toString(),
+					attributeConverterDefinition.getEntityAttributeType().getSimpleName(),
+					propertyType.getSimpleName()
+			);
+			if ( areTypeMatch( attributeConverterDefinition.getEntityAttributeType(), propertyType ) ) {
+				return attributeConverterDefinition;
+			}
+		}
+
+		return null;
+	}
+

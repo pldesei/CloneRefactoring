@@ -1,0 +1,9 @@
+(startLine=345 endLine=351 srcPath=/root/NewExperiment/elasticsearchFilter/01140/src/test/java/org/elasticsearch/benchmark/search/child/ChildSearchBenchmark.java)
+        for (int j = 0; j < QUERY_COUNT; j++) {
+            SearchResponse searchResponse = client.prepareSearch(indexName).setQuery(hasChildQuery("child", termQuery("tag", "tag1")).scoreType("max")).execute().actionGet();
+            if (searchResponse.getHits().totalHits() != COUNT) {
+                System.err.println("mismatch on hits");
+            }
+            totalQueryTime += searchResponse.getTookInMillis();
+        }
+

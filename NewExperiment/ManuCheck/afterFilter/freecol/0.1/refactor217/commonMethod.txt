@@ -1,0 +1,13 @@
+(startLine=1049 endLine=1059 srcPath=/root/NewExperiment/freecolFilter/00790/src/net/sf/freecol/server/control/ChangeSet.java)
+    /**
+     * Helper function to add a message to a ChangeSet.
+     *
+     * @param see The visibility of this change.
+     * @param message The <code>ModelMessage</code> to add.
+     * @return The updated <code>ChangeSet</code>.
+     */
+    public ChangeSet addMessage(See see, ModelMessage message) {
+        changes.add(new OwnedChange(see, message));
+        return this;
+    }
+

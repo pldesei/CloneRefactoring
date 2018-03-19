@@ -1,0 +1,8 @@
+(startLine=442 endLine=447 srcPath=/root/NewExperiment/freecolFilter/01313/src/net/sf/freecol/common/model/Colony.java)
+    private void accumulateChoice(GoodsType workType,
+                                  Collection<GoodsType> tried,
+                                  List<Collection<GoodsType>> result) {
+        if (workType == null) return;
+        accumulateChoices(workType.getEquivalentTypes(), tried, result);
+    }
+

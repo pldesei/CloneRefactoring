@@ -1,0 +1,19 @@
+(startLine=296 endLine=312 srcPath=/root/NewExperiment/freecolFilter/01339/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+            } else if ((enemy = t.getFirstUnit().getOwner()) == player) {
+                // Its one of ours!
+                for (Unit u : t.getUnitList()) {
+                    AIUnit aiu;
+                    if (defenders.contains(u) || units.contains(u)
+                        || (aiu = aiMain.getAIUnit(u)) == null) {
+                        ; // Do nothing
+                    } else if (aiu.getMission() instanceof DefendSettlementMission
+                        && ((DefendSettlementMission)aiu.getMission())
+                        .getTarget() == is) {
+                        sb.append(" ").append(u.getId());
+                        defenders.add(u);
+                    } else if (Mission.invalidNewMissionReason(aiu) == null) {
+                        units.add(u);
+                    }
+                }
+            } else if ((tension = is.getAlarm(enemy)) == null
+

@@ -1,0 +1,47 @@
+(startLine=408 endLine=452 srcPath=/root/NewExperiment/hibernateFilter/00045/testsuite/src/test/java/org/hibernate/test/hql/BulkManipulationTest.java)
+	public void testInsertWithGeneratedTimestampVersion() {
+		// Make sure the env supports bulk inserts with generated ids...
+		EntityPersister persister = sfi().getEntityPersister( TimestampVersioned.class.getName() );
+		IdentifierGenerator generator = persister.getIdentifierGenerator();
+		if ( !HqlSqlWalker.supportsIdGenWithBulkInsertion( generator ) ) {
+			return;
+		}
+
+		Session s = openSession();
+		Transaction t = s.beginTransaction();
+
+		TimestampVersioned entity = new TimestampVersioned( "int-vers" );
+		s.save( entity );
+		s.createQuery( "select id, name, version from TimestampVersioned" ).list();
+		t.commit();
+		s.close();
+
+		Long initialId = entity.getId();
+		//Date initialVersion = entity.getVersion();
+
+		s = openSession();
+		t = s.beginTransaction();
+		int count = s.createQuery( "insert into TimestampVersioned ( name ) select name from TimestampVersioned" ).executeUpdate();
+		t.commit();
+		s.close();
+
+		assertEquals( "unexpected insertion count", 1, count );
+
+		s = openSession();
+		t = s.beginTransaction();
+		TimestampVersioned created = ( TimestampVersioned ) s.createQuery( "from TimestampVersioned where id <> :initialId" )
+				.setLong( "initialId", initialId.longValue() )
+				.uniqueResult();
+		t.commit();
+		s.close();
+
+		assertNotNull( created.getVersion() );
+		//assertEquals( "version was not seeded", initialVersion, created.getVersion() );
+
+		s = openSession();
+		t = s.beginTransaction();
+		s.createQuery( "delete TimestampVersioned" ).executeUpdate();
+		t.commit();
+		s.close();
+	}
+

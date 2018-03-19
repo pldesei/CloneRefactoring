@@ -1,0 +1,20 @@
+(startLine=135 endLine=152 srcPath=/root/NewExperiment/hibernateFilter/01308/hibernate-core/src/main/java/org/hibernate/engine/jdbc/internal/ResultSetReturnImpl.java)
+	public ResultSet extract(Statement statement, String sql) {
+		sqlStatementLogger.logStatement( sql );
+		try {
+			final ResultSet rs;
+			try {
+				jdbcCoordinator.getTransactionCoordinator().getTransactionContext().startStatementExecution();
+				rs = statement.executeQuery( sql );
+			}
+			finally {
+				jdbcCoordinator.getTransactionCoordinator().getTransactionContext().endStatementExecution();
+			}
+			postExtract( rs, statement );
+			return rs;
+		}
+		catch (SQLException e) {
+			throw sqlExceptionHelper.convert( e, "could not extract ResultSet" );
+		}
+	}
+

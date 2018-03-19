@@ -1,0 +1,109 @@
+(startLine=451 endLine=557 srcPath=/root/NewExperiment/hibernateFilter/00028/cache-jbosscache2/src/test/java/org/hibernate/test/cache/jbc2/entity/AbstractEntityRegionAccessStrategyTestCase.java)
+    public void testUpdate() throws Exception {
+        
+        // Set up initial state
+        localAccessStrategy.putFromLoad(KEY, VALUE1, System.currentTimeMillis(), new Integer(1));
+        remoteAccessStrategy.putFromLoad(KEY, VALUE1, System.currentTimeMillis(), new Integer(1));
+        
+        // Let the async put propagate
+        sleep(250);
+        
+        final CountDownLatch readLatch = new CountDownLatch(1);
+        final CountDownLatch commitLatch = new CountDownLatch(1);
+        final CountDownLatch completionLatch = new CountDownLatch(2);
+        
+        Thread updater = new Thread() {          
+            
+            public void run() {
+                
+                try {       
+                    long txTimestamp = System.currentTimeMillis();
+                    BatchModeTransactionManager.getInstance().begin();
+                    
+                    assertEquals("Correct initial value", VALUE1, localAccessStrategy.get(KEY, txTimestamp));
+                    
+                    localAccessStrategy.update(KEY, VALUE2, new Integer(2), new Integer(1));
+                    
+                    readLatch.countDown();
+                    commitLatch.await();
+                    
+                    BatchModeTransactionManager.getInstance().commit();
+                }
+                catch (Exception e) {
+                    log.error("node1 caught exception", e);
+                    node1Exception = e;
+                    rollback();
+                }
+                catch (AssertionFailedError e) {
+                    node1Failure = e;
+                    rollback();
+                }
+                finally {
+                    completionLatch.countDown();
+                }
+            }
+        };
+        
+        Thread reader = new Thread() {          
+            
+            public void run() {                
+                try {       
+                    long txTimestamp = System.currentTimeMillis();
+                    BatchModeTransactionManager.getInstance().begin();
+                    
+                    readLatch.await();
+                    
+                    // This will block w/ pessimistic locking and then
+                    // read the new value; w/ optimistic it shouldn't
+                    // block and will read the old value
+                    Object expected = isUsingOptimisticLocking() ? VALUE1 : VALUE2;
+                    assertEquals("Correct value", expected, localAccessStrategy.get(KEY, txTimestamp));
+                    
+                    BatchModeTransactionManager.getInstance().commit();
+                }
+                catch (Exception e) {
+                    log.error("node1 caught exception", e);
+                    node1Exception = e;
+                    rollback();
+                }
+                catch (AssertionFailedError e) {
+                    node1Failure = e;
+                    rollback();
+                }
+                finally {
+                    commitLatch.countDown();
+                    completionLatch.countDown();
+                }                
+            }
+        };
+        
+        updater.setDaemon(true);
+        reader.setDaemon(true);
+        updater.start();
+        reader.start();
+        
+        if (isUsingOptimisticLocking())
+            // Should complete promptly
+            assertTrue(completionLatch.await(1, TimeUnit.SECONDS));
+        else {        
+            // Reader thread should be blocking
+            assertFalse(completionLatch.await(250, TimeUnit.MILLISECONDS));
+            // Let the writer commit down
+            commitLatch.countDown();
+            assertTrue(completionLatch.await(1, TimeUnit.SECONDS));
+        }
+        
+        if (node1Failure != null)
+            throw node1Failure;
+        if (node2Failure != null)
+            throw node2Failure;
+        
+        assertEquals("node1 saw no exceptions", null, node1Exception);
+        assertEquals("node2 saw no exceptions", null, node2Exception);
+        
+        long txTimestamp = System.currentTimeMillis();
+        assertEquals("Correct node1 value", VALUE2, localAccessStrategy.get(KEY, txTimestamp));
+        Object expected = isUsingInvalidation() ? null : VALUE2;
+        assertEquals("Correct node2 value", expected, remoteAccessStrategy.get(KEY, txTimestamp));
+    }
+

@@ -1,0 +1,29 @@
+(startLine=2002 endLine=2028 srcPath=/root/NewExperiment/hibernateFilter/01690/hibernate-core/src/main/java/org/hibernate/boot/internal/InFlightMetadataCollectorImpl.java)
+			if ( StringHelper.isEmpty( keyName ) ) {
+				final Identifier keyNameIdentifier = getMetadataBuildingOptions().getImplicitNamingStrategy().determineIndexName(
+						new ImplicitIndexNameSource() {
+							@Override
+							public MetadataBuildingContext getBuildingContext() {
+								return buildingContext;
+							}
+
+							@Override
+							public Identifier getTableName() {
+								return table.getNameIdentifier();
+							}
+
+							private List<Identifier> columnNameIdentifiers;
+
+							@Override
+							public List<Identifier> getColumnNames() {
+								// be lazy about building these
+								if ( columnNameIdentifiers == null ) {
+									columnNameIdentifiers = toIdentifiers( columnNames );
+								}
+								return columnNameIdentifiers;
+							}
+						}
+				);
+				keyName = keyNameIdentifier.render( getDatabase().getJdbcEnvironment().getDialect() );
+			}
+

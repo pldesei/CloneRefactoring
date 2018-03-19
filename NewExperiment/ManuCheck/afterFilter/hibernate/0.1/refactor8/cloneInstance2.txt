@@ -1,0 +1,28 @@
+(startLine=96 endLine=121 srcPath=/root/NewExperiment/hibernateFilter/00308/core/src/main/java/org/hibernate/id/enhanced/SequenceStructure.java)
+				try {
+					PreparedStatement st = session.getBatcher().prepareSelectStatement( sql );
+					try {
+						ResultSet rs = st.executeQuery();
+						try {
+							rs.next();
+							long result = rs.getLong( 1 );
+							if ( log.isDebugEnabled() ) {
+								log.debug("Sequence identifier generated: " + result);
+							}
+							return result;
+						}
+						finally {
+							try {
+								rs.close();
+							}
+							catch( Throwable ignore ) {
+								// intentionally empty
+							}
+						}
+					}
+					finally {
+						session.getBatcher().closeStatement( st );
+					}
+
+				}
+

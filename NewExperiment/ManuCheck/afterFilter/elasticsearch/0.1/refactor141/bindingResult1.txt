@@ -1,0 +1,81 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00905
+predFragLineRange:87-121
+predMethodLineRange:87-121
+nextLineRange:85-128
+predStrMethodInvoNames:
+[innerPercolate, entrySet, reset, search, getValue, warn, getKey, exists, add, getKey, searcher, search, searcher, match, warn, release, toArray, size, index, shardId]
+%%%%%%%%%%
+AddedMethodInvo Line:86 InvoName:preparePercolate(request,new PercolateAction(){
+  @Override public PercolateShardResponse doPercolateAction(  PercolateContext context){
+    final List<Text> matches;
+    long count=0;
+    if (context.query == null) {
+      matches=new ArrayList<Text>();
+      Lucene.ExistsCollector collector=new Lucene.ExistsCollector();
+      for (      Map.Entry<Text,Query> entry : context.percolateQueries.entrySet()) {
+        collector.reset();
+        try {
+          context.docSearcher.search(entry.getValue(),collector);
+        }
+ catch (        IOException e) {
+          logger.warn("[" + entry.getKey() + "] failed to execute query",e);
+        }
+        if (collector.exists()) {
+          if (!context.limit) {
+            matches.add(entry.getKey());
+          }
+ else           if (count < context.size) {
+            matches.add(entry.getKey());
+          }
+          count++;
+        }
+      }
+    }
+ else {
+      Engine.Searcher percolatorSearcher=context.indexShard.searcher();
+      try {
+        Match match=match(logger,context.percolateQueries,context.docSearcher,context.fieldDataService,context);
+        percolatorSearcher.searcher().search(context.query,match);
+        matches=match.matches();
+        count=match.counter();
+      }
+ catch (      IOException e) {
+        logger.debug("failed to execute",e);
+        throw new PercolateException(context.indexShard.shardId(),"failed to execute",e);
+      }
+ finally {
+        percolatorSearcher.release();
+      }
+    }
+    return new PercolateShardResponse(matches.toArray(new Text[matches.size()]),count,context,request.index(),request.shardId());
+  }
+}
+)
+PackageName:org.elasticsearch.percolator
+QualifiedClassName:org.elasticsearch.percolator.PercolatorService
+ClassName:PercolatorService
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00905/src/main/java/org/elasticsearch/percolator/PercolatorService.java
+InvokedMethodSig:private org.elasticsearch.action.percolate.PercolateShardResponse preparePercolate(org.elasticsearch.action.percolate.PercolateShardRequest, org.elasticsearch.percolator.PercolatorService.PercolateAction) 
+%%%%%%%%%%
+AddedMethodInvo Line:116 InvoName:match.matches()
+PackageName:org.elasticsearch.percolator
+QualifiedClassName:org.elasticsearch.percolator.QueryCollector.Match
+ClassName:Match
+InnerClass
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00905/src/main/java/org/elasticsearch/percolator/QueryCollector.java
+InvokedMethodSig:List<org.elasticsearch.common.text.Text> matches() 
+%%%%%%%%%%
+AddedMethodInvo Line:117 InvoName:match.counter()
+PackageName:org.elasticsearch.percolator
+QualifiedClassName:org.elasticsearch.percolator.QueryCollector.Match
+ClassName:Match
+InnerClass
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00905/src/main/java/org/elasticsearch/percolator/QueryCollector.java
+InvokedMethodSig:long counter() 
+%%%%%%%%%%
+AddedMethodInvo Line:119 InvoName:logger.debug("failed to execute",e)
+PackageName:org.elasticsearch.common.logging
+QualifiedClassName:org.elasticsearch.common.logging.ESLogger
+ClassName:ESLogger
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00905/src/main/java/org/elasticsearch/common/logging/ESLogger.java
+InvokedMethodSig:public abstract void debug(java.lang.String, java.lang.Object[]) 

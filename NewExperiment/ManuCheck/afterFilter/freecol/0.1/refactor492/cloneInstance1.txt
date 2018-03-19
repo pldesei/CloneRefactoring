@@ -1,0 +1,102 @@
+(startLine=538 endLine=637 srcPath=/root/NewExperiment/freecolFilter/01342/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+    private void bringGifts(int[] randoms, StringBuffer sb) {
+        final Player player = getPlayer();
+        final Map map = getGame().getMap();
+        final CostDecider cd = CostDeciders.numberOfLegalTiles();
+        final int giftProbability = getGame().getSpecification()
+            .getInteger(GameOptions.GIFT_PROBABILITY);
+        int point = (sb == null) ? -1 : sb.length();
+        int randomIdx = 0;
+
+        for (IndianSettlement is : player.getIndianSettlements()) {
+            // Do not bring gifts all the time.
+            if (randoms[randomIdx++] >= giftProbability) continue;
+
+            // Check if the settlement has anything to give.
+            Goods gift = is.getRandomGift(getAIRandom());
+            if (gift == null) continue;
+
+            // Check if there are available units, and if there are already
+            // enough missions in operation.
+            List<Unit> availableUnits = new ArrayList<Unit>();
+            int alreadyAssignedUnits = 0;
+            for (Unit ou : is.getOwnedUnits()) {
+                AIUnit aiu = getAIUnit(ou);
+                if (aiu == null) {
+                    continue;
+                } else if (aiu.getMission() instanceof IndianBringGiftMission) {
+                    alreadyAssignedUnits++;
+                } else if (Mission.invalidNewMissionReason(aiu) == null) {
+                    availableUnits.add(ou);
+                }
+            }
+            if (alreadyAssignedUnits > MAX_NUMBER_OF_GIFTS_BEING_DELIVERED) {
+                logSB(sb, is.getName(), " has ", alreadyAssignedUnits, 
+                      " already, ");
+                continue;
+            } else if (availableUnits.isEmpty()) {
+                logSB(sb, is.getName(), " has no gift units, ");
+                continue;
+            }
+            // Pick a random available capable unit.
+            Unit unit = null;
+            AIUnit aiUnit = null;
+            Tile home = is.getTile();
+            while (unit == null && !availableUnits.isEmpty()) {
+                Unit u = availableUnits.get(Utils.randomInt(logger,
+                        "Choose gift unit", getAIRandom(),
+                        availableUnits.size()));
+                availableUnits.remove(u);
+                aiUnit = getAIUnit(u);
+                if (IndianBringGiftMission.invalidReason(aiUnit) == null
+                    && u.findPath(u.getTile(), home, null, cd) != null) {
+                    unit = u;
+                }
+            }
+            if (unit == null) {
+                logSB(sb, is.getName(), " found no gift unit, ");
+                continue;
+            }
+
+            // Collect nearby colonies.  Filter out ones which are uncontacted,
+            // unreachable or otherwise unsuitable.  Score the rest on alarm
+            // and distance.
+            List<RandomChoice<Colony>> nearbyColonies
+                = new ArrayList<RandomChoice<Colony>>();
+            for (Tile t : home.getSurroundingTiles(MAX_DISTANCE_TO_BRING_GIFTS)) {
+                Colony c = t.getColony();
+                PathNode path;
+                if (c == null
+                    || !is.hasContacted(c.getOwner())
+                    || IndianBringGiftMission.invalidReason(aiUnit, c) != null
+                    || (path = unit.findPath(home, c.getTile(),
+                                             null, cd)) == null) continue;
+                int alarm = Math.max(1, is.getAlarm(c.getOwner()).getValue());
+                nearbyColonies.add(new RandomChoice<Colony>(c,
+                        1000000 / alarm / path.getTotalTurns()));
+            }
+
+            // If there are any suitable colonies, pick a random one
+            // to send a gift to.
+            if (nearbyColonies.isEmpty()) {
+                logSB(sb, is.getName(), " found no gift colonies, ");
+                continue;
+            }
+            Colony target = RandomChoice.getWeightedRandom(logger,
+                "Choose gift colony", nearbyColonies, getAIRandom());
+            if (target == null) {
+                throw new IllegalStateException("No gift target!?!");
+            }
+
+            // Send the unit.
+            logSB(sb, "At ", is.getName(), " ");
+            Mission m = new IndianBringGiftMission(getAIMain(), aiUnit, target);
+            aiUnit.changeMission(m, sb);
+            logSB(sb, " and takes ", gift, " to ", target.getName(), ", ");
+        }
+        if (sb != null && sb.length() > point) {
+            sb.insert(point, "\n  Gifts: ");
+            sb.setLength(sb.length() - 2);
+        }
+    }
+

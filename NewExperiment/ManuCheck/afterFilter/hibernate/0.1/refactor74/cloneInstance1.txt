@@ -1,0 +1,28 @@
+(startLine=68 endLine=93 srcPath=/root/NewExperiment/hibernateFilter/01163/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/CollectionQuerySpaceImpl.java)
+	public JoinDefinedByMetadata addIndexEntityJoin(final EntityPersister indexPersister) {
+		final boolean required = canJoinsBeRequired();
+		final String entityQuerySpaceUid = getQuerySpaces().generateImplicitUid();
+		final EntityQuerySpaceImpl entityQuerySpace = new EntityQuerySpaceImpl(
+				indexPersister,
+				entityQuerySpaceUid,
+				getQuerySpaces(),
+				required,
+				sessionFactory()
+		);
+		getQuerySpaces().registerQuerySpace( entityQuerySpace );
+
+		final JoinDefinedByMetadata join = JoinHelper.INSTANCE.createEntityJoin(
+				this,
+				// collection persister maps its index (through its PropertyMapping contract) as non-prefixed
+				CollectionPropertyNames.COLLECTION_INDICES,
+				entityQuerySpace,
+				canJoinsBeRequired(),
+				(EntityType) persister.getIndexType(),
+				sessionFactory()
+		);
+
+		internalGetJoins().add( join );
+
+		return join;
+	}
+

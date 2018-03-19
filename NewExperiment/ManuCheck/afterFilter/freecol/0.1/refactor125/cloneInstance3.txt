@@ -1,0 +1,16 @@
+(startLine=305 endLine=318 srcPath=/root/NewExperiment/freecolFilter/00432/src/net/sf/freecol/client/gui/panel/ReportRequirementsPanel.java)
+    private JButton createColonyButton(Colony colony, String info, boolean headline) {
+        JButton button = new JButton(colony.getName() + info);
+        if (headline) {
+            button.setFont(smallHeaderFont);
+        }
+        button.setMargin(new Insets(0,0,0,0));
+        button.setOpaque(false);
+        button.setForeground(LINK_COLOR);
+        button.setAlignmentY(0.8f);
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setActionCommand(colony.getId());
+        button.addActionListener(this);
+        return button;
+    }
+

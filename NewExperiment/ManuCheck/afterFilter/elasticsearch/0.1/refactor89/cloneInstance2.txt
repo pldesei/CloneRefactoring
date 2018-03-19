@@ -1,0 +1,13 @@
+(startLine=144 endLine=154 srcPath=/root/NewExperiment/elasticsearchFilter/00729/src/main/java/org/elasticsearch/index/fielddata/plain/LongArrayIndexFieldData.java)
+        } else {
+            int[][] nativeOrdinals = new int[ordinals.size()][];
+            for (int i = 0; i < nativeOrdinals.length; i++) {
+                nativeOrdinals[i] = ordinals.get(i);
+            }
+            return new LongArrayAtomicFieldData.WithOrdinals(
+                    values.toArray(new long[values.size()]),
+                    reader.maxDoc(),
+                    Ordinals.Factories.createFromFlatOrdinals(nativeOrdinals, termOrd, fieldDataType.getSettings())
+            );
+        }
+

@@ -1,0 +1,12 @@
+(startLine=639 endLine=648 srcPath=/root/NewExperiment/freecolFilter/01072/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+                     .getSurroundingTiles(MAX_DISTANCE_TO_MAKE_DEMANDS)) {
+                Colony c = t.getColony();
+                if (c != null
+                    && is.getAlarm(c.getOwner()) != null
+                    && IndianDemandMission.invalidReason(aiUnit, c) == null
+                    && unit.findPath(is.getTile(), c.getTile(), null,
+                                     CostDeciders.numberOfLegalTiles()) != null) {
+                    nearbyColonies.add(c);
+                }
+            }
+

@@ -1,0 +1,19 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/00349
+predFragLineRange:215-222
+predMethodLineRange:203-224
+nextLineRange:201-220
+predStrMethodInvoNames:
+[lt, doWorkInNewTransaction, makeValue, doWorkInNewTransaction, eq, add, multiplyBy, copy, isDebugEnabled, debug, makeValueThenIncrement]
+%%%%%%%%%%
+AddedMethodInvo Line:213 InvoName:hiloOptimizer.generate(new AccessCallback(){
+  public IntegralDataTypeHolder getNextValue(){
+    return (IntegralDataTypeHolder)doWorkInNewTransaction(session);
+  }
+}
+)
+PackageName:org.hibernate.id.enhanced
+QualifiedClassName:org.hibernate.id.enhanced.OptimizerFactory.LegacyHiLoAlgorithmOptimizer
+ClassName:LegacyHiLoAlgorithmOptimizer
+InnerClass
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00349/core/src/main/java/org/hibernate/id/enhanced/OptimizerFactory.java
+InvokedMethodSig:public synchronized java.io.Serializable generate(org.hibernate.id.enhanced.AccessCallback) 

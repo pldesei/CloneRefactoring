@@ -1,0 +1,21 @@
+(startLine=1066 endLine=1084 srcPath=/root/NewExperiment/freecolFilter/00447/src/net/sf/freecol/server/FreeColServer.java)
+    public void sendUpdatedTileToAll(Tile newTile, Player player) {
+        // TODO: can Player be null?
+        for (Player enemy : getGame().getPlayers()) {
+            ServerPlayer enemyPlayer = (ServerPlayer) enemy;
+            if (player != null && player.equals(enemyPlayer) || enemyPlayer.getConnection() == null) {
+                continue;
+            }
+            try {
+                if (enemyPlayer.canSee(newTile)) {
+                    Element updateElement = Message.createNewRootElement("update");
+                    updateElement.appendChild(newTile.toXMLElement(enemyPlayer, updateElement.getOwnerDocument()));
+                    enemyPlayer.getConnection().send(updateElement);
+                }
+            } catch (IOException e) {
+                logger.warning("Could not send message to: " + enemyPlayer.getName() + " with connection "
+                        + enemyPlayer.getConnection());
+            }
+        }
+    }
+

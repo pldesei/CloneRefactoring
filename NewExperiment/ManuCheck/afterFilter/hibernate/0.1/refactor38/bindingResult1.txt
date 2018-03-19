@@ -1,0 +1,34 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/00837
+predFragLineRange:70-94
+predMethodLineRange:69-94
+nextLineRange:51-75
+predStrMethodInvoNames:
+[createEntityManagerFactory, setProperty, constructConfiguration, getName, createEntityManager, setName, begin, getTransaction, persist, commit, getTransaction, fail, assertEquals, getMessage, getTransaction, isActive, getTransaction, rollback, getTransaction, close, close]
+%%%%%%%%%%
+AddedMethodInvo Line:53 InvoName:basicSettings()
+PackageName:org.hibernate.ejb.test.ejb3configuration
+QualifiedClassName:org.hibernate.ejb.test.ejb3configuration.InterceptorTest
+ClassName:InterceptorTest
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00837/hibernate-entitymanager/src/test/java/org/hibernate/ejb/test/ejb3configuration/InterceptorTest.java
+InvokedMethodSig:protected Map#RAW basicSettings() 
+%%%%%%%%%%
+AddedMethodInvo Line:54 InvoName:settings.put(AvailableSettings.INTERCEPTOR,ExceptionInterceptor.class.getName())
+PackageName:java.util
+QualifiedClassName:java.util.Map
+ClassName:Map
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00837/documentation/src/main/docbook/manual/en-US/extras/java/util/Map.java
+InvokedMethodSig:public abstract V put(K, V) 
+%%%%%%%%%%
+AddedMethodInvo Line:55 InvoName:Bootstrap.getEntityManagerFactoryBuilder(new PersistenceUnitDescriptorAdapter(),settings).buildEntityManagerFactory()
+PackageName:org.hibernate.jpa.boot.spi
+QualifiedClassName:org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder
+ClassName:EntityManagerFactoryBuilder
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00837/documentation/src/main/docbook/manual/en-US/extras/org/hibernate/jpa/boot/spi/EntityManagerFactoryBuilder.java
+InvokedMethodSig:public abstract EntityManagerFactory buildEntityManagerFactory() 
+%%%%%%%%%%
+AddedMethodInvo Line:55 InvoName:Bootstrap.getEntityManagerFactoryBuilder(new PersistenceUnitDescriptorAdapter(),settings)
+PackageName:org.hibernate.jpa.boot.spi
+QualifiedClassName:org.hibernate.jpa.boot.spi.Bootstrap
+ClassName:Bootstrap
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00837/documentation/src/main/docbook/manual/en-US/extras/org/hibernate/jpa/boot/spi/Bootstrap.java
+InvokedMethodSig:public static org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder getEntityManagerFactoryBuilder(org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor, Map#RAW) 

@@ -1,0 +1,31 @@
+(startLine=88 endLine=116 srcPath=/root/NewExperiment/hibernateFilter/01165/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/QuerySpaceHelper.java)
+	public ExpandingEntityQuerySpace makeEntityQuerySpace(
+			ExpandingQuerySpace lhsQuerySpace,
+			EntityPersister fetchedPersister,
+			String attributeName,
+			EntityType attributeType,
+			String querySpaceUid,
+			boolean required,
+			boolean shouldIncludeJoin) {
+
+		final ExpandingEntityQuerySpace rhs = lhsQuerySpace.getExpandingQuerySpaces().makeEntityQuerySpace(
+				querySpaceUid,
+				fetchedPersister,
+				required
+		);
+
+		if ( shouldIncludeJoin ) {
+			final JoinDefinedByMetadata join = JoinHelper.INSTANCE.createEntityJoin(
+					lhsQuerySpace,
+					attributeName,
+					rhs,
+					required,
+					attributeType,
+					fetchedPersister.getFactory()
+			);
+			lhsQuerySpace.addJoin( join );
+		}
+
+		return rhs;
+	}
+

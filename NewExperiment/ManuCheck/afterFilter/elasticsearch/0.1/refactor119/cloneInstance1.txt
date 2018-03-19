@@ -1,0 +1,34 @@
+(startLine=392 endLine=423 srcPath=/root/NewExperiment/elasticsearchFilter/00842/src/main/java/org/elasticsearch/index/mapper/geo/GeoPointFieldMapper.java)
+    private void parseLatLon(ParseContext context, double lat, double lon) throws IOException {
+        if (normalizeLat || normalizeLon) {
+            GeoPoint point = new GeoPoint(lat, lon);
+            GeoUtils.normalizePoint(point, normalizeLat, normalizeLon);
+            lat = point.lat();
+            lon = point.lon();
+        }
+
+        if (validateLat) {
+            if (lat > 90.0 || lat < -90.0) {
+                throw new ElasticSearchIllegalArgumentException("illegal latitude value [" + lat + "] for " + name);
+            }
+        }
+        if (validateLon) {
+            if (lon > 180.0 || lon < -180) {
+                throw new ElasticSearchIllegalArgumentException("illegal longitude value [" + lon + "] for " + name);
+            }
+        }
+
+        context.externalValue(Double.toString(lat) + ',' + Double.toString(lon));
+        geoStringMapper.parse(context);
+        if (enableGeoHash) {
+            context.externalValue(GeoHashUtils.encode(lat, lon, precision));
+            geohashMapper.parse(context);
+        }
+        if (enableLatLon) {
+            context.externalValue(lat);
+            latMapper.parse(context);
+            context.externalValue(lon);
+            lonMapper.parse(context);
+        }
+    }
+

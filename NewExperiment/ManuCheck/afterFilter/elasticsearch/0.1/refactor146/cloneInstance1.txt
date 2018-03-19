@@ -1,0 +1,22 @@
+(startLine=175 endLine=194 srcPath=/root/NewExperiment/elasticsearchFilter/00917/src/main/java/org/elasticsearch/search/facet/datehistogram/InternalFullDateHistogramFacet.java)
+        for (Facet facet : facets) {
+            InternalFullDateHistogramFacet histoFacet = (InternalFullDateHistogramFacet) facet;
+            for (FullEntry fullEntry : histoFacet.entries) {
+                FullEntry current = map.get(fullEntry.time);
+                if (current != null) {
+                    current.count += fullEntry.count;
+                    current.total += fullEntry.total;
+                    current.totalCount += fullEntry.totalCount;
+                    if (fullEntry.min < current.min) {
+                        current.min = fullEntry.min;
+                    }
+                    if (fullEntry.max > current.max) {
+                        current.max = fullEntry.max;
+                    }
+                } else {
+                    map.put(fullEntry.time, fullEntry);
+                }
+            }
+            histoFacet.releaseCache();
+        }
+

@@ -1,0 +1,23 @@
+(startLine=1594 endLine=1614 srcPath=/root/NewExperiment/freecolFilter/01205/src/net/sf/freecol/server/ai/ColonyPlan.java)
+    /**
+     * Gets a concise textual description of a location associated with
+     * the colony.  No i18n here, this is for debugging purposes.
+     *
+     * @param loc The <code>Location</code> to describe.
+     * @return The text description.
+     */
+    private String locationDescription(Location loc) {
+        if (loc instanceof Building) {
+            Building building = (Building)loc;
+            return Utils.lastPart(building.getType().toString(), ".");
+        } else if (loc instanceof ColonyTile) {
+            ColonyTile colonyTile = (ColonyTile)loc;
+            Tile workTile = colonyTile.getWorkTile();
+            return Utils.lastPart(workTile.getType().toString(), ".")
+                + "/"
+                + colony.getTile().getDirection(workTile).toString();
+        } else {
+            return ((FreeColObject)loc).getId();
+        }
+    }
+

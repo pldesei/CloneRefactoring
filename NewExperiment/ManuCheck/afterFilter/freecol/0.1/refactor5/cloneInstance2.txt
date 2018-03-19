@@ -1,0 +1,9 @@
+(startLine=2484 endLine=2490 srcPath=/root/NewExperiment/freecolFilter/00056/src/net/sf/freecol/common/model/Unit.java)
+                    if (newTile.getSettlement() instanceof Colony && newTile.getColony().getUnitCount() <= 1) {
+                        int plunderGold = (int) (newTile.getSettlement().getOwner().getGold() * 0.1); // 10% of their gold
+                        getOwner().modifyGold(plunderGold);
+                        newTile.getSettlement().getOwner().modifyGold(-plunderGold);
+                        addModelMessage(newTile.getSettlement().getOwner(), "model.unit.colonyBurning", new String[][] {{"%colony%", newTile.getColony().getName()}, {"%amount%", Integer.toString(plunderGold)}});
+                        newTile.getSettlement().dispose();
+                    } else {
+

@@ -1,0 +1,11 @@
+(startLine=560 endLine=568 srcPath=/root/NewExperiment/freecolFilter/00940/src/net/sf/freecol/server/ai/AIColony.java)
+    /**
+     * Is the colony badly defended?
+     * TODO: check if this heuristic makes sense.
+     *
+     * @return True if the colony needs more defenders.
+     */
+    public boolean isBadlyDefended() {
+        return colony.getTotalDefencePower() < 1.5f * colony.getUnitCount();
+    }
+

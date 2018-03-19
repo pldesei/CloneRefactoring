@@ -1,0 +1,15 @@
+(startLine=1841 endLine=1853 srcPath=/root/NewExperiment/freecolFilter/01357/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+            for (AIUnit aiUnit : aiUnits) {
+                final Unit unit = aiUnit.getUnit();
+                Mission m = getPioneeringMission(aiUnit, lb);
+                if (m == null) continue;
+                done.add(aiUnit);
+                lb.add(", ");
+                if (requestsTransport(aiUnit)) {
+                    Utils.appendToMapList(transportSupply,
+                        upLoc(aiUnit.getTransportSource()), aiUnit);
+                }
+                reasons.put(unit, "Pioneer" + nPioneers);
+                if (--nPioneers <= 0) break;
+            }
+

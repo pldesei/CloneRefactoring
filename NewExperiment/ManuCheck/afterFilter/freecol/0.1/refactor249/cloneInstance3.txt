@@ -1,0 +1,17 @@
+(startLine=309 endLine=323 srcPath=/root/NewExperiment/freecolFilter/00846/src/net/sf/freecol/client/gui/panel/ReportRequirementsPanel.java)
+            if (!canTrainExperts.isEmpty()) {
+                doc.insertString(doc.getLength(),
+                                 "\n" + Messages.message(StringTemplate.template("report.requirements.canTrainExperts")
+                                                         .addName("%unit%", workType)) + " ",
+                        doc.getStyle("regular"));
+                int lastExpertsIndex = canTrainExperts.size() - 1;
+                for (int index = 0; index <= lastExpertsIndex; index++) {
+                    Colony colony = canTrainExperts.get(index);
+                    StyleConstants.setComponent(doc.getStyle("button"), createColonyButton(colony, false));
+                    doc.insertString(doc.getLength(), " ", doc.getStyle("button"));
+                    if (index != lastExpertsIndex) {
+                        doc.insertString(doc.getLength(), ", ", doc.getStyle("regular"));
+                    }
+                }
+            }
+

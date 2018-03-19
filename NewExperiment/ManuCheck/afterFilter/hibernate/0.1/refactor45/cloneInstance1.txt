@@ -1,0 +1,136 @@
+(startLine=81 endLine=214 srcPath=/root/NewExperiment/hibernateFilter/01093/hibernate-core/src/test/java/org/hibernate/loader/EntityWithNonLazyOneToManySetResultSetProcessorTest.java)
+	public void testEntityWithSet() throws Exception {
+		final EntityPersister entityPersister = sessionFactory().getEntityPersister( Poster.class.getName() );
+
+		// create some test data
+		Session session = openSession();
+		session.beginTransaction();
+		Poster poster = new Poster();
+		poster.pid = 0;
+		poster.name = "John Doe";
+		Message message1 = new Message();
+		message1.mid = 1;
+		message1.msgTxt = "Howdy!";
+		message1.poster = poster;
+		poster.messages.add( message1 );
+		Message message2 = new Message();
+		message2.mid = 2;
+		message2.msgTxt = "Bye!";
+		message2.poster = poster;
+		poster.messages.add( message2 );
+		session.save( poster );
+		session.getTransaction().commit();
+		session.close();
+
+		session = openSession();
+		session.beginTransaction();
+		Poster posterGotten = (Poster) session.get( Poster.class, poster.pid );
+		assertEquals( 0, posterGotten.pid.intValue() );
+		assertEquals( poster.name, posterGotten.name );
+		assertTrue( Hibernate.isInitialized( posterGotten.messages ) );
+		assertEquals( 2, posterGotten.messages.size() );
+		for ( Message message : posterGotten.messages ) {
+			if ( message.mid == 1 ) {
+				assertEquals( message1.msgTxt, message.msgTxt );
+			}
+			else if ( message.mid == 2 ) {
+				assertEquals( message2.msgTxt, message.msgTxt );
+			}
+			else {
+				fail( "unexpected message id." );
+			}
+			assertSame( posterGotten, message.poster );
+		}
+		session.getTransaction().commit();
+		session.close();
+
+		{
+			final SingleRootReturnLoadPlanBuilderStrategy strategy = new SingleRootReturnLoadPlanBuilderStrategy(
+					sessionFactory(),
+					LoadQueryInfluencers.NONE
+			);
+			final LoadPlan plan = LoadPlanBuilder.buildRootEntityLoadPlan( strategy, entityPersister );
+			final LoadQueryAliasResolutionContext aliasResolutionContext =
+					new LoadQueryAliasResolutionContextImpl(
+							sessionFactory(),
+							0,
+							Collections.singletonMap( plan.getReturns().get( 0 ), new String[] { "abc" } )
+					);
+			final EntityLoadQueryBuilderImpl queryBuilder = new EntityLoadQueryBuilderImpl(
+					LoadQueryInfluencers.NONE,
+					plan
+			);
+			final String sql = queryBuilder.generateSql( 1, sessionFactory(), aliasResolutionContext );
+
+			final ResultSetProcessorImpl resultSetProcessor = new ResultSetProcessorImpl( plan );
+			final List results = new ArrayList();
+
+			final Session workSession = openSession();
+			workSession.beginTransaction();
+			workSession.doWork(
+					new Work() {
+						@Override
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = connection.prepareStatement( sql );
+							ps.setInt( 1, 0 );
+							ResultSet resultSet = ps.executeQuery();
+							results.addAll(
+									resultSetProcessor.extractResults(
+											NoOpLoadPlanAdvisor.INSTANCE,
+											resultSet,
+											(SessionImplementor) workSession,
+											new QueryParameters(),
+											new NamedParameterContext() {
+												@Override
+												public int[] getNamedParameterLocations(String name) {
+													return new int[0];
+												}
+											},
+											aliasResolutionContext,
+											true,
+											false,
+											null,
+											null
+									)
+							);
+							resultSet.close();
+							ps.close();
+						}
+					}
+			);
+			assertEquals( 2, results.size() );
+			Object result1 = results.get( 0 );
+			assertNotNull( result1 );
+			assertSame( result1, results.get( 1 ) );
+
+			Poster workPoster = ExtraAssertions.assertTyping( Poster.class, result1 );
+			assertEquals( 0, workPoster.pid.intValue() );
+			assertEquals( poster.name, workPoster.name );
+			assertTrue( Hibernate.isInitialized( workPoster.messages ) );
+			assertEquals( 2, workPoster.messages.size() );
+			assertTrue( Hibernate.isInitialized( posterGotten.messages ) );
+			assertEquals( 2, workPoster.messages.size() );
+			for ( Message message : workPoster.messages ) {
+				if ( message.mid == 1 ) {
+					assertEquals( message1.msgTxt, message.msgTxt );
+				}
+				else if ( message.mid == 2 ) {
+					assertEquals( message2.msgTxt, message.msgTxt );
+				}
+				else {
+					fail( "unexpected message id." );
+				}
+				assertSame( workPoster, message.poster );
+			}
+			workSession.getTransaction().commit();
+			workSession.close();
+		}
+
+		// clean up test data
+		session = openSession();
+		session.beginTransaction();
+		session.delete( poster );
+		session.getTransaction().commit();
+		session.close();
+	}
+

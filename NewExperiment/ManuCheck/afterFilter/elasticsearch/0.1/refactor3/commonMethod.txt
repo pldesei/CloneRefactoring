@@ -1,0 +1,6 @@
+(startLine=74 endLine=77 srcPath=/root/NewExperiment/elasticsearchFilter/00050/modules/elasticsearch/src/main/java/org/elasticsearch/action/search/type/TransportSearchCache.java)
+    public void releaseDfsResults(Collection<DfsSearchResult> dfsResults) {
+        dfsResults.clear();
+        cacheDfsResults.offer(dfsResults);
+    }
+

@@ -1,0 +1,43 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/01550
+predFragLineRange:65-93
+predMethodLineRange:63-93
+nextLineRange:45-70
+predStrMethodInvoNames:
+[invoke, getValue, isUnlockable, wasLockedConcurrently, unlock, nextTimestamp, setValue, setValue, setValue, nextTimestamp]
+%%%%%%%%%%
+AddedMethodInvo Line:49 InvoName:region.get(key)
+PackageName:org.hibernate.cache.jcache
+QualifiedClassName:org.hibernate.cache.jcache.JCacheTransactionalDataRegion
+ClassName:JCacheTransactionalDataRegion
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/JCacheTransactionalDataRegion.java
+InvokedMethodSig:public java.lang.Object get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:54 InvoName:region.replace(key,lockItem,lockItem.unlock(region.nextTimestamp()))
+PackageName:org.hibernate.cache.jcache
+QualifiedClassName:org.hibernate.cache.jcache.JCacheTransactionalDataRegion
+ClassName:JCacheTransactionalDataRegion
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/JCacheTransactionalDataRegion.java
+InvokedMethodSig:public boolean replace(java.lang.Object, java.lang.Object, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:59 InvoName:region.replace(key,lockItem,new Item(value,null,region.nextTimestamp(),nextItemId()))
+PackageName:org.hibernate.cache.jcache
+QualifiedClassName:org.hibernate.cache.jcache.JCacheTransactionalDataRegion
+ClassName:JCacheTransactionalDataRegion
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/JCacheTransactionalDataRegion.java
+InvokedMethodSig:public boolean replace(java.lang.Object, java.lang.Object, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:59 InvoName:nextItemId()
+PackageName:org.hibernate.cache.jcache.access
+QualifiedClassName:org.hibernate.cache.jcache.access.AbstractReadWriteRegionAccessStrategy<org.hibernate.cache.jcache.JCacheNaturalIdRegion>
+ClassName:AbstractReadWriteRegionAccessStrategy<JCacheNaturalIdRegion>
+InnerClass
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/access/AbstractReadWriteRegionAccessStrategy<org.java
+InvokedMethodSig:protected long nextItemId() 
+%%%%%%%%%%
+AddedMethodInvo Line:65 InvoName:handleMissingLock(key,item)
+PackageName:org.hibernate.cache.jcache.access
+QualifiedClassName:org.hibernate.cache.jcache.access.AbstractReadWriteRegionAccessStrategy<org.hibernate.cache.jcache.JCacheNaturalIdRegion>
+ClassName:AbstractReadWriteRegionAccessStrategy<JCacheNaturalIdRegion>
+InnerClass
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/access/AbstractReadWriteRegionAccessStrategy<org.java
+InvokedMethodSig:protected void handleMissingLock(java.lang.Object, Lockable) 

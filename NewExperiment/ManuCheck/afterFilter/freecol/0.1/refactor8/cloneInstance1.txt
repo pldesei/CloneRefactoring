@@ -1,0 +1,18 @@
+(startLine=704 endLine=719 srcPath=/root/NewExperiment/freecolFilter/00071/src/net/sf/freecol/common/model/Colony.java)
+    public ColonyTile getVacantColonyTileFor(Unit unit, int goodsType) {
+        ColonyTile bestPick = null;
+        int highestProduction = 0;
+
+        Iterator colonyTileIterator = getColonyTileIterator();
+        while (colonyTileIterator.hasNext()) {
+            ColonyTile colonyTile = (ColonyTile) colonyTileIterator.next();
+            if (colonyTile.canAdd(unit) && unit.getFarmedPotential(goodsType, colonyTile.getWorkTile()) > highestProduction
+                    && (colonyTile.getWorkTile().isLand() || getBuilding(Building.DOCK).isBuilt())) {
+                highestProduction = unit.getFarmedPotential(goodsType, colonyTile.getWorkTile());
+                bestPick = colonyTile;
+            }
+        }
+
+        return bestPick;
+    }
+

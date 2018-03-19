@@ -1,0 +1,37 @@
+(startLine=839 endLine=873 srcPath=/root/NewExperiment/freecolFilter/00324/src/net/sf/freecol/client/gui/panel/ColonyPanel.java)
+    private void updateCargoPanel() {
+        cargoPanel.removeAll();
+
+        if (selectedUnit != null) {
+            selectedUnit.setSelected(true);
+            Unit selUnit = selectedUnit.getUnit();
+
+            Iterator<Unit> unitIterator = selUnit.getUnitIterator();
+            while (unitIterator.hasNext()) {
+                Unit unit = unitIterator.next();
+
+                UnitLabel label = new UnitLabel(unit, parent);
+                if (isEditable()) {
+                    label.setTransferHandler(defaultTransferHandler);
+                    label.addMouseListener(pressListener);
+                }
+
+                cargoPanel.add(label, false);
+            }
+
+            Iterator<Goods> goodsIterator = selUnit.getGoodsIterator();
+            while (goodsIterator.hasNext()) {
+                Goods g = goodsIterator.next();
+
+                GoodsLabel label = new GoodsLabel(g, parent);
+                if (isEditable()) {
+                    label.setTransferHandler(defaultTransferHandler);
+                    label.addMouseListener(pressListener);
+                }
+
+                cargoPanel.add(label, false);
+            }
+
+        }
+    }
+

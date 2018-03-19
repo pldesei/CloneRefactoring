@@ -1,0 +1,22 @@
+(startLine=2954 endLine=2973 srcPath=/root/NewExperiment/freecolFilter/00103/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Sets the damage to this ship and sends it to its repair
+     * location.
+     */
+    private void shipDamaged() {
+        String nation = owner.getNationAsString();
+        Location repairLocation = getOwner().getRepairLocation(this);
+        String repairLocationName = Messages.message("menuBar.view.europe");
+        if (repairLocation instanceof Colony) {
+            repairLocationName = ((Colony) repairLocation).getName();
+        }
+        addModelMessage(this, "model.unit.shipDamaged",
+                        new String [][] {{"%ship%", getName()},
+                                         {"%repairLocation%", repairLocationName},
+                                         {"%nation%", nation}});
+        setHitpoints(1);
+        getUnitContainer().disposeAllUnits();
+        goodsContainer.removeAbove(0);
+        sendToRepairLocation();
+    }
+

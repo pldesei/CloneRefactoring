@@ -1,0 +1,18 @@
+(startLine=313 endLine=328 srcPath=/root/NewExperiment/freecolFilter/00380/src/net/sf/freecol/client/gui/panel/ReportLabourPanel.java)
+        if (unitAtSea[unitIndex] > 0) {
+            JLabel atSeaLabel = new JLabel(Messages.message("report.atSea"));
+            atSeaLabel.setForeground(Color.GRAY);
+            detailPanel.add(atSeaLabel,
+                            higConst.rc(row, column * columnsPerColumn + colonyColumn, "l"));
+            JLabel countLabel = new JLabel(String.valueOf(unitAtSea[unitIndex]));
+            countLabel.setForeground(Color.GRAY);
+            detailPanel.add(countLabel, 
+                            higConst.rc(row, column * columnsPerColumn + countColumn, "r"));
+            if (row == heights.length) {
+                row = startRow;
+                column++;
+            } else {
+                row++;
+            }
+        }
+

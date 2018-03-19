@@ -1,0 +1,11 @@
+(startLine=636 endLine=644 srcPath=/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/common/model/Colony.java)
+    public List<Unit> getTeachers() {
+        List<Unit> teachers = new ArrayList<Unit>();
+        for (Building building : buildingMap.values()) {
+            if (building.getType().hasAbility("model.ability.teach")) {
+                teachers.addAll(building.getUnitList());
+            }
+        }
+        return teachers;
+    }
+

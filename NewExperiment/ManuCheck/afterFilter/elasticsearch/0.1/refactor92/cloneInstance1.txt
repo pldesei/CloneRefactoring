@@ -1,0 +1,15 @@
+(startLine=71 endLine=83 srcPath=/root/NewExperiment/elasticsearchFilter/00740/src/main/java/org/elasticsearch/action/admin/indices/cache/clear/ShardClearIndicesCacheRequest.java)
+    public void readFrom(StreamInput in) throws IOException {
+        super.readFrom(in);
+        filterCache = in.readBoolean();
+        fieldDataCache = in.readBoolean();
+        idCache = in.readBoolean();
+        int size = in.readVInt();
+        if (size > 0) {
+            fields = new String[size];
+            for (int i = 0; i < size; i++) {
+                fields[i] = in.readString();
+            }
+        }
+    }
+

@@ -1,0 +1,13 @@
+(startLine=1171 endLine=1181 srcPath=/root/NewExperiment/freecolFilter/00288/src/net/sf/freecol/client/gui/GUI.java)
+    private Image getPathImage(Unit u) {
+        if (u == null || u.isNaval()) {
+            return (Image) UIManager.get("path.naval.image");
+        } else if (u.isMounted()) {
+            return (Image) UIManager.get("path.horse.image");
+        } else if (u.getType() == Unit.WAGON_TRAIN || u.getType() == Unit.TREASURE_TRAIN || u.getType() == Unit.ARTILLERY || u.getType() == Unit.DAMAGED_ARTILLERY) {
+            return (Image) UIManager.get("path.wagon.image");
+        } else {
+            return (Image) UIManager.get("path.foot.image");
+        }
+    }
+

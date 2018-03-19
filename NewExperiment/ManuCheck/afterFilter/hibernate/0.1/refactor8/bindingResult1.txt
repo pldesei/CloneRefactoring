@@ -1,0 +1,34 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/00309
+predFragLineRange:104-127
+predMethodLineRange:101-137
+nextLineRange:102-139
+predStrMethodInvoNames:
+[prepareSelectStatement, getBatcher, executeQuery, next, get, isDebugEnabled, debug, close, closeStatement, getBatcher, convert, getSQLExceptionConverter, getFactory]
+%%%%%%%%%%
+AddedMethodInvo Line:111 InvoName:buildHolder()
+PackageName:org.hibernate.id
+QualifiedClassName:org.hibernate.id.SequenceGenerator
+ClassName:SequenceGenerator
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00309/core/src/main/java/org/hibernate/id/SequenceGenerator.java
+InvokedMethodSig:protected org.hibernate.id.IntegralDataTypeHolder buildHolder() 
+%%%%%%%%%%
+AddedMethodInvo Line:112 InvoName:result.initialize(rs,1)
+PackageName:org.hibernate.id
+QualifiedClassName:org.hibernate.id.IntegralDataTypeHolder
+ClassName:IntegralDataTypeHolder
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00309/core/src/main/java/org/hibernate/id/IntegralDataTypeHolder.java
+InvokedMethodSig:public abstract org.hibernate.id.IntegralDataTypeHolder initialize(java.sql.ResultSet, long) throws java.sql.SQLException
+%%%%%%%%%%
+AddedMethodInvo Line:138 InvoName:IdentifierGeneratorHelper.getIntegralDataTypeHolder(identifierType.getReturnedClass())
+PackageName:org.hibernate.id
+QualifiedClassName:org.hibernate.id.IdentifierGeneratorHelper
+ClassName:IdentifierGeneratorHelper
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00309/core/src/main/java/org/hibernate/id/IdentifierGeneratorHelper.java
+InvokedMethodSig:public static org.hibernate.id.IntegralDataTypeHolder getIntegralDataTypeHolder(Class#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:138 InvoName:identifierType.getReturnedClass()
+PackageName:org.hibernate.type
+QualifiedClassName:org.hibernate.type.Type
+ClassName:Type
+InvokedFilePath:/root/NewExperiment/hibernateFilter/00309/core/src/main/java/org/hibernate/type/Type.java
+InvokedMethodSig:public abstract Class#RAW getReturnedClass() 

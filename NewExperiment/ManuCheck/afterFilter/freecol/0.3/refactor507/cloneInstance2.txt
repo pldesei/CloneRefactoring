@@ -1,0 +1,20 @@
+(startLine=346 endLine=363 srcPath=/root/NewExperiment/freecolFilter/01379/src/net/sf/freecol/common/model/SimpleCombatModel.java)
+                if (tile.hasSettlement()) {
+                    // Bombard bonus applies to settlement defence
+                    result.addAll(attacker
+                                  .getModifiers(Modifier.BOMBARD_BONUS));
+
+                    // Popular support bonus
+                    if (combatIsWarOfIndependence(attacker, defender)) {
+                        Colony colony = (Colony)tile.getSettlement();
+                        int bonus = colony.getSoLPercentage();
+                        if (bonus >= 0) {
+                            if (attacker.getOwner().isREF()) {
+                                bonus = 100 - bonus;
+                            }
+                            result.add(new Modifier(Modifier.POPULAR_SUPPORT,
+                                    bonus, ModifierType.PERCENTAGE, colony));
+                        }
+                    }
+                } else {
+

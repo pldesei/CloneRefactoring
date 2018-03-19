@@ -1,0 +1,26 @@
+(startLine=122 endLine=145 srcPath=/root/NewExperiment/hibernateFilter/01163/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/CollectionQuerySpaceImpl.java)
+	public JoinDefinedByMetadata addElementEntityJoin(final EntityPersister elementPersister) {
+		final String entityQuerySpaceUid = getQuerySpaces().generateImplicitUid();
+		final EntityQuerySpaceImpl entityQuerySpace = new EntityQuerySpaceImpl(
+				elementPersister,
+				entityQuerySpaceUid,
+				getQuerySpaces(),
+				canJoinsBeRequired(),
+				sessionFactory()
+		);
+		getQuerySpaces().registerQuerySpace( entityQuerySpace );
+
+		final JoinDefinedByMetadata join = JoinHelper.INSTANCE.createEntityJoin(
+				this,
+				// collection persister maps its elements (through its PropertyMapping contract) as non-prefixed
+				CollectionPropertyNames.COLLECTION_ELEMENTS,
+				entityQuerySpace,
+				canJoinsBeRequired(),
+				(EntityType) persister.getElementType(),
+				sessionFactory()
+		);
+		internalGetJoins().add( join );
+
+		return join;
+	}
+

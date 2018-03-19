@@ -1,0 +1,21 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/01550
+predFragLineRange:39-55
+predMethodLineRange:38-55
+nextLineRange:34-37
+predStrMethodInvoNames:
+[invoke, exists, setValue, nextTimestamp]
+%%%%%%%%%%
+AddedMethodInvo Line:36 InvoName:region.putIfAbsent(key,new Item(value,null,region.nextTimestamp(),nextItemId()))
+PackageName:org.hibernate.cache.jcache
+QualifiedClassName:org.hibernate.cache.jcache.JCacheTransactionalDataRegion
+ClassName:JCacheTransactionalDataRegion
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/JCacheTransactionalDataRegion.java
+InvokedMethodSig:public boolean putIfAbsent(java.lang.Object, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:36 InvoName:nextItemId()
+PackageName:org.hibernate.cache.jcache.access
+QualifiedClassName:org.hibernate.cache.jcache.access.AbstractReadWriteRegionAccessStrategy<org.hibernate.cache.jcache.JCacheNaturalIdRegion>
+ClassName:AbstractReadWriteRegionAccessStrategy<JCacheNaturalIdRegion>
+InnerClass
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01550/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/access/AbstractReadWriteRegionAccessStrategy<org.java
+InvokedMethodSig:protected long nextItemId() 

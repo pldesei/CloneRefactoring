@@ -1,0 +1,19 @@
+(startLine=145 endLine=161 srcPath=/root/NewExperiment/freecolFilter/00974/src/net/sf/freecol/client/gui/panel/ReportNavalPanel.java)
+        for (Unit unit : player.getUnits()) {
+            if (unit.isNaval()) {
+                navalUnits.incrementCount(unit.getType(), 1);
+
+                String locationName = getLocationNameFor(unit);
+
+                ArrayList<Unit> unitList = locations.get(locationName);
+                if (unitList == null) {
+                    unitList = new ArrayList<Unit>();
+                    locations.put(locationName, unitList);
+                }
+                unitList.add(unit);
+                if (!(colonyNames.contains(locationName) || otherNames.contains(locationName))) {
+                    otherNames.add(locationName);
+                }
+            }
+        }
+

@@ -1,0 +1,29 @@
+(startLine=69 endLine=95 srcPath=/root/NewExperiment/hibernateFilter/01490/hibernate-core/src/main/java/org/hibernate/tool/schema/internal/SchemaCreatorImpl.java)
+	public List<String> generateCreationCommands(Metadata metadata, boolean createNamespaces) {
+		final ArrayList<String> commands = new ArrayList<String>();
+		doCreation(
+				metadata,
+				createNamespaces,
+				new Target() {
+					@Override
+					public boolean acceptsImportScriptActions() {
+						return true;
+					}
+
+					@Override
+					public void prepare() {
+					}
+
+					@Override
+					public void accept(String action) {
+						commands.add( action );
+					}
+
+					@Override
+					public void release() {
+					}
+				}
+		);
+		return commands;
+	}
+

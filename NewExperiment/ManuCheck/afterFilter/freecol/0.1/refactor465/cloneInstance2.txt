@@ -1,0 +1,13 @@
+(startLine=693 endLine=703 srcPath=/root/NewExperiment/freecolFilter/01328/src/net/sf/freecol/client/gui/panel/QuickActionMenu.java)
+                            public void actionPerformed(ActionEvent e) {
+                                int n = ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0
+                                    && items > 1) ? promptForEquipment(unit, et, items, true)
+                                    : items;
+                                if (n <= 0) return;
+                                igc.equipUnit(unit, et, n);
+                                unitLabel.updateIcon();
+                                if (parentPanel instanceof ColonyPanel) {
+                                    ((ColonyPanel)parentPanel).update();
+                                }
+                            }
+

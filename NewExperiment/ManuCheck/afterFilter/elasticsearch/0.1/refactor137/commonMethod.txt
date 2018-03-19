@@ -1,0 +1,9 @@
+(startLine=253 endLine=259 srcPath=/root/NewExperiment/elasticsearchFilter/00865/src/main/java/org/elasticsearch/index/query/IndexQueryParserService.java)
+    public ParsedQuery parse(XContentParser parser) {
+        try {
+            return parse(cache.get(), parser);
+        } catch (IOException e) {
+            throw new QueryParsingException(index, "Failed to parse", e);
+        }
+    }
+

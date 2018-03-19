@@ -1,0 +1,36 @@
+(startLine=519 endLine=552 srcPath=/root/NewExperiment/elasticsearchFilter/01052/src/test/java/org/elasticsearch/count/query/SimpleQueryTests.java)
+    public void testMultiMatchQueryZeroTermsQuery() throws IOException {
+        client().admin().indices().prepareCreate("test").setSettings(ImmutableSettings.settingsBuilder().put("index.number_of_shards", 1))
+                .addMapping("type1", jsonBuilder().startObject().startObject("type1").startObject("properties")
+                        .startObject("field1").field("type", "string").field("analyzer", "classic").endObject()
+                        .startObject("field2").field("type", "string").field("analyzer", "classic").endObject()
+                        .endObject().endObject().endObject())
+                .execute().actionGet();
+        client().prepareIndex("test", "type1", "1").setSource("field1", "value1", "field2", "value2").execute().actionGet();
+        client().prepareIndex("test", "type1", "2").setSource("field1", "value3", "field2", "value4").execute().actionGet();
+        client().admin().indices().prepareRefresh("test").execute().actionGet();
+
+        BoolQueryBuilder boolQuery = boolQuery()
+                .must(multiMatchQuery("a", "field1", "field2").zeroTermsQuery(MatchQueryBuilder.ZeroTermsQuery.NONE))
+                .must(multiMatchQuery("value1", "field1", "field2").zeroTermsQuery(MatchQueryBuilder.ZeroTermsQuery.NONE)); // Fields are ORed together
+        CountResponse countResponse = client().prepareCount()
+                .setQuery(boolQuery)
+                .execute().actionGet();
+        assertHitCount(countResponse, 0l);
+
+        boolQuery = boolQuery()
+                .must(multiMatchQuery("a", "field1", "field2").zeroTermsQuery(MatchQueryBuilder.ZeroTermsQuery.ALL))
+                .must(multiMatchQuery("value4", "field1", "field2").zeroTermsQuery(MatchQueryBuilder.ZeroTermsQuery.ALL));
+        countResponse = client().prepareCount()
+                .setQuery(boolQuery)
+                .execute().actionGet();
+        assertHitCount(countResponse, 1l);
+
+        boolQuery = boolQuery()
+                .must(multiMatchQuery("a", "field1").zeroTermsQuery(MatchQueryBuilder.ZeroTermsQuery.ALL));
+        countResponse = client().prepareCount()
+                .setQuery(boolQuery)
+                .execute().actionGet();
+        assertHitCount(countResponse, 2l);
+    }
+

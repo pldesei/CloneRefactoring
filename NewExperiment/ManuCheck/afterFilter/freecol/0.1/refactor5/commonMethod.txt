@@ -1,0 +1,35 @@
+(startLine=1753 endLine=1785 srcPath=/root/NewExperiment/freecolFilter/00057/src/net/sf/freecol/common/model/Unit.java)
+    /**
+    * Moves this unit to europe.
+    * @exception IllegalStateException If the move is illegal.
+    */
+    public void moveToEurope() {
+
+        // Check if this move is illegal or not:
+        if (!(getLocation() instanceof Europe)) {
+            boolean ok = false;
+
+            Vector surroundingTiles = getGame().getMap().getSurroundingTiles(getTile(), 1);
+            if (surroundingTiles.size() != 8) {
+                ok = true;
+            } else {
+                for (int i=0; i<surroundingTiles.size(); i++) {
+                    Tile tile = (Tile) surroundingTiles.get(i);
+                    if (tile == null || tile.getType() == Tile.HIGH_SEAS) {
+                        ok = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!ok) {
+                throw new IllegalStateException("It is not allowed to move units to europe from the tile where this unit is located.");
+            }
+
+            setEntryLocation(getLocation());
+        }
+
+        setState(TO_EUROPE);
+        setLocation(getOwner().getEurope());
+    }
+

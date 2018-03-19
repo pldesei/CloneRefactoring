@@ -1,0 +1,33 @@
+(startLine=132 endLine=162 srcPath=/root/NewExperiment/freecolFilter/00974/src/net/sf/freecol/client/gui/panel/ReportNavalPanel.java)
+    private void gatherData() {
+        locations = new HashMap<String, ArrayList<Unit>>();
+        Player player = getMyPlayer();
+        List<Colony> colonies = getSortedColonies();
+        colonyNames = new ArrayList<String>();
+        for (Colony colony : colonies) {
+            colonyNames.add(colony.getName());
+        }
+        otherNames = new ArrayList<String>();
+        if (player.getEurope() != null) {
+            otherNames.add(Messages.message(player.getEurope().getNameKey()));
+        }
+
+        for (Unit unit : player.getUnits()) {
+            if (unit.isNaval()) {
+                navalUnits.incrementCount(unit.getType(), 1);
+
+                String locationName = getLocationNameFor(unit);
+
+                ArrayList<Unit> unitList = locations.get(locationName);
+                if (unitList == null) {
+                    unitList = new ArrayList<Unit>();
+                    locations.put(locationName, unitList);
+                }
+                unitList.add(unit);
+                if (!(colonyNames.contains(locationName) || otherNames.contains(locationName))) {
+                    otherNames.add(locationName);
+                }
+            }
+        }
+    }
+

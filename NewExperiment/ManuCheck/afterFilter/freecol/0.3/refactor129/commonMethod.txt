@@ -1,0 +1,34 @@
+(startLine=346 endLine=377 srcPath=/root/NewExperiment/freecolFilter/00448/test/src/net/sf/freecol/util/test/FreeColTestCase.java)
+    	public IndianSettlement build(){
+    		UnitType skillToTeach = FreeCol.getSpecification().getUnitType(skillTaught);
+    		UnitType indianBraveType = FreeCol.getSpecification().getUnitType("model.unit.brave");
+    		
+    		// indianPlayer not set, get default
+    		if(indianPlayer == null){
+    			indianPlayer = game.getPlayer(defaultIndianPlayer);
+    			if(indianPlayer == null){
+    				throw new IllegalArgumentException("Default Indian player " + defaultIndianPlayer + " not in game");
+    			}
+    		}
+    		
+    		// settlement tile no set, get default
+    		// indianPlayer not set, get default
+    		if(settlementTile == null){
+    			settlementTile = game.getMap().getTile(5, 8);
+    			if(settlementTile == null){
+    				throw new IllegalArgumentException("Default tile not in game");
+    			}
+    		}
+    		
+    		IndianSettlement camp = new IndianSettlement(game,indianPlayer,settlementTile,isCapital,skillToTeach,isVisited,residentMissionary);
+            
+    		// Add braves
+            for(int i=0; i < initialBravesInCamp; i++){
+            	Unit brave = new Unit(game, camp, indianPlayer, indianBraveType, UnitState.ACTIVE,
+                    indianBraveType.getDefaultEquipment());
+            	camp.addOwnedUnit(brave);
+            }
+            
+            return camp;
+    	}
+

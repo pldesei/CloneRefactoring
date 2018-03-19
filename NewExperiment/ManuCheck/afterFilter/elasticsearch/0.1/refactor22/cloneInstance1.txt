@@ -1,0 +1,48 @@
+(startLine=118 endLine=163 srcPath=/root/NewExperiment/elasticsearchFilter/00390/modules/elasticsearch/src/main/java/org/elasticsearch/action/support/single/custom/TransportSingleCustomOperationAction.java)
+        private void performFirst() {
+            if (request.preferLocalShard()) {
+                while (shardsIt.hasNextActive()) {
+                    final ShardRouting shard = shardsIt.nextActive();
+                    if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                        if (request.operationThreaded()) {
+                            request.beforeLocalFork();
+                            threadPool.execute(new Runnable() {
+                                @Override public void run() {
+                                    try {
+                                        Response response = shardOperation(request, shard.id());
+                                        listener.onResponse(response);
+                                    } catch (Exception e) {
+                                        onFailure(shard, e);
+                                    }
+                                }
+                            });
+                            return;
+                        } else {
+                            try {
+                                final Response response = shardOperation(request, shard.id());
+                                if (request.listenerThreaded()) {
+                                    threadPool.execute(new Runnable() {
+                                        @Override public void run() {
+                                            listener.onResponse(response);
+                                        }
+                                    });
+                                } else {
+                                    listener.onResponse(response);
+                                }
+                                return;
+                            } catch (Exception e) {
+                                onFailure(shard, e);
+                            }
+                        }
+                    }
+                }
+            } else {
+                perform(null);
+            }
+            if (!shardsIt.hasNextActive()) {
+                // no local node get, go remote
+                shardsIt.reset();
+                perform(null);
+            }
+        }
+

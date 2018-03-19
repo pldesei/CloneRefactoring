@@ -1,0 +1,20 @@
+(startLine=186 endLine=203 srcPath=/root/NewExperiment/freecolFilter/01342/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+    private void determineStances(StringBuffer sb) {
+        final Player player = getPlayer();
+        int point = (sb == null) ? -1 : sb.length();
+
+        for (Player p : getGame().getLivePlayers(player)) {
+            Stance newStance = determineStance(p);
+            if (newStance != player.getStance(p)) {
+                getAIMain().getFreeColServer().getInGameController()
+                    .changeStance(player, newStance, p, true);
+                logSB(sb, " ", p.getNation().getSuffix(),
+                      "->", newStance, ", ");
+            }
+        }
+        if (sb != null && sb.length() > point) {
+            sb.insert(point, "\n  Stance changes:");
+            sb.setLength(sb.length() - 2);
+        }
+    }
+

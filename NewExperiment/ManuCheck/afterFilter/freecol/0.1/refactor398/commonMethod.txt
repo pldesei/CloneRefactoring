@@ -1,0 +1,16 @@
+(startLine=1249 endLine=1262 srcPath=/root/NewExperiment/freecolFilter/01061/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Gets the number of turns required for this unit to reach a
+     * destination location from a starting location.  If the unit is
+     * currently on a carrier, it will be used.
+     *
+     * @param start The <code>Location</code> to start the search from.
+     * @param end The destination <code>Location</code>.
+     * @return The number of turns it will take to reach the <code>end</code>,
+     *         or <code>INFINITY</code> if no path can be found.
+     */
+    public int getTurnsToReach(Location start, Location end) {
+        return getTurnsToReach(start, end, getCarrier(),
+            CostDeciders.avoidSettlementsAndBlockingUnits());
+    }
+

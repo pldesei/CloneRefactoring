@@ -1,0 +1,9 @@
+(startLine=311 endLine=317 srcPath=/root/NewExperiment/elasticsearchFilter/00984/src/main/java/org/elasticsearch/index/mapper/core/DateFieldMapper.java)
+    public Query rangeQuery(Object lowerTerm, Object upperTerm, boolean includeLower, boolean includeUpper, @Nullable QueryParseContext context) {
+        long now = context == null ? System.currentTimeMillis() : context.nowInMillis();
+        return NumericRangeQuery.newLongRange(names.indexName(), precisionStep,
+                lowerTerm == null ? null : dateMathParser.parse(convertToString(lowerTerm), now),
+                upperTerm == null ? null : (includeUpper && parseUpperInclusive) ? dateMathParser.parseUpperInclusive(convertToString(upperTerm), now) : dateMathParser.parse(convertToString(upperTerm), now),
+                includeLower, includeUpper);
+    }
+

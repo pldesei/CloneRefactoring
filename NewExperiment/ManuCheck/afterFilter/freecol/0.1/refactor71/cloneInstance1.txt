@@ -1,0 +1,36 @@
+(startLine=364 endLine=397 srcPath=/root/NewExperiment/freecolFilter/00272/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    public void testTwoTeachersOfSameKind() {
+        
+        Colony colony = getStandardColony(3);
+
+        Iterator<Unit> units = colony.getUnitIterator();
+
+        Unit colonist1 = units.next();
+        colonist1.setType(Unit.FREE_COLONIST);
+
+        Unit lumberjack1 = units.next();
+        lumberjack1.setType(Unit.EXPERT_LUMBER_JACK);
+
+        Unit lumberjack2 = units.next();
+        lumberjack2.setType(Unit.EXPERT_LUMBER_JACK);
+
+        Building school = colony.getBuilding(Building.SCHOOLHOUSE);
+
+        school.setLevel(Building.SHOP);
+
+        lumberjack1.setLocation(school);
+        lumberjack2.setLocation(school);
+
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 1
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 2
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 3
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 4
+
+        assertEquals(0, colony.getUnitList(Unit.FREE_COLONIST).size());
+        assertEquals(3, colony.getUnitList(Unit.EXPERT_LUMBER_JACK).size());
+    }
+

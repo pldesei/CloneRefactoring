@@ -1,0 +1,21 @@
+(startLine=1072 endLine=1090 srcPath=/root/NewExperiment/freecolFilter/01222/src/net/sf/freecol/server/model/ServerPlayer.java)
+        if (old != stance) {
+            int modifier = old.getTensionModifier(stance);
+            setStance(otherPlayer, stance);
+            if (modifier != 0) {
+                cs.addTension(See.perhaps(),//-til,+til
+                    modifyTension(otherPlayer, modifier));
+            }
+            logger.info("Stance modification " + getName()
+                + " " + old.toString() + " -> " + stance.toString()
+                + " wrt " + otherPlayer.getName());
+            this.addStanceChange(other);
+            cs.addMessage(See.only(other),
+                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                    "model.diplomacy." + stance + ".declared", this)
+                .addStringTemplate("%nation%", getNationName()));
+            cs.addStance(See.only(this), this, stance, otherPlayer);
+            cs.addStance(See.only(other), this, stance, otherPlayer);
+            change = true;
+        }
+

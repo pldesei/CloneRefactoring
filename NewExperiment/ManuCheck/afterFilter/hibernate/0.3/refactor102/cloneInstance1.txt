@@ -1,0 +1,29 @@
+(startLine=405 endLine=431 srcPath=/root/NewExperiment/hibernateFilter/01684/hibernate-core/src/main/java/org/hibernate/cfg/AbstractPropertyHolder.java)
+	private static Map<String, JoinColumn[]> buildJoinColumnOverride(XAnnotatedElement element, String path) {
+		Map<String, JoinColumn[]> columnOverride = new HashMap<String, JoinColumn[]>();
+		if ( element == null ) return columnOverride;
+		AssociationOverride singleOverride = element.getAnnotation( AssociationOverride.class );
+		AssociationOverrides multipleOverrides = element.getAnnotation( AssociationOverrides.class );
+		AssociationOverride[] overrides;
+		if ( singleOverride != null ) {
+			overrides = new AssociationOverride[] { singleOverride };
+		}
+		else if ( multipleOverrides != null ) {
+			overrides = multipleOverrides.value();
+		}
+		else {
+			overrides = null;
+		}
+
+		//fill overridden columns
+		if ( overrides != null ) {
+			for (AssociationOverride depAttr : overrides) {
+				columnOverride.put(
+						StringHelper.qualify( path, depAttr.name() ),
+						depAttr.joinColumns()
+				);
+			}
+		}
+		return columnOverride;
+	}
+

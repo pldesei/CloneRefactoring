@@ -1,0 +1,23 @@
+(startLine=2516 endLine=2536 srcPath=/root/NewExperiment/freecolFilter/00634/src/net/sf/freecol/client/gui/GUI.java)
+            if (tile.getNameKey() != null) {
+                String tileName = Messages.message(tile.getNameKey());
+                g.setColor(Color.BLACK);
+                int b = getBreakingPoint(tileName);
+                if (b == -1) {
+                    g.drawString(tileName, x + (lib.getTerrainImageWidth(tile.getType()) - g.getFontMetrics().stringWidth(tileName))/2, y + (lib.getTerrainImageHeight(tile.getType())/2));
+                    /* Takes to much resources:
+                       BufferedImage stringImage = createStringImage(g, tileName, Color.BLACK, lib.getTerrainImageWidth(tile.getType().getIndex()), 10);
+                       g.drawImage(stringImage, x + (lib.getTerrainImageWidth(tile.getType().getIndex()) - stringImage.getWidth())/2 + 1, y + lib.getTerrainImageHeight(tile.getType().getIndex())/2 - stringImage.getHeight()/2, null);
+                    */
+                } else {
+                    g.drawString(tileName.substring(0, b), x + (lib.getTerrainImageWidth(tile.getType()) - g.getFontMetrics().stringWidth(tileName.substring(0, b)))/2, y + lib.getTerrainImageHeight(tile.getType())/2 - (g.getFontMetrics().getAscent()*2)/3);
+                    g.drawString(tileName.substring(b+1), x + (lib.getTerrainImageWidth(tile.getType()) - g.getFontMetrics().stringWidth(tileName.substring(b+1)))/2, y + lib.getTerrainImageHeight(tile.getType())/2 + (g.getFontMetrics().getAscent()*2)/3);
+                    /* Takes to much resources:
+                       BufferedImage stringImage = createStringImage(g, tileName.substring(0, b), Color.BLACK, lib.getTerrainImageWidth(tile.getType().getIndex()), 10);
+                       g.drawImage(stringImage, x + (lib.getTerrainImageWidth(tile.getType().getIndex()) - stringImage.getWidth())/2 + 1, y + lib.getTerrainImageHeight(tile.getType().getIndex())/2 - (stringImage.getHeight()) - 5, null);
+                       stringImage = createStringImage(g, tileName.substring(b+1), Color.BLACK, lib.getTerrainImageWidth(tile.getType().getIndex()), 10);
+                       g.drawImage(stringImage, x + (lib.getTerrainImageWidth(tile.getType().getIndex()) - stringImage.getWidth())/2 + 1, y + lib.getTerrainImageHeight(tile.getType().getIndex())/2 - 5, null);
+                    */
+                }
+            }
+

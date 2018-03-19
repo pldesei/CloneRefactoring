@@ -1,0 +1,18 @@
+(startLine=447 endLine=462 srcPath=/root/NewExperiment/hibernateFilter/01415/hibernate-core/src/main/java/org/hibernate/cfg/CollectionPropertyHolder.java)
+		if ( elementClass != null ) {
+			for ( AttributeConverterDefinition attributeConverterDefinition : getContext().getMetadataCollector().getAttributeConverters() ) {
+				if ( ! attributeConverterDefinition.isAutoApply() ) {
+					continue;
+				}
+				log.debugf(
+						"Checking auto-apply AttributeConverter [%s] type [%s] for match [%s]",
+						attributeConverterDefinition.toString(),
+						attributeConverterDefinition.getEntityAttributeType().getSimpleName(),
+						elementClass.getSimpleName()
+				);
+				if ( areTypeMatch( attributeConverterDefinition.getEntityAttributeType(), elementClass ) ) {
+					return attributeConverterDefinition;
+				}
+			}
+		}
+

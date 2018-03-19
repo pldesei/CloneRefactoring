@@ -1,0 +1,16 @@
+(startLine=153 endLine=166 srcPath=/root/NewExperiment/elasticsearchFilter/00917/src/main/java/org/elasticsearch/search/facet/datehistogram/InternalCountDateHistogramFacet.java)
+        if (facets.size() == 1) {
+            InternalCountDateHistogramFacet histoFacet = (InternalCountDateHistogramFacet) facets.get(0);
+            if (histoFacet.entries == null) {
+                histoFacet.entries = new CountEntry[histoFacet.counts.size()];
+                int i = 0;
+                for (TLongLongIterator it = histoFacet.counts.iterator(); it.hasNext(); ) {
+                    it.advance();
+                    histoFacet.entries[i++] = new CountEntry(it.key(), it.value());
+                }
+            }
+            Arrays.sort(histoFacet.entries, histoFacet.comparatorType.comparator());
+            histoFacet.releaseCache();
+            return facets.get(0);
+        }
+

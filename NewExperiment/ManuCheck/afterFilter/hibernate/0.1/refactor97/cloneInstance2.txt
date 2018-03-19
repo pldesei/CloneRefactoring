@@ -1,0 +1,19 @@
+(startLine=39 endLine=55 srcPath=/root/NewExperiment/hibernateFilter/01549/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/access/ReadWriteNaturalIdRegionAccessStrategy.java)
+	public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value) throws CacheException {
+		return region.invoke(
+				key, new EntryProcessor<Object, Object, Boolean>() {
+					@Override
+					public Boolean process(MutableEntry<Object, Object> entry, Object... args)
+							throws EntryProcessorException {
+						if ( !entry.exists() ) {
+							entry.setValue( new Item( args[0], null, (Long) args[1] ) );
+							return true;
+						}
+						else {
+							return false;
+						}
+					}
+				}, value, region.nextTimestamp()
+		);
+	}
+

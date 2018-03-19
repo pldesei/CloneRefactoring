@@ -1,0 +1,28 @@
+(startLine=59 endLine=84 srcPath=/root/NewExperiment/hibernateFilter/01164/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/returns/AbstractCollectionReference.java)
+	private CollectionFetchableIndex buildIndexGraph(ExpandingCollectionQuerySpace collectionQuerySpace) {
+		final CollectionPersister persister = collectionQuerySpace.getCollectionPersister();
+		if ( persister.hasIndex() ) {
+			final Type type = persister.getIndexType();
+			if ( type.isAssociationType() ) {
+				if ( type.isEntityType() ) {
+					final EntityPersister indexPersister = persister.getFactory().getEntityPersister(
+							( (EntityType) type ).getAssociatedEntityName()
+					);
+
+					final ExpandingEntityQuerySpace entityQuerySpace = collectionQuerySpace.addIndexEntityQuerySpace(
+							indexPersister
+					);
+					return new CollectionFetchableIndexEntityGraph( this, entityQuerySpace );
+				}
+			}
+			else if ( type.isComponentType() ) {
+				final ExpandingCompositeQuerySpace compositeQuerySpace = collectionQuerySpace.addIndexCompositeQuerySpace(
+						(CompositeType) type
+				);
+				return new CollectionFetchableIndexCompositeGraph( this, compositeQuerySpace );
+			}
+		}
+
+		return null;
+	}
+

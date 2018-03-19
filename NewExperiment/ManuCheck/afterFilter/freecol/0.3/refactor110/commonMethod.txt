@@ -1,0 +1,21 @@
+(startLine=200 endLine=218 srcPath=/root/NewExperiment/freecolFilter/00381/src/net/sf/freecol/client/gui/panel/LabourData.java)
+        /**
+         * in the summary for all unit types, some rows are skipped
+         *
+         * @return the rows to display the unit data
+         */
+        public int getRowCount() {
+            boolean isSummary = getUnitData().isSummary();
+
+            int rows = 0;
+            if (workingProfessionals.getColonists() > 0) rows++;
+            if (workingAmateurs > 0) rows++;
+            if (!isSummary && otherWorkingAmateurs.getColonists() > 0) rows++;
+            if (teachers > 0) rows++;
+            if (students > 0) rows++;
+            if (!isSummary && otherStudents > 0) rows++;
+            if (notWorking > 0) rows++;
+
+            return rows;
+        }
+

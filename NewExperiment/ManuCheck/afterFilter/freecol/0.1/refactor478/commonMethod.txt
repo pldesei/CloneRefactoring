@@ -1,0 +1,14 @@
+(startLine=1777 endLine=1788 srcPath=/root/NewExperiment/freecolFilter/01340/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+    /**
+     * Evaluate a unit for trade purposes.
+     *
+     * @param unit The <code>Unit</code> to evaluate.
+     * @return The score.
+     */
+    private int evaluateUnit(Unit unit) {
+        final Europe europe = getPlayer().getEurope();
+
+        return (europe == null) ? 0
+            : europe.getUnitPrice(unit.getType());
+    }
+

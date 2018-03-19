@@ -1,0 +1,14 @@
+(startLine=496 endLine=507 srcPath=/root/NewExperiment/freecolFilter/00135/src/net/sf/freecol/client/gui/Canvas.java)
+        } else {
+            FreeColDialog informationDialog = FreeColDialog.createInformationDialog(messageText);
+            informationDialog.setLocation(getWidth() / 2 - informationDialog.getWidth() / 2,
+                                          getHeight() / 2 - informationDialog.getHeight() / 2);
+            add(informationDialog, MODEL_MESSAGE_LAYER);
+            informationDialog.requestFocus();
+
+            informationDialog.getResponse();
+            remove(informationDialog);
+
+            freeColClient.getInGameController().nextModelMessage();
+        }
+

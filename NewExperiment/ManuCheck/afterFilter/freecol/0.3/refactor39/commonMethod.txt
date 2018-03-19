@@ -1,0 +1,20 @@
+(startLine=97 endLine=114 srcPath=/root/NewExperiment/freecolFilter/00200/src/net/sf/freecol/client/networking/Client.java)
+    /**
+    * Sends the specified message to the server and returns the reply.
+    *
+    * @param element The element (root element in a DOM-parsed XML tree) 
+    *       that holds all the information
+    * @return The answer from the server or <code>null</code> if either
+    *       an error occured or the server did not send a reply.
+    * @see #sendAndWait
+    * @see #send
+    */
+    public Element ask(Element element) {
+        try {
+            return c.ask(element);
+        } catch (IOException e) {
+            logger.log(Level.WARNING, "Client.ask could not send " + element, e);
+        }
+        return null;
+    }
+

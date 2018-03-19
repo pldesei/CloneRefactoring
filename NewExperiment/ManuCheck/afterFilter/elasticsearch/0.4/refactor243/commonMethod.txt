@@ -1,0 +1,37 @@
+(startLine=148 endLine=182 srcPath=/root/NewExperiment/elasticsearchFilter/01340/src/main/java/org/elasticsearch/gateway/GatewayService.java)
+    protected void checkStateMeetsSettingsAndMaybeRecover(ClusterState state, boolean asyncRecovery) {
+        DiscoveryNodes nodes = state.nodes();
+        if (state.blocks().hasGlobalBlock(Discovery.NO_MASTER_BLOCK)) {
+            logger.debug("not recovering from gateway, no master elected yet");
+        } else if (recoverAfterNodes != -1 && (nodes.masterAndDataNodes().size()) < recoverAfterNodes) {
+            logger.debug("not recovering from gateway, nodes_size (data+master) [" + nodes.masterAndDataNodes().size() + "] < recover_after_nodes [" + recoverAfterNodes + "]");
+        } else if (recoverAfterDataNodes != -1 && nodes.dataNodes().size() < recoverAfterDataNodes) {
+            logger.debug("not recovering from gateway, nodes_size (data) [" + nodes.dataNodes().size() + "] < recover_after_data_nodes [" + recoverAfterDataNodes + "]");
+        } else if (recoverAfterMasterNodes != -1 && nodes.masterNodes().size() < recoverAfterMasterNodes) {
+            logger.debug("not recovering from gateway, nodes_size (master) [" + nodes.masterNodes().size() + "] < recover_after_master_nodes [" + recoverAfterMasterNodes + "]");
+        } else {
+            boolean enforceRecoverAfterTime;
+            String reason;
+            if (expectedNodes == -1 && expectedMasterNodes == -1 && expectedDataNodes == -1) {
+                // no expected is set, honor the setting if they are there
+                enforceRecoverAfterTime = true;
+                reason = "recovery_after_time was set to [" + recoverAfterTime + "]";
+            } else {
+                // one of the expected is set, see if all of them meet the need, and ignore the timeout in this case
+                enforceRecoverAfterTime = false;
+                reason = "";
+                if (expectedNodes != -1 && (nodes.masterAndDataNodes().size() < expectedNodes)) { // does not meet the expected...
+                    enforceRecoverAfterTime = true;
+                    reason = "expecting [" + expectedNodes + "] nodes, but only have [" + nodes.masterAndDataNodes().size() + "]";
+                } else if (expectedDataNodes != -1 && (nodes.dataNodes().size() < expectedDataNodes)) { // does not meet the expected...
+                    enforceRecoverAfterTime = true;
+                    reason = "expecting [" + expectedDataNodes + "] data nodes, but only have [" + nodes.dataNodes().size() + "]";
+                } else if (expectedMasterNodes != -1 && (nodes.masterNodes().size() < expectedMasterNodes)) { // does not meet the expected...
+                    enforceRecoverAfterTime = true;
+                    reason = "expecting [" + expectedMasterNodes + "] master nodes, but only have [" + nodes.masterNodes().size() + "]";
+                }
+            }
+            performStateRecovery(asyncRecovery, enforceRecoverAfterTime, reason);
+        }
+    }
+

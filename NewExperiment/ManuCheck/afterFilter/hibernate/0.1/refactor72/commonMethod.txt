@@ -1,0 +1,11 @@
+(startLine=424 endLine=432 srcPath=/root/NewExperiment/hibernateFilter/01139/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+	private String determineExplicitTargetEntity(String targetClass) {
+		String explicitTargetClass = targetClass;
+		if ( explicitTargetClass != null ) {
+			explicitTargetClass = StringUtil.determineFullyQualifiedClassName(
+					defaultPackageName, targetClass
+			);
+		}
+		return explicitTargetClass;
+	}
+

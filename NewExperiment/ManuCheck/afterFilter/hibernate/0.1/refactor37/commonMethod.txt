@@ -1,0 +1,8 @@
+(startLine=336 endLine=341 srcPath=/root/NewExperiment/hibernateFilter/00782/hibernate-core/src/matrix/java/org/hibernate/test/annotations/naturalid/NaturalIdTest.java)
+	private State getState(Session s, String name) {
+		Criteria criteria = s.createCriteria( State.class );
+		criteria.add( Restrictions.eq( "name", name ) );
+		criteria.setCacheable( true );
+		return (State) criteria.list().get( 0 );
+	}
+

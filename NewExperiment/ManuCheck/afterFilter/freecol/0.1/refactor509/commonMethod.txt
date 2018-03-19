@@ -1,0 +1,17 @@
+(startLine=1502 endLine=1516 srcPath=/root/NewExperiment/freecolFilter/01382/src/net/sf/freecol/common/model/Specification.java)
+    /**
+     * Gets the difficulty levels in this specification.
+     *
+     * @return A list of difficulty levels in this specification.
+     */
+    public List<OptionGroup> getDifficultyLevels() {
+        List<OptionGroup> result = new ArrayList<OptionGroup>();
+        for (Option option : allOptionGroups.get(DIFFICULTY_LEVELS)
+                 .getOptions()) {
+            if (option instanceof OptionGroup) {
+                result.add((OptionGroup) option);
+            }
+        }
+        return result;
+    }
+

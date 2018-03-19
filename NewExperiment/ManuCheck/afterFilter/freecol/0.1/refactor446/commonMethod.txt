@@ -1,0 +1,14 @@
+(startLine=1317 endLine=1328 srcPath=/root/NewExperiment/freecolFilter/01271/src/net/sf/freecol/server/control/ChangeSet.java)
+    /**
+     * Helper function to add a Message to a ChangeSet.
+     *
+     * @param see The visibility of this change.
+     * @param cp The priority of this change.
+     * @param message The <code>Message</code> to add.
+     * @return The updated <code>ChangeSet</code>.
+     */
+    public ChangeSet add(See see, ChangePriority cp, DOMMessage message) {
+        changes.add(new MessageChange(see, cp, message));
+        return this;
+    }
+

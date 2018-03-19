@@ -1,0 +1,11 @@
+(startLine=99 endLine=107 srcPath=/root/NewExperiment/hibernateFilter/01416/hibernate-core/src/main/java/org/hibernate/cfg/AbstractPropertyHolder.java)
+	protected AttributeConverterDescriptor makeAttributeConverterDescriptor(AttributeConversionInfo conversion) {
+		try {
+			AttributeConverterDefinition definition = new AttributeConverterDefinition( conversion.getConverterClass().newInstance(), false );
+			return AttributeConverterDescriptorImpl.create( definition, context.getMetadataCollector().getClassmateContext() );
+		}
+		catch (Exception e) {
+			throw new AnnotationException( "Unable to create AttributeConverter instance", e );
+		}
+	}
+

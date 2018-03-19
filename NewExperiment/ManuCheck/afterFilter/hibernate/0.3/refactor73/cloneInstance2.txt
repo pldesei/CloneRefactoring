@@ -1,0 +1,19 @@
+(startLine=108 endLine=124 srcPath=/root/NewExperiment/hibernateFilter/01163/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/QuerySpacesImpl.java)
+	public CollectionQuerySpace makeCollectionQuerySpace(String uid, CollectionPersister collectionPersister) {
+		if ( querySpaceByUid.containsKey( uid ) ) {
+			throw new IllegalStateException( "Encountered duplicate QuerySpace uid : " + uid );
+		}
+
+		final CollectionQuerySpaceImpl space = new CollectionQuerySpaceImpl(
+				collectionPersister,
+				uid,
+				this,
+				true,
+				sessionFactory
+		);
+		registerQuerySpace( space );
+		roots.add( space );
+
+		return space;
+	}
+

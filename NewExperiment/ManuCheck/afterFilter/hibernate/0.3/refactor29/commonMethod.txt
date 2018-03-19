@@ -1,0 +1,27 @@
+(startLine=147 endLine=171 srcPath=/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/hql/ast/exec/AbstractStatementExecutor.java)
+		@Override
+		public void execute(Connection connection) {
+			try {
+				Statement statement = connection.createStatement();
+				try {
+					statement.executeUpdate( persister.getTemporaryIdTableDDL() );
+					persister.getFactory()
+							.getServiceRegistry()
+							.getService( JdbcServices.class )
+							.getSqlExceptionHelper()
+							.handleAndClearWarnings( statement, CREATION_WARNING_HANDLER );
+				}
+				finally {
+					try {
+						statement.close();
+					}
+					catch( Throwable ignore ) {
+						// ignore
+					}
+				}
+			}
+			catch( Exception e ) {
+				LOG.debug( "unable to create temporary id table [" + e.getMessage() + "]" );
+			}
+		}
+
