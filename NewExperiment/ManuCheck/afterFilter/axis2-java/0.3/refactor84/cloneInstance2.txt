@@ -1,0 +1,16 @@
+(startLine=81 endLine=94 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00793/modules/kernel/src/org/apache/axis2/engine/RequestURIBasedDispatcher.java)
+                if (axisService != null) {
+                    Map endpoints = axisService.getEndpoints();
+                    if (endpoints != null) {
+                        if (endpoints.size() == 1) {
+                            messageContext.setProperty(WSDL2Constants.ENDPOINT_LOCAL_NAME,
+                                                       endpoints.get(
+                                                               axisService.getEndpointName()));
+                        } else {
+                            String endpointName = values[0].substring(values[0].indexOf(".") + 1);
+                            messageContext.setProperty(WSDL2Constants.ENDPOINT_LOCAL_NAME,
+                                                       endpoints.get(endpointName));
+                        }
+                    }
+                }
+

@@ -1,0 +1,13 @@
+(startLine=197 endLine=207 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00985/modules/jaxws-integration/test/org/apache/axis2/jaxws/sample/WrapTests.java)
+        try{
+            String request = "hello world 2";
+            
+            DocLitWrapService service = new DocLitWrapService();
+            DocLitWrap proxy = service.getDocLitWrapPort();
+            BindingProvider p = (BindingProvider) proxy;
+            p.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, axisEndpoint);
+            String response = proxy.echoStringWSGEN2(request);
+            assertTrue(response.equals(request));
+            TestLogger.logger.debug("------------------------------");
+        }catch(Exception e){
+

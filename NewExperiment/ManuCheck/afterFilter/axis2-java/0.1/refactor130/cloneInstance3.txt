@@ -1,0 +1,43 @@
+(startLine=1214 endLine=1254 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01022/modules/kernel/src/org/apache/axis2/description/AxisService2WSDL11.java)
+			OMElement service) throws Exception {
+
+		// /////////////////// FIXME //////////////////////////////////////////
+		Iterator iterator = axisService.getEndpoints().values().iterator();
+		AxisEndpoint axisEndpoint = null;
+		AxisBinding axisBinding = null;
+		boolean found = false;
+		for (; iterator.hasNext();) {
+			axisEndpoint = (AxisEndpoint) iterator.next();
+			/*
+			 * 
+			 */
+			if (axisEndpoint.getEndpointURL() == null) {
+				continue;
+			}
+			axisBinding = axisEndpoint.getBinding();
+			String type = axisBinding.getType();
+			if (WSDL2Constants.URI_WSDL2_HTTP.equals(type)) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			return;
+		}
+		// /////////////////////////////////////////////////////////////////////
+
+		OMElement port = fac.createOMElement(PORT, wsdl);
+		service.addChild(port);
+		port.addAttribute(ATTRIBUTE_NAME, axisEndpoint.getName(), null);
+		QName qname = axisBinding.getName();
+		port.addAttribute(BINDING_LOCAL_NAME, tns.getPrefix() + ":"
+				+ qname.getLocalPart(), null);
+		OMElement extElement = fac.createOMElement("address", http);
+		extElement
+				.addAttribute("location", axisEndpoint.getEndpointURL(), null);
+		port.addChild(extElement);
+
+		addPolicyAsExtElement(axisEndpoint, port);
+		generateHttpBinding(fac, definition, axisEndpoint.getBinding());
+	}
+

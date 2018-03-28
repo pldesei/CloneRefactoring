@@ -1,0 +1,13 @@
+(startLine=791 endLine=801 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00186/modules/om/src/java/org/apache/axis/om/impl/llom/OMElementImpl.java)
+    public OMElement getFirstElement() {
+        OMNode node = getFirstChild();
+        while(node != null){
+            if(node.getType() == OMNode.ELEMENT_NODE){
+                return (OMElement)node;
+            }else{
+                node = node.getNextSibling();
+            }
+        }
+        return null;
+    }
+

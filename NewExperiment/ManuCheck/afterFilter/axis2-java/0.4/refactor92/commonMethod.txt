@@ -1,0 +1,21 @@
+(startLine=45 endLine=63 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00824/modules/integration/test/org/apache/axis2/integration/RPCLocalTestCase.java)
+    /**
+     * Get a pre-initialized ServiceClient set up to talk to our local
+     * server.  If you want to set options, call this and then use getOptions()
+     * on the return. Clients created using this method have their To EPR
+     * preset to include the address for the service+operation.
+     *
+     * @return a ServiceClient, pre-initialized to talk using our local sender
+     * @throws AxisFault if there's a problem
+     */
+    protected RPCServiceClient getRPCClient(String serviceName, String operationName) throws AxisFault {
+        String url = LocalTransportReceiver.CONFIG_CONTEXT.getServiceContextPath()+"/"+serviceName;
+
+        Options opts = getOptions();
+        opts.setTo(new EndpointReference(url));
+        opts.setAction(operationName);
+        RPCServiceClient client = new RPCServiceClient(clientCtx, null);
+        client.setOptions(opts);
+        return client;
+    }
+

@@ -1,0 +1,6 @@
+(startLine=101 endLine=104 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00655/modules/json/test/org/apache/axis2/json/JSONDataSourceTest.java)
+    private JSONDataSource getMappedDataSource(String jsonString) {
+        InputStream jsonInputStream = new ByteArrayInputStream(jsonString.getBytes());
+        return new JSONDataSource(readLocalName(jsonInputStream), "\"mapping\"");
+    }
+

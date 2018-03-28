@@ -1,0 +1,11 @@
+(startLine=43 endLine=51 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/list/ListTest.java)
+       try {
+           OMElement omElement = testListStringElement.getOMElement(TestListStringElement.MY_QNAME,
+                       OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM Element ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestListStringElement result = TestListStringElement.Factory.parse(xmlReader);
+            assertEquals(testListString.toString(),result.getTestListStringElement().toString());
+        } catch (Exception e) {
+

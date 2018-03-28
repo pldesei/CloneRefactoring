@@ -1,0 +1,12 @@
+(startLine=1530 endLine=1539 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01002/modules/metadata/src/org/apache/axis2/jaxws/description/impl/OperationDescriptionImpl.java)
+    private String getInputAction() {
+        String inputAction = null;
+        Action action = getAnnoAction();
+        
+        if (action != null) {
+            inputAction = action.input();
+        }
+        
+        return inputAction;
+    }
+

@@ -1,0 +1,51 @@
+(startLine=1723 endLine=1771 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01233/modules/adb/src/org/apache/axis2/databinding/utils/BeanUtil.java)
+	/**
+	 * Gets the collection element.
+	 *
+	 * @param fac the fac
+	 * @param type the type
+	 * @param results the results
+	 * @param name the name
+	 * @param innerName the inner name
+	 * @param elementQName the element q name
+	 * @param typeTable the type table
+	 * @param elementFormDefault the element form default
+	 * @return the collection element
+	 */
+	public static OMElement getCollectionElement(OMFactory fac, Type type,
+		Collection results, String name, String innerName,
+		QName elementQName, TypeTable typeTable, boolean elementFormDefault) {
+
+	    String elementName = (innerName == null) ? name : innerName;
+	    Iterator<Object> itr = results.iterator();
+	    List<Object> properties = new ArrayList<Object>();
+	    OMNamespace ns = fac.createOMNamespace(elementQName.getNamespaceURI(),
+		    elementQName.getPrefix());
+	    Type valueType = Object.class;
+	    if (type instanceof ParameterizedType) {
+		ParameterizedType aType = (ParameterizedType) type;
+		Type[] parameterArgTypes = aType.getActualTypeArguments();
+		valueType = parameterArgTypes[0];
+	    }
+
+	    while (itr.hasNext()) {
+		Object value = itr.next();
+		if (value != null) {
+		    value = getCollectionItemElement(fac, elementName, value,
+			    valueType, typeTable, ns, elementFormDefault);
+		    properties.add(new QName(ns.getNamespaceURI(), elementName, ns
+			    .getPrefix()));
+		    properties.add(value);
+		}
+	    }
+
+	    XMLStreamReader pullParser = new ADBXMLStreamReaderImpl(new QName(
+		    ns.getNamespaceURI(), elementQName.getLocalPart(),
+		    ns.getPrefix()), properties.toArray(), null, typeTable,
+		    elementFormDefault);
+
+	    StAXOMBuilder stAXOMBuilder = new StAXOMBuilder(
+		    OMAbstractFactory.getOMFactory(), new StreamWrapper(pullParser));
+	    return stAXOMBuilder.getDocumentElement();
+	}	
+

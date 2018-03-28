@@ -1,0 +1,15 @@
+(startLine=532 endLine=544 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01001/modules/metadata/src/org/apache/axis2/jaxws/description/impl/OperationDescriptionImpl.java)
+        if (action != null) {
+            FaultAction[] faultActions = action.fault();
+            
+            if (faultActions != null) {
+                for (FaultAction faultAction : faultActions) {
+                    String className = faultAction.className().getName();
+                    FaultDescription faultDesc = resolveFaultByExceptionName(className);
+                    if (faultDesc != null)  {
+                        newAxisOperation.addFaultAction(faultDesc.getName(), faultAction.value());
+                    }
+                }
+            }
+        }
+

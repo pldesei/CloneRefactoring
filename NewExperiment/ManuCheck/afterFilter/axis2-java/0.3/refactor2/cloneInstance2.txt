@@ -1,0 +1,12 @@
+(startLine=155 endLine=164 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00102/dev/scratch/prototype2/src/java/org/apache/axis/deployment/metadata/phaserule/PhaseHolder.java)
+            case 2 : {
+                ExecutionChain outChain =new ExecutionChain();// service.getExecutableOutChain();
+                for (int i = 0; i < handler.length; i++) {
+                    HandlerMetaData handlerMetaData = handler[i];
+                    outChain.addHandler(handlerMetaData.getHandler());
+                    log.info("Phase Name " + handlerMetaData.getRules().getPhaseName() );
+                }
+                service.setExecutableOutChain(outChain);
+                break;
+            }
+

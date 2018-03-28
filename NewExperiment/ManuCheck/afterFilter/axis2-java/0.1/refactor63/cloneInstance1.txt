@@ -1,0 +1,30 @@
+(startLine=902 endLine=929 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00673/modules/kernel/src/org/apache/axis2/description/WSDL11ToAxisServiceBuilder.java)
+                } else {
+                    // for the wrapped types we need to find this from the
+                    // wrapper schema map
+                    if (isWrapped) {
+                        // The schema for this should be already made ! Find the
+                        // QName from
+                        // the list and add it - the name for this is just the
+                        inMessage
+                                .setElementQName((QName) resolvedRpcWrappedElementMap
+                                        .get(wsdl4jOperation.getName()));
+
+                    } else if (wsdl4jMessage != null) {
+                        // pick the first part from the list and take that as
+                        // the relevant part
+                        // it is somewhat questionnable whether the first part
+                        // gets picked
+                        // but we'll have to take a chance here
+                        Map wsdl4jPartsMap = wsdl4jMessage.getParts();
+                        if (!wsdl4jPartsMap.isEmpty()) {
+                            Part wsdl4jPart = (Part) wsdl4jPartsMap.values()
+                                    .toArray()[0];
+                            if (wsdl4jPart.getElementName() != null) {
+                                inMessage.setElementQName(wsdl4jPart
+                                        .getElementName());
+                            }
+                        }
+                    }
+                }
+

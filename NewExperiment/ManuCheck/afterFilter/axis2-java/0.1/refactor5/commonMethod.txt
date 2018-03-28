@@ -1,0 +1,21 @@
+(startLine=43 endLine=61 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00154/dev/scratch/prototype2/src/test/org/apache/axis/integration/UtilServer.java)
+    public static synchronized void start() throws IOException {
+        if (count == 0) {
+            reciver = new SimpleHTTPReceiver("target/test-resources/samples/");
+
+            ServerSocket serverSoc = null;
+            serverSoc = new ServerSocket(EngineUtils.TESTING_PORT);
+            reciver.setServerSocket(serverSoc);
+            Thread thread = new Thread(reciver);
+            thread.setDaemon(true);
+
+            try {
+                thread.start();
+                System.out.print("Server started .....");
+            } finally {
+
+            }
+        } 
+        count++;
+    }
+

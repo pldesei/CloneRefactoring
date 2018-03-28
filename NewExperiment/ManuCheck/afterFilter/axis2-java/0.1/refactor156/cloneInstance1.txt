@@ -1,0 +1,10 @@
+(startLine=119 endLine=126 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/union/UnionTest.java)
+        try {
+            omElement = testInnerUnionType.getOMElement(TestInnerUnionType.MY_QNAME, OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM Element ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestInnerUnionType result = TestInnerUnionType.Factory.parse(xmlReader);
+            assertEquals(packingType_t_type0.toString(),result.getTestInnerUnionType().getObject().toString());
+        } catch (Exception e) {
+

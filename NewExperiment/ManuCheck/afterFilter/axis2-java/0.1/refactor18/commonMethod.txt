@@ -1,0 +1,28 @@
+(startLine=132 endLine=157 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/engine/AxisEngine.java)
+    /**
+     * This Method Send the SOAP Fault to a Other SOAP Node
+     * @param msgContext
+     * @throws AxisFault
+     */
+    public void sendFault(MessageContext msgContext) throws AxisFault {
+        OperationContext opContext = msgContext.getOperationContext();
+        //find and execute the Fault Out Flow Handlers
+        if (opContext != null) {
+            OperationDescription axisOperation = opContext.getAxisOperation();
+            ArrayList phases = axisOperation.getPhasesOutFaultFlow();
+            if (msgContext.isPaused()) {
+                resumeInvocationPhases(phases, msgContext);
+            } else {
+                invokePhases(phases, msgContext);
+            }
+        }
+        //it is possible that Operation Context is Null as the error occered before the 
+        //Dispatcher. We do not run Handlers in that case 
+
+        if (!msgContext.isPaused()) {
+            //Actually send the SOAP Fault
+            TransportSender sender = msgContext.getTransportOut().getSender();
+            sender.invoke(msgContext);
+        }
+    }
+

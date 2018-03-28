@@ -1,0 +1,19 @@
+(startLine=370 endLine=386 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01034/modules/metadata/src/org/apache/axis2/jaxws/description/impl/OperationDescriptionImpl.java)
+        if (faultDescs != null) {
+            for (FaultDescription faultDesc : faultDescs) {
+        
+                AxisMessage faultMessage = new AxisMessage();
+                String faultName = faultDesc.getName();
+                faultMessage.setName(faultName);
+                
+                String faultAction = 
+                        WSDL11ActionHelper.getFaultActionFromStringInformation( targetNS, 
+                                        portTypeName, 
+                                        operationName, 
+                                        faultMessage.getName());
+                
+                newAxisOperation.addFaultAction(faultMessage.getName(), faultAction);
+                newAxisOperation.setFaultMessages(faultMessage);
+            }
+        }
+

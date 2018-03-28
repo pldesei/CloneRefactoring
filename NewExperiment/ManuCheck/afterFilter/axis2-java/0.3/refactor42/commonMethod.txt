@@ -1,0 +1,26 @@
+(startLine=122 endLine=145 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00625/modules/kernel/src/org/apache/axis2/util/PolicyUtil.java)
+    public static PolicyComponent getPolicyComponent(Element element) {
+
+        String xmlString;
+        ByteArrayInputStream bais;
+
+        if (Constants.URI_POLICY_NS.equals(element.getNamespaceURI())) {
+
+            if (Constants.ELEM_POLICY.equals(element.getLocalName())) {
+                xmlString = DOM2Writer.nodeToString(element);
+                bais = new ByteArrayInputStream(xmlString.getBytes());
+
+                return PolicyEngine.getPolicy(bais);
+
+            } else if (Constants.ELEM_POLICY_REF.equals(element.getLocalName())) {
+                xmlString = DOM2Writer.nodeToString(element);
+                bais = new ByteArrayInputStream(xmlString.getBytes());
+
+                return PolicyEngine.getPolicyReferene(bais);
+            }
+        }
+
+        throw new IllegalArgumentException(
+                "Agrument is neither a <wsp:Policy> nor a <wsp:PolicyReference> element");
+    }
+

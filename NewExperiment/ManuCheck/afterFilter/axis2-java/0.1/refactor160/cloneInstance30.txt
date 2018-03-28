@@ -1,0 +1,10 @@
+(startLine=109 endLine=116 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/references/ElementReferenceTest.java)
+        try {
+            OMElement omElement = element1.getOMElement(Element1.MY_QNAME,OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            Element1 result = Element1.Factory.parse(xmlReader);
+            assertNotNull(result);
+        } catch (ADBException e) {
+

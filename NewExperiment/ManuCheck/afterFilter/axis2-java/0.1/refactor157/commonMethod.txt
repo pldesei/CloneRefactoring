@@ -1,0 +1,17 @@
+(startLine=165 endLine=179 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01144/modules/adb-codegen/test/org/apache/axis2/schema/AbstractTestCase.java)
+    /**
+     * Serialize a bean to XML and then deserialize the XML.
+     * 
+     * @param bean the bean to serialize
+     * @return the deserialized bean
+     * @throws Exception
+     */
+    public static ADBBean serializeDeserialize(ADBBean bean) throws Exception {
+        Class<? extends ADBBean> beanClass = bean.getClass();
+        OMElement omElement = bean.getOMElement(getADBBeanQName(beanClass), OMAbstractFactory.getOMFactory());
+        String omElementString = omElement.toStringWithConsume();
+//        System.out.println("om string ==> " + omElementString);
+        XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+        return parse(beanClass, xmlReader);
+    }
+

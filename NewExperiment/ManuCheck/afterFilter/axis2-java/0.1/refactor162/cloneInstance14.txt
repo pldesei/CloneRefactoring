@@ -1,0 +1,12 @@
+(startLine=139 endLine=148 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/group/GroupTest.java)
+       try {
+           OMElement omElement =
+                   testChoiceNestedGroupElement.getOMElement(testChoiceNestedGroupElement.MY_QNAME, OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM String ==> " + omElementString);
+            XMLStreamReader xmlReader =
+                    StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestChoiceNestedGroupElement result = TestChoiceNestedGroupElement.Factory.parse(xmlReader);
+            assertEquals(result.getTestChoiceNestedGroup().getTestChoiceGroup().getChoiceParam1(),"choiceParam1");
+        } catch (XMLStreamException e) {
+

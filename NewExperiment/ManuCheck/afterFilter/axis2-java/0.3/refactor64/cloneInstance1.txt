@@ -1,0 +1,23 @@
+(startLine=1615 endLine=1635 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00749/modules/kernel/src/org/apache/axis2/description/AxisService.java)
+        try {
+            schemaGenerator = new SchemaGenerator(serviceClassLoader,
+                                                  implClass, schemaNamespace,
+                                                  axisService.getSchematargetNamespacePrefix());
+            schemaGenerator.setElementFormDefault(Java2WSDLConstants.FORM_DEFAULT_UNQUALIFIED);
+            axisService.setElementFormDefault(false);
+            excludeOpeartion.add("init");
+            excludeOpeartion.add("setOperationContext");
+            excludeOpeartion.add("destroy");
+            excludeOpeartion.add("startUp");
+            schemaGenerator.setExcludeMethods(excludeOpeartion);
+            axisService.addSchema(schemaGenerator.generateSchema());
+            axisService.setSchematargetNamespace(schemaGenerator.getSchemaTargetNameSpace());
+            axisService.setTypeTable(schemaGenerator.getTypeTable());
+            if (targetNamespace == null) {
+                targetNamespace = schemaGenerator.getSchemaTargetNameSpace();
+            }
+            if (targetNamespace != null && !"".equals(targetNamespace)) {
+                axisService.setTargetNamespace(targetNamespace);
+            }
+        } catch (Exception e) {
+

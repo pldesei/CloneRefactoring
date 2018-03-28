@@ -1,0 +1,111 @@
+(startLine=272 endLine=380 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01232/modules/adb/src/org/apache/axis2/rpc/receivers/RPCUtil.java)
+    ) throws Exception {
+        QName elementQName = outMessage.getAxisMessage().getElementQName();
+        String partName = outMessage.getAxisMessage().getPartName();
+        if (resObject == null) {
+            processNullReturns(service, envelope, partName);
+        } else {
+            if (resObject instanceof Object[]) {
+                QName resName = new QName(elementQName.getNamespaceURI(),
+                        partName,
+                        elementQName.getPrefix());
+                OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                        (Object[]) resObject,
+                        service.isElementFormDefault(),
+                        service.getTypeTable());
+                envelope.getBody().addChild(bodyChild);
+            } else {
+                if (resObject.getClass().isArray()) {
+                    int length = Array.getLength(resObject);
+                    Object objArray[];
+                    if (resObject instanceof byte[]) {
+                        objArray = new Object[1];
+                        objArray[0] = Base64.encode((byte[]) resObject);
+                    } else {
+                        objArray = new Object[length];
+                        for (int i = 0; i < length; i++) {
+                            objArray[i] = Array.get(resObject, i);
+                        }
+                    }
+
+                    QName resName = new QName(elementQName.getNamespaceURI(),
+                            partName,
+                            elementQName.getPrefix());
+                    OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                            objArray,
+                            service.isElementFormDefault(),
+                            service.getTypeTable());
+                    envelope.getBody().addChild(bodyChild);
+                } else {
+                    if (SimpleTypeMapper.isCollection(resObject.getClass())) {
+                        Collection collection = (Collection) resObject;
+                        int size = collection.size();
+                        Object values[] = new Object[size];
+                        int count = 0;
+                        for (Object aCollection : collection) {
+                            values[count] = aCollection;
+                            count++;
+
+                        }
+                        QName resName = new QName(elementQName.getNamespaceURI(),
+                                partName,
+                                elementQName.getPrefix());
+                        OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                                values,
+                                service.isElementFormDefault(),
+                                service.getTypeTable());
+                        envelope.getBody().addChild(bodyChild);
+                        
+					} else if (SimpleTypeMapper.isMap(resObject.getClass())) {
+						OMElement resElemt = fac.createOMElement(
+								partName, ns);
+						List<OMElement> omList = BeanUtil.getMapElement(fac,
+								method.getGenericReturnType(), (Map) resObject,
+								service.getTypeTable(),
+								service.isElementFormDefault());					
+						Iterator<OMElement> omItr = omList.iterator();
+						while (omItr.hasNext()) {
+							resElemt.addChild(omItr.next());
+						}						
+						envelope.getBody().addChild(resElemt);
+
+					} else if (SimpleTypeMapper.isDataHandler(resObject
+							.getClass())) {
+                        OMElement resElemt;
+                        if (service.isElementFormDefault()) {
+                            resElemt = fac.createOMElement(partName, ns);
+                        } else {
+                            resElemt = fac.createOMElement(partName, null);
+                        }
+                        OMText text = fac.createOMText(resObject, true);
+                        resElemt.addChild(text);
+                        envelope.getBody().addChild(resElemt);
+                    } else {
+                        if (service.isElementFormDefault()) {
+                            RPCUtil.processObjectAsDocLitBare(fac,
+                                    resObject,
+                                    bodyContent,
+                                    ns,
+                                    method,
+                                    envelope,
+                                    service.isElementFormDefault(),
+                                    service.getTypeTable(),
+                                    partName);
+                        } else {
+                            RPCUtil.processObjectAsDocLitBare(fac,
+                                    resObject,
+                                    bodyContent,
+                                    ns,
+                                    method,
+                                    envelope,
+                                    service.isElementFormDefault(),
+                                    null,
+                                    partName);
+                        }
+                    }
+                }
+            }
+        }
+        outMessage.setEnvelope(envelope);
+    }
+

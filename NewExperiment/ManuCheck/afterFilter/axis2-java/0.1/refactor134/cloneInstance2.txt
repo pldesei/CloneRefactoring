@@ -1,0 +1,44 @@
+(startLine=1170 endLine=1211 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01026/modules/kernel/src/org/apache/axis2/description/AxisService2WSDL11.java)
+			OMElement service) throws Exception {
+
+		// /////////////////// FIXME //////////////////////////////////////////
+		Iterator iterator = axisService.getEndpoints().values().iterator();
+		AxisEndpoint axisEndpoint = null;
+		AxisBinding axisBinding = null;
+		boolean found = false;
+		for (; iterator.hasNext();) {
+			axisEndpoint = (AxisEndpoint) iterator.next();
+			/*
+			 * 
+			 */
+			if (axisEndpoint.getEndpointURL() == null) {
+				continue;
+			}
+			axisBinding = axisEndpoint.getBinding();
+			String type = axisBinding.getType();
+			if (Java2WSDLConstants.TRANSPORT_URI.equals(type)) {
+				String version = (String) axisBinding
+						.getProperty(WSDL2Constants.ATTR_WSOAP_VERSION);
+				if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(version)) {
+					found = true;
+					break;
+				}
+			}
+		}
+		if (!found) {
+			return;
+		}
+		// /////////////////////////////////////////////////////////////////////
+
+		OMElement port = fac.createOMElement(PORT, wsdl);
+		service.addChild(port);
+		port.addAttribute(ATTRIBUTE_NAME, axisEndpoint.getName(), null);
+		QName qname = axisBinding.getName();
+		port.addAttribute(BINDING_LOCAL_NAME, tns.getPrefix() + ":"
+				+ qname.getLocalPart(), null);
+		WSDLSerializationUtil.addExtensionElement(fac, port, SOAP_ADDRESS,
+				LOCATION, axisEndpoint.getEndpointURL(), soap12);
+		addPolicyAsExtElement(axisEndpoint, port);
+		generateSoap12Binding(fac, definition, axisEndpoint.getBinding());
+	}
+

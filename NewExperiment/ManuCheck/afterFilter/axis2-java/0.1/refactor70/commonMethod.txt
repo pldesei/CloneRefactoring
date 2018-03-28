@@ -1,0 +1,23 @@
+(startLine=108 endLine=128 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00765/modules/jaxws/src/org/apache/axis2/jaxws/BindingProvider.java)
+    /**
+     * Check for maintain session state enablement either in the
+     * MessageContext.isMaintainSession() or in the ServiceContext properties.
+     * 
+     * @param mc
+     * @param ic
+     */
+    protected void checkMaintainSessionState(MessageContext mc, InvocationContext ic) {
+        Map<String, Object> properties = ic.getServiceClient().getServiceContext().getProperties();
+        boolean bValue = false;
+
+        if (properties != null
+            && properties
+                         .containsKey(javax.xml.ws.BindingProvider.SESSION_MAINTAIN_PROPERTY)) {
+            bValue = (Boolean) properties
+                .get(javax.xml.ws.BindingProvider.SESSION_MAINTAIN_PROPERTY);
+        }
+        if (mc.isMaintainSession() || bValue == true) {
+            setupSessionContext(properties);
+        }
+    }
+

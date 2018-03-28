@@ -1,0 +1,17 @@
+(startLine=119 endLine=133 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00924/modules/metadata/src/org/apache/axis2/jaxws/i18n/Messages.java)
+    /**
+     * Get a message from resource.properties from the package of the given object.
+     *
+     * @param key  The resource key
+     * @param arg0 The argument to place in variable {0}
+     * @param arg1 The argument to place in variable {1}
+     * @param arg2 The argument to place in variable {2}
+     * @param arg3 The argument to place in variable {3}
+     * @return The formatted message
+     */
+    public static String getMessage(String key, String arg0, String arg1, String arg2, String arg3)
+            throws MissingResourceException {
+        MessageBundle messageBundle = getMessageBundle(DEFAULT_MESSAGE_BUNDLE_KEY);
+        return messageBundle.getMessage(key, arg0, arg1, arg2, arg3);
+    }
+

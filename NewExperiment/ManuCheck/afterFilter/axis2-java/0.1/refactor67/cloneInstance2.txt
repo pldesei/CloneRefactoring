@@ -1,0 +1,76 @@
+(startLine=395 endLine=468 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00760/modules/jaxws/src/org/apache/axis2/jaxws/marshaller/impl/alt/DocLitWrappedMethodMarshaller.java)
+        try {
+            // Sample Document message
+            // ..
+            // <soapenv:body>
+            //    <m:operation>
+            //      <param>hello</param>
+            //    </m:operation>
+            // </soapenv:body>
+            //
+            // Important points.
+            //   1) There is no operation element under the body.
+            //   2) The data blocks are located underneath the body.  
+            //   3) The name of the data block (m:operation) is defined by the schema and match the name of the operation.
+            //      This is called the wrapper element.  The wrapper element has a corresponding JAXB element pojo.
+            //   4) The parameters (m:param) are child elements of the wrapper element.
+
+            // Get the operation information
+            ParameterDescription[] pds = operationDesc.getParameterDescriptions();
+
+            // Create the message 
+            MessageFactory mf = (MessageFactory)FactoryRegistry.getFactory(MessageFactory.class);
+            Message m = mf.create(protocol);
+
+            // In usage=WRAPPED, there will be a single block in the body.
+            // The signatureArguments represent the child elements of that block
+            // The first step is to convert the signature arguments into list
+            // of parameter values
+            List<PDElement> pvList = MethodMarshallerUtils.getPDElements(marshalDesc,
+                                                                         pds,
+                                                                         signatureArguments,
+                                                                         true,   // input
+                                                                         true, false);
+
+            // Now we want to create a single JAXB element that contains the 
+            // ParameterValues.  We will use the wrapper tool to do this.
+            // Create the inputs to the wrapper tool
+            ArrayList<String> nameList = new ArrayList<String>();
+            Map<String, Object> objectList = new HashMap<String, Object>();
+
+            for (PDElement pv : pvList) {
+                String name = pv.getParam().getParameterName();
+
+                // The object list contains type rendered objects
+                Object value = pv.getElement().getTypeValue();
+                nameList.add(name);
+                objectList.put(name, value);
+            }
+
+            // Now create the single JAXB element 
+            String wrapperName = marshalDesc.getRequestWrapperClassName(operationDesc);
+            Class cls = MethodMarshallerUtils.loadClass(wrapperName);
+            JAXBWrapperTool wrapperTool = new JAXBWrapperToolImpl();
+            Object object = wrapperTool.wrap(cls, nameList, objectList,
+                                             marshalDesc.getPropertyDescriptorMap(cls));
+
+            QName wrapperQName = new QName(operationDesc.getRequestWrapperTargetNamespace(),
+                                           operationDesc.getRequestWrapperLocalName());
+
+            // Make sure object can be rendered as an element
+            if (!marshalDesc.getAnnotationDesc(cls).hasXmlRootElement()) {
+                object = new JAXBElement(wrapperQName, cls, object);
+            }
+
+            // Put the object into the message
+            JAXBBlockFactory factory =
+                    (JAXBBlockFactory)FactoryRegistry.getFactory(JAXBBlockFactory.class);
+
+            Block block = factory.createFrom(object,
+                                             new JAXBBlockContext(packages, packagesKey),
+                                             wrapperQName);
+            m.setBodyBlock(block);
+
+            return m;
+        } catch (Exception e) {
+

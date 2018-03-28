@@ -1,0 +1,62 @@
+(startLine=181 endLine=240 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/anytype/AnyTypeTest.java)
+     public void testAnyTypeElement4() {
+        TestAnyTypeElement4 testAnyTypeElement;
+        testAnyTypeElement = new TestAnyTypeElement4();
+        testAnyTypeElement.setParam1(new Object[]{"test1","test2"});
+
+        try {
+            OMElement omElement = testAnyTypeElement.getOMElement(TestAnyTypeElement4.MY_QNAME,
+                    OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM Element String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestAnyTypeElement4 result = TestAnyTypeElement4.Factory.parse(xmlReader);
+            assertEquals(result.getParam1()[0],"test1");
+            assertEquals(result.getParam1()[1],"test2");
+        } catch (ADBException e) {
+            fail();
+        } catch (XMLStreamException e) {
+            fail();
+        } catch (Exception e) {
+            fail();
+        }
+
+        testAnyTypeElement = new TestAnyTypeElement4();
+        testAnyTypeElement.setParam1(null);
+
+        try {
+            OMElement omElement = testAnyTypeElement.getOMElement(TestAnyTypeElement4.MY_QNAME,
+                    OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM Element String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestAnyTypeElement4 result = TestAnyTypeElement4.Factory.parse(xmlReader);
+            assertEquals(result.getParam1(),null);
+        } catch (ADBException e) {
+            fail();
+        } catch (XMLStreamException e) {
+            fail();
+        } catch (Exception e) {
+            fail();
+        }
+
+        testAnyTypeElement = new TestAnyTypeElement4();
+        testAnyTypeElement.setParam1(new Object[]{"test",null});
+
+        try {
+            OMElement omElement = testAnyTypeElement.getOMElement(TestAnyTypeElement4.MY_QNAME,
+                    OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM Element String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestAnyTypeElement4 result = TestAnyTypeElement4.Factory.parse(xmlReader);
+            assertEquals(result.getParam1()[0],"test");
+        } catch (ADBException e) {
+            fail();
+        } catch (XMLStreamException e) {
+            fail();
+        } catch (Exception e) {
+            fail();
+        }
+    }
+

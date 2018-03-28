@@ -1,0 +1,22 @@
+(startLine=138 endLine=157 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00514/modules/integration/test/org/apache/axis2/integration/UtilServer.java)
+            throws AxisFault {
+        DeploymentEngine deploymentEngine = new DeploymentEngine();
+        File file = new File(
+                org.apache.axis2.Constants.TESTING_REPOSITORY +
+                        "/modules/addressing.mar");
+        TestCase.assertTrue(file.exists());
+        ModuleDescription moduleDesc = deploymentEngine.buildModule(file);
+
+        ConfigurationContextFactory efac = new ConfigurationContextFactory();
+        ConfigurationContext sysContext =
+                efac.buildClientConfigurationContext(clientHome);
+
+        sysContext.getAxisConfiguration().addModule(moduleDesc);
+        //sysContext.getAxisConfiguration().engageModule(moduleDesc.getName());
+
+        sysContext.getAxisConfiguration().addService(service);
+
+        return service.getParent().getServiceGroupContext(sysContext
+        ).getServiceContext(service.getName().getLocalPart());
+    }
+

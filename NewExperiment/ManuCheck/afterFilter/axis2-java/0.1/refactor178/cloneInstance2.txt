@@ -1,0 +1,50 @@
+(startLine=134 endLine=181 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01366/modules/jaxws-integration/test/org/apache/axis2/jaxws/dispatch/SOAPMessageDispatchTests.java)
+    public void testSOAPMessageAsyncPollingMessageMode() throws Exception {
+
+        String basedir = new File(System.getProperty("basedir",".")).getAbsolutePath();
+        String messageResource = new File(basedir, this.messageResource).getAbsolutePath();
+
+        TestLogger.logger.debug("---------------------------------------");
+        TestLogger.logger.debug("test: " + getName());
+        //Initialize the JAX-WS client artifacts
+        Service svc = Service.create(serviceName);
+        svc.addPort(portName, null, url);
+        Dispatch<SOAPMessage> dispatch = svc.createDispatch(portName,
+                                                            SOAPMessage.class, Service.Mode.MESSAGE);
+
+        //Create SOAPMessage Object no attachments here.
+        FileInputStream inputStream = new FileInputStream(messageResource);
+        MessageFactory factory = MessageFactory.newInstance();
+        SOAPMessage msgObject = factory.createMessage(null, inputStream);
+
+        //Invoke the Dispatch
+        TestLogger.logger.debug(">> Invoking sync Dispatch");
+        Response<SOAPMessage> asyncResponse = dispatch.invokeAsync(msgObject);
+
+        assertNotNull("dispatch invokeAsync returned null Response", asyncResponse);
+        while (!asyncResponse.isDone()) {
+            TestLogger.logger.debug(">> Async invocation still not complete");
+            Thread.sleep(1000);
+        }
+
+        SOAPMessage response = asyncResponse.get();
+        assertNotNull("dispatch invoke returned null", response);
+        response.writeTo(System.out);
+        
+        
+        // Invoke a second time to verify
+        // Invoke the Dispatch
+        TestLogger.logger.debug(">> Invoking sync Dispatch");
+        asyncResponse = dispatch.invokeAsync(msgObject);
+
+        assertNotNull("dispatch invokeAsync returned null Response", asyncResponse);
+        while (!asyncResponse.isDone()) {
+            TestLogger.logger.debug(">> Async invocation still not complete");
+            Thread.sleep(1000);
+        }
+
+        response = asyncResponse.get();
+        assertNotNull("dispatch invoke returned null", response);
+        response.writeTo(System.out);
+    }
+

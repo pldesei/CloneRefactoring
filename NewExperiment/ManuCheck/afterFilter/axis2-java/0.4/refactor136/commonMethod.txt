@@ -1,0 +1,17 @@
+(startLine=1742 endLine=1756 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01027/modules/kernel/src/org/apache/axis2/description/AxisService2WSDL11.java)
+	private boolean isAlreadyAdded(AxisBinding axisBinding,
+			OMElement definitionElement) {
+		QName bindingName = axisBinding.getName();
+		QName name = new QName("name");
+		for (Iterator iterator = definitionElement
+				.getChildrenWithName(new QName(wsdl.getNamespaceURI(),
+						BINDING_LOCAL_NAME)); iterator.hasNext();) {
+			OMElement element = (OMElement) iterator.next();
+			String value = element.getAttributeValue(name);
+			if (bindingName.getLocalPart().equals(value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+

@@ -1,0 +1,64 @@
+(startLine=194 endLine=255 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/engine/AxisEngine.java)
+    /**
+     * If error occurs at inflow or the out flow this method will call to handle the error. But if the
+     * execution reach this method twice, means the sending the error handling failed an in that case the
+     * this method just log the error and exit</p>
+     *
+     * @param context
+     * @param e
+     * @throws AxisFault
+     */
+    public MessageContext createFaultMessageContext(MessageContext processingContext, Throwable e)
+        throws AxisFault {
+        if (processingContext.isProcessingFault()) {
+            //We get the error file processing the fault. nothing we can do
+            throw new AxisFault(
+                "Error occured while processing Fault, Previous error is given in the stack trace",
+                e);
+        }
+
+        MessageContext faultContext =
+            new MessageContext(
+                engineContext,
+                processingContext.getSessionContext(),
+                processingContext.getTransportIn(),
+                processingContext.getTransportOut());
+
+        faultContext.setProcessingFault(true);
+        if (processingContext.getFaultTo() != null) {
+            faultContext.setFaultTo(processingContext.getFaultTo());
+        } else {
+            Object writer = processingContext.getProperty(MessageContext.TRANSPORT_OUT);
+            if (writer != null) {
+                faultContext.setProperty(MessageContext.TRANSPORT_OUT, writer);
+            } else {
+                //TODO Opps there are no place to send this, we will log and should we throw the exception? 
+                throw new AxisFault("No where to send the Error, the return response path is missing and FaultTo not specified");
+            }
+        }
+
+        faultContext.setOperationContext(processingContext.getOperationContext());
+        faultContext.setProcessingFault(true);
+        faultContext.setServerSide(true);
+        SOAPEnvelope envelope = null;
+
+        if (SOAP12Constants
+            .SOAP_ENVELOPE_NAMESPACE_URI
+            .equals(processingContext.getEnvelope().getNamespace().getName())) {
+            envelope = OMAbstractFactory.getSOAP12Factory().getDefaultFaultEnvelope();
+        } else {
+            envelope = OMAbstractFactory.getSOAP11Factory().getDefaultFaultEnvelope();
+        }
+
+        // TODO do we need to set old Headers back?
+        SOAPBody body = envelope.getBody();
+
+        //            body.addFault(new AxisFault(e.getMessage(), e));
+        body.getFault().setException(new AxisFault(e));
+        extractFaultInformationFromMessageContext(processingContext, envelope.getBody().getFault());
+
+        faultContext.setEnvelope(envelope);
+        sendFault(faultContext);
+        return faultContext;
+    }
+

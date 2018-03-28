@@ -1,0 +1,31 @@
+(startLine=61 endLine=89 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00838/modules/adb/src/org/apache/axis2/rpc/receivers/RPCInOnlyMessageReceiver.java)
+            if (inAxisMessage != null) {
+                if (inAxisMessage.getElementQName() == null) {
+                    // method accept empty SOAPbody
+                    method.invoke(obj, new Object[0]);
+                } else {
+                    elementQName = inAxisMessage.getElementQName();
+                    messageNameSpace = elementQName.getNamespaceURI();
+                    OMNamespace namespace = methodElement.getNamespace();
+                    if (messageNameSpace != null) {
+                        if (namespace == null ||
+                                !messageNameSpace.equals(namespace.getNamespaceURI())) {
+                            throw new AxisFault("namespace mismatch require " +
+                                    messageNameSpace +
+                                    " found " +
+                                    methodElement.getNamespace().getNamespaceURI());
+                        }
+                    } else if (namespace != null) {
+                        throw new AxisFault(
+                                "namespace mismatch. Axis Oepration expects non-namespace " +
+                                        "qualified element. But received a namespace qualified element");
+                    }
+
+                    Object[] objectArray = RPCUtil.processRequest(methodElement, method,
+                                                                  inMessage
+                                                                          .getAxisService().getObjectSupplier());
+                    method.invoke(obj, objectArray);
+                }
+
+            }
+

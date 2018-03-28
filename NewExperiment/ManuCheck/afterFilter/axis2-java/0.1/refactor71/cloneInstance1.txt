@@ -1,0 +1,58 @@
+(startLine=47 endLine=102 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00768/modules/jaxws/src/org/apache/axis2/jaxws/handler/HandlerInvokerUtils.java)
+            List<Handler> handlers, EndpointDescription endpointDesc, HandlerChainProcessor.MEP mep, boolean isOneWay) {
+        
+        if (handlers == null)
+            return true;
+        
+        int numHandlers = handlers.size();
+
+        javax.xml.ws.handler.MessageContext handlerMessageContext = null;
+        if (numHandlers > 0) {
+            handlerMessageContext = findOrCreateMessageContext(msgCtx);
+        } else {
+            return true;
+        }
+
+        String bindingProto = null;
+        if (mep.equals(HandlerChainProcessor.MEP.REQUEST))  // inbound request; must be on the server
+            bindingProto = endpointDesc.getBindingType();
+        else // inbound response; must be on the client
+            bindingProto = endpointDesc.getClientBindingID();
+        Protocol proto = Protocol.getProtocolForBinding(bindingProto);
+        
+        HandlerChainProcessor processor = new HandlerChainProcessor(handlers, proto);
+        // if not one-way, expect a response
+        try {
+            if (msgCtx.getMessage().isFault()) {
+                processor.processFault(handlerMessageContext,
+                                       HandlerChainProcessor.Direction.IN);
+            } else {
+        		processor.processChain(handlerMessageContext,
+                                                               HandlerChainProcessor.Direction.IN,
+                                                               mep,
+                                                               !isOneWay);
+            }
+        } catch (RuntimeException re) {
+            /*
+                * handler framework should only throw an exception here if
+                * we are in the client inbound case.  Make sure the message
+                * context and message are transformed.
+                */
+        	HandlerChainProcessor.convertToFaultMessage(handlerMessageContext, re, proto);
+            addConvertedFaultMsgToCtx(msgCtx, handlerMessageContext);
+            return false;
+        }
+
+        if (handlerMessageContext.get(javax.xml.ws.handler.MessageContext.MESSAGE_OUTBOUND_PROPERTY)
+                .equals(true)
+                && mep.equals(HandlerChainProcessor.MEP.REQUEST)) {
+            // uh-oh.  We've changed directions on the server inbound handler processing,
+            // This means we're now on an outbound flow, and the endpoint will not
+            // be called.  Be sure to mark the context and message as such.
+            addConvertedFaultMsgToCtx(msgCtx, handlerMessageContext);
+            return false;
+        }
+        return true;
+
+    }
+

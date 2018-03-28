@@ -1,0 +1,75 @@
+(startLine=911 endLine=983 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00674/modules/kernel/src/org/apache/axis2/description/WSDL11ToAxisServiceBuilder.java)
+	private void addQNameReference(AxisMessage message, Operation wsdl4jOperation, boolean isWrapped, List extensibilityElements, Message wsdl4jMessage) {
+		for (int i = 0; i < extensibilityElements.size(); i++) {
+            ExtensibilityElement extElement = (ExtensibilityElement) extensibilityElements.get(i);
+
+            List bindingPartsList = null;
+            
+            // SOAP 1.1 body element found!
+            if (extElement instanceof SOAPBody) {
+                SOAPBody soapBody = (SOAPBody) extElement;
+                bindingPartsList = soapBody.getParts();
+                
+            } else if (extElement instanceof SOAP12Body) {
+                SOAP12Body soapBody = (SOAP12Body) extElement;
+                bindingPartsList = soapBody.getParts();
+            }
+            
+            if (bindingPartsList != null && !bindingPartsList.isEmpty()) {
+                // we can process a single part only
+                if (bindingPartsList.size() > 1) {
+				    // do something here - perhaps throw and exception
+				} else {
+				    // find the part from the relevant message
+				    Part wsdl4jMessagePart = wsdl4jMessage
+				            .getPart((String) bindingPartsList.get(0));
+				    // the part name better be there - if not throw an exception
+				    if (wsdl4jMessagePart == null) {
+				        throw new WSDLProcessingException("Missing part named \""
+				                + bindingPartsList.get(0) + "\"");
+				    }
+				    QName name = wsdl4jMessagePart.getElementName();
+				    if (name == null) {
+				        name = wsdl4jMessagePart.getTypeName();
+				    }
+				    if (name == null) {
+				        throw new WSDLProcessingException(
+				                "Element reference / Type name  missing for "
+				                        + bindingPartsList.get(0) + "!");
+				    }
+				    message.setElementQName(wsdl4jMessagePart.getElementName());
+				}
+                // there are no parts named in the binding - process the
+                // items normally
+                // by looking at the single message part - or the wrapped
+                // items if wrapped by us
+            } else {
+                // for the wrapped types we need to find this from the
+                // wrapper schema map
+                if (isWrapped) {
+                    // The schema for this should be already made ! Find the
+                    // QName from
+                    // the list and add it - the name for this is just the
+                    message
+                            .setElementQName((QName) resolvedRpcWrappedElementMap
+                                    .get(wsdl4jOperation.getName()));
+                } else if (wsdl4jMessage != null) {
+                    // pick the first part from the list and take that as
+                    // the relevant part
+                    // it is somewhat questionnable whether the first part
+                    // gets picked
+                    // but we'll have to take a chance here
+                    Map wsdl4jPartsMap = wsdl4jMessage.getParts();
+                    if (!wsdl4jPartsMap.isEmpty()) {
+                        Part wsdl4jPart = (Part) wsdl4jPartsMap.values()
+                                .toArray()[0];
+                        if (wsdl4jPart.getElementName() != null) {
+                            message.setElementQName(wsdl4jPart
+                                    .getElementName());
+                        }
+                    }
+                }
+            }
+        }
+	}
+

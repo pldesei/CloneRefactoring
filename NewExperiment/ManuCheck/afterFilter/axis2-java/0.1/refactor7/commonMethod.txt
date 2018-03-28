@@ -1,0 +1,27 @@
+(startLine=393 endLine=417 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00190/modules/core/src/java/org/apache/axis/phaseresolver/PhaseMetadata.java)
+    /**
+     * Method getBeforeAfter
+     *
+     * @param handler
+     * @return
+     * @throws PhaseException
+     */
+    private int getBeforeAfter(HandlerMetadata handler) throws PhaseException {
+        if ((!handler.getRules().getBefore().equals(""))
+                && (!handler.getRules().getAfter().equals(""))) {
+            if (handler.getRules().getBefore().equals(
+                    handler.getRules().getAfter())) {
+                throw new PhaseException(
+                        "Both before and after cannot be the same for this handler"
+                                + handler.getName());
+            }
+            return BOTH_BEFORE_AFTER;
+        } else if (!handler.getRules().getBefore().equals("")) {
+            return BEORE;
+        } else if (!handler.getRules().getAfter().equals("")) {
+            return AFTER;
+        } else {
+            return ANYWHERE;
+        }
+    }
+

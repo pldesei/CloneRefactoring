@@ -1,0 +1,11 @@
+(startLine=248 endLine=256 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00923/modules/metadata/src/org/apache/axis2/jaxws/description/impl/EndpointDescriptionImpl.java)
+        } catch (Exception e) {
+            // TODO RAS & NLS
+            if (log.isDebugEnabled()) {
+                log.debug("Caught Exception attempting to complete configuration on AxisService: "
+                        + axisService + " for ServiceDesription: " + parent, e);
+            }
+            throw ExceptionFactory.makeWebServiceException(
+                    "Unable to complete configuration due to exception " + e, e);
+        }
+

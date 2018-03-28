@@ -1,0 +1,63 @@
+(startLine=53 endLine=113 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00644/modules/kernel/src/org/apache/axis2/deployment/ModuleDeployer.java)
+    public void deploy(DeploymentFileData deploymentFileData) {
+        ArchiveReader archiveReader = new ArchiveReader();
+        String moduleStatus = "";
+        StringWriter errorWriter = new StringWriter();
+        boolean explodedDir = deploymentFileData.getFile().isDirectory();
+        try {
+            deploymentFileData.setClassLoader(explodedDir,
+                    axisConfig.getModuleClassLoader());
+            AxisModule metaData = new AxisModule();
+            metaData.setModuleClassLoader(deploymentFileData.getClassLoader());
+            metaData.setParent(axisConfig);
+            archiveReader.readModuleArchive(deploymentFileData, metaData, explodedDir,
+                    axisConfig);
+            metaData.setFileName(deploymentFileData.getFile().toURL());
+            DeploymentEngine.addNewModule(metaData, axisConfig);
+            log.info(Messages.getMessage(DeploymentErrorMsgs.DEPLOYING_MODULE,
+                    metaData.getName().getLocalPart()));
+        } catch (DeploymentException e) {
+            log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_MODULE,
+                    deploymentFileData.getName(),
+                    e.getMessage()),
+                    e);
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            e.printStackTrace(error_ptintWriter);
+            moduleStatus = "Error:\n" + errorWriter.toString();
+        } catch (AxisFault axisFault) {
+            log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_MODULE,
+                    deploymentFileData.getName(),
+                    axisFault.getMessage()),
+                    axisFault);
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            axisFault.printStackTrace(error_ptintWriter);
+            moduleStatus = "Error:\n" + errorWriter.toString();
+        } catch (MalformedURLException e) {
+            log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_MODULE,
+                    deploymentFileData.getName(),
+                    e.getMessage()),
+                    e);
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            e.printStackTrace(error_ptintWriter);
+            moduleStatus = "Error:\n" + errorWriter.toString();
+        } catch (Throwable t) {
+            if (log.isInfoEnabled()) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                t.printStackTrace(pw);
+                log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_MODULE,
+                        deploymentFileData.getName(),
+                        t.getMessage()),
+                        t);
+            }
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            t.printStackTrace(error_ptintWriter);
+            moduleStatus = "Error:\n" + errorWriter.toString();
+        } finally {
+            if (moduleStatus.startsWith("Error:")) {
+                axisConfig.getFaultyModules().put(DeploymentEngine.getAxisServiceName(
+                        deploymentFileData.getName()), moduleStatus);
+            }
+        }
+    }
+

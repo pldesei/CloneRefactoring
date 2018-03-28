@@ -1,0 +1,41 @@
+(startLine=931 endLine=969 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00673/modules/kernel/src/org/apache/axis2/description/WSDL11ToAxisServiceBuilder.java)
+            } else if (extElement instanceof SOAP12Body) {
+                SOAP12Body soapBody = (SOAP12Body) extElement;
+                List bindingPartsList = soapBody.getParts();
+                if (bindingPartsList != null && !bindingPartsList.isEmpty()) {
+                    // we can process a single part only
+                    processPartsList(bindingPartsList, wsdl4jMessage, inMessage);
+                    // there are no parts named in the binding - process the
+                    // items normally
+                    // by looking at the single message part - or the wrapped
+                    // items if wrapped by us
+                } else {
+                    // for the wrapped types we need to find this from the
+                    // wrapper schema map
+                    if (isWrapped) {
+                        // The schema for this should be already made ! Find the
+                        // QName from
+                        // the list and add it - the name for this is just the
+                        inMessage
+                                .setElementQName((QName) resolvedRpcWrappedElementMap
+                                        .get(wsdl4jOperation.getName()));
+                    } else if (wsdl4jMessage != null) {
+                        // pick the first part from the list and take that as
+                        // the relevant part
+                        // it is somewhat questionnable whether the first part
+                        // gets picked
+                        // but we'll have to take a chance here
+                        Map wsdl4jPartsMap = wsdl4jMessage.getParts();
+                        if (!wsdl4jPartsMap.isEmpty()) {
+                            Part wsdl4jPart = (Part) wsdl4jPartsMap.values()
+                                    .toArray()[0];
+                            if (wsdl4jPart.getElementName() != null) {
+                                inMessage.setElementQName(wsdl4jPart
+                                        .getElementName());
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+

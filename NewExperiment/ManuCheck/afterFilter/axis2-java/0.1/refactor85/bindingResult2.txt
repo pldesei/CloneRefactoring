@@ -1,0 +1,62 @@
+ProjectPath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796
+predFragLineRange:102-123
+predMethodLineRange:102-123
+nextLineRange:53-62
+predStrMethodInvoNames:
+[getSOAP11Factory, createOMNamespace, createOMElement, createOMElement, addChild, createOMText, addChild, setTransportInProtocol, createConfigurationContextFromFileSystem, setOptions, setTo, sendReceive, compareWithCreatedOMElement]
+%%%%%%%%%%
+AddedMethodInvo Line:55 InvoName:dp.addHandler(new SOAPMessageBodyBasedDispatcher())
+PackageName:org.apache.axis2.engine
+QualifiedClassName:org.apache.axis2.engine.Phase
+ClassName:Phase
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/engine/Phase.java
+InvokedMethodSig:public void addHandler(org.apache.axis2.engine.Handler) 
+%%%%%%%%%%
+AddedMethodInvo Line:56 InvoName:serverConfig.getInFlowPhases().set(1,dp)
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList
+ClassName:ArrayList
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/java/util/ArrayList.java
+InvokedMethodSig:public E set(int, E) 
+%%%%%%%%%%
+AddedMethodInvo Line:56 InvoName:serverConfig.getInFlowPhases()
+PackageName:org.apache.axis2.engine
+QualifiedClassName:org.apache.axis2.engine.AxisConfiguration
+ClassName:AxisConfiguration
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/engine/AxisConfiguration.java
+InvokedMethodSig:public ArrayList#RAW getInFlowPhases() 
+%%%%%%%%%%
+AddedMethodInvo Line:58 InvoName:getClient(Echo.SERVICE_NAME,Echo.ECHO_OM_ELEMENT_OP_NAME)
+PackageName:org.apache.axis2.integration
+QualifiedClassName:org.apache.axis2.integration.LocalTestCase
+ClassName:LocalTestCase
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/integration/LocalTestCase.java
+InvokedMethodSig:protected org.apache.axis2.client.ServiceClient getClient(java.lang.String, java.lang.String) throws org.apache.axis2.AxisFault
+%%%%%%%%%%
+AddedMethodInvo Line:59 InvoName:TestingUtils.createDummyOMElement(sender.getOptions().getTo().getAddress())
+PackageName:org.apache.axis2.integration
+QualifiedClassName:org.apache.axis2.integration.TestingUtils
+ClassName:TestingUtils
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/integration/TestingUtils.java
+InvokedMethodSig:public static OMElement createDummyOMElement(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:59 InvoName:sender.getOptions().getTo().getAddress()
+PackageName:org.apache.axis2.addressing
+QualifiedClassName:org.apache.axis2.addressing.EndpointReference
+ClassName:EndpointReference
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/addressing/EndpointReference.java
+InvokedMethodSig:public java.lang.String getAddress() 
+%%%%%%%%%%
+AddedMethodInvo Line:59 InvoName:sender.getOptions().getTo()
+PackageName:org.apache.axis2.client
+QualifiedClassName:org.apache.axis2.client.Options
+ClassName:Options
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/client/Options.java
+InvokedMethodSig:public org.apache.axis2.addressing.EndpointReference getTo() 
+%%%%%%%%%%
+AddedMethodInvo Line:59 InvoName:sender.getOptions()
+PackageName:org.apache.axis2.client
+QualifiedClassName:org.apache.axis2.client.ServiceClient
+ClassName:ServiceClient
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00796/modules/integration/test/org/apache/axis2/client/ServiceClient.java
+InvokedMethodSig:public org.apache.axis2.client.Options getOptions() 

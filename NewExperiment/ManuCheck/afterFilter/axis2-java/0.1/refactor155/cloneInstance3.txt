@@ -1,0 +1,13 @@
+(startLine=124 endLine=134 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/innerChoice/InnerChoiceTest.java)
+       try {
+           OMElement omElement = testSequence.getOMElement(TestInnerSequence3.MY_QNAME,
+                   OMAbstractFactory.getSOAP12Factory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OMelement ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestInnerSequence3 result = TestInnerSequence3.Factory.parse(xmlReader);
+            assertEquals(result.getSequence1(), "sequence");
+            assertEquals(result.getSequence2(), 3);
+            assertTrue(isEqual(result.getTestInnerSequence3Choice_type0().getChoice1(), new String[]{"choice1", null, "choice2"}));
+        } catch (Exception e) {
+

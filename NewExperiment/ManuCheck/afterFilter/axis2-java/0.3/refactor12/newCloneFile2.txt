@@ -1,0 +1,335 @@
+package org.apache.axis.wsdl.codegen.emitter;
+
+import org.apache.axis.wsdl.codegen.CodeGenConfiguration;
+import org.apache.axis.wsdl.codegen.CodeGenerationException;
+import org.apache.axis.wsdl.codegen.extension.AxisBindingBuilder;
+import org.apache.axis.wsdl.codegen.writer.*;
+import org.apache.axis.wsdl.databinding.TypeMapper;
+import org.apache.crimson.tree.XmlDocument;
+import org.apache.wsdl.WSDLBinding;
+import org.apache.wsdl.WSDLOperation;
+import org.apache.wsdl.WSDLTypes;
+import org.apache.wsdl.WSDLInterface;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
+/*
+* Copyright 2004,2005 The Apache Software Foundation.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*
+* Abstract Client emitter
+* the XML will look like the following
+* todo escape the following
+* <pre>
+<interface package="">
+<method name="">
+<input>
+<param name="" type=""/>*
+</input> ?
+<output>
+<param name="" type=""/>?
+</output>?
+</method>
+</interface>
+</pre>
+*/
+
+
+public abstract class MultiLanguageClientEmitter implements Emitter{
+    private static final String CALL_BACK_HANDLER_SUFFIX = "CallbackHandler";
+    private static final String STUB_SUFFIX = "Stub";
+
+    protected InputStream xsltStream = null;
+    protected CodeGenConfiguration configuration;
+    protected TypeMapper mapper;
+
+    /**
+     * Sets the mapper
+     * @see org.apache.axis.wsdl.databinding.TypeMapper
+     * @param mapper
+     */
+    public void setMapper(TypeMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    /**
+     * Sets the code generator configuration
+     * @param configuration
+     */
+    public void setCodeGenConfiguration(CodeGenConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     *
+     * @see org.apache.axis.wsdl.codegen.emitter.Emitter#emitStub()
+     */
+    public void emitStub() throws CodeGenerationException {
+        try {
+            //get the binding
+            WSDLBinding axisBinding = this.configuration.getWom().getBinding(AxisBindingBuilder.AXIS_BINDING_QNAME);
+            //write interfaces
+            writeInterface(axisBinding);
+            //write interface implementations
+            writeInterfaceImplementation(axisBinding);
+            //write the call back handlers
+            writeCallBackHandlers(axisBinding);
+        } catch (Exception e) {
+            throw new CodeGenerationException(e);
+        }
+    }
+
+    /**
+     *
+     */
+    protected void writeCallBackHandlers(WSDLBinding binding) throws Exception{
+
+        if (configuration.isAsyncOn()){
+            XmlDocument interfaceModel = createDOMDocumentForCallbackHandler(binding);
+            CallbackHandlerWriter callbackWriter =
+                    new CallbackHandlerWriter(this.configuration.getOutputLocation(),
+                            this.configuration.getOutputLanguage()
+                    );
+            writeClass(interfaceModel,callbackWriter);
+        }
+
+    }
+    /**
+     * Writes the interfaces
+     * @param axisBinding
+     * @throws Exception
+     */
+    protected void writeInterface(WSDLBinding axisBinding) throws Exception {
+        XmlDocument interfaceModel = createDOMDocuementForInterface(axisBinding);
+        InterfaceWriter interfaceWriter =
+                new InterfaceWriter(this.configuration.getOutputLocation(),
+                        this.configuration.getOutputLanguage()
+                );
+        writeClass(interfaceModel,interfaceWriter);
+    }
+
+
+
+
+    /**
+     * Writes the implementations
+     * @param axisBinding
+     * @throws Exception
+     */
+    protected void writeInterfaceImplementation(WSDLBinding axisBinding) throws Exception {
+        XmlDocument interfaceImplModel = createDOMDocuementForInterfaceImplementation(axisBinding);
+        InterfaceImplementationWriter writer =
+                new InterfaceImplementationWriter(this.configuration.getOutputLocation(),
+                        this.configuration.getOutputLanguage()
+                );
+        writeClass(interfaceImplModel,writer);
+    }
+
+    /**
+     * todo Not used yet
+     * @param wsdlType
+     * @throws Exception
+     */
+    protected void writeBeans(WSDLTypes wsdlType) throws Exception {
+        HashMap typesMap = wsdlType.getTypes();
+        if (typesMap!=null){
+            Collection collection = typesMap.values();
+            for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
+                XmlDocument interfaceModel = createDOMDocuementForBean();
+                BeanWriter beanWriter =
+                        new BeanWriter(this.configuration.getOutputLocation(),
+                                this.configuration.getOutputLanguage()
+                        );
+                writeClass(interfaceModel,beanWriter);
+            }
+        }
+
+    }
+    /**
+     * A resusable method for the implementation of interface and implementation writing
+     * @param model
+     * @param writer
+     * @throws IOException
+     * @throws Exception
+     */
+    private void writeClass(XmlDocument model,ClassWriter writer) throws IOException,Exception {
+        ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
+        model.write(memoryStream);
+        writer.loadTemplate();
+        writer.createOutFile(model.getDocumentElement().getAttribute("package"),
+                model.getDocumentElement().getAttribute("name"));
+        writer.writeOutFile(new ByteArrayInputStream(memoryStream.toByteArray()));
+    }
+
+    /**
+     * @see org.apache.axis.wsdl.codegen.emitter.Emitter#emitSkeleton()
+     */
+    public void emitSkeleton() throws CodeGenerationException {
+        throw new UnsupportedOperationException("Not supported yet");
+    }
+
+     /**
+     * Generating the callbacks
+     * @param binding
+     * @return
+     */
+     protected XmlDocument createDOMDocumentForCallbackHandler(WSDLBinding binding){
+    	WSDLInterface boundInterface = binding.getBoundInterface();
+    	XmlDocument doc = new XmlDocument();
+    	Element rootElement = doc.createElement("callback");
+    	addAttribute(doc,"package",configuration.getPackageName(),rootElement);
+    	addAttribute(doc,"name",boundInterface.getName().getLocalPart()+CALL_BACK_HANDLER_SUFFIX,rootElement);
+    	addAttribute(doc,"namespace",boundInterface.getName().getNamespaceURI(),rootElement);
+
+        //TODO JAXRPC mapping support should be considered
+        this.loadOperations(boundInterface, doc, rootElement);
+        //this.loadOperations(boundInterface, doc, rootElement, "on", "Complete");
+
+    	doc.appendChild(rootElement);
+    	return doc;
+    }
+
+    /**
+     * Finds the input element for the xml document
+     * @param doc
+     * @param operation
+     * @return
+     */
+    protected Element getInputElement(XmlDocument doc,WSDLOperation operation){
+        Element inputElt = doc.createElement("input");
+        //todo this should be multiple
+        Element param = doc.createElement("param");
+        addAttribute(doc,"name",this.mapper.getParameterName(operation.getInputMessage().getElement()),param);
+
+        Class typeMapping = this.mapper.getTypeMapping(operation.getInputMessage().getElement());
+        String typeMappingStr  =typeMapping==null?"":typeMapping.getName();
+        addAttribute(doc,"type",typeMappingStr,param);
+
+        inputElt.appendChild(param);
+
+        return inputElt;
+    }
+
+    /**
+     * Finds the output element for the output element
+     * @param doc
+     * @param operation
+     * @return
+     */
+    protected Element getOutputElement(XmlDocument doc,WSDLOperation operation){
+        Element outputElt = doc.createElement("output");
+        Element param = doc.createElement("param");
+        addAttribute(doc,"name",this.mapper.getParameterName(operation.getOutputMessage().getElement()),param);
+
+        Class typeMapping = this.mapper.getTypeMapping(operation.getOutputMessage().getElement());
+        String typeMappingStr=typeMapping==null?"":typeMapping.getName();
+        addAttribute(doc,"type",typeMappingStr,param);
+        outputElt.appendChild(param);
+
+        return outputElt;
+    }
+
+    /**
+     * Todo Finish this
+     * @return
+     */
+    protected XmlDocument createDOMDocuementForBean(){
+        return null;
+    }
+
+      /**
+     * Creates the DOM tree for the interface creation
+     * @param binding
+     * @return
+     */
+    protected XmlDocument createDOMDocuementForInterface(WSDLBinding binding){
+           WSDLInterface boundInterface = binding.getBoundInterface();
+
+           XmlDocument doc = new XmlDocument();
+           Element rootElement = doc.createElement("interface");
+           addAttribute(doc,"package",configuration.getPackageName(),rootElement);
+    	   addAttribute(doc,"name",boundInterface.getName().getLocalPart(),rootElement);
+    	   fillSyncAttributes(doc, rootElement);
+           loadOperations(boundInterface, doc, rootElement);
+           doc.appendChild(rootElement);
+
+           return doc;
+
+       }
+
+       private void fillSyncAttributes(XmlDocument doc, Element rootElement) {
+           addAttribute(doc,"isAsync",this.configuration.isAsyncOn()?"1":"0",rootElement);
+           addAttribute(doc,"isSync",this.configuration.isSyncOn()?"1":"0",rootElement);
+        }
+
+       private void loadOperations(WSDLInterface boundInterface, XmlDocument doc, Element rootElement){
+           loadOperations(boundInterface, doc, rootElement, null, null);
+       }
+
+       private void loadOperations(WSDLInterface boundInterface, XmlDocument doc, Element rootElement, String operationPrefix, String operationPostfix) {
+           Collection col = boundInterface.getOperations().values();
+           Element methodElement = null;
+           WSDLOperation operation = null;
+
+           for (Iterator iterator = col.iterator(); iterator.hasNext();) {
+               operation = (WSDLOperation) iterator.next();
+               methodElement = doc.createElement("method");
+               addAttribute(doc,"name",operation.getName().getLocalPart(),methodElement);
+               addAttribute(doc,"namepace",operation.getName().getNamespaceURI(),methodElement);
+               methodElement.appendChild(getInputElement(doc,operation));
+               methodElement.appendChild(getOutputElement(doc,operation));
+               rootElement.appendChild(methodElement);
+           }
+       }
+
+       /**
+     * Creates the DOM tree for implementations
+     * @param binding
+     * @return
+     */
+       protected XmlDocument createDOMDocuementForInterfaceImplementation(WSDLBinding binding) {
+           WSDLInterface boundInterface = binding.getBoundInterface();
+
+           XmlDocument doc = new XmlDocument();
+           Element rootElement = doc.createElement("class");
+           addAttribute(doc,"package",configuration.getPackageName(),rootElement);
+    	   addAttribute(doc,"name",boundInterface.getName().getLocalPart()+STUB_SUFFIX,rootElement);
+    	   addAttribute(doc,"servicename",boundInterface.getName().getLocalPart(),rootElement);
+    	   addAttribute(doc,"namespace",boundInterface.getName().getNamespaceURI(),rootElement);
+    	   addAttribute(doc,"interfaceName",boundInterface.getName().getLocalPart(),rootElement);
+    	   addAttribute(doc,"callbackname",boundInterface.getName().getLocalPart() + CALL_BACK_HANDLER_SUFFIX,rootElement);
+           fillSyncAttributes(doc, rootElement);
+           loadOperations(boundInterface, doc, rootElement);
+           doc.appendChild(rootElement);
+
+           return doc;
+
+       }
+
+    protected void addAttribute(XmlDocument document,String AttribName, String attribValue, Element element){
+        Attr attribute = document.createAttribute(AttribName);
+        attribute.setValue(attribValue);
+        element.setAttributeNode(attribute);
+
+    }
+}
+

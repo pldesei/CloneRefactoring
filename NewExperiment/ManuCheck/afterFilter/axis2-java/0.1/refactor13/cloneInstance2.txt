@@ -1,0 +1,12 @@
+(startLine=355 endLine=364 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00313/modules/core/src/org/apache/axis/phaseresolver/PhaseResolver.java)
+            if (flow != null) {
+                ArrayList phaseList = new ArrayList();
+                phaseList.add(new Phase(PhaseMetadata.TRANSPORT_PHASE));
+                phaseHolder = new PhaseHolder(phaseList);
+                for (int j = 0; j < flow.getHandlerCount(); j++) {
+                    HandlerDescription metadata = flow.getHandler(j);
+                    metadata.getRules().setPhaseName(PhaseMetadata.TRANSPORT_PHASE);
+                    phaseHolder.addHandler(metadata);
+                }
+            }
+

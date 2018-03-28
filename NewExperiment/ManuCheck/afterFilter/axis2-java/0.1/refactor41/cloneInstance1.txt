@@ -1,0 +1,23 @@
+(startLine=1693 endLine=1713 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00624/modules/kernel/src/org/apache/axis2/description/WSDL11ToAxisServiceBuilder.java)
+            } else if (wsdl4jElement instanceof SOAPOperation) {
+                SOAPOperation soapOperation = (SOAPOperation) wsdl4jElement;
+                if (description instanceof AxisOperation) {
+                    AxisOperation axisOperation = (AxisOperation) description;
+                    
+                    if(isTraceEnabled){
+                        log.trace("copyExtensibleElements:: AxisOperation "+axisOperation);
+                    }
+                    if (soapOperation.getStyle() != null) {
+                        axisOperation.setStyle(soapOperation.getStyle());
+                    }
+                    String soapActionURI = soapOperation.getSoapActionURI();
+                    if(isTraceEnabled){
+                        log.trace("copyExtensibleElements:: setSoapAction "+soapActionURI);
+                    }
+                    axisOperation.setSoapAction(soapActionURI);
+                    if(soapActionURI != null){
+                        axisService.mapActionToOperation(soapActionURI, axisOperation);
+                    }
+                }
+            } else if (wsdl4jElement instanceof SOAP12Header) {
+

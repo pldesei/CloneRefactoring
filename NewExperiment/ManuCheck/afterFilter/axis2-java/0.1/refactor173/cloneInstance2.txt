@@ -1,0 +1,20 @@
+(startLine=1288 endLine=1305 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01229/modules/kernel/src/org/apache/axis2/description/java2wsdl/DefaultSchemaGenerator.java)
+    private XmlSchemaComplexType createSchemaTypeForFault(String localPartName) {
+        XmlSchema xmlSchema = getXmlSchema(schemaTargetNameSpace);
+        QName elementName =
+                new QName(this.schemaTargetNameSpace, localPartName, this.schema_namespace_prefix);
+
+        XmlSchemaComplexType complexType = getComplexTypeForElement(xmlSchema, elementName);
+        if (complexType == null) {
+            complexType = new XmlSchemaComplexType(xmlSchema);
+
+            XmlSchemaElement globalElement = new XmlSchemaElement();
+            globalElement.setSchemaType(complexType);
+            globalElement.setName(localPartName);
+            globalElement.setQName(elementName);
+            xmlSchema.getItems().add(globalElement);
+            xmlSchema.getElements().add(elementName, globalElement);
+        }
+        return complexType;
+    }
+

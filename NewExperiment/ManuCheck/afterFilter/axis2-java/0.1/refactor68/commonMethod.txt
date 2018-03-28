@@ -1,0 +1,25 @@
+(startLine=125 endLine=147 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00763/modules/jaxws/src/org/apache/axis2/jaxws/message/attachments/JAXBAttachmentMarshaller.java)
+    private String addDataHandler(DataHandler dh) {
+        String cid = null;
+        OMText textNode = null;
+        
+        // If this is an MTOMXMLStreamWriter then inform the writer 
+        // that it must write out this attchment (I guess we should do this
+        // even if the attachment is SWAREF ?)
+        if (writer instanceof MTOMXMLStreamWriter) {
+            textNode = new OMTextImpl(dh, null);
+            cid = textNode.getContentID();
+            ((MTOMXMLStreamWriter) writer).writeOptimized(textNode);
+        } else {
+            cid = UUIDGenerator.getUUID();
+        }
+        
+        if (log.isDebugEnabled()){ 
+            log.debug("   content id=" + cid);
+            log.debug("   dataHandler  =" + dh);
+        }
+        // Remember the attachment on the message.
+        message.addDataHandler(dh, cid);
+        return cid;
+    }
+

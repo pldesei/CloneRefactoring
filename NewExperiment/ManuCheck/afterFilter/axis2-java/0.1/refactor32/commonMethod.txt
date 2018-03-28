@@ -1,0 +1,14 @@
+(startLine=267 endLine=278 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00610/modules/kernel/src/org/apache/axis2/transport/http/HTTPWorker.java)
+    public String getHostAddress(HttpRequest request) throws java.net.SocketException{
+        try {
+            Header hostHeader = request.getFirstHeader("host");
+            if (hostHeader!=null){
+                String host = hostHeader.getValue();
+                return new URI("http://"+host).getHost();
+            }
+        } catch (Exception e){
+            
+        }
+        return HttpUtils.getIpAddress();
+    }	
+

@@ -1,0 +1,17 @@
+(startLine=351 endLine=365 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01217/modules/transport/http/src/org/apache/axis2/transport/http/ListingAgent.java)
+    /**
+     * Checks whether exposing the WSDL & WSDL elements such as schema & policy have been allowed
+     *
+     * @param service  The AxisService which needs to be verified
+     * @throws IOException If exposing WSDL & WSDL elements has been restricted.
+     * @return true - if service metadata can be exposed, false - otherwise
+     */
+    private boolean canExposeServiceMetadata(AxisService service) {
+        Parameter exposeServiceMetadata = service.getParameter("exposeServiceMetadata");
+        if(exposeServiceMetadata != null &&
+           JavaUtils.isFalseExplicitly(exposeServiceMetadata.getValue())) {
+           return false;
+        }
+        return true;
+    }
+

@@ -1,0 +1,16 @@
+(startLine=230 endLine=243 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01106/modules/jaxws/src/org/apache/axis2/jaxws/context/utils/ContextUtils.java)
+    private static SOAPMessageContext getSOAPMessageContext(MessageContext jaxwsMessageContext) {
+        org.apache.axis2.context.MessageContext msgContext =
+            jaxwsMessageContext.getAxisMessageContext();
+        ServiceContext serviceContext = msgContext.getServiceContext();
+        SOAPMessageContext soapMessageContext = null;
+        if (serviceContext != null) {
+            WebServiceContext wsc =
+                (WebServiceContext)serviceContext.getProperty(EndpointLifecycleManagerImpl.WEBSERVICE_MESSAGE_CONTEXT);
+            if (wsc != null) {
+                soapMessageContext = (SOAPMessageContext)wsc.getMessageContext();
+            }
+        }
+        return soapMessageContext;
+    }
+

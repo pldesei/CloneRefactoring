@@ -1,0 +1,10 @@
+(startLine=97 endLine=104 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/attribute/AttributeTest.java)
+         try {
+             omElement = testElement.getOMElement(TestElement3.MY_QNAME, OMAbstractFactory.getOMFactory());
+             String omElementString = omElement.toStringWithConsume();
+            System.out.println("OMElement ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestElement3 result = TestElement3.Factory.parse(xmlReader);
+            assertEquals(result.getAttribute1(),"test");
+        } catch (Exception e) {
+

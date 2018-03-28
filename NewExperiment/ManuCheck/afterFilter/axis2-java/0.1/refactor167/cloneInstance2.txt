@@ -1,0 +1,38 @@
+(startLine=260 endLine=295 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01216/modules/transport/http/src/org/apache/axis2/transport/http/ListingAgent.java)
+                    } else {
+
+                        PolicyInclude policyInclude = axisService.getPolicyInclude();
+                        Policy effecPolicy = policyInclude.getEffectivePolicy();
+
+                        if (effecPolicy != null) {
+                            XMLStreamWriter writer;
+
+                            try {
+                                OutputStream out = res.getOutputStream();
+                                writer = XMLOutputFactory.newInstance()
+                                        .createXMLStreamWriter(out);
+
+                                res.setContentType("application/wspolicy+xml");
+                                effecPolicy.serialize(writer);
+                                writer.flush();
+
+                            } catch (XMLStreamException e) {
+                                throw new ServletException(
+                                        "Error occured when serializing the Policy",
+                                        e);
+
+                            } catch (FactoryConfigurationError e) {
+                                throw new ServletException(
+                                        "Error occured when serializing the Policy",
+                                        e);
+                            }
+                        } else {
+
+                            OutputStream out = res.getOutputStream();
+                            res.setContentType("text/html");
+                            String outStr = "<b>No effective policy for "
+                                            + serviceName + " service</b>";
+                            out.write(outStr.getBytes());
+                        }
+                    }
+

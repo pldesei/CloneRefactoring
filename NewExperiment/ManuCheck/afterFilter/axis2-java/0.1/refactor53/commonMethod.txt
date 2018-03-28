@@ -1,0 +1,87 @@
+(startLine=51 endLine=135 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00644/modules/kernel/src/org/apache/axis2/deployment/ServiceDeployer.java)
+    public void deploy(DeploymentFileData deploymentFileData) {
+        boolean explodedDir = deploymentFileData.getFile().isDirectory();
+        ArchiveReader archiveReader;
+        StringWriter errorWriter = new StringWriter();
+        archiveReader = new ArchiveReader();
+        String serviceStatus = "";
+        try {
+            deploymentFileData.setClassLoader(explodedDir,
+                    axisConfig.getServiceClassLoader());
+            HashMap wsdlservice = archiveReader.processWSDLs(deploymentFileData);
+            if (wsdlservice != null && wsdlservice.size() > 0) {
+                Iterator services = wsdlservice.values().iterator();
+                while (services.hasNext()) {
+                    AxisService service = (AxisService) services.next();
+                    Iterator operations = service.getOperations();
+                    while (operations.hasNext()) {
+                        AxisOperation axisOperation = (AxisOperation) operations.next();
+                        axisConfig.getPhasesInfo().setOperationPhases(axisOperation);
+                    }
+                }
+            }
+            AxisServiceGroup sericeGroup = new AxisServiceGroup(axisConfig);
+            sericeGroup.setServiceGroupClassLoader(
+                    deploymentFileData.getClassLoader());
+            ArrayList serviceList = archiveReader.processServiceGroup(
+                    deploymentFileData.getAbsolutePath(), deploymentFileData,
+                    sericeGroup, explodedDir, wsdlservice,
+                    configCtx);
+            DeploymentEngine.addServiceGroup(sericeGroup,
+                    serviceList,
+                    deploymentFileData.getFile().toURL(),
+                    deploymentFileData,
+                    axisConfig);
+            log.info(Messages.getMessage(DeploymentErrorMsgs.DEPLOYING_WS,
+                    deploymentFileData.getName()));
+        } catch (DeploymentException de) {
+            de.printStackTrace();
+            log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE,
+                    deploymentFileData.getName(),
+                    de.getMessage()),
+                    de);
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            de.printStackTrace(error_ptintWriter);
+            serviceStatus = "Error:\n" + errorWriter.toString();
+        } catch (AxisFault axisFault) {
+            log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE,
+                    deploymentFileData.getName(),
+                    axisFault.getMessage()),
+                    axisFault);
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            axisFault.printStackTrace(error_ptintWriter);
+            serviceStatus = "Error:\n" + errorWriter.toString();
+        } catch (Exception e) {
+            if (log.isInfoEnabled()) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                log.info(Messages.getMessage(
+                        DeploymentErrorMsgs.INVALID_SERVICE,
+                        deploymentFileData.getName(),
+                        sw.getBuffer().toString()));
+            }
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            e.printStackTrace(error_ptintWriter);
+            serviceStatus = "Error:\n" + errorWriter.toString();
+        } catch (Throwable t) {
+            if (log.isInfoEnabled()) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                t.printStackTrace(pw);
+                log.info(Messages.getMessage(
+                        DeploymentErrorMsgs.INVALID_SERVICE,
+                        deploymentFileData.getName(),
+                        sw.getBuffer().toString()));
+            }
+            PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+            t.printStackTrace(error_ptintWriter);
+            serviceStatus = "Error:\n" + errorWriter.toString();
+        } finally {
+            if (serviceStatus.startsWith("Error:")) {
+                axisConfig.getFaultyServices().put(deploymentFileData.getFile().getAbsolutePath(),
+                        serviceStatus);
+            }
+        }
+    }
+

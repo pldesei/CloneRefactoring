@@ -1,0 +1,106 @@
+(startLine=488 endLine=591 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00646/modules/jaxws/src/org/apache/axis2/jaxws/marshaller/impl/alt/DocLitWrappedPlusMethodMarshaller.java)
+    public Message marshalRequest(Object[] signatureArguments, OperationDescription operationDesc) throws WebServiceException {
+        if (log.isDebugEnabled()) {
+            log.debug("Calling DocLitWrapperPlusMethodMarshaller.marshalRequest");
+            log.debug("  The DocLitWrapped Plus marshaller is used when the web service method deviates from the normal doc/lit rules.");
+        }
+        EndpointInterfaceDescription ed = operationDesc.getEndpointInterfaceDescription();
+        EndpointDescription endpointDesc = ed.getEndpointDescription();
+        Protocol protocol = Protocol.getProtocolForBinding(endpointDesc.getClientBindingID()); 
+        MarshalServiceRuntimeDescription marshalDesc = MethodMarshallerUtils.getMarshalDesc(endpointDesc);
+        TreeSet<String> packages = marshalDesc.getPackages();
+        
+        
+        // Note all exceptions are caught and rethrown with a WebServiceException
+        try {
+            // Sample Document message
+            // ..
+            // <soapenv:body>
+            //    <m:param .. >...</m:param>
+            // </soapenv:body>
+            //
+            // Important points.
+            //   1) There is no operation element under the body.
+            //   2) The data blocks are located underneath the body.  
+            //   3) The name of the data blocks (m:param) are defined by the schema
+            //   4) The type of the data block (data:foo) is defined by schema (and probably
+            //      is not present in the message
+            
+            
+            // Get the operation information
+            ParameterDescription[] pds =operationDesc.getParameterDescriptions();
+            
+            // Create the message 
+            MessageFactory mf = (MessageFactory)FactoryRegistry.getFactory(MessageFactory.class);
+            Message m = mf.create(protocol);
+            
+            // In usage=WRAPPED, there will be a single block in the body.
+            // The signatureArguments represent the child elements of that block
+            // The first step is to convert the signature arguments into list
+            // of parameter values
+            List<PDElement> pdeList = MethodMarshallerUtils.getPDElements(pds, 
+                    signatureArguments, 
+                    true,   // input
+                    true, false); 
+            
+            // Now we want to create a single JAXB element that contains the 
+            // ParameterValues.  We will use the wrapper tool to do this.
+            // Create the inputs to the wrapper tool
+            ArrayList<String> nameList = new ArrayList<String>();
+            Map<String, Object> objectList = new HashMap<String, Object>();
+            List<PDElement> headerPDEList = new ArrayList<PDElement>();
+            
+            Iterator<PDElement> it = pdeList.iterator();
+            while(it.hasNext()){
+                PDElement pde = it.next();
+                String name = pde.getParam().getParameterName();
+                if (!pde.getParam().isHeader()) {
+                    // Normal case:
+                    // The object list contains type rendered objects
+                    Object value = pde.getElementValue();
+                    if (value instanceof JAXBElement) {
+                        value = ((JAXBElement) value).getValue();
+                    }
+                    nameList.add(name);
+                    objectList.put(name, value);
+                } else {
+                    // Header Case:
+                    // Remove the header from the list, it will
+                    // not be placed in the wrapper
+                    it.remove();
+                    headerPDEList.add(pde);
+                }
+            }   
+            
+            // Now create the single JAXB element 
+            Class cls = MethodMarshallerUtils.loadClass(operationDesc.getRequestWrapperClassName());
+            JAXBWrapperTool wrapperTool = new JAXBWrapperToolImpl();
+            Object object  = wrapperTool.wrap(cls, nameList, objectList);
+            
+            // Make sure object can be rendered as an element
+            if (!XMLRootElementUtil.isElementEnabled(cls)) {
+                object = XMLRootElementUtil.getElementEnabledObject(
+                        operationDesc.getRequestWrapperTargetNamespace(), 
+                        operationDesc.getRequestWrapperLocalName(), 
+                        cls, 
+                        object);
+            }
+            
+            // Put the object into the message
+            JAXBBlockFactory factory = 
+                (JAXBBlockFactory)FactoryRegistry.getFactory(JAXBBlockFactory.class);
+            Block block = factory.createFrom(object, 
+                    new JAXBBlockContext(packages), 
+                    null);  // The factory will get the qname from the value
+            m.setBodyBlock(block);
+            
+            // Now place the headers in the message
+            if (headerPDEList.size() > 0) {
+                MethodMarshallerUtils.toMessage(headerPDEList, m, packages, false);
+            }
+            return m;
+        } catch(Exception e) {
+            throw ExceptionFactory.makeWebServiceException(e);
+        }
+    }
+

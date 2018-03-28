@@ -1,0 +1,11 @@
+(startLine=56 endLine=64 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/booleantest/BooleanTest.java)
+         try {
+            OMElement omElement = testBoolean.getOMElement(TestBoolean2.MY_QNAME, OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestBoolean2 result = TestBoolean2.Factory.parse(xmlReader);
+            assertEquals(result.getParam1(),false);
+            assertEquals(result.getAttribute1(),true);
+        } catch (Exception e) {
+

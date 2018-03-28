@@ -1,0 +1,11 @@
+(startLine=157 endLine=165 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/attribute/AttributeTest.java)
+        try {
+            OMElement omElement = testAttributeSimpleType.getOMElement(TestAttributeSimpleType.MY_QNAME,
+                      OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OMString ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestAttributeSimpleType result = TestAttributeSimpleType.Factory.parse(xmlReader);
+            assertEquals(result.getAttribute1().getAttribute1_type0(),"test attribute");
+        } catch (Exception e) {
+

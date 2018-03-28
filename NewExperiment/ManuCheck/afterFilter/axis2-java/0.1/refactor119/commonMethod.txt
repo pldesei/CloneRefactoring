@@ -1,0 +1,15 @@
+(startLine=257 endLine=269 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00938/modules/metadata/test/org/apache/axis2/jaxws/description/AnnotationServiceImplWithDBCTests.java)
+    private String getEchoMessageServiceWSDLLocation() {
+    	String loc = null;
+    	String sep = java.io.File.separator;
+        loc = sep + "test-resources" + sep + "wsdl" + sep + "EchoMessageService.wsdl";
+        try {
+        	String baseDir = new File(System.getProperty("basedir",".")).getCanonicalPath();
+            loc = baseDir + loc;
+        }
+        catch(IOException ioe) {
+        	ioe.printStackTrace();
+        }
+    	return loc;
+    }
+

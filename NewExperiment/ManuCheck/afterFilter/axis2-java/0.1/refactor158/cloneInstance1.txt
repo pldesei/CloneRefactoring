@@ -1,0 +1,24 @@
+(startLine=166 endLine=187 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/innerparticles/InnerParticlesTest.java)
+    public void testInnerParticle41() {
+
+        TestInnerParticle4 testInnerParticle4 = new TestInnerParticle4();
+        testInnerParticle4.setParam1("Param1");
+
+         try {
+             OMElement omElement =
+                      testInnerParticle4.getOMElement(TestInnerParticle4.MY_QNAME, OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestInnerParticle4 result = TestInnerParticle4.Factory.parse(xmlReader);
+            assertEquals(result.getParam1(), "Param1");
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+            fail();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+

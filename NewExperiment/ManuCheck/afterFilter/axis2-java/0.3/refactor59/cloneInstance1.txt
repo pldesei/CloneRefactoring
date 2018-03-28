@@ -1,0 +1,10 @@
+(startLine=34 endLine=41 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00654/modules/json/test/org/apache/axis2/json/JSONDataSourceTest.java)
+    public void testSerialize1() throws XMLStreamException {
+        String jsonString = "{\"p\":{\"name\":{\"kamal\":{\"$\":\"yes\"},\"$\":\"innername\"},\"@pp\":\"value\"}}";
+        InputStream jsonInputStream = new ByteArrayInputStream(jsonString.getBytes());
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        JSONBadgerfishDataSource source = new JSONBadgerfishDataSource(readLocalName(jsonInputStream), "p");
+        source.serialize(outStream, null);
+        assertEquals(jsonString, new String(outStream.toByteArray()));
+    }
+

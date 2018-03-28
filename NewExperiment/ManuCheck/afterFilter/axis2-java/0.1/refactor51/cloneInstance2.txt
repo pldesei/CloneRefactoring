@@ -1,0 +1,24 @@
+(startLine=40 endLine=61 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00633/modules/jaxws/src/org/apache/axis2/jaxws/client/async/PollingFuture.java)
+    public void onComplete(AsyncResult result) {
+        boolean debug = log.isDebugEnabled();
+        if (debug) {
+            log.debug("JAX-WS async response listener received the response");
+        }
+        
+        MessageContext responseMsgCtx = null;
+        try {
+            responseMsgCtx = AsyncUtils.createMessageContext(result);
+        } catch (WebServiceException e) {
+            response.onError(e);
+            if (debug) {
+                log.debug("An error occured while processing the async response.  " + e.getMessage());
+            }
+        }
+        
+        if (response == null) {
+            // TODO: throw an exception
+        }
+        
+        response.onComplete(responseMsgCtx);
+    }
+

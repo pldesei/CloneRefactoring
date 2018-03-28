@@ -1,0 +1,21 @@
+(startLine=95 endLine=113 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01068/modules/clustering/src/org/apache/axis2/clustering/tribes/LoadBalancerInterceptor.java)
+    public void memberDisappeared(Member member) {
+        if (loadBalancerMembership == null) {
+            setupMembership();
+        }
+        boolean notify;
+        synchronized (loadBalancerMembership) {
+            notify = Arrays.equals(loadBalancerDomain, member.getDomain());
+            loadBalancerMembership.removeMember((MemberImpl) member);
+        }
+        if (notify) {
+            super.memberDisappeared(member);
+        }
+
+        // Is this an application domain member?
+        if (Arrays.equals(applicationDomain, member.getDomain())) {
+            log.info("Application member " + TribesUtil.getHost(member) + " left cluster");
+            applicationMembers.remove(member);
+        }
+    }
+

@@ -1,0 +1,49 @@
+(startLine=2371 endLine=2417 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00594/modules/kernel/src/org/apache/axis2/util/ObjectStateUtils.java)
+    /**
+     * Trace the NotSerializable exception for the specified object
+     * if this is the first time that the specified
+     * object has caused the exception.
+     * 
+     * @param obj         The object being saved or restored
+     * @param nse         The exception object with the details of the error
+     * @param objDesc     The description of the object, eg, like the field name where it is being used
+     * @param methodName  The method name which encountered the exception
+     * @param desc        Text to be used for tracing
+     */
+    public static void traceNotSerializable(Object obj, NotSerializableException nse, String objDesc, String methodName, String desc)
+    {
+        if (log.isTraceEnabled() == false)
+        {
+            // if no tracing is being done, there's nothing to do
+            // exit quickly
+            return;
+        }
+
+        if (obj != null)
+        {
+            String objName = obj.getClass().getName();
+
+            if (NotSerializableList.get(objName) == null)
+            {
+                // set up some information about the exception
+                // for now, just use an initial counter, which we aren't doing much with
+                // but takes less space than the original object that caused the exception
+                // future: consider using a trace information object that would
+                //         contain a count of the times that a particular class
+                //         caused the exception, the class name of that class,
+                //         and the stack trace for the first time - this information
+                //         could then be accessed from a utility
+                Integer counter = new Integer(1);
+
+                // add to table
+                NotSerializableList.put(objName,counter);
+
+                // trace point
+                log.trace("ObjectStateUtils: ***NotSerializableException*** ["+nse.getMessage()+"] in method ["+methodName+"] for object ["+objName+"]  associated with ["+objDesc+"].  "+desc);
+                //System.out.println("ObjectStateUtils: ***NotSerializableException*** ["+nse.getMessage()+"] in method ["+methodName+"] for object ["+objName+"]  associated with ["+objDesc+"].  "+desc);
+            }
+
+        }
+        
+    }
+

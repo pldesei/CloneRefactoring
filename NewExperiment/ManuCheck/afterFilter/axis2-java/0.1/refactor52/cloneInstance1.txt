@@ -1,0 +1,16 @@
+(startLine=572 endLine=585 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00643/modules/kernel/src/org/apache/axis2/deployment/DeploymentEngine.java)
+                            } catch (Exception e) {
+                                if (log.isInfoEnabled()) {
+                                    StringWriter sw = new StringWriter();
+                                    PrintWriter pw = new PrintWriter(sw);
+                                    e.printStackTrace(pw);
+                                    log.info(Messages.getMessage(
+                                            DeploymentErrorMsgs.INVALID_SERVICE,
+                                            currentArchiveFile.getName(),
+                                            sw.getBuffer().toString()));
+                                }
+                                PrintWriter error_ptintWriter = new PrintWriter(errorWriter);
+                                e.printStackTrace(error_ptintWriter);
+                                serviceStatus = "Error:\n" + errorWriter.toString();
+                            } catch (Throwable t) {
+

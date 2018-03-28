@@ -1,0 +1,9 @@
+(startLine=249 endLine=255 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01106/modules/jaxws/src/org/apache/axis2/jaxws/context/utils/ContextUtils.java)
+    private static void setProperty(SOAPMessageContext context, String name, Object value, boolean logMessage) {
+        context.put(name, value);
+        context.setScope(name, Scope.APPLICATION);
+        if (logMessage && log.isDebugEnabled()) {
+            log.debug(name + " :" + value);
+        }
+    }
+

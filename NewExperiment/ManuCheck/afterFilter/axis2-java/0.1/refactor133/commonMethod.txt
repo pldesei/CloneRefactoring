@@ -1,0 +1,9 @@
+(startLine=261 endLine=267 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01023/modules/samples/jaxws-samples/src/main/org/apache/axis2/jaxws/samples/client/SampleClient.java)
+    private void destroyConfigurationFactory(ClientConfigurationFactory factory) {
+        try {
+            factory.getClientConfigurationContext().terminate();
+        } catch (AxisFault axisFault) {
+            throw new RuntimeException(axisFault);
+        }
+    }
+

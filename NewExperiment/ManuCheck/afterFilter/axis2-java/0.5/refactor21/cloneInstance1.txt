@@ -1,0 +1,29 @@
+(startLine=80 endLine=106 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/clientapi/Call.java)
+    public OMElement invokeBlocking(String axisop, OMElement toSend) throws AxisFault {
+
+        OperationDescription axisConfig =
+                serviceContext.getServiceConfig().getOperation(
+                        new QName(axisop));
+        if (axisConfig == null) {
+            axisConfig = new OperationDescription(new QName(axisop));
+            axisConfig.setRemainingPhasesInFlow(
+                    operationTemplate.getRemainingPhasesInFlow());
+            axisConfig.setPhasesOutFlow(operationTemplate.getPhasesOutFlow());
+            axisConfig.setPhasesInFaultFlow(
+                    operationTemplate.getPhasesInFaultFlow());
+            axisConfig.setPhasesOutFaultFlow(
+                    operationTemplate.getPhasesOutFaultFlow());
+            serviceContext.getServiceConfig().addOperation(axisConfig);
+        }
+
+//        if (axisConfig == null) {
+//            axisConfig = new OperationDescription(new QName(axisop));
+//            serviceContext.getServiceConfig().addOperation(axisConfig);
+//        }
+        MessageContext msgctx = prepareTheSystem(toSend);
+
+        this.lastResponseMessage = super.invokeBlocking(axisConfig, msgctx);
+        SOAPEnvelope resEnvelope = lastResponseMessage.getEnvelope();
+        return resEnvelope.getBody().getFirstElement();
+    }
+

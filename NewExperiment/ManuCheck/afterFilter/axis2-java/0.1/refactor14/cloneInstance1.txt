@@ -1,0 +1,41 @@
+(startLine=102 endLine=140 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00390/modules/samples/test/org/apache/axis/engine/EchoRawXMLTest.java)
+    public void testEchoXMLASync() throws Exception {
+                OMElement payload = createEnvelope();
+
+        org.apache.axis.clientapi.Call call = new org.apache.axis.clientapi.Call();
+
+        call.setTo(targetEPR);
+        call.setTransportInfo(Constants.TRANSPORT_HTTP, Constants.TRANSPORT_HTTP, false);
+
+        Callback callback = new Callback() {
+            public void onComplete(AsyncResult result) {
+                try {
+                    result.getResponseEnvelope().serializeWithCache(new OMOutput(XMLOutputFactory.newInstance().createXMLStreamWriter(System.out)));
+                } catch (XMLStreamException e) {
+                    reportError(e);
+                } finally {
+                    finish = true;
+                }
+            }
+
+            public void reportError(Exception e) {
+                e.printStackTrace();
+                finish = true;
+            }
+        };
+
+        call.invokeNonBlocking(operationName.getLocalPart(), payload, callback);
+        int index = 0;
+        while (!finish) {
+            Thread.sleep(1000);
+            index++;
+            if(index > 10 ){
+                throw new AxisFault("Server is shutdown as the Async response take too longs time");
+            }
+        }
+        call.close();
+
+
+        log.info("send the reqest");
+    }
+

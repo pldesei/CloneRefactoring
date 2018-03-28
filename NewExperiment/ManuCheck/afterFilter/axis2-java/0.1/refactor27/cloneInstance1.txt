@@ -1,0 +1,25 @@
+(startLine=93 endLine=115 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00551/modules/jaxws/src/org/apache/axis2/jaxws/client/async/AsyncResponse.java)
+    public Object get() throws InterruptedException, ExecutionException {
+        // Wait for the response to come back
+        latch.await();
+        
+        if (hasFault()) {
+            throw new ExecutionException(fault);
+        }
+        if (response == null) {
+            WebServiceException wse = new WebServiceException("null response");
+            throw new ExecutionException(wse);
+        }
+        
+        // TODO: Check the type of the object to make sure it corresponds with
+        // the parameterized generic type.
+        if (responseObj == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Demarshalling the async response message");
+            }
+            responseObj = getResponseValueObject(response);
+        }
+
+        return responseObj;
+    }
+

@@ -1,0 +1,31 @@
+(startLine=90 endLine=118 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00314/modules/core/src/org/apache/axis/phaseresolver/PhaseHolder.java)
+    /**
+     * This method is to build the transport phase , here load the corresponding handlers and added them
+     * in to correct phase
+     * @param phase
+     * @param handlers
+     * @throws PhaseException
+     */
+    public void buildTransportHandlerChain(Phase phase, ArrayList handlers) throws PhaseException {
+        try {
+            Class handlerClass = null;
+            Handler handler;
+            for (int i = 0; i < handlers.size(); i++) {
+                HandlerDescription description = (HandlerDescription) handlers.get(i);
+                handlerClass = Class.forName(description.getClassName(), true,
+                        Thread.currentThread().getContextClassLoader());
+                handler =
+                        (Handler) handlerClass.newInstance();
+                handler.init(description);
+                description.setHandler(handler);
+                phase.addHandler(description.getHandler());
+            }
+        } catch (ClassNotFoundException e) {
+            throw new PhaseException(e);
+        } catch (InstantiationException e) {
+            throw new PhaseException(e);
+        } catch (IllegalAccessException e) {
+            throw new PhaseException(e);
+        }
+    }
+

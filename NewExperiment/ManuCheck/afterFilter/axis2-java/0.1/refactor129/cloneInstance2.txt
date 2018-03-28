@@ -1,0 +1,12 @@
+(startLine=286 endLine=295 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01014/modules/kernel/src/org/apache/axis2/deployment/util/Utils.java)
+                if (libfiles.exists()) {
+                    urls.add(libfiles.toURL());
+                    File jarfiles[] = libfiles.listFiles();
+                    for (int i = 0; i < jarfiles.length; i++) {
+                        File jarfile = jarfiles[i];
+                        if (jarfile.getName().endsWith(".jar")) {
+                            urls.add(jarfile.toURL());
+                        }
+                    }
+                }
+

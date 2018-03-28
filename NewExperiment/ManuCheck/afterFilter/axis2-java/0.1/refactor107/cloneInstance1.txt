@@ -1,0 +1,19 @@
+(startLine=1106 endLine=1122 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00920/modules/adb-codegen/src/org/apache/axis2/schema/SchemaCompiler.java)
+            if (!isAlreadyProcessed(extension.getBaseTypeName())) {
+                //pick the relevant basetype from the schema and process it
+                XmlSchemaType type = getType(parentSchema, extension.getBaseTypeName());
+                if (type instanceof XmlSchemaComplexType) {
+                    XmlSchemaComplexType complexType = (XmlSchemaComplexType) type;
+                    if (complexType.getName() != null) {
+                        processNamedComplexSchemaType(complexType, parentSchema);
+                    } else {
+                        //this is not possible. The extension should always
+                        //have a name
+                        throw new SchemaCompilationException("Unnamed complex type used in extension");//Internationlize this
+                    }
+                } else if (type instanceof XmlSchemaSimpleType) {
+                    //process simple type
+                    processSimpleSchemaType((XmlSchemaSimpleType) type, null, parentSchema, null);
+                }
+            }
+

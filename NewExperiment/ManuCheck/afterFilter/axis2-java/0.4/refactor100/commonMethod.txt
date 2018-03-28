@@ -1,0 +1,44 @@
+(startLine=154 endLine=195 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00839/modules/adb/src/org/apache/axis2/rpc/receivers/RPCUtil.java)
+    public static Object invokeServiceClass(AxisMessage inAxisMessage,
+                                            Method method,
+                                            Object implClass,
+                                            String messageNameSpace,
+                                            OMElement methodElement,
+                                            MessageContext inMessage) throws AxisFault,
+            IllegalAccessException, InvocationTargetException {
+        if (inAxisMessage.getElementQName() == null) {
+            // method accept empty SOAPbody
+            return method.invoke(implClass, new Object[0]);
+        } else {
+            QName elementQName = inAxisMessage.getElementQName();
+            messageNameSpace = elementQName.getNamespaceURI();
+            OMNamespace namespace = methodElement.getNamespace();
+            if (messageNameSpace != null) {
+                if (namespace == null) {
+                    throw new AxisFault("namespace mismatch require " +
+                            messageNameSpace +
+                            " found none");
+                }
+                if (!messageNameSpace.equals(namespace.getNamespaceURI())) {
+                    throw new AxisFault("namespace mismatch require " +
+                            messageNameSpace +
+                            " found " + methodElement.getNamespace().getNamespaceURI());
+                }
+            } else if (namespace != null) {
+                throw new AxisFault(
+                        "namespace mismatch. Axis Oepration expects non-namespace " +
+                                "qualified element. But received a namespace qualified element");
+            }
+            Object[] objectArray;
+            if (inAxisMessage.isWrapped()) {
+                objectArray = RPCUtil.processRequest(methodElement,
+                        method, inMessage.getAxisService().getObjectSupplier());
+            } else {
+                objectArray = RPCUtil.processRequest((OMElement) methodElement.getParent(),
+                        method, inMessage.getAxisService().getObjectSupplier());
+            }
+            return method.invoke(implClass, objectArray);
+
+        }
+    }
+

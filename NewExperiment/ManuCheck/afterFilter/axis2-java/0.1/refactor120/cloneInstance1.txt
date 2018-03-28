@@ -1,0 +1,183 @@
+(startLine=317 endLine=497 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00937/modules/kernel/src/org/apache/axis2/description/java2wsdl/DocLitBareSchemaGenerator.java)
+    private QName generateSchema(JClass javaType) throws Exception {
+        String name = getQualifiedName(javaType);
+        QName schemaTypeName = typeTable.getComplexSchemaType(name);
+        if (schemaTypeName == null) {
+            String simpleName = getSimpleName(javaType);
+
+            String packageName = getQualifiedName(javaType.getContainingPackage());
+            String targetNameSpace = resolveSchemaNamespace(packageName);
+
+            XmlSchema xmlSchema = getXmlSchema(targetNameSpace);
+            String targetNamespacePrefix = (String) targetNamespacePrefixMap.get(targetNameSpace);
+            if (targetNamespacePrefix == null) {
+                targetNamespacePrefix = generatePrefix();
+                targetNamespacePrefixMap.put(targetNameSpace, targetNamespacePrefix);
+            }
+
+            XmlSchemaComplexType complexType = new XmlSchemaComplexType(xmlSchema);
+            XmlSchemaSequence sequence = new XmlSchemaSequence();
+            XmlSchemaComplexContentExtension complexExtension =
+                    new XmlSchemaComplexContentExtension();
+
+            XmlSchemaElement eltOuter = new XmlSchemaElement();
+            schemaTypeName = new QName(targetNameSpace, simpleName, targetNamespacePrefix);
+            eltOuter.setName(simpleName);
+            eltOuter.setQName(schemaTypeName);
+
+            JClass sup = javaType.getSuperclass();
+
+            if ((sup != null) && !("java.lang.Object".compareTo(sup.getQualifiedName()) == 0) &&
+                    !("org.apache.axis2".compareTo(sup.getContainingPackage().getQualifiedName()) == 0)
+                    &&!("java.util".compareTo(sup.getContainingPackage().getQualifiedName()) == 0)) {
+                String superClassName = sup.getQualifiedName();
+                String superclassname = getSimpleName(sup);
+                String tgtNamespace;
+                String tgtNamespacepfx;
+                QName qName = typeTable.getSimpleSchemaTypeName(superClassName);
+                if (qName != null) {
+                    tgtNamespace = qName.getNamespaceURI();
+                    tgtNamespacepfx = qName.getPrefix();
+                } else {
+                    tgtNamespace =
+                            resolveSchemaNamespace(sup.getContainingPackage().getQualifiedName());
+                    tgtNamespacepfx = (String) targetNamespacePrefixMap.get(tgtNamespace);
+                    QName superClassQname = generateSchema(sup);
+                    if(superClassQname!=null){
+                        tgtNamespacepfx = superClassQname.getPrefix();
+                        tgtNamespace = superClassQname.getNamespaceURI();
+                    }
+                }
+
+                if (tgtNamespacepfx == null) {
+                    tgtNamespacepfx = generatePrefix();
+                    targetNamespacePrefixMap.put(tgtNamespace, tgtNamespacepfx);
+                }
+
+                QName basetype = new QName(tgtNamespace, superclassname, tgtNamespacepfx);
+
+
+                complexExtension.setBaseTypeName(basetype);
+                complexExtension.setParticle(sequence);
+
+                XmlSchemaComplexContent contentModel = new XmlSchemaComplexContent();
+
+                contentModel.setContent(complexExtension);
+
+                complexType.setContentModel(contentModel);
+
+            } else {
+                complexType.setParticle(sequence);
+            }
+
+            complexType.setName(simpleName);
+
+//            xmlSchema.getItems().add(eltOuter);
+            xmlSchema.getElements().add(schemaTypeName, eltOuter);
+            eltOuter.setSchemaTypeName(complexType.getQName());
+
+            xmlSchema.getItems().add(complexType);
+            xmlSchema.getSchemaTypes().add(schemaTypeName, complexType);
+
+            // adding this type to the table
+            typeTable.addComplexSchema(name, eltOuter.getQName());
+            // adding this type's package to the table, to support inheritance.
+            typeTable.addComplexSchema(javaType.getContainingPackage().getQualifiedName(),
+                    eltOuter.getQName());
+
+
+            Set propertiesSet = new HashSet();
+            Set propertiesNames = new HashSet();
+
+            ArrayList excludes = null;
+            if (service.getBeanExludeMap() !=null) {
+                excludes = (ArrayList) service.getBeanExludeMap().get(
+                        javaType.getQualifiedName());
+            }
+            JProperty[] tempProperties = javaType.getDeclaredProperties();
+            for (int i = 0; i < tempProperties.length; i++) {
+                JProperty tempProperty = tempProperties[i];
+                if (excludes !=null && excludes.contains("*")){
+                      continue;
+                }
+                if (excludes != null && excludes.contains(
+                        getCorrectName(tempProperty.getSimpleName()))) {
+                    continue;
+                }
+                propertiesSet.add(tempProperties[i]);
+            }
+
+            JProperty[] properties = (JProperty[]) propertiesSet.toArray(new JProperty[0]);
+            Arrays.sort(properties);
+            for (int i = 0; i < properties.length; i++) {
+                JProperty property = properties[i];
+                boolean isArryType = property.getType().isArrayType();
+
+                String propname = getCorrectName(property.getSimpleName());
+
+                propertiesNames.add(propname);
+
+                this.generateSchemaforFieldsandProperties(xmlSchema, sequence, property.getType(),
+                        propname, isArryType);
+
+            }
+
+            JField[] tempFields = javaType.getDeclaredFields();
+            HashMap FieldMap = new HashMap();
+
+
+            for (int i = 0; i < tempFields.length; i++) {
+                // create a element for the field only if it is public
+                // and there is no property with the same name
+                if (tempFields[i].isPublic()) {
+
+                    if (tempFields[i].isStatic()) {
+//                        We do not need to expose static fields
+                        continue;
+                    }
+                    if (excludes != null && excludes.contains("*")) {
+                        continue;
+                    }
+                    if (excludes != null &&
+                            excludes.contains(tempFields[i].getSimpleName())) {
+                        continue;
+                    }
+
+                    // skip field with same name as a property
+                    if (!propertiesNames.contains(tempFields[i].getSimpleName())) {
+
+                        FieldMap.put(tempFields[i].getSimpleName(), tempFields[i]);
+                    }
+                }
+
+            }
+
+            // remove fields from super classes patch for defect Annogen-21
+            // getDeclaredFields is incorrectly returning fields of super classes as well
+            // getDeclaredProperties used earlier works correctly
+            JClass supr = javaType.getSuperclass();
+            while (supr != null && supr.getQualifiedName().compareTo("java.lang.Object") != 0) {
+                JField[] suprFields = supr.getFields();
+                for (int i = 0; i < suprFields.length; i++) {
+                    FieldMap.remove(suprFields[i].getSimpleName());
+                }
+                supr = supr.getSuperclass();
+            }
+            // end patch for Annogen -21
+
+            JField[] froperties = (JField[]) FieldMap.values().toArray(new JField[0]);
+            Arrays.sort(froperties);
+
+            for (int i = 0; i < froperties.length; i++) {
+                JField field = froperties[i];
+                boolean isArryType = field.getType().isArrayType();
+
+                this.generateSchemaforFieldsandProperties(xmlSchema, sequence, field.getType(),
+                        field.getSimpleName(), isArryType);
+            }
+
+
+        }
+        return schemaTypeName;
+    }
+

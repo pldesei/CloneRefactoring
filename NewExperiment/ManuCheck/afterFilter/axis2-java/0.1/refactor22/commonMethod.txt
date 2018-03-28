@@ -1,0 +1,10 @@
+(startLine=201 endLine=208 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00515/modules/integration/test/org/apache/axis2/integration/UtilServer.java)
+    private static File getAddressingMARFile() {
+        File dir = new File(org.apache.axis2.Constants.TESTING_REPOSITORY + "/modules");
+        File[] files = dir.listFiles(new AddressingFilter());
+        TestCase.assertTrue(files.length == 1);
+        File file = files[0];
+        TestCase.assertTrue(file.exists());
+        return file;
+    }
+

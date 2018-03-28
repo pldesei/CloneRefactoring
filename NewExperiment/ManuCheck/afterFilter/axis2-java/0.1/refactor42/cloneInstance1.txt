@@ -1,0 +1,13 @@
+(startLine=1781 endLine=1791 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00624/modules/kernel/src/org/apache/axis2/description/WSDL11ToAxisServiceBuilder.java)
+            } else if (wsdl4jElement instanceof SOAPBinding) {
+                SOAPBinding soapBinding = (SOAPBinding) wsdl4jElement;
+                style = soapBinding.getStyle();
+                String wsdl11SOAPNSURI = soapBinding.getElementType()
+                        .getNamespaceURI();
+                if (org.apache.axis2.namespace.Constants.URI_WSDL11_SOAP.equals(wsdl11SOAPNSURI)) {
+                    axisService.setSoapNsUri(SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+                } else {
+                    axisService.setSoapNsUri(SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+                }
+            } else if (wsdl4jElement instanceof SOAP12Binding) {
+

@@ -1,0 +1,25 @@
+(startLine=265 endLine=287 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01216/modules/transport/http/src/org/apache/axis2/transport/http/ListingAgent.java)
+                        if (effecPolicy != null) {
+                            XMLStreamWriter writer;
+
+                            try {
+                                OutputStream out = res.getOutputStream();
+                                writer = XMLOutputFactory.newInstance()
+                                        .createXMLStreamWriter(out);
+
+                                res.setContentType("application/wspolicy+xml");
+                                effecPolicy.serialize(writer);
+                                writer.flush();
+
+                            } catch (XMLStreamException e) {
+                                throw new ServletException(
+                                        "Error occured when serializing the Policy",
+                                        e);
+
+                            } catch (FactoryConfigurationError e) {
+                                throw new ServletException(
+                                        "Error occured when serializing the Policy",
+                                        e);
+                            }
+                        } else {
+

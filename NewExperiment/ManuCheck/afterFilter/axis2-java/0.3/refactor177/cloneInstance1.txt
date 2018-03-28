@@ -1,0 +1,13 @@
+(startLine=69 endLine=79 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01288/modules/json/src/org/apache/axis2/json/impl/utils/XmlNodeGenerator.java)
+            if (nextEle instanceof XmlSchemaElement) {
+                XmlSchemaElement innerElement = ((XmlSchemaElement) nextEle);   // todo add to xml node
+                XmlSchemaType innerEleType = innerElement.getSchemaType();
+                if (innerEleType == null) {
+                    processSchemaTypeName(innerElement, mainXmlNode);
+                } else if (innerEleType instanceof XmlSchemaComplexType) {
+                    processComplexType(innerElement , mainXmlNode);
+                } else if (innerEleType instanceof XmlSchemaSimpleType) {
+                    processSimpleType(innerElement , mainXmlNode);
+                }
+            }
+

@@ -1,0 +1,24 @@
+(startLine=82 endLine=103 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00633/modules/jaxws/src/org/apache/axis2/jaxws/client/async/CallbackFuture.java)
+    public void onComplete(AsyncResult result) {
+        if (debug) {
+            log.debug("JAX-WS received the async response");
+        }
+        
+        MessageContext response = null;
+        try {
+            response = AsyncUtils.createMessageContext(result);
+        } catch (WebServiceException e) {
+            cft.setError(e);
+            if (debug) {
+                log.debug("An error occured while processing the async response.  " + e.getMessage());
+            }
+        }
+        
+        if (response == null) {
+            // TODO: throw an exception
+        }
+        
+        cft.setMessageContext(response);
+        execute();
+    }
+
