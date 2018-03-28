@@ -1,0 +1,16 @@
+(startLine=1472 endLine=1485 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 82208: [1.5][search][annot] Search for annotations misses references in default and values constructs
+ * @see "https://bugs.eclipse.org/bugs/show_bug.cgi?id=82208"
+ */
+private void setUpBug82208() throws CoreException {
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b82208/Test.java",
+		"package b82208;\n" + 
+		"interface B82208_I {}\n" + 
+		"enum B82208_E {}\n" + 
+		"@interface B82208_A {}\n" + 
+		"public class B82208 {}\n"
+	);
+}
+

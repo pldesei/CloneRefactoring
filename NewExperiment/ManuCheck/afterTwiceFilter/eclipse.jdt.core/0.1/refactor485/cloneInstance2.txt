@@ -1,0 +1,15 @@
+(startLine=9007 endLine=9019 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01192/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompletionTests.java)
+public void testCompletionStaticMethodDeclaration5() throws JavaModelException {
+	CompletionTestsRequestor requestor = new CompletionTestsRequestor();
+	ICompilationUnit cu= getCompilationUnit("Completion", "src", "", "CompletionStaticMethodDeclaration5.java");
+
+	String str = cu.getSource();
+	String completeBehind = "foo";
+	int cursorLocation = str.lastIndexOf(completeBehind) + completeBehind.length();
+	cu.codeComplete(cursorLocation, requestor);
+
+	assertEquals(
+			"element:foo0    completion:public void foo0()    relevance:" + (R_DEFAULT + R_INTERESTING + R_CASE + R_NON_STATIC_OVERIDE+ R_NON_RESTRICTED),
+			requestor.getResults());
+}
+

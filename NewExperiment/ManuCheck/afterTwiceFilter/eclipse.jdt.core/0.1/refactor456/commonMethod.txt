@@ -1,0 +1,8 @@
+(startLine=1394 endLine=1399 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01109/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+	protected void discardWorkingCopies(ICompilationUnit[] units) throws JavaModelException {
+		if (units == null) return;
+		for (int i = 0, length = units.length; i < length; i++)
+			if (units[i] != null)
+				units[i].discardWorkingCopy();
+	}
+

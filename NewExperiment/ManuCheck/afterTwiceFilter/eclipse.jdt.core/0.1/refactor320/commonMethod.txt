@@ -1,0 +1,16 @@
+(startLine=493 endLine=506 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00661/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTParser.java)
+    /**
+     * Sets the working copy owner using when resolving bindings, where
+     * <code>null</code> means the primary owner. Defaults to the primary owner.
+     *
+	 * @param owner the owner of working copies that take precedence over underlying 
+	 *   compilation units, or <code>null</code> if the primary owner should be used
+     */
+	public void setWorkingCopyOwner(WorkingCopyOwner owner) {
+	    if (owner == null) {
+			this.workingCopyOwner = DefaultWorkingCopyOwner.PRIMARY;
+		} else {
+			this.workingCopyOwner = owner;
+	 	}
+	}
+

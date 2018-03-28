@@ -1,0 +1,15 @@
+(startLine=62 endLine=74 srcPath=/home/sonia/NewExperiment/luceneFilter/00900/solr/src/solrj/org/apache/solr/client/solrj/response/FieldAnalysisResponse.java)
+  private Analysis buildAnalysis(NamedList<NamedList<List<NamedList<Object>>>> value) {
+      Analysis analysis = new Analysis();
+      
+      NamedList<List<NamedList<Object>>> queryNL = value.get("query");
+      List<AnalysisPhase> phases = (queryNL == null) ? null : buildPhases(queryNL);
+      analysis.setQueryPhases(phases);
+
+      NamedList<List<NamedList<Object>>> indexNL = value.get("index");
+      phases = buildPhases(indexNL);
+      analysis.setIndexPhases(phases);
+      
+      return analysis;
+  }
+

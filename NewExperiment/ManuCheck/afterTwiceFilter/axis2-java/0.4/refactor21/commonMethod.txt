@@ -1,0 +1,26 @@
+(startLine=116 endLine=139 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00423/modules/core/src/org/apache/axis2/clientapi/Call.java)
+    /**
+     * This method create a operation desc if it null and copy the flows from the template operation
+     * @param opDesc
+     * @param axisOp
+     * @return
+     */
+    private OperationDescription createOpDescAndFillInFlowInformation(
+        OperationDescription opDesc,
+        String axisOp) {
+        if (opDesc == null) {
+            //if the operation is not alrady define we will copy the 
+            //crated Phases from the templete operation to the this Operation
+            opDesc = new OperationDescription(new QName(axisOp));
+            opDesc.setRemainingPhasesInFlow(
+                operationTemplate.getRemainingPhasesInFlow());
+            opDesc.setPhasesOutFlow(operationTemplate.getPhasesOutFlow());
+            opDesc.setPhasesInFaultFlow(
+                operationTemplate.getPhasesInFaultFlow());
+            opDesc.setPhasesOutFaultFlow(
+                operationTemplate.getPhasesOutFaultFlow());
+            serviceContext.getServiceConfig().addOperation(opDesc);
+        }
+        return opDesc;
+    }
+

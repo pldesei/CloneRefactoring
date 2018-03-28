@@ -1,0 +1,9 @@
+(startLine=3050 endLine=3056 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00749/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+/**
+ * Resize the pool contents
+ */
+private final void resizePoolContents(int minimalSize) {
+	final int length = poolContent.length;
+	System.arraycopy(poolContent, 0, (poolContent = new byte[length + Math.max(minimalSize, CONSTANTPOOL_GROW_SIZE)]), 0, length);
+}
+

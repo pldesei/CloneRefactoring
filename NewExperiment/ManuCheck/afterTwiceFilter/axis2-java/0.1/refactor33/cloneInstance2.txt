@@ -1,0 +1,21 @@
+(startLine=134 endLine=152 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00609/modules/kernel/src/org/apache/axis2/transport/http/HTTPWorker.java)
+            if (uri.endsWith("?wsdl")) {
+                String serviceName = uri.substring(uri.lastIndexOf("/") + 1, uri.length() - 5);
+                HashMap services = configurationContext.getAxisConfiguration().getServices();
+                final AxisService service = (AxisService) services.get(serviceName);
+                if (service != null) {
+                    final String ip = HttpUtils.getIpAddress();
+                    EntityTemplate entity = new EntityTemplate(new ContentProducer() {
+
+                        public void writeTo(final OutputStream outstream) throws IOException {
+                            service.printWSDL(outstream, ip, servicePath);
+                        }
+
+                    });
+                    entity.setContentType("text/xml");
+                    entity.setChunked(chunked);
+                    response.setEntity(entity);
+                    return;
+                }
+            }
+

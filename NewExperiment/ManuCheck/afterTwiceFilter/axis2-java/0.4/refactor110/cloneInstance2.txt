@@ -1,0 +1,9 @@
+(startLine=1085 endLine=1091 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00923/modules/metadata/src/org/apache/axis2/jaxws/description/impl/ServiceDescriptionImpl.java)
+            && !(implPDCList != null && !implPDCList.isEmpty())) {
+            String message = "Validation error: SEI indicates parameters " + seiPDCList
+                + " but implementation method specifies no parameters; Implementation class: "
+                + composite.getClassName() + "; Method name: " + seiMDC.getMethodName()
+                + "; Endpoint Interface: " + className;
+            throw ExceptionFactory.makeWebServiceException(message);
+        } else if (seiPDCList.size() != implPDCList.size()) {
+

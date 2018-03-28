@@ -1,0 +1,22 @@
+(startLine=53 endLine=72 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00938/modules/kernel/src/org/apache/axis2/deployment/util/BeanExcludeInfo.java)
+    /**
+     * a property is excluded if it ths given in the exclude list
+     * but not in include list
+     * @param property
+     * @return is exclude the property or not
+     */
+    public boolean isExcluedProperty(String property){
+       boolean isExclude = false;
+       if ((excludeProperties != null) && (excludeProperties.trim().length() > 0)){
+           if (property.matches(excludeProperties)){
+               isExclude = true;
+               if ((includeProperties != null) && (includeProperties.trim().length() > 0)){
+                   if (property.matches(includeProperties)){
+                       isExclude = false;
+                   }
+               }
+           }
+       }
+       return isExclude;
+    }
+

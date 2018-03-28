@@ -1,0 +1,16 @@
+(startLine=154 endLine=167 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00289/source/org/jfree/chart/entity/CategoryItemEntity.java)
+            CategoryDataset dataset, Comparable rowKey, Comparable columnKey) {
+        super(area, toolTipText, urlText);
+        if (dataset == null) {
+            throw new IllegalArgumentException("Null 'dataset' argument.");
+        }
+        this.dataset = dataset;
+        this.rowKey = rowKey;
+        this.columnKey = columnKey;
+
+        // populate the deprecated fields
+        this.series = dataset.getRowIndex(rowKey);
+        this.category = columnKey;
+        this.categoryIndex = dataset.getColumnIndex(columnKey);
+    }
+

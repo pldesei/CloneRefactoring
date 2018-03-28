@@ -1,0 +1,11 @@
+(startLine=769 endLine=777 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00748/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+		for (int i = 0; i < 8; i++) {
+			try {
+				poolContent[currentOffset++] = (byte) (temp >>> (56 - (i << 3)));
+			} catch (IndexOutOfBoundsException e) { //currentOffset has been ++ already (see the -1)
+				int length = poolContent.length;
+				System.arraycopy(poolContent, 0, (poolContent = new byte[(length << 1) + CONSTANTPOOL_INITIAL_SIZE]), 0, length);
+				poolContent[currentOffset - 1] = (byte) (temp >>> (56 - (i << 3)));
+			}
+		}
+

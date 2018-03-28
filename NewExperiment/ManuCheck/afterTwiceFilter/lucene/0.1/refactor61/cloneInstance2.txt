@@ -1,0 +1,42 @@
+(startLine=221 endLine=260 srcPath=/home/sonia/NewExperiment/luceneFilter/00914/lucene/src/test/org/apache/lucene/search/payloads/TestPayloadTermQuery.java)
+  public void testIgnoreSpanScorer() throws Exception {
+    PayloadTermQuery query = new PayloadTermQuery(new Term(PayloadHelper.MULTI_FIELD, "seventy"),
+            new MaxPayloadFunction(), false);
+
+    IndexSearcher theSearcher = new IndexSearcher(directory, true);
+    theSearcher.setSimilarity(new FullSimilarity());
+    TopDocs hits = searcher.search(query, null, 100);
+    assertTrue("hits is null and it shouldn't be", hits != null);
+    assertTrue("hits Size: " + hits.totalHits + " is not: " + 100, hits.totalHits == 100);
+
+    //they should all have the exact same score, because they all contain seventy once, and we set
+    //all the other similarity factors to be 1
+
+    //System.out.println("Hash: " + seventyHash + " Twice Hash: " + 2*seventyHash);
+    assertTrue(hits.getMaxScore() + " does not equal: " + 4.0, hits.getMaxScore() == 4.0);
+    //there should be exactly 10 items that score a 4, all the rest should score a 2
+    //The 10 items are: 70 + i*100 where i in [0-9]
+    int numTens = 0;
+    for (int i = 0; i < hits.scoreDocs.length; i++) {
+      ScoreDoc doc = hits.scoreDocs[i];
+      if (doc.doc % 10 == 0) {
+        numTens++;
+        assertTrue(doc.score + " does not equal: " + 4.0, doc.score == 4.0);
+      } else {
+        assertTrue(doc.score + " does not equal: " + 2, doc.score == 2);
+      }
+    }
+    assertTrue(numTens + " does not equal: " + 10, numTens == 10);
+    CheckHits.checkExplanations(query, "field", searcher, true);
+    Spans spans = query.getSpans(searcher.getIndexReader());
+    assertTrue("spans is null and it shouldn't be", spans != null);
+    assertTrue("spans is not an instanceof " + TermSpans.class, spans instanceof TermSpans);
+    //should be two matches per document
+    int count = 0;
+    //100 hits times 2 matches per hit, we should have 200 in count
+    while (spans.next()) {
+      count++;
+    }
+    theSearcher.close();
+  }
+

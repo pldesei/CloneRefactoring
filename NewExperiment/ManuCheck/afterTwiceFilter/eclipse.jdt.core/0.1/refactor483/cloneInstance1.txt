@@ -1,0 +1,19 @@
+(startLine=374 endLine=390 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01175/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+public int literalIndex(char[] stringCharArray, byte[] utf8encoding) {
+	int index;
+	int stringIndex;
+	if ((index = stringCache.get(stringCharArray)) < 0) {
+		// The entry doesn't exit yet
+		stringIndex = literalIndex(utf8encoding, stringCharArray);
+		index = stringCache.put(stringCharArray, currentIndex++);
+		if (index > 0xFFFF){
+			this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+		}
+		// Write the tag first
+		writeU1(StringTag);
+		// Then the string index
+		writeU2(stringIndex);
+	}
+	return index;
+}
+

@@ -1,0 +1,8 @@
+(startLine=858 endLine=863 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00923/modules/metadata/src/org/apache/axis2/jaxws/description/impl/ServiceDescriptionImpl.java)
+            if (composite.getSoapBindingAnnot() != null) {
+                if (composite.getSoapBindingAnnot().use() == javax.jws.soap.SOAPBinding.Use.ENCODED) {
+                    throw ExceptionFactory.makeWebServiceException("Validation error: Unsupported SOAPBinding annotation value. The ENCODED setting is not supported for SOAPBinding.Use. Implementation class: " 
+                                +composite.getClassName());  
+                }
+            }
+

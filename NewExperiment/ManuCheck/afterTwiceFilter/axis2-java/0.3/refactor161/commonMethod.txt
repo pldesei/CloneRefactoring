@@ -1,0 +1,17 @@
+(startLine=192 endLine=206 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01144/modules/adb-codegen/test/org/apache/axis2/schema/AbstractTestCase.java)
+    /**
+     * Assert that serializing the given bean should result in an {@link ADBException}.
+     * 
+     * @param bean the bean to serialize
+     * @throws Exception
+     */
+    public static void assertSerializationFailure(ADBBean bean) throws Exception {
+        try {
+            OMElement omElement = bean.getOMElement(getADBBeanQName(bean.getClass()), OMAbstractFactory.getOMFactory());
+            omElement.toStringWithConsume();
+            fail("Expected ADBException");
+        } catch (ADBException ex) {
+            // OK: expected
+        }
+    }
+

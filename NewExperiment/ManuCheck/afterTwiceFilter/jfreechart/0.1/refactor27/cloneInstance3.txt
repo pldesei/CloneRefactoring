@@ -1,0 +1,16 @@
+(startLine=815 endLine=828 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00288/source/org/jfree/data/general/DatasetUtilities.java)
+                                        boolean includeInterval) {
+        if (dataset == null) {
+            throw new IllegalArgumentException("Null 'dataset' argument.");
+        }
+        Range result = null;
+        if (dataset instanceof RangeInfo) {
+            RangeInfo info = (RangeInfo) dataset;
+            result = info.getRangeBounds(includeInterval);
+        }
+        else {
+            result = iterateRangeBounds(dataset, includeInterval);
+        }
+        return result;
+    }
+

@@ -1,0 +1,14 @@
+(startLine=168 endLine=179 srcPath=/home/sonia/NewExperiment/luceneFilter/00241/src/java/org/apache/lucene/index/IndexFileDeleter.java)
+  public final void deleteFile(String file)
+       throws IOException {
+    try {
+      directory.deleteFile(file);          // try to delete each file
+    } catch (IOException e) {              // if delete fails
+      if (directory.fileExists(file)) {
+        if (infoStream != null)
+          infoStream.println("IndexFileDeleter: unable to remove file \"" + file + "\": " + e.toString() + "; Will re-try later.");
+        addDeletableFile(file);                  // add to deletable
+      }
+    }
+  }
+

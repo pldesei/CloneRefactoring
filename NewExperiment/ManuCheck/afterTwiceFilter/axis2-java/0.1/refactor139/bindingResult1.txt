@@ -1,0 +1,75 @@
+ProjectPath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069
+predFragLineRange:72-93
+predMethodLineRange:72-93
+nextLineRange:78-111
+predStrMethodInvoNames:
+[setupMembership, equals, getDomain, memberAlive, equals, getDomain, info, getHost, add]
+%%%%%%%%%%
+AddedMethodInvo Line:96 InvoName:TribesUtil.getName(member)
+PackageName:org.apache.axis2.clustering.tribes
+QualifiedClassName:org.apache.axis2.clustering.tribes.TribesUtil
+ClassName:TribesUtil
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/clustering/src/org/apache/axis2/clustering/tribes/TribesUtil.java
+InvokedMethodSig:public static java.lang.String getName(Member) 
+%%%%%%%%%%
+AddedMethodInvo Line:100 InvoName:member.getPort()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:getProperties(member.getPayload())
+PackageName:org.apache.axis2.clustering.tribes
+QualifiedClassName:org.apache.axis2.clustering.tribes.LoadBalancerInterceptor
+ClassName:LoadBalancerInterceptor
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/clustering/src/org/apache/axis2/clustering/tribes/LoadBalancerInterceptor.java
+InvokedMethodSig:private java.util.Properties getProperties(byte[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:member.getPayload()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:102 InvoName:Integer.parseInt(props.getProperty("HTTP"))
+PackageName:java.lang
+QualifiedClassName:java.lang.Integer
+ClassName:Integer
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/java/lang/Integer.java
+InvokedMethodSig:public static int parseInt(java.lang.String) throws java.lang.NumberFormatException
+%%%%%%%%%%
+AddedMethodInvo Line:102 InvoName:props.getProperty("HTTP")
+PackageName:java.util
+QualifiedClassName:java.util.Properties
+ClassName:Properties
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/java/util/Properties.java
+InvokedMethodSig:public java.lang.String getProperty(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:103 InvoName:Integer.parseInt(props.getProperty("HTTPS"))
+PackageName:java.lang
+QualifiedClassName:java.lang.Integer
+ClassName:Integer
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/java/lang/Integer.java
+InvokedMethodSig:public static int parseInt(java.lang.String) throws java.lang.NumberFormatException
+%%%%%%%%%%
+AddedMethodInvo Line:103 InvoName:props.getProperty("HTTPS")
+PackageName:java.util
+QualifiedClassName:java.util.Properties
+ClassName:Properties
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/java/util/Properties.java
+InvokedMethodSig:public java.lang.String getProperty(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:104 InvoName:axis2Member.setHttpPort(httpPort)
+PackageName:org.apache.axis2.clustering
+QualifiedClassName:org.apache.axis2.clustering.Member
+ClassName:Member
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/org/apache/axis2/clustering/Member.java
+InvokedMethodSig:public void setHttpPort(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:105 InvoName:axis2Member.setHttpsPort(httpsPort)
+PackageName:org.apache.axis2.clustering
+QualifiedClassName:org.apache.axis2.clustering.Member
+ClassName:Member
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/org/apache/axis2/clustering/Member.java
+InvokedMethodSig:public void setHttpsPort(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:106 InvoName:eventHandler.applicationMemberAdded(axis2Member)
+PackageName:org.apache.axis2.clustering
+QualifiedClassName:org.apache.axis2.clustering.LoadBalanceEventHandler
+ClassName:LoadBalanceEventHandler
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/01069/modules/samples/jaxws-calculator/src/org/apache/axis2/clustering/LoadBalanceEventHandler.java
+InvokedMethodSig:public abstract void applicationMemberAdded(org.apache.axis2.clustering.Member) 

@@ -1,0 +1,13 @@
+(startLine=541 endLine=551 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00590/modules/kernel/src/org/apache/axis2/description/AxisService.java)
+    /**
+     * Maps an action (aka WSA action) to the given operation. This is used by
+     * addressing based dispatching to figure out which operation it is that a
+     * given message is for.
+     *
+     * @param action        the action key
+     * @param axisOperation the operation to map to
+     */
+    public void mapActionToOperation(String action, AxisOperation axisOperation) {
+        operationsAliasesMap.put(action, axisOperation);
+    }
+

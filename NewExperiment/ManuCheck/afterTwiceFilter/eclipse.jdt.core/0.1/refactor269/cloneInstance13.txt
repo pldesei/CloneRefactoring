@@ -1,0 +1,15 @@
+(startLine=453 endLine=465 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00464/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/impl/CompilerOptions.java)
+			if(optionID.equals(OPTION_ReportFieldHiding)){
+				if (optionValue.equals(ERROR)) {
+					this.errorThreshold |= FieldHiding;
+					this.warningThreshold &= ~FieldHiding;
+				} else if (optionValue.equals(WARNING)) {
+					this.errorThreshold &= ~FieldHiding;
+					this.warningThreshold |= FieldHiding;
+				} else if (optionValue.equals(IGNORE)) {
+					this.errorThreshold &= ~FieldHiding;
+					this.warningThreshold &= ~FieldHiding;
+				}
+				continue;
+			}
+

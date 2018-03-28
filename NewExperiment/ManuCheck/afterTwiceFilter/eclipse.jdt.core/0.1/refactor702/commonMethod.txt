@@ -1,0 +1,11 @@
+(startLine=168 endLine=176 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01704/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/StackMapFrameCodeStream.java)
+public void addFramePosition(int pc) {
+	Integer newEntry = new Integer(pc);
+	FramePosition value;
+	if ((value = (FramePosition) this.framePositions.get(newEntry)) != null) {
+		value.counter++;
+	} else {
+		this.framePositions.put(newEntry, new FramePosition());
+	}
+}
+

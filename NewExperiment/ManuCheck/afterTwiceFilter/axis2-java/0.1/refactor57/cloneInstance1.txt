@@ -1,0 +1,22 @@
+(startLine=412 endLine=431 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00646/modules/jaxws/src/org/apache/axis2/jaxws/marshaller/impl/alt/DocLitWrappedPlusMethodMarshaller.java)
+            while(it.hasNext()) {
+                PDElement pde = it.next();
+                String name = pde.getParam().getParameterName();
+                if (!pde.getParam().isHeader()) {
+                    // Normal case
+                    // The object list contains type rendered objects
+                    Object value = pde.getElementValue();
+                    if (value instanceof JAXBElement) {
+                        value = ((JAXBElement) value).getValue();
+                    }  
+                    nameList.add(name);
+                    objectList.put(name, value);
+                } else {
+                    // Header Case:
+                    // Remove the header from the list, it will
+                    // not be placed in the wrapper
+                    it.remove();
+                    headerPDEList.add(pde);
+                }
+            }
+

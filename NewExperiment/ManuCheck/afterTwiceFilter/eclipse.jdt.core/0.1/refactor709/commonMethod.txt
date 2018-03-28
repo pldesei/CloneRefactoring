@@ -1,0 +1,20 @@
+(startLine=728 endLine=745 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01790/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/LookupEnvironment.java)
+public MissingTypeBinding createMissingType(PackageBinding packageBinding, char[][] compoundName) {
+	// create a proxy for the missing BinaryType
+	if (packageBinding == null) {
+		packageBinding = computePackageFrom(compoundName, true /* missing */);
+		if (packageBinding == TheNotFoundPackage) packageBinding = this.defaultPackage;
+	}
+	MissingTypeBinding missingType = new MissingTypeBinding(packageBinding, compoundName, this);
+	if (missingType.id != TypeIds.T_JavaLangObject) {
+		// make Object be its superclass - it could in turn be missing as well
+		ReferenceBinding objectType = getType(TypeConstants.JAVA_LANG_OBJECT);
+		if (objectType == null) {
+			objectType = createMissingType(null, TypeConstants.JAVA_LANG_OBJECT);	// create a proxy for the missing Object type		
+		}
+		missingType.setMissingSuperclass(objectType);
+	}
+	packageBinding.addType(missingType);
+	return missingType;	
+}
+

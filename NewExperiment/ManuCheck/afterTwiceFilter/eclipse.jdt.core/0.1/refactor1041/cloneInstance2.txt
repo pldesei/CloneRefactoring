@@ -1,0 +1,20 @@
+(startLine=938 endLine=955 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02552/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/MessageSend.java)
+public boolean isCompatibleWith(TypeBinding targetType, final Scope scope) {
+	if (this.argumentsHaveErrors || this.binding == null || !this.binding.isValidBinding() || targetType == null || scope == null)
+		return false;
+	TypeBinding originalExpectedType = this.expectedType;
+	try {
+		this.expectedType = targetType;
+		// No need to tunnel through overload resolution. this.binding is the MSMB.
+		MethodBinding method = isPolyExpression() ? ParameterizedGenericMethodBinding.computeCompatibleMethod18(this.binding.shallowOriginal(), this.argumentTypes, scope, this) : this.binding;
+		TypeBinding returnType;
+		if (method == null || !method.isValidBinding() || (returnType = method.returnType) == null || !returnType.isValidBinding())
+			return false;
+		if (method == scope.environment().arrayClone)
+			returnType = this.actualReceiverType;
+		return returnType != null && returnType.capture(scope, this.sourceEnd).isCompatibleWith(targetType, scope);
+	} finally {
+		this.expectedType = originalExpectedType;
+	}
+}
+

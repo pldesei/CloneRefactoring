@@ -1,0 +1,13 @@
+(startLine=1513 endLine=1523 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTMatcherTest.java)
+	public void testTypeAnnotations5() {	
+		if (this.ast.apiLevel() < AST.JLS8) {
+			return;
+		}
+		// constructor invocation results
+		ClassInstanceCreation x1 = this.ast.newClassInstanceCreation();
+		SimpleType x2 = this.ast.newSimpleType(this.N1);
+		x2.annotations().add(this.ANO1);
+		x1.setType(x2);
+		basicMatch(x1);
+	}
+

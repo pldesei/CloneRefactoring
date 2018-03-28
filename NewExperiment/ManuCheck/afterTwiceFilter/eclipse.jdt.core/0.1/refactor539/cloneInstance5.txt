@@ -1,0 +1,17 @@
+(startLine=621 endLine=635 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01389/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/BinaryTypeBinding.java)
+public MethodBinding getExactConstructor(TypeBinding[] argumentTypes) {
+	int argCount = argumentTypes.length;
+	nextMethod : for (int m = methods.length; --m >= 0;) {
+		MethodBinding method = methods[m];
+		if (method.selector == TypeConstants.INIT && method.parameters.length == argCount) {
+			resolveTypesFor(method);
+			TypeBinding[] toMatch = method.parameters;
+			for (int p = 0; p < argCount; p++)
+				if (toMatch[p] != argumentTypes[p])
+					continue nextMethod;
+			return method;
+		}
+	}
+	return null;
+}
+

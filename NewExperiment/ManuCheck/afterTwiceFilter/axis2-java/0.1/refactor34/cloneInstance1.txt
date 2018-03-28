@@ -1,0 +1,15 @@
+(startLine=250 endLine=262 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00616/modules/kernel/src/org/apache/axis2/client/Options.java)
+    public TransportListener getListener() {
+        if (needsToBeReconciled) {
+            if (log.isWarnEnabled()) {
+                log.warn(myClassName+":getListener(): ****WARNING**** Options.activate(configurationContext) needs to be invoked.");
+            }
+            //System.out.println(myClassName+":getListener(): ****WARNING**** Options.activate(configurationContext) needs to be invoked.");
+        }
+
+        if (listener == null && parent != null) {
+            return parent.getListener();
+        }
+        return listener;
+    }
+

@@ -1,0 +1,17 @@
+(startLine=74 endLine=88 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00771/modules/kernel/src/org/apache/axis2/deployment/RepositoryListener.java)
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                if (isSourceControlDir(file)) {
+                    continue;
+                }
+                if (!file.isDirectory()) {
+                    if (DeploymentFileData.isModuleArchiveFile(file.getName())) {
+                        wsInfoList.addWSInfoItem(file, TYPE_MODULE);
+                    }
+                } else {
+                    if (!"lib".equalsIgnoreCase(file.getName())) {
+                        wsInfoList.addWSInfoItem(file, TYPE_MODULE);
+                    }
+                }
+            }
+

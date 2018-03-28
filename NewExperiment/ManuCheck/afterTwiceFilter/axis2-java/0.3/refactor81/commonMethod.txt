@@ -1,0 +1,26 @@
+(startLine=172 endLine=195 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00794/modules/integration/test/org/apache/axis2/integration/LocalTestCase.java)
+    /**
+     * Get a pre-initialized ServiceClient set up to talk to our local
+     * server.  If you want to set options, call this and then use getOptions()
+     * on the return. Clients created using this method have their To EPR
+     * preset to include the address for the service+operation.
+     *
+     * @return a ServiceClient, pre-initialized to talk using our local sender
+     * @throws AxisFault if there's a problem
+     */
+    protected ServiceClient getClient(String serviceName, String operationName) throws AxisFault {
+        TransportOutDescription td = new TransportOutDescription("local");
+        td.setSender(sender);
+
+        Options opts = new Options();
+        opts.setTransportOut(td);
+        
+        String url = LocalTransportReceiver.CONFIG_CONTEXT.getServiceContextPath()+"/"+serviceName;
+
+        opts.setTo(new EndpointReference(url));
+        opts.setAction(operationName);
+        ServiceClient client = new ServiceClient(clientCtx, null);
+        client.setOptions(opts);
+        return client;
+    }
+

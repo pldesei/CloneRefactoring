@@ -1,0 +1,13 @@
+(startLine=9169 endLine=9179 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02382/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+private String shortAnnotatedTypeName(TypeBinding type, char[][] annotationName) {
+	int dims = 0;
+	if (type instanceof ArrayBinding && ((ArrayBinding)type).nullTagBitsPerDimension != null) {
+		// if type has annotations on dimensions show the annotation on the outer most dimension:
+		dims = type.dimensions();
+		type = type.leafComponentType();
+	}
+	char[] typeName = type.shortReadableName();
+	char[] annotationDisplayName = annotationName[annotationName.length-1];
+	return internalAnnotatedTypeName(annotationDisplayName, typeName, dims);
+}
+

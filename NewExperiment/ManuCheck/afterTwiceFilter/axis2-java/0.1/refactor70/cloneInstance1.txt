@@ -1,0 +1,70 @@
+(startLine=223 endLine=290 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00764/modules/jaxws/src/org/apache/axis2/jaxws/client/dispatch/BaseDispatch.java)
+    public Future<?> invokeAsync(Object obj, AsyncHandler asynchandler) throws WebServiceException {
+
+        // All exceptions are caught and rethrown as a WebServiceException
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Entered asynchronous (callback) invocation: BaseDispatch.invokeAsync()");
+            }
+
+            // Create the InvocationContext instance for this request/response flow.
+            InvocationContext invocationContext =
+                    InvocationContextFactory.createInvocationContext(null);
+            invocationContext.setServiceClient(serviceClient);
+
+            // Create the MessageContext to hold the actual request message and its
+            // associated properties
+            MessageContext requestMsgCtx = new MessageContext();
+            requestMsgCtx.setEndpointDescription(getEndpointDescription());
+            invocationContext.setRequestMessageContext(requestMsgCtx);
+
+            Message requestMsg = null;
+            if (isValidInvocationParam(obj)) {
+                requestMsg = createMessageFromValue(obj);
+            } else {
+                throw ExceptionFactory.makeWebServiceException("dispatchInvalidParam");
+            }
+
+            setupMessageProperties(requestMsg);
+            requestMsgCtx.setMessage(requestMsg);
+
+            // Migrate the properties from the client request context bag to
+            // the request MessageContext.
+            ApplicationContextMigratorUtil.performMigrationToMessageContext(
+                    Constants.APPLICATION_CONTEXT_MIGRATOR_LIST_ID,
+                    getRequestContext(), requestMsgCtx);
+
+            // Setup the Executor that will be used to drive async responses back to 
+            // the client.
+            // FIXME: We shouldn't be getting this from the ServiceDelegate, rather each 
+            // Dispatch object should have it's own.
+            Executor e = serviceDelegate.getExecutor();
+            invocationContext.setExecutor(e);
+
+            // Create the AsyncListener that is to be used by the InvocationController.
+            AsyncResponse listener = createAsyncResponseListener();
+            invocationContext.setAsyncResponseListener(listener);
+
+            // Send the request using the InvocationController
+            Future<?> asyncResponse = ic.invokeAsync(invocationContext, asynchandler);
+
+            //Check to see if we need to maintain session state
+            if (requestMsgCtx.isMaintainSession()) {
+                //TODO: Need to figure out a cleaner way to make this call. 
+                setupSessionContext(
+                        invocationContext.getServiceClient().getServiceContext().getProperties());
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Asynchronous (callback) invocation sent: BaseDispatch.invokeAsync()");
+            }
+
+            return asyncResponse;
+        } catch (WebServiceException e) {
+            throw e;
+        } catch (Exception e) {
+            // All exceptions are caught and rethrown as a WebServiceException
+            throw ExceptionFactory.makeWebServiceException(e);
+        }
+    }
+

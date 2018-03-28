@@ -1,0 +1,18 @@
+(startLine=747 endLine=762 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02167/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/PublicScanner.java)
+private final void consumeDigits(int radix, boolean expectingDigitFirst) throws InvalidInputException {
+	final int USING_UNDERSCORE = 1;
+	final int INVALID_POSITION = 2;
+	switch(consumeDigits0(radix, USING_UNDERSCORE, INVALID_POSITION, expectingDigitFirst)) {
+		case USING_UNDERSCORE :
+			if (this.sourceLevel < ClassFileConstants.JDK1_7) {
+				throw new InvalidInputException(UNDERSCORES_IN_LITERALS_NOT_BELOW_17);
+			}
+			break;
+		case INVALID_POSITION :
+			if (this.sourceLevel < ClassFileConstants.JDK1_7) {
+				throw new InvalidInputException(UNDERSCORES_IN_LITERALS_NOT_BELOW_17);
+			}
+			throw new InvalidInputException(INVALID_UNDERSCORE);
+	}
+}
+

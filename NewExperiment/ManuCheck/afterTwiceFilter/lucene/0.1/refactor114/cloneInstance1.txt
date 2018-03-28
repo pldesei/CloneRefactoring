@@ -1,0 +1,12 @@
+(startLine=278 endLine=287 srcPath=/home/sonia/NewExperiment/luceneFilter/01810/solr/core/src/test/org/apache/solr/cloud/ChaosMonkeyShardSplitTest.java)
+    for (i = 0; i < 10; i++) {
+      ZkStateReader zkStateReader = cloudClient.getZkStateReader();
+      zkStateReader.updateClusterState(true);
+      clusterState = zkStateReader.getClusterState();
+      slice1_0 = clusterState.getSlice(AbstractDistribZkTestBase.DEFAULT_COLLECTION, "shard1_0");
+      slice1_1 = clusterState.getSlice(AbstractDistribZkTestBase.DEFAULT_COLLECTION, "shard1_1");
+      if (Slice.ACTIVE.equals(slice1_0.getState()) && Slice.ACTIVE.equals(slice1_1.getState()))
+        break;
+      Thread.sleep(500);
+    }
+

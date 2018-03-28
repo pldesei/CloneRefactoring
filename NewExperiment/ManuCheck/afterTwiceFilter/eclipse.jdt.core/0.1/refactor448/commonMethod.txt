@@ -1,0 +1,21 @@
+(startLine=198 endLine=216 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01046/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ParameterizedType.java)
+	/**
+	 * Sets the type of this parameterized type.
+	 * 
+	 * @param type the new type of this parameterized type
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * </ul>
+	 */ 
+	public void setType(Type type) {
+		if (type == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.type;
+		preReplaceChild(oldChild, type, TYPE_PROPERTY);
+		this.type = type;
+		postReplaceChild(oldChild, type, TYPE_PROPERTY);
+	}
+

@@ -1,0 +1,27 @@
+(startLine=144 endLine=168 srcPath=/home/sonia/NewExperiment/luceneFilter/02045/solr/test-framework/src/java/org/apache/solr/util/RestTestHarness.java)
+  public String post(String request, String content) throws IOException {
+    URL url = new URL(getBaseURL() + request);
+    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+    out.write(content);
+    out.close();
+    InputStream inputStream = null;
+    StringWriter stringWriter;
+    try {
+      try {
+        inputStream = connection.getInputStream();
+      } catch (IOException e) {
+        inputStream = connection.getErrorStream();
+      }
+      stringWriter = new StringWriter();
+      IOUtils.copy(new InputStreamReader(inputStream, "UTF-8"), stringWriter);
+    } finally {
+      IOUtils.closeQuietly(inputStream);
+    }
+    return stringWriter.toString();
+  }
+

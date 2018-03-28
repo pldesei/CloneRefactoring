@@ -1,0 +1,11 @@
+(startLine=75 endLine=83 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01193/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelCompletionTests.java)
+protected void assertResults(String expected, String actual) {
+	try {
+		assertEquals(expected, actual);
+	} catch(ComparisonFailure c) {
+		System.out.println(actual);
+		System.out.println();
+		throw c;
+	}
+}
+

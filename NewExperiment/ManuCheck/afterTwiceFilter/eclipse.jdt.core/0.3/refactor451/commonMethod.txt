@@ -1,0 +1,28 @@
+(startLine=1797 endLine=1822 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01075/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MatchLocator.java)
+/**
+ * Report matching in annotations.
+ */
+protected void reportMatching(Annotation[] annotations, IJavaElement enclosingElement, Binding elementBinding, MatchingNodeSet nodeSet, boolean matchedContainer, boolean enclosesElement) throws CoreException {
+	for (int i=0, al=annotations.length; i<al; i++) {
+		Annotation annotationType = annotations[i];
+
+		// Look for annotation type ref
+		TypeReference typeRef = annotationType.type;
+		Integer level = (Integer) nodeSet.matchingNodes.removeKey(typeRef);
+		if (level != null && matchedContainer) {
+			this.patternLocator.matchReportReference(typeRef, enclosingElement, elementBinding, level.intValue(), this);
+		}
+		
+		// Look for attribute ref
+		MemberValuePair[] pairs = annotationType.memberValuePairs();
+		for (int j = 0, pl = pairs.length; j < pl; j++) {
+			MemberValuePair pair = pairs[j];
+			level = (Integer) nodeSet.matchingNodes.removeKey(pair);
+			if (level != null && enclosesElement) {
+				ASTNode reference = (annotationType instanceof SingleMemberAnnotation) ? (ASTNode) annotationType: pair;
+				this.patternLocator.matchReportReference(reference, enclosingElement, pair.binding, level.intValue(), this);
+			}
+		}
+	}
+}
+

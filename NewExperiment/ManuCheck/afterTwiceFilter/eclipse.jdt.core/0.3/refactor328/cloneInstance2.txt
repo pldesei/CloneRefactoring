@@ -1,0 +1,12 @@
+(startLine=791 endLine=800 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00704/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/SearchTests.java)
+public void testSearchPatternCreation28() {
+	IImportDeclaration importDecl = getCompilationUnit("/P/x/y/z/Foo.java").getImport("x.y.*");
+	ISearchPattern searchPattern = SearchEngine.createSearchPattern(
+			importDecl, 
+			IJavaSearchConstants.DECLARATIONS);
+	
+	assertPattern(
+		"PackageDeclarationPattern: <x.y>, exact match, case sensitive",
+		searchPattern);
+}
+

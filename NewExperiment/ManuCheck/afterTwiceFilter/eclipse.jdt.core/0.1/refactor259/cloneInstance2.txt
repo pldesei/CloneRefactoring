@@ -1,0 +1,22 @@
+(startLine=2742 endLine=2761 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+		int[] jump_offsets) {
+
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.TABLESWITCH])
+			.append("default:") //$NON-NLS-1$
+			.append(defaultoffset + pc);
+		writeNewLine();
+		for (int i = low; i < high + 1; i++) {
+			writeExtraTabs(1);
+			buffer
+				.append("case") //$NON-NLS-1$
+				.append(i)
+				.append(":") //$NON-NLS-1$
+				.append(jump_offsets[i - low] + pc);
+			writeNewLine();
+		}
+	}
+

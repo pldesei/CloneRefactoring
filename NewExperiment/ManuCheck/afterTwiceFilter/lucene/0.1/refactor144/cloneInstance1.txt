@@ -1,0 +1,146 @@
+(startLine=1413 endLine=1556 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  private void getDocListNC(QueryResult qr,QueryCommand cmd) throws IOException {
+    final long timeAllowed = cmd.getTimeAllowed();
+    int len = cmd.getSupersetMaxDoc();
+    int last = len;
+    if (last < 0 || last > maxDoc()) last=maxDoc();
+    final int lastDocRequested = last;
+    int nDocsReturned;
+    int totalHits;
+    float maxScore;
+    int[] ids;
+    float[] scores;
+
+    boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+    boolean terminateEarly = (cmd.getFlags() & TERMINATE_EARLY) == TERMINATE_EARLY;
+    
+    Query query = QueryUtils.makeQueryable(cmd.getQuery());
+
+    ProcessedFilter pf = getProcessedFilter(cmd.getFilter(), cmd.getFilterList());
+    final Filter luceneFilter = pf.filter;
+
+    // handle zero case...
+    if (lastDocRequested<=0) {
+      final float[] topscore = new float[] { Float.NEGATIVE_INFINITY };
+      final int[] numHits = new int[1];
+
+      Collector collector;
+
+      if (!needScores) {
+        collector = new Collector () {
+          @Override
+          public void setScorer(Scorer scorer) {
+          }
+          @Override
+          public void collect(int doc) {
+            numHits[0]++;
+          }
+          @Override
+          public void setNextReader(AtomicReaderContext context) {
+          }
+          @Override
+          public boolean acceptsDocsOutOfOrder() {
+            return true;
+          }
+        };
+      } else {
+        collector = new Collector() {
+          Scorer scorer;
+          @Override
+          public void setScorer(Scorer scorer) {
+            this.scorer = scorer;
+          }
+          @Override
+          public void collect(int doc) throws IOException {
+            numHits[0]++;
+            float score = scorer.score();
+            if (score > topscore[0]) topscore[0]=score;            
+          }
+          @Override
+          public void setNextReader(AtomicReaderContext context) {
+          }
+          @Override
+          public boolean acceptsDocsOutOfOrder() {
+            return true;
+          }
+        };
+      }
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      nDocsReturned=0;
+      ids = new int[nDocsReturned];
+      scores = new float[nDocsReturned];
+      totalHits = numHits[0];
+      maxScore = totalHits>0 ? topscore[0] : 0.0f;
+    } else {
+      TopDocsCollector topCollector;
+      if (cmd.getSort() == null) {
+        if(cmd.getScoreDoc() != null) {
+          topCollector = TopScoreDocCollector.create(len, cmd.getScoreDoc(), true); //create the Collector with InOrderPagingCollector
+        } else {
+          topCollector = TopScoreDocCollector.create(len, true);
+        }
+
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+      Collector collector = topCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      totalHits = topCollector.getTotalHits();
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+    int sliceLen = Math.min(lastDocRequested,nDocsReturned);
+    if (sliceLen < 0) sliceLen=0;
+    qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));
+  }
+

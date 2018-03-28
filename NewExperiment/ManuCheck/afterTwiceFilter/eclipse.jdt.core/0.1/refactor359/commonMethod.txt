@@ -1,0 +1,10 @@
+(startLine=3549 endLine=3556 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void typeMismatchError(TypeBinding actualType, TypeBinding expectedType, ASTNode location) {
+	this.handle(
+		IProblem.TypeMismatch,
+		new String[] {new String(actualType.readableName()), new String(expectedType.readableName())},
+		new String[] {new String(actualType.shortReadableName()), new String(expectedType.shortReadableName())},
+		location.sourceStart,
+		location.sourceEnd);
+}
+

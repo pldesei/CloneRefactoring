@@ -1,0 +1,17 @@
+(startLine=285 endLine=299 srcPath=/home/sonia/NewExperiment/luceneFilter/00347/src/java/org/apache/lucene/index/TermVectorsReader.java)
+  final private String[] readFields(int fieldCount) throws IOException {
+    int number = 0;
+    String[] fields = new String[fieldCount];
+
+    for (int i = 0; i < fieldCount; i++) {
+      if (format >= FORMAT_VERSION)
+        number = tvd.readVInt();
+      else
+        number += tvd.readVInt();
+
+      fields[i] = fieldInfos.fieldName(number);
+    }
+
+    return fields;
+  }
+

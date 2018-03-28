@@ -1,0 +1,11 @@
+(startLine=77 endLine=85 srcPath=/home/sonia/NewExperiment/luceneFilter/02116/lucene/codecs/src/java/org/apache/lucene/codecs/simpletext/SimpleTextUtil.java)
+  public static void writeChecksum(IndexOutput out, BytesRef scratch) throws IOException {
+    // Pad with zeros so different checksum values use the
+    // same number of bytes
+    // (BaseIndexFileFormatTestCase.testMergeStability cares):
+    String checksum = String.format(Locale.ROOT, "%020d", out.getChecksum());
+    SimpleTextUtil.write(out, CHECKSUM);
+    SimpleTextUtil.write(out, checksum, scratch);
+    SimpleTextUtil.writeNewline(out);
+  }
+

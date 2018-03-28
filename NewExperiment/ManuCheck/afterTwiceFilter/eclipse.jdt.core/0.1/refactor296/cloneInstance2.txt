@@ -1,0 +1,35 @@
+(startLine=173 endLine=205 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00588/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/ClassFileReaderTest.java)
+	public void test003() {
+		try {
+			String sourceA003 =
+				"public class A003 {\n" +
+				"\n" +
+				"	public int bar() {\n" +
+				"		return 0;\n" +
+				"	}\n" +
+				"	\n" +
+				"	public void foo() {\n" +
+				"		System.out.println(bar());\n" +
+				"	}\n" +
+				"}";
+			compileAndDeploy(sourceA003, "A003");
+			IClassFileReader classFileReader = ToolFactory.createDefaultClassFileReader(EVAL_DIRECTORY + File.separator + "A003.class", IClassFileReader.ALL);
+			IMethodInfo[] methodInfos = classFileReader.getMethodInfos();
+			assertEquals("wrong size", 3, methodInfos.length);
+			IMethodInfo methodInfo = methodInfos[2];
+			assertEquals("wrong name", "foo", new String(methodInfo.getName()));
+			ICodeAttribute codeAttribute = methodInfo.getCodeAttribute();
+			assertNotNull("No code attribute", codeAttribute);
+			ILineNumberAttribute lineNumberAttribute = codeAttribute.getLineNumberAttribute();
+			assertNotNull("No code line number attribute", lineNumberAttribute);
+			int[][] lineNumberTable = lineNumberAttribute.getLineNumberTable();
+			assertEquals("wrong size", 2, lineNumberTable.length);
+			assertEquals("wrong pc[0]", 0, lineNumberTable[0][0]);
+			assertEquals("wrong line[0]", 8, lineNumberTable[0][1]);
+			assertEquals("wrong pc[1]", 10, lineNumberTable[1][0]);
+			assertEquals("wrong line[1]", 9, lineNumberTable[1][1]);
+		} finally {
+			removeTempClass("A003");
+		}
+	}
+

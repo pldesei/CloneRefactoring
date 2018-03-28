@@ -1,0 +1,63 @@
+(startLine=1249 endLine=1309 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00593/modules/kernel/src/org/apache/axis2/util/ObjectStateUtils.java)
+        {
+            // active flag
+            out.writeBoolean(ACTIVE_OBJECT);
+
+            int listSize = objlist.size();
+            int savedListSize = 0;
+
+            // expected list size
+            out.writeInt(listSize);
+
+            // setup an iterator for the list
+            Iterator i = objlist.iterator();
+
+            while (i.hasNext())
+            {
+                Object obj = i.next();
+                String tmpClassName = obj.getClass().getName();
+
+                try
+                {
+                    out.writeObject(obj);
+                    savedListSize++;
+
+                    // trace point
+                    if (log.isTraceEnabled())
+                    {
+                        log.trace("ObjectStateUtils:writeLinkedList(): "+desc+" ["+obj.getClass().getName()+"]");
+                    }
+                    //System.out.println("ObjectStateUtils:writeLinkedList(): "+desc+" ["+obj.getClass().getName()+"]");
+
+                }
+                catch (Exception ex)
+                {
+                    // use this as a generic point for all exceptions
+
+                    // trace point
+                    log.warn("ObjectStateUtils:writeLinkedList(): "+desc+" ["+obj.getClass().getName()+"]  ***Exception***  ["+ex.getClass().getName()+" : "+ex.getMessage()+"] "+OBJ_SAVE_PROBLEM);
+                    //System.out.println("ObjectStateUtils:writeLinkedList(): "+desc+" ["+obj.getClass().getName()+"]  ***Exception***  ["+ex.getClass().getName()+" : "+ex.getMessage()+"]");
+
+                    if (log.isTraceEnabled())
+                    {
+                        // informational
+                        log.trace("ObjectStateUtils:writeLinkedList(): "+desc+" ["+obj.getClass().getName()+"]  "+OBJ_SAVE_PROBLEM,ex);
+                        //ex.printStackTrace();
+                    }
+                }
+            }
+
+            // put the end-of-marker in the stream
+            out.writeObject(LAST_ENTRY);
+            savedListSize++;
+
+            out.writeInt(savedListSize);
+
+            // trace point
+            if (log.isTraceEnabled())
+            {
+                log.trace("ObjectStateUtils:writeLinkedList(): List ["+desc+"]   members saved ["+savedListSize+"]");
+            }
+            //System.out.println("ObjectStateUtils:writeLinkedList(): List ["+desc+"]   members saved ["+savedListSize+"]");
+        }
+

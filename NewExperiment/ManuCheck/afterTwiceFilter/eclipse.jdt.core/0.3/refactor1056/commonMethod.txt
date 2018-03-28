@@ -1,0 +1,11 @@
+(startLine=1141 endLine=1149 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02630/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+public void bytecodeExceeds64KLimit(MethodBinding method, int start, int end) {
+	this.handle(
+		IProblem.BytecodeExceeds64KLimit,
+		new String[] {new String(method.selector), typesAsString(method, false)},
+		new String[] {new String(method.selector), typesAsString(method, true)},
+		ProblemSeverities.Error | ProblemSeverities.Abort | ProblemSeverities.Fatal,
+		start,
+		end);
+}
+

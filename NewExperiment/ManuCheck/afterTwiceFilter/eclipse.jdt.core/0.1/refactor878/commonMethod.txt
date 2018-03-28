@@ -1,0 +1,8 @@
+(startLine=603 endLine=608 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01932/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+	protected void assertElementExists(String message, String expected, IJavaElement element) {
+		assertElementEquals(message, expected, element);
+		if (element != null && !element.exists()) {
+			fail(((JavaElement) element).toStringWithAncestors(false/*don't show key*/) + " doesn't exist");
+		}
+	}
+

@@ -1,0 +1,69 @@
+(startLine=778 endLine=844 srcPath=/home/sonia/NewExperiment/luceneFilter/01995/solr/core/src/test/org/apache/solr/analytics/facet/FieldFacetTest.java)
+  public void minTest() throws Exception { 
+    //Int Date
+    String intDateFacet = getFacetXML(response, "minn","fieldFacets", "date_dtd"); 
+    Collection<Integer> intDate = (ArrayList<Integer>)xmlToList(intDateFacet, "int", "int");
+    ArrayList<Integer> intDateTest = (ArrayList<Integer>)calculateStat(intDateTestStart, "min");
+    assertEquals(intDate,intDateTest);
+    //Int String
+    String intStringFacet = getFacetXML(response, "minn","fieldFacets", "string_sd");    
+    Collection<Integer> intString = (ArrayList<Integer>)xmlToList(intStringFacet, "int", "int");
+    ArrayList<Integer> intStringTest = (ArrayList<Integer>)calculateStat(intStringTestStart, "min");
+    assertEquals(intString,intStringTest);
+
+    //Long Date
+    String longDateFacet = getFacetXML(response, "minn","fieldFacets", "date_dtd");    
+    Collection<Long> longDate = (ArrayList<Long>)xmlToList(longDateFacet, "long", "long");
+    ArrayList<Long> longDateTest = (ArrayList<Long>)calculateStat(longDateTestStart, "min");
+    assertEquals(longDate,longDateTest);
+    //Long String
+    String longStringFacet = getFacetXML(response, "minn","fieldFacets", "string_sd");    
+    Collection<Long> longString = (ArrayList<Long>)xmlToList(longStringFacet, "long", "long");
+    ArrayList<Long> longStringTest = (ArrayList<Long>)calculateStat(longStringTestStart, "min");
+    assertEquals(longString,longStringTest);
+
+    //Float Date
+    String floatDateFacet = getFacetXML(response, "minn","fieldFacets", "date_dtd");    
+    Collection<Float> floatDate = (ArrayList<Float>)xmlToList(floatDateFacet, "float", "float");
+    ArrayList<Float> floatDateTest = (ArrayList<Float>)calculateStat(floatDateTestStart, "min");
+    assertEquals(floatDate,floatDateTest);
+    //Float String
+    String floatStringFacet = getFacetXML(response, "minn","fieldFacets", "string_sd");       
+    Collection<Float> floatString = (ArrayList<Float>)xmlToList(floatStringFacet, "float", "float");
+    ArrayList<Float> floatStringTest = (ArrayList<Float>)calculateStat(floatStringTestStart, "min");
+    assertEquals(floatString,floatStringTest);
+
+    //Double Date
+    String doubleDateFacet = getFacetXML(response, "minn","fieldFacets", "date_dtd");    
+    Collection<Double> doubleDate = (ArrayList<Double>)xmlToList(doubleDateFacet, "double", "double");
+    ArrayList<Double> doubleDateTest = (ArrayList<Double>)calculateStat(doubleDateTestStart, "min");
+    assertEquals(doubleDate,doubleDateTest);
+    //Double String
+    String doubleStringFacet = getFacetXML(response, "minn","fieldFacets", "string_sd");      
+    Collection<Double> doubleString = (ArrayList<Double>)xmlToList(doubleStringFacet, "double", "double");
+    ArrayList<Double> doubleStringTest = (ArrayList<Double>)calculateStat(doubleStringTestStart, "min");
+    assertEquals(doubleString,doubleStringTest);
+
+    //Date Int
+    String dateIntFacet = getFacetXML(response, "min","fieldFacets", "int_id"); 
+    Collection<String> dateInt = (ArrayList<String>)xmlToList(dateIntFacet, "date", "date");
+    ArrayList<String> dateIntTest = (ArrayList<String>)calculateStat(dateIntTestStart, "min");
+    assertEquals(dateInt,dateIntTest);
+    //Date Long
+    String dateStringFacet = getFacetXML(response, "min","fieldFacets", "long_ld");       
+    Collection<String> dateString = (ArrayList<String>)xmlToList(dateStringFacet, "date", "date");
+    ArrayList<String> dateLongTest = (ArrayList<String>)calculateStat(dateLongTestStart, "min");
+    assertEquals(dateString,dateLongTest);
+
+    //String Int
+    String stringIntFacet = getFacetXML(response, "min","fieldFacets", "int_id");   
+    Collection<String> stringInt = (ArrayList<String>)xmlToList(stringIntFacet, "str", "str");
+    ArrayList<String> stringIntTest = (ArrayList<String>)calculateStat(stringIntTestStart, "min");
+    assertEquals(stringInt,stringIntTest);
+    //String Long
+    String stringLongFacet = getFacetXML(response, "min","fieldFacets", "long_ld");     
+    Collection<String> stringLong = (ArrayList<String>)xmlToList(stringLongFacet, "str", "str");
+    ArrayList<String> stringLongTest = (ArrayList<String>)calculateStat(stringLongTestStart, "min");
+    assertEquals(stringLong,stringLongTest);
+  }
+

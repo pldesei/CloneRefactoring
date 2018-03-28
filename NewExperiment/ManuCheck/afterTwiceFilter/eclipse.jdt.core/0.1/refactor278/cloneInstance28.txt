@@ -1,0 +1,16 @@
+(startLine=809 endLine=822 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveMemberTypeDeclaration2() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveMemberTypeDeclaration2.java");
+	
+	String str = cu.getSource();
+	String selectAt = "MemberOfMember";
+	String selection = "MemberOfMember";
+	int start = str.indexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one type", elements.length == 1 && 
+		elements[0].getElementName().equals("MemberOfMember") &&
+		elements[0] instanceof IType);	
+}
+

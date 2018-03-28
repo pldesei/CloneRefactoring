@@ -1,0 +1,27 @@
+(startLine=808 endLine=832 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01371/modules/jaxws-integration/src/test/java/org/apache/axis2/jaxws/sample/AddNumbersHandlerTests.java)
+        try{
+            TestLogger.logger.debug("----------------------------------");
+            TestLogger.logger.debug("test: " + getName());
+            
+            AddNumbersHandlerService service = new AddNumbersHandlerService();
+            AddNumbersHandlerPortType proxy = service.getAddNumbersHandlerPort();
+            
+            BindingProvider p = (BindingProvider)proxy;
+            
+            p.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, 
+                    axisEndpoint);
+
+            List<Handler> handlers = p.getBinding().getHandlerChain();
+            if (handlers == null)
+                handlers = new ArrayList<Handler>();
+            handlers.add(new AddNumbersClientLogicalHandler4());
+            handlers.add(new AddNumbersClientLogicalHandler3());
+            handlers.add(new AddNumbersClientLogicalHandler());
+            
+            p.getBinding().setHandlerChain(handlers);
+
+            int total = proxy.addNumbersHandler(99,10);
+            
+            fail("Should have got an exception, but we didn't.");
+        } catch(Exception e) {
+

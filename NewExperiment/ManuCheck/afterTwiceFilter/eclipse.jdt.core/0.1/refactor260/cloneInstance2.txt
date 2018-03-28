@@ -1,0 +1,14 @@
+(startLine=322 endLine=333 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _checkcast(int pc, int index, IConstantPoolEntry constantClass) {
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.CHECKCAST])
+			.append(Util.bind("disassembler.constantpoolindex")) //$NON-NLS-1$
+			.append(index)
+			.append(Util.bind("disassembler.space")) //$NON-NLS-1$
+			.append(returnConstantClassName(constantClass));
+		writeNewLine();
+	}
+

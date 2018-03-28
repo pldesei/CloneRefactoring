@@ -1,0 +1,19 @@
+(startLine=920 endLine=936 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02552/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/MessageSend.java)
+public boolean isBoxingCompatibleWith(TypeBinding targetType, Scope scope) {
+	if (this.argumentsHaveErrors || this.binding == null || !this.binding.isValidBinding() || targetType == null || scope == null)
+		return false;
+	if (isPolyExpression() && !targetType.isPrimitiveOrBoxedPrimitiveType()) // i.e it is dumb to trigger inference, checking boxing compatibility against say Collector<? super T, A, R>.
+		return false;
+	TypeBinding originalExpectedType = this.expectedType;
+	try {
+		this.expectedType = targetType;
+		// No need to tunnel through overload resolution. this.binding is the MSMB.
+		MethodBinding method = isPolyExpression() ? ParameterizedGenericMethodBinding.computeCompatibleMethod18(this.binding.shallowOriginal(), this.argumentTypes, scope, this) : this.binding;
+		if (method == null || !method.isValidBinding() || method.returnType == null || !method.returnType.isValidBinding())
+			return false;
+		return super.isBoxingCompatible(method.returnType.capture(scope, this.sourceEnd), targetType, this, scope);
+	} finally {
+		this.expectedType = originalExpectedType;
+	}
+}
+

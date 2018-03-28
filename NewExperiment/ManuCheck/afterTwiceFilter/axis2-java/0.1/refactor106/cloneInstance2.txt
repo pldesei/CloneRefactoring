@@ -1,0 +1,28 @@
+(startLine=256 endLine=281 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00915/modules/kernel/src/org/apache/axis2/context/externalize/SafeObjectInputStream.java)
+            try {
+                if (isObjectForm) {
+                    if (isDebug) {
+                        log.debug(" reading using object form");
+                    }
+                    // Read the value directly
+                    value = in.readObject();
+                } else {
+                    if (isDebug) {
+                        log.debug(" reading using byte form");
+                    }
+                    // Get the byte stream
+                    ByteArrayInputStream bais = getByteStream(in);
+
+                    // Now get the real key and value
+                    ObjectInputStream tempOIS = createObjectInputStream(bais);
+                    value = tempOIS.readObject();
+                    tempOIS.close();
+                    bais.close();
+                }
+                // Put the key and value in the map
+                if (isDebug) {
+                    log.debug("Read value="+value);
+                }
+                list.add(value);
+            } catch (IOException e) {
+

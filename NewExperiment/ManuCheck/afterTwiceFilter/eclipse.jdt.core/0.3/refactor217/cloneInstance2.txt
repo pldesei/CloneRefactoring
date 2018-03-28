@@ -1,0 +1,41 @@
+(startLine=218 endLine=256 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00198/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		int modifiers) {
+
+		char[] fullyQualifiedName = CharOperation.concat(packageName, interfaceName, '.');
+		char[] completionName = fullyQualifiedName;
+
+		if (this.knownTypes.containsKey(completionName)) return;
+
+		this.knownTypes.put(completionName, this);
+
+		int relevance = DEFAULTRELEVANCE;
+		if (resolvingImports) {
+			completionName = CharOperation.concat(completionName, new char[] { ';' });
+			if(CharOperation.prefixEquals(token, fullyQualifiedName, true)){
+				relevance += CASEMATCHRELEVANCE;
+			}
+		} else {
+			if (!insideQualifiedReference) {
+				if (mustQualifyType(packageName, interfaceName)) {
+					if (packageName == null || packageName.length == 0)
+						if (unitScope != null && unitScope.fPackage.compoundName != NoCharChar)
+							return; // ignore types from the default package from outside it
+				} else {
+					completionName = interfaceName;
+				}
+			}
+			if(CharOperation.prefixEquals(token, interfaceName, true)){
+				relevance += CASEMATCHRELEVANCE;
+			}
+		}
+		
+		requestor.acceptInterface(
+			packageName,
+			interfaceName,
+			completionName,
+			modifiers,
+			startPosition - offset,
+			endPosition - offset,
+			relevance);
+	}
+

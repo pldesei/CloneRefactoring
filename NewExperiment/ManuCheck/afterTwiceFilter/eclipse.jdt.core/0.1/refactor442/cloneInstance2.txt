@@ -1,0 +1,55 @@
+(startLine=3908 endLine=3960 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01030/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+		if (this.unitScope != null) {
+			int typeLength = qualifiedName.length;
+			SourceTypeBinding[] types = this.unitScope.topLevelTypes;
+
+			for (int i = 0, length = types.length; i < length; i++) {
+				SourceTypeBinding sourceType = types[i]; 
+	
+				char[] qualifiedSourceTypeName = CharOperation.concatWith(sourceType.compoundName, '.');
+				
+				if (sourceType.sourceName == CompletionParser.FAKE_TYPE_NAME) continue;
+				if (sourceType.sourceName == TypeConstants.PACKAGE_INFO_NAME) continue;
+				if (typeLength > qualifiedSourceTypeName.length) continue;
+				if (!(packageBinding == sourceType.getPackage())) continue;
+				if (!CharOperation.prefixEquals(qualifiedName, qualifiedSourceTypeName, false))	continue;
+				
+				boolean hasRestrictedAccess = sourceType.hasRestrictedAccess();
+				if(this.options.checkRestrictions && hasRestrictedAccess) continue;
+				
+				this.knownTypes.put(CharOperation.concat(sourceType.qualifiedPackageName(), sourceType.sourceName(), '.'), this);
+
+				int relevance = computeBaseRelevance();
+				relevance += computeRelevanceForInterestingProposal();
+				relevance += computeRelevanceForCaseMatching(qualifiedName, qualifiedSourceTypeName);
+				relevance += computeRelevanceForExpectingType(sourceType);
+				relevance += computeRelevanceForQualification(false);
+				relevance += computeRelevanceForRestrictions(hasRestrictedAccess);
+				
+				if (sourceType.isAnnotationType()) {
+					relevance += computeRelevanceForAnnotation();
+				} else if (sourceType.isInterface()) {
+					relevance += computeRelevanceForInterface();
+				} else {
+					relevance += computeRelevanceForClass();
+					relevance += computeRelevanceForException(sourceType.sourceName);
+				}
+				this.noProposal = false;
+				if(!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+					CompletionProposal proposal = this.createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
+					proposal.setDeclarationSignature(sourceType.qualifiedPackageName());
+					proposal.setSignature(getSignature(sourceType));
+					proposal.setPackageName(sourceType.qualifiedPackageName());
+					proposal.setTypeName(sourceType.sourceName());
+					proposal.setCompletion(sourceType.sourceName());
+					proposal.setFlags(sourceType.modifiers);
+					proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+					proposal.setRelevance(relevance);
+					this.requestor.accept(proposal);
+					if(DEBUG) {
+						this.printDebug(proposal);
+					}
+				}
+			}
+		}
+

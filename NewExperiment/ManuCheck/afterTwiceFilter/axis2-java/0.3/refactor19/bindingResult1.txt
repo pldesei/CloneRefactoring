@@ -1,0 +1,41 @@
+ProjectPath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422
+predFragLineRange:73-137
+predMethodLineRange:70-137
+nextLineRange:69-153
+predStrMethodInvoNames:
+[getTransportIn, getAxisConfiguration, getTransportOut, getAxisConfiguration, setServerSide, setProperty, getContentType, getMailHeader, setWSAAction, setSoapAction, getSubject, getAddress, getReplyTo, setReplyTo, getAddress, getAllRecipients, setTo, toString, getContent, println, getBytes, createXMLStreamReader, newInstance, setEnvelope, getDocumentElement, receive, printStackTrace, error]
+%%%%%%%%%%
+AddedMethodInvo Line:121 InvoName:envelope.getBody().hasFault()
+PackageName:org.apache.axis2.soap
+QualifiedClassName:org.apache.axis2.soap.SOAPBody
+ClassName:SOAPBody
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/soap/SOAPBody.java
+InvokedMethodSig:public abstract boolean hasFault() 
+%%%%%%%%%%
+AddedMethodInvo Line:121 InvoName:envelope.getBody()
+PackageName:org.apache.axis2.soap
+QualifiedClassName:org.apache.axis2.soap.SOAPEnvelope
+ClassName:SOAPEnvelope
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/soap/SOAPEnvelope.java
+InvokedMethodSig:public abstract org.apache.axis2.soap.SOAPBody getBody() throws org.apache.axis2.om.OMException
+%%%%%%%%%%
+AddedMethodInvo Line:122 InvoName:engine.receiveFault(msgContext)
+PackageName:org.apache.axis2.engine
+QualifiedClassName:org.apache.axis2.engine.AxisEngine
+ClassName:AxisEngine
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/engine/AxisEngine.java
+InvokedMethodSig:public void receiveFault(org.apache.axis2.context.MessageContext) throws org.apache.axis2.engine.AxisFault
+%%%%%%%%%%
+AddedMethodInvo Line:134 InvoName:engine.createFaultMessageContext(msgContext,e)
+PackageName:org.apache.axis2.engine
+QualifiedClassName:org.apache.axis2.engine.AxisEngine
+ClassName:AxisEngine
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/engine/AxisEngine.java
+InvokedMethodSig:public org.apache.axis2.context.MessageContext createFaultMessageContext(org.apache.axis2.context.MessageContext, java.lang.Throwable) throws org.apache.axis2.engine.AxisFault
+%%%%%%%%%%
+AddedMethodInvo Line:135 InvoName:engine.sendFault(faultContext)
+PackageName:org.apache.axis2.engine
+QualifiedClassName:org.apache.axis2.engine.AxisEngine
+ClassName:AxisEngine
+InvokedFilePath:/home/newdisk/pc/NewExperiment/axis2-javaFilter/00422/modules/core/src/org/apache/axis2/engine/AxisEngine.java
+InvokedMethodSig:public void sendFault(org.apache.axis2.context.MessageContext) throws org.apache.axis2.engine.AxisFault

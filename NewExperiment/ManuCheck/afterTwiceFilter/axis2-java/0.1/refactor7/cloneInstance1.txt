@@ -1,0 +1,13 @@
+(startLine=70 endLine=80 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00189/modules/core/src/java/org/apache/axis/phaseresolver/PhaseMetadata.java)
+    public void setPhaseFirst(HandlerMetadata phaseFirst) throws PhaseException {
+        if (phasefirstset) {
+            throw new PhaseException("PhaseFirst alredy has been set, cannot have two phaseFirst Hander for same phase " + this.name);
+        } else {
+            if (getBefoerAfter(phaseFirst) != ANYWHERE) {
+                throw new PhaseException("Hander with PhaseFirst can not have any before or after proprty error in " + phaseFirst.getName());
+            } else
+                this.phaseFirst = phaseFirst;
+            phasefirstset = true;
+        }
+    }
+

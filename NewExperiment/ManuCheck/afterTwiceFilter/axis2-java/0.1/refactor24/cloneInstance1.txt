@@ -1,0 +1,21 @@
+(startLine=326 endLine=344 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00528/modules/kernel/src/org/apache/axis2/description/WSDL20ToAxisServiceBuilder.java)
+                    messageReference.getMessageLabel().IN)) {
+                // Its an input message
+
+                if (isServerSide) {
+                    AxisMessage inMessage = axisOperation
+                            .getMessage(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+
+                    inMessage.setElementQName(messageReference.getElementName());
+                    inMessage.setName(messageReference.getElementName().getLocalPart());
+                    // TODO copy policy elements
+                } else {
+                    AxisMessage inMessage = axisOperation
+                            .getMessage(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+
+                    inMessage.setElementQName(messageReference.getElementName());
+                    inMessage.setName(messageReference.getElementName().getLocalPart());
+                    // TODO copy policy elements
+                }
+            } else if (messageReference.getMessageLabel().equals(
+

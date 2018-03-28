@@ -1,0 +1,19 @@
+(startLine=658 endLine=674 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01238/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompilationUnitTests.java)
+public void testTypeParameter3() throws CoreException {
+	ICompilationUnit workingCopy = null;
+	try {
+		workingCopy = workingCopy(
+			"package p;\n" +
+			"public class Y<T extends List> {\n" +
+			"}"
+		);
+		ITypeParameter[] typeParameters = workingCopy.getType("Y").getTypeParameters();
+		assertTypeParametersEqual(
+			"T extends List\n",
+			typeParameters);
+	} finally {
+		if (workingCopy != null)
+			workingCopy.discardWorkingCopy();
+	}
+}
+

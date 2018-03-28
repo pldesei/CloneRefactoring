@@ -1,0 +1,11 @@
+(startLine=1770 endLine=1778 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01074/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MatchLocator.java)
+		for (int i=0, al=method.annotations.length; i<al; i++) {
+			TypeReference typeRef = method.annotations[i].type;
+			Integer level = (Integer) nodeSet.matchingNodes.removeKey(typeRef);
+			if (level != null) {
+				if (enclosingElement == null)
+					enclosingElement = createHandle(method, parent);
+				this.patternLocator.matchReportReference(typeRef, enclosingElement, method.binding, level.intValue(), this);
+			}
+		}
+

@@ -1,0 +1,19 @@
+(startLine=185 endLine=201 srcPath=/home/sonia/NewExperiment/luceneFilter/00901/lucene/src/java/org/apache/lucene/index/codecs/pulsing/PulsingPostingsReaderImpl.java)
+  public DocsEnum docs(FieldInfo field, TermState _termState, Bits skipDocs, DocsEnum reuse) throws IOException {
+    PulsingTermState termState = (PulsingTermState) _termState;
+    if (termState.docFreq <= maxPulsingDocFreq) {
+      if (reuse instanceof PulsingDocsEnum) {
+        return ((PulsingDocsEnum) reuse).reset(skipDocs, termState);
+      } else {
+        PulsingDocsEnum docsEnum = new PulsingDocsEnum();
+        return docsEnum.reset(skipDocs, termState);
+      }
+    } else {
+      if (reuse instanceof PulsingDocsEnum) {
+        return wrappedPostingsReader.docs(field, termState.wrappedTermState, skipDocs, null);
+      } else {
+        return wrappedPostingsReader.docs(field, termState.wrappedTermState, skipDocs, reuse);
+      }
+    }
+  }
+

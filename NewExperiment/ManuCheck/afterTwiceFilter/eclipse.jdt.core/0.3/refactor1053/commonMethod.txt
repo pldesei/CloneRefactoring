@@ -1,0 +1,21 @@
+(startLine=12138 endLine=12156 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02610/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+	/**
+	 * Checks whether name matches the token according to the current
+	 * code completion settings (substring match, camel case match etc.)
+	 * and sets whether the current match is a suffix proposal.
+	 * 
+	 * @param token the token that is tested
+	 * @param name the name to match
+	 * @return <code>true</code> if the token does not match,
+	 * <code>false</code> otherwise
+	 */
+	private boolean isFailedMatch(char[] token, char[] name) {
+		if ((this.options.substringMatch && CharOperation.substringMatch(token, name))
+				|| (this.options.camelCaseMatch && CharOperation.camelCaseMatch(token, name))
+				|| CharOperation.prefixEquals(token, name, false)) {
+			return false;
+		}
+
+		return true;
+	}
+

@@ -1,0 +1,19 @@
+(startLine=249 endLine=265 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00349/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/TypeDeclaration.java)
+				for (int i = 0, count = methods.length; i < count; i++) {
+					AbstractMethodDeclaration method = methods[i];
+					if (method.ignoreFurtherInvestigation)
+						continue;
+					if (method.isInitializationMethod()) {
+						if (method.isStatic()) { // <clinit>
+							((Clinit)method).analyseCode(
+								scope, 
+								staticInitializerContext, 
+								staticFieldInfo.unconditionalInits().discardNonFieldInitializations().addInitializationsFrom(outerInfo));
+						} else { // constructor
+							((ConstructorDeclaration)method).analyseCode(scope, initializerContext, constructorInfo.copy());
+						}
+					} else { // regular method
+						method.analyseCode(scope, null, FlowInfo.initial(maxFieldCount));
+					}
+				}
+

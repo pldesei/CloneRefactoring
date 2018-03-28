@@ -1,0 +1,10 @@
+(startLine=96 endLine=103 srcPath=/home/sonia/NewExperiment/luceneFilter/00755/lucene/src/test/org/apache/lucene/index/RandomIndexWriter.java)
+  public IndexReader getReader() throws IOException {
+    if (r.nextBoolean()) {
+      return w.getReader();
+    } else {
+      w.commit();
+      return IndexReader.open(w.getDirectory(), new KeepOnlyLastCommitDeletionPolicy(), r.nextBoolean(), _TestUtil.nextInt(r, 1, 10));
+    }
+  }
+

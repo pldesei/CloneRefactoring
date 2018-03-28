@@ -1,0 +1,13 @@
+(startLine=259 endLine=269 srcPath=/home/sonia/NewExperiment/luceneFilter/00666/lucene/src/test/org/apache/lucene/util/LuceneTestCase.java)
+  /** Gets a resource from the classpath as {@link File}. This method should only be used,
+   * if a real file is needed. To get a stream, code should prefer
+   * {@link Class#getResourceAsStream} using {@code this.getClass()}.
+   */
+  protected File getDataFile(String name) throws IOException {
+    try {
+      return new File(this.getClass().getResource(name).toURI());
+    } catch (Exception e) {
+      throw new IOException("Cannot find resource: " + name);
+    }
+  }
+

@@ -1,0 +1,110 @@
+(startLine=1232 endLine=1339 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02247/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/BinaryExpression.java)
+public void generateOptimizedLogicalAnd(BlockScope currentScope, CodeStream codeStream, BranchLabel trueLabel, BranchLabel falseLabel, boolean valueRequired) {
+	Constant condConst;
+	if ((this.left.implicitConversion & TypeIds.COMPILE_TYPE_MASK) == TypeIds.T_boolean) {
+		if ((condConst = this.left.optimizedBooleanConstant()) != Constant.NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// <something equivalent to true> & x
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					valueRequired);
+			} else {
+				// <something equivalent to false> & x
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (valueRequired) {
+					if (falseLabel != null) {
+						// implicit falling through the TRUE case
+						codeStream.goto_(falseLabel);
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+			}
+			return;
+		}
+		if ((condConst = this.right.optimizedBooleanConstant()) != Constant.NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// x & <something equivalent to true>
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					valueRequired);
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+			} else {
+				// x & <something equivalent to false>
+				BranchLabel internalTrueLabel = new BranchLabel(codeStream);
+				this.left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					internalTrueLabel,
+					falseLabel,
+					false);
+				internalTrueLabel.place();
+				this.right.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (valueRequired) {
+					if (falseLabel != null) {
+						// implicit falling through the TRUE case
+						codeStream.goto_(falseLabel);
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+			}
+			return;
+		}
+	}
+	// default case
+	this.left.generateCode(currentScope, codeStream, valueRequired);
+	this.right.generateCode(currentScope, codeStream, valueRequired);
+	if (valueRequired) {
+		codeStream.iand();
+		if (falseLabel == null) {
+			if (trueLabel != null) {
+				// implicit falling through the FALSE case
+				codeStream.ifne(trueLabel);
+			}
+		} else {
+			// implicit falling through the TRUE case
+			if (trueLabel == null) {
+				codeStream.ifeq(falseLabel);
+			} else {
+				// no implicit fall through TRUE/FALSE --> should never occur
+			}
+		}
+	}
+	// reposition the endPC
+	codeStream.updateLastRecordedEndPC(currentScope, codeStream.position);
+}
+

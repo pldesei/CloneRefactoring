@@ -1,0 +1,18 @@
+(startLine=2201 endLine=2216 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01789/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+			while (currentIndex < typeNameLength) {
+				binding = packageBinding.getTypeOrPackage(compoundName[currentIndex++]); // does not check visibility
+				if (binding == null)
+					return new ProblemReferenceBinding(
+						CharOperation.subarray(compoundName, 0, currentIndex),
+						null,
+						ProblemReasons.NotFound);
+				if (!binding.isValidBinding())
+					return new ProblemReferenceBinding(
+						CharOperation.subarray(compoundName, 0, currentIndex),
+						binding instanceof ReferenceBinding ? ((ReferenceBinding)binding).closestMatch() : null,
+						binding.problemId());
+				if (!(binding instanceof PackageBinding))
+					break;
+				packageBinding = (PackageBinding) binding;
+			}
+

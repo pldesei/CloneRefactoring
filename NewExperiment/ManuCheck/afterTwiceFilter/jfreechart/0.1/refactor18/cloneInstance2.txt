@@ -1,0 +1,44 @@
+(startLine=482 endLine=523 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00287/source/org/jfree/chart/LegendItem.java)
+                      Paint linePaint) {
+
+        if (label == null) {
+            throw new IllegalArgumentException("Null 'label' argument.");
+        }
+        if (fillPaint == null) {
+            throw new IllegalArgumentException("Null 'fillPaint' argument.");
+        }
+        if (lineStroke == null) {
+            throw new IllegalArgumentException("Null 'lineStroke' argument.");
+        }
+        if (line == null) {
+            throw new IllegalArgumentException("Null 'line' argument.");
+        }
+        if (linePaint == null) {
+            throw new IllegalArgumentException("Null 'linePaint' argument.");
+        }
+        if (outlinePaint == null) {
+            throw new IllegalArgumentException("Null 'outlinePaint' argument.");
+        }
+        if (outlineStroke == null) {
+            throw new IllegalArgumentException(
+                "Null 'outlineStroke' argument.");
+        }
+        this.label = characterIteratorToString(label.getIterator());
+        this.attributedLabel = label;
+        this.description = description;
+        this.shapeVisible = shapeVisible;
+        this.shape = shape;
+        this.shapeFilled = shapeFilled;
+        this.fillPaint = fillPaint;
+        this.fillPaintTransformer = new StandardGradientPaintTransformer();
+        this.shapeOutlineVisible = shapeOutlineVisible;
+        this.outlinePaint = outlinePaint;
+        this.outlineStroke = outlineStroke;
+        this.lineVisible = lineVisible;
+        this.line = line;
+        this.lineStroke = lineStroke;
+        this.linePaint = linePaint;
+        this.toolTipText = toolTipText;
+        this.urlText = urlText;
+    }
+

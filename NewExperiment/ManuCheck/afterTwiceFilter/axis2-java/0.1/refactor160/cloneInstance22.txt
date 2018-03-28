@@ -1,0 +1,11 @@
+(startLine=589 endLine=597 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/anytype/AnyTypeTest.java)
+        try {
+            OMElement omElement = testAnyTypeElement.getOMElement(TestAnyTypeElement1.MY_QNAME,
+                    OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM Element String ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestAnyTypeElement1 result = TestAnyTypeElement1.Factory.parse(xmlReader);
+            assertEquals(result.getTestAnyTypeElement1(),new Integer(5));
+        } catch (ADBException e) {
+

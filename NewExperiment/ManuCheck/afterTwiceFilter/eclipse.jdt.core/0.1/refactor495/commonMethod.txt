@@ -1,0 +1,8 @@
+(startLine=102 endLine=107 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01239/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/CompilationUnitTests.java)
+private ICompilationUnit createWorkingCopy(String source) throws JavaModelException {
+	this.workingCopy = getCompilationUnit("/P/src/p/Y.java").getWorkingCopy(new WorkingCopyOwner(){}, null, null);
+	this.workingCopy.getBuffer().setContents(source);
+	this.workingCopy.makeConsistent(null);
+	return workingCopy;
+}
+

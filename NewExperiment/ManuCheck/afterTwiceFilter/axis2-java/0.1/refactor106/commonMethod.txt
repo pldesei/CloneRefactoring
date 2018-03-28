@@ -1,0 +1,11 @@
+(startLine=350 endLine=358 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00916/modules/kernel/src/org/apache/axis2/context/externalize/SafeObjectInputStream.java)
+    private String valueName(Object obj) {
+        if (obj == null) {
+            return "null";
+        } else if (obj instanceof String) {
+            return (String) obj;
+        } else {
+            return "Object of class = " + obj.getClass().getName();
+        }
+    }
+

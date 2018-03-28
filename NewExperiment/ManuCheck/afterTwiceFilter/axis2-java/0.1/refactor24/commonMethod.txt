@@ -1,0 +1,31 @@
+(startLine=422 endLine=450 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00529/modules/kernel/src/org/apache/axis2/description/WSDL20ToAxisServiceBuilder.java)
+    private void createAxisMessage(AxisOperation axisOperation, InterfaceMessageReference messageReference, String messageLabel) throws Exception {
+        AxisMessage message = axisOperation
+                .getMessage(messageLabel);
+
+        String messageContentModelName = messageReference.getMessageContentModel();
+        QName elementQName = null;
+
+        if (WSDLConstants.WSDL20_2006Constants.NMTOKEN_ELEMENT.equals(messageContentModelName)) {
+            elementQName = messageReference.getElementDeclaration().getName();
+        } else if (WSDLConstants.WSDL20_2006Constants.NMTOKEN_ANY.equals(messageContentModelName)) {
+            // TODO : Need to improve this
+//           elementQName = SchemaConstants.XSD_ANY;
+        } else
+        if (WSDLConstants.WSDL20_2006Constants.NMTOKEN_NONE.equals(messageContentModelName)) {
+            // TODO : Need to improve this
+//           elementQName = new QName("None");
+        } else {
+            throw new Exception("Sorry we do not support " + messageContentModelName + ". We do only support #any, #none and #element as message content models.");
+        }
+
+        message.setElementQName(elementQName);
+        message.setName(elementQName != null ? elementQName.getLocalPart() : null);
+        axisOperation.addMessage(message, messageLabel);
+
+        // populate this map so that this can be used in SOAPBody based dispatching
+        if (elementQName != null) {
+            axisService.addmessageNameToOperationMapping(elementQName.getLocalPart(), axisOperation);
+        }
+    }
+

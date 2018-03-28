@@ -1,0 +1,34 @@
+(startLine=167 endLine=198 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00600/modules/jaxws/src/org/apache/axis2/jaxws/client/async/AsyncResponse.java)
+    private Object processAsyncResponse(MessageContext ctx) throws ExecutionException {
+        if (hasFault()) {
+            throw new ExecutionException(ExceptionFactory.makeWebServiceException(fault));
+        }
+        if (ctx == null) {
+            throw new ExecutionException(ExceptionFactory.makeWebServiceException("null response"));
+        }
+
+        // TODO: Check the type of the object to make sure it corresponds with
+        // the parameterized generic type.
+        Object obj = null;
+        try {
+            if (debug) {
+                log.debug("Unmarshalling the async response message.");
+             }
+             obj = getResponseValueObject(ctx);
+        }
+        catch (Throwable t) {
+            if (debug) {
+                log.debug("An error occurred while processing the response");
+            }
+            throw new ExecutionException(ExceptionFactory.makeWebServiceException(t));
+        }
+
+        if (debug && obj != null) {
+            log.debug("Unmarshalled response object of type: " + obj.getClass());
+        }
+        
+        initResponseContext();
+        
+        return obj;
+    }
+

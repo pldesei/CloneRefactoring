@@ -1,0 +1,10 @@
+(startLine=1376 endLine=1383 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01230/modules/kernel/src/org/apache/axis2/description/java2wsdl/DefaultSchemaGenerator.java)
+     private boolean isAnonymousTypesDisallowed() {
+        boolean disallowAnonTypes = false;
+        Parameter param = service.getParameter(Java2WSDLConstants.DISALLOW_ANON_TYPES_OPTION_LONG);
+        if (param != null) {
+            disallowAnonTypes = JavaUtils.isTrueExplicitly(param.getValue());
+        }
+        return disallowAnonTypes;
+    }
+

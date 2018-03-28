@@ -1,0 +1,26 @@
+(startLine=77 endLine=100 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00658/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/JavaSearchMatch.java)
+	public static JavaSearchMatch newReferenceMatch(
+			int referenceType,
+			IJavaElement enclosingElement,
+			int accuracy,
+			int sourceStart,  
+			int sourceEnd,
+			MatchLocator locator) {
+		SearchParticipant participant = locator.getParticipant(); 
+		IResource resource = locator.currentPossibleMatch.resource;
+		switch (referenceType) {
+			case IJavaElement.PACKAGE_FRAGMENT:
+				return new PackageReferenceMatch(enclosingElement, accuracy, sourceStart, sourceEnd, participant, resource);
+			case IJavaElement.TYPE:
+				return new TypeReferenceMatch(enclosingElement, accuracy, sourceStart, sourceEnd, participant, resource);
+			case IJavaElement.FIELD:
+				return new FieldReferenceMatch(enclosingElement, accuracy, sourceStart, sourceEnd, participant, resource);
+			case IJavaElement.METHOD:
+				return new MethodReferenceMatch(enclosingElement, accuracy, sourceStart, sourceEnd, participant, resource);
+			case IJavaElement.LOCAL_VARIABLE:
+				return new LocalVariableReferenceMatch(enclosingElement, accuracy, sourceStart, sourceEnd, participant, resource);
+			default:
+				return new JavaSearchMatch(enclosingElement, accuracy, sourceStart, sourceEnd, participant, resource);
+		}
+	}
+

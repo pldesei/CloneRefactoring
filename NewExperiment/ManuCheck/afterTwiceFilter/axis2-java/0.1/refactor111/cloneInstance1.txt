@@ -1,0 +1,13 @@
+(startLine=1170 endLine=1180 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00923/modules/metadata/src/org/apache/axis2/jaxws/description/impl/ServiceDescriptionImpl.java)
+        if (seiExceptions == null) {
+            if (implExceptions == null) {
+                return;
+            } else {
+                // SEI delcares no checked exceptions, but the implementation has checked exceptions, which is an error
+                throw ExceptionFactory.makeWebServiceException("Validation error: Implementation method signature has more checked exceptions than SEI method signature (0): Implementation class: "
+                    + composite.getClassName() 
+                    + "; method name: " + seiMDC.getMethodName() 
+                    + "; endpointInterface: " + className);
+            }
+        } else if (implExceptions == null) {
+

@@ -1,0 +1,17 @@
+(startLine=245 endLine=259 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01023/modules/samples/jaxws-samples/src/main/org/apache/axis2/jaxws/samples/client/SampleClient.java)
+    private ClientConfigurationFactory initConfigurationFactory() {
+        String axis2xml = System.getProperty("org.apache.axis2.jaxws.config.path");
+        if (axis2xml == null) {
+            throw new RuntimeException("Please set org.apache.axis2.jaxws.config.path system property to a valid axis2.xml file (with addressing module enabled)");
+        }
+        ClientConfigurationFactory factory = null;
+        try {
+            FileSystemConfigurator configurator = new FileSystemConfigurator(null, axis2xml);
+            factory = new ClientConfigurationFactory(configurator);
+            MetadataFactoryRegistry.setFactory(ClientConfigurationFactory.class, factory);
+        } catch (AxisFault axisFault) {
+            throw new RuntimeException(axisFault);
+        }
+        return factory;
+    }
+

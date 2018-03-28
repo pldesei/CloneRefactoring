@@ -1,0 +1,15 @@
+(startLine=55 endLine=67 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00934/modules/kernel/src/org/apache/axis2/clustering/context/Replicator.java)
+    public static void replicate(AbstractContext abstractContext) throws ClusteringFault {
+        if (!doReplication(abstractContext)) {
+            return;
+        }
+        log.debug("Going to replicate state...");
+        try {
+            replicateState(abstractContext);
+        } catch (Exception e) {
+            String message = "Could not replicate the state";
+            log.error(message, e);
+            throw new ClusteringFault(message, e);
+        }
+    }
+

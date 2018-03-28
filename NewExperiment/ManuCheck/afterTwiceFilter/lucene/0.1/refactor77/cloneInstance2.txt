@@ -1,0 +1,10 @@
+(startLine=111 endLine=118 srcPath=/home/sonia/NewExperiment/luceneFilter/01392/solr/core/src/java/org/apache/solr/update/SolrIndexConfig.java)
+    if(str != null && str.trim().length() >0){
+      //legacy handling  <mergePolicy>[classname]</mergePolicy>
+      //remove in Solr2.0
+      log.warn("deprecated syntax : <mergePolicy>[classname]</mergePolicy>");
+      Map<String,String> atrs = new HashMap<String, String>();
+      atrs.put("class",str.trim());
+      mergePolicyInfo = new PluginInfo("mergePolicy",atrs,null,null);
+    } else {
+

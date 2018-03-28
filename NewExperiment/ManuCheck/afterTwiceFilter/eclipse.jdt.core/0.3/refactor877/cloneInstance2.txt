@@ -1,0 +1,14 @@
+(startLine=2520 endLine=2531 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01930/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug86380_Field() throws CoreException {
+	this.resultCollector.showInsideDoc = true;
+	setUpBug86380();
+	ICompilationUnit unit = getCompilationUnit("JavaSearchBugs", "src", "b86380", "Annot.java");
+	IField[] fields = unit.getType("Annot").getFields();
+	assertEquals("Invalid number of fields", 1, fields.length);
+	search(fields[0], REFERENCES);
+	assertSearchResults(
+		"src/b86380/Test.java b86380.Test.field [field] EXACT_MATCH OUTSIDE_JAVADOC\n" +
+		"src/b86380/package-info.java [field] EXACT_MATCH INSIDE_JAVADOC"
+	);
+}
+

@@ -1,0 +1,12 @@
+(startLine=181 endLine=190 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01704/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/StackMapFrameCodeStream.java)
+public void removeFramePosition(int pc) {
+	Integer entry = new Integer(pc);
+	FramePosition value;
+	if ((value = (FramePosition) this.framePositions.get(entry)) != null) {
+		value.counter--;
+		if (value.counter <= 0) {
+			this.framePositions.remove(entry);
+		}
+	}
+}
+

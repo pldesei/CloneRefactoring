@@ -1,0 +1,17 @@
+(startLine=264 endLine=278 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00555/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/TypeReferenceLocator.java)
+	if (tokens == null) {
+		if (typeBinding == null || typeBinding instanceof ProblemReferenceBinding)
+			tokens = new char[][] {this.pattern.simpleName};
+		else
+			tokens = qTypeRef.tokens;
+		if (!this.isCaseSensitive) {
+			int length = tokens.length;
+			char[][] lowerCaseTokens = new char[length][];
+			for (int i = 0; i < length; i++) {
+				char[] token = tokens[i];
+				lowerCaseTokens[i] = CharOperation.toLowerCase(token);
+			}
+			tokens = lowerCaseTokens;
+		}
+	}
+

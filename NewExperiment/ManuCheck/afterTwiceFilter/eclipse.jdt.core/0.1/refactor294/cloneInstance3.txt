@@ -1,0 +1,24 @@
+(startLine=162 endLine=183 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00587/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/OR_OR_Expression.java)
+			} else {
+				// <something equivalent to false> || x
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				if ((bits & OnlyValueRequiredMASK) != 0) {
+					right.generateCode(currentScope, codeStream, valueRequired);
+				} else {
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						valueRequired);
+				}
+			}
+

@@ -1,0 +1,20 @@
+(startLine=204 endLine=221 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01022/modules/samples/jaxws-samples/src/main/org/apache/axis2/jaxws/samples/client/SampleClient.java)
+            } else {
+                if (servtype.equalsIgnoreCase("echo")) {
+                    if (0 == urlSuffix.length()) {
+                        urlSuffix = ECHO_CONTEXT;
+                    }
+                    buildEcho(uriString + urlSuffix, null, message);
+                } else if (servtype.equalsIgnoreCase("async")) {
+                    if (0 == urlSuffix.length()) {
+                        urlSuffix = ECHO_CONTEXT;
+                    }
+                    buildAsync(uriString + urlSuffix, null, message, timeout, wireasync);
+                } else {
+                    if (0 == urlSuffix.length()) {
+                        urlSuffix = PING_CONTEXT;
+                    }
+                    buildPing(uriString + urlSuffix, null, message);
+                }
+            }
+

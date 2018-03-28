@@ -1,0 +1,27 @@
+(startLine=444 endLine=468 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00937/modules/kernel/src/org/apache/axis2/description/java2wsdl/DocLitBareSchemaGenerator.java)
+            for (int i = 0; i < tempFields.length; i++) {
+                // create a element for the field only if it is public
+                // and there is no property with the same name
+                if (tempFields[i].isPublic()) {
+
+                    if (tempFields[i].isStatic()) {
+//                        We do not need to expose static fields
+                        continue;
+                    }
+                    if (excludes != null && excludes.contains("*")) {
+                        continue;
+                    }
+                    if (excludes != null &&
+                            excludes.contains(tempFields[i].getSimpleName())) {
+                        continue;
+                    }
+
+                    // skip field with same name as a property
+                    if (!propertiesNames.contains(tempFields[i].getSimpleName())) {
+
+                        FieldMap.put(tempFields[i].getSimpleName(), tempFields[i]);
+                    }
+                }
+
+            }
+

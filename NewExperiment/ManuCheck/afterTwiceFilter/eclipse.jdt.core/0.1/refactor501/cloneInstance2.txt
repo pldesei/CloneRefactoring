@@ -1,0 +1,20 @@
+(startLine=95 endLine=112 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01279/org.eclipse.jdt.apt.core/src/org/eclipse/jdt/apt/core/util/AptConfig.java)
+    public static String removeProcessorOption(IJavaProject jproj, String key) {
+    	String old;
+    	IEclipsePreferences node;
+    	synchronized (AptConfig.class) {
+	    	Map<String, String> options = getRawProcessorOptions(jproj);
+	    	old = options.get(key);
+	    	options.remove(key);
+	    	String serializedOptions = serializeProcessorOptions(options);
+			IScopeContext context = (null != jproj) ? 
+					new ProjectScope(jproj.getProject()) : new InstanceScope();
+			node = context.getNode(AptPlugin.PLUGIN_ID);
+			node.put(AptPreferenceConstants.APT_PROCESSOROPTIONS, serializedOptions);
+    	}
+    	// Do the flush outside of the synchronized block to avoid deadlock:
+    	// flush causes a file write, which will block if the workspace is locked.
+    	flushPreference(AptPreferenceConstants.APT_PROCESSOROPTIONS, node);
+    	return old;
+    }
+

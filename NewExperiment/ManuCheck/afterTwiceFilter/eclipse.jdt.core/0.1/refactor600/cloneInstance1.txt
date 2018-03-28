@@ -1,0 +1,27 @@
+(startLine=3203 endLine=3227 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug95794b() throws CoreException {
+	resultCollector.showRule = true;
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 1, workingCopies.length);
+	this.discard = false;
+	IType type = workingCopies[0].getType("Test").getType("Color");
+	this.discard = false;
+	
+	// Verify matches
+	TestCollector occurencesCollector = new TestCollector();
+	occurencesCollector.showAccuracy = true;
+	search(type, ALL_OCCURRENCES, getJavaSearchScopeBugs(), occurencesCollector);
+	assertSearchResults(
+		"src/b95794/Test.java [b95794.Test.Color] EXACT_MATCH\n" + 
+		"src/b95794/Test.java [b95794.Test.Color] EXACT_MATCH\n" + 
+		"src/b95794/Test.java void b95794.Test.main(String[]) [Color] EXACT_MATCH\n" + 
+		"src/b95794/Test.java b95794.Test$Color [Color] EXACT_MATCH",
+		occurencesCollector
+	);
+	
+	// Verify with references matches
+	TestCollector referencesCollector = new TestCollector();
+	search(type, REFERENCES, getJavaSearchScopeBugs(), referencesCollector);
+	assertEquals("Problem with occurences or references number of matches: ", occurencesCollector.matches.size()-1, referencesCollector.matches.size());
+}
+

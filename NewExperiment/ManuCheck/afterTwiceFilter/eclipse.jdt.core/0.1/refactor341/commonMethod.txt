@@ -1,0 +1,10 @@
+(startLine=3405 endLine=3412 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00756/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Scanner.java)
+public void unicodeStoreAt(int pos) {
+    if (this.withoutUnicodeBuffer == null) this.withoutUnicodeBuffer = new char[10];
+    int length = this.withoutUnicodeBuffer.length;
+    if (pos == length) {
+        System.arraycopy(this.withoutUnicodeBuffer, 0, this.withoutUnicodeBuffer = new char[length * 2], 0, length);
+    }
+	this.withoutUnicodeBuffer[pos] = this.currentCharacter;
+}
+

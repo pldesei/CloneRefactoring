@@ -1,0 +1,73 @@
+(startLine=8334 endLine=8404 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02254/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/Parser.java)
+protected void consumeReferenceExpressionGenericTypeForm() {
+
+	// ReferenceExpression ::= Name PushModifiers BeginTypeArguments ReferenceExpressionTypeArgumentsAndTrunk '::' NonWildTypeArgumentsopt IdentifierOrNew
+	// ReferenceExpression ::= Modifiers Name PushRealModifiers BeginTypeArguments ReferenceExpressionTypeArgumentsAndTrunk '::' NonWildTypeArgumentsopt IdentifierOrNew
+	
+	ReferenceExpression rexp;
+	TypeReference type = null;
+	TypeReference [] typeArguments = null;
+	SingleNameReference methodReference = null;
+	int newEnd = -1;
+	
+	boolean newForm = this.intStack[this.intPtr--] != 0;
+	if (newForm) {
+		newEnd = this.intStack[this.intPtr--] + 3; // "new"
+	} else {
+		methodReference = (SingleNameReference) getUnspecifiedReferenceOptimized();
+	}
+	
+	int length = this.genericsLengthStack[this.genericsLengthPtr--];
+	if (length > 0) {
+		this.genericsPtr -= length;
+		System.arraycopy(this.genericsStack, this.genericsPtr + 1, typeArguments = new TypeReference[length], 0, length);
+		this.intPtr--;  // pop type arguments source start.
+	}
+	
+	int typeSourceEnd = this.intStack[this.intPtr--];
+	boolean qualified = this.intStack[this.intPtr--] != 0;
+	int dims = this.intStack[this.intPtr--];
+
+	if (qualified) {
+		TypeReference rightSide = getUnannotatedTypeReference(0); // until we add support for X. @Inner Y, by design the type after '.' is unannotated.
+		type = computeQualifiedGenericsFromRightSide(rightSide, dims);
+	} else {		
+		pushOnGenericsIdentifiersLengthStack(this.identifierLengthStack[this.identifierLengthPtr]);
+		type = getUnannotatedTypeReference(dims); // annotations attached below.
+	}
+	this.intPtr--; // pop '<' position
+	int illegalModifiersSourceStart = this.intStack[this.intPtr--];
+	if (illegalModifiersSourceStart >= 0 && illegalModifiersSourceStart < type.sourceStart) {
+		type.sourceStart = illegalModifiersSourceStart;
+	}
+	type.sourceEnd = typeSourceEnd;
+	
+	rexp = newForm ? new ReferenceExpression(type, typeArguments, newEnd) : new ReferenceExpression(type, typeArguments, methodReference);
+
+	// Prefix annotations if any are on the expression stack, attach them now.
+	if ((length = this.expressionLengthStack[this.expressionLengthPtr--]) != 0) {
+		type.annotations = new Annotation[type.getAnnotatableLevels()][];
+		System.arraycopy(
+				this.expressionStack,
+				(this.expressionPtr -= length) + 1,
+				type.annotations[0] = new Annotation[length],
+				0,
+				length);
+		int annotStart = type.annotations[0][0].sourceStart;
+		if (annotStart < type.sourceStart) {
+			type.sourceStart = annotStart;
+		}
+		type.bits |= ASTNode.HasTypeAnnotations;
+	}
+
+	int illegalModifiers = this.intStack[this.intPtr--];
+	if (illegalModifiers != ClassFileConstants.AccDefault) {
+		problemReporter().invalidLocationForModifiers(type);
+	}
+	resetModifiers();
+	pushOnExpressionStack(rexp);
+	if (!this.parsingJava8Plus) {
+		problemReporter().referenceExpressionsNotBelow18(rexp);
+	}
+}
+

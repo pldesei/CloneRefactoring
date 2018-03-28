@@ -1,0 +1,17 @@
+(startLine=1616 endLine=1630 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00237/source/org/jfree/chart/axis/ValueAxis.java)
+    /**
+     * Slides the axis range by the specified percentage.
+     *
+     * @param percent  the percentage.
+     *
+     * @since 1.0.13
+     */
+    public void pan(double percent) {
+        Range range = getRange();
+        double length = range.getLength();
+        double adj = length * percent;
+        double lower = range.getLowerBound() + adj;
+        double upper = range.getUpperBound() + adj;
+        setRange(lower, upper);
+    }
+

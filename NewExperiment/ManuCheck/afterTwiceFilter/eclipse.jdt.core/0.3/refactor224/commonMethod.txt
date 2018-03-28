@@ -1,0 +1,11 @@
+(startLine=552 endLine=560 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00220/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/Util.java)
+	public static void log(Throwable e, String message) {
+		IStatus status= new Status(
+			IStatus.ERROR, 
+			JavaCore.getPlugin().getDescriptor().getUniqueIdentifier(), 
+			IStatus.ERROR, 
+			message, 
+			e); 
+		JavaCore.getPlugin().getLog().log(status);
+	}	
+

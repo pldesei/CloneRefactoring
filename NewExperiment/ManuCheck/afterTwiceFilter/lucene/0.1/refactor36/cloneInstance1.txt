@@ -1,0 +1,12 @@
+(startLine=50 endLine=59 srcPath=/home/sonia/NewExperiment/luceneFilter/00665/solr/src/java/org/apache/solr/analysis/EnglishPorterFilterFactory.java)
+        } else  {
+          List<String> files = StrUtils.splitFileNames(wordFiles);
+          for (String file : files) {
+            List<String> wlist = loader.getLines(file.trim());
+            if (protectedWords == null)
+              protectedWords = new CharArraySet(wlist, false);
+            else
+              protectedWords.addAll(wlist);
+          }
+        }
+

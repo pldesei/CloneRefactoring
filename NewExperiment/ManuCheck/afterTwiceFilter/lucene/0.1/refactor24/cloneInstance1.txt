@@ -1,0 +1,34 @@
+(startLine=2331 endLine=2362 srcPath=/home/sonia/NewExperiment/luceneFilter/00443/src/java/org/apache/lucene/index/IndexWriter.java)
+  public void addDocument(Document doc, Analyzer analyzer) throws CorruptIndexException, IOException {
+    ensureOpen();
+    boolean doFlush = false;
+    boolean success = false;
+    try {
+      try {
+        doFlush = docWriter.addDocument(doc, analyzer);
+        success = true;
+      } finally {
+        if (!success) {
+
+          if (infoStream != null)
+            message("hit exception adding document");
+
+          synchronized (this) {
+            // If docWriter has some aborted files that were
+            // never incref'd, then we clean them up here
+            if (docWriter != null) {
+              final Collection files = docWriter.abortedFiles();
+              if (files != null)
+                deleter.deleteNewFiles(files);
+            }
+          }
+        }
+      }
+      if (doFlush)
+        flush(true, false, false);
+    } catch (OutOfMemoryError oom) {
+      hitOOM = true;
+      throw oom;
+    }
+  }
+

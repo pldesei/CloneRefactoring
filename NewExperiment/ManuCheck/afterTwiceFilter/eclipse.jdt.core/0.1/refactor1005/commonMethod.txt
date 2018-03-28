@@ -1,0 +1,6 @@
+(startLine=693 endLine=696 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02338/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+	private void formatLeadingDimensions(TypeReference typeReference, boolean spaceBeforeAnnotation) {
+		int leadingDimensions = Math.min(getDimensions(), typeReference != null ? typeReference.dimensions() : 0);
+		if (leadingDimensions != 0) formatDimensions(typeReference, 0, leadingDimensions, spaceBeforeAnnotation);
+	}
+

@@ -1,0 +1,19 @@
+(startLine=807 endLine=823 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00047/source/org/jfree/chart/plot/Plot.java)
+    public void setOutlinePaint(Paint paint) {
+        if (paint == null) {
+            if (this.outlinePaint != null) {
+                this.outlinePaint = null;
+                notifyListeners(new PlotChangeEvent(this));
+            }
+        }
+        else {
+            if (this.outlinePaint != null) {
+                if (this.outlinePaint.equals(paint)) {
+                    return;  // nothing to do
+                }
+            }
+            this.outlinePaint = paint;
+            notifyListeners(new PlotChangeEvent(this));
+        }
+    }
+

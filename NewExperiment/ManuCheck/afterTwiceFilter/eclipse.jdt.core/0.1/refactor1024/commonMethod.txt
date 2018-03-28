@@ -1,0 +1,7 @@
+(startLine=355 endLine=359 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02405/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/ASTConverter.java)
+	private void checkAndSetMalformed(ASTNode oldASTNode, ASTNode newASTNode) {
+		if ((oldASTNode.getFlags() & ASTNode.MALFORMED) != 0) {
+			newASTNode.setFlags(newASTNode.getFlags() | ASTNode.MALFORMED);
+		}
+	}
+

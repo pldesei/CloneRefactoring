@@ -1,0 +1,14 @@
+(startLine=2508 endLine=2519 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01930/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug86380_Method() throws CoreException {
+	this.resultCollector.showInsideDoc = true;
+	setUpBug86380();
+	ICompilationUnit unit = getCompilationUnit("JavaSearchBugs", "src", "b86380", "Annot.java");
+	IMethod[] methods = unit.getType("Annot").getMethods();
+	assertEquals("Invalid number of methods", 1, methods.length);
+	search(methods[0], REFERENCES);
+	assertSearchResults(
+		"src/b86380/Test.java b86380.Test [12] EXACT_MATCH OUTSIDE_JAVADOC\n" +
+		"src/b86380/package-info.java [value] EXACT_MATCH OUTSIDE_JAVADOC"
+	);
+}
+

@@ -1,0 +1,12 @@
+(startLine=1552 endLine=1561 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01002/modules/metadata/src/org/apache/axis2/jaxws/description/impl/OperationDescriptionImpl.java)
+    private FaultAction[] getFaultActions() {
+        FaultAction[] faultActions = null;
+        Action action = getAnnoAction();
+        
+        if (action !=  null) {
+            faultActions = action.fault();
+        }
+        
+        return faultActions;
+    }
+

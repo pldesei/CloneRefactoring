@@ -1,0 +1,29 @@
+(startLine=81 endLine=107 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00360/source/org/jfree/chart/util/CloneUtils.java)
+    /**
+     * Returns a new map that contains the same keys and cloned copied of the
+     * values.
+     * 
+     * @param source  the source map (<code>null</code> not permitted).
+     * 
+     * @return A new map. 
+     * 
+     * @since 1.0.18
+     */
+    public static Map cloneMapValues(Map source) {
+        ParamChecks.nullNotPermitted(source, "source");
+        Map result = new HashMap();
+        for (Object key : source.keySet()) {
+            Object value = source.get(key);
+            if (value != null) {
+                try {
+                    result.put(key, ObjectUtilities.clone(value));
+                } catch (CloneNotSupportedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                result.put(key, null);
+            }
+        }
+        return result;
+    }
+

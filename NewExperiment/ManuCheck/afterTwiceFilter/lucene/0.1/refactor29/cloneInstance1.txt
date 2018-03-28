@@ -1,0 +1,17 @@
+(startLine=75 endLine=89 srcPath=/home/sonia/NewExperiment/luceneFilter/00498/contrib/analyzers/common/src/test/org/apache/lucene/analysis/ngram/NGramTokenizerTest.java)
+    public void testBigrams() throws Exception {
+        NGramTokenizer tokenizer = new NGramTokenizer(input, 2, 2);
+        final Token reusableToken = new Token();
+        for (Token nextToken = tokenizer.next(reusableToken); nextToken != null; nextToken = tokenizer.next(reusableToken)) {
+          tokens.add(nextToken.toString());
+//        System.out.println(token.term());
+//        System.out.println(token);
+//        Thread.sleep(1000);
+      }
+
+        assertEquals(4, tokens.size());
+        ArrayList exp = new ArrayList();
+        exp.add("(ab,0,2)"); exp.add("(bc,1,3)"); exp.add("(cd,2,4)"); exp.add("(de,3,5)");
+        assertEquals(exp, tokens);
+    }
+

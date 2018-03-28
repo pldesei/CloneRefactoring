@@ -1,0 +1,11 @@
+(startLine=102 endLine=110 srcPath=/home/sonia/NewExperiment/luceneFilter/00668/lucene/src/java/org/apache/lucene/index/TermsEnum.java)
+  /** Get {@link DocsEnum} for the current term.  Do not
+   *  call this before calling {@link #next} or {@link
+   *  #seek} for the first time.  This method will not
+   *  return null.
+   *  
+   * @param skipDocs set bits are documents that should not
+   * be returned
+   * @param reuse pass a prior DocsEnum for possible reuse */
+  public abstract DocsEnum docs(Bits skipDocs, DocsEnum reuse) throws IOException;
+

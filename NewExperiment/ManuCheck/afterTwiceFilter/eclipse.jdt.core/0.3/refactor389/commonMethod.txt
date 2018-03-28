@@ -1,0 +1,11 @@
+(startLine=414 endLine=422 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00827/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/NameLookup.java)
+	private IType getMemberType(IType type, String name, int dot) {
+		while (dot != -1) {
+			int start = dot+1;
+			dot = name.indexOf('.', start);
+			String typeName = name.substring(start, dot == -1 ? name.length() : dot);
+			type = type.getType(typeName);
+		}
+		return type;
+	}
+

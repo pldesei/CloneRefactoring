@@ -1,0 +1,22 @@
+(startLine=332 endLine=351 srcPath=/home/sonia/NewExperiment/luceneFilter/01946/lucene/core/src/java/org/apache/lucene/util/IOUtils.java)
+  /**
+   * Simple utilty method that takes a previously caught
+   * {@code Throwable} and rethrows either {@code
+   * IOException} or an unchecked exception.  If the
+   * argument is null then this method does nothing.
+   */
+  public static void reThrow(Throwable th) throws IOException {
+    if (th != null) {
+      if (th instanceof IOException) {
+        throw (IOException) th;
+      }
+      if (th instanceof RuntimeException) {
+        throw (RuntimeException) th;
+      }
+      if (th instanceof Error) {
+        throw (Error) th;
+      }
+      throw new RuntimeException(th);
+    }
+  }
+

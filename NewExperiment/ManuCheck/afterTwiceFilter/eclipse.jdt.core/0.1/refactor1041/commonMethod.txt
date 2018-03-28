@@ -1,0 +1,8 @@
+(startLine=1043 endLine=1048 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02553/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/MessageSend.java)
+@Override
+public void registerResult(TypeBinding targetType, MethodBinding method) {
+	if (this.solutionsPerTargetType == null)
+		this.solutionsPerTargetType = new HashMap<TypeBinding, MethodBinding>();
+	this.solutionsPerTargetType.put(targetType, method);
+}
+

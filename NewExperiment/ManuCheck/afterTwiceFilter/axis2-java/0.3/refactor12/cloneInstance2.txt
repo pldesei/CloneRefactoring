@@ -1,0 +1,17 @@
+(startLine=235 endLine=249 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00293/modules/wsdl/src/org/apache/axis/wsdl/codegen/emitter/MultiLanguageClientEmitter.java)
+    protected Element getOutputElement(XmlDocument doc,WSDLOperation operation){
+        Element outputElt = doc.createElement("output");
+        Element param = doc.createElement("param");
+        Attr paramNameAttr = doc.createAttribute("name");
+        paramNameAttr.setValue(this.mapper.getParameterName(operation.getOutputMessage().getElement()));
+        param.setAttributeNode(paramNameAttr);
+        Attr paramTypeAttr = doc.createAttribute("type");
+        Class typeMapping = this.mapper.getTypeMapping(operation.getOutputMessage().getElement());
+        paramTypeAttr.setValue(typeMapping==null?"":typeMapping.getName());
+        param.setAttributeNode(paramTypeAttr);
+
+        outputElt.appendChild(param);
+
+        return outputElt;
+    }
+

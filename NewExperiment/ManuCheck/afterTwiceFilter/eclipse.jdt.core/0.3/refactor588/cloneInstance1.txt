@@ -1,0 +1,40 @@
+(startLine=878 endLine=915 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01420/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+		if (interfacesToVisit != null) {
+			ProblemFieldBinding ambiguous = null;
+			done : for (int i = 0; i <= lastPosition; i++) {
+				ReferenceBinding[] interfaces = interfacesToVisit[i];
+				for (int j = 0, length = interfaces.length; j < length; j++) {
+					ReferenceBinding anInterface = interfaces[j];
+					if ((anInterface.tagBits & TagBits.InterfaceVisited) == 0) {
+						// if interface as not already been visited
+						anInterface.tagBits |= TagBits.InterfaceVisited;
+						unitScope.recordTypeReference(anInterface);
+						if ((field = anInterface.getField(fieldName, true /*resolve*/)) != null) {
+							if (visibleField == null) {
+								visibleField = field;
+							} else {
+								ambiguous = new ProblemFieldBinding(visibleField /* closest match*/, visibleField.declaringClass, fieldName, ProblemReasons.Ambiguous);
+								break done;
+							}
+						} else {
+							ReferenceBinding[] itsInterfaces = anInterface.superInterfaces();
+							if (itsInterfaces != Binding.NO_SUPERINTERFACES) {
+								if (++lastPosition == interfacesToVisit.length)
+									System.arraycopy(interfacesToVisit, 0, interfacesToVisit = new ReferenceBinding[lastPosition * 2][], 0, lastPosition);
+								interfacesToVisit[lastPosition] = itsInterfaces;
+							}
+						}
+					}
+				}
+			}
+
+			// bit reinitialization
+			for (int i = 0; i <= lastPosition; i++) {
+				ReferenceBinding[] interfaces = interfacesToVisit[i];
+				for (int j = 0, length = interfaces.length; j < length; j++)
+					interfaces[j].tagBits &= ~TagBits.InterfaceVisited;
+			}
+			if (ambiguous != null)
+				return ambiguous;
+		}
+

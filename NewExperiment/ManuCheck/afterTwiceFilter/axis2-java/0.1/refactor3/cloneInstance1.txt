@@ -1,0 +1,19 @@
+(startLine=59 endLine=75 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00123/dev/scratch/prototype2/src/java/org/apache/axis/impl/providers/SimpleJavaProvider.java)
+            throws AxisFault {
+        try {
+            AxisService service = msgContext.getService();
+            classLoader = service.getClassLoader();
+            Parameter classParm = service.getParameter("className");
+            String className = (String) classParm.getValue();
+            if (className == null)
+                throw new AxisFault("className parameter is null");
+            if (classLoader == null) {
+                classLoader = Thread.currentThread().getContextClassLoader();
+            }
+            Class implClass = Class.forName(className, true, classLoader);
+            return implClass.newInstance();
+        } catch (Exception e) {
+            throw AxisFault.makeFault(e);
+        }
+    }
+

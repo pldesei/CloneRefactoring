@@ -1,0 +1,52 @@
+(startLine=141 endLine=190 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00587/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ast/AND_AND_Expression.java)
+		if ((condConst = left.optimizedBooleanConstant()) != NotAConstant) {
+			if (condConst.booleanValue() == true) {
+				// <something equivalent to true> && x
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (rightInitStateIndex != -1) {
+					codeStream.addDefinitelyAssignedVariables(currentScope, rightInitStateIndex);
+				}
+				if ((bits & OnlyValueRequiredMASK) != 0) {
+					right.generateCode(currentScope, codeStream, valueRequired);
+				} else {
+					right.generateOptimizedBoolean(
+						currentScope,
+						codeStream,
+						trueLabel,
+						falseLabel,
+						valueRequired);
+				}
+			} else {
+				// <something equivalent to false> && x
+				left.generateOptimizedBoolean(
+					currentScope,
+					codeStream,
+					trueLabel,
+					falseLabel,
+					false);
+				if (valueRequired) {
+					if ((bits & OnlyValueRequiredMASK) != 0) {
+						codeStream.iconst_0();
+					} else {
+						if (falseLabel != null) {
+							// implicit falling through the TRUE case
+							codeStream.goto_(falseLabel);
+						}
+					}
+				}
+				// reposition the endPC
+				codeStream.updateLastRecordedEndPC(codeStream.position);
+			}
+			if (mergedInitStateIndex != -1) {
+				codeStream.removeNotDefinitelyAssignedVariables(
+					currentScope,
+					mergedInitStateIndex);
+			}
+			return;
+		}
+

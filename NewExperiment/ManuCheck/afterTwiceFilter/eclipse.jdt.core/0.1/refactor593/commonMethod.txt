@@ -1,0 +1,19 @@
+(startLine=882 endLine=898 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 79990: [1.5][search] Search doesn't find type reference in type parameter bound
+ * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=79990"
+ */
+private void setUpBug79990() throws CoreException {
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b79990/Test.java",
+		"package b79990;\n" + 
+		"class Test<T> {\n" + 
+		"    public void first(Exception num) {}\n" + 
+		"    public void second(T t) {}\n" + 
+		"}\n" + 
+		"class Sub extends Test<Exception> {\n" + 
+		"    public void first(Exception num) {}\n" + 
+		"    public void second(Exception t) {}\n" + 
+		"}\n"
+	);}
+

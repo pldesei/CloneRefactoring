@@ -1,0 +1,38 @@
+(startLine=140 endLine=175 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00219/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/CompilationUnitProblemFinder.java)
+		throws JavaModelException {
+
+		char[] fileName = unitElement.getElementName().toCharArray();
+		
+		CompilationUnitProblemFinder problemFinder =
+			new CompilationUnitProblemFinder(
+				getNameEnvironment(unitElement),
+				getHandlingPolicy(),
+				JavaCore.getOptions(),
+				getRequestor(),
+				getProblemFactory(fileName, problemRequestor, monitor));
+
+		CompilationUnitDeclaration unit = null;
+		try {
+			String encoding = (String) JavaCore.getOptions().get(CompilerOptions.OPTION_Encoding);
+			if ("".equals(encoding)) encoding = null; //$NON-NLS-1$
+			
+			IPackageFragment packageFragment = (IPackageFragment)unitElement.getAncestor(IJavaElement.PACKAGE_FRAGMENT);
+			char[][] expectedPackageName = null;
+			if (packageFragment != null){
+				expectedPackageName = CharOperation.splitOn('.', packageFragment.getElementName().toCharArray());
+			}
+			unit = problemFinder.resolve(
+					new BasicCompilationUnit(
+						unitElement.getSource().toCharArray(),
+						expectedPackageName,
+						new String(fileName),
+						encoding));
+			return unit;
+		} finally {
+			if (unit != null) {
+				unit.cleanUp();
+			}
+			problemFinder.lookupEnvironment.reset();			
+		}
+	}
+

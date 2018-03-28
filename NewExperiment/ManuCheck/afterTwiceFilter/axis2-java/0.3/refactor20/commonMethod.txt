@@ -1,0 +1,17 @@
+(startLine=94 endLine=108 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00423/modules/core/src/org/apache/axis2/clientapi/MEPClient.java)
+    /**
+     * This class prepare the SOAP Envelope using the payload
+     * @param toSend
+     * @return
+     * @throws AxisFault
+     */
+    protected MessageContext prepareTheSOAPEnvelope(OMElement toSend) throws AxisFault {
+        MessageContext msgctx = new MessageContext(
+                serviceContext.getEngineContext());
+
+        SOAPEnvelope envelope = createDefaultSOAPEnvelope();
+        envelope.getBody().addChild(toSend);
+        msgctx.setEnvelope(envelope);
+        return msgctx;
+    }
+

@@ -1,0 +1,14 @@
+(startLine=805 endLine=816 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01596/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/index/DiskIndex.java)
+private void readStreamBuffer(FileInputStream stream) throws IOException {
+	// if we're about to read a known amount at the end of the existing buffer, but it does not completely fit
+	// so we need to shift the remaining bytes to be read, and fill the buffer from the stream
+	if (this.bufferEnd < this.streamBuffer.length)
+		return; // we're at the end of the stream - nothing left to read
+
+	int bytesInBuffer = this.bufferEnd - this.bufferIndex;
+	if (bytesInBuffer > 0)
+		System.arraycopy(this.streamBuffer, this.bufferIndex, this.streamBuffer, 0, bytesInBuffer);
+	this.bufferEnd = bytesInBuffer + stream.read(this.streamBuffer, bytesInBuffer, this.bufferIndex);
+	this.bufferIndex = 0;
+}
+

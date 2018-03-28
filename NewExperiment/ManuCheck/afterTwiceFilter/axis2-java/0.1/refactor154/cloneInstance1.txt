@@ -1,0 +1,24 @@
+(startLine=70 endLine=91 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/innerChoice/InnerChoiceTest.java)
+    public void testInnerChoice21() {
+        TestInnerSequence2 testSequence = new TestInnerSequence2();
+        testSequence.setSequence1("sequence");
+        testSequence.setSequence2(3);
+        TestInnerSequence2Choice_type0 testInnerSequence2Choice_type1 = new TestInnerSequence2Choice_type0();
+        testInnerSequence2Choice_type1.setChoice1(new String[]{"choice1", "choice2"});
+        testSequence.setTestInnerSequence2Choice_type0(testInnerSequence2Choice_type1);
+
+        try {
+            OMElement omElement = testSequence.getOMElement(TestInnerSequence2.MY_QNAME,
+                    OMAbstractFactory.getSOAP12Factory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OMelement ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestInnerSequence2 result = TestInnerSequence2.Factory.parse(xmlReader);
+            assertEquals(result.getSequence1(), "sequence");
+            assertEquals(result.getSequence2(), 3);
+            assertTrue(isEqual(result.getTestInnerSequence2Choice_type0().getChoice1(), new String[]{"choice1", "choice2"}));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+

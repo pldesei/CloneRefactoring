@@ -1,0 +1,30 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01860
+predFragLineRange:80-101
+predMethodLineRange:79-101
+nextLineRange:76-97
+predStrMethodInvoNames:
+[newFSDirectory, initCore, fail, getSimpleName, assertTrue, assertNotNull, getCause, assertTrue, getCause, assertNotNull, getCause, getCause, assertTrue, getCause, getCause, close, close, deleteCore]
+%%%%%%%%%%
+AddedMethodInvo Line:80 InvoName:log.info("Acquiring lock on {}",indexDir.getAbsolutePath())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:80 InvoName:indexDir.getAbsolutePath()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01860/solr/core/src/test/java/io/File.java
+InvokedMethodSig:public java.lang.String getAbsolutePath() 
+%%%%%%%%%%
+AddedMethodInvo Line:88 InvoName:h.getCoreContainer()
+PackageName:org.apache.solr.util
+QualifiedClassName:org.apache.solr.util.TestHarness
+ClassName:TestHarness
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01860/solr/core/src/test/org/apache/solr/util/TestHarness.java
+InvokedMethodSig:public org.apache.solr.core.CoreContainer getCoreContainer() 
+%%%%%%%%%%
+AddedMethodInvo Line:89 InvoName:checkForCoreInitException(LockObtainFailedException.class)
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.SolrCoreCheckLockOnStartupTest
+ClassName:SolrCoreCheckLockOnStartupTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01860/solr/core/src/test/org/apache/solr/core/SolrCoreCheckLockOnStartupTest.java
+InvokedMethodSig:private boolean checkForCoreInitException(Class<? extends java.lang.Exception>) 

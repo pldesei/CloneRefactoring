@@ -1,0 +1,19 @@
+(startLine=397 endLine=413 srcPath=/home/sonia/NewExperiment/luceneFilter/00443/src/java/org/apache/lucene/search/Similarity.java)
+  /** Encodes a normalization factor for storage in an index.
+   *
+   * <p>The encoding uses a three-bit mantissa, a five-bit exponent, and
+   * the zero-exponent point at 15, thus
+   * representing values from around 7x10^9 to 2x10^-9 with about one
+   * significant decimal digit of accuracy.  Zero is also represented.
+   * Negative numbers are rounded up to zero.  Values too large to represent
+   * are rounded down to the largest representable value.  Positive values too
+   * small to represent are rounded up to the smallest positive representable
+   * value.
+   *
+   * @see org.apache.lucene.document.Field#setBoost(float)
+   * @see org.apache.lucene.util.SmallFloat
+   */
+  public static byte encodeNorm(float f) {
+    return SmallFloat.floatToByte315(f);
+  }
+

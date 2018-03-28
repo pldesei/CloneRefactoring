@@ -1,0 +1,15 @@
+(startLine=149 endLine=161 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00323/tests/org/jfree/chart/plot/CombinedDomainCategoryPlotTest.java)
+    public void testSerialization() throws IOException, ClassNotFoundException {
+        CombinedDomainCategoryPlot plot1 = createPlot();
+        CombinedDomainCategoryPlot plot2;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(buffer);
+        out.writeObject(plot1);
+        out.close();
+        ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(
+                buffer.toByteArray()));
+        plot2 = (CombinedDomainCategoryPlot) in.readObject();
+        in.close();
+        assertEquals(plot1, plot2);
+    }
+

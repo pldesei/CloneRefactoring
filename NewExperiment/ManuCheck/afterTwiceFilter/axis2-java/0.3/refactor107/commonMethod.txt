@@ -1,0 +1,44 @@
+(startLine=2522 endLine=2563 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00921/modules/adb-codegen/src/org/apache/axis2/schema/SchemaCompiler.java)
+    /**
+     * returns the parent schema of the componet having QName compoentTypeQName.
+     * withe the componet type.
+     * @param parentSchema - parent schema of the given componet
+     * @param componentQName - qname of the componet, of which we want to get the parent schema
+     * @param componetType - type of the componet. this can either be type,element,attribute or attribute group
+     * @return parent schema.
+     */
+
+    private XmlSchema getParentSchema(XmlSchema parentSchema,
+                                      QName componentQName,
+                                      int componetType) throws SchemaCompilationException {
+        // if the componet do not have a propernamesapce or
+        // it is equals to the xsd scheam namesapce
+        // we do not have to do any thing.
+        if ((componentQName == null) ||
+              (componentQName.getNamespaceURI() == null) ||
+                Constants.URI_2001_SCHEMA_XSD.equals(componentQName.getNamespaceURI())){
+            return parentSchema;
+        }
+
+        List visitedSchemas = new ArrayList();
+        visitedSchemas.add(parentSchema);
+        XmlSchema newParentSchema = getParentSchemaFromIncludes(parentSchema,
+                componentQName,componetType,visitedSchemas);
+        if (newParentSchema == null){
+            String targetNamespace = componentQName.getNamespaceURI();
+            if (loadedSchemaMap.containsKey(targetNamespace)){
+                XmlSchema tempSchema = (XmlSchema) loadedSchemaMap.get(targetNamespace);
+                if (isComponetExists(tempSchema,componentQName,componetType)){
+                    newParentSchema = tempSchema;
+                }
+            } else if (availableSchemaMap.containsKey(targetNamespace)){
+                XmlSchema tempSchema = (XmlSchema) availableSchemaMap.get(targetNamespace);
+                if (isComponetExists(tempSchema,componentQName,componetType)){
+                    compile(tempSchema);
+                    newParentSchema = tempSchema;
+                }
+            }
+        }
+        return newParentSchema;
+    }
+

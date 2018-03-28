@@ -1,0 +1,13 @@
+(startLine=718 endLine=728 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02273/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodVerifier.java)
+void collectAllDistinctSuperInterfaces(ReferenceBinding[] superInterfaces, Set seen, List result) {
+	// use 'seen' to avoid duplicates, use result to maintain stable order
+	int length = superInterfaces.length;
+	for (int i=0; i<length; i++) {
+		ReferenceBinding superInterface = superInterfaces[i];
+		if (seen.add(superInterface)) {
+			result.add(superInterface);
+			collectAllDistinctSuperInterfaces(superInterface.superInterfaces(), seen, result);
+		}
+	}
+}
+

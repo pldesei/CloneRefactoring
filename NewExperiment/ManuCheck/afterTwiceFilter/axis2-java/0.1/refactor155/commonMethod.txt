@@ -1,0 +1,12 @@
+(startLine=181 endLine=190 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01144/modules/adb-codegen/test/org/apache/axis2/schema/AbstractTestCase.java)
+    /**
+     * Serialize a bean to XML, then deserialize the XML and compare the resulting bean to
+     * the original.
+     * 
+     * @param bean the bean to serialize
+     * @throws Exception
+     */
+    public static void testSerializeDeserialize(ADBBean bean) throws Exception {
+        assertBeanEquals(bean, serializeDeserialize(bean));
+    }
+

@@ -1,0 +1,15 @@
+(startLine=2273 endLine=2285 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02093/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+				for (int i = 0; i < length;) {
+					// write the entry
+					if (localContentsOffset + 4 >= this.contents.length) {
+						resizeContents(4);
+					}
+					int pc = pcToSourceMapTable[i++];
+					this.contents[localContentsOffset++] = (byte) (pc >> 8);
+					this.contents[localContentsOffset++] = (byte) pc;
+					int lineNumber = pcToSourceMapTable[i++];
+					this.contents[localContentsOffset++] = (byte) (lineNumber >> 8);
+					this.contents[localContentsOffset++] = (byte) lineNumber;
+					numberOfEntries++;
+				}
+

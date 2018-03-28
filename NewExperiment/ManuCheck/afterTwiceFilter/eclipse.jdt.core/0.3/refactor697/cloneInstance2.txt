@@ -1,0 +1,28 @@
+(startLine=4836 endLine=4861 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01657/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/MethodVerifyTest.java)
+	public void test073d() {
+		String expectedOutput = new CompilerOptions(getCompilerOptions()).sourceLevel < ClassFileConstants.JDK1_6
+		?	"----------\n" + 
+			"1. ERROR in NumericArray5.java (at line 5)\r\n" + 
+			"	@Override public void add(Number n, Integer i) {}\r\n" + 
+			"	                      ^^^^^^^^^^^^^^^^^^^^^^^^\n" + 
+			"The method add(Number, Integer) of type NumericArray5<T> must override a superclass method\n" + 
+			"----------\n"
+		:	"----------\n" + 
+			"1. ERROR in NumericArray5.java (at line 5)\n" + 
+			"	@Override public void add(Number n, Integer i) {}\n" + 
+			"	                      ^^^^^^^^^^^^^^^^^^^^^^^^\n" + 
+			"The method add(Number, Integer) of type NumericArray5<T> must override or implement a supertype method\n" + 
+			"----------\n";		
+		this.runNegativeTest(
+			new String[] {
+				"NumericArray5.java",
+				"class Array<T> {\n" + 
+				"	public <U> void add(T t, U u) {}\n" + 
+				"}\n" + 
+				"public class NumericArray5<T extends Number> extends Array<T> {\n" +
+				"	@Override public void add(Number n, Integer i) {}\n" +
+				"}"
+			},
+			expectedOutput);
+	}
+

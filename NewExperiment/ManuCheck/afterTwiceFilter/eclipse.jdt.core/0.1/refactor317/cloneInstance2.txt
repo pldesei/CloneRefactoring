@@ -1,0 +1,51 @@
+(startLine=972 endLine=1020 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00660/org.eclipse.jdt.core/dom/org/eclipse/jdt/core/dom/AST.java)
+		IProgressMonitor monitor) {
+			
+		if (source == null) {
+			throw new IllegalArgumentException();
+		}
+		if (unitName == null && project != null) {
+			throw new IllegalArgumentException();
+		}
+		if (project == null) {
+			// this just reduces to the other simplest case
+			return parseCompilationUnit(source);
+		}
+		if (owner == null) {
+			owner = DefaultWorkingCopyOwner.PRIMARY;
+		}
+	
+		CompilationUnitDeclaration compilationUnitDeclaration = null;
+		try {
+			// parse and resolve
+			compilationUnitDeclaration =
+				CompilationUnitResolver.resolve(
+					source,
+					unitName,
+					project,
+					false/*don't cleanup*/,
+					owner,
+					monitor);
+			ASTConverter converter = new ASTConverter(project.getOptions(true), true, monitor);
+			AST ast = new AST();
+			BindingResolver resolver = new DefaultBindingResolver(compilationUnitDeclaration.scope);
+			ast.setBindingResolver(resolver);
+			converter.setAST(ast);
+		
+			CompilationUnit cu = converter.convert(compilationUnitDeclaration, source);
+			cu.setLineEndTable(compilationUnitDeclaration.compilationResult.lineSeparatorPositions);
+			resolver.storeModificationCount(ast.modificationCount());
+			return cu;
+		} catch(JavaModelException e) {
+			/* if a JavaModelException is thrown trying to retrieve the name environment
+			 * then we simply do a parsing without creating bindings.
+			 * Therefore all binding resolution will return null.
+			 */
+			return parseCompilationUnit(source);			
+		} finally {
+			if (compilationUnitDeclaration != null) {
+				compilationUnitDeclaration.cleanUp();
+			}
+		}
+	}
+

@@ -1,0 +1,22 @@
+(startLine=696 endLine=715 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02335/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+	private void formatDimensions(TypeReference typeReference, int anchor, int count, boolean spaceBeforeAnnotation) {
+		if (count != 0) {
+			if (this.preferences.insert_space_before_opening_bracket_in_array_type_reference) {
+				this.scribe.space();
+			}
+			Annotation[][] annotationsOnDimensions = typeReference != null ? typeReference.getAnnotationsOnDimensions() : null;
+			 for (int i = 0; i < count; i++) {
+				int dimensionIndex = anchor + i;
+				if (annotationsOnDimensions != null && annotationsOnDimensions.length > dimensionIndex) {
+					boolean hadAnnotations = formatInlineAnnotations(annotationsOnDimensions[dimensionIndex], spaceBeforeAnnotation && i == 0);
+					if (hadAnnotations && this.preferences.insert_space_before_opening_bracket_in_array_type_reference) this.scribe.space();
+				}
+			 	this.scribe.printNextToken(TerminalTokens.TokenNameLBRACKET);
+			 	if (this.preferences.insert_space_between_brackets_in_array_type_reference) {
+			 		this.scribe.space();
+			 	}
+			 	this.scribe.printNextToken(TerminalTokens.TokenNameRBRACKET);
+			 }
+		}
+	}
+

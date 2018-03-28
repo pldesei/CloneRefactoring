@@ -1,0 +1,9 @@
+(startLine=72 endLine=78 srcPath=/home/sonia/NewExperiment/luceneFilter/00033/src/test/org/apache/lucene/search/TestRangeQuery.java)
+  private void initializeIndex(String[] values) throws IOException {
+    IndexWriter writer = new IndexWriter(dir, new WhitespaceAnalyzer(), true);
+    for (int i = 0; i < values.length; i++) {
+      insertDoc(writer, values[i]);
+    }
+    writer.close();
+  }
+

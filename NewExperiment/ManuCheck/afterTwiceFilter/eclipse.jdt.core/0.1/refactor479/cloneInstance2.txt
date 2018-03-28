@@ -1,0 +1,38 @@
+(startLine=1615 endLine=1650 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01128/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/Compliance_1_3.java)
+public void test044() {
+	this.runConformTest(
+		new String[] {
+			"X.java",
+			"public class X {\n" +
+			"    public static void main(String[] args) {\n" +
+			"		args.clone();	\n"+
+			"		System.out.println(\"SUCCESS\");\n" +
+			"    }\n" +
+			"}\n",
+		},
+		"SUCCESS");
+		
+	ClassFileBytesDisassembler disassembler = ToolFactory.createDefaultClassFileBytesDisassembler();
+	String actualOutput = null;
+	try {
+		byte[] classFileBytes = org.eclipse.jdt.internal.compiler.util.Util.getFileByteContent(new File(OUTPUT_DIR + File.separator  +"X.class"));
+		actualOutput =
+			disassembler.disassemble(
+				classFileBytes,
+				"\n",
+				ClassFileBytesDisassembler.DETAILED); 
+	} catch (org.eclipse.jdt.core.util.ClassFormatException e) {
+		assertTrue("ClassFormatException", false);
+	} catch (IOException e) {
+		assertTrue("IOException", false);
+	}
+	
+	String expectedOutput = 
+		"     1  invokevirtual java/lang/Object.clone()Ljava/lang/Object; [19]\n"; 
+		
+	if (actualOutput.indexOf(expectedOutput) == -1) {
+		System.out.println(org.eclipse.jdt.core.tests.util.Util.displayString(actualOutput, 2));
+	}
+	assertTrue("unexpected bytecode sequence", actualOutput.indexOf(expectedOutput) != -1);
+}
+

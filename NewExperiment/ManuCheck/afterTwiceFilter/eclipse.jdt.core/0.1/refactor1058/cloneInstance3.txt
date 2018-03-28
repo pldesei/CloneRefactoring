@@ -1,0 +1,13 @@
+(startLine=110 endLine=120 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02697/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/parser/TestAll.java)
+	if ((possibleComplianceLevels & AbstractCompilerTest.F_1_6) != 0) {
+		ArrayList tests_1_6 = (ArrayList)testClasses.clone();
+		tests_1_6.addAll(TEST_CLASSES_1_5);
+		// Reset forgotten subsets tests
+		TestCase.TESTS_PREFIX = null;
+		TestCase.TESTS_NAMES = null;
+		TestCase.TESTS_NUMBERS= null;
+		TestCase.TESTS_RANGE = null;
+		TestCase.RUN_ONLY_ID = null;
+		all.addTest(AbstractCompilerTest.buildComplianceTestSuite(ClassFileConstants.JDK1_6, tests_1_6));
+	}
+

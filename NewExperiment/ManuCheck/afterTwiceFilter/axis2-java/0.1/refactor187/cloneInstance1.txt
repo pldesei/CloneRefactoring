@@ -1,0 +1,53 @@
+(startLine=1199 endLine=1249 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01371/modules/jaxws-integration/src/test/java/org/apache/axis2/jaxws/sample/AddNumbersHandlerTests.java)
+    public void testOneWayWithProtocolException() {
+        Exception exception = null;
+        try {
+            TestLogger.logger.debug("----------------------------------");
+            TestLogger.logger.debug("test: " + getName());
+
+            AddNumbersHandlerService service = new AddNumbersHandlerService();
+            AddNumbersHandlerPortType proxy = service.getAddNumbersHandlerPort();
+
+            BindingProvider p = (BindingProvider) proxy;
+
+            p.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, axisEndpoint);
+            p.getRequestContext().put("myClientKey", "myClientVal");
+
+            List<Handler> handlers = p.getBinding().getHandlerChain();
+            if (handlers == null)
+                handlers = new ArrayList<Handler>();
+            handlers.add(new AddNumbersClientLogicalHandler());
+            handlers.add(new AddNumbersClientProtocolHandler());
+            p.getBinding().setHandlerChain(handlers);
+            
+            BindingProvider bp = (BindingProvider) proxy;
+            bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, axisEndpoint);
+            // value 99 will trigger exception from AddNumbersClientLogicalHandler
+            proxy.oneWayInt(99);
+        } catch (Exception e) {            
+            e.printStackTrace();
+            exception = e;
+        }
+        
+        // exceptions on one-way invocations are suppressed by default
+        assertNull(exception);
+            
+        // one-way invocations run in their own thread,
+        // and we can't tell here in the client when it
+        // has completed.  So, we need to wait long enough
+        // for the invocation to complete, so our log file
+        // is fully populated.
+        try {
+            Thread.sleep(1000 * 5); // 5 seconds
+        } catch (InterruptedException ie) {
+            // nothing
+        }
+            
+        String log = readLogFile();
+        String expected_calls = "AddNumbersClientLogicalHandler HANDLE_MESSAGE_OUTBOUND\n"
+                + "AddNumbersClientLogicalHandler CLOSE\n";
+        assertEquals(expected_calls, log);
+                    
+        TestLogger.logger.debug("----------------------------------");
+    }
+

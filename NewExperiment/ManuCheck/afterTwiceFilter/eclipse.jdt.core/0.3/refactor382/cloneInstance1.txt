@@ -1,0 +1,25 @@
+(startLine=96 endLine=118 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00794/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/FieldBinding.java)
+	if (isPrivate()) {
+		// answer true if the receiverType is the declaringClass
+		// AND the invocationType and the declaringClass have a common enclosingType
+		if (receiverType != declaringClass) return false;
+
+		if (invocationType != declaringClass) {
+			ReferenceBinding outerInvocationType = invocationType;
+			ReferenceBinding temp = outerInvocationType.enclosingType();
+			while (temp != null) {
+				outerInvocationType = temp;
+				temp = temp.enclosingType();
+			}
+
+			ReferenceBinding outerDeclaringClass = (ReferenceBinding)declaringClass.erasure();
+			temp = outerDeclaringClass.enclosingType();
+			while (temp != null) {
+				outerDeclaringClass = temp;
+				temp = temp.enclosingType();
+			}
+			if (outerInvocationType != outerDeclaringClass) return false;
+		}
+		return true;
+	}
+

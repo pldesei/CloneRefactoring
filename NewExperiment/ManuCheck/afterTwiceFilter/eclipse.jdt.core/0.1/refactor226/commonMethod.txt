@@ -1,0 +1,10 @@
+(startLine=862 endLine=869 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00261/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	public final ReferenceBinding getJavaLangThrowable() {
+		compilationUnitScope().recordQualifiedReference(JAVA_LANG_THROWABLE);
+		ReferenceBinding type = environment().getType(JAVA_LANG_THROWABLE);
+		if (type != null) return type;
+	
+		problemReporter().isClassPathCorrect(JAVA_LANG_THROWABLE, referenceCompilationUnit());
+		return null; // will not get here since the above error aborts the compilation
+	}
+

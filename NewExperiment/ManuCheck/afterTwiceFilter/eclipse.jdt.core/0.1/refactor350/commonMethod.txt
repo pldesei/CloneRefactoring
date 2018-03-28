@@ -1,0 +1,16 @@
+(startLine=78 endLine=91 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00758/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/MethodBinding.java)
+public final boolean areParameterErasuresEqual(MethodBinding method) {
+	TypeBinding[] args = method.parameters;
+	if (parameters == args)
+		return true;
+
+	int length = parameters.length;
+	if (length != args.length)
+		return false;
+
+	for (int i = 0; i < length; i++) {
+		if (parameters[i].erasure() != args[i].erasure()) return false;
+	}
+	return true;
+}
+

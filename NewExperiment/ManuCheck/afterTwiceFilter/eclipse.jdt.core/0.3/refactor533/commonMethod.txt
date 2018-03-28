@@ -1,0 +1,23 @@
+(startLine=176 endLine=196 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01377/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaModelTests.java)
+	/**
+	 * Build a test suite with all tests computed from public methods starting with "test"
+	 * found in the given test class.
+	 * Test suite name is the name of the given test class.
+	 * 
+	 * Note that this lis maybe reduced using some mechanisms detailed in {@link #buildTestsList(Class)} method.
+	 * 
+	 * This test suite differ from this computed in {@link TestCase} in the fact that this is
+	 * a {@link Suite} instead of a simple framework {@link TestSuite}.
+	 * 
+	 * @param evaluationTestClass
+	 * @return a test suite ({@link Test}) 
+	 */
+	public static Test buildModelTestSuite(Class evaluationTestClass) {
+		TestSuite suite = new Suite(evaluationTestClass.getName());
+		List tests = buildTestsList(evaluationTestClass);
+		for (int index=0, size=tests.size(); index<size; index++) {
+			suite.addTest((Test)tests.get(index));
+		}
+		return suite;
+	}
+

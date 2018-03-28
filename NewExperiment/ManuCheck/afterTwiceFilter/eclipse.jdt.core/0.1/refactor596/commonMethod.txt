@@ -1,0 +1,18 @@
+(startLine=1795 endLine=1810 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+private void setUpBug83304_TypeParameterizedElementPattern() throws CoreException {
+	resultCollector.showRule = true;
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b83304/Types.java",
+		"package b83304;\n" + 
+		"import g1.t.s.def.Generic;\n" + 
+		"public class Types {\n" + 
+		"	public Generic gen;\n" + 
+		"	public Generic<Object> gen_obj;\n" + 
+		"	public Generic<Exception> gen_exc;\n" + 
+		"	public Generic<?> gen_wld;\n" + 
+		"	public Generic<? extends Throwable> gen_thr;\n" + 
+		"	public Generic<? super RuntimeException> gen_run;\n" + 
+		"}\n"
+	);
+}
+

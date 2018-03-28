@@ -1,0 +1,11 @@
+(startLine=305 endLine=313 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/particalmaxoccurs/ParticalMaxOccursTest.java)
+        try {
+            OMElement omElement =
+                     testParticalChoiceMaxOccurs.getOMElement(TestParticalChoiceMaxOccurs.MY_QNAME, OMAbstractFactory.getOMFactory());
+            String omElementString = omElement.toStringWithConsume();
+            System.out.println("OM string ==> " + omElementString);
+            XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+            TestParticalChoiceMaxOccurs result = TestParticalChoiceMaxOccurs.Factory.parse(xmlReader);
+            assertEquals(result.getTestParticalChoiceMaxOccurs().getParm1(), "Param1");
+        } catch (XMLStreamException e) {
+

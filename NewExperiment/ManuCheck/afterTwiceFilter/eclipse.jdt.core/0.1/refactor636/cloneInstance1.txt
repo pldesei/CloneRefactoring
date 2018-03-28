@@ -1,0 +1,19 @@
+(startLine=2317 endLine=2333 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01476/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+						i++) {
+					switch (currentArgChars[i]) {
+						case '[':
+							throw new InvalidInputException(
+								Main.bind("configure.accessRuleAfterDestinationPath", //$NON-NLS-1$ 
+											"[-d " + currentArg)); //$NON-NLS-1$ 
+						case ']':
+							if (mode != INSIDE_CLASSPATH_bracket) {
+								throw new InvalidInputException(
+									Main.bind("configure.unexpectedBracket", //$NON-NLS-1$ 
+												currentArg));
+							} else {
+								mode = DEFAULT;
+							}
+							break;
+					}
+				}
+

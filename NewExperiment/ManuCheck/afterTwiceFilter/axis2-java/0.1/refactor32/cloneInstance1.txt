@@ -1,0 +1,16 @@
+(startLine=119 endLine=132 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00609/modules/kernel/src/org/apache/axis2/transport/http/HTTPWorker.java)
+                if (service != null) {
+                    final String ip = HttpUtils.getIpAddress();
+                    EntityTemplate entity = new EntityTemplate(new ContentProducer() {
+
+                        public void writeTo(final OutputStream outstream) throws IOException {
+                            service.printWSDL2(outstream, ip, servicePath);
+                        }
+
+                    });
+                    entity.setContentType("text/xml");
+                    entity.setChunked(chunked);
+                    response.setEntity(entity);
+                    return;
+                }
+

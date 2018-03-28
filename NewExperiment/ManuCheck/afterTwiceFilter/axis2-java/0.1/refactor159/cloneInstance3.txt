@@ -1,0 +1,13 @@
+(startLine=183 endLine=193 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01143/modules/adb-codegen/test/org/apache/axis2/schema/group/GroupTest.java)
+        try {
+            OMElement omElement =
+                    testNestedAttributeGroupElement.getOMElement(TestNestedAttributeGroupElement.MY_QNAME,OMAbstractFactory.getOMFactory());
+             String omElementString = omElement.toStringWithConsume();
+             System.out.println("OM Element ==> " + omElementString);
+             XMLStreamReader xmlReader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(omElementString.getBytes()));
+             TestNestedAttributeGroupElement result = TestNestedAttributeGroupElement.Factory.parse(xmlReader);
+             assertEquals(result.getParam1(),"Param1");
+             assertEquals(result.getAttribute1(),"Attribute1");
+             assertEquals(result.getAttribute2(),"Attribute2");
+         } catch (XMLStreamException e) {
+

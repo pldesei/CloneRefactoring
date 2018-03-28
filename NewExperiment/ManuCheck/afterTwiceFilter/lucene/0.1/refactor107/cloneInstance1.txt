@@ -1,0 +1,18 @@
+(startLine=46 endLine=61 srcPath=/home/sonia/NewExperiment/luceneFilter/01792/lucene/analysis/common/src/java/org/apache/lucene/analysis/compound/DictionaryCompoundWordTokenFilterFactory.java)
+  public DictionaryCompoundWordTokenFilterFactory(Map<String, String> args) {
+    super(args);
+    assureMatchVersion();
+    dictFile = args.remove("dictionary");
+    if (null == dictFile) {
+      throw new IllegalArgumentException("Missing required parameter: dictionary");
+    }
+
+    minWordSize = getInt(args, "minWordSize", CompoundWordTokenFilterBase.DEFAULT_MIN_WORD_SIZE);
+    minSubwordSize = getInt(args, "minSubwordSize", CompoundWordTokenFilterBase.DEFAULT_MIN_SUBWORD_SIZE);
+    maxSubwordSize = getInt(args, "maxSubwordSize", CompoundWordTokenFilterBase.DEFAULT_MAX_SUBWORD_SIZE);
+    onlyLongestMatch = getBoolean(args, "onlyLongestMatch", true);
+    if (!args.isEmpty()) {
+      throw new IllegalArgumentException("Unknown parameters: " + args);
+    }
+  }
+

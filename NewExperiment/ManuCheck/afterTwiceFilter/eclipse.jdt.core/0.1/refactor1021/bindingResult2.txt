@@ -1,0 +1,13 @@
+ProjectPath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02389
+predFragLineRange:461-503
+predMethodLineRange:461-503
+nextLineRange:409-439
+predStrMethodInvoNames:
+[getCompilerOptions, put, put, runNegativeTest]
+%%%%%%%%%%
+AddedMethodInvo Line:410 InvoName:runNegativeTestWithLibs(new String[]{"Wrapper.java","public class Wrapper<T> {\n" + "	T content;" + "	public T content() { return content; }\n"+ "}\n","A.java","import org.eclipse.jdt.annotation.*;\n" + "public class A {\n" + "    void bar(Wrapper<@NonNull String[][]> realStrings, Wrapper<@Nullable String[][]> maybeStrings) {\n"+ "        System.out.println(realStrings.content()[0][0].toUpperCase()); // no problem\n"+ "        realStrings.content()[0][0] = null; // problem: cannot assign null as @NonNull element\n"+ "        System.out.println(maybeStrings.content()[0][0].toUpperCase()); // problem: element can be null\n"+ "        maybeStrings.content()[0][0] = null; // no problem\n"+ "    }\n"+ "}\n"},"----------\n" + "1. ERROR in A.java (at line 5)\n" + "	realStrings.content()[0][0] = null; // problem: cannot assign null as @NonNull element\n"+ "	^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"+ "Null type mismatch: required \'@NonNull String\' but the provided value is null\n"+ "----------\n"+ "2. ERROR in A.java (at line 6)\n"+ "	System.out.println(maybeStrings.content()[0][0].toUpperCase()); // problem: element can be null\n"+ "	                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"+ "Potential null pointer access: array element may be null\n"+ "----------\n")
+PackageName:org.eclipse.jdt.core.tests.compiler.regression
+QualifiedClassName:org.eclipse.jdt.core.tests.compiler.regression.AbstractNullAnnotationTest
+ClassName:AbstractNullAnnotationTest
+InvokedFilePath:/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02389/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/AbstractNullAnnotationTest.java
+InvokedMethodSig:void runNegativeTestWithLibs(java.lang.String[], java.lang.String) 

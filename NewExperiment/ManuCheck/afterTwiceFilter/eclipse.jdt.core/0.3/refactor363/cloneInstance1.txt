@@ -1,0 +1,15 @@
+(startLine=815 endLine=827 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00764/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/parser/AbstractCommentParser.java)
+					if (typeRef == null) {
+						consumeToken();
+						while (Character.isWhitespace(this.source[this.index])) {
+							if (this.source[this.index] == '\r' || this.source[this.index] == '\n') {
+								if (this.kind == DOM_PARSER) {
+									parseTag();
+									pushText(previousPosition, this.index);
+								}
+								return true;
+							}
+							this.index++;
+						}
+					}
+

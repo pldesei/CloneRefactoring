@@ -1,0 +1,18 @@
+(startLine=1706 endLine=1721 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01230/org.eclipse.jdt.core/codeassist/org/eclipse/jdt/internal/codeassist/CompletionEngine.java)
+			if(!this.requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+				CompletionProposal proposal = this.createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
+				proposal.setDeclarationSignature(packageName);
+				proposal.setSignature(getSignature(refBinding));
+				proposal.setPackageName(packageName);
+				proposal.setTypeName(typeName);
+				proposal.setCompletion(CharOperation.NO_CHAR);
+				proposal.setFlags(refBinding.modifiers);
+				proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+				proposal.setRelevance(relevance);
+				proposal.setAccessibility(accessibility);
+				this.requestor.accept(proposal);
+				if(DEBUG) {
+					this.printDebug(proposal);
+				}
+			}
+

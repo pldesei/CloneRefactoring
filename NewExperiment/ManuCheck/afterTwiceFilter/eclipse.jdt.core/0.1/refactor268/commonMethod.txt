@@ -1,0 +1,16 @@
+(startLine=1205 endLine=1218 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00465/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+	private void disableWarnings() {
+		Object[] entries = options.entrySet().toArray();
+		for (int i = 0, max = entries.length; i < max; i++) {
+			Map.Entry entry = (Map.Entry) entries[i];
+			if (!(entry.getKey() instanceof String))
+				continue;
+			if (!(entry.getValue() instanceof String))
+				continue;
+			if (((String) entry.getValue()).equals(CompilerOptions.WARNING)) {
+				options.put((String) entry.getKey(), CompilerOptions.IGNORE);
+			}
+		}
+		options.put(CompilerOptions.OPTION_TaskTags, ""); //$NON-NLS-1$
+	}
+

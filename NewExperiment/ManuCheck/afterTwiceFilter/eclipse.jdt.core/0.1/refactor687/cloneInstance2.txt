@@ -1,0 +1,13 @@
+(startLine=87 endLine=97 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01561/org.eclipse.jdt.compiler.apt/batch/org/eclipse/jdt/internal/compiler/apt/dispatch/AnnotationDiscoveryVisitor.java)
+	public boolean visit(FieldDeclaration fieldDeclaration, MethodScope scope) {
+		this.currentBinding = fieldDeclaration.binding;
+		Annotation[] annotations = fieldDeclaration.annotations;
+		if (annotations != null) {
+			int annotationsLength = annotations.length;
+			for (int i = 0; i < annotationsLength; i++) {
+				annotations[i].traverse(this, scope);
+			}
+		}
+		return false;
+	}
+

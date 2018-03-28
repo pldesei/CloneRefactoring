@@ -1,0 +1,20 @@
+(startLine=1856 endLine=1873 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java)
+			} else {
+				this.handle(
+					IProblem.IncorrectArityForParameterizedConstructor  ,
+					new String[] { 
+					        new String(shownConstructor.declaringClass.sourceName()),
+					        parametersAsString(shownConstructor.parameters, false), 
+					        new String(shownConstructor.declaringClass.readableName()), 
+							parametersAsString(shownConstructor.typeVariables, false),
+					        parametersAsString(targetConstructor.parameters, false) },
+					new String[] { 
+					        new String(shownConstructor.declaringClass.sourceName()),
+					        parametersAsString(shownConstructor.parameters, true), 
+					        new String(shownConstructor.declaringClass.shortReadableName()), 
+							parametersAsString(shownConstructor.typeVariables, true),
+					        parametersAsString(targetConstructor.parameters, true) },
+					statement.sourceStart,
+					statement.sourceEnd);		    
+			}
+

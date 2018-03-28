@@ -1,0 +1,16 @@
+(startLine=2280 endLine=2293 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00557/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchTests.java)
+public void testStaticMethodReference1() throws JavaModelException, CoreException {
+	IType type = getCompilationUnit("JavaSearch", "src", "p", "Y.java").getType("Y");
+	IMethod method = type.getMethod("bar", new String[] {});
+	JavaSearchResultCollector resultCollector = new JavaSearchResultCollector();
+	new SearchEngine().search(
+		getWorkspace(), 
+		method, 
+		REFERENCES, 
+		getJavaSearchScope(), 
+		resultCollector);
+	assertEquals(
+		"src/Test.java Test.main(String[]) -> void [bar()]", 
+		resultCollector.toString());
+}
+

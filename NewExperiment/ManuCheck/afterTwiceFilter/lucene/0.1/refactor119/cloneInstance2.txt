@@ -1,0 +1,24 @@
+(startLine=80 endLine=101 srcPath=/home/sonia/NewExperiment/luceneFilter/01867/solr/core/src/test/org/apache/solr/core/SolrCoreCheckLockOnStartupTest.java)
+  public void testNativeLockErrorOnStartup() throws Exception {
+
+    Directory directory = newFSDirectory(new File(dataDir, "index"), new NativeFSLockFactory());
+    //creates a new IndexWriter without releasing the lock yet
+    IndexWriter indexWriter = new IndexWriter(directory, new IndexWriterConfig(Version.LUCENE_40, null));
+
+    try {
+      //opening a new core on the same index
+      initCore("solrconfig-nativelock.xml", "schema.xml");
+      fail("Expected " + LockObtainFailedException.class.getSimpleName());
+    } catch(Throwable t) {
+      assertTrue(t instanceof RuntimeException);
+      assertNotNull(t.getCause());
+      assertTrue(t.getCause() instanceof RuntimeException);
+      assertNotNull(t.getCause().getCause());
+      assertTrue(t.getCause().getCause() instanceof  LockObtainFailedException);
+    } finally {
+      indexWriter.close();
+      directory.close();
+      deleteCore();
+    }
+  }
+

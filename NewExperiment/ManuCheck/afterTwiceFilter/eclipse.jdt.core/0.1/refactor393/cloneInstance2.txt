@@ -1,0 +1,17 @@
+(startLine=3084 endLine=3098 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00839/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/CodeStream.java)
+public void invokeJavaUtilIteratorNext() {
+	// invokeinterface java.util.Iterator.next()java.lang.Object
+	if (DEBUG) System.out.println(position + "\t\tinvokeinterface: java.util.Iterator.next()java.lang.Object"); //$NON-NLS-1$
+	countLabels = 0;
+	if (classFileOffset + 4 >= bCodeStream.length) {
+		resizeByteArray();
+	}
+	position += 3;
+	bCodeStream[classFileOffset++] = OPC_invokeinterface;
+	writeUnsignedShort(constantPool.literalIndexForJavaUtilIteratorNext());
+	bCodeStream[classFileOffset++] = 1;
+	// Generate a  0 into the byte array. Like the array is already fill with 0, we just need to increment
+	// the number of bytes.
+	bCodeStream[classFileOffset++] = 0;
+}
+

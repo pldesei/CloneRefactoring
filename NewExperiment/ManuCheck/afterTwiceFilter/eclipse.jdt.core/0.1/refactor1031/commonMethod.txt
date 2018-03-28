@@ -1,0 +1,24 @@
+(startLine=283 endLine=304 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02422/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/TypeSystem.java)
+	protected final TypeBinding cacheDerivedType(TypeBinding keyType, TypeBinding nakedType, TypeBinding derivedType) {
+		
+		/* Cache the derived type, tagging it as a derivative of both the key type and the naked type.
+		   E.g: int @NonNull [] would be tagged as a derived type of both int and int []. This is not
+		   needed for correctness, but for annotated object reuse. We provide two alternate ways to
+		   annotate a type: 
+		   
+		   Taking parameterized types as an example, a call to getParamaterizedType can be made with annotations
+		   to create @NonNull List<@NonNull String> in one stroke. Or a parameterized type can be created first
+		   and then annotated via getAnnotatedType. In the former case, the tables get looked up with List as
+		   the key, in the latter with List<String> as the key.
+		   
+		   Binary vs source, substitutions, annotation re-attribution from SE7 locations etc trigger these
+		   alternate code paths. Unless care is exercised, we will end up with duplicate objects (that share
+		   the same TypeBinding.id => correctness is not an issue, but memory wastage is)
+		*/
+		cacheDerivedType(keyType, derivedType);
+		if (nakedType.id != keyType.id) {
+			cacheDerivedType(nakedType, derivedType);
+		}
+		return derivedType;
+	}
+

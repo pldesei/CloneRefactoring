@@ -1,0 +1,17 @@
+(startLine=5229 endLine=5243 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02338/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+	private boolean formatInlineAnnotations(final Annotation[] annotations, boolean spaceBefore) {
+		if (annotations != null ) {
+			if (spaceBefore) this.scribe.space();
+			int length = annotations.length;
+			for (int i = 0; i < length; ++i) {
+				if (i != 0) this.scribe.space();
+				annotations[i].traverse(this, (BlockScope)null);
+			}
+			if (length > 0 && !this.isNextTokenPunctuation()) {
+				this.scribe.space();
+			}
+			return true;
+		}
+		return false;
+	}
+

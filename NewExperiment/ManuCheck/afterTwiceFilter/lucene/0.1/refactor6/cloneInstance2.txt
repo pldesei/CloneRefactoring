@@ -1,0 +1,31 @@
+(startLine=246 endLine=274 srcPath=/home/sonia/NewExperiment/luceneFilter/00181/src/java/org/apache/lucene/search/PhrasePrefixQuery.java)
+  public final String toString(String f) {
+    StringBuffer buffer = new StringBuffer();
+    if (!field.equals(f)) {
+      buffer.append(field);
+      buffer.append(":");
+    }
+
+    buffer.append("\"");
+    Iterator i = termArrays.iterator();
+    while (i.hasNext()) {
+      Term[] terms = (Term[])i.next();
+      buffer.append(terms[0].text() + (terms.length > 1 ? "*" : ""));
+      if (i.hasNext())
+        buffer.append(" ");
+    }
+    buffer.append("\"");
+
+    if (slop != 0) {
+      buffer.append("~");
+      buffer.append(slop);
+    }
+
+    if (getBoost() != 1.0f) {
+      buffer.append("^");
+      buffer.append(Float.toString(getBoost()));
+    }
+
+    return buffer.toString();
+  }
+

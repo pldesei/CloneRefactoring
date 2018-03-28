@@ -1,0 +1,26 @@
+(startLine=69 endLine=92 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01368/modules/jaxws-integration/src/test/java/org/apache/axis2/jaxws/security/BasicAuthSecurityTests.java)
+    public void testBasicAuth_uid_pwd() throws Exception {
+        TestLogger.logger.debug("---------------------------------------");
+        TestLogger.logger.debug("test: " + getName());
+        
+        Dispatch<String> dispatch = getDispatch(Service.Mode.PAYLOAD,
+        		                                endpointUrl,
+        		                                SOAPBinding.SOAP11HTTP_BINDING);
+        
+        dispatch.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, USER_ID);
+		dispatch.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, PASSWORD);
+
+        TestLogger.logger.debug(">> Invoking Dispatch<String> BasicAuthSecurityService");
+        String retVal = dispatch.invoke(xmlString);
+        TestLogger.logger.debug(">> Response [" + retVal + "]");
+        
+        assertTrue(retVal != null);
+        
+        // Invoke a second time to verify
+        TestLogger.logger.debug(">> Invoking Dispatch<String> BasicAuthSecurityService");
+        retVal = dispatch.invoke(xmlString);
+        TestLogger.logger.debug(">> Response [" + retVal + "]");
+        
+        assertTrue(retVal != null);
+    }
+

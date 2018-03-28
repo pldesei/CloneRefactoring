@@ -1,0 +1,15 @@
+(startLine=2069 endLine=2081 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02723/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTVisitorTest.java)
+	public void testSuperMethodReference() {
+		if (this.ast.apiLevel() < AST.JLS8) {
+			return;
+		}
+		SuperMethodReference x1 = this.ast.newSuperMethodReference();
+		x1.setQualifier(this.N1);
+		x1.setName(this.N2);
+		TestVisitor v1 = new TestVisitor();
+		this.b.setLength(0);
+		x1.accept(v1);
+		String result = this.b.toString();
+		assertTrue(result.equals("[(eSMR"+this.N1S+this.N2S+"eSMR)]")); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+

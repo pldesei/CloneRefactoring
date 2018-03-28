@@ -1,0 +1,16 @@
+(startLine=253 endLine=266 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00506/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/ResolveTests.java)
+public void testResolveTypeInComment() throws JavaModelException {
+	ICompilationUnit cu = getCompilationUnit("Resolve", "src", "", "ResolveTypeInComment.java");
+
+	String str = cu.getSource();
+	String selectAt = "X */";
+	String selection = "X";
+	int start = str.indexOf(selectAt);
+	int length = selection.length();
+	IJavaElement[] elements = cu.codeSelect(start, length);
+	
+	assertTrue("should have one type", elements.length == 1 &&
+		elements[0] instanceof IType &&
+		((IType)elements[0]).getFullyQualifiedName().equals("p2.X"));	
+}
+

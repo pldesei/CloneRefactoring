@@ -1,0 +1,28 @@
+(startLine=162 endLine=187 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00935/modules/kernel/src/org/apache/axis2/clustering/context/Replicator.java)
+    private static void waitForACKs(ContextManager contextManager,
+                                    String msgUUID,
+                                    ConfigurationContext configCtx) throws ClusteringFault {
+        long start = System.currentTimeMillis();
+
+        // Wait till all members have ACKed receipt & successful processing of
+        // the message with UUID 'msgUUID'
+        do {
+
+            // Wait sometime before checking whether message is ACKed
+            try {
+                Long tts =
+                        (Long) configCtx.getPropertyNonReplicable(ClusteringConstants.TIME_TO_SEND);
+                if (tts == null) {
+                    Thread.sleep(5);
+                } else if (tts.longValue() >= 0) {
+                    Thread.sleep(tts.longValue() + 5); // Time to recv ACK + time in queue & processing replication request
+                }
+            } catch (InterruptedException ignored) {
+            }
+            if (System.currentTimeMillis() - start > 45000) {
+                throw new ClusteringFault("ACKs not received from all members within 45 sec. " +
+                                          "Aborting wait.");
+            }
+        } while (!contextManager.isMessageAcknowledged(msgUUID));
+    }
+

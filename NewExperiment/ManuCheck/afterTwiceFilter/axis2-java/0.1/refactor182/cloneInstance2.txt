@@ -1,0 +1,26 @@
+(startLine=127 endLine=150 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01368/modules/jaxws-integration/src/test/java/org/apache/axis2/jaxws/sample/BareTests.java)
+    public void testTwoWaySyncWithBodyRouting(){
+        TestLogger.logger.debug("------------------------------");
+        TestLogger.logger.debug("Test : " + getName());
+
+        try{
+
+            BareDocLitService service = new BareDocLitService();
+            DocLitBarePortType proxy = service.getBareDocLitPort();
+            BindingProvider p = (BindingProvider) proxy;
+            p.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, ENDPOINT_URL);
+
+            String response = proxy.twoWaySimple(10);
+            TestLogger.logger.debug("Sync Response =" + response);
+            
+            
+            // Try the call again
+            response = proxy.twoWaySimple(10);
+            TestLogger.logger.debug("Sync Response =" + response);
+            TestLogger.logger.debug("------------------------------");
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+

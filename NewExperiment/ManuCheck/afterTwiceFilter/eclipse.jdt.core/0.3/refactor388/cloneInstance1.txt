@@ -1,0 +1,20 @@
+(startLine=745 endLine=762 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00826/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/NameLookup.java)
+					|| nameMatches(unitName, compilationUnit, partialMatch)) {
+						
+				IType[] types= null;
+				try {
+					types= compilationUnit.getTypes();
+				} catch (JavaModelException npe) {
+					continue; // the compilation unit is not present
+				}
+				int typeLength= types.length;
+				for (int j= 0; j < typeLength; j++) {
+					if (requestor.isCanceled())
+						return;
+					IType type= types[j];
+					if (nameMatches(matchName, type, partialMatch)) {
+						if (acceptType(type, acceptFlags)) requestor.acceptType(type);
+					}
+				}
+			} else if (potentialMemberType && nameMatches(potentialUnitName, compilationUnit, partialMatch)) {
+

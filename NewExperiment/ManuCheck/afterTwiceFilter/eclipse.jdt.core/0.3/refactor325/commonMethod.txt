@@ -1,0 +1,16 @@
+(startLine=58 endLine=71 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00669/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/JavadocTest.java)
+	public static Test buildSuite(Class testClass) {
+		TestSuite suite = new TestSuite(testClass.getName());
+		int complianceLevels = AbstractCompilerTest.getPossibleComplianceLevels();
+		if ((complianceLevels & AbstractCompilerTest.F_1_3) != 0) {
+			suite.addTest(suiteForComplianceLevel(COMPLIANCE_1_3, testClass));
+		}
+		if ((complianceLevels & AbstractCompilerTest.F_1_4) != 0) {
+			suite.addTest(suiteForComplianceLevel(COMPLIANCE_1_4, testClass));
+		}
+		if ((complianceLevels & AbstractCompilerTest.F_1_5) != 0) {
+			suite.addTest(suiteForComplianceLevel(COMPLIANCE_1_5, testClass));
+		}
+		return suite;
+	}
+

@@ -1,0 +1,16 @@
+(startLine=39 endLine=52 srcPath=/home/sonia/NewExperiment/luceneFilter/01379/modules/analysis/common/src/test/org/apache/lucene/analysis/charfilter/HTMLStripCharFilterTest.java)
+  static private Analyzer newTestAnalyzer() {
+    return new Analyzer() {
+      @Override
+      protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
+        Tokenizer tokenizer = new MockTokenizer(reader, MockTokenizer.WHITESPACE, false);
+        return new TokenStreamComponents(tokenizer, tokenizer);
+      }
+
+      @Override
+      protected Reader initReader(Reader reader) {
+        return new HTMLStripCharFilter(CharReader.get(reader));
+      }
+    };
+  }
+

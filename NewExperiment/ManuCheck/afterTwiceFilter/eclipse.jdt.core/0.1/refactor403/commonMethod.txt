@@ -1,0 +1,21 @@
+(startLine=427 endLine=445 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00840/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/codegen/ConstantPool.java)
+/**
+ * This method returns the index into the constantPool corresponding to the type descriptor 
+ * corresponding to a type constant pool name.
+ */
+public int literalIndexForType(final char[] constantPoolName) {
+	int index;
+	if ((index = classCache.get(constantPoolName)) < 0) {
+		// The entry doesn't exit yet
+		int nameIndex = literalIndex(constantPoolName);
+		index = classCache.put(constantPoolName, currentIndex++);
+		if (index > 0xFFFF){
+			this.classFile.referenceBinding.scope.problemReporter().noMoreAvailableSpaceInConstantPool(this.classFile.referenceBinding.scope.referenceType());
+		}
+		writeU1(ClassTag);
+		// Then add the 8 bytes representing the long
+		writeU2(nameIndex);
+	}
+	return index;
+}
+

@@ -1,0 +1,20 @@
+(startLine=3898 endLine=3915 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+/**
+ * Bug 100772: [1.5][search] Search for declarations in hierarchy reports to many matches
+ * @see "http://bugs.eclipse.org/bugs/show_bug.cgi?id=100772"
+ */
+private void setUpBug100772_HierarchyScope_ClassAndSubclass() throws CoreException {
+	workingCopies = new ICompilationUnit[1];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b100772/Test.java",
+		"package b100772;\n" + 
+		"class Test<T> {\n" + 
+		"    public void foo(T t) {}\n" + 
+		"    public void foo(Class c) {}\n" + 
+		"}\n" + 
+		"class Sub extends Test<String> {\n" + 
+		"    public void foo(String str) {}\n" + 
+		"    public void foo(Exception e) {}\n" + 
+		"}\n"
+	);
+}
+

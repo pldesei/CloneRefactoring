@@ -1,0 +1,19 @@
+(startLine=95 endLine=111 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01040/org.eclipse.jdt.core.tests.performance/src/org/eclipse/jdt/core/tests/performance/FullSourceWorkspaceBuildTests.java)
+	public void _testPerfWithMissingJavadocComments() throws CoreException, IOException {
+		Hashtable options = JavaCore.getOptions();
+		options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+		options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+		options.put(JavaCore.COMPILER_PB_INVALID_JAVADOC, JavaCore.WARNING);
+		options.put(JavaCore.COMPILER_PB_INVALID_JAVADOC_TAGS_VISIBILITY, JavaCore.PRIVATE);
+		options.put(JavaCore.COMPILER_PB_INVALID_JAVADOC_TAGS, JavaCore.ENABLED);
+		options.put(JavaCore.COMPILER_PB_INVALID_JAVADOC_TAGS__DEPRECATED_REF, JavaCore.ENABLED);
+		options.put(JavaCore.COMPILER_PB_INVALID_JAVADOC_TAGS__NOT_VISIBLE_REF, JavaCore.ENABLED);
+		options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS, JavaCore.WARNING);
+		options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_VISIBILITY, JavaCore.PRIVATE);
+		options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_OVERRIDING, JavaCore.ENABLED);
+		options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_COMMENTS, JavaCore.WARNING);
+		options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_COMMENTS_VISIBILITY, JavaCore.PRIVATE);
+		options.put(JavaCore.COMPILER_PB_MISSING_JAVADOC_COMMENTS_OVERRIDING, JavaCore.ENABLED);
+		startBuild(options);
+	}
+

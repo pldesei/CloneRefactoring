@@ -1,0 +1,311 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/01525
+predFragLineRange:757-793
+predMethodLineRange:748-793
+nextLineRange:748-886
+predStrMethodInvoNames:
+[getName, doCreate, remove, remove, put]
+%%%%%%%%%%
+AddedMethodInvo Line:766 InvoName:dcore.getInstanceDir()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getInstanceDir() 
+%%%%%%%%%%
+AddedMethodInvo Line:767 InvoName:idir.isAbsolute()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/io/File.java
+InvokedMethodSig:public boolean isAbsolute() 
+%%%%%%%%%%
+AddedMethodInvo Line:768 InvoName:dcore.getInstanceDir()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getInstanceDir() 
+%%%%%%%%%%
+AddedMethodInvo Line:770 InvoName:idir.getPath()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/io/File.java
+InvokedMethodSig:public java.lang.String getPath() 
+%%%%%%%%%%
+AddedMethodInvo Line:771 InvoName:log.info("Creating SolrCore '{}' using instanceDir: {}",dcore.getName(),instanceDir)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:779 InvoName:getCoreProps(instanceDir,dcore.getPropertiesName(),dcore.getCoreProperties())
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreContainer
+ClassName:CoreContainer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreContainer.java
+InvokedMethodSig:static java.util.Properties getCoreProps(java.lang.String, java.lang.String, java.util.Properties) 
+%%%%%%%%%%
+AddedMethodInvo Line:779 InvoName:dcore.getPropertiesName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getPropertiesName() 
+%%%%%%%%%%
+AddedMethodInvo Line:779 InvoName:dcore.getCoreProperties()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:java.util.Properties getCoreProperties() 
+%%%%%%%%%%
+AddedMethodInvo Line:780 InvoName:dcore.getConfigName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getConfigName() 
+%%%%%%%%%%
+AddedMethodInvo Line:783 InvoName:dcore.getCloudDescriptor().getCollectionName()
+PackageName:org.apache.solr.cloud
+QualifiedClassName:org.apache.solr.cloud.CloudDescriptor
+ClassName:CloudDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/cloud/CloudDescriptor.java
+InvokedMethodSig:public java.lang.String getCollectionName() 
+%%%%%%%%%%
+AddedMethodInvo Line:783 InvoName:dcore.getCloudDescriptor()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public org.apache.solr.cloud.CloudDescriptor getCloudDescriptor() 
+%%%%%%%%%%
+AddedMethodInvo Line:784 InvoName:zkController.createCollectionZkNode(dcore.getCloudDescriptor())
+PackageName:org.apache.solr.cloud
+QualifiedClassName:org.apache.solr.cloud.ZkController
+ClassName:ZkController
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/cloud/ZkController.java
+InvokedMethodSig:public void createCollectionZkNode(org.apache.solr.cloud.CloudDescriptor) throws KeeperException, java.lang.InterruptedException
+%%%%%%%%%%
+AddedMethodInvo Line:784 InvoName:dcore.getCloudDescriptor()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public org.apache.solr.cloud.CloudDescriptor getCloudDescriptor() 
+%%%%%%%%%%
+AddedMethodInvo Line:786 InvoName:zkController.readConfigName(collection)
+PackageName:org.apache.solr.cloud
+QualifiedClassName:org.apache.solr.cloud.ZkController
+ClassName:ZkController
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/cloud/ZkController.java
+InvokedMethodSig:public java.lang.String readConfigName(java.lang.String) throws KeeperException, java.lang.InterruptedException
+%%%%%%%%%%
+AddedMethodInvo Line:788 InvoName:log.error("Could not find config name for collection:" + collection)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:792 InvoName:getCoreProps(instanceDir,dcore.getPropertiesName(),dcore.getCoreProperties())
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreContainer
+ClassName:CoreContainer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreContainer.java
+InvokedMethodSig:static java.util.Properties getCoreProps(java.lang.String, java.lang.String, java.util.Properties) 
+%%%%%%%%%%
+AddedMethodInvo Line:792 InvoName:dcore.getPropertiesName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getPropertiesName() 
+%%%%%%%%%%
+AddedMethodInvo Line:792 InvoName:dcore.getCoreProperties()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:java.util.Properties getCoreProperties() 
+%%%%%%%%%%
+AddedMethodInvo Line:793 InvoName:getSolrConfigFromZk(zkConfigName,dcore.getConfigName(),solrLoader)
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreContainer
+ClassName:CoreContainer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreContainer.java
+InvokedMethodSig:private org.apache.solr.core.SolrConfig getSolrConfigFromZk(java.lang.String, java.lang.String, org.apache.solr.core.SolrResourceLoader) throws java.io.IOException, javax.xml.parsers.ParserConfigurationException, org.xml.sax.SAXException, KeeperException, java.lang.InterruptedException
+%%%%%%%%%%
+AddedMethodInvo Line:793 InvoName:dcore.getConfigName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getConfigName() 
+%%%%%%%%%%
+AddedMethodInvo Line:795 InvoName:log.error("",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:800 InvoName:Thread.currentThread().interrupt()
+PackageName:java.lang
+QualifiedClassName:java.lang.Thread
+ClassName:Thread
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/lang/Thread.java
+InvokedMethodSig:public void interrupt() 
+%%%%%%%%%%
+AddedMethodInvo Line:800 InvoName:Thread.currentThread()
+PackageName:java.lang
+QualifiedClassName:java.lang.Thread
+ClassName:Thread
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/lang/Thread.java
+InvokedMethodSig:public static native java.lang.Thread currentThread() 
+%%%%%%%%%%
+AddedMethodInvo Line:801 InvoName:log.error("",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:810 InvoName:dcore.getSchemaName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getSchemaName() 
+%%%%%%%%%%
+AddedMethodInvo Line:811 InvoName:schemaFile.isAbsolute()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/io/File.java
+InvokedMethodSig:public boolean isAbsolute() 
+%%%%%%%%%%
+AddedMethodInvo Line:812 InvoName:solrLoader.getInstanceDir()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.SolrResourceLoader
+ClassName:SolrResourceLoader
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/SolrResourceLoader.java
+InvokedMethodSig:public java.lang.String getInstanceDir() 
+%%%%%%%%%%
+AddedMethodInvo Line:813 InvoName:dcore.getSchemaName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getSchemaName() 
+%%%%%%%%%%
+AddedMethodInvo Line:815 InvoName:schemaFile.exists()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/io/File.java
+InvokedMethodSig:public boolean exists() 
+%%%%%%%%%%
+AddedMethodInvo Line:816 InvoName:schemaFile.getAbsolutePath()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/io/File.java
+InvokedMethodSig:public java.lang.String getAbsolutePath() 
+%%%%%%%%%%
+AddedMethodInvo Line:818 InvoName:new SimpleDateFormat("yyyyMMddHHmmss",Locale.ROOT).format(new Date(schemaFile.lastModified()))
+PackageName:java.text
+QualifiedClassName:java.text.DateFormat
+ClassName:DateFormat
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/text/DateFormat.java
+InvokedMethodSig:public final java.lang.String format(java.util.Date) 
+%%%%%%%%%%
+AddedMethodInvo Line:819 InvoName:schemaFile.lastModified()
+PackageName:java.io
+QualifiedClassName:java.io.File
+ClassName:File
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/io/File.java
+InvokedMethodSig:public long lastModified() 
+%%%%%%%%%%
+AddedMethodInvo Line:820 InvoName:indexSchemaCache.get(key)
+PackageName:java.util
+QualifiedClassName:java.util.Map<java.lang.String,org.apache.solr.schema.IndexSchema>
+ClassName:Map<String,IndexSchema>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/util/Map<java.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:822 InvoName:log.info("creating new schema object for core: " + dcore.name)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:823 InvoName:dcore.getSchemaName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getSchemaName() 
+%%%%%%%%%%
+AddedMethodInvo Line:826 InvoName:log.info("re-using schema object for core: " + dcore.name)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:837 InvoName:getSchemaFromZk(zkConfigName,dcore.getSchemaName(),config,solrLoader)
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreContainer
+ClassName:CoreContainer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreContainer.java
+InvokedMethodSig:private org.apache.solr.schema.IndexSchema getSchemaFromZk(java.lang.String, java.lang.String, org.apache.solr.core.SolrConfig, org.apache.solr.core.SolrResourceLoader) throws KeeperException, java.lang.InterruptedException
+%%%%%%%%%%
+AddedMethodInvo Line:837 InvoName:dcore.getSchemaName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getSchemaName() 
+%%%%%%%%%%
+AddedMethodInvo Line:839 InvoName:log.error("",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:844 InvoName:Thread.currentThread().interrupt()
+PackageName:java.lang
+QualifiedClassName:java.lang.Thread
+ClassName:Thread
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/lang/Thread.java
+InvokedMethodSig:public void interrupt() 
+%%%%%%%%%%
+AddedMethodInvo Line:844 InvoName:Thread.currentThread()
+PackageName:java.lang
+QualifiedClassName:java.lang.Thread
+ClassName:Thread
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/java/lang/Thread.java
+InvokedMethodSig:public static native java.lang.Thread currentThread() 
+%%%%%%%%%%
+AddedMethodInvo Line:845 InvoName:log.error("",e)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:850 InvoName:dcore.getSchemaName()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.CoreDescriptor
+ClassName:CoreDescriptor
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/CoreDescriptor.java
+InvokedMethodSig:public java.lang.String getSchemaName() 
+%%%%%%%%%%
+AddedMethodInvo Line:856 InvoName:core.getUpdateHandler().getUpdateLog()
+PackageName:org.apache.solr.update
+QualifiedClassName:org.apache.solr.update.UpdateHandler
+ClassName:UpdateHandler
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/update/UpdateHandler.java
+InvokedMethodSig:public abstract org.apache.solr.update.UpdateLog getUpdateLog() 
+%%%%%%%%%%
+AddedMethodInvo Line:856 InvoName:core.getUpdateHandler()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.SolrCore
+ClassName:SolrCore
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/SolrCore.java
+InvokedMethodSig:public org.apache.solr.update.UpdateHandler getUpdateHandler() 
+%%%%%%%%%%
+AddedMethodInvo Line:858 InvoName:core.getUpdateHandler().getUpdateLog().recoverFromLog()
+PackageName:org.apache.solr.update
+QualifiedClassName:org.apache.solr.update.UpdateLog
+ClassName:UpdateLog
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/update/UpdateLog.java
+InvokedMethodSig:public Future<org.apache.solr.update.UpdateLog.RecoveryInfo> recoverFromLog() 
+%%%%%%%%%%
+AddedMethodInvo Line:858 InvoName:core.getUpdateHandler().getUpdateLog()
+PackageName:org.apache.solr.update
+QualifiedClassName:org.apache.solr.update.UpdateHandler
+ClassName:UpdateHandler
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/update/UpdateHandler.java
+InvokedMethodSig:public abstract org.apache.solr.update.UpdateLog getUpdateLog() 
+%%%%%%%%%%
+AddedMethodInvo Line:858 InvoName:core.getUpdateHandler()
+PackageName:org.apache.solr.core
+QualifiedClassName:org.apache.solr.core.SolrCore
+ClassName:SolrCore
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/01525/solr/core/src/java/org/apache/solr/core/SolrCore.java
+InvokedMethodSig:public org.apache.solr.update.UpdateHandler getUpdateHandler() 

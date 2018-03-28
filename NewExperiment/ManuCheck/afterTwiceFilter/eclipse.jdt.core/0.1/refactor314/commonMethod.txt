@@ -1,0 +1,12 @@
+(startLine=45 endLine=54 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00658/org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/JavaSearchMatch.java)
+	public static JavaSearchMatch newDeclarationMatch(
+			IJavaElement element,
+			int accuracy,
+			int sourceStart,  
+			int sourceEnd,
+			MatchLocator locator) {
+		SearchParticipant participant = locator.getParticipant(); 
+		IResource resource = locator.currentPossibleMatch.resource;
+		return newDeclarationMatch(element, accuracy, sourceStart, sourceEnd, participant, resource);
+	}
+

@@ -1,0 +1,15 @@
+(startLine=3886 endLine=3898 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01429/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+public void testBug100772_HierarchyScope_ClassAndSubclass04() throws CoreException {
+//	org.eclipse.jdt.internal.core.search.BasicSearchEngine.VERBOSE = true;
+	assertNotNull("There should be working copies!", workingCopies);
+	assertEquals("Invalid number of working copies kept between tests!", 1, workingCopies.length);
+	IType type = workingCopies[0].getType("Sub");
+	IMethod method = type.getMethod("foo", new String[] { "QString;" });
+	search(method, UI_DECLARATIONS, SearchEngine.createHierarchyScope(type));
+	this.discard = false;
+	assertSearchResults(
+		"src/b100772/Test.java void b100772.Test.foo(T) [foo] EXACT_MATCH\n" + 
+		"src/b100772/Test.java void b100772.Sub.foo(String) [foo] EXACT_MATCH"
+	);
+}
+

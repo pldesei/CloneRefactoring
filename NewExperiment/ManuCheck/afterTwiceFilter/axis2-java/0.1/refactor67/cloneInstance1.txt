@@ -1,0 +1,86 @@
+(startLine=295 endLine=378 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00760/modules/jaxws/src/org/apache/axis2/jaxws/marshaller/impl/alt/DocLitWrappedMethodMarshaller.java)
+        try {
+            // Sample Document message
+            // ..
+            // <soapenv:body>
+            //    <m:operationResponse ... >
+            //       <param>hello</param>
+            //    </m:operationResponse>
+            // </soapenv:body>
+            //
+            // Important points.
+            //   1) There is no operation element in the message
+            //   2) The data blocks are located underneath the body element. 
+            //   3) The name of the data block (m:operationResponse) is defined by the schema.
+            //      It matches the operation name + "Response", and it has a corresponding JAXB element.
+            //      This element is called the wrapper element
+            //   4) The parameters are (param) are child elements of the wrapper element.
+
+            // Get the operation information
+            ParameterDescription[] pds = operationDesc.getParameterDescriptions();
+
+            // Create the message 
+            MessageFactory mf = (MessageFactory)FactoryRegistry.getFactory(MessageFactory.class);
+            Message m = mf.create(protocol);
+
+            // In usage=WRAPPED, there will be a single block in the body.
+            // The signatureArguments represent the child elements of that block
+            // The first step is to convert the signature arguments into a list
+            // of parameter values
+            List<PDElement> pdeList =
+                    MethodMarshallerUtils.getPDElements(marshalDesc,
+                                                        pds,
+                                                        signatureArgs,
+                                                        false,  // output
+                                                        true, false);
+
+            // Now we want to create a single JAXB element that contains the 
+            // ParameterValues.  We will use the wrapper tool to do this.
+            // Create the inputs to the wrapper tool
+            ArrayList<String> nameList = new ArrayList<String>();
+            Map<String, Object> objectList = new HashMap<String, Object>();
+
+            for (PDElement pde : pdeList) {
+                String name = pde.getParam().getParameterName();
+
+                // The object list contains type rendered objects
+                Object value = pde.getElement().getTypeValue();
+                nameList.add(name);
+                objectList.put(name, value);
+            }
+
+            // Add the return object to the nameList and objectList
+            Class returnType = operationDesc.getResultActualType();
+            if (returnType != void.class) {
+                String name = operationDesc.getResultName();
+                nameList.add(name);
+                objectList.put(name, returnObject);
+            }
+
+            // Now create the single JAXB element
+            String wrapperName = marshalDesc.getResponseWrapperClassName(operationDesc);
+            Class cls = MethodMarshallerUtils.loadClass(wrapperName);
+            JAXBWrapperTool wrapperTool = new JAXBWrapperToolImpl();
+            Object object = wrapperTool.wrap(cls, nameList, objectList,
+                                             marshalDesc.getPropertyDescriptorMap(cls));
+
+            QName wrapperQName = new QName(operationDesc.getResponseWrapperTargetNamespace(),
+                                           operationDesc.getResponseWrapperLocalName());
+
+            // Make sure object can be rendered as an element
+            if (!marshalDesc.getAnnotationDesc(cls).hasXmlRootElement()) {
+                object = new JAXBElement(wrapperQName, cls, object);
+            }
+
+            // Put the object into the message
+            JAXBBlockFactory factory =
+                    (JAXBBlockFactory)FactoryRegistry.getFactory(JAXBBlockFactory.class);
+
+            Block block = factory.createFrom(object,
+                                             new JAXBBlockContext(packages, packagesKey),
+                                             wrapperQName);
+            m.setBodyBlock(block);
+
+            return m;
+        } catch (Exception e) {
+

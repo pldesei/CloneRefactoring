@@ -1,0 +1,113 @@
+(startLine=340 endLine=450 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00839/modules/adb/src/org/apache/axis2/rpc/receivers/RPCUtil.java)
+    public static void processResponseAsDocLitWrapped(Object resObject,
+                                                      AxisService service,
+                                                      Method method,
+                                                      SOAPEnvelope envelope,
+                                                      SOAPFactory fac,
+                                                      OMNamespace ns,
+                                                      OMElement bodyContent,
+                                                      MessageContext outMessage
+    ) throws Exception {
+        QName elementQName = outMessage.getAxisMessage().getElementQName();
+        if (resObject == null) {
+            QName resName;
+            if (service.isElementFormDefault()) {
+                resName = new QName(service.getSchematargetNamespace(),
+                        RETURN_WRAPPER,
+                        service.getSchemaTargetNamespacePrefix());
+            } else {
+                resName = new QName(RETURN_WRAPPER);
+            }
+            XMLStreamReader xr = new NullXMLStreamReader(resName);
+            StreamWrapper parser = new StreamWrapper(xr);
+            StAXOMBuilder stAXOMBuilder =
+                    OMXMLBuilderFactory.createStAXOMBuilder(
+                            OMAbstractFactory.getSOAP11Factory(), parser);
+            ns = fac.createOMNamespace(service.getSchematargetNamespace(),
+                    service.getSchemaTargetNamespacePrefix());
+            OMElement bodyChild = fac.createOMElement(method.getName() + "Response", ns);
+            bodyChild.addChild(stAXOMBuilder.getDocumentElement());
+            envelope.getBody().addChild(bodyChild);
+        } else {
+            if (resObject instanceof Object[]) {
+
+                QName resName = new QName(elementQName.getNamespaceURI(),
+                        method.getName() + "Response",
+                        elementQName.getPrefix());
+                OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                        (Object[]) resObject,
+                        service.isElementFormDefault(),
+                        service.getTypeTable());
+                envelope.getBody().addChild(bodyChild);
+            } else {
+                if (resObject.getClass().isArray()) {
+                    int length = Array.getLength(resObject);
+                    Object objArray[];
+                    if (resObject instanceof byte[]) {
+                        objArray = new Object[1];
+                        objArray[0] = Base64.encode((byte[]) resObject);
+                    } else {
+                        objArray = new Object[length];
+                        for (int i = 0; i < length; i++) {
+                            objArray[i] = Array.get(resObject, i);
+                        }
+                    }
+
+                    QName resName = new QName(elementQName.getNamespaceURI(),
+                            method.getName() + "Response",
+                            elementQName.getPrefix());
+                    OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                            objArray,
+                            service.isElementFormDefault(),
+                            service.getTypeTable());
+                    envelope.getBody().addChild(bodyChild);
+                } else {
+                    if (SimpleTypeMapper.isCollection(resObject.getClass())) {
+                        Collection collection = (Collection) resObject;
+                        int size = collection.size();
+                        Object values[] = new Object[size];
+                        int count = 0;
+                        for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
+                            values[count] = iterator.next();
+                            count++;
+
+                        }
+                        QName resName = new QName(elementQName.getNamespaceURI(),
+                                method.getName() + "Response",
+                                elementQName.getPrefix());
+                        OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                                values,
+                                service.isElementFormDefault(),
+                                service.getTypeTable());
+                        envelope.getBody().addChild(bodyChild);
+                    } else if (SimpleTypeMapper.isDataHandler(resObject.getClass())) {
+                        OMElement resElemt = fac.createOMElement(method.getName() + "Response", ns);
+                        OMText text = fac.createOMText(resObject, true);
+                        OMElement returnElement;
+                        if (service.isElementFormDefault()) {
+                            returnElement = fac.createOMElement(RETURN_WRAPPER, ns);
+                        } else {
+                            returnElement = fac.createOMElement(RETURN_WRAPPER, null);
+                        }
+                        returnElement.addChild(text);
+                        resElemt.addChild(returnElement);
+                        envelope.getBody().addChild(resElemt);
+                    } else {
+                        if (service.isElementFormDefault()) {
+                            RPCUtil.processResponse(fac, resObject, bodyContent, ns,
+                                    envelope, method,
+                                    service.isElementFormDefault(),
+                                    service.getTypeTable());
+                        } else {
+                            RPCUtil.processResponse(fac, resObject, bodyContent, ns,
+                                    envelope, method,
+                                    service.isElementFormDefault(),
+                                    null);
+                        }
+                    }
+                }
+            }
+        }
+        outMessage.setEnvelope(envelope);
+    }
+

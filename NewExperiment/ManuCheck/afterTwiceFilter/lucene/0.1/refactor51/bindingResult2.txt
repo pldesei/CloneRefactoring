@@ -1,0 +1,27 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/00775
+predFragLineRange:1603-1631
+predMethodLineRange:1603-1631
+nextLineRange:1616-1645
+predStrMethodInvoNames:
+[add, addDocument, commit, open, getOnlySegmentReader, getInts, assertEquals, assertEquals, addDocument, commit, reopen, close, getSequentialSubReaders, getInts, close, assertTrue, close]
+%%%%%%%%%%
+AddedMethodInvo Line:1618 InvoName:newIndexWriterConfig(random,TEST_VERSION_CURRENT,new MockAnalyzer())
+PackageName:org.apache.lucene.util
+QualifiedClassName:org.apache.lucene.util.LuceneTestCase
+ClassName:LuceneTestCase
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00775/lucene/src/test/org/apache/lucene/util/LuceneTestCase.java
+InvokedMethodSig:public static org.apache.lucene.index.IndexWriterConfig newIndexWriterConfig(java.util.Random, Version, org.apache.lucene.analysis.Analyzer) 
+%%%%%%%%%%
+AddedMethodInvo Line:1621 InvoName:((LogMergePolicy)writer.getMergePolicy()).setMergeFactor(10)
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.LogMergePolicy
+ClassName:LogMergePolicy
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00775/lucene/src/test/org/apache/lucene/index/LogMergePolicy.java
+InvokedMethodSig:public void setMergeFactor(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:1621 InvoName:writer.getMergePolicy()
+PackageName:org.apache.lucene.index
+QualifiedClassName:org.apache.lucene.index.IndexWriter
+ClassName:IndexWriter
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/00775/lucene/src/test/org/apache/lucene/index/IndexWriter.java
+InvokedMethodSig:public org.apache.lucene.index.MergePolicy getMergePolicy() 

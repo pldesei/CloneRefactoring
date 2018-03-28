@@ -1,0 +1,23 @@
+(startLine=3101 endLine=3121 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02094/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/ClassFile.java)
+	private int generateSignatureAttribute(char[] genericSignature) {
+		int localContentsOffset = this.contentsOffset;
+		if (localContentsOffset + 8 >= this.contents.length) {
+			resizeContents(8);
+		}
+		int signatureAttributeNameIndex =
+			this.constantPool.literalIndex(AttributeNamesConstants.SignatureName);
+		this.contents[localContentsOffset++] = (byte) (signatureAttributeNameIndex >> 8);
+		this.contents[localContentsOffset++] = (byte) signatureAttributeNameIndex;
+		// the length of a signature attribute is equals to 2
+		this.contents[localContentsOffset++] = 0;
+		this.contents[localContentsOffset++] = 0;
+		this.contents[localContentsOffset++] = 0;
+		this.contents[localContentsOffset++] = 2;
+		int signatureIndex =
+			this.constantPool.literalIndex(genericSignature);
+		this.contents[localContentsOffset++] = (byte) (signatureIndex >> 8);
+		this.contents[localContentsOffset++] = (byte) signatureIndex;
+		this.contentsOffset = localContentsOffset;
+		return 1;
+	}
+

@@ -1,0 +1,21 @@
+(startLine=480 endLine=498 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01232/modules/adb/src/org/apache/axis2/rpc/receivers/RPCUtil.java)
+                    if (SimpleTypeMapper.isCollection(resObject.getClass())) {
+                        Collection collection = (Collection) resObject;
+                        int size = collection.size();
+                        Object values[] = new Object[size];
+                        int count = 0;
+                        for (Object aCollection : collection) {
+                            values[count] = aCollection;
+                            count++;
+
+                        }
+                        QName resName = new QName(elementQName.getNamespaceURI(),
+                                method.getName() + "Response",
+                                elementQName.getPrefix());
+                        OMElement bodyChild = RPCUtil.getResponseElement(resName,
+                                values,
+                                service.isElementFormDefault(),
+                                service.getTypeTable());
+                        envelope.getBody().addChild(bodyChild);
+                    } else if (SimpleTypeMapper.isMap(resObject.getClass())){
+

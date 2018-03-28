@@ -1,0 +1,14 @@
+(startLine=1757 endLine=1768 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00617/modules/kernel/src/org/apache/axis2/client/Options.java)
+    /**
+     * Trace a warning message, if needed, indicating that this 
+     * object needs to be activated before accessing certain fields.
+     * 
+     * @param methodname The method where the warning occurs
+     */
+    private void checkActivateWarning(String methodname)
+    {
+        if (needsToBeReconciled) {
+           log.warn(logCorrelationIDString+":"+methodname+"(): ****WARNING**** "+myClassName+".activate(configurationContext) needs to be invoked.");
+        }
+    }
+

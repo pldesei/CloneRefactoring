@@ -1,0 +1,15 @@
+(startLine=380 endLine=392 srcPath=/home/sonia/NewExperiment/luceneFilter/00667/lucene/src/java/org/apache/lucene/search/FieldCacheImpl.java)
+      try {
+        do {
+          Term term = termEnum.term();
+          if (term==null || term.field() != field) break;
+          int termval = parser.parseInt(term.text());
+          if (retArray == null) // late init
+            retArray = new int[reader.maxDoc()];
+          termDocs.seek (termEnum);
+          while (termDocs.next()) {
+            retArray[termDocs.doc()] = termval;
+          }
+        } while (termEnum.next());
+      } catch (StopFillCacheException stop) {
+

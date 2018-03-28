@@ -1,0 +1,26 @@
+(startLine=1201 endLine=1224 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01371/modules/jaxws-integration/src/test/java/org/apache/axis2/jaxws/sample/AddNumbersHandlerTests.java)
+        try {
+            TestLogger.logger.debug("----------------------------------");
+            TestLogger.logger.debug("test: " + getName());
+
+            AddNumbersHandlerService service = new AddNumbersHandlerService();
+            AddNumbersHandlerPortType proxy = service.getAddNumbersHandlerPort();
+
+            BindingProvider p = (BindingProvider) proxy;
+
+            p.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, axisEndpoint);
+            p.getRequestContext().put("myClientKey", "myClientVal");
+
+            List<Handler> handlers = p.getBinding().getHandlerChain();
+            if (handlers == null)
+                handlers = new ArrayList<Handler>();
+            handlers.add(new AddNumbersClientLogicalHandler());
+            handlers.add(new AddNumbersClientProtocolHandler());
+            p.getBinding().setHandlerChain(handlers);
+            
+            BindingProvider bp = (BindingProvider) proxy;
+            bp.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, axisEndpoint);
+            // value 99 will trigger exception from AddNumbersClientLogicalHandler
+            proxy.oneWayInt(99);
+        } catch (Exception e) {            
+

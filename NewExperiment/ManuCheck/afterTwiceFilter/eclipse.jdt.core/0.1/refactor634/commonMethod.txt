@@ -1,0 +1,64 @@
+(startLine=2865 endLine=2926 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01477/org.eclipse.jdt.core/batch/org/eclipse/jdt/internal/compiler/batch/Main.java)
+private int processPaths(String[] args, int index, String currentArg, ArrayList paths) throws InvalidInputException {
+	int localIndex = index;
+	int count = 0;
+	for (int i = 0, max = currentArg.length(); i < max; i++) {
+		switch(currentArg.charAt(i)) {
+			case '[' :
+				count++;
+				break;
+			case ']' :
+				count--;
+				break;
+		}
+	}
+	if (count == 0) {
+		paths.add(currentArg);
+	} else if (count > 1) {
+		throw new InvalidInputException(
+				this.bind("configure.unexpectedBracket", //$NON-NLS-1$ 
+							currentArg));
+	} else {
+		StringBuffer currentPath = new StringBuffer(currentArg);
+		while (true) {
+    		if (localIndex >= args.length) {
+    			throw new InvalidInputException(
+    					this.bind("configure.unexpectedBracket", //$NON-NLS-1$ 
+    								currentArg));
+    		}
+    		localIndex++;
+    		String nextArg = args[localIndex];
+    		for (int i = 0, max = nextArg.length(); i < max; i++) {
+    			switch(nextArg.charAt(i)) {
+    				case '[' :
+    					if (count > 1) {
+    						throw new InvalidInputException(
+    								this.bind("configure.unexpectedBracket", //$NON-NLS-1$ 
+    											nextArg));
+    					}
+    					count++;
+    					break;
+    				case ']' :
+    					count--;
+    					break;
+    			}
+    		}
+    		if (count == 0) {
+    			currentPath.append(' ');
+    			currentPath.append(nextArg);
+    			paths.add(currentPath.toString());
+    			return localIndex - index;
+    		} else if (count < 0) {
+				throw new InvalidInputException(
+						this.bind("configure.unexpectedBracket", //$NON-NLS-1$ 
+									nextArg));
+			} else {
+				currentPath.append(' ');
+				currentPath.append(nextArg);
+			}
+		}
+		
+	}
+	return localIndex - index;
+}
+

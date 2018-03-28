@@ -1,0 +1,27 @@
+(startLine=4201 endLine=4225 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/01430/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java)
+private void setUpBug100772_ProjectScope_InterfacesAndClass() throws CoreException {
+	workingCopies = new ICompilationUnit[3];
+	workingCopies[0] = getWorkingCopy("/JavaSearchBugs/src/b100772/Test.java",
+		"package b100772;\n" + 
+		"interface Test<T> {\n" + 
+		"    public void foo(T t);\n" + 
+		"    public void foo(Class c);\n" + 
+		"}\n"
+	);
+	workingCopies[1] = getWorkingCopy("/JavaSearchBugs/src/b100772/Sub.java",
+		"package b100772;\n" + 
+		"interface Sub extends Test<String> {\n" + 
+		"    public void foo(String str);\n" + 
+		"    public void foo(Exception e);\n" + 
+		"}\n"
+	);
+	workingCopies[2] = getWorkingCopy("/JavaSearchBugs/src/b100772/X.java",
+		"package b100772;\n" + 
+		"class X implements Test<String> {\n" + 
+		"    public void foo(String str) {}\n" + 
+		"    public void foo(Class c) {}\n" + 
+		"    public void foo(Exception e) {}\n" + 
+		"}\n"
+	);
+}
+

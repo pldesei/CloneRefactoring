@@ -1,0 +1,47 @@
+(startLine=446 endLine=490 srcPath=/home/sonia/NewExperiment/luceneFilter/01995/solr/core/src/test/org/apache/solr/analytics/facet/FieldFacetTest.java)
+  public void meanTest() throws Exception { 
+    //Int Date
+    String intDateFacet = getFacetXML(response, "mean","fieldFacets", "date_dtd");
+    Collection<Double> intDate = (ArrayList<Double>)xmlToList(intDateFacet, "double", "int");
+    ArrayList<Double> intDateTest = calculateNumberStat(intDateTestStart, "mean");
+    assertEquals(intDate,intDateTest);
+    //Int String
+    String intStringFacet = getFacetXML(response, "mean","fieldFacets", "string_sd");
+    Collection<Double> intString = (ArrayList<Double>)xmlToList(intStringFacet, "double", "int");
+    ArrayList<Double> intStringTest = calculateNumberStat(intStringTestStart, "mean");
+    assertEquals(intString,intStringTest);
+
+    //Long Date
+    String longDateFacet = getFacetXML(response, "mean","fieldFacets", "date_dtd");
+    Collection<Double> longDate = (ArrayList<Double>)xmlToList(longDateFacet, "double", "long");
+    ArrayList<Double> longDateTest = calculateNumberStat(longDateTestStart, "mean");
+    assertEquals(longDate,longDateTest);
+    //Long String
+    String longStringFacet = getFacetXML(response, "mean","fieldFacets", "string_sd");
+    Collection<Double> longString = (ArrayList<Double>)xmlToList(longStringFacet, "double", "long");
+    ArrayList<Double> longStringTest = calculateNumberStat(longStringTestStart, "mean");
+    assertEquals(longString,longStringTest);
+
+    //Float Date
+    String floatDateFacet = getFacetXML(response, "mean","fieldFacets", "date_dtd");   
+    Collection<Double> floatDate = (ArrayList<Double>)xmlToList(floatDateFacet, "double", "float");
+    ArrayList<Double> floatDateTest = calculateNumberStat(floatDateTestStart, "mean");
+    assertEquals(floatDate,floatDateTest);
+    //Float String
+    String floatStringFacet = getFacetXML(response, "mean","fieldFacets", "string_sd");    
+    Collection<Double> floatString = (ArrayList<Double>)xmlToList(floatStringFacet, "double", "float");
+    ArrayList<Double> floatStringTest = calculateNumberStat(floatStringTestStart, "mean");
+    assertEquals(floatString,floatStringTest);
+
+    //Double Date
+    String doubleDateFacet = getFacetXML(response, "mean","fieldFacets", "date_dtd");  
+    Collection<Double> doubleDate = (ArrayList<Double>)xmlToList(doubleDateFacet, "double", "double");
+    ArrayList<Double> doubleDateTest = calculateNumberStat(doubleDateTestStart, "mean");
+    assertEquals(doubleDate,doubleDateTest);
+    //Double String
+    String doubleStringFacet = getFacetXML(response, "mean","fieldFacets", "string_sd");    
+    Collection<Double> doubleString = (ArrayList<Double>)xmlToList(doubleStringFacet, "double", "double");
+    ArrayList<Double> doubleStringTest = calculateNumberStat(doubleStringTestStart, "mean");
+    assertEquals(doubleString,doubleStringTest);
+  }
+

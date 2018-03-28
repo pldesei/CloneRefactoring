@@ -1,0 +1,31 @@
+(startLine=1810 endLine=1838 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00419/org.eclipse.jdt.core/model/org/eclipse/jdt/internal/core/util/DefaultBytecodeVisitor.java)
+	public void _invokevirtual(int pc, int index, IConstantPoolEntry constantMethodref) {
+
+		char[] methodDescriptor = constantMethodref.getMethodDescriptor();
+		CharOperation.replace(methodDescriptor, '/', '.');
+		char[] returnType = Signature.getReturnType(methodDescriptor);
+		CharOperation.replace(returnType, '/', '.');
+		
+		writeTabs();
+		buffer
+			.append(pc)
+			.append(Util.bind("disassembler.tab")) //$NON-NLS-1$
+			.append(OpcodeStringValues.BYTECODE_NAMES[IOpcodeMnemonics.INVOKEVIRTUAL])
+			.append(Util.bind("disassembler.constantpoolindex")) //$NON-NLS-1$
+			.append(index)
+			.append(Util.bind("classformat.invokevirtualmethod")) //$NON-NLS-1$
+			.append(returnDeclaringClassName(constantMethodref))
+			.append(Util.bind("disassembler.classmemberseparator")) //$NON-NLS-1$
+			.append(
+				Signature.toCharArray(
+					methodDescriptor,
+					constantMethodref.getMethodName(),
+					getParameterNames(methodDescriptor),
+					true,
+					false))
+			.append(Util.bind("disassembler.space")) //$NON-NLS-1$
+			.append(Signature.toCharArray(returnType))
+			.append(Util.bind("classformat.invokevirtualmethodclose")); //$NON-NLS-1$
+		writeNewLine();
+	}
+

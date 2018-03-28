@@ -1,0 +1,25 @@
+(startLine=3039 endLine=3061 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02335/org.eclipse.jdt.core/formatter/org/eclipse/jdt/internal/formatter/CodeFormatterVisitor.java)
+		ClassScope scope) {
+
+		final int numberOfParens = (arrayTypeReference.bits & ASTNode.ParenthesizedMASK) >> ASTNode.ParenthesizedSHIFT;
+		if (numberOfParens > 0) {
+			manageOpeningParenthesizedExpression(arrayTypeReference, numberOfParens);
+		}
+		if (arrayTypeReference.annotations != null) formatInlineAnnotations(arrayTypeReference.annotations[0], false);
+		this.scribe.printNextToken(SINGLETYPEREFERENCE_EXPECTEDTOKENS);
+		int dimensions = getDimensions();
+		if (dimensions != 0) {
+			formatDimensions(arrayTypeReference, 0, dimensions, true);
+		}
+		// dimensions the number of visible bracket-pairs. Ellipsis is an extra dimension
+		if ((arrayTypeReference.bits & ASTNode.IsVarArgs) != 0
+				&& arrayTypeReference.annotationsOnDimensions != null
+				&& arrayTypeReference.annotationsOnDimensions.length > dimensions) {
+				formatInlineAnnotations(arrayTypeReference.annotationsOnDimensions[dimensions], true);
+		}
+		if (numberOfParens > 0) {
+			manageClosingParenthesizedExpression(arrayTypeReference, numberOfParens);
+		}
+		return false;
+	}
+

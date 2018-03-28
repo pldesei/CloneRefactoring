@@ -1,0 +1,17 @@
+(startLine=221 endLine=235 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/02576/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/rewrite/describing/ASTRewritingTest.java)
+	protected String evaluateRewrite(ICompilationUnit cu, ASTRewrite rewrite) throws Exception {
+		Document document1= new Document(cu.getSource());
+		TextEdit res= rewrite.rewriteAST(document1, cu.getJavaProject().getOptions(true));
+		res.apply(document1);
+		String content1= document1.get();
+
+		Document document2= new Document(cu.getSource());
+		TextEdit res2= rewrite.rewriteAST();
+		res2.apply(document2);
+		String content2= document2.get();
+
+		assertEquals(content1, content2);
+
+		return content1;
+	}
+

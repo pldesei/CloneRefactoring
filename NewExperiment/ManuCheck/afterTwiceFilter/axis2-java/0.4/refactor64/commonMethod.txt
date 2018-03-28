@@ -1,0 +1,13 @@
+(startLine=623 endLine=633 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00750/modules/kernel/src/org/apache/axis2/deployment/util/Utils.java)
+    /**
+     * To add the exclude method when generating scheams , here the exclude methods
+     * will be session releated axis2 methods
+     */
+    public static void addExclueMethods(ArrayList excludeList){
+        excludeList.add("init");
+        excludeList.add("setOperationContext");
+        excludeList.add("startUp");
+        excludeList.add("destroy");
+        excludeList.add("shutDown");
+    }
+

@@ -1,0 +1,13 @@
+(startLine=60 endLine=70 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00986/modules/jaxws-integration/test/org/apache/axis2/jaxws/sample/WrapTests.java)
+        /**
+         * Get theDocLitWrap Prxoy
+         * @return DocLitWrapProxy
+         */
+        private DocLitWrap getProxy() {
+            DocLitWrapService service = new DocLitWrapService();
+            DocLitWrap proxy = service.getDocLitWrapPort();
+            BindingProvider p = (BindingProvider) proxy;
+            p.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, axisEndpoint);
+            return proxy;
+        }
+

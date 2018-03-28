@@ -1,0 +1,28 @@
+(startLine=379 endLine=404 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01015/modules/kernel/src/org/apache/axis2/deployment/util/Utils.java)
+    private static boolean addFiles(ArrayList urls, final File libfiles) throws MalformedURLException {
+        Boolean exists = (Boolean) org.apache.axis2.java.security.AccessController.doPrivileged(
+                new PrivilegedAction() {
+                    public Object run() {
+                        return new Boolean(libfiles.exists());
+                    }
+                }
+        );
+        if (exists.booleanValue()) {
+            urls.add(libfiles.toURL());
+            File jarfiles[] = (File[]) org.apache.axis2.java.security.AccessController.doPrivileged(
+                    new PrivilegedAction() {
+                        public Object run() {
+                            return libfiles.listFiles();
+                        }
+                    }
+            );
+            for (int i = 0; i < jarfiles.length; i++) {
+                File jarfile = jarfiles[i];
+                if (jarfile.getName().endsWith(".jar")) {
+                    urls.add(jarfile.toURL());
+                }
+            }
+        }
+        return exists.booleanValue();
+    }
+

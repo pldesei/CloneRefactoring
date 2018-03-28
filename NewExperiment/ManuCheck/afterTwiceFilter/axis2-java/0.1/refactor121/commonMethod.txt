@@ -1,0 +1,17 @@
+(startLine=41 endLine=55 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/00938/modules/kernel/src/org/apache/axis2/deployment/util/ExcludeInfo.java)
+    public BeanExcludeInfo getBeanExcludeInfoForClass(String className){
+        // here map keys represents the regualr expressions for class names
+        // so we have to iterate through the keys and find the beanInfo object
+        String classNameRegx = null;
+        BeanExcludeInfo beanExcludeInfo = null;
+        for (Iterator iter = this.classNameToBeanInfoMap.keySet().iterator(); iter.hasNext();){
+             classNameRegx = (String) iter.next();
+             if (className.matches(classNameRegx)){
+                 beanExcludeInfo = (BeanExcludeInfo) this.classNameToBeanInfoMap.get(classNameRegx);
+                 // this means we have find the required object
+                 break;
+             }
+        }
+        return beanExcludeInfo;
+    }
+

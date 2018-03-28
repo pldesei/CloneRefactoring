@@ -1,0 +1,355 @@
+ProjectPath:/home/sonia/NewExperiment/luceneFilter/02005
+predFragLineRange:501-512
+predMethodLineRange:349-550
+nextLineRange:345-625
+predStrMethodInvoNames:
+[waitForRecoveriesToFinish, getFileSystem, makeQualified, delete, makeQualified, delete, makeQualified, delete, assertTrue, mkdirs, upAvroFile, getJobConf, setMaxMapAttempts, setMaxReduceAttempts, setJar, setBoolean, get, getAbsolutePath, toString, toString, toString, toString, nextInt, random, prependInitialArgs, getShardUrlArgs, concat, toArray, run, assertEquals, assertTrue, isComplete, assertTrue, isSuccessful, query, assertEquals, getNumFound, getResults, delete, delete, delete, assertTrue, mkdirs, upAvroFile, getAbsolutePath, toString, toString, toString, toString, nextInt, random, prependInitialArgs, getShardUrlArgs, concat, toArray, run, assertEquals, assertTrue, isComplete, assertTrue, isSuccessful, query, assertEquals, getNumFound, getResults, nextBoolean, random, createAlias, delete, delete, delete, upAvroFile, toString, toString, toString, getZkAddress, prependInitialArgs, run, assertEquals, assertTrue, isComplete, assertTrue, isSuccessful, query, assertEquals, getNumFound, getResults, shutdown, createCollection, waitForRecoveriesToFinish, setDefaultCollection, delete, delete, delete, assertTrue, mkdirs, upAvroFile, getAbsolutePath, toString, getZkAddress, toString, prependInitialArgs, run, assertEquals, assertTrue, isComplete, assertTrue, isSuccessful, query, assertEquals, getNumFound, getResults, checkConsistency, deleteByQuery, commit, delete, delete, assertTrue, mkdirs, upAvroFile, getAbsolutePath, toString, toString, nextInt, random, toString, prependInitialArgs, getShardUrlArgs, concat, toArray, run, assertEquals, assertTrue, isComplete, assertTrue, isSuccessful, checkConsistency, query, assertEquals, getNumFound, getResults]
+%%%%%%%%%%
+AddedMethodInvo Line:471 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:473 InvoName:resultDocs.size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:479 InvoName:doc.entrySet()
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Set<Entry<java.lang.String,java.lang.Object>> entrySet() 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:update.setField(entry.getKey(),entry.getValue())
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrInputDocument
+ClassName:SolrInputDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrInputDocument.java
+InvokedMethodSig:public void setField(java.lang.String, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:entry.getKey()
+PackageName:java.util
+QualifiedClassName:java.util.Map.Entry<java.lang.String,java.lang.Object>
+ClassName:Entry<String,Object>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/Map.java
+InvokedMethodSig:public abstract K getKey() 
+%%%%%%%%%%
+AddedMethodInvo Line:480 InvoName:entry.getValue()
+PackageName:java.util
+QualifiedClassName:java.util.Map.Entry<java.lang.String,java.lang.Object>
+ClassName:Entry<String,Object>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/Map.java
+InvokedMethodSig:public abstract V getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:482 InvoName:update.setField("user_screen_name","Nadja" + i)
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrInputDocument
+ClassName:SolrInputDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrInputDocument.java
+InvokedMethodSig:public void setField(java.lang.String, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:483 InvoName:update.removeField("_version_")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrInputDocument
+ClassName:SolrInputDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrInputDocument.java
+InvokedMethodSig:public org.apache.solr.common.SolrInputField removeField(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:484 InvoName:cloudClient.add(update)
+PackageName:org.apache.solr.client.solrj
+QualifiedClassName:org.apache.solr.client.solrj.SolrServer
+ClassName:SolrServer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/client/solrj/SolrServer.java
+InvokedMethodSig:public org.apache.solr.client.solrj.response.UpdateResponse add(org.apache.solr.common.SolrInputDocument) throws org.apache.solr.client.solrj.SolrServerException, java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:489 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:491 InvoName:resultDocs2.size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:495 InvoName:doc.getFirstValue("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:495 InvoName:doc2.getFirstValue("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:496 InvoName:doc2.getFirstValue("user_screen_name")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:497 InvoName:doc.getFirstValue("text")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:497 InvoName:doc2.getFirstValue("text")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:500 InvoName:cloudClient.deleteById((String)doc.getFirstValue("id"))
+PackageName:org.apache.solr.client.solrj
+QualifiedClassName:org.apache.solr.client.solrj.SolrServer
+ClassName:SolrServer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/client/solrj/SolrServer.java
+InvokedMethodSig:public org.apache.solr.client.solrj.response.UpdateResponse deleteById(java.lang.String) throws org.apache.solr.client.solrj.SolrServerException, java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:500 InvoName:doc.getFirstValue("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:505 InvoName:executeSolrQuery(cloudClient,"*:*").size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:505 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:548 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:550 InvoName:resultDocs.size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:558 InvoName:doc.entrySet()
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Set<Entry<java.lang.String,java.lang.Object>> entrySet() 
+%%%%%%%%%%
+AddedMethodInvo Line:559 InvoName:update.setField(entry.getKey(),entry.getValue())
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrInputDocument
+ClassName:SolrInputDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrInputDocument.java
+InvokedMethodSig:public void setField(java.lang.String, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:559 InvoName:entry.getKey()
+PackageName:java.util
+QualifiedClassName:java.util.Map.Entry<java.lang.String,java.lang.Object>
+ClassName:Entry<String,Object>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/Map.java
+InvokedMethodSig:public abstract K getKey() 
+%%%%%%%%%%
+AddedMethodInvo Line:559 InvoName:entry.getValue()
+PackageName:java.util
+QualifiedClassName:java.util.Map.Entry<java.lang.String,java.lang.Object>
+ClassName:Entry<String,Object>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/Map.java
+InvokedMethodSig:public abstract V getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:561 InvoName:update.setField("user_screen_name","@Nadja" + i)
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrInputDocument
+ClassName:SolrInputDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrInputDocument.java
+InvokedMethodSig:public void setField(java.lang.String, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:562 InvoName:update.removeField("_version_")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrInputDocument
+ClassName:SolrInputDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrInputDocument.java
+InvokedMethodSig:public org.apache.solr.common.SolrInputField removeField(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:563 InvoName:cloudClient.add(update)
+PackageName:org.apache.solr.client.solrj
+QualifiedClassName:org.apache.solr.client.solrj.SolrServer
+ClassName:SolrServer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/client/solrj/SolrServer.java
+InvokedMethodSig:public org.apache.solr.client.solrj.response.UpdateResponse add(org.apache.solr.common.SolrInputDocument) throws org.apache.solr.client.solrj.SolrServerException, java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:568 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:570 InvoName:resultDocs2.size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:574 InvoName:doc.getFieldValues("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Collection<java.lang.Object> getFieldValues(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:574 InvoName:doc2.getFieldValues("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Collection<java.lang.Object> getFieldValues(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:575 InvoName:doc.getFieldValues("id").size()
+PackageName:java.util
+QualifiedClassName:java.util.Collection<java.lang.Object>
+ClassName:Collection<Object>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/Collection<java.java
+InvokedMethodSig:public abstract int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:575 InvoName:doc.getFieldValues("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Collection<java.lang.Object> getFieldValues(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:576 InvoName:Arrays.asList("@Nadja" + i)
+PackageName:java.util
+QualifiedClassName:java.util.Arrays
+ClassName:Arrays
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/Arrays.java
+InvokedMethodSig:public static List#RAW asList(T[]) 
+%%%%%%%%%%
+AddedMethodInvo Line:576 InvoName:doc2.getFieldValues("user_screen_name")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Collection<java.lang.Object> getFieldValues(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:577 InvoName:doc.getFieldValues("text")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Collection<java.lang.Object> getFieldValues(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:577 InvoName:doc2.getFieldValues("text")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public Collection<java.lang.Object> getFieldValues(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:580 InvoName:cloudClient.deleteById((String)doc.getFirstValue("id"))
+PackageName:org.apache.solr.client.solrj
+QualifiedClassName:org.apache.solr.client.solrj.SolrServer
+ClassName:SolrServer
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/client/solrj/SolrServer.java
+InvokedMethodSig:public org.apache.solr.client.solrj.response.UpdateResponse deleteById(java.lang.String) throws org.apache.solr.client.solrj.SolrServerException, java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:580 InvoName:doc.getFirstValue("id")
+PackageName:org.apache.solr.common
+QualifiedClassName:org.apache.solr.common.SolrDocument
+ClassName:SolrDocument
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/common/SolrDocument.java
+InvokedMethodSig:public java.lang.Object getFirstValue(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:585 InvoName:executeSolrQuery(cloudClient,"*:*").size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:585 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:591 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:592 InvoName:executeSolrQuery(cloudClient,"*:*").size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:592 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException
+%%%%%%%%%%
+AddedMethodInvo Line:622 InvoName:executeSolrQuery(cloudClient,"*:*").size()
+PackageName:java.util
+QualifiedClassName:java.util.ArrayList<org.apache.solr.common.SolrDocument>
+ClassName:ArrayList<SolrDocument>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/java/util/ArrayList<org.java
+InvokedMethodSig:public int size() 
+%%%%%%%%%%
+AddedMethodInvo Line:622 InvoName:executeSolrQuery(cloudClient,"*:*")
+PackageName:org.apache.solr.hadoop
+QualifiedClassName:org.apache.solr.hadoop.MorphlineGoLiveMiniMRTest
+ClassName:MorphlineGoLiveMiniMRTest
+InvokedFilePath:/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java
+InvokedMethodSig:private org.apache.solr.common.SolrDocumentList executeSolrQuery(org.apache.solr.client.solrj.SolrServer, java.lang.String) throws org.apache.solr.client.solrj.SolrServerException

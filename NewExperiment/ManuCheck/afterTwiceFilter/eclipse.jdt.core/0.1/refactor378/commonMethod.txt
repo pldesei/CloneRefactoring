@@ -1,0 +1,12 @@
+(startLine=250 endLine=259 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00793/org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/lookup/Scope.java)
+	public TypeBinding convertToRawType(TypeBinding type) {
+		if (type.isArrayType()) {
+		    TypeBinding leafComponentType = type.leafComponentType();
+		    if (leafComponentType.isGenericType())
+		        return createArrayType(environment().createRawType((ReferenceBinding) leafComponentType, null), type.dimensions());
+		} else if (type.isGenericType()) {
+	        return environment().createRawType((ReferenceBinding) type, null);
+		}
+		return type;
+	}
+

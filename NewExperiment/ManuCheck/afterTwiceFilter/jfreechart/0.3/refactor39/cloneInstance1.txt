@@ -1,0 +1,15 @@
+(startLine=127 endLine=139 srcPath=/home/sonia/NewExperiment/jfreechartFilter/00289/source/org/jfree/chart/entity/CategoryItemEntity.java)
+                              int series, Object category, int categoryIndex) {
+
+        super(area, toolTipText, urlText);
+        if (dataset == null) {
+            throw new IllegalArgumentException("Null 'dataset' argument.");
+        }
+        this.dataset = dataset;
+        this.series = series;
+        this.category = category;
+        this.categoryIndex = categoryIndex;
+        this.rowKey = dataset.getRowKey(series);
+        this.columnKey = dataset.getColumnKey(categoryIndex);
+    }
+

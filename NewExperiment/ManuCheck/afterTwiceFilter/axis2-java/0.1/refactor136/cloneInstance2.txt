@@ -1,0 +1,17 @@
+(startLine=1492 endLine=1506 srcPath=/home/newdisk/pc/NewExperiment/axis2-javaFilter/01026/modules/kernel/src/org/apache/axis2/description/AxisService2WSDL11.java)
+                if (axisBindingOutMessage != null) {
+                    AxisMessage outAxisMessage = axisBindingOutMessage
+                            .getAxisMessage();
+                    if (outAxisMessage != null) {
+                        OMElement output = fac.createOMElement(OUT_PUT_LOCAL_NAME,
+                                wsdl);
+                        addPolicyAsExtElement(axisBindingOutMessage, output);
+                        addExtensionElement(fac, output, SOAP_BODY, SOAP_USE, use,
+                                null, targetNamespace, soap12);
+                        // addPolicyAsExtElement(PolicyInclude.BINDING_OUTPUT_POLICY,
+                        // outAxisMessage.getPolicyInclude(), output);
+                        operation.addChild(output);
+                        writeSoapHeaders(outAxisMessage, fac, output, soap12);
+                    }
+                }
+

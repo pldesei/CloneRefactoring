@@ -1,0 +1,93 @@
+(startLine=338 endLine=428 srcPath=/home/sonia/NewExperiment/eclipse.jdt.coreFilter/00892/org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/dom/ASTConverterTestAST3_2.java)
+	public void test0409() throws JavaModelException {
+		Hashtable options = JavaCore.getOptions();
+		Hashtable newOptions = JavaCore.getOptions();
+		try {
+			newOptions.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_4);
+			JavaCore.setOptions(newOptions);
+			ICompilationUnit sourceUnit = getCompilationUnit("Converter" , "src", "test0409", "A.java"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			ASTNode result = runConversion(AST.JLS3, sourceUnit, true);
+			assertTrue("Not a compilation unit", result.getNodeType() == ASTNode.COMPILATION_UNIT); //$NON-NLS-1$
+			CompilationUnit compilationUnit = (CompilationUnit) result; 
+			// TODO (olivier) problem count  got incremented (null check)
+			assertEquals("Wrong number of problems", 2, compilationUnit.getProblems().length); //$NON-NLS-1$
+			assertEquals("Unexpected problem", "The import java.lang is never used", compilationUnit.getProblems()[0].getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			BindingsCollectorVisitor bindingsCollectorVisitor = new BindingsCollectorVisitor();
+			compilationUnit.accept(bindingsCollectorVisitor);
+			assertEquals("wrong number", 3, bindingsCollectorVisitor.getUnresolvedNodesSet().size()); //$NON-NLS-1$
+			Map bindingsMap = bindingsCollectorVisitor.getBindingsMap();
+			assertEquals("wrong number", 191, bindingsMap.size()); //$NON-NLS-1$
+			ASTNodesCollectorVisitor nodesCollector = new ASTNodesCollectorVisitor();
+			compilationUnit.accept(nodesCollector);
+			Set detachedNodes = nodesCollector.getDetachedAstNodes();
+			int counter = 0;
+			for (Iterator iterator = detachedNodes.iterator(); iterator.hasNext(); ) {
+				ASTNode detachedNode = (ASTNode) iterator.next();
+				counter++;
+				IBinding binding = (IBinding) bindingsMap.get(detachedNode);
+				assertNotNull(binding);
+				switch(detachedNode.getNodeType()) {
+					case ASTNode.ARRAY_ACCESS :
+					case ASTNode.ARRAY_CREATION :
+					case ASTNode.ARRAY_INITIALIZER :
+					case ASTNode.ASSIGNMENT :
+					case ASTNode.BOOLEAN_LITERAL :
+					case ASTNode.CAST_EXPRESSION :
+					case ASTNode.CHARACTER_LITERAL :
+					case ASTNode.CLASS_INSTANCE_CREATION :
+					case ASTNode.CONDITIONAL_EXPRESSION :
+					case ASTNode.FIELD_ACCESS :
+					case ASTNode.INFIX_EXPRESSION :
+					case ASTNode.INSTANCEOF_EXPRESSION :
+					case ASTNode.METHOD_INVOCATION :
+					case ASTNode.NULL_LITERAL :
+					case ASTNode.NUMBER_LITERAL :
+					case ASTNode.POSTFIX_EXPRESSION :
+					case ASTNode.PREFIX_EXPRESSION :
+					case ASTNode.THIS_EXPRESSION :
+					case ASTNode.TYPE_LITERAL :
+					case ASTNode.VARIABLE_DECLARATION_EXPRESSION :
+						ITypeBinding typeBinding = ((Expression) detachedNode).resolveTypeBinding();
+						if (!binding.equals(typeBinding)) {
+							System.out.println(detachedNode);
+						}
+						assertTrue("binding not equals", binding.equals(typeBinding)); //$NON-NLS-1$
+						break;						
+					case ASTNode.VARIABLE_DECLARATION_FRAGMENT :
+						assertTrue("binding not equals", binding.equals(((VariableDeclarationFragment) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;						
+					case ASTNode.ANONYMOUS_CLASS_DECLARATION :
+						assertTrue("binding not equals", binding.equals(((AnonymousClassDeclaration) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;
+					case ASTNode.QUALIFIED_NAME :
+					case ASTNode.SIMPLE_NAME :
+						IBinding newBinding = ((Name) detachedNode).resolveBinding();
+						assertTrue("binding not equals", binding.equals(newBinding)); //$NON-NLS-1$
+						break;
+					case ASTNode.ARRAY_TYPE :
+					case ASTNode.SIMPLE_TYPE :
+					case ASTNode.PRIMITIVE_TYPE :
+						assertTrue("binding not equals", binding.equals(((Type) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;
+					case ASTNode.CONSTRUCTOR_INVOCATION :
+						assertTrue("binding not equals", binding.equals(((ConstructorInvocation) detachedNode).resolveConstructorBinding())); //$NON-NLS-1$
+						break;
+					case ASTNode.IMPORT_DECLARATION :
+						assertTrue("binding not equals", binding.equals(((ImportDeclaration) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;
+					case ASTNode.METHOD_DECLARATION :
+						assertTrue("binding not equals", binding.equals(((MethodDeclaration) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;
+					case ASTNode.PACKAGE_DECLARATION :
+						assertTrue("binding not equals", binding.equals(((PackageDeclaration) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;
+					case ASTNode.TYPE_DECLARATION :
+						assertTrue("binding not equals", binding.equals(((TypeDeclaration) detachedNode).resolveBinding())); //$NON-NLS-1$
+						break;
+				}
+			}
+		} finally {
+			JavaCore.setOptions(options);
+		}
+	}
+
