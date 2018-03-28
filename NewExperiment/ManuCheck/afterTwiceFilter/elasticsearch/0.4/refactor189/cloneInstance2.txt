@@ -1,0 +1,14 @@
+(startLine=294 endLine=305 srcPath=/root/NewExperiment/elasticsearchFilter/01060/src/main/java/org/elasticsearch/action/search/type/TransportSearchTypeAction.java)
+                } else {
+                    // no more shards active, add a failure
+                    if (logger.isDebugEnabled()) {
+                        if (t != null && !TransportActions.isShardNotAvailableException(t)) {
+                            if (shard != null) {
+                                logger.debug(shard.shortSummary() + ": Failed to execute [" + request + "]", t);
+                            } else {
+                                logger.debug(shardIt.shardId() + ": Failed to execute [" + request + "]", t);
+                            }
+                        }
+                    }
+                }
+

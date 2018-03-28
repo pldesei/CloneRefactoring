@@ -1,0 +1,20 @@
+(startLine=291 endLine=308 srcPath=/root/NewExperiment/hibernateFilter/01409/hibernate-core/src/main/java/org/hibernate/persister/entity/JoinedSubclassEntityPersister.java)
+		while ( titer.hasNext() ) {
+			Table tab = (Table) titer.next();
+			isConcretes.add( persistentClass.isClassOrSuperclassTable( tab ) );
+			isDeferreds.add( Boolean.FALSE );
+			isLazies.add( Boolean.FALSE );
+			String tabname = tab.getQualifiedName(
+					factory.getDialect(),
+					factory.getSettings().getDefaultCatalogName(),
+					factory.getSettings().getDefaultSchemaName()
+			);
+			subtables.add( tabname );
+			String[] key = new String[idColumnSpan];
+			Iterator citer = tab.getPrimaryKey().getColumnIterator();
+			for ( int k = 0; k < idColumnSpan; k++ ) {
+				key[k] = ( (Column) citer.next() ).getQuotedName( factory.getDialect() );
+			}
+			keyColumns.add( key );
+		}
+

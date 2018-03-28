@@ -1,0 +1,19 @@
+(startLine=142 endLine=158 srcPath=/root/NewExperiment/hibernateFilter/00465/hibernate-core/src/main/java/org/hibernate/cfg/PropertyContainer.java)
+		for ( XProperty property : fieldAccessMap.values() ) {
+			Access access = property.getAnnotation( Access.class );
+			if ( access == null ) {
+				continue;
+			}
+
+			// see "2.3.2 Explicit Access Type" of JPA 2 spec
+			// the access type for this property is explicitly set to AccessType.FIELD, hence we have to
+			// use field access for this property even if the default access type for the class is AccessType.PROPERTY
+			AccessType accessType = AccessType.getAccessStrategy( access.value() );
+			if ( accessType == AccessType.FIELD ) {
+				propertyAccessMap.put( property.getName(), property );
+			}
+			else {   // AccessType.PROPERTY
+				log.warn( "Placing @Access(AccessType.PROPERTY) on a field does not have any effect." );
+			}
+		}
+

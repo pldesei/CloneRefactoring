@@ -1,0 +1,24 @@
+(startLine=208 endLine=229 srcPath=/root/NewExperiment/hibernateFilter/00349/core/src/main/java/org/hibernate/id/enhanced/OptimizerFactory.java)
+		/**
+		 * {@inheritDoc}
+		 */
+		public synchronized Serializable generate(AccessCallback callback) {
+			if ( lastSourceValue == null ) {
+				// first call, so initialize ourselves.  we need to read the database
+				// value and set up the 'bucket' boundaries
+				lastSourceValue = callback.getNextValue();
+				while ( lastSourceValue.lt( 1 ) ) {
+					lastSourceValue = callback.getNextValue();
+				}
+				// upperLimit defines the upper end of the bucket values
+				upperLimit = lastSourceValue.copy().multiplyBy( incrementSize ).increment();
+				// initialize value to the low end of the bucket
+				value = upperLimit.copy().subtract( incrementSize );
+			}
+			else if ( ! upperLimit.gt( value ) ) {
+				lastSourceValue = callback.getNextValue();
+				upperLimit = lastSourceValue.copy().multiplyBy( incrementSize ).increment();
+			}
+			return value.makeValueThenIncrement();
+		}
+

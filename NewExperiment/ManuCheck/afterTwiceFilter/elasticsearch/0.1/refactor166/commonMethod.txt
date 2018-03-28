@@ -1,0 +1,6 @@
+(startLine=306 endLine=309 srcPath=/root/NewExperiment/elasticsearchFilter/00985/src/main/java/org/elasticsearch/index/mapper/core/DateFieldMapper.java)
+    public long parseToMilliseconds(Object value, @Nullable QueryParseContext context, boolean includeUpper) {
+        long now = context == null ? System.currentTimeMillis() : context.nowInMillis();
+        return includeUpper ? dateMathParser.parseUpperInclusive(convertToString(value), now) : dateMathParser.parse(convertToString(value), now);
+    }
+

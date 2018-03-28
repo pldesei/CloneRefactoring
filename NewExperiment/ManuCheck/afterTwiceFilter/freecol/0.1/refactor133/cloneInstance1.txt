@@ -1,0 +1,89 @@
+(startLine=479 endLine=565 srcPath=/root/NewExperiment/freecolFilter/00480/src/net/sf/freecol/client/gui/panel/ProductionMultiplesLabel.java)
+    public void paintComponent(Graphics g) {
+
+        if (goodsIcon == null || (totalProduction == 0 && stockNumber<0) ) {
+            return;
+        }
+
+        int drawImageCount = Math.min(Math.abs(totalProduction), maxIcons);
+        if (drawImageCount==0) {
+            drawImageCount=1;
+        }
+
+        int iconWidth = getMaximumIconWidth();
+        int pixelsPerIcon = iconWidth / 2;
+        if (pixelsPerIcon - iconWidth < 0) {
+            pixelsPerIcon = (compressedWidth - iconWidth) / drawImageCount;
+        }
+        int maxSpacing = iconWidth;
+
+        /* TODO Tune this: all icons are the same width, but many
+         * do not take up the whole width, eg. bells
+         */
+        boolean iconsTooFarApart = pixelsPerIcon > maxSpacing;
+        if (iconsTooFarApart) {
+            pixelsPerIcon = maxSpacing;
+        }
+        int coverage = pixelsPerIcon * (drawImageCount - 1) + iconWidth;
+        int leftOffset = 0;
+
+        boolean needToCenterImages = centered && coverage < getWidth();
+        if (needToCenterImages) {
+            leftOffset = (getWidth() - coverage)/2;
+        }
+
+        int width = Math.max(getWidth(), coverage);
+        int height = Math.max(getHeight(), getMaximumIconHeight());
+        setSize(new Dimension(width, height));
+
+        // Go through all icons for this label
+        int countImages = 0;
+        int leftImageOffset = 0;
+        for( int indexGoods = 0; indexGoods < goodsIcon.length; indexGoods++ ) {
+            // Draw the icons onto the image:
+            for (int i = 0; i < Math.abs(production[indexGoods]); i++) {
+//                goodsIcon[indexGoods].paintIcon(null, g, leftOffset + i*pixelsPerIcon, 0);
+                goodsIcon[indexGoods].paintIcon(null, g, leftOffset + leftImageOffset, 0);
+            	leftImageOffset += pixelsPerIcon;
+                if( ++countImages >= drawImageCount ) {
+                	indexGoods = goodsIcon.length;
+                	break;
+                }
+            }
+        }
+        
+
+        if (totalProduction >= displayNumber || totalProduction < 0 || maxIcons < totalProduction || stockNumber>0) {
+            String number = "";
+            if (stockNumber >= 0 ) {
+                number = Integer.toString(stockNumber);  // Show stored items in ReportColonyPanel
+                drawPlus = true;
+            }
+            if (totalProduction >=0 && drawPlus ) {
+                number = number + "+" + Integer.toString(totalProduction);
+            } else {
+                number = number + Integer.toString(totalProduction);
+            }
+            if (maximumProduction > totalProduction && totalProduction > 0) {
+                number = number + "/" + String.valueOf(maximumProduction);
+            }
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                 RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
+                                 RenderingHints.VALUE_RENDER_QUALITY);
+
+            TextLayout layout = new TextLayout(number, parent.getGUI().getTextFont(),
+                                               g2d.getFontRenderContext());
+            Shape outline = layout.getOutline(null);
+            double textOffset = leftOffset + (coverage - layout.getBounds().getWidth())/2;
+            double heightOffset = (getMaximumIconHeight() - layout.getBounds().getHeight())/2
+                + layout.getAscent();
+            g2d.setColor(getForeground());
+            g2d.translate(textOffset, heightOffset);
+            g2d.fill(outline);
+            g2d.setColor(Color.BLACK);
+            g2d.draw(outline);
+        }
+    }
+

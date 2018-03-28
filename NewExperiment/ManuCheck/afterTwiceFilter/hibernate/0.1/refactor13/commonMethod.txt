@@ -1,0 +1,6 @@
+(startLine=65 endLine=68 srcPath=/root/NewExperiment/hibernateFilter/00319/testsuite/src/test/java/org/hibernate/test/readonly/AbstractReadOnlyTest.java)
+	protected void assertInsertCount(int expected) {
+		int inserts = ( int ) getSessions().getStatistics().getEntityInsertCount();
+		assertEquals( "unexpected insert count", expected, inserts );
+	}
+

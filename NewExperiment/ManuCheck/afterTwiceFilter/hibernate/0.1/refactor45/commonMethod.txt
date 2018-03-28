@@ -1,0 +1,9 @@
+(startLine=50 endLine=56 srcPath=/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/loader/Helper.java)
+	public LoadPlan buildLoadPlan(SessionFactoryImplementor sf, EntityPersister entityPersister) {
+		final SingleRootReturnLoadPlanBuilderStrategy strategy = new SingleRootReturnLoadPlanBuilderStrategy(
+				sf,
+				LoadQueryInfluencers.NONE
+		);
+		return LoadPlanBuilder.buildRootEntityLoadPlan( strategy, entityPersister );
+	}
+

@@ -1,0 +1,44 @@
+(startLine=245 endLine=286 srcPath=/root/NewExperiment/freecolFilter/00747/test/src/net/sf/freecol/server/ai/ContactTest.java)
+    public void testNativeMeetsEuropean() throws Exception {
+        if (server == null) {
+            server = ServerTestHelper.startServer(false, true);
+        }
+        Map map = getTestMap(plains);
+        server.setMapGenerator(new MockMapGenerator(map));
+        Controller c = server.getController();
+        PreGameController pgc = (PreGameController)c;
+        try {
+            pgc.startGame();
+        } catch (FreeColException e) {
+            fail("Failed to start game");
+        }
+        Game game = server.getGame();
+        FreeColTestCase.setGame(game);
+
+        ServerPlayer apache = (ServerPlayer) game.getPlayer("model.nation.apache");
+        ServerPlayer french = (ServerPlayer) game.getPlayer("model.nation.french");
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExploredBy(apache, true);
+        tile1.setExploredBy(french, false);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExploredBy(apache, true);
+        tile2.setExploredBy(french, true);
+        Tile tile3 = map.getTile(3, 8);
+        tile3.setExploredBy(apache, false);
+        tile3.setExploredBy(french, true);
+
+        assertFalse(french.hasContacted(apache));
+        assertFalse(apache.hasContacted(french));
+
+        Unit brave = new Unit(game, tile1, apache, braveType, UnitState.FORTIFIED);
+        @SuppressWarnings("unused")
+        Unit colonist = new Unit(game, tile3, french, colonistType, UnitState.ACTIVE);
+        InGameController igc = (InGameController) server.getController();
+        igc.move(apache, brave, tile2);
+
+        assertTrue(french.hasContacted(apache));
+        assertTrue(apache.hasContacted(french));
+        assertEquals(Stance.PEACE, french.getStance(apache));
+        assertEquals(Stance.PEACE, apache.getStance(french));
+    }
+

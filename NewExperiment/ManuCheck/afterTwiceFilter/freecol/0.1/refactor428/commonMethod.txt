@@ -1,0 +1,16 @@
+(startLine=94 endLine=107 srcPath=/root/NewExperiment/freecolFilter/01205/src/net/sf/freecol/common/util/Utils.java)
+    /**
+     * Gets the last part of a string after a supplied delimiter.
+     *
+     * @param s The string to operate on.
+     * @param delim The delimiter.
+     * @return The last part of the string after the last instance of
+     *     the delimiter, or the original string if the delimiter is
+     *     not present.
+     */
+    public static String lastPart(String s, String delim) {
+        int last = (s == null) ? -1 : s.lastIndexOf(delim);
+        return (last > 0) ? s.substring(last+delim.length(), s.length())
+            : s;
+    }
+

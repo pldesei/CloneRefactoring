@@ -1,0 +1,12 @@
+(startLine=503 endLine=512 srcPath=/root/NewExperiment/freecolFilter/00692/src/net/sf/freecol/common/model/GoodsContainer.java)
+        if (!storedGoods.isEmpty()) {
+            out.writeStartElement(STORED_GOODS_TAG);
+            for (Map.Entry<GoodsType, Integer> entry : storedGoods.entrySet()) {
+                out.writeStartElement(Goods.getXMLElementTagName());
+                out.writeAttribute("type", entry.getKey().getId());
+                out.writeAttribute("amount", entry.getValue().toString());
+                out.writeEndElement();
+            }
+            out.writeEndElement();
+        }
+

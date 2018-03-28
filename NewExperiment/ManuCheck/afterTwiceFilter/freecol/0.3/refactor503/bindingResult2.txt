@@ -1,0 +1,69 @@
+ProjectPath:/root/NewExperiment/freecolFilter/01368
+predFragLineRange:512-527
+predMethodLineRange:440-695
+nextLineRange:440-706
+predStrMethodInvoNames:
+[getAIMain, isSinglePlayer, getFreeColServer, getPlayer, getPlayerType, mark, getSpecification, getGame, getMarket, getEurope, getAIRandom, getGoodsTypeList, getArrears, add, size, randomInts, setArrears, getColonies, getModifiers, getSource, removeModifier, add, isEmpty, scoutsNeeded, getUnitList, hasDefaultRole, hasAbility, priceGoods, getGoodsDifference, checkGold, getOwner, modifyGold, add, equipForRole, getAIUnit, add, isEmpty, pioneersNeeded, getUnitList, hasDefaultRole, hasAbility, priceGoods, getGoodsDifference, checkGold, getOwner, modifyGold, add, equipForRole, getAIUnit, add, keySet, get, isEmpty, isAvailableTo, getUnitPrice, get, getValue, getValue, getUnitPrice, getUnitType, getImmigration, getImmigrationRequired, getRecruitPrice, checkGold, modifyGold, add, recruitAIUnitInEurope, add, getUnit, trainAIUnitInEurope, getUnitType, getWishRealizationMission, add, add, getUnit, getAge, getTurn, isAtWar, getLivePlayers, atWarWith, add, getStrengthRatio, add, isEmpty, clear, addAll, getColonies, size, isEuropean, addAll, getColonies, isConnectedPort, getUnitCount, getStockade, getLevel, isEmpty, getAIColonies, isBadlyDefended, add, isEmpty, addAll, getAIColonies, getRandomMember, getTile, getColony, searchCircle, getMap, getEnemySettlementGoalDecider, getSettlement, createUnits, getMercenaries, getMonarch, getAIUnit, getSeekAndDestroyMission, add, add, getUnit, getNavalStrengthRatio, getUnitCount, clear, getUnitTypeList, hasAbility, isAvailableTo, hasPrice, isOffensive, getUnitPrice, add, cheatUnit, clear, getUnitTypeList, hasAbility, isAvailableTo, hasPrice, getSpace, getUnitPrice, add, cheatUnit, grew, shrink]
+%%%%%%%%%%
+AddedMethodInvo Line:448 InvoName:player.getGold()
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:454 InvoName:player.logCheat(amount + " gold")
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:501 InvoName:player.logCheat("lift boycott at " + c.getName())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:501 InvoName:c.getName()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Settlement
+ClassName:Settlement
+InvokedFilePath:/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/common/model/Settlement.java
+InvokedMethodSig:public java.lang.String getName() 
+%%%%%%%%%%
+AddedMethodInvo Line:515 InvoName:cheatGold(europe.priceGoods(u.getGoodsDifference(scoutRole,1)),lb)
+PackageName:net.sf.freecol.server.ai
+QualifiedClassName:net.sf.freecol.server.ai.EuropeanAIPlayer
+ClassName:EuropeanAIPlayer
+InvokedFilePath:/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java
+InvokedMethodSig:public void cheatGold(int, net.sf.freecol.common.util.LogBuilder) 
+%%%%%%%%%%
+AddedMethodInvo Line:518 InvoName:player.logCheat("Equip scout " + u.toShortString())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:518 InvoName:u.toShortString()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public java.lang.String toShortString() 
+%%%%%%%%%%
+AddedMethodInvo Line:531 InvoName:cheatGold(europe.priceGoods(u.getGoodsDifference(pioneerRole,1)),lb)
+PackageName:net.sf.freecol.server.ai
+QualifiedClassName:net.sf.freecol.server.ai.EuropeanAIPlayer
+ClassName:EuropeanAIPlayer
+InvokedFilePath:/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java
+InvokedMethodSig:public void cheatGold(int, net.sf.freecol.common.util.LogBuilder) 
+%%%%%%%%%%
+AddedMethodInvo Line:534 InvoName:player.logCheat("Equip pioneer " + u.toShortString())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:534 InvoName:u.toShortString()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Unit
+ClassName:Unit
+InvokedFilePath:/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/common/model/Unit.java
+InvokedMethodSig:public java.lang.String toShortString() 
+%%%%%%%%%%
+AddedMethodInvo Line:568 InvoName:cheatGold(cost,lb)
+PackageName:net.sf.freecol.server.ai
+QualifiedClassName:net.sf.freecol.server.ai.EuropeanAIPlayer
+ClassName:EuropeanAIPlayer
+InvokedFilePath:/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java
+InvokedMethodSig:public void cheatGold(int, net.sf.freecol.common.util.LogBuilder) 
+%%%%%%%%%%
+AddedMethodInvo Line:585 InvoName:player.logCheat("Make " + aiu.getUnit())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:654 InvoName:player.logCheat("Enlist " + aiu.getUnit())
+mBinding is null

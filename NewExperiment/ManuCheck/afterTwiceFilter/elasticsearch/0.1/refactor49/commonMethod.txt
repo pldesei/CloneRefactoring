@@ -1,0 +1,10 @@
+(startLine=74 endLine=81 srcPath=/root/NewExperiment/elasticsearchFilter/00585/src/main/java/org/elasticsearch/common/io/stream/StreamOutput.java)
+    public void writeBytesHolder(@Nullable BytesHolder bytes) throws IOException {
+        if (bytes == null) {
+            writeVInt(0);
+        } else {
+            writeVInt(bytes.length());
+            writeBytes(bytes.bytes(), bytes.offset(), bytes.length());
+        }
+    }
+

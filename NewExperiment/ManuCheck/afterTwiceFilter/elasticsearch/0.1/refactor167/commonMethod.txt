@@ -1,0 +1,19 @@
+(startLine=45 endLine=61 srcPath=/root/NewExperiment/elasticsearchFilter/00992/src/main/java/org/elasticsearch/common/util/concurrent/CountDown.java)
+    /**
+     * Decrements the count-down and returns <code>true</code> iff this call
+     * reached zero otherwise <code>false</code>
+     */
+    public boolean countDown() {
+        assert originalCount > 0;
+        for (;;) {
+            final int current = countDown.get();
+            assert current >= 0;
+            if (current == 0) {
+                return false;
+            }
+            if (countDown.compareAndSet(current, current - 1)) {
+                return current == 1;
+            }
+        }
+    }
+

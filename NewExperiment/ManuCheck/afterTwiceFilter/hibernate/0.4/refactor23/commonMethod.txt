@@ -1,0 +1,14 @@
+(startLine=291 endLine=302 srcPath=/root/NewExperiment/hibernateFilter/00349/core/src/main/java/org/hibernate/id/enhanced/OptimizerFactory.java)
+		/**
+		 * {@inheritDoc}
+		 */
+		public synchronized Serializable generate(AccessCallback callback) {
+			if ( lo > maxLo ) {
+				lastSourceValue = callback.getNextValue();
+				lo = lastSourceValue.eq( 0 ) ? 1 : 0;
+				hi = lastSourceValue.copy().multiplyBy( maxLo+1 );
+			}
+			value = hi.copy().add( lo++ );
+			return value.makeValue();
+		}
+

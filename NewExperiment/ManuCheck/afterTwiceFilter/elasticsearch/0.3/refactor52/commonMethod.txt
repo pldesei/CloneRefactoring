@@ -1,0 +1,12 @@
+(startLine=263 endLine=272 srcPath=/root/NewExperiment/elasticsearchFilter/00600/src/main/java/org/elasticsearch/index/query/QueryParseContext.java)
+    /**
+     * Returns the narrowed down explicit types, or, if not set, all types.
+     */
+    public Collection<String> queryTypes() {
+        String[] types = getTypes();
+        if (types == null || types.length == 0) {
+            return mapperService().types();
+        }
+        return Arrays.asList(types);
+    }
+

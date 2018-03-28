@@ -1,0 +1,45 @@
+(startLine=425 endLine=467 srcPath=/root/NewExperiment/freecolFilter/00747/test/src/net/sf/freecol/server/ai/ContactTest.java)
+    public void testShipMeetsShip() throws Exception {
+        if (server == null) {
+            server = ServerTestHelper.startServer(false, true);
+        }
+        Map map = getTestMap(ocean);
+        server.setMapGenerator(new MockMapGenerator(map));
+        Controller c = server.getController();
+        PreGameController pgc = (PreGameController)c;
+        try {
+            pgc.startGame();
+        } catch (FreeColException e) {
+            fail("Failed to start game");
+        }
+        Game game = server.getGame();
+        FreeColTestCase.setGame(game);
+
+
+        ServerPlayer dutch = (ServerPlayer) game.getPlayer("model.nation.dutch");
+        ServerPlayer french = (ServerPlayer) game.getPlayer("model.nation.french");
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExploredBy(dutch, true);
+        tile1.setExploredBy(french, false);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExploredBy(dutch, true);
+        tile2.setExploredBy(french, true);
+        Tile tile3 = map.getTile(3, 8);
+        tile3.setExploredBy(dutch, false);
+        tile3.setExploredBy(french, true);
+
+        assertFalse(french.hasContacted(dutch));
+        assertFalse(dutch.hasContacted(french));
+
+        Unit ship1 = new Unit(game, tile1, dutch, galleonType, UnitState.FORTIFIED);
+        @SuppressWarnings("unused")
+        Unit ship2 = new Unit(game, tile3, french, galleonType, UnitState.ACTIVE);
+        InGameController igc = (InGameController) server.getController();
+        igc.move(dutch, ship1, tile2);
+
+        assertFalse(french.hasContacted(dutch));
+        assertFalse(dutch.hasContacted(french));
+        assertEquals(Stance.UNCONTACTED, french.getStance(dutch));
+        assertEquals(Stance.UNCONTACTED, dutch.getStance(french));
+    }
+

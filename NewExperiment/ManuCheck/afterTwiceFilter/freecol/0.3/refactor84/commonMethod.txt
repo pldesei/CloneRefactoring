@@ -1,0 +1,19 @@
+(startLine=278 endLine=294 srcPath=/root/NewExperiment/freecolFilter/00309/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    /**
+     * Return a colony with a university and 10 elder statesmen
+     * @return
+     */
+    public Colony getUniversityColony(){
+    	Colony colony = getStandardColony(10);
+
+        for (Unit u : colony.getUnitList()){
+        	u.setType(Unit.ELDER_STATESMAN);
+        }
+
+        Building school = colony.getBuilding(spec().getBuildingType("model.building.Schoolhouse"));
+        school.upgrade();
+        school.upgrade();
+        school.upgrade();
+        return colony;
+    }
+

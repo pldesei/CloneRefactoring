@@ -1,0 +1,66 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/00730
+predFragLineRange:99-117
+predMethodLineRange:80-155
+nextLineRange:83-124
+predStrMethodInvoNames:
+[reader, terms, indexName, getFieldNames, maxDoc, add, maxDoc, add, iterator, next, next, add, parseLong, docs, getLiveDocs, nextDoc, nextDoc, size, maxDoc, add, get, endsWith, getName, getClass, size, get, maxDoc, maxDoc, set, get, maxDoc, maxDoc, size, get, toArray, size, maxDoc, createFromFlatOrdinals, getSettings]
+%%%%%%%%%%
+AddedMethodInvo Line:96 InvoName:builder.buildFromTerms(builder.wrapNumeric64Bit(terms.iterator(null)),reader.getLiveDocs())
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.OrdinalsBuilder
+ClassName:OrdinalsBuilder
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java
+InvokedMethodSig:public BytesRefIterator buildFromTerms(TermsEnum, Bits) throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:96 InvoName:builder.wrapNumeric64Bit(terms.iterator(null))
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.OrdinalsBuilder
+ClassName:OrdinalsBuilder
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java
+InvokedMethodSig:public TermsEnum wrapNumeric64Bit(TermsEnum) 
+%%%%%%%%%%
+AddedMethodInvo Line:98 InvoName:NumericUtils.prefixCodedToLong(term)
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:100 InvoName:builder.build(fieldDataType.getSettings())
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.OrdinalsBuilder
+ClassName:OrdinalsBuilder
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java
+InvokedMethodSig:public org.elasticsearch.index.fielddata.ordinals.Ordinals build(org.elasticsearch.common.settings.Settings) 
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:build.isMultiValued()
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.Ordinals
+ClassName:Ordinals
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/Ordinals.java
+InvokedMethodSig:public abstract boolean isMultiValued() 
+%%%%%%%%%%
+AddedMethodInvo Line:102 InvoName:build.ordinals()
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.Ordinals
+ClassName:Ordinals
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/Ordinals.java
+InvokedMethodSig:public abstract org.elasticsearch.index.fielddata.ordinals.Ordinals.Docs ordinals() 
+%%%%%%%%%%
+AddedMethodInvo Line:106 InvoName:ordinals.getOrd(i)
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.Ordinals.Docs
+ClassName:Docs
+InnerClass
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/Ordinals.java
+InvokedMethodSig:public abstract int getOrd(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:108 InvoName:builder.buildDocsWithValuesSet()
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.OrdinalsBuilder
+ClassName:OrdinalsBuilder
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java
+InvokedMethodSig:public FixedBitSet buildDocsWithValuesSet() 
+%%%%%%%%%%
+AddedMethodInvo Line:121 InvoName:builder.close()
+PackageName:org.elasticsearch.index.fielddata.ordinals
+QualifiedClassName:org.elasticsearch.index.fielddata.ordinals.OrdinalsBuilder
+ClassName:OrdinalsBuilder
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java
+InvokedMethodSig:public void close() throws java.io.IOException

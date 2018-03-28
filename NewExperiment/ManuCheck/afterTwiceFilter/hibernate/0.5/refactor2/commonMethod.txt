@@ -1,0 +1,7 @@
+(startLine=321 endLine=325 srcPath=/root/NewExperiment/hibernateFilter/00046/testsuite/src/test/java/org/hibernate/test/hql/BulkManipulationTest.java)
+	protected boolean supportsBulkInsertIdGeneration(Class entityClass) {
+		EntityPersister persister = sfi().getEntityPersister( entityClass.getName() );
+		IdentifierGenerator generator = persister.getIdentifierGenerator();
+		return HqlSqlWalker.supportsIdGenWithBulkInsertion( generator );
+	}
+

@@ -1,0 +1,35 @@
+(startLine=495 endLine=527 srcPath=/root/NewExperiment/freecolFilter/00272/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    public void testTeachPettyCriminalsByMaster() {
+        Colony colony = getStandardColony(2);
+
+        Iterator<Unit> units = colony.getUnitIterator();
+
+        Unit criminal = units.next();
+        criminal.setType(Unit.PETTY_CRIMINAL);
+
+        Unit teacher = units.next();
+        teacher.setType(Unit.MASTER_BLACKSMITH);
+
+        Building school = colony.getBuilding(Building.SCHOOLHOUSE);
+        school.setLevel(Building.SHOP);
+
+        teacher.setLocation(school);
+
+        // It takes two turns longer to train a petty criminal by a master than
+        // by an expert!
+        assertEquals(1, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        school.newTurn();
+        assertEquals(0, colony.getUnitList(Unit.PETTY_CRIMINAL).size());
+        assertEquals(Unit.INDENTURED_SERVANT, criminal.getType());
+    }
+

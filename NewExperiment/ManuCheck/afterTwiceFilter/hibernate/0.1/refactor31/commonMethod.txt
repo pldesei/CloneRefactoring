@@ -1,0 +1,7 @@
+(startLine=116 endLine=120 srcPath=/root/NewExperiment/hibernateFilter/00557/hibernate-core/src/main/java/org/hibernate/internal/SessionFactoryRegistry.java)
+	public SessionFactory getNamedSessionFactory(String name) {
+        LOG.debugf( "Lookup: name=%s", name );
+		final String uuid = nameUuidXref.get( name );
+		return getSessionFactory( uuid );
+	}
+

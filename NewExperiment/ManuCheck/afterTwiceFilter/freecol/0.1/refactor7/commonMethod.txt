@@ -1,0 +1,9 @@
+(startLine=808 endLine=814 srcPath=/root/NewExperiment/freecolFilter/00057/src/net/sf/freecol/common/model/Unit.java)
+    /**
+    * Checks if this unit is visible to the given player.
+    */
+    public boolean isVisibleTo(Player player) {
+        return (getTile() != null && player.canSee(getTile()) && (getTile().getSettlement() == null
+                || getTile().getSettlement().getOwner() == player));
+    }
+

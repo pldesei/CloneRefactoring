@@ -1,0 +1,50 @@
+(startLine=376 endLine=423 srcPath=/root/NewExperiment/freecolFilter/00240/src/net/sf/freecol/client/gui/panel/ReportUnitPanel.java)
+    private JLabel createUnitTypeLabel(int unitType, boolean mounted, int count) {
+        int graphicsType = reportPanel.getLibrary().getUnitGraphicsType(unitType, true, mounted, 0, false);
+        JLabel unitLabel = reportPanel.buildUnitLabel(graphicsType, 0.66f);
+        unitLabel.setText(String.valueOf(count));
+        if (count == 0) {
+            unitLabel.setForeground(Color.GRAY);
+        }
+        switch (unitType) {
+        case Unit.ARTILLERY:
+        case Unit.DAMAGED_ARTILLERY:
+        case Unit.CARAVEL:
+        case Unit.MERCHANTMAN:
+        case Unit.GALLEON:
+        case Unit.FRIGATE:
+        case Unit.MAN_O_WAR:
+        case Unit.PRIVATEER:
+            unitLabel.setToolTipText(Unit.getName(unitType));
+            break;
+        case Unit.VETERAN_SOLDIER:
+            if (mounted) {
+                unitLabel.setToolTipText(Messages.message("model.unit.veteranDragoon"));
+            } else {
+                unitLabel.setToolTipText(Messages.message("model.unit.veteranSoldier"));
+            }
+            break;
+        case Unit.COLONIAL_REGULAR:
+            if (mounted) {
+                unitLabel.setToolTipText(Messages.message("model.unit.colonialCavalry"));
+            } else {
+                unitLabel.setToolTipText(Messages.message("model.unit.colonialRegular"));
+            }
+            break;
+        case Unit.KINGS_REGULAR:
+            if (mounted) {
+                unitLabel.setToolTipText(Messages.message("model.unit.kingsCavalry"));
+            } else {
+                unitLabel.setToolTipText(Messages.message("model.unit.kingsRegular"));
+            }
+            break;
+        default:
+            if (mounted) {
+                unitLabel.setToolTipText(Messages.message("model.unit.dragoon"));
+            } else {
+                unitLabel.setToolTipText(Messages.message("model.unit.soldier"));
+            }
+        }
+        return unitLabel;
+    }
+

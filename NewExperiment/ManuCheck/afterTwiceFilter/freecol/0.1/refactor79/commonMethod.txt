@@ -1,0 +1,14 @@
+(startLine=4754 endLine=4765 srcPath=/root/NewExperiment/freecolFilter/00289/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Return the type of the image which will be used to draw the path
+     *
+     * @returns a <code>String</code> to form the resource key
+     */
+    public String getPathTypeImage() {
+        if (isMounted()) {
+            return "horse";
+        } else {
+            return unitType.getPathImage();
+        }
+    }
+

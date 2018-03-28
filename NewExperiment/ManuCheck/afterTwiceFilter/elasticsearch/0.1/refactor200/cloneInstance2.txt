@@ -1,0 +1,16 @@
+(startLine=80 endLine=93 srcPath=/root/NewExperiment/elasticsearchFilter/01111/src/main/java/org/elasticsearch/action/admin/indices/delete/TransportDeleteIndexAction.java)
+    protected void doExecute(DeleteIndexRequest request, ActionListener<DeleteIndexResponse> listener) {
+        ClusterState state = clusterService.state();
+        String[] indicesOrAliases = request.indices();
+
+        request.indices(state.metaData().concreteIndices(request.indices(), request.indicesOptions()));
+
+        if (disableDeleteAllIndices) {
+            if (state.metaData().isAllIndices(indicesOrAliases) ||
+                    state.metaData().isPatternMatchingAllIndices(indicesOrAliases, request.indices())) {
+                throw new ElasticsearchIllegalArgumentException("deleting all indices is disabled");
+            }
+        }
+        super.doExecute(request, listener);
+    }
+

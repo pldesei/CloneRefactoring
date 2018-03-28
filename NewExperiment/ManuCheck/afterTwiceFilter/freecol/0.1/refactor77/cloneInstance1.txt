@@ -1,0 +1,16 @@
+(startLine=213 endLine=226 srcPath=/root/NewExperiment/freecolFilter/00286/src/net/sf/freecol/client/gui/action/DetermineHighSeasAction.java)
+            for (int j = 0; j < height; j++) {
+                final int oldX = (i * oldWidth) / width;
+                final int oldY = (j * oldHeight) / height;
+                /*
+                 * TODO: This tile should be based on the average as
+                 *       mentioned at the top of this method.
+                 */
+                Tile importTile = oldMap.getTile(oldX, oldY);
+                Tile t = new Tile(game, importTile.getType(), i, j);
+                t.setForested(importTile.isForested());
+                t.setAddition(importTile.getAddition());
+                t.setBonus(importTile.hasBonus());
+                v.add(t);
+            }
+

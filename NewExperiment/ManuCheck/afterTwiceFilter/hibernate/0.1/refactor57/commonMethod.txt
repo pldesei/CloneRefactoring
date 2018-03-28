@@ -1,0 +1,11 @@
+(startLine=496 endLine=504 srcPath=/root/NewExperiment/hibernateFilter/01138/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+	private void parseBasic(Basic basic) {
+		XmlMetaSingleAttribute attribute;
+		ElementKind elementKind = getElementKind( basic.getAccess() );
+		String type = getType( basic.getName(), null, elementKind );
+		if ( type != null ) {
+			attribute = new XmlMetaSingleAttribute( this, basic.getName(), type );
+			members.add( attribute );
+		}
+	}
+

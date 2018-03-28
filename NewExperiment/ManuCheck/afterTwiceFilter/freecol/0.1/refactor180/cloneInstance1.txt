@@ -1,0 +1,42 @@
+(startLine=71 endLine=110 srcPath=/root/NewExperiment/freecolFilter/00747/test/src/net/sf/freecol/server/ai/mission/UnitSeekAndDestroyMissionTest.java)
+    public void testCapturedUnitsLoseMission() {
+        setupServer();
+        
+        Game game = server.getGame();
+        Map map = game.getMap();
+        AIMain aiMain = server.getAIMain();
+        
+        UnitType veteranType = spec().getUnitType("model.unit.veteranSoldier");
+        EquipmentType muskets = spec().getEquipmentType("model.equipment.muskets");
+
+        // Create attacking player and unit
+        ServerPlayer player1 = (ServerPlayer) game.getPlayer("model.nation.dutch");
+        Tile tile1 = map.getTile(2, 2);
+        Unit attacker = new Unit(game, tile1, player1, veteranType, UnitState.ACTIVE);
+        AIUnit aiUnit = (AIUnit) aiMain.getAIObject(attacker);
+        assertNotNull(aiUnit);
+        
+        // Create defending player and unit
+        ServerPlayer player2 = (ServerPlayer) game.getPlayer("model.nation.french");
+        Tile tile2 = map.getTile(2, 1);
+        Unit defender = new Unit(game, tile2, player2, veteranType,
+                                 UnitState.ACTIVE, muskets);
+        
+        player1.setStance(player2, Stance.WAR);
+        player2.setStance(player1, Stance.WAR);
+        
+        UnitSeekAndDestroyMission mission = new UnitSeekAndDestroyMission(aiMain,aiUnit,defender);
+        aiUnit.setMission(mission);
+        boolean isSeekAndDestroyMission = aiUnit.getMission() instanceof UnitSeekAndDestroyMission;
+        assertTrue("Attacker should have a UnitSeekAndDestroyMission", isSeekAndDestroyMission);
+                
+        // simulate capture
+        attacker.setOwner(player2);
+        assertTrue("Attacking unit should have been captured", attacker.getOwner() == player2);
+        
+        // re-check unit mission
+        aiUnit = (AIUnit) aiMain.getAIObject(attacker);
+        assertFalse("Captured unit should lose previous mission", aiUnit.getMission() == null);
+        
+    }
+

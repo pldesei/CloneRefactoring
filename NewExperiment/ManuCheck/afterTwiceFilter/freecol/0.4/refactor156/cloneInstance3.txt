@@ -1,0 +1,10 @@
+(startLine=578 endLine=585 srcPath=/root/NewExperiment/freecolFilter/00693/src/net/sf/freecol/FreeCol.java)
+        if (autoSaveDirectory.exists()) {
+            if (autoSaveDirectory.isFile()) {
+                System.out.println("Could not create freecol/save/autosave under "
+                                   + System.getProperty("user.home") + " because there "
+                                   + "already exists a regular file with the same name.");
+                return null;
+            }
+        } else {
+

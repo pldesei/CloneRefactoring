@@ -1,0 +1,21 @@
+(startLine=129 endLine=147 srcPath=/root/NewExperiment/freecolFilter/00285/src/net/sf/freecol/server/ai/GoodsWish.java)
+     protected void readFromXMLImpl(XMLStreamReader in) throws XMLStreamException {        
+         id = in.getAttributeValue(null, "ID");
+         destination = (Location) getAIMain().getFreeColGameObject(in.getAttributeValue(null, "destination"));
+         
+         final String transportableStr = in.getAttributeValue(null, "transportable");
+         if (transportableStr != null) {
+             transportable = (Transportable) getAIMain().getAIObject(transportableStr);
+             if (transportable == null) {
+                 transportable = new AIGoods(getAIMain(), transportableStr);
+             }
+         } else {
+             transportable = null;
+         }
+         value = Integer.parseInt(in.getAttributeValue(null, "value"));
+         
+         goodsType = Integer.parseInt(in.getAttributeValue(null, "goodsType"));
+         
+         in.nextTag();
+     }
+

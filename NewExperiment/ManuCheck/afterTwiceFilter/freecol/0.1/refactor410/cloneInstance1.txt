@@ -1,0 +1,12 @@
+(startLine=554 endLine=563 srcPath=/root/NewExperiment/freecolFilter/01072/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+                     .getSurroundingTiles(MAX_DISTANCE_TO_BRING_GIFTS)) {
+                Colony c = t.getColony();
+                if (c != null
+                    && is.getAlarm(c.getOwner()) != null
+                    && IndianBringGiftMission.invalidReason(aiUnit, c) == null
+                    && unit.findPath(is.getTile(), c.getTile(), null,
+                                     CostDeciders.numberOfLegalTiles()) != null) {
+                    nearbyColonies.add(c);
+                }
+            }
+

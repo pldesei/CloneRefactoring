@@ -1,0 +1,17 @@
+(startLine=658 endLine=672 srcPath=/root/NewExperiment/freecolFilter/00405/src/net/sf/freecol/common/model/Europe.java)
+            if (in.getLocalName().equals(UNITS_TAG_NAME)) {
+                units = new ArrayList<Unit>();
+                while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+                    if (in.getLocalName().equals(Unit.getXMLElementTagName())) {
+                        Unit unit = (Unit) getGame().getFreeColGameObject(in.getAttributeValue(null, "ID"));
+                        if (unit != null) {
+                            unit.readFromXML(in);
+                            units.add(unit);
+                        } else {
+                            unit = new Unit(getGame(), in);
+                            units.add(unit);
+                        }
+                    }
+                }
+            } else if (in.getLocalName().equals("unitPrice")) {
+

@@ -1,0 +1,25 @@
+(startLine=848 endLine=870 srcPath=/root/NewExperiment/freecolFilter/00222/src/net/sf/freecol/common/model/Building.java)
+    public int getProduction() {
+        if (getGoodsOutputType() == -1) {
+            return 0;
+        }
+
+        int goodsOutput = getMaximumProduction();
+
+        if ((getGoodsInputType() > -1) && (colony.getGoodsCount(getGoodsInputType()) < goodsOutput)) { // Not
+                                                                                                        // enough
+                                                                                                        // goods
+                                                                                                        // to
+                                                                                                        // do
+                                                                                                        // this?
+            int goodsInput = colony.getGoodsCount(getGoodsInputType());
+            if (level < FACTORY) {
+                goodsOutput = goodsInput;
+            } else {
+                goodsOutput = (goodsInput * 3) / 2;
+            }
+        }
+
+        return goodsOutput;
+    }
+

@@ -1,0 +1,37 @@
+(startLine=1058 endLine=1092 srcPath=/root/NewExperiment/freecolFilter/00615/src/net/sf/freecol/common/model/SimpleCombatModel.java)
+    private void sinkShip(Unit sinkingShip, Colony attackerColony, Unit attackerUnit) {
+        String nation = sinkingShip.getApparentOwnerName();
+
+        if (attackerColony != null) {
+            attackerColony.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                            "model.unit.shipSunkByBombardment",
+                                                            attackerColony)
+                                           .addName("%colony%", attackerColony.getName())
+                                           .addName("%unit%", sinkingShip.getName())
+                                           .addName("%nation%", nation));
+            sinkingShip.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                         "model.unit.shipSunkByBombardment",
+                                                         sinkingShip)
+                                        .addName("%colony%", attackerColony.getName())
+                                        .addName("%unit%", sinkingShip.getName()));
+        } else if (attackerUnit != null) {
+            String attackerNation = attackerUnit.getApparentOwnerName();
+
+            attackerUnit.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                          "model.unit.enemyShipSunk",
+                                                          attackerUnit)
+                                         .addName("%unit%", attackerUnit.getName())
+                                         .addName("%enemyUnit%", sinkingShip.getName())
+                                         .addName("%enemyNation%", nation));
+            sinkingShip.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                         "model.unit.shipSunk",
+                                                         sinkingShip)
+                                        .addName("%unit%", sinkingShip.getName())
+                                        .addName("%enemyUnit%", attackerUnit.getName())
+                                        .addName("%enemyNation%", attackerNation));
+        }
+        sinkingShip.getOwner().divertModelMessages(sinkingShip,
+                                                   sinkingShip.getTile());
+        sinkingShip.dispose();
+    }
+

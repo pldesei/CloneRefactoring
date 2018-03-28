@@ -1,0 +1,15 @@
+(startLine=423 endLine=435 srcPath=/root/NewExperiment/freecolFilter/00448/src/net/sf/freecol/common/networking/Connection.java)
+    /**
+     * Sends the given message over this <code>Connection</code> and waits for
+     * confirmation of receiveval before returning.
+     * 
+     * @param element The element (root element in a DOM-parsed XML tree) that
+     *            holds all the information
+     * @throws IOException If an error occur while sending the message.
+     * @see #send(Element)
+     * @see #ask(Element)
+     */
+    public void sendAndWait(Element element) throws IOException {
+        ask(element);
+    }
+

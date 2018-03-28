@@ -1,0 +1,10 @@
+(startLine=315 endLine=322 srcPath=/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java)
+    /**
+     * Closes this builder and release all resources.
+     */
+    @Override
+    public void close() throws IOException {
+        pool.reset(true, false);
+        offsets = null;
+    }
+

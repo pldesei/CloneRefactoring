@@ -1,0 +1,9 @@
+(startLine=78 endLine=84 srcPath=/root/NewExperiment/elasticsearchFilter/00915/src/main/java/org/elasticsearch/index/fielddata/BytesValues.java)
+    /**
+     * Fills the given spare for the given doc ID and returns the hashcode of the reference as defined by
+     * {@link BytesRef#hashCode()}
+     */
+    public int getValueHashed(int docId, BytesRef spare) {
+        return getValueScratch(docId, spare).hashCode();
+    }
+

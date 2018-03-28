@@ -1,0 +1,14 @@
+(startLine=118 endLine=129 srcPath=/root/NewExperiment/freecolFilter/00553/src/net/sf/freecol/server/ai/mission/UnitWanderHostileMission.java)
+                unit.getMoveType(direction) == MoveType.ATTACK) {
+                Element element = Message.createNewRootElement("attack");
+                element.setAttribute("unit", unit.getId());
+                element.setAttribute("direction", direction.toString());
+
+                try {
+                    connection.ask(element);
+                } catch (IOException e) {
+                    logger.warning("Could not send message!");
+                }
+
+            }
+

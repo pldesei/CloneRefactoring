@@ -1,0 +1,16 @@
+(startLine=695 endLine=708 srcPath=/root/NewExperiment/freecolFilter/01151/src/net/sf/freecol/common/model/FreeColObject.java)
+    /**
+     * Close the current tag, checking that it did indeed close correctly.
+     *
+     * @param in The input stream with the XML.
+     * @param tag The expected tag name.
+     * @exception XMLStreamException if a closing tag is not found.
+     */
+    public void closeTag(XMLStreamReader in, String tag) throws XMLStreamException {
+        if (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+            throw new XMLStreamException("Parse error, END_ELEMENT expected,"
+                + " not: " + in.getLocalName());
+        }
+        expectTag(in, tag);
+    }
+

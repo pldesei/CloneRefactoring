@@ -1,0 +1,17 @@
+(startLine=872 endLine=886 srcPath=/root/NewExperiment/freecolFilter/00092/src/net/sf/freecol/common/model/Colony.java)
+    /**
+	 *
+	 * @param unit
+	 * @param colonyTile
+	 * @return
+	 * 
+	 * @date Oct 1, 2005 9:13:41 PM by chris
+	 */
+	public boolean verifyWorkerCanWorkLand(Unit unit, ColonyTile colonyTile) {
+		final boolean spaceForWorker = colonyTile.canAdd(unit);		// CHRIS
+		final boolean landIsAccessible = (colonyTile.getWorkTile().isLand() || getBuilding(Building.DOCK).isBuilt());
+		final boolean workerAllowedToWorkLand = (colonyTile.getWorkTile().getNationOwner() == Player.NO_NATION || colonyTile.getWorkTile().getNationOwner() == unit.getNation());
+		final boolean workable = spaceForWorker && landIsAccessible && workerAllowedToWorkLand;
+		return workable;
+	}
+

@@ -1,0 +1,14 @@
+(startLine=1660 endLine=1671 srcPath=/root/NewExperiment/freecolFilter/01204/src/net/sf/freecol/server/ai/ColonyPlan.java)
+        for (WorkLocationPlan wlp : getFoodPlans()) {
+            WorkLocation wl = wlp.getWorkLocation();
+            String wlStr = (wl instanceof Building)
+                ? ((Building)wl).getType().toString().substring(15)
+                : (wl instanceof ColonyTile)
+                ? tile.getDirection(((ColonyTile)wl).getWorkTile()).toString()
+                : wl.getId();
+            sb.append(wlStr
+                + ": " + getWorkLocationProduction(wl, wlp.getGoodsType())
+                + " " + wlp.getGoodsType().toString().substring(12)
+                + "\n");
+        }
+

@@ -1,0 +1,11 @@
+(startLine=304 endLine=312 srcPath=/root/NewExperiment/freecolFilter/00785/src/net/sf/freecol/server/ai/AIPlayer.java)
+            if (reply!=null && reply.getTagName().equals("recruitUnitInEuropeConfirmed")) {
+                Element unitElement = (Element) reply.getChildNodes().item(0);
+                String unitID = unitElement.getAttribute("ID");
+                unit = (AIUnit) getAIMain().getAIObject(unitID);
+                if (unit==null) {
+                    logger.warning("Could not recruit the specified AI unit in europe");
+                }
+                return unit;
+            } else {
+

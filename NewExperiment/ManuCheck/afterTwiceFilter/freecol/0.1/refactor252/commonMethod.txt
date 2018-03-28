@@ -1,0 +1,10 @@
+(startLine=951 endLine=958 srcPath=/root/NewExperiment/freecolFilter/00861/src/net/sf/freecol/server/model/ServerPlayer.java)
+    /**
+     * Adds a player to the list of players for whom the stance has changed.
+     *
+     * @param other The <code>ServerPlayer</code> to add.
+     */
+    public void addStanceChange(ServerPlayer other) {
+        if (!stanceDirty.contains(other)) stanceDirty.add(other);
+    }
+

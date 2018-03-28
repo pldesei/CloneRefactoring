@@ -1,0 +1,37 @@
+(startLine=169 endLine=203 srcPath=/root/NewExperiment/elasticsearchFilter/00390/modules/elasticsearch/src/main/java/org/elasticsearch/action/support/single/custom/TransportSingleCustomOperationAction.java)
+                if (shard.currentNodeId().equals(nodes.localNodeId())) {
+                    // we don't prefer local shard, so try and do it here
+                    if (!request.preferLocalShard()) {
+                        if (request.operationThreaded()) {
+                            request.beforeLocalFork();
+                            threadPool.execute(new Runnable() {
+                                @Override public void run() {
+                                    try {
+                                        Response response = shardOperation(request, shard.id());
+                                        listener.onResponse(response);
+                                    } catch (Exception e) {
+                                        onFailure(shard, e);
+                                    }
+                                }
+                            });
+                            return;
+                        } else {
+                            try {
+                                final Response response = shardOperation(request, shard.id());
+                                if (request.listenerThreaded()) {
+                                    threadPool.execute(new Runnable() {
+                                        @Override public void run() {
+                                            listener.onResponse(response);
+                                        }
+                                    });
+                                } else {
+                                    listener.onResponse(response);
+                                }
+                                return;
+                            } catch (Exception e) {
+                                onFailure(shard, e);
+                            }
+                        }
+                    }
+                } else {
+

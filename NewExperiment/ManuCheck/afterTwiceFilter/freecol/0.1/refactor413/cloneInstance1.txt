@@ -1,0 +1,14 @@
+(startLine=487 endLine=498 srcPath=/root/NewExperiment/freecolFilter/01136/src/net/sf/freecol/server/ai/mission/IndianDemandMission.java)
+        throws XMLStreamException {
+        super.readAttributes(in);
+
+        String str = in.getAttributeValue(null, "target");
+        target = getGame().getFreeColGameObject(str, Colony.class);
+
+        str = in.getAttributeValue(null, "completed");
+        completed = Boolean.valueOf(str).booleanValue();
+
+        str = in.getAttributeValue(null, "demanded");
+        demanded = Boolean.valueOf(str).booleanValue();
+    }
+

@@ -1,0 +1,6 @@
+(startLine=92 endLine=95 srcPath=/root/NewExperiment/elasticsearchFilter/01127/src/main/java/org/elasticsearch/action/support/IndicesOptions.java)
+    public static IndicesOptions fromOptions(boolean ignoreUnavailable, boolean allowNoIndices, boolean expandToOpenIndices, boolean expandToClosedIndices) {
+        byte id = toByte(ignoreUnavailable, allowNoIndices, expandToOpenIndices, expandToClosedIndices);
+        return VALUES[id];
+    }
+

@@ -1,0 +1,17 @@
+(startLine=97 endLine=111 srcPath=/root/NewExperiment/hibernateFilter/01240/hibernate-entitymanager/src/test/java/org/hibernate/jpa/test/packaging/JarVisitorTest.java)
+	private ScanResult standardScan(URL url) {
+		ScanEnvironment env = new ScanEnvironmentImpl( url );
+		return new StandardScanner().scan(
+				env,
+				new StandardScanOptions(),
+				new ScanParameters() {
+//					private final JandexInitManager jandexInitManager = new JandexInitManager();
+					@Override
+					public JandexInitializer getJandexInitializer() {
+//						return jandexInitManager;
+						return null;
+					}
+				}
+		);
+	}
+

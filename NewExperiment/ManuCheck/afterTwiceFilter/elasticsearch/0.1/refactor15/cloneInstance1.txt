@@ -1,0 +1,13 @@
+(startLine=105 endLine=115 srcPath=/root/NewExperiment/elasticsearchFilter/00259/modules/elasticsearch/src/main/java/org/elasticsearch/index/query/xcontent/GeoPolygonFilterParser.java)
+                                } else if (token.isValue()) {
+                                    if (currentFieldName.equals(XContentGeoPointFieldMapper.Names.LAT)) {
+                                        point.lat = parser.doubleValue();
+                                    } else if (currentFieldName.equals(XContentGeoPointFieldMapper.Names.LON)) {
+                                        point.lon = parser.doubleValue();
+                                    } else if (currentFieldName.equals(XContentGeoPointFieldMapper.Names.GEOHASH)) {
+                                        double[] values = GeoHashUtils.decode(parser.text());
+                                        point.lat = values[0];
+                                        point.lon = values[1];
+                                    }
+                                }
+

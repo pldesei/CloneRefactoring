@@ -1,0 +1,18 @@
+(startLine=216 endLine=231 srcPath=/root/NewExperiment/freecolFilter/00286/src/net/sf/freecol/client/gui/action/ScaleMapAction.java)
+            for (int j = 0; j < height; j++) {
+                final int oldX = (i * oldWidth) / width;
+                final int oldY = (j * oldHeight) / height;
+                /*
+                 * TODO: This tile should be based on the average as
+                 *       mentioned at the top of this method.
+                 */
+                Tile oldTile = oldMap.getTile(oldX, oldY);
+                
+                // Copy values to the new tile:
+                Tile t = new Tile(game, oldTile.getType(), i, j);
+                t.setForested(oldTile.isForested());
+                t.setAddition(oldTile.getAddition());
+                t.setBonus(oldTile.hasBonus());
+                v.add(t);
+            }
+

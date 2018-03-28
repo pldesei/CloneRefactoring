@@ -1,0 +1,29 @@
+(startLine=208 endLine=234 srcPath=/root/NewExperiment/freecolFilter/01048/src/net/sf/freecol/server/ai/mission/BuildColonyMission.java)
+    public static PathNode findTargetPath(AIUnit aiUnit, boolean deferOK) {
+        if (invalidAIUnitReason(aiUnit) != null) return null;
+        final Unit unit = aiUnit.getUnit();
+        final Tile startTile = unit.getPathStartTile();
+        if (startTile == null) return null;
+
+        PathNode path;
+        final Unit carrier = unit.getCarrier();
+        final GoalDecider gd = getGoalDecider(aiUnit, deferOK);
+        final CostDecider standardCd
+            = CostDeciders.avoidSettlementsAndBlockingUnits();
+        final CostDecider relaxedCd = CostDeciders.numberOfTiles();
+
+        // Try for something sensible nearby.
+        path = unit.searchFullPath(startTile, gd, standardCd,
+                                   MAX_TURNS, carrier);
+        if (path != null) return path;
+
+        // Retry, but increase the range.
+        path = unit.searchFullPath(startTile, gd, standardCd,
+                                   MAX_TURNS*3, carrier);
+        if (path != null) return path;
+
+        // One more try with a relaxed cost decider and no range limit.
+        return unit.searchFullPath(startTile, gd, relaxedCd,
+                                   INFINITY, carrier);
+    }
+

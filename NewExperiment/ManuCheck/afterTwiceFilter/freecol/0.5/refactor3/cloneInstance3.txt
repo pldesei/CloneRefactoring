@@ -1,0 +1,21 @@
+(startLine=467 endLine=485 srcPath=/root/NewExperiment/freecolFilter/00032/src/net/sf/freecol/client/gui/ImageLibrary.java)
+            for(int j = 0; j < UNIT_BUTTON_COUNT; j++) {
+                String filePath = dataDirectory + path + unitButtonDirectory + subDirectory + unitButtonName + j + extension;
+                ImageIcon tempImage;
+                if (doLookup) {
+                    URL url = resourceLocator.getResource(filePath);
+                    if (url == null) {
+                        throw new FreeColException("The data file \"" + filePath + "\" could not be fonud.");
+                    }
+                    tempImage = new ImageIcon(url);
+                }
+                else {
+                    File tmpFile = new File(filePath);
+                    if ((tmpFile == null) || !tmpFile.exists() || !tmpFile.isFile() || !tmpFile.canRead()) {
+                        throw new FreeColException("The data file \"" + filePath + "\" could not be found.");
+                    }
+                    tempImage = new ImageIcon(filePath);
+                }
+                unitButtons[i].add(tempImage);
+            }
+

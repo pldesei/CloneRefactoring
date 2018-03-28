@@ -1,0 +1,26 @@
+(startLine=1518 endLine=1541 srcPath=/root/NewExperiment/freecolFilter/01070/src/net/sf/freecol/server/control/InGameController.java)
+                                  Goods goods, int price) {
+        TradeSession session
+            = TradeSession.lookup(TradeSession.class, unit, settlement);
+        if (session == null) {
+            return DOMMessage.clientError("Proposing to buy without opening a transaction session?!");
+        }
+        if (!session.getBuy()) {
+            return DOMMessage.clientError("Proposing to buy in a session where buying is not allowed.");
+        }
+        ChangeSet cs = new ChangeSet();
+        if (settlement instanceof IndianSettlement) {
+            csSpeakToChief(serverPlayer, (IndianSettlement)settlement,
+                           false, cs);
+        }
+
+        // AI considers the proposition, return with a gold value
+        AIPlayer ai = getFreeColServer().getAIPlayer(settlement.getOwner());
+        int gold = ai.buyProposition(unit, settlement, goods, price);
+
+        // Others can not see proposals.
+        cs.addAttribute(See.only(serverPlayer),
+                        "gold", Integer.toString(gold));
+        return cs.build(serverPlayer);
+    }
+

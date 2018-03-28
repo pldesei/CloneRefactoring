@@ -1,0 +1,32 @@
+(startLine=408 endLine=437 srcPath=/root/NewExperiment/hibernateFilter/01451/hibernate-core/src/main/java/org/hibernate/cfg/CollectionPropertyHolder.java)
+	public AttributeConverterDescriptor mapKeyAttributeConverterDescriptor(XProperty mapXProperty, XClass keyXClass) {
+		AttributeConversionInfo info = locateAttributeConversionInfo( "key" );
+		if ( info != null ) {
+			if ( info.isConversionDisabled() ) {
+				return null;
+			}
+			else {
+				try {
+					return makeAttributeConverterDescriptor( info );
+				}
+				catch (Exception e) {
+					throw new IllegalStateException(
+							String.format( "Unable to instantiate AttributeConverter [%s", info.getConverterClass().getName() ),
+							e
+					);
+				}
+			}
+		}
+
+		log.debugf(
+				"Attempting to locate auto-apply AttributeConverter for collection key [%s]",
+				collection.getRole()
+		);
+
+		// todo : do we need to pass along `XClass keyXClass`?
+
+		return getContext().getMetadataCollector()
+				.getAttributeConverterAutoApplyHandler()
+				.findAutoApplyConverterForMapKey( mapXProperty, getContext() );
+	}
+

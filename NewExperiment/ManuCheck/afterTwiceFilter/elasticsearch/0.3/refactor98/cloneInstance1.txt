@@ -1,0 +1,21 @@
+(startLine=1354 endLine=1372 srcPath=/root/NewExperiment/elasticsearchFilter/00748/src/main/java/jsr166e/extra/ReadMostlyVector.java)
+        public int indexOf(Object o) {
+            final SequenceLock lock = list.lock;
+            long seq = lock.awaitAvailability();
+            Object[] items = list.array;
+            int c = list.count;
+            if (c <= items.length) {
+                int idx = list.validatedIndexOf(o, items, offset,
+                                                offset + size, seq);
+                if (lock.getSequence() == seq)
+                    return idx < 0 ? -1 : idx - offset;
+            }
+            lock.lock();
+            try {
+                int idx = list.rawIndexOf(o, offset, offset + size);
+                return idx < 0 ? -1 : idx - offset;
+            } finally {
+                lock.unlock();
+            }
+        }
+

@@ -1,0 +1,25 @@
+(startLine=221 endLine=243 srcPath=/root/NewExperiment/hibernateFilter/00483/hibernate-core/src/main/java/org/hibernate/hql/ast/exec/AbstractStatementExecutor.java)
+		@Override
+		public void execute(Connection connection) {
+			final String command = session.getFactory().getDialect().getDropTemporaryTableString()
+					+ ' ' + persister.getTemporaryIdTableName();
+			try {
+				Statement statement = connection.createStatement();
+				try {
+					statement = connection.createStatement();
+					statement.executeUpdate( command );
+				}
+				finally {
+					try {
+						statement.close();
+					}
+					catch( Throwable ignore ) {
+						// ignore
+					}
+				}
+			}
+			catch( Exception e ) {
+				LOG.warn( "unable to drop temporary id table after use [" + e.getMessage() + "]" );
+			}
+		}
+

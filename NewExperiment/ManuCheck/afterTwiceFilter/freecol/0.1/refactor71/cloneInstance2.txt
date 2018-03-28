@@ -1,0 +1,32 @@
+(startLine=815 endLine=844 srcPath=/root/NewExperiment/freecolFilter/00272/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    public void testSonsOfLiberty() {
+        Colony colony = getStandardColony(2);
+        colony.addSoL(100);
+        colony.newTurn();
+
+        Iterator<Unit> units = colony.getUnitIterator();
+
+        Unit colonist1 = units.next();
+        colonist1.setType(Unit.FREE_COLONIST);
+
+        Unit lumberjack = units.next();
+        lumberjack.setType(Unit.EXPERT_LUMBER_JACK);
+
+        Building school = colony.getBuilding(Building.SCHOOLHOUSE);
+        school.setLevel(Building.SHOP);
+
+        lumberjack.setLocation(school);
+
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 1
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 2
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 3
+        assertEquals(1, colony.getUnitList(Unit.FREE_COLONIST).size());
+        school.newTurn(); // 4
+
+        assertEquals(0, colony.getUnitList(Unit.FREE_COLONIST).size());
+        assertEquals(2, colony.getUnitList(Unit.EXPERT_LUMBER_JACK).size());
+    }
+

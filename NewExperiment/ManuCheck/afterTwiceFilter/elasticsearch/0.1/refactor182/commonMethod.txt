@@ -1,0 +1,11 @@
+(startLine=135 endLine=143 srcPath=/root/NewExperiment/elasticsearchFilter/01007/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
+    protected final Query getQuery(int doc) {
+        final int numValues = values.setDocument(doc);
+        if (numValues == 0) {
+            return null;
+        }
+        assert numValues == 1;
+        spare.reset(values.nextValue(), values.currentValueHash());
+        return queries.get(spare);
+    }
+

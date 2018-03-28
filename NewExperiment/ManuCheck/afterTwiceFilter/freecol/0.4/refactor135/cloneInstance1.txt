@@ -1,0 +1,32 @@
+(startLine=125 endLine=154 srcPath=/root/NewExperiment/freecolFilter/00501/src/net/sf/freecol/client/gui/panel/PreCombatDialog.java)
+        for (Modifier modifier : offence) {
+            FreeColGameObjectType source = modifier.getSource();
+            String sourceName;
+            if (source == null) {
+                sourceName = "???";
+            } else {
+                sourceName = source.getName();
+            }
+            add(new JLabel(sourceName), higConst.rc(row, offenceLabelColumn));
+            String bonus = getModifierFormat().format(modifier.getValue());
+            switch(modifier.getType()) {
+            case ADDITIVE:
+                if (modifier.getValue() > 0) {
+                    bonus = "+" + bonus;
+                }
+                break;
+            case PERCENTAGE:
+                if (modifier.getValue() > 0) {
+                    bonus = "+" + bonus;
+                }
+                add(new JLabel("%"), higConst.rc(row, offencePercentageColumn));
+                break;
+            case MULTIPLICATIVE:
+                bonus = "\u00D7" + bonus;
+                break;
+            default:
+            }                
+            add(new JLabel(bonus), higConst.rc(row, offenceValueColumn, "r"));
+            row += 2;
+        }
+

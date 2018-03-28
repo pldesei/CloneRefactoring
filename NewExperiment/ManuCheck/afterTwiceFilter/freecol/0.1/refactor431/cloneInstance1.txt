@@ -1,0 +1,51 @@
+(startLine=2532 endLine=2580 srcPath=/root/NewExperiment/freecolFilter/01222/src/net/sf/freecol/server/control/InGameController.java)
+                                     Goods goods, int amount) {
+        ChangeSet cs = new ChangeSet();
+        csVisit(serverPlayer, settlement, 0, cs);
+
+        TradeSession session
+            = TradeSession.lookup(TradeSession.class, unit, settlement);
+        if (session == null) {
+            return DOMMessage.clientError("Trying to buy without opening a transaction session");
+        }
+        if (!session.getBuy()) {
+            return DOMMessage.clientError("Trying to buy in a session where buying is not allowed.");
+        }
+        if (!unit.hasSpaceLeft()) {
+            return DOMMessage.clientError("Unit is full, unable to buy.");
+        }
+
+        // Check that this is the agreement that was made
+        AIPlayer ai = getFreeColServer().getAIPlayer(settlement.getOwner());
+        int returnGold = ai.buyProposition(unit, settlement, goods, amount);
+        if (returnGold != amount) {
+            return DOMMessage.clientError("This was not the price we agreed upon! Cheater?");
+        }
+        if (!serverPlayer.checkGold(amount)) { // Check this is funded.
+            return DOMMessage.clientError("Insufficient gold to buy.");
+        }
+
+        // Valid, make the trade.
+        moveGoods(goods, unit);
+        cs.add(See.perhaps(), unit);
+
+        Player settlementPlayer = settlement.getOwner();
+        Tile tile = settlement.getTile();
+        settlement.updateWantedGoods();
+        settlementPlayer.modifyGold(amount);
+        serverPlayer.modifyGold(-amount);
+        cs.addTension(See.perhaps(),//-til,+til
+            ((ServerIndianSettlement)settlement).modifyAlarm(serverPlayer,
+                -amount / 50));
+        tile.updateIndianSettlement(serverPlayer);
+        cs.add(See.only(serverPlayer), tile);
+        cs.addPartial(See.only(serverPlayer), serverPlayer, "gold");
+        session.setBuy();
+        logger.finest(serverPlayer.getName() + " " + unit + " buys " + goods
+                      + " at " + settlement.getName() + " for " + amount);
+
+        // Others can see the unit capacity.
+        sendToOthers(serverPlayer, cs);
+        return cs.build(serverPlayer);
+    }
+

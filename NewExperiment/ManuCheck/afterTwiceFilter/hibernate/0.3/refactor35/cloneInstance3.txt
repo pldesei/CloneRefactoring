@@ -1,0 +1,46 @@
+(startLine=165 endLine=208 srcPath=/root/NewExperiment/hibernateFilter/00742/hibernate-core/src/matrix/java/org/hibernate/test/locking/LockModeTest.java)
+	public void testLegacyCriteriaAliasSpecific() {
+		// open a session, begin a transaction and lock row
+		Session s1 = sessionFactory().openSession();
+		s1.beginTransaction();
+		try {
+			A it = (A) s1.createCriteria( A.class )
+					.setLockMode( "this", LockMode.PESSIMISTIC_WRITE )
+					.uniqueResult();
+			// make sure we got it
+			assertNotNull( it );
+
+			// that initial transaction is still active and so the lock should still be held.
+			// Lets open another session/transaction and verify
+			Session s2 = sessionFactory().openSession();
+			s2.beginTransaction();
+			try {
+				s2.createCriteria( A.class )
+						.setLockMode( "this", LockMode.PESSIMISTIC_WRITE )
+						.uniqueResult();
+
+				fail( "Pessimistic lock was not obtained/held" );
+			}
+			catch ( Exception e ) {
+				// grr, exception can be any number of types based on database
+				// 		see HHH-6887
+				if ( LockAcquisitionException.class.isInstance( e )
+						|| GenericJDBCException.class.isInstance( e )
+						|| PessimisticLockException.class.isInstance( e ) ) {
+					// "ok"
+				}
+				else {
+					fail( "Unexpected error type testing pessimistic locking : " + e.getClass().getName() );
+				}
+			}
+			finally {
+				s2.getTransaction().commit();
+				s2.close();
+			}
+		}
+		finally {
+			s1.getTransaction().commit();
+			s1.close();
+		}
+	}
+

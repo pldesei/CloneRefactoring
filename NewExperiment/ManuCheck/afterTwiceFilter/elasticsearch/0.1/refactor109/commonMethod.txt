@@ -1,0 +1,6 @@
+(startLine=198 endLine=201 srcPath=/root/NewExperiment/elasticsearchFilter/00776/src/test/java/org/elasticsearch/test/unit/index/fielddata/StringFieldDataTests.java)
+    private HashedBytesRef convert(BytesValues values, int doc) {
+        BytesRef ref = new BytesRef();
+        return new HashedBytesRef(ref, values.getValueHashed(doc, ref));
+    }
+

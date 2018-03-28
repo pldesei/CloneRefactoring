@@ -1,0 +1,60 @@
+(startLine=59 endLine=116 srcPath=/root/NewExperiment/hibernateFilter/01514/hibernate-core/src/test/java/org/hibernate/test/optlock/OptimisticLockTest.java)
+	private void testUpdateOptimisticLockFailure(String entityName) {
+		Session mainSession = openSession();
+		mainSession.beginTransaction();
+		Document doc = new Document();
+		doc.setTitle( "Hibernate in Action" );
+		doc.setAuthor( "Bauer et al" );
+		doc.setSummary( "Very boring book about persistence" );
+		doc.setText( "blah blah yada yada yada" );
+		doc.setPubDate( new PublicationDate( 2004 ) );
+		mainSession.save( entityName, doc );
+		mainSession.getTransaction().commit();
+		mainSession.close();
+
+		mainSession = openSession();
+		mainSession.beginTransaction();
+		doc = ( Document ) mainSession.get( entityName, doc.getId() );
+
+		Session otherSession = sessionFactory().openSession();
+		otherSession.beginTransaction();
+		Document otherDoc = ( Document ) otherSession.get( entityName, doc.getId() );
+		otherDoc.setSummary( "A modern classic" );
+		otherSession.getTransaction().commit();
+		otherSession.close();
+
+		try {
+			doc.setSummary( "A machiavellian achievement of epic proportions" );
+			mainSession.flush();
+			fail( "expecting opt lock failure" );
+		}
+		catch ( StaleObjectStateException expected ) {
+			// expected result...
+		}
+		catch( StaleStateException expected ) {
+			// expected result (if using versioned batching)...
+		}
+		catch( JDBCException e ) {
+			// SQLServer will report this condition via a SQLException
+			// when using its SNAPSHOT transaction isolation...
+			if ( ! ( getDialect() instanceof SQLServerDialect && e.getErrorCode() == 3960 ) ) {
+				throw e;
+			}
+			else {
+				// it seems to "lose track" of the transaction as well...
+				mainSession.getTransaction().rollback();
+				mainSession.beginTransaction();
+			}
+		}
+		mainSession.clear();
+		mainSession.getTransaction().commit();
+		mainSession.close();
+
+		mainSession = openSession();
+		mainSession.beginTransaction();
+		doc = ( Document ) mainSession.load( entityName, doc.getId() );
+		mainSession.delete( entityName, doc );
+		mainSession.getTransaction().commit();
+		mainSession.close();
+	}
+

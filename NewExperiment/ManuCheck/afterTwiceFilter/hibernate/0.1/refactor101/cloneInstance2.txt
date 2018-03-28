@@ -1,0 +1,24 @@
+(startLine=501 endLine=522 srcPath=/root/NewExperiment/hibernateFilter/01668/hibernate-infinispan/src/test/java/org/hibernate/test/cache/infinispan/access/PutFromLoadValidatorUnitTest.java)
+		public Void call() throws Exception {
+			try {
+				long txTimestamp = System.currentTimeMillis(); // this should be acquired before UserTransaction.begin()
+				SharedSessionContractImplementor session = mock (SharedSessionContractImplementor.class);
+				PutFromLoadValidator.Lock lock = testee.acquirePutFromLoadLock(session, KEY1, txTimestamp);
+				try {
+					if (expectSuccess) {
+						assertNotNull(lock);
+					} else {
+						assertNull(lock);
+					}
+				}
+				finally {
+					if (lock != null) {
+						testee.releasePutFromLoadLock(KEY1, lock);
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			return null;
+		}
+

@@ -1,0 +1,18 @@
+(startLine=493 endLine=508 srcPath=/root/NewExperiment/freecolFilter/01367/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+            && randoms[cheatIndex++] < equipScoutCheatPercent) {
+            for (Unit u : europe.getUnitList()) {
+                if (u.hasDefaultRole()
+                    && u.hasAbility(Ability.CAN_BE_EQUIPPED)) {
+                    int price = europe.priceGoods(u.getGoodsDifference(scoutRole, 1));
+                    if (!u.getOwner().checkGold(price)) {
+                        player.modifyGold(price);
+                        lb.add("added ", price, " gold to ");
+                    }
+                    if (getAIUnit(u).equipForRole("model.role.scout")) {
+                        lb.add("equip scout ", u, ", ");
+                    }
+                    break;
+                }
+            }
+        }
+

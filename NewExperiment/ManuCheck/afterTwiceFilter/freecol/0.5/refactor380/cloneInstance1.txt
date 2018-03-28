@@ -1,0 +1,18 @@
+(startLine=1204 endLine=1219 srcPath=/root/NewExperiment/freecolFilter/01004/src/net/sf/freecol/server/FreeColServer.java)
+    private void addBooleanOption(String id, String gr, boolean defaultValue) {
+        Specification spec = game.getSpecification();
+        if (!spec.hasOption(id)) {
+            BooleanOption op = new BooleanOption(id);
+            op.setGroup(gr);
+            op.setValue(defaultValue);
+            spec.addAbstractOption(op);
+            if ("".equals(gr)) {
+                for (OptionGroup level : spec.getDifficultyLevels()) {
+                    level.add(op);
+                }
+            } else {
+                spec.getOptionGroup(gr).add(op);
+            }
+        }
+    }
+

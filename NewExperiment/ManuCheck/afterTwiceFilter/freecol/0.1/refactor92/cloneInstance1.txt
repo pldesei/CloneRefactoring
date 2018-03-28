@@ -1,0 +1,12 @@
+(startLine=191 endLine=200 srcPath=/root/NewExperiment/freecolFilter/00339/src/net/sf/freecol/client/gui/panel/DragListener.java)
+                        } else {
+                            if (tempUnit.getTile() == null) { // -> in Europe
+                                int price = tempUnit.getOwner().getMarket().getBidPrice(Goods.MUSKETS, 50);
+                                menuItem = new JMenuItem(Messages.message("arm") + " (" +
+                                                         Messages.message("goldAmount", "%amount%",
+                                                                          String.valueOf(price)) + ")");
+                            } else {
+                                menuItem = new JMenuItem(Messages.message("arm"));
+                            }
+                        }
+

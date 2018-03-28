@@ -1,0 +1,14 @@
+(startLine=1079 endLine=1090 srcPath=/root/NewExperiment/freecolFilter/00405/src/net/sf/freecol/common/model/Building.java)
+        while (in.nextTag() != XMLStreamConstants.END_ELEMENT) {
+            Unit unit = (Unit) getGame().getFreeColGameObject(in.getAttributeValue(null, "ID"));
+            if (unit == null) {
+                unit = new Unit(getGame(), in);
+                units.add(unit);
+            } else {
+                unit.readFromXML(in);
+                if (!units.contains(unit)) {
+                    units.add(unit);
+                }
+            }
+        }
+

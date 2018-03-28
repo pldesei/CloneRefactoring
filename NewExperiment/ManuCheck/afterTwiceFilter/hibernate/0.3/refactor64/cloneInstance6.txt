@@ -1,0 +1,16 @@
+(startLine=423 endLine=436 srcPath=/root/NewExperiment/hibernateFilter/01137/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+		for ( OneToMany oneToMany : attributes.getOneToMany() ) {
+			ElementKind elementKind = getElementKind( oneToMany.getAccess() );
+			try {
+				types = getCollectionType( oneToMany.getName(), oneToMany.getTargetEntity(), elementKind );
+			}
+			catch ( MetaModelGenerationException e ) {
+				logMetaModelException( oneToMany.getName(), e );
+				break;
+			}
+			if ( types != null ) {
+				metaCollection = new XmlMetaCollection( this, oneToMany.getName(), types[0], types[1] );
+				members.add( metaCollection );
+			}
+		}
+

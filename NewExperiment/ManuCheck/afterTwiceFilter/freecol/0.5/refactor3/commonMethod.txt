@@ -1,0 +1,24 @@
+(startLine=278 endLine=299 srcPath=/root/NewExperiment/freecolFilter/00033/src/net/sf/freecol/client/gui/ImageLibrary.java)
+    /**
+    * Finds the image file in the given <code>filePath</code>.
+    *
+    * @doLookup If <i>true</i> then the <code>resourceLocator</code>
+    *           is used when searching for the image file.
+    * @return An ImageIcon with data loaded from the image file.
+    */
+    private ImageIcon findImage(String filePath, Class resourceLocator, boolean doLookup) throws FreeColException {
+        if (doLookup) {
+            URL url = resourceLocator.getResource(filePath);
+            if (url != null) {
+                return new ImageIcon(url);
+            }
+        }
+
+        File tmpFile = new File(filePath);
+        if ((tmpFile == null) || !tmpFile.exists() || !tmpFile.isFile() || !tmpFile.canRead()) {
+            throw new FreeColException("The data file \"" + filePath + "\" could not be found.");
+        }
+        
+        return new ImageIcon(filePath);
+    }
+

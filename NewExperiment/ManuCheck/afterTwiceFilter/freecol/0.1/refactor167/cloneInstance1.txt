@@ -1,0 +1,39 @@
+(startLine=600 endLine=636 srcPath=/root/NewExperiment/freecolFilter/00725/src/net/sf/freecol/server/ai/ColonialAIPlayer.java)
+            if (getAIRandom().nextInt(10) == 1) {
+                int price = 0;
+                UnitType unitToTrain = null;
+                for (UnitType unitType : unitTypes) {
+                    if (unitType.hasPrice()) {
+                        int unitPrice = europe.getUnitPrice(unitType);
+                        if (unitToTrain == null || unitPrice < price) {
+                            unitToTrain = unitType;
+                            price = unitPrice;
+                        }
+                    }
+                }
+                Unit unit = null;
+                if (unitToTrain != null) {
+                    getPlayer().modifyGold(price);
+                    unit = this.trainAIUnitInEurope(unitToTrain).getUnit();
+                }
+                if (unit != null && unit.isColonist()) {
+                    // no need to equip artillery units with muskets or horses
+                    GoodsType muskets = getGame().getSpecification().getGoodsType("model.goods.muskets");
+                    GoodsType horses = getGame().getSpecification().getGoodsType("model.goods.horses");
+                    getPlayer().modifyGold(getPlayer().getMarket().getBidPrice(muskets, 50));
+                    getPlayer().modifyGold(getPlayer().getMarket().getBidPrice(horses, 50));
+                    
+                    sendAndWaitSafely(new ClearSpecialityMessage(unit).toXMLElement());
+                    Element equipMusketsElement = Message.createNewRootElement("equipUnit");
+                    equipMusketsElement.setAttribute("unit", unit.getId());
+                    equipMusketsElement.setAttribute("type", "model.equipment.muskets");
+                    equipMusketsElement.setAttribute("amount", Integer.toString(50));
+                    sendAndWaitSafely(equipMusketsElement);
+                    Element equipHorsesElement = Message.createNewRootElement("equipUnit");
+                    equipHorsesElement.setAttribute("unit", unit.getId());
+                    equipHorsesElement.setAttribute("type", "model.equipment.horses");
+                    equipHorsesElement.setAttribute("amount", Integer.toString(50));
+                    sendAndWaitSafely(equipHorsesElement);
+                }
+            }
+

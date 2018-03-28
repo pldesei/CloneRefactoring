@@ -1,0 +1,14 @@
+(startLine=277 endLine=288 srcPath=/root/NewExperiment/freecolFilter/01169/src/net/sf/freecol/common/model/StringTemplate.java)
+    public StringTemplate addName(String key, FreeColObject object) {
+        if (templateType == TemplateType.TEMPLATE) {
+            requireKeys(); requireReplacements();
+            keys.add(key);
+            replacements.add(new StringTemplate(object.getId() + ".name",
+                                                TemplateType.KEY));
+        } else {
+            throw new IllegalArgumentException("Cannot add key-value pair to StringTemplate type "
+                                               + templateType.toString());
+        }
+        return this;
+    }
+

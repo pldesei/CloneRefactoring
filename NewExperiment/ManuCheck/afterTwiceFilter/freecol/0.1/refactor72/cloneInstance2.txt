@@ -1,0 +1,21 @@
+(startLine=151 endLine=169 srcPath=/root/NewExperiment/freecolFilter/00285/src/net/sf/freecol/server/ai/WorkerWish.java)
+    protected void readFromXMLImpl(XMLStreamReader in) throws XMLStreamException {        
+        id = in.getAttributeValue(null, "ID");
+        destination = (Location) getAIMain().getFreeColGameObject(in.getAttributeValue(null, "destination"));
+        
+        final String transportableStr = in.getAttributeValue(null, "transportable"); 
+        if (transportableStr != null) {
+            transportable = (Transportable) getAIMain().getAIObject(transportableStr);
+            if (transportable == null) {
+                transportable = new AIUnit(getAIMain(), transportableStr);
+            }
+        } else {
+            transportable = null;
+        }
+        value = Integer.parseInt(in.getAttributeValue(null, "value"));
+
+        unitType = Integer.parseInt(in.getAttributeValue(null, "unitType"));
+        expertNeeded = Boolean.valueOf(in.getAttributeValue(null, "expertNeeded")).booleanValue();
+        in.nextTag();
+    }
+

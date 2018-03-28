@@ -1,0 +1,13 @@
+(startLine=530 endLine=540 srcPath=/root/NewExperiment/elasticsearchFilter/01053/src/test/java/org/elasticsearch/test/ElasticsearchIntegrationTest.java)
+    /**
+     * Waits for relocations and refreshes all indices in the cluster.
+     * @see #waitForRelocation()
+     */
+    protected final RefreshResponse refresh() {
+        waitForRelocation();
+        // TODO RANDOMIZE with flush?
+        RefreshResponse actionGet = client().admin().indices().prepareRefresh().execute().actionGet();
+        assertNoFailures(actionGet);
+        return actionGet;
+    }
+

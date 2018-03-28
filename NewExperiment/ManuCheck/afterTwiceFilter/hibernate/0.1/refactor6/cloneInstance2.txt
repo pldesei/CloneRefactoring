@@ -1,0 +1,23 @@
+(startLine=80 endLine=100 srcPath=/root/NewExperiment/hibernateFilter/00299/core/src/main/java/org/hibernate/proxy/pojo/javassist/SerializableProxy.java)
+	private Object readResolve() {
+		try {
+			return JavassistLazyInitializer.getProxy(
+				entityName,
+				persistentClass,
+				interfaces,
+				getIdentifierMethodName==null ?
+					null :
+					getIdentifierMethodClass.getDeclaredMethod(getIdentifierMethodName, null),
+				setIdentifierMethodName==null ?
+					null :
+					setIdentifierMethodClass.getDeclaredMethod(setIdentifierMethodName, setIdentifierMethodParams),
+					componentIdType,
+				id,
+				null
+			);
+		}
+		catch (NoSuchMethodException nsme) {
+			throw new HibernateException("could not create proxy for entity: " + entityName, nsme);
+		}
+	}
+

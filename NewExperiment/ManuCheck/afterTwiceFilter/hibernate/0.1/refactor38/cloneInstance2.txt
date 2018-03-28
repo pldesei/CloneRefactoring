@@ -1,0 +1,27 @@
+(startLine=97 endLine=121 srcPath=/root/NewExperiment/hibernateFilter/00836/hibernate-entitymanager/src/test/java/org/hibernate/ejb/test/ejb3configuration/InterceptorTest.java)
+    public void testConfiguredSessionInterceptor() {
+        EntityManagerFactory emf = constructConfiguration().setProperty(
+                AvailableSettings.SESSION_INTERCEPTOR,
+                LocalExceptionInterceptor.class.getName()
+        ).setProperty( "aaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbb" ).createEntityManagerFactory();
+        EntityManager em = emf.createEntityManager();
+        Item i = new Item();
+        i.setName( "Laptop" );
+        try {
+            em.getTransaction().begin();
+            em.persist( i );
+            em.getTransaction().commit();
+            fail( "No interceptor" );
+        }
+        catch ( IllegalStateException e ) {
+            assertEquals( LocalExceptionInterceptor.LOCAL_EXCEPTION_MESSAGE, e.getMessage() );
+        }
+        finally {
+            if ( em.getTransaction() != null && em.getTransaction().isActive() ) {
+                em.getTransaction().rollback();
+            }
+            em.close();
+            emf.close();
+        }
+    }
+

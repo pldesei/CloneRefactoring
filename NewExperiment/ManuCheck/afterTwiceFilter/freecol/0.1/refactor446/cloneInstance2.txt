@@ -1,0 +1,15 @@
+(startLine=3928 endLine=3940 srcPath=/root/NewExperiment/freecolFilter/01270/src/net/sf/freecol/server/model/ServerPlayer.java)
+        } else { // (serverPlayer.isEuropean)
+            String key = getContactKey(other);
+            if (key != null) {
+                cs.addMessage(See.only(this),
+                    new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                        key, this, other));
+            }
+
+            // History event for European players.
+            cs.addHistory(this, new HistoryEvent(turn,
+                    HistoryEvent.EventType.MEET_NATION, other)
+                .addStringTemplate("%nation%", other.getNationName()));
+        }
+

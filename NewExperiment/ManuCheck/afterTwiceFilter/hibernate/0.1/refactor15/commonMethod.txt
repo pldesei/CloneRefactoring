@@ -1,0 +1,6 @@
+(startLine=70 endLine=73 srcPath=/root/NewExperiment/hibernateFilter/00319/testsuite/src/test/java/org/hibernate/test/readonly/AbstractReadOnlyTest.java)
+	protected void assertUpdateCount(int expected) {
+		int updates = ( int ) getSessions().getStatistics().getEntityUpdateCount();
+		assertEquals( "unexpected update counts", expected, updates );
+	}
+

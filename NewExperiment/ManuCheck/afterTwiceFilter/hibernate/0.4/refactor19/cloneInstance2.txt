@@ -1,0 +1,23 @@
+(startLine=204 endLine=224 srcPath=/root/NewExperiment/hibernateFilter/00348/core/src/main/java/org/hibernate/id/MultipleHiLoPerTableGenerator.java)
+		throws HibernateException {
+		// maxLo < 1 indicates a hilo generator with no hilo :?
+		if ( maxLo < 1 ) {
+			//keep the behavior consistent even for boundary usages
+			IntegralDataTypeHolder value = null;
+			while ( value == null || value.lt( 1 ) ) {
+				value = (IntegralDataTypeHolder) doWorkInNewTransaction( session );
+			}
+			return value.makeValue();
+		}
+
+		if ( lo > maxLo ) {
+			IntegralDataTypeHolder hiVal = (IntegralDataTypeHolder) doWorkInNewTransaction( session );
+			lo = ( hiVal.eq( 0 ) ) ? 1 : 0;
+			value = hiVal.copy().multiplyBy( maxLo+1 ).add( lo );
+			if ( log.isDebugEnabled() ) {
+				log.debug("new hi value: " + hiVal);
+			}
+		}
+		return value.makeValueThenIncrement();
+	}
+

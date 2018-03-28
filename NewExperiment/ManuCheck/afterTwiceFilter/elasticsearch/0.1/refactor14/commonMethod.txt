@@ -1,0 +1,52 @@
+(startLine=115 endLine=164 srcPath=/root/NewExperiment/elasticsearchFilter/00260/modules/elasticsearch/src/main/java/org/elasticsearch/common/lucene/geo/GeoHashUtils.java)
+    /**
+     * Decodes the given geohash into a latitude and longitude
+     *
+     * @param geohash Geohash to deocde
+     * @return Array with the latitude at index 0, and longitude at index 1
+     */
+    public static double[] decode(String geohash) {
+//        double[] latInterval = {-90.0, 90.0};
+//        double[] lngInterval = {-180.0, 180.0};
+        double latInterval0 = -90.0;
+        double latInterval1 = 90.0;
+        double lngInterval0 = -180.0;
+        double lngInterval1 = 180.0;
+
+        boolean isEven = true;
+
+        double latitude;
+        double longitude;
+        for (int i = 0; i < geohash.length(); i++) {
+            final int cd = DECODE_MAP.get(geohash.charAt(i));
+
+            for (int mask : BITS) {
+                if (isEven) {
+                    if ((cd & mask) != 0) {
+//                        lngInterval[0] = (lngInterval[0] + lngInterval[1]) / 2D;
+                        lngInterval0 = (lngInterval0 + lngInterval1) / 2D;
+                    } else {
+//                        lngInterval[1] = (lngInterval[0] + lngInterval[1]) / 2D;
+                        lngInterval1 = (lngInterval0 + lngInterval1) / 2D;
+                    }
+                } else {
+                    if ((cd & mask) != 0) {
+//                        latInterval[0] = (latInterval[0] + latInterval[1]) / 2D;
+                        latInterval0 = (latInterval0 + latInterval1) / 2D;
+                    } else {
+//                        latInterval[1] = (latInterval[0] + latInterval[1]) / 2D;
+                        latInterval1 = (latInterval0 + latInterval1) / 2D;
+                    }
+                }
+                isEven = !isEven;
+            }
+
+        }
+//        latitude = (latInterval[0] + latInterval[1]) / 2D;
+        latitude = (latInterval0 + latInterval1) / 2D;
+//        longitude = (lngInterval[0] + lngInterval[1]) / 2D;
+        longitude = (lngInterval0 + lngInterval1) / 2D;
+
+        return new double[]{latitude, longitude};
+    }
+

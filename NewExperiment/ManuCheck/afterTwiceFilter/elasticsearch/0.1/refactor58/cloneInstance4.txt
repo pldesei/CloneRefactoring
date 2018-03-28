@@ -1,0 +1,13 @@
+(startLine=162 endLine=172 srcPath=/root/NewExperiment/elasticsearchFilter/00643/src/main/java/org/elasticsearch/action/deletebyquery/DeleteByQueryRequest.java)
+    public DeleteByQueryRequest query(XContentBuilder builder) {
+        try {
+            this.querySource = builder.underlyingBytes();
+            this.querySourceOffset = 0;
+            this.querySourceLength = builder.underlyingBytesLength();
+            this.querySourceUnsafe = false;
+            return this;
+        } catch (IOException e) {
+            throw new ElasticSearchGenerationException("Failed to generate [" + builder + "]", e);
+        }
+    }
+

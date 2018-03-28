@@ -1,0 +1,26 @@
+ProjectPath:/root/NewExperiment/elasticsearchFilter/01025
+predFragLineRange:952-979
+predMethodLineRange:951-979
+nextLineRange:716-738
+predStrMethodInvoNames:
+[actionGet, execute, addMapping, setSettings, prepareCreate, indices, admin, client, put, settingsBuilder, endObject, endObject, endObject, endObject, field, field, field, startObject, startObject, startObject, startObject, jsonBuilder, actionGet, execute, setWaitForYellowStatus, setWaitForEvents, prepareHealth, cluster, admin, client, actionGet, execute, setRefresh, setSource, prepareIndex, client, toString, actionGet, execute, addHighlightedField, setQuery, prepareSearch, client, fieldQuery, assertNoFailures, assertThat, totalHits, getHits, equalTo, assertThat, hits, getHits, equalTo, getHits, assertThat, string, fragments, get, highlightFields, equalTo]
+%%%%%%%%%%
+AddedMethodInvo Line:718 InvoName:assertAcked(client().admin().indices().prepareCreate("test").setSettings(ImmutableSettings.settingsBuilder().put("index.number_of_shards",2)).addMapping("type1","title","type=string,store=yes,term_vector=with_positions_offsets").get())
+mBinding is null
+%%%%%%%%%%
+AddedMethodInvo Line:720 InvoName:ensureYellow()
+PackageName:org.elasticsearch.test
+QualifiedClassName:org.elasticsearch.test.AbstractIntegrationTest
+ClassName:AbstractIntegrationTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/01025/src/test/java/org/elasticsearch/test/AbstractIntegrationTest.java
+InvokedMethodSig:public ClusterHealthStatus ensureYellow() 
+%%%%%%%%%%
+AddedMethodInvo Line:727 InvoName:indexRandom(true,indexRequestBuilders)
+PackageName:org.elasticsearch.test
+QualifiedClassName:org.elasticsearch.test.AbstractIntegrationTest
+ClassName:AbstractIntegrationTest
+InvokedFilePath:/root/NewExperiment/elasticsearchFilter/01025/src/test/java/org/elasticsearch/test/AbstractIntegrationTest.java
+InvokedMethodSig:public void indexRandom(boolean, org.elasticsearch.action.index.IndexRequestBuilder[]) throws java.lang.InterruptedException, java.util.concurrent.ExecutionException
+%%%%%%%%%%
+AddedMethodInvo Line:736 InvoName:assertHighlight(search,i,"title",0,1,equalTo("highlighting <em>bug</em> present in elasticsearch"))
+mBinding is null

@@ -1,0 +1,13 @@
+(startLine=123 endLine=133 srcPath=/root/NewExperiment/freecolFilter/00936/src/net/sf/freecol/common/model/Tension.java)
+    /** 
+     * Get the current tension level.
+     *
+     * @return The current level.
+     */
+    public Level getLevel() {
+        for (Level level : Level.values()) {
+            if (value <= level.getLimit()) return level;
+        }
+        return Level.HATEFUL;
+    }
+

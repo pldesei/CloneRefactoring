@@ -1,0 +1,10 @@
+(startLine=228 endLine=235 srcPath=/root/NewExperiment/elasticsearchFilter/00344/modules/elasticsearch/src/main/java/org/elasticsearch/index/shard/service/InternalIndexShard.java)
+    @Override public Engine.Index prepareIndex(SourceToParse source) throws ElasticSearchException {
+        DocumentMapper docMapper = mapperService.type(source.type());
+        if (docMapper == null) {
+            throw new DocumentMapperNotFoundException("No mapper found for type [" + source.type() + "]");
+        }
+        ParsedDocument doc = docMapper.parse(source);
+        return new Engine.Index(docMapper.uidMapper().term(doc.uid()), doc);
+    }
+

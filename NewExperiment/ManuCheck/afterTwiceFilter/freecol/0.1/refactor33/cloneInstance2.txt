@@ -1,0 +1,14 @@
+(startLine=1056 endLine=1067 srcPath=/root/NewExperiment/freecolFilter/00176/src/net/sf/freecol/client/gui/GUI.java)
+                    } else {
+                        g.setColor(Color.RED);
+                        image = getPathNextTurnImage(activeUnit);
+                        if (activeUnit != null
+                                && tile.isExplored()
+                                && activeUnit.isNaval()
+                                && tile.isLand() 
+                                && (tile.getColony() == null || tile.getColony().getOwner() != activeUnit.getOwner())) {
+                            image = getPathNextTurnImage(activeUnit.getFirstUnit());
+                        }
+                        textColor = Color.WHITE;
+                    }                
+

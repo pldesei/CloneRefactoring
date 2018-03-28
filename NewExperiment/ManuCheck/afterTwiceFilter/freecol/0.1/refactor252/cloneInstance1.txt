@@ -1,0 +1,21 @@
+(startLine=939 endLine=957 srcPath=/root/NewExperiment/freecolFilter/00860/src/net/sf/freecol/server/model/ServerPlayer.java)
+        if (old != stance) {
+            try {
+                int modifier = old.getTensionModifier(stance);
+                setStance(otherPlayer, stance);
+                if (modifier != 0) {
+                    cs.add(See.only(null).perhaps((ServerPlayer) otherPlayer),
+                           modifyTension(otherPlayer, modifier));
+                }
+                cs.addStance(See.perhaps(), this, stance, otherPlayer,
+                             stance == Stance.WAR || old == Stance.WAR);
+                logger.info("Stance change " + getName()
+                            + " " + old.toString()
+                            + " -> " + stance.toString()
+                            + " wrt " + otherPlayer.getName());
+                change = true;
+            } catch (IllegalStateException e) { // Catch illegal transitions
+                logger.log(Level.WARNING, "Illegal stance transition", e);
+            }
+        }
+

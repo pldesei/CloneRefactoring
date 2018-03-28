@@ -1,0 +1,17 @@
+(startLine=636 endLine=650 srcPath=/root/NewExperiment/freecolFilter/01137/src/net/sf/freecol/common/model/FreeColObject.java)
+    /**
+     * Gets a boolean from an attribute in a stream.
+     *
+     * @param in The <code>XMLStreamReader</code> to read from.
+     * @param attributeName The attribute name.
+     * @param defaultValue The default value.
+     * @return The boolean attribute value, or the default value if none found.
+     */
+    public boolean getAttribute(XMLStreamReader in, String attributeName,
+                                boolean defaultValue) {
+        final String attrib = in.getAttributeValue(null, attributeName);
+
+        return (attrib == null) ? defaultValue
+            : Boolean.parseBoolean(attrib);
+    }
+

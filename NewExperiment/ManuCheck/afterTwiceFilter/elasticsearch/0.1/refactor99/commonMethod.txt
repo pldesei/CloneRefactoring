@@ -1,0 +1,14 @@
+(startLine=402 endLine=413 srcPath=/root/NewExperiment/elasticsearchFilter/00749/src/main/java/jsr166e/StampedLock.java)
+    /**
+     * Non-exclusively acquires the lock, blocking if necessary
+     * until available.
+     *
+     * @return a stamp that can be used to unlock or convert mode
+     */
+    public long readLock() {
+        long s, next;  // bypass acquireRead on fully unlocked case only
+        return ((((s = state) & ABITS) == 0L &&
+                 U.compareAndSwapLong(this, STATE, s, next = s + RUNIT)) ?
+                next : acquireRead(false, 0L));
+    }
+

@@ -1,0 +1,57 @@
+(startLine=255 endLine=309 srcPath=/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/loader/EncapsulatedCompositeAttributeResultSetProcessorTest.java)
+	private List<?> getResults(EntityPersister entityPersister ) {
+		final LoadPlan plan = Helper.INSTANCE.buildLoadPlan( sessionFactory(), entityPersister );
+
+		// ultimately, using a LoadPlan requires that it be interpreted into 2 pieces of information:
+		//		1) The query to execute
+		//		2) The ResultSetProcessor to use.
+		//
+		// Those 2 pieces of information share some common context:
+		//		1) alias resolution context
+		//
+
+		final AliasResolutionContext aliasResolutionContext = new AliasResolutionContextImpl( sessionFactory() );
+
+		final String sql = Helper.INSTANCE.generateSql( sessionFactory(), plan, aliasResolutionContext );
+
+		final ResultSetProcessorImpl resultSetProcessor = new ResultSetProcessorImpl( plan, true );
+		final List results = new ArrayList();
+
+		final Session workSession = openSession();
+		workSession.beginTransaction();
+		workSession.doWork(
+				new Work() {
+					@Override
+					public void execute(Connection connection) throws SQLException {
+						PreparedStatement ps = connection.prepareStatement( sql );
+						ps.setInt( 1, 1 );
+						ResultSet resultSet = ps.executeQuery();
+						results.addAll(
+								resultSetProcessor.extractResults(
+										NoOpLoadPlanAdvisor.INSTANCE,
+										resultSet,
+										(SessionImplementor) workSession,
+										new QueryParameters(),
+										new NamedParameterContext() {
+											@Override
+											public int[] getNamedParameterLocations(String name) {
+												return new int[0];
+											}
+										},
+										aliasResolutionContext,
+										true,
+										false,
+										null,
+										null
+								)
+						);
+						resultSet.close();
+						ps.close();
+					}
+				}
+		);
+		workSession.getTransaction().commit();
+		workSession.close();
+		return results;
+	}
+

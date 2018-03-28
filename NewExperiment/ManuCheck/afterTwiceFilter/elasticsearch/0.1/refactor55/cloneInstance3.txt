@@ -1,0 +1,12 @@
+(startLine=564 endLine=573 srcPath=/root/NewExperiment/elasticsearchFilter/00620/src/main/java/org/elasticsearch/cluster/metadata/IndexMetaData.java)
+                    if ("settings".equals(currentFieldName)) {
+                        ImmutableSettings.Builder settingsBuilder = settingsBuilder();
+                        while ((token = parser.nextToken()) != XContentParser.Token.END_OBJECT) {
+                            String key = parser.currentName();
+                            token = parser.nextToken();
+                            String value = parser.text();
+                            settingsBuilder.put(key, value);
+                        }
+                        builder.settings(settingsBuilder.build());
+                    } else if ("mappings".equals(currentFieldName)) {
+

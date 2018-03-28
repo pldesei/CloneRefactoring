@@ -1,0 +1,55 @@
+ProjectPath:/root/NewExperiment/freecolFilter/01073
+predFragLineRange:533-544
+predMethodLineRange:493-580
+nextLineRange:489-586
+predStrMethodInvoNames:
+[getPlayer, getMap, getGame, getIndianSettlements, getRandomGift, getAIRandom, randomInt, getName, getAIRandom, getOwnedUnits, getAIUnit, getMission, invalidNewMissionReason, add, finest, getName, isEmpty, finest, getName, isEmpty, get, randomInt, getAIRandom, size, remove, getAIUnit, invalidReason, findPath, getTile, getTile, numberOfLegalTiles, finest, getName, getSurroundingTiles, getTile, getColony, getAlarm, getOwner, invalidReason, findPath, getTile, getTile, numberOfLegalTiles, add, isEmpty, finest, getName, get, randomInt, getAIRandom, size, finest, getName, getName, setMission, getAIMain]
+%%%%%%%%%%
+AddedMethodInvo Line:496 InvoName:getGame().getSpecification().getInteger("model.option.giftProbability")
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Specification
+ClassName:Specification
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/src/net/sf/freecol/common/model/Specification.java
+InvokedMethodSig:public int getInteger(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:496 InvoName:getGame().getSpecification()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Game
+ClassName:Game
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/src/net/sf/freecol/common/model/Game.java
+InvokedMethodSig:public net.sf.freecol.common.model.Specification getSpecification() 
+%%%%%%%%%%
+AddedMethodInvo Line:559 InvoName:is.hasContacted(c.getOwner())
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.IndianSettlement
+ClassName:IndianSettlement
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/src/net/sf/freecol/common/model/IndianSettlement.java
+InvokedMethodSig:public boolean hasContacted(net.sf.freecol.common.model.Player) 
+%%%%%%%%%%
+AddedMethodInvo Line:563 InvoName:Math.max(1,is.getAlarm(c.getOwner()).getValue())
+PackageName:java.lang
+QualifiedClassName:java.lang.Math
+ClassName:Math
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/test/src/java/lang/Math.java
+InvokedMethodSig:public static int max(int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:563 InvoName:is.getAlarm(c.getOwner()).getValue()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Tension
+ClassName:Tension
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/src/net/sf/freecol/common/model/Tension.java
+InvokedMethodSig:public int getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:565 InvoName:path.getTotalTurns()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.PathNode
+ClassName:PathNode
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/src/net/sf/freecol/common/model/PathNode.java
+InvokedMethodSig:public int getTotalTurns() 
+%%%%%%%%%%
+AddedMethodInvo Line:574 InvoName:RandomChoice.getWeightedRandom(logger,"Choose gift colony",getAIRandom(),nearbyColonies)
+PackageName:net.sf.freecol.common.util
+QualifiedClassName:net.sf.freecol.common.util.RandomChoice
+ClassName:RandomChoice
+InvokedFilePath:/root/NewExperiment/freecolFilter/01073/src/net/sf/freecol/common/util/RandomChoice.java
+InvokedMethodSig:public static T getWeightedRandom(java.util.logging.Logger, java.lang.String, java.util.Random, Collection<RandomChoice<T>>) 

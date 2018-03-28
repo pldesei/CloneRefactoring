@@ -1,0 +1,58 @@
+(startLine=2986 endLine=3041 srcPath=/root/NewExperiment/freecolFilter/00103/src/net/sf/freecol/common/model/Unit.java)
+    /**
+     * Demotes this unit. A unit that can not be further demoted is
+     * destroyed. The enemy may plunder horses and muskets.
+     *
+     * @param enemyUnit The unit we are fighting against.
+     */
+    public void demote(Unit enemyUnit) {
+        String oldName = getName();
+        String messageID = "model.unit.unitDemoted";
+        String nation = owner.getNationAsString();
+        if (isMounted()) {
+            if (isArmed() && getType() != BRAVE) {
+                // dragoon
+                setMounted(false);
+                if (enemyUnit.getType() == BRAVE) {
+                    addModelMessage(this, "model.unit.braveMounted",
+                                    new String [][] {{"%nation%", enemyUnit.getOwner().getNationAsString()}});
+                    enemyUnit.setMounted(true, true);
+                }
+            } else {
+                // scout, brave?
+                messageID = "model.unit.unitSlaughtered";
+                dispose();
+            }
+        } else if (isArmed()) {
+            // soldier
+            setArmed(false);
+            if (enemyUnit.getType() == BRAVE) {
+                addModelMessage(this, "model.unit.braveArmed",
+                                new String [][] {{"%nation%", enemyUnit.getOwner().getNationAsString()}});
+                enemyUnit.setArmed(true, true);
+            }
+        } else if (getType() == ARTILLERY) {
+            messageID = "model.unit.artilleryDamaged";
+            setType(DAMAGED_ARTILLERY);
+        } else if (getType() == DAMAGED_ARTILLERY ||
+                   getType() == KINGS_REGULAR) {
+            messageID = "model.unit.unitDestroyed";
+            dispose();
+        } else {
+            // civilians
+            if (enemyUnit.getOwner().isEuropean()) {
+                messageID = "model.unit.unitCaptured";
+                setHitpoints(getInitialHitpoints(enemyUnit.getType()));
+                setLocation(enemyUnit.getTile());
+                setOwner(enemyUnit.getOwner());
+            }
+            messageID = "model.unit.unitSlaughtered";
+            dispose();
+        }
+        String newName = getName();
+        addModelMessage(this, messageID,
+                        new String [][] {{"%oldName%", oldName},
+                                         {"%newName%", newName},
+                                         {"%nation%", nation}});
+    }
+

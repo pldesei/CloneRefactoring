@@ -1,0 +1,41 @@
+(startLine=134 endLine=172 srcPath=/root/NewExperiment/freecolFilter/00325/src/net/sf/freecol/client/gui/panel/CargoPanel.java)
+    public void initialize() {
+        removeAll();
+
+        if (carrier != null) {
+
+            Iterator<Unit> unitIterator = carrier.getUnitIterator();
+            while (unitIterator.hasNext()) {
+                Unit unit = unitIterator.next();
+
+                UnitLabel label = new UnitLabel(unit, parent);
+                if (isEditable()) {
+                    label.setTransferHandler(defaultTransferHandler);
+                    label.addMouseListener(pressListener);
+                }
+
+                add(label, false);
+            }
+
+            Iterator<Goods> goodsIterator = carrier.getGoodsIterator();
+            while (goodsIterator.hasNext()) {
+                Goods g = goodsIterator.next();
+
+                GoodsLabel label = new GoodsLabel(g, parent);
+                if (isEditable()) {
+                    label.setTransferHandler(defaultTransferHandler);
+                    label.addMouseListener(pressListener);
+                }
+
+                add(label, false);
+            }
+
+            border.setTitle(Messages.message("cargoOnCarrierLong", 
+                                             "%name%", carrier.getName(),
+                                             "%space%", String.valueOf(carrier.getSpaceLeft())));
+        } else {
+            border.setTitle(Messages.message("cargoOnCarrier"));
+        }
+
+    }
+

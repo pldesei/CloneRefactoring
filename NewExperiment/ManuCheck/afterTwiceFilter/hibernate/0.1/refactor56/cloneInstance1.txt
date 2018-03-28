@@ -1,0 +1,30 @@
+(startLine=76 endLine=103 srcPath=/root/NewExperiment/hibernateFilter/01118/hibernate-core/src/main/java/org/hibernate/loader/plan2/build/internal/spaces/EntityQuerySpaceImpl.java)
+	public JoinImpl addCompositeJoin(CompositionDefinition compositionDefinition, String querySpaceUid) {
+		final boolean required = canJoinsBeRequired() && !compositionDefinition.isNullable();
+
+		final CompositeQuerySpaceImpl rhs = new CompositeQuerySpaceImpl(
+				new CompositePropertyMapping(
+						compositionDefinition.getType(),
+						(PropertyMapping) this.getEntityPersister(),
+						compositionDefinition.getName()
+				),
+				querySpaceUid,
+				getQuerySpaces(),
+				required,
+				sessionFactory()
+		);
+		getQuerySpaces().registerQuerySpace( rhs );
+
+		final JoinImpl join = new JoinImpl(
+				this,
+				compositionDefinition.getName(),
+				rhs,
+				( (PropertyMapping) persister ).toColumns( compositionDefinition.getName() ),
+				compositionDefinition.getType(),
+				required
+		);
+		internalGetJoins().add( join );
+
+		return join;
+	}
+

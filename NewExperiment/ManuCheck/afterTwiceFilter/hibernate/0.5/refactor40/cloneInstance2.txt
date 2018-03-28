@@ -1,0 +1,14 @@
+(startLine=573 endLine=584 srcPath=/root/NewExperiment/hibernateFilter/00922/hibernate-core/src/main/java/org/hibernate/mapping/Table.java)
+	public String sqlDropString(Dialect dialect, String defaultCatalog, String defaultSchema) {
+		StringBuilder buf = new StringBuilder( "drop table " );
+		if ( dialect.supportsIfExistsBeforeTableName() ) {
+			buf.append( "if exists " );
+		}
+		buf.append( getQualifiedName( dialect, defaultCatalog, defaultSchema ) )
+				.append( dialect.getCascadeConstraintsString() );
+		if ( dialect.supportsIfExistsAfterTableName() ) {
+			buf.append( " if exists" );
+		}
+		return buf.toString();
+	}
+

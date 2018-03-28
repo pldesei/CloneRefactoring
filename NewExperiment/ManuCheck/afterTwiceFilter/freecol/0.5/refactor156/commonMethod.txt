@@ -1,0 +1,18 @@
+(startLine=516 endLine=531 srcPath=/root/NewExperiment/freecolFilter/00694/src/net/sf/freecol/FreeCol.java)
+    /**
+     * Try to make a directory.
+     *
+     * @param file A <code>File</code> specifying where to make the directory.
+     * @return True if the directory is there after the call.
+     */
+    private static boolean insistDirectory(File file) {
+        if (file.exists()) {
+            if (file.isDirectory()) return true;
+            System.out.println("Could not create directory " + file.getName()
+                + " under " + file.getParentFile().getName()
+                + " because a non-directory with that name is already there.");
+            return false;
+        }
+        return file.mkdir();
+    }
+

@@ -1,0 +1,13 @@
+(startLine=322 endLine=332 srcPath=/root/NewExperiment/freecolFilter/00288/src/net/sf/freecol/client/gui/panel/ReportUnitPanel.java)
+        } else if (reportType == NAVAL) {
+            int[] unitTypes = new int[] {
+                Unit.CARAVEL, Unit.MERCHANTMAN, Unit.GALLEON,
+                Unit.FRIGATE, Unit.MAN_O_WAR, Unit.PRIVATEER
+            };
+            unitPanel = new JPanel(new GridLayout(1, unitTypes.length));
+            for (int index = 0; index < unitTypes.length; index++) {
+                int count = unitCounts[unitTypes[index]][0];
+                unitPanel.add(createUnitTypeLabel(unitTypes[index], false, count));
+            }
+        } else if (reportType == MILITARY) {
+

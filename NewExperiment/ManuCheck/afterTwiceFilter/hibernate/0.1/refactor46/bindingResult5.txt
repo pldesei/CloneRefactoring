@@ -1,0 +1,41 @@
+ProjectPath:/root/NewExperiment/hibernateFilter/01094
+predFragLineRange:82-145
+predMethodLineRange:71-153
+nextLineRange:65-136
+predStrMethodInvoNames:
+[getEntityPersister, sessionFactory, getName, openSession, beginTransaction, save, commit, getTransaction, close, sessionFactory, buildRootEntityLoadPlan, sessionFactory, singletonMap, get, getReturns, generateSql, sessionFactory, openSession, beginTransaction, doWork, prepareStatement, setInt, executeQuery, addAll, extractResults, close, close, assertEquals, size, get, assertNotNull, assertTyping, assertEquals, intValue, assertEquals, commit, getTransaction, close, openSession, beginTransaction, executeUpdate, createQuery, commit, getTransaction, close]
+%%%%%%%%%%
+AddedMethodInvo Line:77 InvoName:Helper.INSTANCE.buildLoadPlan(sessionFactory(),entityPersister)
+PackageName:org.hibernate.loader
+QualifiedClassName:org.hibernate.loader.Helper
+ClassName:Helper
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/loader/Helper.java
+InvokedMethodSig:public org.hibernate.loader.plan.spi.LoadPlan buildLoadPlan(org.hibernate.engine.spi.SessionFactoryImplementor, org.hibernate.persister.entity.EntityPersister) 
+%%%%%%%%%%
+AddedMethodInvo Line:91 InvoName:((SessionImplementor)workSession).getFactory().getJdbcServices().getSqlStatementLogger().logStatement(sql)
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.SqlStatementLogger
+ClassName:SqlStatementLogger
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/engine/jdbc/spi/SqlStatementLogger.java
+InvokedMethodSig:public void logStatement(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:91 InvoName:((SessionImplementor)workSession).getFactory().getJdbcServices().getSqlStatementLogger()
+PackageName:org.hibernate.engine.jdbc.spi
+QualifiedClassName:org.hibernate.engine.jdbc.spi.JdbcServices
+ClassName:JdbcServices
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/engine/jdbc/spi/JdbcServices.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.SqlStatementLogger getSqlStatementLogger() 
+%%%%%%%%%%
+AddedMethodInvo Line:91 InvoName:((SessionImplementor)workSession).getFactory().getJdbcServices()
+PackageName:org.hibernate.engine.spi
+QualifiedClassName:org.hibernate.engine.spi.SessionFactoryImplementor
+ClassName:SessionFactoryImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/engine/spi/SessionFactoryImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.jdbc.spi.JdbcServices getJdbcServices() 
+%%%%%%%%%%
+AddedMethodInvo Line:91 InvoName:((SessionImplementor)workSession).getFactory()
+PackageName:org.hibernate.engine.spi
+QualifiedClassName:org.hibernate.engine.spi.SessionImplementor
+ClassName:SessionImplementor
+InvokedFilePath:/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/engine/spi/SessionImplementor.java
+InvokedMethodSig:public abstract org.hibernate.engine.spi.SessionFactoryImplementor getFactory() 

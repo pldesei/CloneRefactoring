@@ -1,0 +1,9 @@
+(startLine=20 endLine=26 srcPath=/root/NewExperiment/freecolFilter/00273/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    private void trainForTurns(Colony colony, int requiredTurns, int unitType) {
+        for (int turn = 0; turn < requiredTurns; turn++) {
+            assertEquals("wrong number of units in turn " + turn + ": " + Unit.getName(unitType),
+                         1, colony.getUnitList(unitType).size());
+            colony.getBuilding(Building.SCHOOLHOUSE).newTurn();
+        }
+    }
+

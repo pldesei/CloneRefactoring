@@ -1,0 +1,12 @@
+(startLine=5117 endLine=5126 srcPath=/root/NewExperiment/hibernateFilter/01410/hibernate-core/src/main/java/org/hibernate/persister/entity/AbstractEntityPersister.java)
+	protected String determineTableName(Table table, JdbcEnvironment jdbcEnvironment) {
+		if ( table.getSubselect() != null ) {
+			return "( " + table.getSubselect() + " )";
+		}
+
+		return jdbcEnvironment.getQualifiedObjectNameFormatter().format(
+				table.getQualifiedTableName(),
+				jdbcEnvironment.getDialect()
+		);
+	}
+

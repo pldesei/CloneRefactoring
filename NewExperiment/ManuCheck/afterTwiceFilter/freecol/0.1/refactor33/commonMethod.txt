@@ -1,0 +1,50 @@
+(startLine=821 endLine=868 srcPath=/root/NewExperiment/freecolFilter/00177/src/net/sf/freecol/client/gui/GUI.java)
+    private void displayDragPath(Graphics2D g, PathNode dragPath) {
+        if (dragPath != null) {
+            PathNode temp = dragPath;
+            while (temp != null) {
+                Point p = getTilePosition(temp.getTile());
+                if (p != null) {
+                    Tile tile = temp.getTile();
+                    Image image;
+                    final Color textColor; 
+                    if (temp.getTurns() == 0) {
+                        g.setColor(Color.GREEN);                        
+                        image = getPathImage(activeUnit);
+                        if (activeUnit != null 
+                                && tile.isExplored()
+                                && activeUnit.isNaval()
+                                && tile.isLand() 
+                                && (tile.getColony() == null || tile.getColony().getOwner() != activeUnit.getOwner())) {
+                            image = getPathImage(activeUnit.getFirstUnit());
+                        }
+                        textColor = Color.BLACK;
+                    } else {
+                        g.setColor(Color.RED);
+                        image = getPathNextTurnImage(activeUnit);
+                        if (activeUnit != null
+                                && tile.isExplored()
+                                && activeUnit.isNaval()
+                                && tile.isLand() 
+                                && (tile.getColony() == null || tile.getColony().getOwner() != activeUnit.getOwner())) {
+                            image = getPathNextTurnImage(activeUnit.getFirstUnit());
+                        }
+                        textColor = Color.WHITE;
+                    }                
+                    if (image != null) {
+                        g.drawImage(image, p.x + (tileWidth - image.getWidth(null))/2, p.y + (tileHeight - image.getHeight(null))/2, null);
+                    } else {
+                        g.fillOval(p.x + tileWidth/2, p.y + tileHeight/2, 10, 10);
+                        g.setColor(Color.BLACK);
+                        g.drawOval(p.x + tileWidth/2, p.y + tileHeight/2, 10, 10);
+                    }                
+                    if (temp.getTurns() > 0) {
+                        BufferedImage stringImage = createStringImage(g, Integer.toString(temp.getTurns()), textColor, tileWidth, 12);
+                        g.drawImage(stringImage, p.x + (tileWidth - stringImage.getWidth(null))/2, p.y + (tileHeight - stringImage.getHeight()) / 2, null);
+                    }
+                }                    
+                temp = temp.next;
+            }
+        }
+    }
+

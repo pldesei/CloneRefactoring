@@ -1,0 +1,18 @@
+(startLine=276 endLine=291 srcPath=/root/NewExperiment/freecolFilter/00846/src/net/sf/freecol/client/gui/panel/ReportRequirementsPanel.java)
+            if (!misusedExperts.isEmpty()) {
+                doc.insertString(doc.getLength(), "\n"
+                                 + Messages.message(StringTemplate.template("report.requirements.misusedExperts")
+                                                    .addName("%unit%", workType)
+                                                    .add("%work%", goodsType.getWorkingAsKey())) + " ",
+                                 doc.getStyle("regular"));
+                int lastExpertsIndex = misusedExperts.size() - 1;
+                for (int index = 0; index <= lastExpertsIndex; index++) {
+                    Colony colony = misusedExperts.get(index);
+                    StyleConstants.setComponent(doc.getStyle("button"), createColonyButton(colony, false));
+                    doc.insertString(doc.getLength(), " ", doc.getStyle("button"));
+                    if (index != lastExpertsIndex) {
+                        doc.insertString(doc.getLength(), ", ", doc.getStyle("regular"));
+                    }
+                }
+            }
+

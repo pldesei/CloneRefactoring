@@ -1,0 +1,28 @@
+(startLine=344 endLine=369 srcPath=/root/NewExperiment/freecolFilter/00340/src/net/sf/freecol/client/gui/panel/UnitLabel.java)
+    public void updateIcon() {
+        int unitIndex = parent.getGUI().getImageLibrary().getUnitGraphicsType(unit);
+        setIcon(parent.getGUI().getImageLibrary().getUnitImageIcon(unitIndex));
+        setDisabledIcon(parent.getGUI().getImageLibrary().getUnitImageIcon(unitIndex, true));
+
+        Component uc = getParent();
+        while (uc != null) {
+            if (uc instanceof ColonyPanel) {
+                if (unit.getColony() == null) {
+                    parent.remove(uc);
+                    parent.getClient().getActionManager().update();
+                } else {
+                    ((ColonyPanel) uc).reinitialize();
+                }
+
+                break;
+            } else if (uc instanceof EuropePanel) {
+                break;
+            }
+
+            uc = uc.getParent();
+        }
+
+        // repaint(0, 0, getWidth(), getHeight());
+        // uc.refresh();
+    }
+

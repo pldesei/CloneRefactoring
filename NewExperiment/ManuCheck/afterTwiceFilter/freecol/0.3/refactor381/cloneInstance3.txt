@@ -1,0 +1,15 @@
+(startLine=1240 endLine=1252 srcPath=/root/NewExperiment/freecolFilter/01004/src/net/sf/freecol/server/FreeColServer.java)
+        if (!spec.hasOption(id)) {
+            StringOption op = new StringOption(id);
+            op.setGroup(gr);
+            op.setValue(defaultValue);
+            spec.addAbstractOption(op);
+            if ("".equals(gr)) {
+                for (OptionGroup level : spec.getDifficultyLevels()) {
+                    level.add(op);
+                }
+            } else {
+                spec.getOptionGroup(gr).add(op);
+            }
+        }
+

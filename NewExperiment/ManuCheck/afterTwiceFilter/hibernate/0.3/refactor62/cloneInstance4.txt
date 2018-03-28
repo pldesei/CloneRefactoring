@@ -1,0 +1,16 @@
+(startLine=361 endLine=374 srcPath=/root/NewExperiment/hibernateFilter/01137/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+		for ( ElementCollection collection : attributes.getElementCollection() ) {
+			ElementKind elementKind = getElementKind( collection.getAccess() );
+			try {
+				types = getCollectionType( collection.getName(), collection.getTargetClass(), elementKind );
+			}
+			catch ( MetaModelGenerationException e ) {
+				logMetaModelException( collection.getName(), e );
+				break;
+			}
+			if ( types != null ) {
+				metaCollection = new XmlMetaCollection( this, collection.getName(), types[0], types[1] );
+				members.add( metaCollection );
+			}
+		}
+

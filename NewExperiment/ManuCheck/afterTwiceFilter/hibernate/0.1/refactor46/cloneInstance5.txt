@@ -1,0 +1,66 @@
+(startLine=82 endLine=145 srcPath=/root/NewExperiment/hibernateFilter/01093/hibernate-core/src/test/java/org/hibernate/loader/SimpleResultSetProcessorTest.java)
+		{
+			final SingleRootReturnLoadPlanBuilderStrategy strategy = new SingleRootReturnLoadPlanBuilderStrategy(
+					sessionFactory(),
+					LoadQueryInfluencers.NONE
+			);
+			final LoadPlan plan = LoadPlanBuilder.buildRootEntityLoadPlan( strategy, entityPersister );
+			final LoadQueryAliasResolutionContext aliasResolutionContext =
+					new LoadQueryAliasResolutionContextImpl(
+							sessionFactory(),
+							0,
+							Collections.singletonMap( plan.getReturns().get( 0 ), new String[] { "abc" } )
+					);
+			final EntityLoadQueryBuilderImpl queryBuilder = new EntityLoadQueryBuilderImpl(
+					LoadQueryInfluencers.NONE,
+					plan
+			);
+			final String sql = queryBuilder.generateSql( 1, sessionFactory(), aliasResolutionContext );
+
+			final ResultSetProcessorImpl resultSetProcessor = new ResultSetProcessorImpl( plan );
+			final List results = new ArrayList();
+
+			final Session workSession = openSession();
+			workSession.beginTransaction();
+			workSession.doWork(
+					new Work() {
+						@Override
+						public void execute(Connection connection) throws SQLException {
+							PreparedStatement ps = connection.prepareStatement( sql );
+							ps.setInt( 1, 1 );
+							ResultSet resultSet = ps.executeQuery();
+							results.addAll(
+									resultSetProcessor.extractResults(
+											NoOpLoadPlanAdvisor.INSTANCE,
+											resultSet,
+											(SessionImplementor) workSession,
+											new QueryParameters(),
+											new NamedParameterContext() {
+												@Override
+												public int[] getNamedParameterLocations(String name) {
+													return new int[0];
+												}
+											},
+											aliasResolutionContext,
+											true,
+											false,
+											null,
+											null
+									)
+							);
+							resultSet.close();
+							ps.close();
+						}
+					}
+			);
+			assertEquals( 1, results.size() );
+			Object result = results.get( 0 );
+			assertNotNull( result );
+
+			SimpleEntity workEntity = ExtraAssertions.assertTyping( SimpleEntity.class, result );
+			assertEquals( 1, workEntity.id.intValue() );
+			assertEquals( "the only", workEntity.name );
+			workSession.getTransaction().commit();
+			workSession.close();
+		}
+

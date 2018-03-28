@@ -1,0 +1,31 @@
+(startLine=970 endLine=998 srcPath=/root/NewExperiment/freecolFilter/00615/src/net/sf/freecol/common/model/SimpleCombatModel.java)
+    private void evade(Unit defender, Colony attackerColony, Unit attackerUnit) {
+        String nation = defender.getApparentOwnerName();
+
+        if (attackerColony != null) {
+            attackerColony.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                            "model.unit.shipEvadedBombardment", attackerColony)
+                                           .addName("%colony%", attackerColony.getName())
+                                           .addName("%unit%", defender.getName())
+                                           .addName("%nation%", nation));
+            defender.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT, 
+                                                      "model.unit.shipEvadedBombardment", defender)
+                                     .addName("%colony%", attackerColony.getName())
+                                     .addName("%unit%", defender.getName())
+                                     .addName("%nation%", nation));
+        } else if (attackerUnit != null) {
+            String attackerNation = attackerUnit.getApparentOwnerName();
+
+            attackerUnit.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                          "model.unit.enemyShipEvaded", attackerUnit)
+                                         .addName("%unit%", attackerUnit.getName())
+                                         .addName("%enemyUnit%", defender.getName())
+                                         .addName("%enemyNation%", nation));
+            defender.addModelMessage(new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                                      "model.unit.shipEvaded", defender)
+                                     .addName("%unit%", defender.getName())
+                                     .addName("%enemyUnit%", attackerUnit.getName())
+                                     .addName("%enemyNation%", attackerNation));
+        }
+    }
+

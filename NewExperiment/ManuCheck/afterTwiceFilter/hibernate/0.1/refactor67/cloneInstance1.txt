@@ -1,0 +1,87 @@
+(startLine=291 endLine=375 srcPath=/root/NewExperiment/hibernateFilter/01137/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+	private void parseAttributes(Attributes attributes) {
+		XmlMetaSingleAttribute attribute;
+		for ( Id id : attributes.getId() ) {
+			ElementKind elementKind = getElementKind( id.getAccess() );
+			String type = getType( id.getName(), null, elementKind );
+			if ( type != null ) {
+				attribute = new XmlMetaSingleAttribute( this, id.getName(), type );
+				members.add( attribute );
+			}
+		}
+
+		for ( Basic basic : attributes.getBasic() ) {
+			ElementKind elementKind = getElementKind( basic.getAccess() );
+			String type = getType( basic.getName(), null, elementKind );
+			if ( type != null ) {
+				attribute = new XmlMetaSingleAttribute( this, basic.getName(), type );
+				members.add( attribute );
+			}
+		}
+
+		for ( ManyToOne manyToOne : attributes.getManyToOne() ) {
+			ElementKind elementKind = getElementKind( manyToOne.getAccess() );
+			String type = getType( manyToOne.getName(), manyToOne.getTargetEntity(), elementKind );
+			if ( type != null ) {
+				attribute = new XmlMetaSingleAttribute( this, manyToOne.getName(), type );
+				members.add( attribute );
+			}
+		}
+
+		for ( OneToOne oneToOne : attributes.getOneToOne() ) {
+			ElementKind elementKind = getElementKind( oneToOne.getAccess() );
+			String type = getType( oneToOne.getName(), oneToOne.getTargetEntity(), elementKind );
+			if ( type != null ) {
+				attribute = new XmlMetaSingleAttribute( this, oneToOne.getName(), type );
+				members.add( attribute );
+			}
+		}
+
+		XmlMetaCollection metaCollection;
+		String[] types;
+		for ( ManyToMany manyToMany : attributes.getManyToMany() ) {
+			ElementKind elementKind = getElementKind( manyToMany.getAccess() );
+			try {
+				types = getCollectionType( manyToMany.getName(), manyToMany.getTargetEntity(), elementKind );
+			}
+			catch ( MetaModelGenerationException e ) {
+				logMetaModelException( manyToMany.getName(), e );
+				break;
+			}
+			if ( types != null ) {
+				metaCollection = new XmlMetaCollection( this, manyToMany.getName(), types[0], types[1] );
+				members.add( metaCollection );
+			}
+		}
+
+		for ( OneToMany oneToMany : attributes.getOneToMany() ) {
+			ElementKind elementKind = getElementKind( oneToMany.getAccess() );
+			try {
+				types = getCollectionType( oneToMany.getName(), oneToMany.getTargetEntity(), elementKind );
+			}
+			catch ( MetaModelGenerationException e ) {
+				logMetaModelException( oneToMany.getName(), e );
+				break;
+			}
+			if ( types != null ) {
+				metaCollection = new XmlMetaCollection( this, oneToMany.getName(), types[0], types[1] );
+				members.add( metaCollection );
+			}
+		}
+
+		for ( ElementCollection collection : attributes.getElementCollection() ) {
+			ElementKind elementKind = getElementKind( collection.getAccess() );
+			try {
+				types = getCollectionType( collection.getName(), collection.getTargetClass(), elementKind );
+			}
+			catch ( MetaModelGenerationException e ) {
+				logMetaModelException( collection.getName(), e );
+				break;
+			}
+			if ( types != null ) {
+				metaCollection = new XmlMetaCollection( this, collection.getName(), types[0], types[1] );
+				members.add( metaCollection );
+			}
+		}
+	}
+

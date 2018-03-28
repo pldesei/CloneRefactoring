@@ -1,0 +1,29 @@
+(startLine=145 endLine=171 srcPath=/root/NewExperiment/freecolFilter/00975/src/net/sf/freecol/client/gui/panel/ReportUnitPanel.java)
+    protected void addUnit(Unit unit, String key) {
+        if (unit.getLocation() == null) {
+            // this should never happen
+            return;
+        } else if (unit.isInEurope()) {
+            inEurope.add(unit);
+        } else {
+            Colony colony = unit.getLocation().getColony();
+            if (colony == null) {
+                String locationName = getLocationNameFor(unit);
+                List<Unit> unitList = inLocations.get(locationName);
+                if (unitList == null) {
+                    unitList = new ArrayList<Unit>();
+                    inLocations.put(locationName, unitList);
+                }
+                unitList.add(unit);
+            } else {
+                List<Unit> unitList = inColonies.get(colony);
+                if (unitList == null) {
+                    unitList = new ArrayList<Unit>();
+                    inColonies.put(colony, unitList);
+                }
+                unitList.add(unit);
+            }
+        }
+        incrementCount(key, unit.getType(), 1);
+    }
+

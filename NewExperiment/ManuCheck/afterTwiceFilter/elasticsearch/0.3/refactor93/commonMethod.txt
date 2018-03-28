@@ -1,0 +1,15 @@
+(startLine=276 endLine=288 srcPath=/root/NewExperiment/elasticsearchFilter/00741/src/main/java/org/elasticsearch/common/io/stream/StreamOutput.java)
+    /**
+     * Writes a string array, for nullable string, writes it as 0 (empty string).
+     */
+    public void writeStringArrayNullable(@Nullable String[] array) throws IOException {
+        if (array == null) {
+            writeVInt(0);
+        } else {
+            writeVInt(array.length);
+            for (String s : array) {
+                writeString(s);
+            }
+        }
+    }
+

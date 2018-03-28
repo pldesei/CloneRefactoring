@@ -1,0 +1,127 @@
+ProjectPath:/root/NewExperiment/freecolFilter/01239
+predFragLineRange:452-460
+predMethodLineRange:405-487
+nextLineRange:367-466
+predStrMethodInvoNames:
+[getFreeColClient, isHeadless, getGame, getAttribute, warning, getFreeColGameObject, selectUnitFromElement, warning, getId, getMyPlayer, getAttribute, warning, getFreeColGameObject, selectUnitFromElement, warning, getId, getMyPlayer, getAttribute, warning, getFreeColGameObject, warning, getId, getMyPlayer, getAttribute, warning, getFreeColGameObject, warning, getId, getMyPlayer, parseBoolean, getAttribute, invokeSpecial, log]
+%%%%%%%%%%
+AddedMethodInvo Line:376 InvoName:element.getElementsByTagName(Player.getXMLElementTagName()).item(0)
+PackageName:org.w3c.dom
+QualifiedClassName:org.w3c.dom.NodeList
+ClassName:NodeList
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/org/w3c/dom/NodeList.java
+InvokedMethodSig:public abstract org.w3c.dom.Node item(int) 
+%%%%%%%%%%
+AddedMethodInvo Line:376 InvoName:element.getElementsByTagName(Player.getXMLElementTagName())
+PackageName:org.w3c.dom
+QualifiedClassName:org.w3c.dom.Element
+ClassName:Element
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/org/w3c/dom/Element.java
+InvokedMethodSig:public abstract org.w3c.dom.NodeList getElementsByTagName(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:377 InvoName:Player.getXMLElementTagName()
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.FreeColGameObject
+ClassName:FreeColGameObject
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/common/model/FreeColGameObject.java
+InvokedMethodSig:public static java.lang.String getXMLElementTagName() 
+%%%%%%%%%%
+AddedMethodInvo Line:378 InvoName:FreeColObject.readId(playerElement)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.FreeColObject
+ClassName:FreeColObject
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/common/model/FreeColObject.java
+InvokedMethodSig:public static java.lang.String readId(org.w3c.dom.Element) 
+%%%%%%%%%%
+AddedMethodInvo Line:380 InvoName:game.addPlayer(new Player(game,playerElement))
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.Game
+ClassName:Game
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/common/model/Game.java
+InvokedMethodSig:public boolean addPlayer(net.sf.freecol.common.model.Player) 
+%%%%%%%%%%
+AddedMethodInvo Line:382 InvoName:game.getFreeColGameObject(id).readFromXMLElement(playerElement)
+PackageName:net.sf.freecol.common.model
+QualifiedClassName:net.sf.freecol.common.model.FreeColObject
+ClassName:FreeColObject
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/common/model/FreeColObject.java
+InvokedMethodSig:public void readFromXMLElement(org.w3c.dom.Element) 
+%%%%%%%%%%
+AddedMethodInvo Line:454 InvoName:invokeAndWait(new Runnable(){
+  public void run(){
+    if (focus || !getGUI().onScreen(attackerTile) || !getGUI().onScreen(defenderTile)) {
+      getGUI().setFocusImmediately(attackerTile);
+    }
+    getGUI().animateUnitAttack(attacker,defender,attackerTile,defenderTile,success);
+    refreshCanvas(false);
+  }
+}
+)
+PackageName:net.sf.freecol.client.control
+QualifiedClassName:net.sf.freecol.client.control.InGameInputHandler
+ClassName:InGameInputHandler
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/control/InGameInputHandler.java
+InvokedMethodSig:private void invokeAndWait(java.lang.Runnable) 
+%%%%%%%%%%
+AddedMethodInvo Line:456 InvoName:getGUI().onScreen(attackerTile)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.GUI
+ClassName:GUI
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/gui/GUI.java
+InvokedMethodSig:public boolean onScreen(net.sf.freecol.common.model.Tile) 
+%%%%%%%%%%
+AddedMethodInvo Line:456 InvoName:getGUI()
+PackageName:net.sf.freecol.client.control
+QualifiedClassName:net.sf.freecol.client.control.InputHandler
+ClassName:InputHandler
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/control/InputHandler.java
+InvokedMethodSig:protected net.sf.freecol.client.gui.GUI getGUI() 
+%%%%%%%%%%
+AddedMethodInvo Line:457 InvoName:getGUI().onScreen(defenderTile)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.GUI
+ClassName:GUI
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/gui/GUI.java
+InvokedMethodSig:public boolean onScreen(net.sf.freecol.common.model.Tile) 
+%%%%%%%%%%
+AddedMethodInvo Line:457 InvoName:getGUI()
+PackageName:net.sf.freecol.client.control
+QualifiedClassName:net.sf.freecol.client.control.InputHandler
+ClassName:InputHandler
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/control/InputHandler.java
+InvokedMethodSig:protected net.sf.freecol.client.gui.GUI getGUI() 
+%%%%%%%%%%
+AddedMethodInvo Line:458 InvoName:getGUI().setFocusImmediately(attackerTile)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.GUI
+ClassName:GUI
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/gui/GUI.java
+InvokedMethodSig:public void setFocusImmediately(net.sf.freecol.common.model.Tile) 
+%%%%%%%%%%
+AddedMethodInvo Line:458 InvoName:getGUI()
+PackageName:net.sf.freecol.client.control
+QualifiedClassName:net.sf.freecol.client.control.InputHandler
+ClassName:InputHandler
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/control/InputHandler.java
+InvokedMethodSig:protected net.sf.freecol.client.gui.GUI getGUI() 
+%%%%%%%%%%
+AddedMethodInvo Line:460 InvoName:getGUI().animateUnitAttack(attacker,defender,attackerTile,defenderTile,success)
+PackageName:net.sf.freecol.client.gui
+QualifiedClassName:net.sf.freecol.client.gui.GUI
+ClassName:GUI
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/gui/GUI.java
+InvokedMethodSig:public void animateUnitAttack(net.sf.freecol.common.model.Unit, net.sf.freecol.common.model.Unit, net.sf.freecol.common.model.Tile, net.sf.freecol.common.model.Tile, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:460 InvoName:getGUI()
+PackageName:net.sf.freecol.client.control
+QualifiedClassName:net.sf.freecol.client.control.InputHandler
+ClassName:InputHandler
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/control/InputHandler.java
+InvokedMethodSig:protected net.sf.freecol.client.gui.GUI getGUI() 
+%%%%%%%%%%
+AddedMethodInvo Line:462 InvoName:refreshCanvas(false)
+PackageName:net.sf.freecol.client.control
+QualifiedClassName:net.sf.freecol.client.control.InGameInputHandler
+ClassName:InGameInputHandler
+InvokedFilePath:/root/NewExperiment/freecolFilter/01239/src/net/sf/freecol/client/control/InGameInputHandler.java
+InvokedMethodSig:private void refreshCanvas(boolean) 

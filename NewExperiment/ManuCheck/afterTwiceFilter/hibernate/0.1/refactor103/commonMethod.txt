@@ -1,0 +1,28 @@
+(startLine=23 endLine=48 srcPath=/root/NewExperiment/hibernateFilter/01691/hibernate-core/src/main/java/org/hibernate/boot/model/naming/Identifier.java)
+	/**
+	 * Means to generate an {@link Identifier} instance from its simple text form.
+	 * <p/>
+	 * If passed text is {@code null}, {@code null} is returned.
+	 * <p/>
+	 * If passed text is surrounded in quote markers, the generated Identifier
+	 * is considered quoted.  Quote markers include back-ticks (`), and
+	 * double-quotes (").
+	 *
+	 * @param text The text form
+	 *
+	 * @return The identifier form, or {@code null} if text was {@code null}
+	 */
+	public static Identifier toIdentifier(String text) {
+		if ( StringHelper.isEmpty( text ) ) {
+			return null;
+		}
+		final String trimmedText = text.trim();
+		if ( isQuoted( trimmedText ) ) {
+			final String bareName = trimmedText.substring( 1, trimmedText.length() - 1 );
+			return new Identifier( bareName, true );
+		}
+		else {
+			return new Identifier( trimmedText, false );
+		}
+	}
+

@@ -1,0 +1,23 @@
+(startLine=101 endLine=121 srcPath=/root/NewExperiment/hibernateFilter/01239/hibernate-entitymanager/src/test/java/org/hibernate/jpa/test/packaging/JarVisitorTest.java)
+	public void testInputStreamZippedJar() throws Exception {
+		File defaultPar = buildDefaultPar();
+		addPackageToClasspath( defaultPar );
+
+		ArchiveDescriptor archiveDescriptor = new JarInputStreamBasedArchiveDescriptor(
+				StandardArchiveDescriptorFactory.INSTANCE,
+				defaultPar.toURL(),
+				""
+		);
+
+		AbstractScannerImpl.ResultCollector resultCollector = new AbstractScannerImpl.ResultCollector( new StandardScanOptions() );
+		archiveDescriptor.visitArchive(
+				new AbstractScannerImpl.ArchiveContextImpl(
+						new PersistenceUnitDescriptorAdapter(),
+						true,
+						resultCollector
+				)
+		);
+
+		validateResults( resultCollector, org.hibernate.jpa.test.pack.defaultpar.ApplicationServer.class, Version.class );
+	}
+

@@ -1,0 +1,18 @@
+(startLine=1862 endLine=1877 srcPath=/root/NewExperiment/freecolFilter/01374/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+        if (nBuilders > 0) {
+            Collections.sort(aiUnits, builderComparator);
+            for (AIUnit aiUnit : aiUnits) {
+                if ((m = getBuildColonyMission(aiUnit,
+                                               null)) == null) continue;
+                lb.add(m, ", ");
+                done.add(aiUnit);
+                if (requestsTransport(aiUnit)) {
+                    transportSupply.add(aiUnit);
+                }
+                reasons.put(aiUnit.getUnit(), "Builder" + nBuilders);
+                if (--nBuilders <= 0) break;
+            }
+            aiUnits.removeAll(done);
+            done.clear();
+        }
+

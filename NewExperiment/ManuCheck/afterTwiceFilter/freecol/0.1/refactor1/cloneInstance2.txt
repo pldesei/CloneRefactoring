@@ -1,0 +1,15 @@
+(startLine=817 endLine=829 srcPath=/root/NewExperiment/freecolFilter/00012/src/net/sf/freecol/common/model/Unit.java)
+        if ((b) && (!mounted)) {
+            if (getGoodsDumpLocation() != null) {
+               if (getGoodsDumpLocation().getGoodsCount(Goods.HORSES) < 50) return;
+               getGoodsDumpLocation().removeAmountAndTypeOfGoods(Goods.HORSES, 50);
+               mounted = true;
+            } else if (location instanceof Europe) {
+               if (((getOwner().getGold()) / (getGame().getMarket().costToBuy(Goods.HORSES))) < 50) return;
+               getGame().getMarket().buy(Goods.HORSES, 50, getOwner());
+               mounted = true;
+            } else {
+                logger.warning("Attempting to mount a colonist outside of a colony or Europe!");
+            }
+        } else if ((!b) && (mounted)) {
+

@@ -1,0 +1,11 @@
+(startLine=1708 endLine=1716 srcPath=/root/NewExperiment/freecolFilter/01206/src/net/sf/freecol/server/ai/ColonyPlan.java)
+        for (WorkLocationPlan wlp : getWorkPlans()) {
+            WorkLocation wl = wlp.getWorkLocation();
+            sb.append(locationDescription(wl))
+                .append(": ")
+                .append(wl.getGenericPotential(wlp.getGoodsType()))
+                .append(" ")
+                .append(Utils.lastPart(wlp.getGoodsType().toString(), "."))
+                .append("\n");
+        }
+

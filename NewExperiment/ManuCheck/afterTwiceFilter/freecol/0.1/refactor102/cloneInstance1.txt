@@ -1,0 +1,20 @@
+(startLine=195 endLine=212 srcPath=/root/NewExperiment/freecolFilter/00373/src/net/sf/freecol/common/model/SimpleCombatModel.java)
+        if (attacker.isNaval()) {
+            int goodsCount = attacker.getGoodsCount();
+            if (goodsCount > 0) {
+                // -12.5% penalty for every unit of cargo.
+                // TODO: shouldn't this be -cargo/capacity?
+                percentage = -12.5f * goodsCount;
+                result.add(new Modifier("modifiers.cargoPenalty", percentage, Modifier.Type.PERCENTAGE));
+                totalPercentage += percentage;
+            }
+            if (attacker.hasAbility("model.ability.piracy")) {
+                Modifier piracyBonus = attacker.getModifier("model.modifier.piracyBonus");
+                if (piracyBonus != null) {
+                    // Drake grants 50% power bonus (in colonization gives for attack and defence)
+                    result.add(piracyBonus);
+                    totalPercentage += piracyBonus.getValue();
+                }
+            }
+        } else {
+

@@ -1,0 +1,20 @@
+(startLine=1391 endLine=1408 srcPath=/root/NewExperiment/freecolFilter/00481/src/net/sf/freecol/client/gui/GUI.java)
+    /**
+     * Creates an image with a string of a given color and with 
+     * a black border around the glyphs.
+     *
+     * @param c A <code>JComponent</code>-object for getting a
+     *       <code>Font</code>.
+     * @param nameString The <code>String</code> to make an image of.
+     * @param color The <code>Color</code> to use when displaying 
+     *       the <code>nameString</code>.
+     * @param maxWidth The maximum width of the image. The size of 
+     *       the <code>Font</code> will be adjusted if the image gets 
+     *       larger than this value.
+     * @param preferredFontSize The preferred font size.
+     * @return The image that was created.
+     */
+    public BufferedImage createStringImage(JComponent c, String nameString, Color color, int maxWidth, int preferredFontSize) {
+        return createStringImage(c, null, nameString, color, maxWidth, preferredFontSize);
+    }    
+

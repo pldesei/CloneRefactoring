@@ -1,0 +1,20 @@
+(startLine=185 endLine=202 srcPath=/root/NewExperiment/elasticsearchFilter/01140/src/test/java/org/elasticsearch/benchmark/search/child/ChildSearchBenchmark.java)
+        for (int j = 1; j <= QUERY_COUNT; j++) {
+            SearchResponse searchResponse = client.prepareSearch(indexName)
+                    .setQuery(
+                            filteredQuery(
+                                    matchAllQuery(),
+                                    hasChildFilter("child", matchAllQuery())
+                            )
+                    )
+                    .execute().actionGet();
+            if (searchResponse.getFailedShards() > 0) {
+                System.err.println("Search Failures " + Arrays.toString(searchResponse.getShardFailures()));
+            }
+            long expected = (COUNT / BATCH) * BATCH;
+            if (searchResponse.getHits().totalHits() != expected) {
+                System.err.println("--> mismatch on hits [" + j + "], got [" + searchResponse.getHits().totalHits() + "], expected [" + expected + "]");
+            }
+            totalQueryTime += searchResponse.getTookInMillis();
+        }
+

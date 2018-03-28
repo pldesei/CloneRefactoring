@@ -1,0 +1,17 @@
+(startLine=97 endLine=111 srcPath=/root/NewExperiment/hibernateFilter/00562/hibernate-core/src/main/java/org/hibernate/metamodel/source/hbm/state/domain/HbmSimpleAttributeDomainState.java)
+										 XMLTimestamp timestamp) {
+
+		super( defaults, attribute, entityMetaAttributes, timestamp );
+		this.isLazy = false;
+
+		// for version properties marked as being generated, make sure they are "always"
+		// generated; aka, "insert" is invalid; this is dis-allowed by the DTD,
+		// but just to make sure.
+		this.propertyGeneration = PropertyGeneration.parse(  timestamp.getGenerated().value()  );
+		if ( propertyGeneration == PropertyGeneration.INSERT ) {
+			throw new MappingException( "'generated' attribute cannot be 'insert' for versioning property" );
+		}
+		this.isInsertable = true; //TODO: is this right????
+		this.isUpdateable = true;
+	}
+

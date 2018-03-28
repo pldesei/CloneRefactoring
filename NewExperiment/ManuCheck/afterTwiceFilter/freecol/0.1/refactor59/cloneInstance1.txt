@@ -1,0 +1,17 @@
+(startLine=385 endLine=399 srcPath=/root/NewExperiment/freecolFilter/00217/src/net/sf/freecol/client/control/InGameInputHandler.java)
+            if (unit.isNaval()) {
+                if (colony == null) {
+                    canvas.showInformationMessage("model.unit.shipEvaded",
+                                                  new String [][] {{"%ship%", defender.getName()},
+                                                                   {"%nation%",
+                                                                    defender.getOwner().getNationAsString()}});
+                } else {
+                    canvas.showInformationMessage("model.unit.shipEvadedBombardment",
+                                                  new String [][] {{"%colony%", colony.getName()},
+                                                                   {"%building%", building.getName()},
+                                                                   {"%ship%", defender.getName()},
+                                                                   {"%nation%",
+                                                                    defender.getOwner().getNationAsString()}});
+                }
+            }
+

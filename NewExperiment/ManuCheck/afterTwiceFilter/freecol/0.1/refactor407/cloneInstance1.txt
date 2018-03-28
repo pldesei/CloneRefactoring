@@ -1,0 +1,14 @@
+(startLine=533 endLine=544 srcPath=/root/NewExperiment/freecolFilter/01072/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+            while (unit == null && !availableUnits.isEmpty()) {
+                Unit u = availableUnits.get(Utils.randomInt(logger,
+                        "Choose gift unit", getAIRandom(),
+                        availableUnits.size()));
+                availableUnits.remove(u);
+                aiUnit = getAIUnit(u);
+                if (IndianBringGiftMission.invalidReason(aiUnit) == null
+                    && u.findPath(u.getTile(), is.getTile(), null,
+                                  CostDeciders.numberOfLegalTiles()) != null) {
+                    unit = u;
+                }
+            }
+

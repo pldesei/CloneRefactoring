@@ -1,0 +1,15 @@
+(startLine=208 endLine=220 srcPath=/root/NewExperiment/elasticsearchFilter/01181/src/main/java/org/elasticsearch/percolator/QueryCollector.java)
+                if (collector.exists()) {
+                    if (!limit || counter < size) {
+                        matches.add(values.copyShared());
+                        if (context.highlight() != null) {
+                            highlightPhase.hitExecute(context, context.hitContext());
+                            hls.add(context.hitContext().hit().getHighlightFields());
+                        }
+                    }
+                    counter++;
+                    if (facetAndAggregatorCollector != null) {
+                        facetAndAggregatorCollector.collect(doc);
+                    }
+                }
+

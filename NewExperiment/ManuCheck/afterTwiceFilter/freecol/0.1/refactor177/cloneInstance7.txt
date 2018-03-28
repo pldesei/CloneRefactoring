@@ -1,0 +1,44 @@
+(startLine=334 endLine=375 srcPath=/root/NewExperiment/freecolFilter/00747/test/src/net/sf/freecol/server/ai/ContactTest.java)
+    public void testNativeMeetsColony() throws Exception {
+        if (server == null) {
+            server = ServerTestHelper.startServer(false, true);
+        }
+        Map map = getTestMap(plains);
+        server.setMapGenerator(new MockMapGenerator(map));
+        Controller c = server.getController();
+        PreGameController pgc = (PreGameController)c;
+        try {
+            pgc.startGame();
+        } catch (FreeColException e) {
+            fail("Failed to start game");
+        }
+        Game game = server.getGame();
+        FreeColTestCase.setGame(game);
+
+        ServerPlayer apache = (ServerPlayer) game.getPlayer("model.nation.apache");
+        ServerPlayer dutch = (ServerPlayer) game.getPlayer("model.nation.dutch");
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExploredBy(apache, false);
+        tile1.setExploredBy(dutch, true);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExploredBy(apache, true);
+        tile2.setExploredBy(dutch, true);
+        Tile tile3 = map.getTile(3, 8);
+        tile3.setExploredBy(apache, true);
+        tile3.setExploredBy(dutch, false);
+
+        assertFalse(dutch.hasContacted(apache));
+        assertFalse(apache.hasContacted(dutch));
+
+        @SuppressWarnings("unused")
+        Colony colony = getStandardColony(1, 5, 8);
+        Unit brave = new Unit(game, tile3, apache, braveType, UnitState.ACTIVE);
+        InGameController igc = (InGameController) server.getController();
+        igc.move(apache, brave, tile2);
+
+        assertTrue(dutch.hasContacted(apache));
+        assertTrue(apache.hasContacted(dutch));
+        assertEquals(Stance.PEACE, dutch.getStance(apache));
+        assertEquals(Stance.PEACE, apache.getStance(dutch));
+    }
+

@@ -1,0 +1,13 @@
+(startLine=189 endLine=199 srcPath=/root/NewExperiment/hibernateFilter/00922/hibernate-core/src/main/java/org/hibernate/id/enhanced/TableStructure.java)
+	public String[] sqlDropStrings(Dialect dialect) throws HibernateException {
+		StringBuilder sqlDropString = new StringBuilder().append( "drop table " );
+		if ( dialect.supportsIfExistsBeforeTableName() ) {
+			sqlDropString.append( "if exists " );
+		}
+		sqlDropString.append( tableName ).append( dialect.getCascadeConstraintsString() );
+		if ( dialect.supportsIfExistsAfterTableName() ) {
+			sqlDropString.append( " if exists" );
+		}
+		return new String[] { sqlDropString.toString() };
+	}
+

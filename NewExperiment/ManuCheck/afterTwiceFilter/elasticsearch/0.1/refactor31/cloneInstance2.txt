@@ -1,0 +1,12 @@
+(startLine=295 endLine=304 srcPath=/root/NewExperiment/elasticsearchFilter/00428/modules/benchmark/micro/src/main/java/org/elasticsearch/benchmark/search/facet/TermsFacetSearchBenchmark.java)
+        for (int j = 0; j < QUERY_COUNT; j++) {
+            SearchResponse searchResponse = client.prepareSearch()
+                    .setQuery(matchAllQuery())
+                    .addFacet(termsFacet("sm_value").field("sm_value").executionHint("map"))
+                    .execute().actionGet();
+            if (searchResponse.hits().totalHits() != COUNT) {
+                System.err.println("--> mismatch on hits");
+            }
+            totalQueryTime += searchResponse.tookInMillis();
+        }
+

@@ -1,0 +1,13 @@
+(startLine=773 endLine=783 srcPath=/root/NewExperiment/freecolFilter/01060/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+        for (AIUnit aiUnit : aiUnits) {
+            Mission m;
+            if (aiUnit.getMission() instanceof IdleAtSettlementMission) {
+                m = aiUnit.getMission();
+            } else {
+                m = new IdleAtSettlementMission(aiMain, aiUnit);
+                aiUnit.setMission(m);
+            }
+            report += "\n  UNUSED-" + m
+                + " at " + aiUnit.getUnit().getLocation();
+        }
+

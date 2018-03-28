@@ -1,0 +1,21 @@
+(startLine=188 endLine=206 srcPath=/root/NewExperiment/freecolFilter/00339/src/net/sf/freecol/client/gui/panel/DragListener.java)
+                    if (tempUnit.canBeArmed()) {
+                        if (tempUnit.isArmed()) {
+                            menuItem = new JMenuItem(Messages.message("disarm"));
+                        } else {
+                            if (tempUnit.getTile() == null) { // -> in Europe
+                                int price = tempUnit.getOwner().getMarket().getBidPrice(Goods.MUSKETS, 50);
+                                menuItem = new JMenuItem(Messages.message("arm") + " (" +
+                                                         Messages.message("goldAmount", "%amount%",
+                                                                          String.valueOf(price)) + ")");
+                            } else {
+                                menuItem = new JMenuItem(Messages.message("arm"));
+                            }
+                        }
+                        menuItem.setIcon(imageLibrary.getScaledGoodsImageIcon(Goods.MUSKETS, 0.66f));
+                        menuItem.setActionCommand(String.valueOf(UnitLabel.ARM));
+                        menuItem.addActionListener(unitLabel);
+                        menu.add(menuItem);
+                        separatorNeeded = true;
+                    }
+

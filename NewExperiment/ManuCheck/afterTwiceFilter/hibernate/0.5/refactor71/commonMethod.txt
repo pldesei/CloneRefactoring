@@ -1,0 +1,9 @@
+(startLine=434 endLine=440 srcPath=/root/NewExperiment/hibernateFilter/01139/tooling/metamodel-generator/src/main/java/org/hibernate/jpamodelgen/xml/XmlMetaEntity.java)
+	private String determineExplicitMapKeyClass(MapKeyClass mapKeyClass) {
+		String explicitMapKey = null;
+		if ( mapKeyClass != null ) {
+			explicitMapKey = StringUtil.determineFullyQualifiedClassName( defaultPackageName, mapKeyClass.getClazz() );
+		}
+		return explicitMapKey;
+	}
+

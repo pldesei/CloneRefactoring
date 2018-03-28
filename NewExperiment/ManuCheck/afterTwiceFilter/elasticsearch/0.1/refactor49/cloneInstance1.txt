@@ -1,0 +1,24 @@
+(startLine=390 endLine=411 srcPath=/root/NewExperiment/elasticsearchFilter/00584/src/main/java/org/elasticsearch/index/translog/Translog.java)
+        public void writeTo(StreamOutput out) throws IOException {
+            out.writeVInt(5); // version
+            out.writeUTF(id);
+            out.writeUTF(type);
+            out.writeVInt(sourceLength);
+            out.writeBytes(source, sourceOffset, sourceLength);
+            if (routing == null) {
+                out.writeBoolean(false);
+            } else {
+                out.writeBoolean(true);
+                out.writeUTF(routing);
+            }
+            if (parent == null) {
+                out.writeBoolean(false);
+            } else {
+                out.writeBoolean(true);
+                out.writeUTF(parent);
+            }
+            out.writeLong(version);
+            out.writeLong(timestamp);
+            out.writeLong(ttl);
+        }
+

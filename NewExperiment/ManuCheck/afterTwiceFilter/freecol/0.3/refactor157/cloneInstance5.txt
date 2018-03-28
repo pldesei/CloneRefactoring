@@ -1,0 +1,22 @@
+(startLine=48 endLine=67 srcPath=/root/NewExperiment/freecolFilter/00695/src/net/sf/freecol/client/gui/plaf/FreeColListUI.java)
+    public void paint(Graphics g, JComponent c) {
+        int width = c.getWidth();
+        int height = c.getHeight();
+
+        Image tempImage = ResourceManager.getImage("BackgroundImage2");
+
+        if (tempImage != null) {
+            for (int x=0; x<width; x+=tempImage.getWidth(null)) {
+                for (int y=0; y<height; y+=tempImage.getHeight(null)) {
+                    g.drawImage(tempImage, x, y, null);
+                }
+            }
+        } else {
+            g.setColor(c.getBackground());
+            g.fillRect(0, 0, width, height);
+        }
+         
+        LAFUtilities.setProperties(g, c);
+        super.paint(g, c);
+    }
+

@@ -1,0 +1,15 @@
+(startLine=157 endLine=169 srcPath=/root/NewExperiment/elasticsearchFilter/00742/src/main/java/org/elasticsearch/action/search/type/TransportSearchScrollScanAction.java)
+                if (request.operationThreading() == SearchOperationThreading.SINGLE_THREAD) {
+                    threadPool.executor(ThreadPool.Names.SEARCH).execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (Tuple<String, Long> target : scrollId.context()) {
+                                DiscoveryNode node = nodes.get(target.v1());
+                                if (node != null && nodes.localNodeId().equals(node.id())) {
+                                    executePhase(node, target.v2());
+                                }
+                            }
+                        }
+                    });
+                } else {
+

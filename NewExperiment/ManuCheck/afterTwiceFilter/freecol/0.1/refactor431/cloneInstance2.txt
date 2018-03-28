@@ -1,0 +1,47 @@
+(startLine=2594 endLine=2638 srcPath=/root/NewExperiment/freecolFilter/01222/src/net/sf/freecol/server/control/InGameController.java)
+                                    Goods goods, int amount) {
+        ChangeSet cs = new ChangeSet();
+        csVisit(serverPlayer, settlement, 0, cs);
+
+        TradeSession session
+            = TransactionSession.lookup(TradeSession.class, unit, settlement);
+        if (session == null) {
+            return DOMMessage.clientError("Trying to sell without opening a transaction session");
+        }
+        if (!session.getSell()) {
+            return DOMMessage.clientError("Trying to sell in a session where selling is not allowed.");
+        }
+
+        // Check that the gold is the agreed amount
+        AIPlayer ai = getFreeColServer().getAIPlayer(settlement.getOwner());
+        int returnGold = ai.sellProposition(unit, settlement, goods, amount);
+        if (returnGold != amount) {
+            return DOMMessage.clientError("This was not the price we agreed upon! Cheater?");
+        }
+
+        // Valid, make the trade.
+        moveGoods(goods, settlement);
+        cs.add(See.perhaps(), unit);
+
+        Player settlementPlayer = settlement.getOwner();
+        settlementPlayer.modifyGold(-amount);
+        serverPlayer.modifyGold(amount);
+        cs.addTension(See.perhaps(),//-til,+til
+            ((ServerIndianSettlement)settlement).modifyAlarm(serverPlayer,
+                -amount / 500));
+        Tile tile = settlement.getTile();
+        settlement.updateWantedGoods();
+        tile.updateIndianSettlement(serverPlayer);
+        cs.add(See.only(serverPlayer), tile);
+        cs.addPartial(See.only(serverPlayer), serverPlayer, "gold");
+        session.setSell();
+        cs.addSale(serverPlayer, settlement, goods.getType(),
+                   (int) Math.round((float) amount / goods.getAmount()));
+        logger.finest(serverPlayer.getName() + " " + unit + " sells " + goods
+                      + " at " + settlement.getName() + " for " + amount);
+
+        // Others can see the unit capacity.
+        sendToOthers(serverPlayer, cs);
+        return cs.build(serverPlayer);
+    }
+

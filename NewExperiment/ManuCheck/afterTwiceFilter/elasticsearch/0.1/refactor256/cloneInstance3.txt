@@ -1,0 +1,13 @@
+(startLine=51 endLine=61 srcPath=/root/NewExperiment/elasticsearchFilter/01768/core/src/main/java/org/elasticsearch/index/query/TypeQueryParser.java)
+            } else if (token.isValue()) {
+                if ("_name".equals(currentFieldName)) {
+                    queryName = parser.text();
+                } else if ("boost".equals(currentFieldName)) {
+                    boost = parser.floatValue();
+                } else if ("value".equals(currentFieldName)) {
+                    type = parser.utf8Bytes();
+                } else {
+                    throw new ParsingException(parser.getTokenLocation(), "[" + TypeQueryBuilder.NAME + "] filter doesn't support [" + currentFieldName + "]");
+                }
+            } else {
+

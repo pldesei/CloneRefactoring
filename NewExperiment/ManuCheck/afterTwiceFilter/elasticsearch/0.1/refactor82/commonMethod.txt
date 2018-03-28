@@ -1,0 +1,41 @@
+(startLine=275 endLine=313 srcPath=/root/NewExperiment/elasticsearchFilter/00730/src/main/java/org/elasticsearch/index/fielddata/ordinals/OrdinalsBuilder.java)
+    /**
+     * This method iterates all terms in the given {@link TermsEnum} and
+     * associates each terms ordinal with the terms documents. The caller must
+     * exhaust the returned {@link BytesRefIterator} which returns all values
+     * where the first returned value is associted with the ordinal <tt>1</tt>
+     * etc.
+     * <p>
+     * If the {@link TermsEnum} contains prefix coded numerical values the terms
+     * enum should be wrapped with either {@link #wrapNumeric32Bit(TermsEnum)}
+     * or {@link #wrapNumeric64Bit(TermsEnum)} depending on its precision. If
+     * the {@link TermsEnum} is not wrapped the returned
+     * {@link BytesRefIterator} will contain partial precision terms rather than
+     * only full-precision terms.
+     * </p>
+     */
+    public BytesRefIterator buildFromTerms(final TermsEnum termsEnum, final Bits liveDocs) throws IOException {
+        return new BytesRefIterator() {
+            private DocsEnum docsEnum = null;
+
+            @Override
+            public BytesRef next() throws IOException {
+                BytesRef ref;
+                if ((ref = termsEnum.next()) != null) {
+                    docsEnum = termsEnum.docs(liveDocs, docsEnum, DocsEnum.FLAG_NONE);
+                    nextOrdinal();
+                    int docId;
+                    while((docId = docsEnum.nextDoc()) != DocsEnum.NO_MORE_DOCS) {
+                        addDoc(docId);
+                    }
+                }
+                return ref;
+            }
+
+            @Override
+            public Comparator<BytesRef> getComparator() {
+                return termsEnum.getComparator();
+            }
+        };
+    }
+

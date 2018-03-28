@@ -1,0 +1,20 @@
+(startLine=52 endLine=69 srcPath=/root/NewExperiment/hibernateFilter/00233/annotations/src/main/java/org/hibernate/cfg/EJB3DTDEntityResolver.java)
+				if ( systemId.endsWith( "orm_1_0.xsd" ) ) {
+					log.debug(
+							"recognized EJB3 ORM namespace; attempting to resolve on classpath under org/hibernate/ejb"
+					);
+					String path = "org/hibernate/ejb/" + "orm_1_0.xsd";
+					InputStream dtdStream = resolveInHibernateNamespace( path );
+					if ( dtdStream == null ) {
+						log.debug( "unable to locate [{}] on classpath", systemId );
+					}
+					else {
+						log.debug( "located [{}] in classpath", systemId );
+						InputSource source = new InputSource( dtdStream );
+						source.setPublicId( publicId );
+						source.setSystemId( systemId );
+						resolved = false;
+						return source;
+					}
+				}
+

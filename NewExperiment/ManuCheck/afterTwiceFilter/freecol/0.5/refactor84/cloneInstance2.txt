@@ -1,0 +1,22 @@
+(startLine=437 endLine=456 srcPath=/root/NewExperiment/freecolFilter/00308/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    public void testTeachPettyCriminalsByMaster() {
+        Colony colony = getStandardColony(2);
+
+        Iterator<Unit> units = colony.getUnitIterator();
+
+        Unit criminal = units.next();
+        criminal.setType(Unit.PETTY_CRIMINAL);
+
+        Unit teacher = units.next();
+        teacher.setType(Unit.MASTER_BLACKSMITH);
+
+        Building school = colony.getBuilding(spec().getBuildingType("model.building.Schoolhouse"));
+        school.upgrade();school.upgrade();
+
+        teacher.setLocation(school);
+
+        assertEquals(teacher.getNeededTurnsOfTraining(), 4);
+        trainForTurns(colony, teacher.getNeededTurnsOfTraining(), Unit.PETTY_CRIMINAL);
+        assertEquals(Unit.INDENTURED_SERVANT, criminal.getType());
+    }
+

@@ -1,0 +1,15 @@
+(startLine=59 endLine=71 srcPath=/root/NewExperiment/hibernateFilter/00300/core/src/main/java/org/hibernate/proxy/AbstractSerializableProxy.java)
+	/**
+	 * Set the read-only/modifiable setting from this object in an AbstractLazyInitializer.
+	 *
+	 * This method should only be called during deserialization, before associating the
+	 * AbstractLazyInitializer with a session.
+	 *
+	 * @param li, the read-only/modifiable setting to use when
+	 * associated with a session; null indicates that the default should be used.
+	 * @throws IllegalStateException if isReadOnlySettingAvailable() == true
+	 */
+	protected void setReadOnlyBeforeAttachedToSession(AbstractLazyInitializer li) {
+		li.setReadOnlyBeforeAttachedToSession( readOnly );
+	}
+

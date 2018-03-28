@@ -1,0 +1,33 @@
+(startLine=807 endLine=837 srcPath=/root/NewExperiment/freecolFilter/01151/src/net/sf/freecol/common/model/FreeColObject.java)
+    /**
+     * Reads an XML-representation of a list of
+     * <code>FreeColGameObjectType</code>s.
+     *
+     * @param in The input stream with the XML.
+     * @param tag The tag for the list <code>Element</code>.
+     * @param spec The <code>Specification</code> to find items in.
+     * @param type The type of the items to be added.  The type must exist
+     *     in the supplied specification.
+     * @return The list.
+     * @exception XMLStreamException if a problem was encountered
+     *     during parsing.
+     */
+    protected <T extends FreeColGameObjectType> List<T>
+        readFromListElement(XMLStreamReader in, String tag, Specification spec,
+                            Class<T> type) throws XMLStreamException {
+        expectTag(in, tag);
+
+        final int length = getAttribute(in, ARRAY_SIZE_TAG, -1);
+        if (length < 0) return Collections.emptyList();
+
+        List<T> list = new ArrayList<T>(length);
+        for (int x = 0; x < length; x++) {
+            T value = spec.getType(in, "x" + x, type, (T)null); 
+            if (value == null) logger.warning("Null list value(" + x + ")");
+            list.add(value);
+        }
+
+        closeTag(in, tag);
+        return list;
+    }
+

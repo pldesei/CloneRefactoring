@@ -1,0 +1,66 @@
+(startLine=124 endLine=187 srcPath=/root/NewExperiment/freecolFilter/00966/test/src/net/sf/freecol/common/model/ColonyProductionTest.java)
+    public void testProductionPioneer() {
+
+        Game game = getStandardGame();
+
+        Player dutch = game.getPlayer("model.nation.dutch");
+
+        Tile[][] tiles = new Tile[10][15];
+
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 15; y++) {
+                tiles[x][y] = new Tile(game, plainsType, x, y);
+            }
+        }
+
+        Map map = new Map(game, tiles);
+
+        Resource grain = new Resource(game, map.getTile(5, 8),
+                                      spec().getResourceType("model.resource.grain"));
+        map.getTile(5, 8).addResource(grain);
+        map.getTile(5, 8).setExploredBy(dutch, true);
+        map.getTile(6, 8).setExploredBy(dutch, true);
+
+        game.setMap(map);
+        UnitType pioneerType = spec().getUnitType("model.unit.hardyPioneer");
+        GoodsType foodType = grainType;
+        Unit pioneer = new ServerUnit(game, map.getTile(6, 8), dutch, pioneerType);
+
+        Colony colony = new ServerColony(game, dutch, "New Amsterdam", pioneer.getTile());
+        dutch.addSettlement(colony);
+        pioneer.setWorkType(foodType);
+        nonServerBuildColony(pioneer, colony);
+
+        // Test the colony
+        assertEquals(map.getTile(6, 8), colony.getTile());
+
+        assertEquals("New Amsterdam", colony.getName());
+
+        assertEquals(colony, colony.getTile().getSettlement());
+
+        assertEquals(dutch, colony.getTile().getOwner());
+
+        // Disabled.  Removal of equipment has moved to the server, so
+        // nonServerBuildColony is not going to work.
+        //// Should have 100 tools and nothing else
+        //GoodsType tools = spec().getGoodsType("model.goods.tools");
+        //assertNotNull(tools);
+        //
+        //for (GoodsType type : spec().getGoodsTypeList()){
+        //    if (type == tools)
+        //        assertEquals(100, colony.getGoodsCount(type));
+        //    else
+        //        assertEquals(type.toString(), 0, colony.getGoodsCount(type));
+        //}
+
+        // Test the state of the pioneer
+        // Pioneer should be working on the field with the bonus
+        assertEquals(foodType, pioneer.getWorkType());
+
+        assertEquals(colony.getColonyTile(map.getTile(5,8)).getTile(), pioneer.getLocation().getTile());
+
+        assertEquals(0, pioneer.getMovesLeft());
+
+        //assertEquals(false, pioneer.isArmed());
+    }
+

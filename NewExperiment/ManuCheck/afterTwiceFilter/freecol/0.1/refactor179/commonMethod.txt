@@ -1,0 +1,16 @@
+(startLine=160 endLine=173 srcPath=/root/NewExperiment/freecolFilter/00748/test/src/net/sf/freecol/util/test/FreeColTestCase.java)
+    /**
+     * Creates a standardized map on which all fields have the plains type.
+     * 
+     * Uses the getGame() method to access the currently running game.
+     * 
+     * Does not call Game.setMap(Map) with the returned map. The map
+     * is unexplored.
+     * 
+     * @return The map created as described above.
+     */
+    public static Map getTestMap() {
+        MapBuilder builder = new MapBuilder(getGame());
+        return builder.build();
+    }
+

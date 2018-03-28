@@ -1,0 +1,10 @@
+(startLine=299 endLine=306 srcPath=/root/NewExperiment/freecolFilter/00846/src/net/sf/freecol/client/gui/panel/ReportRequirementsPanel.java)
+                for (int index = 0; index <= lastExpertsIndex; index++) {
+                    Colony colony = severalExperts.get(index);
+                    StyleConstants.setComponent(doc.getStyle("button"), createColonyButton(colony, false));
+                    doc.insertString(doc.getLength(), " ", doc.getStyle("button"));
+                    if (index != lastExpertsIndex) {
+                        doc.insertString(doc.getLength(), ", ", doc.getStyle("regular"));
+                    }
+                }
+

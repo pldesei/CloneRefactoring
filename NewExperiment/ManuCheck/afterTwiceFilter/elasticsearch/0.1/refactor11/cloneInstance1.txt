@@ -1,0 +1,10 @@
+(startLine=83 endLine=90 srcPath=/root/NewExperiment/elasticsearchFilter/00220/modules/elasticsearch/src/main/java/org/elasticsearch/transport/local/LocalTransportChannel.java)
+        } catch (NotSerializableException e) {
+            stream = BytesStreamOutput.Cached.cached();
+            writeResponseExceptionHeader(stream);
+            RemoteTransportException tx = new RemoteTransportException(targetTransport.nodeName(), targetTransport.boundAddress().boundAddress(), action, new NotSerializableTransportException(error));
+            ThrowableObjectOutputStream too = new ThrowableObjectOutputStream(stream);
+            too.writeObject(tx);
+            too.close();
+        }
+

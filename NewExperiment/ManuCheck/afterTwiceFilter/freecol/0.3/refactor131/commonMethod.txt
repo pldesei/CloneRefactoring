@@ -1,0 +1,30 @@
+(startLine=2781 endLine=2808 srcPath=/root/NewExperiment/freecolFilter/00454/src/net/sf/freecol/server/control/InGameInputHandler.java)
+    /**
+     * Checks general conditions for several types of trade queries
+     * 
+     * @param element
+     * @param player
+     * @param unit
+     * @param settlement
+     * @param goods
+     */
+    private void checkGeneralCondForTradeQuery(Element element, Player player, Unit unit, Settlement settlement, Goods goods){
+        if (goods != null && goods.getAmount() > 100) {
+            throw new IllegalArgumentException("Amount of goods exceeds 100: " + goods.getAmount());
+        }
+        if (unit == null) {
+            throw new IllegalArgumentException("Could not find 'Unit' with specified ID: "
+                    + element.getAttribute("unit"));
+        }
+        if (settlement == null) {
+            throw new IllegalArgumentException("Could not find 'Settlement' with specified ID: "
+                    + element.getAttribute("settlement"));
+        }
+        if (unit.getOwner() != player) {
+            throw new IllegalStateException("Not your unit!");
+        }
+        if (unit.getTile().getDistanceTo(settlement.getTile()) > 1) {
+            throw new IllegalStateException("Not adjacent to settlement!");
+        }        
+    }
+

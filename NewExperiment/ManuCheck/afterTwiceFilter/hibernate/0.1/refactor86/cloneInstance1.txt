@@ -1,0 +1,19 @@
+(startLine=157 endLine=173 srcPath=/root/NewExperiment/hibernateFilter/01308/hibernate-core/src/main/java/org/hibernate/engine/jdbc/internal/ResultSetReturnImpl.java)
+		try {
+			final ResultSet rs;
+			try {
+				jdbcCoordinator.getTransactionCoordinator().getTransactionContext().startStatementExecution();
+				if ( !statement.execute() ) {
+					while ( !statement.getMoreResults() && statement.getUpdateCount() != -1 ) {
+						// do nothing until we hit the resultset
+					}
+				}
+				rs = statement.getResultSet();
+			}
+			finally {
+				jdbcCoordinator.getTransactionCoordinator().getTransactionContext().endStatementExecution();
+			}
+			postExtract( rs, statement );
+			return rs;
+		}
+

@@ -1,0 +1,31 @@
+(startLine=533 endLine=561 srcPath=/root/NewExperiment/freecolFilter/00272/test/src/net/sf/freecol/common/model/SchoolTest.java)
+    public void testTeachIndenturedServants() {
+        Colony colony = getStandardColony(2);
+
+        Iterator<Unit> units = colony.getUnitIterator();
+
+        Unit indenturedServant = units.next();
+        indenturedServant.setType(Unit.INDENTURED_SERVANT);
+
+        Unit teacher = units.next();
+        teacher.setType(Unit.EXPERT_ORE_MINER);
+
+        Building school = colony.getBuilding(Building.SCHOOLHOUSE);
+        school.setLevel(Building.SHOP);
+
+        teacher.setLocation(school);
+
+        // Train to become free colonist
+        assertEquals(1, colony.getUnitList(Unit.INDENTURED_SERVANT).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.INDENTURED_SERVANT).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.INDENTURED_SERVANT).size());
+        school.newTurn();
+        assertEquals(1, colony.getUnitList(Unit.INDENTURED_SERVANT).size());
+        school.newTurn();
+        assertEquals(0, colony.getUnitList(Unit.INDENTURED_SERVANT).size());
+
+        assertEquals(Unit.FREE_COLONIST, indenturedServant.getType());
+    }
+

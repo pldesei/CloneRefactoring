@@ -1,0 +1,34 @@
+(startLine=846 endLine=877 srcPath=/root/NewExperiment/freecolFilter/00725/src/net/sf/freecol/server/ai/AIColony.java)
+            for (int i = 0; i < workLocationPlans.size() && food < 2; i++) {
+                WorkLocationPlan wlp = workLocationPlans.get(i);
+                WorkLocation wl = wlp.getWorkLocation();
+                if (wlp.getGoodsType() == foodType
+                    && (((ColonyTile) wl).getWorkTile().isLand()
+                        || colony.hasAbility("model.ability.produceInWater"))) {
+                    Unit bestUnit = null;
+                    int bestProduction = 0;
+                    Iterator<Unit> unitIterator = units.iterator();
+                    while (unitIterator.hasNext()) {
+                        Unit unit = unitIterator.next();
+                        int production = ((ColonyTile) wlp.getWorkLocation()).getProductionOf(unit,
+                                                                                              foodType);
+                        if (production > 1
+                            && (bestUnit == null || production > bestProduction || production == bestProduction
+                                && unit.getSkillLevel() < bestUnit.getSkillLevel())) {
+                            bestUnit = unit;
+                            bestProduction = production;
+                        }
+                    }
+                    if (bestUnit != null && wlp.getWorkLocation().canAdd(bestUnit)) {
+                        //use work() instead of setLocation()
+                        //to make sure that unitState is properly updated!
+                        bestUnit.work(wlp.getWorkLocation());
+                        bestUnit.setWorkType(wlp.getGoodsType());
+                        units.remove(bestUnit);
+                        workLocationPlans.remove(wlp);
+                        workerAdded = true;
+                        food = colony.getFoodProduction() - colony.getFoodConsumption();
+                    }
+                }
+            }
+

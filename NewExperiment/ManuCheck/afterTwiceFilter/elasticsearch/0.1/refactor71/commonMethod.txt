@@ -1,0 +1,12 @@
+(startLine=54 endLine=63 srcPath=/root/NewExperiment/elasticsearchFilter/00717/src/main/java/org/elasticsearch/common/geo/GeoPoint.java)
+    public GeoPoint resetFromString(String value) {
+        int comma = value.indexOf(',');
+        if (comma != -1) {
+            lat = Double.parseDouble(value.substring(0, comma).trim());
+            lon = Double.parseDouble(value.substring(comma + 1).trim());
+        } else {
+            resetFromGeoHash(value);
+        }
+        return this;
+    }
+

@@ -1,0 +1,22 @@
+(startLine=125 endLine=144 srcPath=/root/NewExperiment/elasticsearchFilter/00729/src/main/java/org/elasticsearch/index/fielddata/plain/ShortArrayIndexFieldData.java)
+        if (ordinals.size() == 1) {
+            int[] nativeOrdinals = ordinals.get(0);
+            FixedBitSet set = new FixedBitSet(reader.maxDoc());
+            short[] sValues = new short[reader.maxDoc()];
+            boolean allHaveValue = true;
+            for (int i = 0; i < nativeOrdinals.length; i++) {
+                int nativeOrdinal = nativeOrdinals[i];
+                if (nativeOrdinal == 0) {
+                    allHaveValue = false;
+                } else {
+                    set.set(i);
+                    sValues[i] = values.get(nativeOrdinal);
+                }
+            }
+            if (allHaveValue) {
+                return new ShortArrayAtomicFieldData.Single(sValues, reader.maxDoc());
+            } else {
+                return new ShortArrayAtomicFieldData.SingleFixedSet(sValues, reader.maxDoc(), set);
+            }
+        } else {
+

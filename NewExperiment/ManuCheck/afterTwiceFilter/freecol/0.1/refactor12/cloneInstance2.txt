@@ -1,0 +1,19 @@
+(startLine=3065 endLine=3081 srcPath=/root/NewExperiment/freecolFilter/00102/src/net/sf/freecol/common/model/Unit.java)
+            } else {
+                if (defender.isMounted()) {
+                    defender.setMounted(false, true);
+                    if (getType() == BRAVE && result == ATTACK_GREAT_WIN) {
+                        setMounted(true, true);
+                    }
+                } else if ((defender.getType() == ARTILLERY)) {
+                    defender.setType(DAMAGED_ARTILLERY);
+                } else if ((defender.getType() == KINGS_REGULAR) || (defender.getType() == DAMAGED_ARTILLERY)) {
+                    defender.dispose();
+                } else {
+                    defender.setArmed(false, true);
+                    if (getType() == BRAVE && result == ATTACK_GREAT_WIN) {
+                        setArmed(true, true);
+                    }
+                }
+            }
+

@@ -1,0 +1,11 @@
+(startLine=315 endLine=323 srcPath=/root/NewExperiment/freecolFilter/00239/src/net/sf/freecol/client/gui/panel/ReportUnitPanel.java)
+            for (int mounted = 1; mounted >= 0; mounted--) {
+                for (int index = 2; index < unitTypes.length; index++) {
+                    int count = unitCounts[unitTypes[index]][mounted];
+                    int graphicsType = reportPanel.getLibrary().getUnitGraphicsType(unitTypes[index], true, (mounted == 1), 0, false);
+                    JLabel unitLabel = reportPanel.buildUnitLabel(graphicsType, 0.66f);
+                    unitLabel.setText(String.valueOf(count));
+                    unitPanel.add(unitLabel);
+                }
+            }
+

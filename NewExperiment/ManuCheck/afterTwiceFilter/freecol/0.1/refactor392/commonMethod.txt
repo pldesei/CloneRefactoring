@@ -1,0 +1,16 @@
+(startLine=400 endLine=413 srcPath=/root/NewExperiment/freecolFilter/01061/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+    /**
+     * Checks if a transportable needs transport.
+     *
+     * @param t The <code>Transportable</code> to check.
+     * @return True if no transport is already present or the
+     *     transportable is already aboard a carrier, and there is a
+     *     well defined source and destination location.
+     */
+    private boolean requestsTransport(Transportable t) {
+        return t.getTransport() == null
+            && t.getTransportDestination() != null
+            && t.getTransportSource() != null
+            && !(t.getTransportLocatable().getLocation() instanceof Unit);
+    }
+

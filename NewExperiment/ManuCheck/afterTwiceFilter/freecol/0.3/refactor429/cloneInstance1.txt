@@ -1,0 +1,8 @@
+(startLine=1601 endLine=1606 srcPath=/root/NewExperiment/freecolFilter/01206/src/net/sf/freecol/server/ai/ColonyPlan.java)
+            if ((other = trySwapExpert(u1, experts, col)) != null) {
+                report.append("Swapped ").append(u1.getId()).append("(")
+                    .append(Utils.lastPart(u1.getType().toString(), "."))
+                    .append(") for ").append(other).append("\n");
+                experts.remove(u1);
+            } else if ((other = trySwapExpert(u1, nonExperts, col)) != null) {
+

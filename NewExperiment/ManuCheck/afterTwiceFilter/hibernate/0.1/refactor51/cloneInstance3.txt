@@ -1,0 +1,29 @@
+(startLine=203 endLine=229 srcPath=/root/NewExperiment/hibernateFilter/01094/hibernate-core/src/test/java/org/hibernate/loader/EncapsulatedCompositeIdResultSetProcessorTest.java)
+					public void execute(Connection connection) throws SQLException {
+						PreparedStatement ps = connection.prepareStatement( sql );
+						callback.bind( ps );
+						ResultSet resultSet = ps.executeQuery();
+						//callback.beforeExtractResults( workSession );
+						results.addAll(
+								resultSetProcessor.extractResults(
+										NoOpLoadPlanAdvisor.INSTANCE,
+										resultSet,
+										(SessionImplementor) workSession,
+										callback.getQueryParameters(),
+										new NamedParameterContext() {
+											@Override
+											public int[] getNamedParameterLocations(String name) {
+												return new int[0];
+											}
+										},
+										aliasResolutionContext,
+										true,
+										false,
+										null,
+										null
+								)
+						);
+						resultSet.close();
+						ps.close();
+					}
+

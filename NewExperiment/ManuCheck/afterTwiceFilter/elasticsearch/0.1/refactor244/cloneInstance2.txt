@@ -1,0 +1,15 @@
+(startLine=179 endLine=191 srcPath=/root/NewExperiment/elasticsearchFilter/01339/src/main/java/org/elasticsearch/gateway/GatewayService.java)
+                } else {
+                    // one of the expected is set, see if all of them meet the need, and ignore the timeout in this case
+                    ignoreRecoverAfterTime = true;
+                    if (expectedNodes != -1 && (nodes.masterAndDataNodes().size() < expectedNodes)) { // does not meet the expected...
+                        ignoreRecoverAfterTime = false;
+                    }
+                    if (expectedMasterNodes != -1 && (nodes.masterNodes().size() < expectedMasterNodes)) { // does not meet the expected...
+                        ignoreRecoverAfterTime = false;
+                    }
+                    if (expectedDataNodes != -1 && (nodes.dataNodes().size() < expectedDataNodes)) { // does not meet the expected...
+                        ignoreRecoverAfterTime = false;
+                    }
+                }
+

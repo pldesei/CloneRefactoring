@@ -1,0 +1,13 @@
+(startLine=329 endLine=339 srcPath=/root/NewExperiment/freecolFilter/01169/src/net/sf/freecol/common/model/StringTemplate.java)
+                                                          StringTemplate template) {
+        if (templateType == TemplateType.TEMPLATE) {
+            requireKeys(); requireReplacements();
+            keys.add(key);
+            replacements.add(template);
+        } else {
+            throw new IllegalArgumentException("Cannot add a key-template pair to a StringTemplate type "
+                                               + templateType.toString());
+        }
+        return this;
+    }
+

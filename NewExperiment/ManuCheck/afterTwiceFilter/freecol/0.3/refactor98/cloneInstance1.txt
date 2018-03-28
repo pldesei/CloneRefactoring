@@ -1,0 +1,23 @@
+(startLine=682 endLine=702 srcPath=/root/NewExperiment/freecolFilter/00365/src/net/sf/freecol/server/ai/mission/TransportMission.java)
+        if (player.getGold() >= player.getRecruitPrice()) {
+            for (int i = 0; i < 3; i++) {
+                // Note, used to be 1-3 but the method expects 0-2
+                if (europe.getRecruitable(i) == unitType) {
+                    Element recruitUnitInEuropeElement = Message.createNewRootElement("recruitUnitInEurope");
+                    recruitUnitInEuropeElement.setAttribute("slot", Integer.toString(i));
+                    try {
+                        Element reply = connection.ask(recruitUnitInEuropeElement);
+                        if (reply.getTagName().equals("recruitUnitInEuropeConfirmed")) {
+                            return (AIUnit) getAIMain().getAIObject(
+                                    ((Element) reply.getChildNodes().item(0)).getAttribute("ID"));
+                        } else {
+                            logger.warning("Could not recruit the specified unit in europe.");
+                            continue;
+                        }
+                    } catch (IOException e) {
+                        logger.warning("Could not send \"recruitUnitInEurope\"-message to the server.");
+                    }
+                }
+            }
+        }
+

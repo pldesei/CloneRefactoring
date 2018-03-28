@@ -1,0 +1,18 @@
+(startLine=440 endLine=455 srcPath=/root/NewExperiment/freecolFilter/01368/src/net/sf/freecol/server/ai/EuropeanAIPlayer.java)
+    /**
+     * Cheat by adding gold to guarantee the player has a minimum amount.
+     *
+     * @param amount The minimum amount of gold required.
+     * @param lb A <code>LogBuilder</code> to log to.
+     */
+    public void cheatGold(int amount, LogBuilder lb) {
+        final Player player = getPlayer();
+        int gold = player.getGold();
+        if (gold < amount) {
+            amount -= gold;
+            player.modifyGold(amount);
+            lb.add("added ", amount, " gold");
+        }
+        player.logCheat(amount + " gold");
+    }
+

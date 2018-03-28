@@ -1,0 +1,34 @@
+(startLine=288 endLine=319 srcPath=/root/NewExperiment/freecolFilter/00032/src/net/sf/freecol/client/gui/ImageLibrary.java)
+    private void loadUnits(GraphicsConfiguration gc, Class resourceLocator, boolean doLookup) throws FreeColException {
+        units = new Vector(UNIT_GRAPHICS_COUNT);
+
+        for (int i = 0; i < UNIT_GRAPHICS_COUNT; i++) {
+            String filePath = dataDirectory + path + unitsDirectory + unitsName + i + extension;
+            ImageIcon tempImage;
+            if (doLookup) {
+                URL url = resourceLocator.getResource(filePath);
+                if (url == null) {
+                    throw new FreeColException("The data file \"" + filePath + "\" could not be found.");
+                }
+                tempImage = new ImageIcon(url);
+            } else {
+                File tmpFile = new File(filePath);
+                if ((tmpFile == null) || !tmpFile.exists() || !tmpFile.isFile() || !tmpFile.canRead()) {
+                    throw new FreeColException("The data file \"" + filePath + "\" could not be found.");
+                }
+                tempImage = new ImageIcon(filePath);
+            }
+            units.add(tempImage);
+        }
+
+        /*
+        If all units are patched together in one graphics file then this is the way to load
+        them into different images:
+
+        Image unitsImage = new ImageIcon(url).getImage();
+        BufferedImage tempImage = gc.createCompatibleImage(42, 63, Transparency.TRANSLUCENT);
+        tempImage.getGraphics().drawImage(unitsImage, 0, 0, null);
+        units.add(tempImage);
+        */
+    }
+

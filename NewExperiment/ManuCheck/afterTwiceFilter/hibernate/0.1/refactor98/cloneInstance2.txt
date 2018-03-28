@@ -1,0 +1,31 @@
+(startLine=65 endLine=93 srcPath=/root/NewExperiment/hibernateFilter/01549/hibernate-jcache/src/main/java/org/hibernate/cache/jcache/access/ReadWriteNaturalIdRegionAccessStrategy.java)
+			throws CacheException {
+		return region.invoke(
+				key, new EntryProcessor<Object, Object, Boolean>() {
+					@Override
+					public Boolean process(MutableEntry<Object, Object> entry, Object... args)
+							throws EntryProcessorException {
+						final Lockable item = (Lockable) entry.getValue();
+
+						if ( item != null && item.isUnlockable( (SoftLock) args[1] ) ) {
+							final Lock lockItem = (Lock) item;
+							if ( lockItem.wasLockedConcurrently() ) {
+								lockItem.unlock( region.nextTimestamp() );
+								entry.setValue( lockItem );
+								return false;
+							}
+							else {
+								entry.setValue( new Item( args[0], null, (Long) args[2] ) );
+								return true;
+							}
+						}
+						else {
+							entry.setValue( null );
+							return false;
+						}
+
+					}
+				}, value, lock, region.nextTimestamp()
+		);
+	}
+

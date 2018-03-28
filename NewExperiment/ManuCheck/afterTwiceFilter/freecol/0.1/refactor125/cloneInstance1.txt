@@ -1,0 +1,15 @@
+(startLine=330 endLine=342 srcPath=/root/NewExperiment/freecolFilter/00432/src/net/sf/freecol/client/gui/panel/ReportProductionPanel.java)
+    private JButton createColonyButton(int index) {
+
+        JButton button = new JButton(colonies.get(index).getName());
+        button.setMargin(new Insets(0,0,0,0));
+        button.setOpaque(false);
+        button.setForeground(FreeColPanel.LINK_COLOR);
+        button.setAlignmentY(0.8f);
+        button.setHorizontalAlignment(SwingConstants.LEADING);
+        button.setBorder(FreeColPanel.LEFTCELLBORDER);
+        button.setActionCommand(String.valueOf(index));
+        button.addActionListener(this);
+        return button;
+    }
+

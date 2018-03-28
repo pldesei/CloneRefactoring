@@ -1,0 +1,13 @@
+(startLine=495 endLine=505 srcPath=/root/NewExperiment/freecolFilter/01293/src/net/sf/freecol/client/gui/panel/Flag.java)
+        } else if (stars == 2) {
+            unionPath = new GeneralPath();
+            GeneralPath newStar = getStar();
+            newStar.transform(AffineTransform.getScaleInstance(1.5, 1.5));
+            unionPath.append(newStar, false);
+            newStar = getStar();
+            newStar.transform(AffineTransform.getScaleInstance(1.5, 1.5));
+            newStar.transform(AffineTransform.getTranslateInstance(radius, 0));
+            unionPath.append(newStar, false);
+            unionPath.transform(AffineTransform.getTranslateInstance(r, HEIGHT / 2));
+        } else if (stars < 14) {
+

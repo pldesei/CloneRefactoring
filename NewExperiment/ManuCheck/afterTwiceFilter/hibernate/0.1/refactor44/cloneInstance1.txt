@@ -1,0 +1,10 @@
+(startLine=76 endLine=83 srcPath=/root/NewExperiment/hibernateFilter/01093/hibernate-core/src/main/java/org/hibernate/loader/entity/plan/LegacyBatchingEntityLoaderBuilder.java)
+				LoadQueryInfluencers loadQueryInfluencers) {
+			super( persister );
+			this.batchSizes = ArrayHelper.getBatchSizes( maxBatchSize );
+			this.loaders = new EntityLoader[ batchSizes.length ];
+			for ( int i = 0; i < batchSizes.length; i++ ) {
+				this.loaders[i] = new EntityLoader( persister, batchSizes[i], lockMode, factory, loadQueryInfluencers);
+			}
+		}
+

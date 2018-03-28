@@ -1,0 +1,26 @@
+(startLine=1675 endLine=1698 srcPath=/root/NewExperiment/freecolFilter/00837/src/net/sf/freecol/server/ai/StandardAIPlayer.java)
+                if (colonyTile != null) {
+                    Mission mission = new BuildColonyMission(getAIMain(),
+                                                             aiUnit,
+                                                             colonyTile,
+                                                             getPlayer().getColonyValue(colonyTile));
+                    aiUnit.setMission(mission);
+
+                    boolean isUnitOnCarrier = aiUnit.getUnit().isOnCarrier();
+                    if (isUnitOnCarrier) {
+                        AIUnit carrier = (AIUnit) getAIMain().getAIObject(
+                                (FreeColGameObject) aiUnit.getUnit().getLocation());
+
+                        //make verification of carrier mission
+                        Mission carrierMission = carrier.getMission();
+
+                        boolean isCarrierMissionToTransport = carrierMission instanceof TransportMission;
+                        if(!isCarrierMissionToTransport){
+                        	throw new IllegalStateException("Carrier carrying unit not on a transport mission");
+                        }
+                        //transport unit to carrier destination (is this what is truly wanted?)
+                        ((TransportMission) carrierMission).addToTransportList(aiUnit);
+                    }
+                    continue;
+                }
+

@@ -1,0 +1,23 @@
+(startLine=693 endLine=713 srcPath=/root/NewExperiment/freecolFilter/00570/src/net/sf/freecol/common/model/Unit.java)
+    public static Comparator<Unit> getSkillLevelComparator(){
+        if(skillLevelComp != null){
+            return skillLevelComp;
+        }
+        
+        // Create comparator to sort units by skill level
+        // Prefer unit with less qualifications
+        skillLevelComp = new Comparator<Unit>(){
+            public int compare(Unit u1,Unit u2){
+                if(u1.getSkillLevel() < u2.getSkillLevel()){
+                    return -1;
+                }
+                if(u1.getSkillLevel() > u2.getSkillLevel()){
+                    return 1;
+                }
+                return 0;
+            }
+        };
+        
+        return skillLevelComp;
+    }
+

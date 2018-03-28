@@ -1,0 +1,10 @@
+(startLine=52 endLine=59 srcPath=/root/NewExperiment/elasticsearchFilter/00221/modules/elasticsearch/src/main/java/org/elasticsearch/common/io/stream/CachedStreamOutput.java)
+    /**
+     * Returns the cached thread local byte stream, with its internal stream cleared.
+     */
+    public static BytesStreamOutput cachedBytes() {
+        BytesStreamOutput os = cache.get().get().bytes;
+        os.reset();
+        return os;
+    }
+

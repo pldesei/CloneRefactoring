@@ -1,0 +1,11 @@
+(startLine=2570 endLine=2578 srcPath=/root/NewExperiment/freecolFilter/00635/src/net/sf/freecol/client/gui/GUI.java)
+    private void centerString(Graphics2D g, String text, int x, int y) {
+        g.setColor(Color.BLACK);
+        g.setFont(((Font)UIManager.get("NormalFont")).deriveFont(12.0f));
+        g.drawString(text,
+                     x + (tileWidth
+                          - g.getFontMetrics().stringWidth(text))/2,
+                     y + (tileHeight
+                          - g.getFontMetrics().getAscent())/2);
+    }
+

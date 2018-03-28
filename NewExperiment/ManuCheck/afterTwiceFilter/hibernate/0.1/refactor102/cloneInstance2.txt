@@ -1,0 +1,31 @@
+(startLine=433 endLine=461 srcPath=/root/NewExperiment/hibernateFilter/01684/hibernate-core/src/main/java/org/hibernate/cfg/AbstractPropertyHolder.java)
+	private static Map<String, JoinTable> buildJoinTableOverride(XAnnotatedElement element, String path) {
+		Map<String, JoinTable> tableOverride = new HashMap<String, JoinTable>();
+		if ( element == null ) return tableOverride;
+		AssociationOverride singleOverride = element.getAnnotation( AssociationOverride.class );
+		AssociationOverrides multipleOverrides = element.getAnnotation( AssociationOverrides.class );
+		AssociationOverride[] overrides;
+		if ( singleOverride != null ) {
+			overrides = new AssociationOverride[] { singleOverride };
+		}
+		else if ( multipleOverrides != null ) {
+			overrides = multipleOverrides.value();
+		}
+		else {
+			overrides = null;
+		}
+
+		//fill overridden tables
+		if ( overrides != null ) {
+			for (AssociationOverride depAttr : overrides) {
+				if ( depAttr.joinColumns().length == 0 ) {
+					tableOverride.put(
+							StringHelper.qualify( path, depAttr.name() ),
+							depAttr.joinTable()
+					);
+				}
+			}
+		}
+		return tableOverride;
+	}
+

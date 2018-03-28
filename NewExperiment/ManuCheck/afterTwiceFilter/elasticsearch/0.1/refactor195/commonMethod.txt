@@ -1,0 +1,8 @@
+(startLine=614 endLine=619 srcPath=/root/NewExperiment/elasticsearchFilter/01087/src/main/java/org/elasticsearch/cluster/metadata/MetaData.java)
+    /**
+     * Translates the provided indices (possibly aliased) into actual indices.
+     */
+    public String[] concreteIndicesIgnoreMissing(String[] indices) {
+        return concreteIndices(indices, IndicesOptions.fromOptions(true, true, true, false));
+    }
+

@@ -1,0 +1,19 @@
+(startLine=551 endLine=567 srcPath=/root/NewExperiment/hibernateFilter/01168/hibernate-core/src/main/java/org/hibernate/event/internal/DefaultLoadEventListener.java)
+		try {
+			source.getEventListenerManager().cacheGetStart();
+			ce = persister.getCacheAccessStrategy().get( ck, source.getTimestamp() );
+
+			if ( factory.getStatistics().isStatisticsEnabled() ) {
+				if ( ce == null ) {
+					factory.getStatisticsImplementor().secondLevelCacheMiss(
+							persister.getCacheAccessStrategy().getRegion().getName()
+					);
+				}
+				else {
+					factory.getStatisticsImplementor().secondLevelCacheHit(
+							persister.getCacheAccessStrategy().getRegion().getName()
+					);
+				}
+			}
+		}
+

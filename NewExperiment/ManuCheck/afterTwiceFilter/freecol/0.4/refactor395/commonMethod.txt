@@ -1,0 +1,20 @@
+(startLine=108 endLine=125 srcPath=/root/NewExperiment/freecolFilter/01061/src/net/sf/freecol/common/util/Utils.java)
+    /**
+     * Appends a value to a list member of a map with a given key.
+     *
+     * @param map The <code>Map</code> to add to.
+     * @param key The key with which to look up the list in the map.
+     * @param value The value to append.
+     */
+    public static <T,K> void appendToMapList(Map<K, List<T>> map,
+                                             K key, T value) {
+        List<T> l = map.get(key);
+        if (l == null) {
+            l = new ArrayList<T>();
+            l.add(value);
+            map.put(key, l);
+        } else if (!l.contains(value)) {
+            l.add(value);
+        }
+    }
+

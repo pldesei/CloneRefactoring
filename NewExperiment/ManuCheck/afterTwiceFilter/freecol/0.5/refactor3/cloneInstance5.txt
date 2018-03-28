@@ -1,0 +1,25 @@
+(startLine=535 endLine=557 srcPath=/root/NewExperiment/freecolFilter/00032/src/net/sf/freecol/client/gui/ImageLibrary.java)
+    private void loadIndians(GraphicsConfiguration gc, Class resourceLocator, boolean doLookup) throws FreeColException {
+        indians = new Vector(INDIAN_COUNT);
+
+        for(int i = 0; i < INDIAN_COUNT; i++) {
+            String filePath = dataDirectory + path + indianDirectory + indianName + i + extension;
+            ImageIcon tempImage;
+            if (doLookup) {
+                URL url = resourceLocator.getResource(filePath);
+                if (url == null) {
+                    throw new FreeColException("The data file \"" + filePath + "\" could not be fonud.");
+                }
+                tempImage = new ImageIcon(url);
+            }
+            else {
+                File tmpFile = new File(filePath);
+                if ((tmpFile == null) || !tmpFile.exists() || !tmpFile.isFile() || !tmpFile.canRead()) {
+                    throw new FreeColException("The data file \"" + filePath + "\" could not be found.");
+                }
+                tempImage = new ImageIcon(filePath);
+            }
+            indians.add(tempImage);
+        }
+    }
+

@@ -1,0 +1,23 @@
+(startLine=87 endLine=107 srcPath=/root/NewExperiment/hibernateFilter/00754/hibernate-envers/src/main/java/org/hibernate/envers/event/BaseEnversEventListener.java)
+					if (newValue != null) {
+						// relDesc.getToEntityName() doesn't always return the entity name of the value - in case
+						// of subclasses, this will be root class, no the actual class. So it can't be used here.
+						String toEntityName;
+						Serializable id;
+
+						if (newValue instanceof HibernateProxy ) {
+							HibernateProxy hibernateProxy = (HibernateProxy) newValue;
+							toEntityName = session.bestGuessEntityName(newValue);
+							id = hibernateProxy.getHibernateLazyInitializer().getIdentifier();
+							// We've got to initialize the object from the proxy to later read its state.
+							newValue = Tools.getTargetFromProxy(session.getFactory(), hibernateProxy);
+						} else {
+							toEntityName =  session.guessEntityName(newValue);
+
+							IdMapper idMapper = enversConfiguration.getEntCfg().get(toEntityName).getIdMapper();
+							 id = (Serializable) idMapper.mapToIdFromEntity(newValue);
+						}
+
+						auditProcess.addWorkUnit(new CollectionChangeWorkUnit(session, toEntityName, enversConfiguration, id, newValue));
+					}
+

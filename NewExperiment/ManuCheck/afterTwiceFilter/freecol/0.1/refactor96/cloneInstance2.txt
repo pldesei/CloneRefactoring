@@ -1,0 +1,68 @@
+(startLine=732 endLine=797 srcPath=/root/NewExperiment/freecolFilter/00365/src/net/sf/freecol/server/ai/mission/TransportMission.java)
+    private AIUnit getCheapestUnitInEurope(Connection connection) {
+        AIPlayer aiPlayer = (AIPlayer) getAIMain().getAIObject(getUnit().getOwner().getId());
+        Player player = aiPlayer.getPlayer();
+        Europe europe = player.getEurope();
+
+        if (!(getUnit().getLocation() instanceof Europe)) {
+            throw new IllegalStateException("Carrier not in Europe");
+        }
+
+        // Check if there are any units on the docks:
+        Iterator<Unit> ui = europe.getUnitIterator();
+        while (ui.hasNext()) {
+            Unit u = ui.next();
+            if (!u.isCarrier() && ((AIUnit) getAIMain().getAIObject(u)).getTransport() == null) {
+                return (AIUnit) getAIMain().getAIObject(u.getId());
+            }
+        }
+
+        int priceTrained = 0;
+        UnitType cheapestTrained = null;
+        List<UnitType> unitTypes = FreeCol.getSpecification().getUnitTypesTrainedInEurope();
+        for (UnitType unitType : unitTypes) {
+            int price = europe.getUnitPrice(unitType);
+            if (cheapestTrained == null || price < priceTrained) {
+            	cheapestTrained = unitType;
+            	priceTrained = price;
+            }
+        }
+        // Try recruiting the unit:
+        if (player.getGold() >= player.getRecruitPrice() && cheapestTrained != null
+                && player.getRecruitPrice() < priceTrained) {
+            Element recruitUnitInEuropeElement = Message.createNewRootElement("recruitUnitInEurope");
+            // TODO: Take the best unit (Seasoned scout, pioneer, soldier etc):
+            recruitUnitInEuropeElement.setAttribute("slot", Integer.toString(1));
+            try {
+                Element reply = connection.ask(recruitUnitInEuropeElement);
+                if (reply.getTagName().equals("recruitUnitInEuropeConfirmed")) {
+                    return (AIUnit) getAIMain().getAIObject(
+                            ((Element) reply.getChildNodes().item(0)).getAttribute("ID"));
+                } else {
+                    logger.warning("Could not recruit the specified unit in europe.");
+                }
+            } catch (IOException e) {
+                logger.warning("Could not send \"recruitUnitInEurope\"-message to the server.");
+            }
+        }
+
+        // Try training the unit:
+        if (cheapestTrained != null && player.getGold() >= priceTrained) {
+            Element trainUnitInEuropeElement = Message.createNewRootElement("trainUnitInEurope");
+            trainUnitInEuropeElement.setAttribute("unitType", Integer.toString(cheapestTrained.getIndex()));
+            try {
+                Element reply = connection.ask(trainUnitInEuropeElement);
+                if (reply.getTagName().equals("trainUnitInEuropeConfirmed")) {
+                    return (AIUnit) getAIMain().getAIObject(
+                            ((Element) reply.getChildNodes().item(0)).getAttribute("ID"));
+                } else {
+                    logger.warning("Could not train the specified unit in europe.");
+                }
+            } catch (IOException e) {
+                logger.warning("Could not send \"trainUnitInEurope\"-message to the server.");
+            }
+        }
+
+        return null;
+    }
+

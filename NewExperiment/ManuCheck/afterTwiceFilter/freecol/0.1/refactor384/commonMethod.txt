@@ -1,0 +1,23 @@
+(startLine=359 endLine=379 srcPath=/root/NewExperiment/freecolFilter/01021/src/net/sf/freecol/client/gui/panel/DefaultTransferHandler.java)
+    private boolean equipUnitIfPossible(UnitLabel unitLabel, AbstractGoods goods) {
+        Unit unit = unitLabel.getUnit();
+        if (unit.hasAbility(Ability.CAN_BE_EQUIPPED)) {
+            for (EquipmentType equipment : freeColClient.getGame().getSpecification()
+                     .getEquipmentTypeList()) {
+                if (unit.canBeEquippedWith(equipment) && equipment.getGoodsRequired().size() == 1) {
+                    AbstractGoods requiredGoods = equipment.getGoodsRequired().get(0);
+                    if (requiredGoods.getType().equals(goods.getType())
+                        && requiredGoods.getAmount() <= goods.getAmount()) {
+                        int amount = Math.min(goods.getAmount() / requiredGoods.getAmount(),
+                                              equipment.getMaximumCount());
+                        freeColClient.getInGameController()
+                            .equipUnit(unit, equipment, amount);
+                        unitLabel.updateIcon();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+

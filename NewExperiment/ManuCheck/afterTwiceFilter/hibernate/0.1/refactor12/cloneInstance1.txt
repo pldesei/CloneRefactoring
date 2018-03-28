@@ -1,0 +1,40 @@
+(startLine=82 endLine=119 srcPath=/root/NewExperiment/hibernateFilter/00315/entitymanager/src/test/java/org/hibernate/ejb/test/ops/PersistTest.java)
+	public void testCreateException() {
+		Session s = openSession();
+		Transaction tx = s.beginTransaction();
+		Node dupe = new Node( "dupe" );
+		s.persist( dupe );
+		s.persist( dupe );
+		tx.commit();
+		s.close();
+
+		s = openSession();
+		tx = s.beginTransaction();
+		s.persist( dupe );
+		try {
+			tx.commit();
+			fail( "Cannot persist() twice the same entity" );
+		}
+		catch (ConstraintViolationException cve) {
+			//verify that an exception is thrown!
+		}
+		tx.rollback();
+		s.close();
+
+		Node nondupe = new Node( "nondupe" );
+		nondupe.addChild( dupe );
+
+		s = openSession();
+		tx = s.beginTransaction();
+		s.persist( nondupe );
+		try {
+			tx.commit();
+			assertFalse( true );
+		}
+		catch (ConstraintViolationException cve) {
+			//verify that an exception is thrown!
+		}
+		tx.rollback();
+		s.close();
+	}
+

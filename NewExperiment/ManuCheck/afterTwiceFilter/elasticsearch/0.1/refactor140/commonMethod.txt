@@ -1,0 +1,9 @@
+(startLine=855 endLine=861 srcPath=/root/NewExperiment/elasticsearchFilter/00901/src/main/java/org/elasticsearch/common/xcontent/XContentBuilder.java)
+    public XContentBuilder byteSizeField(XContentBuilderString rawFieldName, XContentBuilderString readableFieldName, ByteSizeValue byteSizeValue) throws IOException {
+        if (readableFormat) {
+            field(readableFieldName, byteSizeValue.toString());
+        }
+        field(rawFieldName, byteSizeValue.bytes());
+        return this;
+    }
+

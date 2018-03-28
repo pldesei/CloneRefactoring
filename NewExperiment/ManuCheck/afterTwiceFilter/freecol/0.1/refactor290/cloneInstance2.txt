@@ -1,0 +1,16 @@
+(startLine=408 endLine=421 srcPath=/root/NewExperiment/freecolFilter/00935/src/net/sf/freecol/server/ai/NativeAIPlayer.java)
+        } else {
+            int haggling = 1;
+            if (sessionRegister.containsKey(hagglingKey)) {
+                haggling = sessionRegister.get(hagglingKey).intValue();
+            }
+            if (getAIRandom().nextInt(3 + haggling) < 3) {
+                sessionRegister.put(goldKey, new Integer(gold));
+                sessionRegister.put(hagglingKey, new Integer(haggling + 1));
+                return gold;
+            } else {
+                sessionRegister.put(goldKey, new Integer(-1));
+                return NetworkConstants.NO_TRADE;
+            }
+        }
+

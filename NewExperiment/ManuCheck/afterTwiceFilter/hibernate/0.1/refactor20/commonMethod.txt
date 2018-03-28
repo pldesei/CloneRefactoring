@@ -1,0 +1,23 @@
+(startLine=352 endLine=372 srcPath=/root/NewExperiment/hibernateFilter/00349/core/src/main/java/org/hibernate/id/enhanced/OptimizerFactory.java)
+		/**
+		 * {@inheritDoc}
+		 */
+		public synchronized Serializable generate(AccessCallback callback) {
+			if ( hiValue == null ) {
+				value = callback.getNextValue();
+				if ( value.lt( 1 ) ) {
+					// unfortunately not really safe to normalize this
+					// to 1 as an initial value like we do the others
+					// because we would not be able to control this if
+					// we are using a sequence...
+					log.info( "pooled optimizer source reported [" + value + "] as the initial value; use of 1 or greater highly recommended" );
+				}
+				hiValue = callback.getNextValue();
+			}
+			else if ( ! hiValue.gt( value ) ) {
+				hiValue = callback.getNextValue();
+				value = hiValue.copy().subtract( incrementSize );
+			}
+			return value.makeValueThenIncrement();
+		}
+

@@ -1,0 +1,20 @@
+(startLine=73 endLine=90 srcPath=/root/NewExperiment/elasticsearchFilter/01770/core/src/test/java/org/elasticsearch/common/network/NetworkAddressTests.java)
+    /**
+     * Round trip test code for both IPv4 and IPv6. {@link InetAddress} contains the {@code getByAddress} and
+     * {@code getbyName} methods for both IPv4 and IPv6, unless you also specify a {@code scopeid}, which this does not
+     * test.
+     *
+     * @param bytes 4 (32-bit for IPv4) or 16 bytes (128-bit for IPv6)
+     * @throws Exception if any error occurs while interacting with the network address
+     */
+    private void roundTrip(byte[] bytes) throws Exception {
+        Random random = random();
+        for (int i = 0; i < 10000; i++) {
+            random.nextBytes(bytes);
+            InetAddress expected = InetAddress.getByAddress(bytes);
+            String formatted = NetworkAddress.format(expected);
+            InetAddress actual = InetAddress.getByName(formatted);
+            assertEquals(expected, actual);
+        }
+    }
+

@@ -1,0 +1,14 @@
+(startLine=314 endLine=325 srcPath=/root/NewExperiment/elasticsearchFilter/00428/modules/benchmark/micro/src/main/java/org/elasticsearch/benchmark/search/facet/TermsFacetSearchBenchmark.java)
+        for (int j = 0; j < QUERY_WARMUP; j++) {
+            SearchResponse searchResponse = client.prepareSearch()
+                    .setQuery(matchAllQuery())
+                    .addFacet(termsFacet("lm_value").field("lm_value"))
+                    .execute().actionGet();
+            if (j == 0) {
+                System.out.println("--> Loading (lm_value) took: " + searchResponse.took());
+            }
+            if (searchResponse.hits().totalHits() != COUNT) {
+                System.err.println("--> mismatch on hits");
+            }
+        }
+
