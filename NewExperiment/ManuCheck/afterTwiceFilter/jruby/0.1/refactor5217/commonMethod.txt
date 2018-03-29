@@ -1,0 +1,8 @@
+(startLine=3428 endLine=3433 srcPath=/home/sonia/NewExperiment/jrubyFilter/01408/src/org/jruby/Ruby.java)
+    public RaiseException newErrnoFromLastPOSIXErrno() {
+        RubyClass errnoClass = getErrno(getPosix().errno());
+        if (errnoClass == null) errnoClass = systemCallError;
+
+        return newRaiseException(errnoClass, null);
+    }
+

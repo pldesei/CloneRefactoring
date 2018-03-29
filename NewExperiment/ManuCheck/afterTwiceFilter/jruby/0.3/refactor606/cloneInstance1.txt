@@ -1,0 +1,18 @@
+(startLine=568 endLine=583 srcPath=/home/sonia/NewExperiment/jrubyFilter/00544/src/org/jruby/compiler/NodeCompilerFactory.java)
+        } else {
+            // FIXME: Missing blockpassnode handling
+            final IterNode iterNode = (IterNode) callNode.getIterNode();
+            
+            final ClosureCallback closureArg = new ClosureCallback() {
+                public void compile(MethodCompiler context) {
+                    NodeCompilerFactory.compile(iterNode, context);
+                }
+            };
+            
+            if (callNode.getArgsNode() != null) {
+                context.getInvocationCompiler().invokeDynamic(callNode.getName(), receiverCallback, argsCallback, CallType.NORMAL, closureArg, false);
+            } else {
+                context.getInvocationCompiler().invokeDynamic(callNode.getName(), receiverCallback, null, CallType.NORMAL, closureArg, false);
+            }
+        }
+

@@ -1,0 +1,34 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00931
+predFragLineRange:96-102
+predMethodLineRange:93-105
+nextLineRange:93-105
+predStrMethodInvoNames:
+[createJavaMethods, getRuntime, isGiven, newProc, getRuntime, findCallableArityOne, convertArgumentToType, getParameterTypes, java_to_ruby, invoke, dataGetStruct, call]
+%%%%%%%%%%
+AddedMethodInvo Line:97 InvoName:castJavaProxy(self)
+PackageName:org.jruby.java.invokers
+QualifiedClassName:org.jruby.java.invokers.InstanceMethodInvoker
+ClassName:InstanceMethodInvoker
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/java/invokers/InstanceMethodInvoker.java
+InvokedMethodSig:static org.jruby.java.proxies.JavaProxy castJavaProxy(org.jruby.runtime.builtin.IRubyObject) throws org.jruby.exceptions.RaiseException
+%%%%%%%%%%
+AddedMethodInvo Line:100 InvoName:convertArg(context,proc,method,0)
+PackageName:org.jruby.java.invokers
+QualifiedClassName:org.jruby.java.invokers.RubyToJavaInvoker
+ClassName:RubyToJavaInvoker
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/java/invokers/RubyToJavaInvoker.java
+InvokedMethodSig:static java.lang.Object convertArg(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.javasupport.JavaMethod, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:method.invokeDirect(proxy.getObject(),cArg0)
+PackageName:org.jruby.javasupport
+QualifiedClassName:org.jruby.javasupport.JavaMethod
+ClassName:JavaMethod
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/javasupport/JavaMethod.java
+InvokedMethodSig:public org.jruby.runtime.builtin.IRubyObject invokeDirect(java.lang.Object, java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:101 InvoName:proxy.getObject()
+PackageName:org.jruby.java.proxies
+QualifiedClassName:org.jruby.java.proxies.JavaProxy
+ClassName:JavaProxy
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00931/src/org/jruby/java/proxies/JavaProxy.java
+InvokedMethodSig:public java.lang.Object getObject() 

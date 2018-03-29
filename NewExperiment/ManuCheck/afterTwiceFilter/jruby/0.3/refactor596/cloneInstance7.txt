@@ -1,0 +1,33 @@
+(startLine=930 endLine=960 srcPath=/home/sonia/NewExperiment/jrubyFilter/00508/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+    public Callback getFastOptMethod(String method) {
+        String mname = type.getName() + "Invoker" + method + "xx1";
+        String mnamePath = typePath + "Invoker" + method + "xx1";
+        synchronized (runtime.getJRubyClassLoader()) {
+            Class c = tryClass(mname);
+            try {
+                if (c == null) {
+                    String ret = getReturnName(method, new Class[] { IRubyObject[].class });
+                    ClassWriter cw = createCtorFast(mnamePath);
+                    MethodVisitor mv = startCallFast(cw);
+                    mv.visitVarInsn(ALOAD, 2);
+                    mv.visitTypeInsn(CHECKCAST, "[" + IRUB_ID);
+                    mv.visitTypeInsn(CHECKCAST, "[" + IRUB_ID);
+                    mv.visitMethodInsn(INVOKEVIRTUAL, typePath, method, "([" + IRUB_ID + ")L" + ret
+                            + ";");
+                    mv.visitInsn(ARETURN);
+                    mv.visitMaxs(2, 3);
+                    c = endCall(cw, mv, mname);
+                }
+                FastInvocationCallback ic = (FastInvocationCallback) c.newInstance();
+                ic.setArity(Arity.optional());
+                ic.setArgumentTypes(InvocationCallback.OPTIONAL_ARGS);
+                ic.setJavaName(method);
+                return ic;
+            } catch (IllegalArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+    }
+

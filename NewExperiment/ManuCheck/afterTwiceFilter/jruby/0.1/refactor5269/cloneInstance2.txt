@@ -1,0 +1,18 @@
+(startLine=1276 endLine=1291 srcPath=/home/sonia/NewExperiment/jrubyFilter/01538/core/src/main/java/org/jruby/truffle/nodes/core/FixnumNodes.java)
+            outer: for (int i = from; i <= to; i++) {
+                while (true) {
+                    try {
+                        yield(frame, block, i);
+                        continue outer;
+                    } catch (BreakException e) {
+                        breakProfile.enter();
+                        return e.getResult();
+                    } catch (NextException e) {
+                        nextProfile.enter();
+                        continue outer;
+                    } catch (RedoException e) {
+                        redoProfile.enter();
+                    }
+                }
+            }
+

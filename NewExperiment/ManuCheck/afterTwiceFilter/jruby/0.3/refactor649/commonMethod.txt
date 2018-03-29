@@ -1,0 +1,9 @@
+(startLine=170 endLine=176 srcPath=/home/sonia/NewExperiment/jrubyFilter/00608/src/org/jruby/util/ByteList.java)
+    public ByteList makeShared(int index, int len) {
+        ByteList shared = new ByteList(false);        
+        shared.bytes = bytes;
+        shared.realSize = len;        
+        shared.begin = begin + index;
+        return shared;
+    }
+

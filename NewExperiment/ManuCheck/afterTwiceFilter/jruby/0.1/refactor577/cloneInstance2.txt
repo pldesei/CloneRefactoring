@@ -1,0 +1,14 @@
+(startLine=2409 endLine=2420 srcPath=/home/sonia/NewExperiment/jrubyFilter/00493/src/org/jruby/RubyString.java)
+        while (pattern.search(toString, this, start) != -1) {
+            RubyMatchData md = (RubyMatchData) tc.getBackref();
+
+            block.yield(tc, md.getSize() == 1 ? md.group(0) : md.subseq(1, md.getSize()));
+
+            if (md.matchEndPosition() == md.matchStartPosition()) {
+                start++;
+            } else {
+                start = md.matchEndPosition();
+            }
+
+        }
+

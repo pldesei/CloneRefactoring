@@ -1,0 +1,13 @@
+(startLine=480 endLine=490 srcPath=/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java)
+    public void visitAll(Visitor visitor) {
+        int startGeneration = generation;
+        for (RubyHashEntry entry = head.nextAdded; entry != head; entry = entry.nextAdded) {
+            if (startGeneration != generation) {
+                startGeneration = generation;
+                entry = head.nextAdded;
+                if (entry == head) break;
+            }
+            if (entry.isLive()) visitor.visit(entry.key, entry.value);
+        }
+    }
+

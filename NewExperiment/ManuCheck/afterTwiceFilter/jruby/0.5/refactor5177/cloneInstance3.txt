@@ -1,0 +1,15 @@
+(startLine=229 endLine=241 srcPath=/home/sonia/NewExperiment/jrubyFilter/01229/src/org/jruby/RubyEnumerable.java)
+        try {
+            callEach(runtime, context, self, Arity.NO_ARGUMENTS, new BlockCallback() {
+                long i = len; // Atomic ?
+                public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                    IRubyObject larg = checkArgs(runtime, largs);
+                    synchronized (result) {
+                        result.append(larg);
+                        if (--i == 0) throw JumpException.SPECIAL_JUMP; 
+                    }
+                    return runtime.getNil();
+                }
+            });
+        } catch (JumpException.SpecialJump sj) {}
+

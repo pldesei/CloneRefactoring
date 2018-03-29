@@ -1,0 +1,17 @@
+(startLine=174 endLine=188 srcPath=/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java)
+    private static IRubyObject yieldWithTimeout(ThreadContext context,
+        final IRubyObject seconds, final Block block,
+        final Runnable runnable, final AtomicBoolean latch) throws RaiseException {
+
+        final long micros = (long) ( RubyTime.convertTimeInterval(context, seconds) * 1000000 );
+        Future timeoutFuture = null;
+        try {
+            timeoutFuture = timeoutExecutor.schedule(runnable, micros, TimeUnit.MICROSECONDS);
+            return block.yield(context, seconds);
+        }
+        finally {
+            if ( timeoutFuture != null ) killTimeoutThread(context, timeoutFuture, latch);
+            // ... when timeoutFuture == null there's likely an error thrown from schedule
+        }
+    }
+

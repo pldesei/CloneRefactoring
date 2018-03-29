@@ -1,0 +1,20 @@
+(startLine=536 endLine=553 srcPath=/home/sonia/NewExperiment/jrubyFilter/00485/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+        try {
+            if(c == null) {
+                String ret = getReturnName(method,new Class[]{arg1});
+                ClassWriter cw = createCtorFast(mnamePath);
+                MethodVisitor mv = startCallFast(cw);
+                mv.visitVarInsn(ALOAD, 2);
+                mv.visitInsn(ICONST_0);
+                mv.visitInsn(AALOAD);
+                mv.visitTypeInsn(CHECKCAST, cg.p(arg1));
+                mv.visitMethodInsn(INVOKEVIRTUAL, typePath, method, "("+cg.ci(arg1)+")L"+ret+";");
+                mv.visitInsn(ARETURN);
+                mv.visitMaxs(3, 3);
+                c = endCall(cw,mv,mname);
+            }
+            FastInvocationCallback ic = (FastInvocationCallback)c.newInstance();
+            ic.setArity(Arity.singleArgument());
+            return ic;
+        } catch(IllegalArgumentException e) {
+

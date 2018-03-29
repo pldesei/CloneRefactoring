@@ -1,0 +1,21 @@
+(startLine=2675 endLine=2693 srcPath=/home/sonia/NewExperiment/jrubyFilter/01217/src/org/jruby/compiler/ir/IRBuilder.java)
+    public Operand buildOpElementAsgnWithAnd(Node node, IRScope s) {
+        final OpElementAsgnNode opElementAsgnNode = (OpElementAsgnNode) node;
+        Operand array = build(opElementAsgnNode.getReceiverNode(), s);
+        Label    l     = s.getNewLabel();
+        Variable elt   = s.getNewTemporaryVariable();
+        Variable flag  = s.getNewTemporaryVariable();
+        List<Operand> args = setupCallArgs(opElementAsgnNode.getArgsNode(), s);
+        // SSS FIXME: Verify with Tom that I am not missing something here
+        assert args.size() == 1;
+        Operand  index = args.get(0);
+        s.addInstr(CallInstr.create(elt, new MethAddr("[]"), array, new Operand[] { index }, null));
+        s.addInstr(new IsTrueInstr(flag, elt));
+        s.addInstr(new BEQInstr(flag, BooleanLiteral.FALSE, l));
+        Operand value = build(opElementAsgnNode.getValueNode(), s);
+        s.addInstr(CallInstr.create(elt, new MethAddr("[]="), array, new Operand[] { index, value }, null));
+        s.addInstr(new CopyInstr(elt, value));
+        s.addInstr(new LABEL_Instr(l));
+        return elt;
+    }
+

@@ -1,0 +1,37 @@
+(startLine=2034 endLine=2068 srcPath=/home/sonia/NewExperiment/jrubyFilter/00855/src/org/jruby/RubyIO.java)
+    private IRubyObject getPartial(ThreadContext context, IRubyObject[] args, boolean isNonblocking) {
+        Ruby runtime = context.getRuntime();
+
+        // Length to read
+        int length = RubyNumeric.fix2int(args[0]);
+        if (length < 0) throw runtime.newArgumentError("negative length " + length + " given");
+
+        // String/Buffer to read it into
+        IRubyObject stringArg = args.length > 1 ? args[1] : RubyString.newEmptyString(runtime);
+        RubyString string = stringArg.isNil() ? RubyString.newEmptyString(runtime) : stringArg.convertToString();
+        
+        openFile.checkClosed(runtime);
+
+        if (!(openFile.getMainStream() instanceof ChannelStream)) { // cryptic for the uninitiated...
+            throw runtime.newNotImplementedError("readpartial only works with Nio based handlers");
+        }
+        
+        try {
+            ChannelStream stream = (ChannelStream) openFile.getMainStream();
+            ByteList buf = isNonblocking ? stream.readnonblock(length) : stream.readpartial(length);
+            boolean empty = buf == null || buf.length() == 0;
+
+            string.view(empty ? ByteList.EMPTY_BYTELIST : buf);
+
+            if (stream.feof() && empty) return runtime.getNil();
+
+            return string;
+        } catch (BadDescriptorException e) {
+            throw runtime.newErrnoEBADFError();
+        } catch (EOFException e) {
+            throw runtime.newEOFError(e.getMessage());
+        } catch (IOException e) {
+            throw runtime.newIOError(e.getMessage());
+        }
+    }
+

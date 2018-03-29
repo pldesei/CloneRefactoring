@@ -1,0 +1,10 @@
+(startLine=473 endLine=480 srcPath=/home/sonia/NewExperiment/jrubyFilter/00233/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                    support.checkExpression(((INode)yyVals[0+yyTop]));
+                    if (((INode)yyVals[-2+yyTop]) != null && ((INode)yyVals[-2+yyTop]) instanceof BeginNode) {
+                        yyVal = new UntilNode(getPosition(), support.getConditionNode(((INode)yyVals[0+yyTop])), ((BeginNode)yyVals[-2+yyTop]).getBodyNode());
+                    } else {
+                        yyVal = new UntilNode(getPosition(), support.getConditionNode(((INode)yyVals[0+yyTop])), ((INode)yyVals[-2+yyTop]));
+                    }
+                }
+

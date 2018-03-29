@@ -1,0 +1,20 @@
+(startLine=895 endLine=912 srcPath=/home/sonia/NewExperiment/jrubyFilter/01048/src/org/jruby/javasupport/Java.java)
+    private static void memoizePackageOrClass(RubyModule parentPackage, String name, final IRubyObject value) {
+        RubyClass singleton = parentPackage.getSingletonClass();
+        singleton.addMethod(name, new org.jruby.internal.runtime.methods.JavaMethod(singleton, Visibility.PUBLIC) {
+            public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, IRubyObject[] args, Block block) {
+                Arity.checkArgumentCount(context.getRuntime(), args, 0, 0);
+                return call(context, self, clazz, name);
+            }
+
+            public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name) {
+                return value;
+            }
+
+            @Override
+            public Arity getArity() {
+                return Arity.noArguments();
+            }
+        });
+    }
+

@@ -1,0 +1,8 @@
+(startLine=81 endLine=86 srcPath=/home/sonia/NewExperiment/jrubyFilter/00065/org/jruby/RubyBignum.java)
+    private static RubyInteger bigNorm(Ruby ruby, BigInteger bi) {
+        if (bi.compareTo(LONG_MIN) < 0 || bi.compareTo(LONG_MAX) > 0) {
+            return m_newBignum(ruby, bi);
+        }
+        return RubyFixnum.m_newFixnum(ruby, bi.longValue());
+    }
+

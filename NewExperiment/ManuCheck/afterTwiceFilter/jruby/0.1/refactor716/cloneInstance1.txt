@@ -1,0 +1,12 @@
+(startLine=1544 endLine=1553 srcPath=/home/sonia/NewExperiment/jrubyFilter/00815/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+                ((lex_state == LexState.EXPR_ARG || lex_state == LexState.EXPR_CMDARG) && spaceSeen && !Character.isWhitespace(c))) {
+            if (lex_state == LexState.EXPR_ARG || lex_state == LexState.EXPR_CMDARG) arg_ambiguous();
+            lex_state = LexState.EXPR_BEG;
+            src.unread(c);
+            yaccValue = new Token("-", getPosition());
+            if (Character.isDigit(c)) {
+                return Tokens.tUMINUS_NUM;
+            }
+            return Tokens.tUMINUS;
+        }
+

@@ -1,0 +1,17 @@
+(startLine=161 endLine=175 srcPath=/home/sonia/NewExperiment/jrubyFilter/01066/src/org/jruby/javasupport/JavaObject.java)
+    public IRubyObject op_equal(IRubyObject other) {
+        if (!(other instanceof JavaObject)) {
+            other = (JavaObject)other.dataGetStruct();
+            if (!(other instanceof JavaObject)) {
+                return getRuntime().getFalse();
+            }
+        }
+
+        if (getValue() == null && ((JavaObject) other).getValue() == null) {
+            return getRuntime().getTrue();
+        }
+
+        boolean isEqual = getValue().equals(((JavaObject) other).getValue());
+        return isEqual ? getRuntime().getTrue() : getRuntime().getFalse();
+    }
+

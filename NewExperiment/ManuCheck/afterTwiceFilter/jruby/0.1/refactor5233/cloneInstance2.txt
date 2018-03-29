@@ -1,0 +1,15 @@
+(startLine=104 endLine=116 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/HeredocTerm.java)
+            if (c == '#') {
+                switch (c = src.read()) {
+                case '$':
+                case '@':
+                    src.unread(c);
+                    lexer.setValue(new Token("#", lexer.getPosition()));
+                    return Tokens.tSTRING_DVAR;
+                case '{':
+                    lexer.setValue(new Token("#{", lexer.getPosition()));
+                    return Tokens.tSTRING_DBEG;
+                }
+                str.append('#');
+            }
+

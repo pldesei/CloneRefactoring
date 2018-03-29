@@ -1,0 +1,13 @@
+(startLine=1234 endLine=1244 srcPath=/home/sonia/NewExperiment/jrubyFilter/01370/src/org/jruby/RubyModule.java)
+    private DynamicMethod searchForAliasMethod(Ruby runtime, String name) {
+        // JRUBY-2435: Aliasing eval and other "special" methods should display a warning
+        // We warn because we treat certain method names as "special" for purposes of
+        // optimization. Hopefully this will be enough to convince people not to alias
+        // them.
+        if (SCOPE_CAPTURING_METHODS.contains(name)) {
+            runtime.getWarnings().warn("`" + name + "' should not be aliased");
+        }  
+      
+        return deepMethodSearch(name, runtime);
+    }
+

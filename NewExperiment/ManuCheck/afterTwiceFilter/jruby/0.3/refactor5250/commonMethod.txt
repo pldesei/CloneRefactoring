@@ -1,0 +1,7 @@
+(startLine=487 endLine=491 srcPath=/home/sonia/NewExperiment/jrubyFilter/01503/core/src/main/java/org/jruby/ir/dataflow/analyses/UnboxableOpsAnalysisNode.java)
+    private void markLocalVariables(Collection<Variable> varsToBox, Set<Variable> varsToCheck) {
+        for (Variable v: varsToCheck) {
+            if (v instanceof LocalVariable) varsToBox.add(v);
+        }
+    }
+

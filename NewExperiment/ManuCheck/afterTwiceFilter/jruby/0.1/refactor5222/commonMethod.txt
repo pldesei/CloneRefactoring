@@ -1,0 +1,11 @@
+(startLine=424 endLine=432 srcPath=/home/sonia/NewExperiment/jrubyFilter/01455/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    public void pushback(int c) {
+        if (c == -1) return;
+        
+        lex_p--;
+        
+        if (lex_p > lex_pbeg && p(lex_p) == '\n' && p(lex_p-1) == '\r') {
+            lex_p--;
+        }
+    }
+

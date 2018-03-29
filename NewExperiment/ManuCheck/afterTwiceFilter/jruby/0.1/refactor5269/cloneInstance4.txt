@@ -1,0 +1,18 @@
+(startLine=69 endLine=84 srcPath=/home/sonia/NewExperiment/jrubyFilter/01538/core/src/main/java/org/jruby/truffle/nodes/core/RangeNodes.java)
+            outer: for (int n = range.getBegin(); n < range.getExclusiveEnd(); n++) {
+                while (true) {
+                    try {
+                        yield(frame, block, n);
+                        continue outer;
+                    } catch (BreakException e) {
+                        breakProfile.enter();
+                        return e.getResult();
+                    } catch (NextException e) {
+                        nextProfile.enter();
+                        continue outer;
+                    } catch (RedoException e) {
+                        redoProfile.enter();
+                    }
+                }
+            }
+

@@ -1,0 +1,16 @@
+(startLine=57 endLine=70 srcPath=/home/sonia/NewExperiment/jrubyFilter/01129/src/org/jruby/compiler/ir/dataflow/analyses/BindingLoadPlacementProblem.java)
+    public boolean scopeUsesVariable(Variable v) { 
+        if (_usedVars.contains(v)) {
+            return true;
+        }
+        else {
+            for (IRClosure cl: getCFG().getScope().getClosures()) {
+                BindingLoadPlacementProblem nestedProblem = (BindingLoadPlacementProblem)cl.getCFG().getDataFlowSolution(DataFlowConstants.BLP_NAME);
+                if (nestedProblem.scopeUsesVariable(v)) 
+                    return true;
+            }
+
+            return false;
+        }
+    }
+

@@ -1,0 +1,13 @@
+(startLine=118 endLine=128 srcPath=/home/sonia/NewExperiment/jrubyFilter/00422/src/org/jruby/ext/openssl/Digest.java)
+    public static IRubyObject s_hexdigest(IRubyObject recv, IRubyObject str, IRubyObject data) {
+        String name = str.toString();
+        try {
+            MessageDigest md = MessageDigest.getInstance(transformDigest(name));
+            return recv.getRuntime().newString(Utils.toHex(md.digest(data.toString().getBytes("PLAIN"))));
+        } catch(NoSuchAlgorithmException e) {
+            throw recv.getRuntime().newNotImplementedError("Unsupported digest algorithm (" + name + ")");
+        } catch(java.io.UnsupportedEncodingException e) {
+            throw recv.getRuntime().newNotImplementedError("Unsupported digest algorithm (" + name + ")");
+        }
+    }
+

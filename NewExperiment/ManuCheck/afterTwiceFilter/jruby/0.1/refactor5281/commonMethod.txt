@@ -1,0 +1,5 @@
+(startLine=784 endLine=786 srcPath=/home/sonia/NewExperiment/jrubyFilter/01561/core/src/main/java/org/jruby/ir/runtime/IRRuntimeHelpers.java)
+    public static IRubyObject instanceSuperSplatArgs(ThreadContext context, IRubyObject self, String methodName, RubyClass definingModule, IRubyObject[] args, Block block, boolean[] splatMap) {
+        return instanceSuper(context, self, methodName, definingModule, splatArguments(args, splatMap), block);
+    }
+

@@ -1,0 +1,13 @@
+(startLine=216 endLine=226 srcPath=/home/sonia/NewExperiment/jrubyFilter/01759/truffle/src/main/java/org/jruby/truffle/core/queue/SizedQueueNodes.java)
+        public Object popNonBlock(DynamicObject self, boolean nonBlocking) {
+            final BlockingQueue<Object> queue = Layouts.SIZED_QUEUE.getQueue(self);
+
+            final Object value = doPoll(queue);
+            if (value == null) {
+                CompilerDirectives.transferToInterpreter();
+                throw new RaiseException(getContext().getCoreLibrary().threadError("queue empty", this));
+            }
+
+            return value;
+        }
+

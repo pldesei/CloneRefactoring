@@ -1,0 +1,56 @@
+(startLine=228 endLine=281 srcPath=/home/sonia/NewExperiment/jrubyFilter/00234/src/org/jruby/parser/ParserSupport.java)
+    public INode assignable(ISourcePosition position, Object id, INode value) {
+        checkExpression(value);
+        
+        if (id instanceof SelfNode) {
+            yyerror("Can't change the value of self"); 
+        } else if (id instanceof NilNode) {
+            yyerror("Can't assign to nil");
+        } else if (id instanceof TrueNode) {
+    	    yyerror("Can't assign to true");
+        } else if (id instanceof FalseNode) {
+    	    yyerror("Can't assign to false");
+        } 
+        // TODO: Support FILE and LINE by making nodes of them.
+        /*else if (id == k__FILE__) {
+    	    yyerror("Can't assign to __FILE__");
+        } else if (id == k__LINE__) {
+            yyerror("Can't assign to __LINE__");
+        } */else {
+            String name = (String) id;
+            if (IdUtil.isLocal(name)) {
+                // TODO: Add curried dvar?
+                /*if (rb_dvar_curr(id)) {
+                    return NEW_DASGN_CURR(id, value);
+                } else*/
+                if (blockNames.isDefined(name)) {
+                    return new DAsgnNode(position, name, value);
+                } else if (getLocalNames().isLocalRegistered(name) || !blockNames.isInBlock()) {
+                    return new LocalAsgnNode(position, name, getLocalNames().getLocalIndex(name), value);
+                } else {
+                    blockNames.add(name);
+                    // TODO: Should be curried
+                    return new DAsgnNode(position, name, value);
+                }
+            } else if (IdUtil.isGlobal(name)) {
+                return new GlobalAsgnNode(position, name, value);
+            } else if (IdUtil.isInstanceVariable(name)) {
+                return new InstAsgnNode(position, name, value);
+            } else if (IdUtil.isConstant(name)) {
+                if (isInDef() || isInSingle()) {
+                    yyerror("dynamic constant assignment");
+                }
+                return new ConstDeclNode(position, name, value);
+            } else if (IdUtil.isClassVariable(name)) {
+                if (isInDef() || isInSingle()) {
+                    return new ClassVarAsgnNode(position, name, value);
+                }
+                return new ClassVarDeclNode(position, name, value);
+            } else {
+                errorHandler.handleError(IErrors.COMPILE_ERROR, position, "identifier " + name + " is not valid"); 
+            }
+        }
+        
+        return null;
+    }
+

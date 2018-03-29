@@ -1,0 +1,27 @@
+(startLine=1692 endLine=1716 srcPath=/home/sonia/NewExperiment/jrubyFilter/00545/src/org/jruby/compiler/NodeCompilerFactory.java)
+    private static ClosureCallback getBlock(Node node) {
+        if (node == null) return null;
+        
+        switch (node.nodeId) {
+        case ITERNODE:
+            final IterNode iterNode = (IterNode) node;
+
+            return new ClosureCallback() {
+                public void compile(MethodCompiler context) {
+                    NodeCompilerFactory.compile(iterNode, context);
+                }
+            };
+        case BLOCKPASSNODE:
+            final BlockPassNode blockPassNode = (BlockPassNode) node;
+
+            return new ClosureCallback() {
+                public void compile(MethodCompiler context) {
+                    NodeCompilerFactory.compile(blockPassNode.getBodyNode(), context);
+                    context.unwrapPassedBlock();
+                }
+            };
+        default:
+            throw new NotCompilableException("ERROR: Encountered a method with a non-block, non-blockpass iter node at: " + node);
+        }
+    }
+

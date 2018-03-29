@@ -1,0 +1,20 @@
+(startLine=3354 endLine=3371 srcPath=/home/sonia/NewExperiment/jrubyFilter/00880/src/org/jruby/RubyString.java)
+    public IRubyObject op_aset(ThreadContext context, IRubyObject arg0, IRubyObject arg1, IRubyObject arg2) {
+        if (arg0 instanceof RubyRegexp) {
+            subpatSet(context, (RubyRegexp)arg0, RubyNumeric.fix2int(arg1), arg2);
+        } else {
+            RubyString repl = arg2.convertToString();
+            int beg = RubyNumeric.fix2int(arg0);
+            int len = RubyNumeric.fix2int(arg1);
+            if (len < 0) throw context.getRuntime().newIndexError("negative length");
+            int strLen = value.realSize;
+            if (beg < 0) beg += strLen;
+
+            if (beg < 0 || (beg > 0 && beg > strLen)) throw context.getRuntime().newIndexError("string index out of bounds");
+            if (beg + len > strLen) len = strLen - beg;
+
+            replaceInternal(beg, len, repl);
+        }
+        return arg2;
+    }
+

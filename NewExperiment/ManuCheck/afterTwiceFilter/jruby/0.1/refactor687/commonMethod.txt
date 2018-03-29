@@ -1,0 +1,67 @@
+(startLine=550 endLine=614 srcPath=/home/sonia/NewExperiment/jrubyFilter/00738/src/org/jruby/javasupport/JavaClass.java)
+    private static Object convertArgumentToType(ThreadContext context, IRubyObject arg, Class target) {
+        Ruby runtime = context.getRuntime();
+        Object intermediate;
+        if (arg.dataGetStruct() instanceof JavaObject) {
+            intermediate = ((JavaObject)arg.dataGetStruct()).getValue();
+        } else {
+            intermediate = primitive_to_java(context, arg);
+        }
+        
+        if (intermediate == null) {
+          if(target.isPrimitive()) {
+            throw runtime.newTypeError("primitives do not accept null");
+          } else {
+            return null;
+          }
+        }
+        
+        if (intermediate instanceof JavaObject) {
+            intermediate = ((JavaObject) intermediate).getValue();
+            if (intermediate == null) {
+                return null;
+            }
+        }
+        Class<?> type = primitiveToWrapper(target);
+        if (type == Void.class) {
+            return null;
+        }
+        if (intermediate instanceof Number) {
+            final Number number = (Number) intermediate;
+            if (type == Long.class) {
+                return new Long(number.longValue());
+            } else if (type == Integer.class) {
+                return new Integer(number.intValue());
+            } else if (type == Byte.class) {
+                return new Byte(number.byteValue());
+            } else if (type == Character.class) {
+                return new Character((char) number.intValue());
+            } else if (type == Double.class) {
+                return new Double(number.doubleValue());
+            } else if (type == Float.class) {
+                return new Float(number.floatValue());
+            } else if (type == Short.class) {
+                return new Short(number.shortValue());
+            }
+        }
+        if (isDuckTypeConvertable(intermediate.getClass(), target)) {
+            RubyObject rubyObject = (RubyObject) intermediate;
+            if (!rubyObject.respondsTo("java_object")) {
+                IRubyObject javaUtilities = runtime.getJavaSupport().getJavaUtilitiesModule();
+                IRubyObject javaInterfaceModule = Java.get_interface_module(javaUtilities, JavaClass.get(runtime, target));
+                if (!((RubyModule)javaInterfaceModule).isInstance(rubyObject)) {
+                    rubyObject.extend(new IRubyObject[] {javaInterfaceModule});
+                }
+                
+                if (rubyObject instanceof RubyProc) {
+                    // Proc implementing an interface, pull in the catch-all code that lets the proc get invoked
+                    // no matter what method is called on the interface
+                    rubyObject.instance_eval(context, runtime.newString("extend Proc::CatchAll"), Block.NULL_BLOCK);
+                }
+                JavaObject jo = (JavaObject) rubyObject.instance_eval(context, runtime.newString("send :__jcreate_meta!"), Block.NULL_BLOCK);
+                return jo.getValue();
+            }
+        }
+        return intermediate;
+    }
+

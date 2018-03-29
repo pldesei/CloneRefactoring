@@ -1,0 +1,36 @@
+(startLine=606 endLine=639 srcPath=/home/sonia/NewExperiment/jrubyFilter/01182/src/org/jruby/runtime/invokedynamic/InvokeDynamicSupport.java)
+    /**
+     * Update the given call site using the new target, wrapping with appropriate
+     * guard and argument-juggling logic. Return a handle suitable for invoking
+     * with the site's original method type.
+     */
+    private static MethodHandle updateInvocationTarget(MethodHandle target, JRubyCallSite site, RubyModule selfClass, String name, CacheEntry entry, boolean block, int arity) {
+        if (target == null || ++site.failCount > RubyInstanceConfig.MAX_FAIL_COUNT) {
+            site.setTarget(target = createFail((block?FAILS_B:FAILS)[arity], site, name, entry.method));
+        } else {
+            target = postProcess(site, target);
+            
+            boolean curry;
+            MethodHandle fallback;
+            MethodHandle gwt;
+            if (site.getTarget() != null) {
+                fallback = site.getTarget();
+                curry = false;
+            } else {
+                fallback = (block?FALLBACKS_B:FALLBACKS)[arity];
+                curry = true;
+            }
+            gwt = createGWT(selfClass, (block?TESTS_B:TESTS)[arity], target, fallback, entry, site, curry);
+            
+            if (RubyInstanceConfig.INVOKEDYNAMIC_INVOCATION_SWITCHPOINT) {
+                // wrap in switchpoint for mutation invalidation
+                SwitchPoint switchPoint = (SwitchPoint)selfClass.getInvalidator().getData();
+                gwt = switchPoint.guardWithTest(gwt, fallback);
+            }
+            
+            site.setTarget(gwt);
+            
+        }
+        return target;
+    }
+

@@ -1,0 +1,10 @@
+(startLine=2573 endLine=2580 srcPath=/home/sonia/NewExperiment/jrubyFilter/00494/src/org/jruby/RubyString.java)
+    private final RubyString substr(Ruby runtime, String str, int beg, int len, boolean utf8) {
+        if (utf8) {
+            if (len == 0) return newEmptyString(runtime, getMetaClass());
+            return new RubyString(runtime, getMetaClass(), toUTF(str.substring(beg, beg + len)));
+        } else {
+            return makeShared(beg, len);
+        }
+    }
+

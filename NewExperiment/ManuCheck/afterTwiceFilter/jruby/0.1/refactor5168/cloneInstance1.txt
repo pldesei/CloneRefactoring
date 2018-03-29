@@ -1,0 +1,16 @@
+(startLine=109 endLine=122 srcPath=/home/sonia/NewExperiment/jrubyFilter/01188/src/org/jruby/java/proxies/MapJavaProxy.java)
+        public void internalPut(final IRubyObject key, final IRubyObject value, final boolean checkForExisting) {
+            if (checkForExisting) {
+                Set<Map.Entry> entries = ((Map) ((JavaProxy)receiver).getObject()).entrySet();
+                for (Map.Entry entry : entries) {
+                    IRubyObject rubyfiedKey = JavaUtil.convertJavaToUsableRubyObject(getRuntime(), entry.getKey());
+                    if (key.eql(rubyfiedKey)) {
+                        entry.setValue(value.toJava(Object.class));
+                        return;
+                    }
+                }
+            }
+            ((Map) ((JavaProxy)receiver).getObject()).put(key.toJava(Object.class), value.toJava(Object.class));
+            size = ((Map) ((JavaProxy)receiver).getObject()).size();
+        }
+

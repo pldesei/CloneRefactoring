@@ -1,0 +1,27 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00599
+predFragLineRange:907-922
+predMethodLineRange:903-922
+nextLineRange:885-914
+predStrMethodInvoNames:
+[getRuntime, getCurrentContext, preIter, checkIter, isTrue, equalInternal, postIter, getNil, getRuntime]
+%%%%%%%%%%
+AddedMethodInvo Line:890 InvoName:internalIndex(expected)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyHash
+ClassName:RubyHash
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java
+InvokedMethodSig:private org.jruby.runtime.builtin.IRubyObject internalIndex(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:903 InvoName:visitAll(new Visitor(){
+  public void visit(  IRubyObject key,  IRubyObject value){
+    if (equalInternal(context,value,expected).isTrue()) {
+      throw new FoundKey(key);
+    }
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyHash
+ClassName:RubyHash
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java
+InvokedMethodSig:public void visitAll(org.jruby.RubyHash.Visitor) 

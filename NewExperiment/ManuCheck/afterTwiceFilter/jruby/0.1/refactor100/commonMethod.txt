@@ -1,0 +1,12 @@
+(startLine=397 endLine=406 srcPath=/home/sonia/NewExperiment/jrubyFilter/00299/src/org/jruby/runtime/ThreadContext.java)
+    public RubyModule pushRubyClass(RubyModule currentModule) {
+        RubyModule previousModule = null;
+        if (!parentStack.isEmpty()) {
+            previousModule = (RubyModule)parentStack.peek();
+        }
+        
+        parentStack.push(currentModule);
+        
+        return previousModule;
+    }
+

@@ -1,0 +1,6 @@
+(startLine=1183 endLine=1186 srcPath=/home/sonia/NewExperiment/jrubyFilter/00780/src/org/jruby/runtime/ThreadContext.java)
+    public Frame preYieldNoScope(Binding binding, RubyModule klass) {
+        pushRubyClass((klass != null) ? klass : binding.getKlass());
+        return pushFrameForBlock(binding);
+    }
+

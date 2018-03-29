@@ -1,0 +1,9 @@
+(startLine=185 endLine=191 srcPath=/home/sonia/NewExperiment/jrubyFilter/00110/org/jruby/javasupport/JavaUtil.java)
+    public static RubyObject[] convertJavaArrayToRuby(Ruby ruby, Object[] objects) {
+        RubyObject[] rubyObjects = new RubyObject[objects.length];
+        for (int i = 0; i < objects.length; i++) {
+            rubyObjects[i] = convertJavaToRuby(ruby, objects[i]);
+        }
+        return rubyObjects;
+    }
+

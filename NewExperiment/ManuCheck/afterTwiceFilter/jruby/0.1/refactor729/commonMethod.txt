@@ -1,0 +1,11 @@
+(startLine=409 endLine=417 srcPath=/home/sonia/NewExperiment/jrubyFilter/00827/src/org/jruby/runtime/builtin/InstanceVariableTable.java)
+    @SuppressWarnings("unchecked")
+    public Map getMap(Object object, final Map map) {
+        visit(new TryLockVisitor(object) {
+            public void visit(String name, Object value) {
+                map.put(name, value);
+            }
+        });
+        return map;
+    }
+

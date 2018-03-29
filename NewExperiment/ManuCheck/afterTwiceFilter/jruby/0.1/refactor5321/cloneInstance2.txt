@@ -1,0 +1,18 @@
+(startLine=364 endLine=379 srcPath=/home/sonia/NewExperiment/jrubyFilter/01685/core/src/main/java/org/jruby/lexer/yacc/StringTerm.java)
+            } else if (!lexer.isASCII(c)) {
+nonascii:       hasNonAscii = true; // Label for comparison with MRI only.
+
+                if (buffer.getEncoding() != enc[0]) {
+                    mixedEscape(lexer, buffer.getEncoding(), enc[0]);
+                    continue;
+                }
+
+                if (!lexer.tokadd_mbchar(c, buffer)) {
+                    throw new SyntaxException(PID.INVALID_MULTIBYTE_CHAR, lexer.getPosition(),
+                            null, "invalid multibyte char (" + enc[0] + ")");
+                }
+
+                continue;
+                // end of goto non_ascii
+            } else if (qwords && Character.isWhitespace(c)) {
+

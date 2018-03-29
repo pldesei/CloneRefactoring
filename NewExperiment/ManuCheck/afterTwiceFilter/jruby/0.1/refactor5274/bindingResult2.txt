@@ -1,0 +1,125 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01545
+predFragLineRange:2098-2116
+predMethodLineRange:2094-2123
+nextLineRange:1853-1894
+predStrMethodInvoNames:
+[getOpenFileChecked, getPipeStream, isWritable, newIOError, getPipeStream, close, fclose, getMainStreamSafe, setMode, getMode, setMainStream, getPipeStream, setPipeStream, newErrnoEBADFError, newIOErrorFromException]
+%%%%%%%%%%
+AddedMethodInvo Line:1860 InvoName:fptr.socketChannel()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.nio.channels.SocketChannel socketChannel() 
+%%%%%%%%%%
+AddedMethodInvo Line:1862 InvoName:fptr.socketChannel().socket().shutdownInput()
+PackageName:java.net
+QualifiedClassName:java.net.Socket
+ClassName:Socket
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/java/net/Socket.java
+InvokedMethodSig:public void shutdownInput() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1862 InvoName:fptr.socketChannel().socket()
+PackageName:java.nio.channels
+QualifiedClassName:java.nio.channels.SocketChannel
+ClassName:SocketChannel
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/java/nio/channels/SocketChannel.java
+InvokedMethodSig:public abstract java.net.Socket socket() 
+%%%%%%%%%%
+AddedMethodInvo Line:1862 InvoName:fptr.socketChannel()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.nio.channels.SocketChannel socketChannel() 
+%%%%%%%%%%
+AddedMethodInvo Line:1864 InvoName:runtime.newErrnoFromErrno(Helpers.errnoFromException(ioe),fptr.getPath())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newErrnoFromErrno(Errno, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1864 InvoName:Helpers.errnoFromException(ioe)
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Helpers
+ClassName:Helpers
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/runtime/Helpers.java
+InvokedMethodSig:public static Errno errnoFromException(java.lang.Throwable) 
+%%%%%%%%%%
+AddedMethodInvo Line:1864 InvoName:fptr.getPath()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.lang.String getPath() 
+%%%%%%%%%%
+AddedMethodInvo Line:1868 InvoName:rbIoClose(runtime)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:protected org.jruby.runtime.builtin.IRubyObject rbIoClose(org.jruby.Ruby) 
+%%%%%%%%%%
+AddedMethodInvo Line:1872 InvoName:GetWriteIO()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:public org.jruby.RubyIO GetWriteIO() 
+%%%%%%%%%%
+AddedMethodInvo Line:1876 InvoName:wfptr.setProcess(fptr.getProcess())
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void setProcess(java.lang.Process) 
+%%%%%%%%%%
+AddedMethodInvo Line:1876 InvoName:fptr.getProcess()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.lang.Process getProcess() 
+%%%%%%%%%%
+AddedMethodInvo Line:1877 InvoName:wfptr.setPid(fptr.getPid())
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void setPid(long) 
+%%%%%%%%%%
+AddedMethodInvo Line:1877 InvoName:fptr.getPid()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public long getPid() 
+%%%%%%%%%%
+AddedMethodInvo Line:1878 InvoName:fptr.setProcess(null)
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void setProcess(java.lang.Process) 
+%%%%%%%%%%
+AddedMethodInvo Line:1879 InvoName:fptr.setPid(-1)
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void setPid(long) 
+%%%%%%%%%%
+AddedMethodInvo Line:1885 InvoName:fptr.cleanup(runtime,false)
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public void cleanup(org.jruby.Ruby, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:1893 InvoName:rbIoClose(runtime)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:protected org.jruby.runtime.builtin.IRubyObject rbIoClose(org.jruby.Ruby) 

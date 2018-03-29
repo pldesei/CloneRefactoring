@@ -1,0 +1,12 @@
+(startLine=345 endLine=354 srcPath=/home/sonia/NewExperiment/jrubyFilter/00174/org/jruby/RubyModule.java)
+        while (tmp != null) {
+            if (tmp.getInstanceVariables() != null && tmp.getInstanceVariables().get(name) != null) {
+                if (tmp.isTaint() && getRuntime().getSafeLevel() >= 4) {
+                    throw new SecurityError(getRuntime(), "Insecure: can't modify class variable");
+                }
+                tmp.getInstanceVariables().put(name, value);
+                return;
+            }
+            tmp = tmp.getSuperClass();
+        }
+

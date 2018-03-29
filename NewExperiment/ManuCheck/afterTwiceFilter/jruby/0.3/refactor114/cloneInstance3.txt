@@ -1,0 +1,12 @@
+(startLine=227 endLine=236 srcPath=/home/sonia/NewExperiment/jrubyFilter/00392/src/org/jruby/RubyBigDecimal.java)
+    public IRubyObject sub(IRubyObject[] args) {
+        // TODO: better implementation
+        RubyBigDecimal val = null;
+        if(args[0] instanceof RubyBigDecimal) {
+            val = (RubyBigDecimal)args[0];
+        } else {
+            val = (RubyBigDecimal)args[0].callMethod(getRuntime().getCurrentContext(), "to_d");
+        }
+        return new RubyBigDecimal(getRuntime(),value.subtract(val.value));
+    }
+

@@ -1,0 +1,21 @@
+(startLine=217 endLine=235 srcPath=/home/sonia/NewExperiment/jrubyFilter/00980/src/org/jruby/javasupport/proxy/JavaProxyConstructor.java)
+            public Object invoke(Object proxy, JavaProxyMethod m, Object[] nargs) throws Throwable {
+                String name = m.getName();
+                DynamicMethod method = self.getMetaClass().searchMethod(name);
+                int v = method.getArity().getValue();
+                IRubyObject[] newArgs = new IRubyObject[nargs.length];
+                for (int i = nargs.length; --i >= 0; ) {
+                    newArgs[i] = Java.java_to_ruby(
+                            javaUtilities,
+                            JavaObject.wrap(runtime, nargs[i]),
+                            Block.NULL_BLOCK);
+                }
+                
+                if (v < 0 || v == (newArgs.length)) {
+                    return RuntimeHelpers.invoke(runtime.getCurrentContext(), self, name, newArgs).toJava(m.getReturnType());
+                } else {
+                    RubyClass superClass = self.getMetaClass().getSuperClass();
+                    return RuntimeHelpers.invokeAs(runtime.getCurrentContext(), superClass, self, name, newArgs, Block.NULL_BLOCK).toJava(m.getReturnType());
+                }
+            }
+

@@ -1,0 +1,35 @@
+(startLine=612 endLine=644 srcPath=/home/sonia/NewExperiment/jrubyFilter/00508/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+    public Callback getOptMethod(String method) {
+        String mname = type.getName() + "Invoker" + method + "xx1";
+        String mnamePath = typePath + "Invoker" + method + "xx1";
+        synchronized (runtime.getJRubyClassLoader()) {
+            Class c = tryClass(mname);
+            try {
+                if (c == null) {
+                    String ret = getReturnName(method, new Class[] { IRubyObject[].class,
+                            Block.class });
+                    ClassWriter cw = createCtor(mnamePath);
+                    MethodVisitor mv = startCall(cw);
+                    mv.visitVarInsn(ALOAD, 2);
+                    mv.visitTypeInsn(CHECKCAST, "[" + IRUB_ID);
+                    mv.visitTypeInsn(CHECKCAST, "[" + IRUB_ID);
+                    mv.visitVarInsn(ALOAD, 3);
+                    mv.visitMethodInsn(INVOKEVIRTUAL, typePath, method, "([" + IRUB_ID + BLOCK_ID
+                            + ")L" + ret + ";");
+                    mv.visitInsn(ARETURN);
+                    mv.visitMaxs(2, 3);
+                    c = endCall(cw, mv, mname);
+                }
+                InvocationCallback ic = (InvocationCallback) c.newInstance();
+                ic.setArity(Arity.optional());
+                ic.setArgumentTypes(InvocationCallback.OPTIONAL_ARGS);
+                ic.setJavaName(method);
+                return ic;
+            } catch (IllegalArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+    }
+

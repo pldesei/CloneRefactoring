@@ -1,0 +1,22 @@
+(startLine=925 endLine=944 srcPath=/home/sonia/NewExperiment/jrubyFilter/00810/src/org/jruby/javasupport/JavaUtil.java)
+    public static Object coerceFixnumToType(RubyFixnum fixnum, Class target) {
+        if (target.isPrimitive()) {
+            if (target == Integer.TYPE) {
+                return Integer.valueOf((int)fixnum.getLongValue());
+            } else if (target == Double.TYPE) {
+                return Double.valueOf(fixnum.getLongValue());
+            } else if (target == Byte.TYPE) {
+                return Byte.valueOf((byte)fixnum.getLongValue());
+            } else if (target == Character.TYPE) {
+                return Character.valueOf((char)fixnum.getLongValue());
+            } else if (target == Float.TYPE) {
+                return Float.valueOf((float)fixnum.getLongValue());
+            } else if (target == Long.TYPE) {
+                return Long.valueOf(fixnum.getLongValue());
+            } else if (target == Short.TYPE) {
+                return Short.valueOf((short)fixnum.getLongValue());
+            }
+        }
+        return Long.valueOf(fixnum.getLongValue());
+    }
+

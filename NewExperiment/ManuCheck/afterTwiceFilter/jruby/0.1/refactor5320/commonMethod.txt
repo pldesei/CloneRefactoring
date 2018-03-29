@@ -1,0 +1,32 @@
+(startLine=4736 endLine=4765 srcPath=/home/sonia/NewExperiment/jrubyFilter/01667/core/src/main/java/org/jruby/Ruby.java)
+    /**
+     * Given a Ruby string, cache a frozen, duplicated copy of it, or find an
+     * existing copy already prepared. This is used to reduce in-memory
+     * duplication of pre-frozen or known-frozen strings.
+     *
+     * Note that this cache does some sync against the Ruby instance. This
+     * could cause contention under heavy concurrent load, so a reexamination
+     * of this design might be warranted.
+     *
+     * @param string the string to freeze-dup if an equivalent does not already exist
+     * @return the freeze-duped version of the string
+     */
+    public RubyString freezeAndDedupString(RubyString string) {
+        if (string.getMetaClass() != stringClass) {
+            // never cache a non-natural String
+            RubyString duped = string.strDup(this);
+            duped.setFrozen(true);
+            return duped;
+        }
+
+        WeakReference<RubyString> dedupedRef = dedupMap.get(string);
+        RubyString deduped;
+
+        if (dedupedRef == null || (deduped = dedupedRef.get()) == null) {
+            deduped = string.strDup(this);
+            deduped.setFrozen(true);
+            dedupMap.put(string, new WeakReference<RubyString>(deduped));
+        }
+        return deduped;
+    }
+

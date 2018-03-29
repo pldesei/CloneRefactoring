@@ -1,0 +1,11 @@
+(startLine=1035 endLine=1043 srcPath=/home/sonia/NewExperiment/jrubyFilter/01120/src/org/jruby/RubyRegexp.java)
+    public IRubyObject initialize_m(IRubyObject arg0, IRubyObject arg1) {
+        if (arg0 instanceof RubyRegexp) {
+            getRuntime().getWarnings().warn(ID.REGEXP_IGNORED_FLAGS, "flags ignored");            
+            return initializeByRegexp((RubyRegexp)arg0);
+        }
+        
+        int options = arg1 instanceof RubyFixnum ? RubyNumeric.fix2int(arg1) : arg1.isTrue() ? RE_OPTION_IGNORECASE : 0;
+        return initializeCommon(arg0.convertToString().getByteList(), RegexpOptions.fromJoniOptions(options));
+    }
+

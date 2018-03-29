@@ -1,0 +1,10 @@
+(startLine=69 endLine=76 srcPath=/home/sonia/NewExperiment/jrubyFilter/01750/truffle/src/main/java/org/jruby/truffle/runtime/rope/Rope.java)
+    public final byte[] getBytes() {
+        if (bytes == null) {
+            CompilerDirectives.transferToInterpreter();
+            bytes = RopeOperations.flattenBytes(this);
+        }
+
+        return bytes;
+    }
+

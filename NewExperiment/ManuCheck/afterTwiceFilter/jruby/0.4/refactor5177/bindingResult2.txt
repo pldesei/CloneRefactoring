@@ -1,0 +1,32 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01230
+predFragLineRange:1376-1387
+predMethodLineRange:1360-1393
+nextLineRange:1337-1361
+predStrMethodInvoNames:
+[getRuntime, isGiven, callEach, arity, checkContext, checkArgs, isTrue, yield, getNil, callEach, checkContext, checkArgs, isTrue, getNil, getTrue, getFalse]
+%%%%%%%%%%
+AddedMethodInvo Line:1342 InvoName:each(context,self,new JavaInternalBlockBody(context,"Enumerable#any?",block.arity()){
+  public IRubyObject yield(  ThreadContext context,  IRubyObject arg){
+    if (block.yield(context,arg).isTrue())     throw JumpException.SPECIAL_JUMP;
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01230/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject each(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockBody) 
+%%%%%%%%%%
+AddedMethodInvo Line:1349 InvoName:each(context,self,new JavaInternalBlockBody(context,"Enumerable#any?",Arity.ONE_REQUIRED){
+  public IRubyObject yield(  ThreadContext context,  IRubyObject arg){
+    if (arg.isTrue())     throw JumpException.SPECIAL_JUMP;
+    return runtime.getNil();
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyEnumerable
+ClassName:RubyEnumerable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01230/src/org/jruby/RubyEnumerable.java
+InvokedMethodSig:public static org.jruby.runtime.builtin.IRubyObject each(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.BlockBody) 

@@ -1,0 +1,30 @@
+(startLine=566 endLine=593 srcPath=/home/sonia/NewExperiment/jrubyFilter/00934/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+        synchronized (classLoader) {
+            Class c = tryClass(mname);
+            try {
+                if (c == null) {
+                    ClassWriter cw = createBlockCtor(mnamePath, typeClass);
+                    SkinnyMethodAdapter mv = startBlockCall(cw);
+                    mv.aload(0);
+                    mv.getfield(mnamePath, "$scriptObject", ci(typeClass));
+                    mv.aload(1);
+                    mv.aload(2);
+                    mv.aload(3);
+                    mv.invokevirtual(typePathString, method, sig(
+                            RubyKernel.IRUBY_OBJECT, params(ThreadContext.class,
+                                    RubyKernel.IRUBY_OBJECT, IRubyObject.class)));
+                    mv.areturn();
+                    
+                    mv.visitMaxs(2, 3);
+                    c = endCall(cw, mv, mname);
+                }
+                CompiledBlockCallback ic = (CompiledBlockCallback) c.getConstructor(Object.class).newInstance(scriptObject);
+                return ic;
+            } catch (IllegalArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+

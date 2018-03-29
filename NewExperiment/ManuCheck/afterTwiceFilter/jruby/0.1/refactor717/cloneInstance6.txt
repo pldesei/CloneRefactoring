@@ -1,0 +1,15 @@
+(startLine=305 endLine=317 srcPath=/home/sonia/NewExperiment/jrubyFilter/00815/src/org/jruby/internal/runtime/methods/DefaultMethod.java)
+        if (jitCompiledScript != null && !runtime.hasEventHooks()) {
+            try {
+                jitPre(context, self, name, block, 2);
+
+                return jitCompiledScript.__file__(context, self, arg0, arg1, block);
+            } catch (JumpException.ReturnJump rj) {
+                return handleReturn(context, rj);
+            } catch (JumpException.RedoJump rj) {
+                return handleRedo(runtime);
+            } finally {
+                jitPost(runtime, context, name);
+            }
+        } else {
+

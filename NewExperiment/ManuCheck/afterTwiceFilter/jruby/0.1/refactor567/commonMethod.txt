@@ -1,0 +1,13 @@
+(startLine=74 endLine=84 srcPath=/home/sonia/NewExperiment/jrubyFilter/00482/src/org/jruby/RubyDigest.java)
+    private static MessageDigest createMessageDigest(Ruby runtime, String providerName) throws NoSuchAlgorithmException {
+        if(provider != null) {
+            try {
+                return MessageDigest.getInstance(providerName, provider);
+            } catch(NoSuchAlgorithmException e) {
+                // bouncy castle doesn't support algorithm
+            }
+        }
+        // fall back to system JCA providers
+        return MessageDigest.getInstance(providerName);
+    }
+

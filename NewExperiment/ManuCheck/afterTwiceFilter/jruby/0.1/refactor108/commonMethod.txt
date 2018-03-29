@@ -1,0 +1,9 @@
+(startLine=160 endLine=166 srcPath=/home/sonia/NewExperiment/jrubyFilter/00309/src/org/jruby/evaluator/EvaluationState.java)
+    public void addRedoMarker(Node redoableNode) {
+        InstructionBundle ib = new InstructionBundle(redoMarker, redoableNode);
+        
+        ib.redoable = true;
+        
+        addInstructionBundle(ib);
+    }
+

@@ -1,0 +1,20 @@
+(startLine=347 endLine=364 srcPath=/home/sonia/NewExperiment/jrubyFilter/01879/core/src/main/java/org/jruby/RubyArgsFile.java)
+    public static IRubyObject readlines(ThreadContext context, IRubyObject recv, IRubyObject[] args) {
+        ArgsFileData data = ArgsFileData.getDataFrom(recv);
+        Ruby runtime = context.runtime;
+
+        if (!data.next_argv(context)) {
+            return runtime.newEmptyArray();
+        }
+        if (!(data.currentFile instanceof RubyIO)) {
+            return data.currentFile.callMethod(context, "readlines", args);
+        }
+
+        RubyArray ary = runtime.newArray();
+        IRubyObject line;
+        while(!(line = argf_getline(context, recv, args)).isNil()) {
+            ary.append(line);
+        }
+        return ary;
+    }
+

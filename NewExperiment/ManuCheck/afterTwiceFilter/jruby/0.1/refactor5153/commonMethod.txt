@@ -1,0 +1,15 @@
+(startLine=1118 endLine=1130 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/compiler/ir/representations/CFG.java)
+    public boolean definesLocalVariable(Variable v) {
+        if (_definedLocalVars.contains(v)) {
+            return true;
+        }
+        else {
+            for (IRClosure cl: getScope().getClosures()) {
+                if (cl.getCFG().definesLocalVariable(v))
+                    return true;
+            }
+
+            return false;
+        }
+    }
+

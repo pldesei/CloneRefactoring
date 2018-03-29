@@ -1,0 +1,20 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00599
+predFragLineRange:1089-1108
+predMethodLineRange:1085-1108
+nextLineRange:1057-1077
+predStrMethodInvoNames:
+[modify, getRuntime, getCurrentContext, preIter, checkIter, isTrue, yield, newArray, delete, postIter]
+%%%%%%%%%%
+AddedMethodInvo Line:1068 InvoName:visitAll(new Visitor(){
+  public void visit(  IRubyObject key,  IRubyObject value){
+    if (block.yield(context,RubyArray.newArray(runtime,key,value),null,null,true).isTrue()) {
+      self.delete(key,block);
+    }
+  }
+}
+)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyHash
+ClassName:RubyHash
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java
+InvokedMethodSig:public void visitAll(org.jruby.RubyHash.Visitor) 

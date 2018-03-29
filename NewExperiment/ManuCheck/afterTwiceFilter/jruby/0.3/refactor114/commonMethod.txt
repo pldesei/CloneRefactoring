@@ -1,0 +1,6 @@
+(startLine=271 endLine=274 srcPath=/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyNumeric.java)
+    protected IRubyObject callCoerced(String method, IRubyObject other) {
+        IRubyObject[] args = getCoerced(other, true);
+        return args[0].callMethod(getRuntime().getCurrentContext(), method, args[1]);
+    }
+

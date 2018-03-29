@@ -1,0 +1,23 @@
+(startLine=654 endLine=674 srcPath=/home/sonia/NewExperiment/jrubyFilter/00735/src/org/jruby/javasupport/JavaClass.java)
+        public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, IRubyObject arg0, Block block) {
+            createJavaMethods(self.getRuntime());
+
+            // TODO: ok to convert args in place, rather than new array?
+            int len = 1;
+            boolean blockGiven = block.isGiven();
+            IRubyObject convertedProc = null;
+            if (blockGiven) { // convert block to argument
+                convertedProc = Java.ruby_to_java(self, RubyProc.newProc(self.getRuntime(), block, Block.Type.LAMBDA), Block.NULL_BLOCK);
+                IRubyObject[] convertedArgs = new IRubyObject[len+1];
+                convertedArgs[len] = convertedProc;
+                convertedArgs[0] = Java.ruby_to_java(self,arg0,Block.NULL_BLOCK);
+                JavaMethod method = findMethod(self, name, convertedArgs, len + 1);
+                return Java.java_to_ruby(self, method.invoke((JavaObject)self.dataGetStruct(), convertedArgs), Block.NULL_BLOCK);
+            } else {
+                IRubyObject[] convertedArgs = new IRubyObject[len];
+                convertedArgs[0] = Java.ruby_to_java(self,arg0,Block.NULL_BLOCK);
+                JavaMethod method = findMethod(self, name, convertedArgs, len);
+                return Java.java_to_ruby(self, method.invoke((JavaObject)self.dataGetStruct(), convertedArgs), Block.NULL_BLOCK);
+            }
+        }
+

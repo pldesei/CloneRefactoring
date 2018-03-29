@@ -1,0 +1,12 @@
+(startLine=514 endLine=523 srcPath=/home/sonia/NewExperiment/jrubyFilter/01003/src/org/jruby/compiler/impl/SkinnyMethodAdapter.java)
+    public void end() {
+        if (DEBUG) {
+            PrintWriter pw = new PrintWriter(System.out);
+            pw.write("*** Dumping ***\n");
+            ((TraceMethodVisitor)getMethodVisitor()).print(pw);
+            pw.flush();
+        }
+        getMethodVisitor().visitMaxs(1, 1);
+        getMethodVisitor().visitEnd();
+    }
+

@@ -1,0 +1,37 @@
+(startLine=422 endLine=456 srcPath=/home/sonia/NewExperiment/jrubyFilter/00508/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+    public Callback getSingletonMethod(String method, Class arg1) {
+        String mname = type.getName() + "InvokerS" + method + "1";
+        String mnamePath = typePath + "InvokerS" + method + "1";
+        synchronized (runtime.getJRubyClassLoader()) {
+            Class c = tryClass(mname);
+            try {
+                if (c == null) {
+                    String ret = getReturnName(method, new Class[] { RubyKernel.IRUBY_OBJECT, arg1,
+                            Block.class });
+                    ClassWriter cw = createCtor(mnamePath);
+                    MethodVisitor mv = startCallS(cw);
+                    mv.visitVarInsn(ALOAD, 2);
+                    mv.visitInsn(ICONST_0);
+                    mv.visitInsn(AALOAD);
+                    mv.visitTypeInsn(CHECKCAST, cg.p(arg1));
+                    mv.visitVarInsn(ALOAD, 3);
+                    mv.visitMethodInsn(INVOKESTATIC, typePath, method, "(" + IRUB_ID + cg.ci(arg1)
+                            + BLOCK_ID + ")L" + ret + ";");
+                    mv.visitInsn(ARETURN);
+                    mv.visitMaxs(3, 3);
+                    c = endCall(cw, mv, mname);
+                }
+                InvocationCallback ic = (InvocationCallback) c.newInstance();
+                ic.setArity(Arity.singleArgument());
+                ic.setArgumentTypes(new Class[] {arg1});
+                ic.setJavaName(method);
+                ic.setSingleton(true);
+                return ic;
+            } catch (IllegalArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+    }
+

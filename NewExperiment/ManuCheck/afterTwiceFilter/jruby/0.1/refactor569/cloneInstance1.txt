@@ -1,0 +1,17 @@
+(startLine=169 endLine=183 srcPath=/home/sonia/NewExperiment/jrubyFilter/00485/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+        try {
+            if(c == null) {
+                String ret = getReturnName(method, new Class[]{Block.class});
+                ClassWriter cw = createCtor(mnamePath);
+                MethodVisitor mv = startCall(cw);
+                mv.visitVarInsn(ALOAD, 3);
+                mv.visitMethodInsn(INVOKEVIRTUAL, typePath, method, "(" + BLOCK_ID + ")L" + ret + ";");
+                mv.visitInsn(ARETURN);
+                mv.visitMaxs(1, 3);
+                c = endCall(cw,mv,mname);
+            }
+            InvocationCallback ic = (InvocationCallback)c.newInstance();
+            ic.setArity(Arity.noArguments());
+            return ic;
+        } catch(IllegalArgumentException e) {
+

@@ -1,0 +1,13 @@
+(startLine=2640 endLine=2650 srcPath=/home/sonia/NewExperiment/jrubyFilter/01179/src/org/jruby/compiler/ir/IRBuilder.java)
+        } else {
+            Variable ret = m.getNewTemporaryVariable();
+            Label    l   = m.getNewLabel();
+            Operand  v1  = build(orNode.getFirstNode(), m);
+            m.addInstr(new CopyInstr(ret, v1));
+            m.addInstr(new BEQInstr(v1, BooleanLiteral.TRUE, l));
+            Operand  v2  = build(orNode.getSecondNode(), m);
+            m.addInstr(new CopyInstr(ret, v2));
+            m.addInstr(new LABEL_Instr(l));
+            return ret;
+        }
+

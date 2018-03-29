@@ -1,0 +1,15 @@
+(startLine=621 endLine=633 srcPath=/home/sonia/NewExperiment/jrubyFilter/01690/core/src/main/java/org/jruby/java/proxies/MapJavaProxy.java)
+    public IRubyObject rbClone() {
+        try {
+            MapJavaProxy proxy = new MapJavaProxy(getRuntime(), metaClass);
+            Map newMap = (Map)getObject().getClass().newInstance();
+            newMap.putAll((Map)getObject());
+            proxy.setObject(newMap);
+            return proxy;
+        } catch (InstantiationException ex) {
+            throw getRuntime().newNotImplementedError("can't clone Map of type " + getObject().getClass().getName());
+        } catch (IllegalAccessException ex) {
+            throw getRuntime().newNotImplementedError("can't clone Map of type " + getObject().getClass().getName());
+        }
+    }
+

@@ -1,0 +1,23 @@
+(startLine=1811 endLine=1831 srcPath=/home/sonia/NewExperiment/jrubyFilter/00308/src/org/jruby/evaluator/EvaluateVisitor.java)
+            do {
+                while (true) { // Used for the 'redo' command
+                    try {
+                        state.begin(iVisited.getBodyNode());
+                        break;
+                    } catch (JumpException je) {
+                    	if (je.getJumpType() == JumpException.JumpType.RedoJump) {
+                    		// When a 'redo' is reached eval body of loop again.
+                    		continue;
+                    	} else if (je.getJumpType() == JumpException.JumpType.NextJump) {
+                    		// When a 'next' is reached ceck condition of loop again.
+                    		break;
+                    	} else if (je.getJumpType() == JumpException.JumpType.BreakJump) {
+	                        // When a 'break' is reached leave loop.
+	                        return;
+                    	} else {
+                    		throw je;
+                    	}
+                    }
+                }
+            } while (state.begin(iVisited.getConditionNode()).isTrue());
+

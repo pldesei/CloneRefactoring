@@ -1,0 +1,19 @@
+(startLine=2777 endLine=2793 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+        if (src.peek('{')) { // handle \\u{...}
+            do {
+                src.read(); // Eat curly or whitespace
+                codepoint = scanHex(6, false, "invalid Unicode escape");
+                if (codepoint > 0x10ffff) {
+                    throw new SyntaxException(SyntaxException.PID.INVALID_ESCAPE_SYNTAX, getPosition(),
+                            getCurrentLine(), "invalid Unicode codepoint (too large)");
+                }
+                if (buffer != null) readUTF8EscapeIntoBuffer(codepoint, buffer, stringLiteral);
+            } while (src.peek(' ') || src.peek('\t'));
+
+            c = src.read();
+            if (c != '}') {
+                throw new SyntaxException(SyntaxException.PID.INVALID_ESCAPE_SYNTAX, getPosition(),
+                        getCurrentLine(), "unterminated Unicode escape");
+            }
+        } else { // handle \\uxxxx
+

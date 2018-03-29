@@ -1,0 +1,37 @@
+(startLine=156 endLine=190 srcPath=/home/sonia/NewExperiment/jrubyFilter/00234/src/org/jruby/parser/ParserSupport.java)
+    public INode gettable(String id, ISourcePosition position) {
+        if (id.equals("self")) {
+            return new SelfNode(position);
+        } else if (id.equals("nil")) {
+        	return new NilNode(position);
+        } else if (id.equals("true")) {
+        	return new TrueNode(position);
+        } else if (id.equals("false")) {
+        	return new FalseNode(position);
+        } /*else if (id == k__FILE__) {
+        	return NEW_STR(rb_str_new2(ruby_sourcefile));
+            }
+            else if (id == k__LINE__) {
+        	return NEW_LIT(INT2FIX(ruby_sourceline));
+            }*/
+        else if (IdUtil.isLocal(id)) {
+            if (blockNames.isInBlock() && blockNames.isDefined(id)) {
+                return new DVarNode(position, id);
+            } else if (getLocalNames().isLocalRegistered(id)) {
+                return new LocalVarNode(position, getLocalNames().getLocalIndex(id));
+            }
+            return new VCallNode(position, id); // Method call without arguments.
+        } else if (IdUtil.isGlobal(id)) {
+            return new GlobalVarNode(position, id);
+        } else if (IdUtil.isInstanceVariable(id)) {
+            return new InstVarNode(position, id);
+        } else if (IdUtil.isConstant(id)) {
+            return new ConstNode(position, id);
+        } else if (IdUtil.isClassVariable(id)) {
+            return new ClassVarNode(position, id);
+        } else {
+            errorHandler.handleError(IErrors.COMPILE_ERROR, position, "identifier " + id + " is not valid");
+        }
+        return null;
+    }
+

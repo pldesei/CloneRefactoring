@@ -1,0 +1,8 @@
+(startLine=169 endLine=174 srcPath=/home/sonia/NewExperiment/jrubyFilter/01885/core/src/main/java/org/jruby/ext/io/wait/IOWaitLibrary.java)
+    private static IRubyObject doWait(ThreadContext context, RubyIO io, OpenFile fptr, long tv, int ops) {
+        boolean ready = fptr.ready(context.runtime, context.getThread(), ops, tv);
+        fptr.checkClosed();
+        if (ready) return io;
+        return context.nil;
+    }
+

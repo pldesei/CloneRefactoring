@@ -1,0 +1,5 @@
+(startLine=170 endLine=172 srcPath=/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java)
+    private static boolean nilOrZeroSeconds(final ThreadContext context, final IRubyObject seconds) {
+        return seconds.isNil() || Helpers.invoke(context, seconds, "zero?").isTrue();
+    }
+

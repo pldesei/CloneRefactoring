@@ -1,0 +1,14 @@
+(startLine=703 endLine=714 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+                    } else {
+                        try {
+                            for(int i = begin; i < begin + realLength; i++) {
+                                h = (h << 1) | (h < 0 ? 1 : 0);
+                                final IRubyObject value;
+                                    value = values[i];
+                                h ^= RubyNumeric.num2long(value.callMethod(context, "hash"));
+                            }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            concurrentModification();
+                        }
+                    }
+

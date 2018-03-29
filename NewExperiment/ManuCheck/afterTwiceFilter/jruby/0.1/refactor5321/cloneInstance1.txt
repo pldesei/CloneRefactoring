@@ -1,0 +1,21 @@
+(startLine=318 endLine=336 srcPath=/home/sonia/NewExperiment/jrubyFilter/01685/core/src/main/java/org/jruby/lexer/yacc/StringTerm.java)
+                    if (!lexer.isASCII(c)) {
+                        if (!expand) buffer.append('\\');
+
+                        // goto non_ascii
+                        hasNonAscii = true;
+
+                        if (buffer.getEncoding() != enc[0]) {
+                            mixedEscape(lexer, buffer.getEncoding(), enc[0]);
+                            continue;
+                        }
+
+                        if (!lexer.tokadd_mbchar(c, buffer)) {
+                            throw new SyntaxException(PID.INVALID_MULTIBYTE_CHAR, lexer.getPosition(),
+                                    null, "invalid multibyte char (" + enc[0] + ")");
+                        }
+
+                        continue;
+                        // end of goto non_ascii
+                    }
+

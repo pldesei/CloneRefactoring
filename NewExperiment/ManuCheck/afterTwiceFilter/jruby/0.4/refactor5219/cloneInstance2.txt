@@ -1,0 +1,14 @@
+(startLine=429 endLine=440 srcPath=/home/sonia/NewExperiment/jrubyFilter/01440/core/src/main/java/org/jruby/RubyStruct.java)
+    public static RubyArray members19(IRubyObject recv, Block block) {
+        RubyArray member = (RubyArray) getInternalVariable((RubyClass) recv, "__member__");
+
+        assert !member.isNil() : "uninitialized struct";
+
+        RubyArray result = recv.getRuntime().newArray(member.getLength());
+        for (int i = 0,k=member.getLength(); i < k; i++) {
+            result.append(member.eltInternal(i));
+        }
+
+        return result;
+    }
+

@@ -1,0 +1,8 @@
+(startLine=1018 endLine=1023 srcPath=/home/sonia/NewExperiment/jrubyFilter/01121/src/org/jruby/RubyRegexp.java)
+    private int objectAsJoniOptions(IRubyObject arg) {
+        if (arg instanceof RubyFixnum) return RubyNumeric.fix2int(arg);
+        if (arg.isTrue()) return RE_OPTION_IGNORECASE;
+        
+        return 0;
+    }
+

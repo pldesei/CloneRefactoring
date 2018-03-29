@@ -1,0 +1,19 @@
+(startLine=443 endLine=459 srcPath=/home/sonia/NewExperiment/jrubyFilter/01278/src/org/jruby/ext/socket/RubySocket.java)
+        try {
+            IRubyObject addr = sockaddr.pop(context);
+            IRubyObject port = sockaddr.pop(context);
+            InetSocketAddress iaddr = new InetSocketAddress(
+                    addr.convertToString().toString(), RubyNumeric.fix2int(port));
+
+            Channel socketChannel = getChannel();
+            if (socketChannel instanceof SocketChannel) {
+                Socket socket = ((SocketChannel)socketChannel).socket();
+                socket.bind(iaddr);
+            } else if (socketChannel instanceof DatagramChannel) {
+                DatagramSocket socket = ((DatagramChannel)socketChannel).socket();
+                socket.bind(iaddr);
+            } else {
+                throw getRuntime().newErrnoENOPROTOOPTError();
+            }
+        } catch(UnknownHostException e) {
+

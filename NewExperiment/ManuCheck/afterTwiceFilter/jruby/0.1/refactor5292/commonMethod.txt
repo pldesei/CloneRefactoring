@@ -1,0 +1,12 @@
+(startLine=151 endLine=160 srcPath=/home/sonia/NewExperiment/jrubyFilter/01585/core/src/main/java/org/jruby/embed/IsolatedScriptingContainer.java)
+    private String createUri(ClassLoader cl, String ref) {
+        URL url = cl.getResource( ref );
+        if ( url == null && ref.startsWith( "/" ) ) {
+            url = cl.getResource( ref.substring( 1 ) );
+        }
+        if ( url == null ) {
+            throw new RuntimeException( "reference " + ref + " not found on classloader " + cl );
+        }
+        return "uri:" + url.toString().replaceFirst( ref + "$", "" );
+    }
+

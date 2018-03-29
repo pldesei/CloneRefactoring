@@ -1,0 +1,33 @@
+(startLine=2542 endLine=2572 srcPath=/home/sonia/NewExperiment/jrubyFilter/00559/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+        public void issueBreakEvent(ClosureCallback value) {
+            if (withinProtection) {
+                method.newobj(cg.p(JumpException.BreakJump.class));
+                method.dup();
+                method.aconst_null();
+                value.compile(this);
+                method.invokespecial(cg.p(JumpException.BreakJump.class), "<init>", cg.sig(Void.TYPE, cg.params(Object.class, Object.class)));
+
+                method.athrow();
+            } else if (currentLoopLabels != null) {
+                value.compile(this);
+                issueLoopBreak();
+            } else {
+                // in method body with no containing loop, issue jump error
+                
+                // load runtime
+                loadRuntime();
+                
+                // load "break" jump error type
+                method.ldc("break");
+                
+                value.compile(this);
+                
+                // load break jump error message
+                method.ldc("unexpected break");
+                
+                // create and raise local jump error
+                invokeIRuby("newLocalJumpError", cg.sig(RaiseException.class, cg.params(String.class, IRubyObject.class, String.class)));
+                method.athrow();
+            }
+        }
+

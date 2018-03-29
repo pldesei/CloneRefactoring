@@ -1,0 +1,17 @@
+(startLine=3539 endLine=3553 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject drop_while(ThreadContext context, Block block) {
+        Ruby runtime = context.getRuntime();
+        if (!block.isGiven()) return enumeratorize(runtime, this, "drop_while");
+
+        int i= begin;
+        try {
+            for (; i < begin + realLength; i++) {
+                if (!block.yield(context, values[i]).isTrue()) break;
+            }
+        } catch (ArrayIndexOutOfBoundsException aioob) {
+            concurrentModification();
+        }
+        IRubyObject result = subseq(i - begin, realLength);
+        return result.isNil() ? runtime.newEmptyArray() : result;
+    }
+

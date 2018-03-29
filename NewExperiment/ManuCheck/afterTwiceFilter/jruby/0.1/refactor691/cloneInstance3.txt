@@ -1,0 +1,10 @@
+(startLine=339 endLine=346 srcPath=/home/sonia/NewExperiment/jrubyFilter/00760/src/org/jruby/RubyClass.java)
+            IRubyObject arg0, IRubyObject arg1, IRubyObject arg2, CallType callType, Block block) {
+        DynamicMethod method = searchMethod(name);
+        if (method.isUndefined() || (!name.equals("method_missing") && !method.isCallableFrom(context.getFrameSelf(), callType))) {
+            return RuntimeHelpers.callMethodMissing(context, self, method, name, 
+                    new IRubyObject[] {arg0, arg1, arg2}, context.getFrameSelf(), callType, block);
+        }
+        return method.call(context, self, this, name, arg0, arg1, arg2, block);
+    }
+

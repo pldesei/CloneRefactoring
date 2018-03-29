@@ -1,0 +1,8 @@
+(startLine=343 endLine=348 srcPath=/home/sonia/NewExperiment/jrubyFilter/00494/src/org/jruby/runtime/ThreadContext.java)
+    public void setBackref(IRubyObject backref) {
+        if (!(backref instanceof RubyMatchData) && !backref.isNil()) {
+            throw runtime.newTypeError(backref, runtime.getClass("MatchData"));
+        }
+        getCurrentScope().setBackRef(backref);
+    }
+

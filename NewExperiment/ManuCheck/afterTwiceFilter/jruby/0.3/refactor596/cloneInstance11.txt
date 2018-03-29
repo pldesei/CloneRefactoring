@@ -1,0 +1,30 @@
+(startLine=784 endLine=811 srcPath=/home/sonia/NewExperiment/jrubyFilter/00508/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+    public Callback getFastSingletonMethod(String method) {
+        String mname = type.getName() + "InvokerS" + method + "0";
+        String mnamePath = typePath + "InvokerS" + method + "0";
+        synchronized (runtime.getJRubyClassLoader()) {
+            Class c = tryClass(mname);
+            try {
+                if (c == null) {
+                    String ret = getReturnName(method, new Class[] { RubyKernel.IRUBY_OBJECT });
+                    ClassWriter cw = createCtorFast(mnamePath);
+                    MethodVisitor mv = startCallSFast(cw);
+                    mv.visitMethodInsn(INVOKESTATIC, typePath, method, "(" + IRUB_ID + ")L" + ret
+                            + ";");
+                    mv.visitInsn(ARETURN);
+                    mv.visitMaxs(1, 3);
+                    c = endCall(cw, mv, mname);
+                }
+                FastInvocationCallback ic = (FastInvocationCallback) c.newInstance();
+                ic.setArity(Arity.noArguments());
+                ic.setJavaName(method);
+                ic.setSingleton(true);
+                return ic;
+            } catch (IllegalArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+    }
+

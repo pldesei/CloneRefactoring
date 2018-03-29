@@ -1,0 +1,25 @@
+(startLine=219 endLine=241 srcPath=/home/sonia/NewExperiment/jrubyFilter/00088/org/jruby/javasupport/JavaSupport.java)
+	private void defineModuleConstants(Class javaClass, RubyModule rubyModule)
+	{
+		// add constants
+		Field[] fields = javaClass.getFields();
+		for (int i = 0; i < fields.length; i++)
+		{
+			int modifiers = fields[i].getModifiers();
+			if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))
+			{
+				try
+				{
+					String name = fields[i].getName();
+					if (Character.isLowerCase(name.charAt(0)))
+					{
+						name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+					}
+					rubyModule.defineConstant(name, JavaUtil.convertJavaToRuby(ruby, fields[i].get(null), fields[i].getType()));
+				} catch (IllegalAccessException iaExcptn)
+				{
+				}
+			}
+		}
+	}
+

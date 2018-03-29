@@ -1,0 +1,27 @@
+(startLine=4363 endLine=4387 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/RubyArray.java)
+    /**
+     * Construct the most efficient array shape for the given size. This should only be used when you
+     * intend to populate all elements, since the packed arrays will be born with a nonzero size and
+     * would have to be unpacked to partially populate.
+     *
+     * We nil-fill all cases, to ensure nulls will never leak out if there's an unpopulated element
+     * or an index accessed before assignment.
+     *
+     * @param runtime the runtime
+     * @param size the size
+     * @return a RubyArray shaped for the given size
+     */
+    public static RubyArray newBlankArray(Ruby runtime, int size) {
+        RubyArray result;
+        switch (size) {
+            case 0:
+                return newEmptyArray(runtime);
+            case 1:
+                return new RubyArrayOneObject(runtime, runtime.getNil());
+            case 2:
+                return new RubyArrayTwoObject(runtime, runtime.getNil(), runtime.getNil());
+            default:
+                return newArray(runtime, size);
+        }
+    }
+

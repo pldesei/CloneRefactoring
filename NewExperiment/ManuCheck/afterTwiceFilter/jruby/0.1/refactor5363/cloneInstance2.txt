@@ -1,0 +1,34 @@
+(startLine=133 endLine=164 srcPath=/home/sonia/NewExperiment/jrubyFilter/01884/core/src/main/java/org/jruby/ext/io/wait/IOWaitLibrary.java)
+    public static IRubyObject wait_writable(ThreadContext context, IRubyObject _io, IRubyObject[] argv) {
+        RubyIO io = (RubyIO)_io;
+        Ruby runtime = context.runtime;
+        OpenFile fptr;
+        IRubyObject timeout;
+        long tv;
+
+        fptr = io.getOpenFileChecked();
+        fptr.checkWritable(context);
+
+        switch (argv.length) {
+            case 1:
+                timeout = argv[0];
+                break;
+            default:
+                timeout = context.nil;
+        }
+        if (timeout.isNil()) {
+            tv = -1;
+        }
+        else {
+            tv = (long)(RubyTime.convertTimeInterval(context, timeout) * 1000);
+            if (tv < 0) throw runtime.newArgumentError("time interval must be positive");
+        }
+
+        boolean ready = fptr.ready(runtime, context.getThread(), SelectionKey.OP_CONNECT | SelectionKey.OP_WRITE, tv);
+
+        fptr.checkClosed();
+        if (ready)
+            return io;
+        return context.nil;
+    }
+

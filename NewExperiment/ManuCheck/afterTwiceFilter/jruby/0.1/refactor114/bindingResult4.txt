@@ -1,0 +1,48 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00393
+predFragLineRange:238-247
+predMethodLineRange:238-247
+nextLineRange:272-288
+predStrMethodInvoNames:
+[callMethod, getCurrentContext, getRuntime, getRuntime, divide]
+%%%%%%%%%%
+AddedMethodInvo Line:274 InvoName:checkArgumentCount(args,1,2)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyObject
+ClassName:RubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyObject.java
+InvokedMethodSig:public int checkArgumentCount(org.jruby.runtime.builtin.IRubyObject[], int, int) 
+%%%%%%%%%%
+AddedMethodInvo Line:275 InvoName:RubyNumeric.fix2int(args[1])
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyNumeric
+ClassName:RubyNumeric
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyNumeric.java
+InvokedMethodSig:public static int fix2int(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:278 InvoName:getVpValue(args[0],false)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyBigDecimal
+ClassName:RubyBigDecimal
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyBigDecimal.java
+InvokedMethodSig:private org.jruby.RubyBigDecimal getVpValue(org.jruby.runtime.builtin.IRubyObject, boolean) 
+%%%%%%%%%%
+AddedMethodInvo Line:280 InvoName:callCoerced("/",args[0])
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyNumeric
+ClassName:RubyNumeric
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyNumeric.java
+InvokedMethodSig:protected org.jruby.runtime.builtin.IRubyObject callCoerced(java.lang.String, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:284 InvoName:new RubyBigDecimal(getRuntime(),value.divide(val.value,200,BigDecimal.ROUND_HALF_UP)).setResult()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyBigDecimal
+ClassName:RubyBigDecimal
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyBigDecimal.java
+InvokedMethodSig:private org.jruby.RubyBigDecimal setResult() 
+%%%%%%%%%%
+AddedMethodInvo Line:286 InvoName:new RubyBigDecimal(getRuntime(),value.divide(val.value,200,BigDecimal.ROUND_HALF_UP)).setResult(scale)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyBigDecimal
+ClassName:RubyBigDecimal
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00393/src/org/jruby/RubyBigDecimal.java
+InvokedMethodSig:private org.jruby.RubyBigDecimal setResult(int) 

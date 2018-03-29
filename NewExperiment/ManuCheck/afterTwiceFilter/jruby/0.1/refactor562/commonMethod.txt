@@ -1,0 +1,7 @@
+(startLine=86 endLine=90 srcPath=/home/sonia/NewExperiment/jrubyFilter/00480/src/org/jruby/RubyEnumerable.java)
+    public static IRubyObject callEach(Ruby runtime, ThreadContext context, IRubyObject self,
+            BlockCallback callback) {
+        return self.callMethod(context, "each", new CallBlock(self, runtime.getEnumerable(), 
+                Arity.noArguments(), callback, context));
+    }
+

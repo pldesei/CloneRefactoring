@@ -1,0 +1,6 @@
+(startLine=109 endLine=112 srcPath=/home/sonia/NewExperiment/jrubyFilter/01868/core/src/main/java/org/jruby/java/util/ArrayUtils.java)
+    private static RaiseException mapIndexOutOfBoundsException(final Ruby runtime, final Object array, int index) {
+        return runtime.newArgumentError("index out of bounds for java array (" +
+                index + " for length " + Array.getLength(array) + ')');
+    }
+

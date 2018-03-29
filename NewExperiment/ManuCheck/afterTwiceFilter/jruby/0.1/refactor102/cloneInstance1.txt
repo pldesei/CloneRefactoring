@@ -1,0 +1,46 @@
+(startLine=775 endLine=818 srcPath=/home/sonia/NewExperiment/jrubyFilter/00301/src/org/jruby/Ruby.java)
+    public void loadScript(String scriptName, Reader source, boolean wrap) {
+        IRubyObject self = getTopSelf();
+
+        ThreadContext context = getCurrentContext();
+
+        context.pushDynamicVars();
+
+        RubyModule wrapper = context.getWrapper();
+
+        if (!wrap) {
+            secure(4); /* should alter global state */
+            context.pushRubyClass(objectClass);
+            context.setWrapper(null);
+        } else {
+            /* load in anonymous module as toplevel */
+            context.setWrapper(RubyModule.newModule(this, null));
+            context.pushRubyClass(context.getWrapper());
+            self = getTopSelf().rbClone();
+            self.extendObject(context.getRubyClass());
+        }
+
+        context.pushFrame(self, IRubyObject.NULL_ARRAY, null, null);
+        context.pushScope();
+
+        /* default visibility is private at loading toplevel */
+        setCurrentVisibility(Visibility.PRIVATE);
+
+        try {
+        	Node node = parse(source, scriptName);
+            self.eval(node);
+        } catch (JumpException je) {
+        	if (je.getJumpType() == JumpException.JumpType.ReturnJump) {
+        		// Make sure this does not bubble out to java caller.
+        	} else {
+        		throw je;
+        	}
+        } finally {
+            context.popScope();
+            context.popFrame();
+            context.popRubyClass();
+            context.popDynamicVars();
+            context.setWrapper(wrapper);
+        }
+    }
+

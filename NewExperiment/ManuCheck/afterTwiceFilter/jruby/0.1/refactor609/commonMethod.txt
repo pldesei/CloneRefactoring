@@ -1,0 +1,9 @@
+(startLine=421 endLine=427 srcPath=/home/sonia/NewExperiment/jrubyFilter/00560/src/org/jruby/compiler/impl/StandardASMCompiler.java)
+        /**
+         * This is for utility methods used by the compiler, to reduce the amount of code generation
+         * necessary.  All of these live in CompilerHelpers.
+         */
+        public void invokeUtilityMethod(String methodName, String signature) {
+            method.invokestatic(cg.p(RuntimeHelpers.class), methodName, signature);
+        }
+

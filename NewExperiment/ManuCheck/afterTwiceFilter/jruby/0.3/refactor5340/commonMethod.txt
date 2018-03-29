@@ -1,0 +1,12 @@
+(startLine=803 endLine=812 srcPath=/home/sonia/NewExperiment/jrubyFilter/01811/core/src/main/java/org/jruby/java/codegen/RealClassGenerator.java)
+    public static int calcBaseIndex(final Class[] params, int baseIndex) {
+        for (Class paramType : params) {
+            if (paramType == double.class || paramType == long.class) {
+                baseIndex += 2;
+            } else {
+                baseIndex += 1;
+            }
+        }
+        return baseIndex;
+    }
+

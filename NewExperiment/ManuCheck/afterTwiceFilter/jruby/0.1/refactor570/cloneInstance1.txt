@@ -1,0 +1,11 @@
+(startLine=513 endLine=521 srcPath=/home/sonia/NewExperiment/jrubyFilter/00485/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+            if(c == null) {
+                String ret = getReturnName(method, null);
+                ClassWriter cw = createCtorFast(mnamePath);
+                MethodVisitor mv = startCallFast(cw);
+                mv.visitMethodInsn(INVOKEVIRTUAL, typePath, method, "()L" + ret + ";");
+                mv.visitInsn(ARETURN);
+                mv.visitMaxs(1, 3);
+                c = endCall(cw,mv,mname);
+            }
+

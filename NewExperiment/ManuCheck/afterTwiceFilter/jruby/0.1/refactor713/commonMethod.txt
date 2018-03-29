@@ -1,0 +1,13 @@
+(startLine=925 endLine=935 srcPath=/home/sonia/NewExperiment/jrubyFilter/00814/src/org/jruby/RubyArray.java)
+    private void spliceRealloc(int length) {
+        int tryLength = values.length + (values.length >> 1);
+        int len = length > tryLength ? length : tryLength;
+        IRubyObject[] vals = new IRubyObject[len];
+        System.arraycopy(values, begin, vals, 0, realLength);
+
+        // only fill if there actually will remain trailing storage
+        if (tryLength > length) fillNil(vals, length, tryLength, getRuntime());
+
+        values = vals;
+    }
+

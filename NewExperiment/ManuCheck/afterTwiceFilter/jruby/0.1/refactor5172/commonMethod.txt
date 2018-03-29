@@ -1,0 +1,5 @@
+(startLine=145 endLine=147 srcPath=/home/sonia/NewExperiment/jrubyFilter/01218/src/org/jruby/parser/StaticScope.java)
+    public static StaticScope newBlockScope(StaticScope parent, String[] names) {
+        return inIRMode() ? new IRStaticScope(parent, names, true, false) : new BlockStaticScope(parent, names);
+    }
+

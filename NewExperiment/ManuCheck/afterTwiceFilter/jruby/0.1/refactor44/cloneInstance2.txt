@@ -1,0 +1,18 @@
+(startLine=106 endLine=121 srcPath=/home/sonia/NewExperiment/jrubyFilter/00168/org/jruby/javasupport/bsf/JRubyEngine.java)
+    public void exec(String file, int line, int col, Object expr) throws BSFException {
+        try {
+            String oldFile = ruby.getSourceFile();
+            int oldLine = ruby.getSourceLine();
+
+            ruby.setSourceFile(file);
+            ruby.setSourceLine(line);
+
+            ruby.evalScript((String) expr, Object.class);
+
+            ruby.setSourceFile(oldFile);
+            ruby.setSourceLine(oldLine);
+        } catch (Exception excptn) {
+            throw new BSFException(BSFException.REASON_EXECUTION_ERROR, "Exception", excptn);
+        }
+    }
+

@@ -1,0 +1,9 @@
+(startLine=174 endLine=180 srcPath=/home/sonia/NewExperiment/jrubyFilter/01847/core/src/main/java/org/jruby/runtime/Block.java)
+    public IRubyObject yieldArray(ThreadContext context, IRubyObject value, IRubyObject self) {
+        // SSS FIXME: Later on, we can move this code into IR insructions or
+        // introduce a specialized entry-point when we know that this block has
+        // explicit call protocol IR instructions.
+        IRubyObject[] args = IRRuntimeHelpers.singleBlockArgToArray(value);
+        return body.yield(context, this, args, self);
+    }
+

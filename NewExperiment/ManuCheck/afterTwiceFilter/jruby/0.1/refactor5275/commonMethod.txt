@@ -1,0 +1,8 @@
+(startLine=3643 endLine=3648 srcPath=/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/Ruby.java)
+    public RaiseException newErrnoFromErrno(Errno errno, String message) {
+        if (errno == null || errno == Errno.__UNKNOWN_CONSTANT__) {
+            return newSystemCallError(message);
+        }
+        return newErrnoFromInt(errno.intValue(), message);
+    }
+

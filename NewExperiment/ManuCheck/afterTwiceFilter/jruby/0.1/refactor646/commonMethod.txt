@@ -1,0 +1,33 @@
+(startLine=2523 endLine=2553 srcPath=/home/sonia/NewExperiment/jrubyFilter/00607/src/org/jruby/RubyString.java)
+    private IRubyObject scan_once(RubyRegexp pat, int[] start) {
+        Encoding enc = encodingCheck(pat);
+        Region regs;
+        int i;
+
+        if(pat.search(this, start[0], false) >= 0) {
+            RubyMatchData match = (RubyMatchData)getRuntime().getCurrentContext().getCurrentFrame().getBackRef();
+            regs = match.regs;
+            if(regs.beg[0] == regs.end[0]) {
+                /*
+                 * Always consume at least one character of the input string
+                 */
+                if(value.realSize > regs.end[0]) {
+                    start[0] = regs.end[0] + enc.length(value.bytes[value.begin+regs.end[0]]);
+                } else {
+                    start[0] = regs.end[0] + 1;
+                }
+            } else {
+                start[0] = regs.end[0];
+            }
+            if(regs.numRegs == 1) {
+                return RubyRegexp.nth_match(0,match);
+            }
+            RubyArray ary = getRuntime().newArray(regs.numRegs);
+            for(i=1;i<regs.numRegs;i++) {
+                ary.append(RubyRegexp.nth_match(i,match));
+            }
+            return ary;
+        }
+        return getRuntime().getNil();
+    }
+

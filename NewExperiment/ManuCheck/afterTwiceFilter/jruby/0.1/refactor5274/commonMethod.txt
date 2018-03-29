@@ -1,0 +1,46 @@
+(startLine=1774 endLine=1817 srcPath=/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java)
+    protected IRubyObject rbIoClose(Ruby runtime) {
+        ThreadContext context = runtime.getCurrentContext();
+        OpenFile fptr;
+        RubyIO write_io;
+        OpenFile write_fptr;
+
+        write_io = GetWriteIO();
+        if (this != write_io) {
+            write_fptr = write_io.openFile;
+            if (write_fptr != null && write_fptr.fd() != null) {
+                write_fptr.cleanup(runtime, true);
+            }
+        }
+
+        fptr = openFile;
+        if (fptr == null) return runtime.getNil();
+        if (fptr.fd() == null) return runtime.getNil();
+
+        // interrupt waiting threads
+        fptr.interruptBlockingThreads();
+        fptr.cleanup(runtime, false);
+
+        if (fptr.getProcess() != null) {
+            context.setLastExitStatus(context.nil);
+
+            if (runtime.getPosix().isNative()) {
+                // We do not need to nuke native-launched child process, since we now have full control
+                // over child process pipes.
+                IRubyObject processResult = RubyProcess.RubyStatus.newProcessStatus(runtime, ((POSIXProcess)fptr.getProcess()).status(), fptr.getPid());
+                context.setLastExitStatus(processResult);
+            } else {
+                // If this is not a popen3/popen4 stream and it has a process, attempt to shut down that process
+                if (!popenSpecial) {
+                    obliterateProcess(fptr.getProcess());
+                    // RubyStatus uses real native status now, so we unshift Java's shifted exit status
+                    IRubyObject processResult = RubyProcess.RubyStatus.newProcessStatus(runtime, fptr.getProcess().exitValue() << 8, fptr.getPid());
+                    context.setLastExitStatus(processResult);
+                }
+            }
+            fptr.setProcess(null);
+        }
+
+        return runtime.getNil();
+    }
+

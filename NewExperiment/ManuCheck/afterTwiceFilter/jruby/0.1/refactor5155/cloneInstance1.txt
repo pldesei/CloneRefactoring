@@ -1,0 +1,16 @@
+(startLine=2304 endLine=2317 srcPath=/home/sonia/NewExperiment/jrubyFilter/01130/src/org/jruby/RubyArray.java)
+    public IRubyObject index(ThreadContext context, Block block) {
+        Ruby runtime = context.getRuntime();
+        if (!block.isGiven()) return enumeratorize(runtime, this, "index");
+
+        try {
+            for (int i = begin; i < begin + realLength; i++) {
+                if (block.yield(context, values[i]).isTrue()) return runtime.newFixnum(i - begin);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            concurrentModification();
+        }
+
+        return runtime.getNil();
+    }
+

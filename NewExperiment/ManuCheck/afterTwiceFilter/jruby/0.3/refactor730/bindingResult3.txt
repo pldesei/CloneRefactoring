@@ -1,0 +1,20 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00827
+predFragLineRange:1540-1547
+predMethodLineRange:1533-1549
+nextLineRange:1293-1308
+predStrMethodInvoNames:
+[variableTableGetTable, isInstanceVariable, variableTableReadLocked, add]
+%%%%%%%%%%
+AddedMethodInvo Line:1299 InvoName:variables.visit(new InstanceVariableTable.TryLockVisitor(this){
+  public void visit(  String name,  Object value){
+    if (IdUtil.isInstanceVariable(name)) {
+      list.add(new VariableEntry<IRubyObject>(name,(IRubyObject)value));
+    }
+  }
+}
+)
+PackageName:org.jruby.runtime.builtin
+QualifiedClassName:org.jruby.runtime.builtin.InstanceVariableTable
+ClassName:InstanceVariableTable
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00827/src/org/jruby/runtime/builtin/InstanceVariableTable.java
+InvokedMethodSig:public void visit(org.jruby.runtime.builtin.InstanceVariableTable.TryLockVisitor) 

@@ -1,0 +1,9 @@
+(startLine=480 endLine=486 srcPath=/home/sonia/NewExperiment/jrubyFilter/00736/src/org/jruby/javasupport/JavaClass.java)
+    protected static Object convertArgument(ThreadContext context, IRubyObject object) {
+        if (object.dataGetStruct() instanceof JavaObject) {
+            return ((JavaObject)object.dataGetStruct()).getValue();
+        }
+
+        return primitive_to_java(context, object);
+    }
+

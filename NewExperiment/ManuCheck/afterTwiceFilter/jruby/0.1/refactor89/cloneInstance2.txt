@@ -1,0 +1,21 @@
+(startLine=1781 endLine=1799 srcPath=/home/sonia/NewExperiment/jrubyFilter/00233/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                    if (((IListNode)yyVals[-3+yyTop]) != null) {
+                        yyVals[-4+yyTop] = new RescueNode(getPosition(), ((INode)yyVals[-4+yyTop]), ((IListNode)yyVals[-3+yyTop]), ((INode)yyVals[-2+yyTop]));
+                    } else if (((INode)yyVals[-2+yyTop]) != null) {
+		        errorHandler.handleError(IErrors.WARN, null, "Else without rescue is useless.");
+                        yyVals[-4+yyTop] = support.appendToBlock(((INode)yyVals[-4+yyTop]), ((INode)yyVals[-2+yyTop]));
+                    }
+                    if (((INode)yyVals[-1+yyTop]) != null) {
+                        yyVals[-4+yyTop] = new EnsureNode(getPosition(), ((INode)yyVals[-4+yyTop]), ((INode)yyVals[-1+yyTop]));
+                    }
+
+                    /* NOEX_PRIVATE for toplevel */
+                    yyVal = new DefnNode(getPosition(), ((String)yyVals[-7+yyTop]), ((INode)yyVals[-5+yyTop]),
+		                      new ScopeNode(support.getLocalNames().getNames(), ((INode)yyVals[-4+yyTop])),
+		                      support.getClassNest() !=0 || IdUtil.isAttrSet(((String)yyVals[-7+yyTop])) ? Visibility.PUBLIC : Visibility.PRIVATE);
+                    /* $<Node>$.setPosFrom($4);*/
+                    support.getLocalNames().pop();
+                    support.setInDef(false);
+                }
+

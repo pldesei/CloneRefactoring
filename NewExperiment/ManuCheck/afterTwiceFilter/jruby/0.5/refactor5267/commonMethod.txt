@@ -1,0 +1,14 @@
+(startLine=205 endLine=216 srcPath=/home/sonia/NewExperiment/jrubyFilter/01531/ext/openssl/src/main/java/org/jruby/ext/openssl/X509Cert.java)
+    private void addExtension(final ThreadContext context, final RubyModule _ASN1,
+        final RubyClass _Extension, final String extOID, final RubyBoolean critical) {
+        final byte[] extValue = cert.getExtensionValue(extOID);
+        // TODO: wired. J9 returns null for an OID given in getNonCriticalExtensionOIDs()
+        if ( extValue == null ) return;
+
+        RubyString extValueStr = context.runtime.newString( new ByteList(extValue, false) );
+        IRubyObject rValue = ASN1.decode(context, _ASN1, extValueStr).callMethod(context, "value");
+        IRubyObject extension = _Extension.callMethod(context, "new",
+            new IRubyObject[] { context.runtime.newString(extOID), rValue, critical });
+        add_extension(extension);
+    }
+

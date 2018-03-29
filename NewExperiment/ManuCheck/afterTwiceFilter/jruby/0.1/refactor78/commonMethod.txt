@@ -1,0 +1,21 @@
+(startLine=737 endLine=755 srcPath=/home/sonia/NewExperiment/jrubyFilter/00234/src/org/jruby/parser/ParserSupport.java)
+    public INode literal_concat(ISourcePosition position, INode head, 
+            Object tail) {
+        IListNode list;
+        
+        if (head == null) {
+            list = new DStrNode(position);
+        } else if (head instanceof EvStrNode) {
+            list = new DStrNode(position).add(head);
+        } else {
+            list = (IListNode) head;
+        }
+        
+        if (tail instanceof String) {
+            tail = new StrNode(position, (String)tail);
+        }
+        list.add((INode)tail);
+        
+        return list;
+    }
+

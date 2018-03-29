@@ -1,0 +1,20 @@
+(startLine=274 endLine=291 srcPath=/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java)
+    private static IRubyObject raiseTimeoutErrorIfMatches(ThreadContext context,
+        final IRubyObject timeout, final RaiseException ex, final IRubyObject id) {
+        // check if it's the exception intended for us (@see prepareRunnable):
+        if ( ex.getException().getInternalVariable("__identifier__") == id ) {
+            final RubyException rubyException = ex.getException();
+
+            return RubyKernel.raise( // throws
+                    context,
+                    context.runtime.getKernel(),
+                    new IRubyObject[] {
+                        getClassFrom(timeout, "Error"), // Timeout::Error
+                        rubyException.callMethod(context, "message"),
+                        rubyException.callMethod(context, "backtrace")
+                    },
+                    Block.NULL_BLOCK);
+        }
+        return null;
+    }
+

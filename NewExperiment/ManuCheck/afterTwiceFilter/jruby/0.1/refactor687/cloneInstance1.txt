@@ -1,0 +1,10 @@
+(startLine=728 endLine=735 srcPath=/home/sonia/NewExperiment/jrubyFilter/00737/src/org/jruby/javasupport/JavaClass.java)
+            if (block.isGiven()) { // convert block to argument
+                Object[] convertedArgs = new IRubyObject[3];
+                convertedArgs[0] = convertArgument(context, arg0);
+                convertedArgs[1] = convertArgument(context, arg1);
+                convertedArgs[2] = convertArgument(context, RubyProc.newProc(self.getRuntime(), block, Block.Type.LAMBDA));
+                JavaMethod method = findMethod(self, name, convertedArgs, 3);
+                return Java.java_to_ruby(self, method.invoke((JavaObject)self.dataGetStruct(), convertedArgs), Block.NULL_BLOCK);
+            } else {
+

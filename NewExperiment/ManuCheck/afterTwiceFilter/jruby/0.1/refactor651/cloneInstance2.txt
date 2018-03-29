@@ -1,0 +1,15 @@
+(startLine=1924 endLine=1936 srcPath=/home/sonia/NewExperiment/jrubyFilter/00608/src/org/jruby/RubyString.java)
+        } else {
+            IRubyObject tmp = args[0].checkStringType();
+
+            if (tmp.isNil()) throw getRuntime().newTypeError("type mismatch: " + args[0].getMetaClass().getName() + " given");
+
+            ByteList sub = ((RubyString) tmp).value;
+
+            if (sub.length() > value.length()) return getRuntime().getNil();
+            // the empty string is always found at the beginning of a string (or at the end when rindex)
+            if (sub.realSize == 0) return getRuntime().newFixnum(pos);
+
+            pos = value.lastIndexOf(sub, pos);
+        }
+

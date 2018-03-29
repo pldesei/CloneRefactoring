@@ -1,0 +1,19 @@
+(startLine=1742 endLine=1758 srcPath=/home/sonia/NewExperiment/jrubyFilter/00504/src/org/jruby/evaluator/EvaluationState.java)
+    private static IRubyObject vcallNode(Ruby runtime, ThreadContext context, Node node, IRubyObject self) {
+        VCallNode iVisited = (VCallNode) node;
+        RubyModule module = self.getMetaClass();
+        if (module.index != 0 && iVisited.index != 0) {
+            return self.callMethod(context, module, iVisited.index, iVisited.getName(), 
+                    IRubyObject.NULL_ARRAY, CallType.VARIABLE, Block.NULL_BLOCK);
+        } else {
+            DynamicMethod method = module.searchMethod(iVisited.getName());
+
+            IRubyObject mmResult = RubyObject.callMethodMissingIfNecessary(context, self, method, iVisited.getName(), iVisited.index, IRubyObject.NULL_ARRAY, self, CallType.VARIABLE, Block.NULL_BLOCK);
+            if (mmResult != null) {
+                return mmResult;
+            }
+
+            return method.call(context, self, module, iVisited.getName(), IRubyObject.NULL_ARRAY, false, Block.NULL_BLOCK);
+        }
+    }
+

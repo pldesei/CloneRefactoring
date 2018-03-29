@@ -1,0 +1,25 @@
+(startLine=431 endLine=453 srcPath=/home/sonia/NewExperiment/jrubyFilter/01181/src/org/jruby/runtime/invokedynamic/InvokeDynamicSupport.java)
+            String name) throws Throwable {
+        RubyClass selfClass = pollAndGetClass(context, self);
+        CacheEntry entry = selfClass.searchWithCache(name);
+        
+        if (methodMissing(entry, site.callType(), name, caller)) {
+            return callMethodMissing(entry, site.callType(), context, self, name);
+        }
+        
+        MethodHandle target = getTarget(site, selfClass, name, entry, 0);
+        
+        if (target == null || ++site.failCount > RubyInstanceConfig.MAX_FAIL_COUNT) {
+            site.setTarget(target = createFail(FAIL_0, site, name, entry.method));
+        } else {
+            target = postProcess(site, target);
+            if (site.getTarget() != null) {
+                site.setTarget(createGWT(TEST_0, target, site.getTarget(), entry, site, false));
+            } else {
+                site.setTarget(createGWT(TEST_0, target, FALLBACK_0, entry, site));
+            }
+        }
+
+        return (IRubyObject)target.invokeWithArguments(context, caller, self, name);
+    }
+

@@ -1,0 +1,12 @@
+(startLine=557 endLine=566 srcPath=/home/sonia/NewExperiment/jrubyFilter/01180/src/org/jruby/compiler/ir/IRBuilder.java)
+    private Variable getValueInTemporaryVariable(IRScope s, Operand val) {
+        if ((val != null) && (val instanceof TemporaryVariable)) {
+            return (Variable)val;
+        }
+        else {
+            Variable tmpVar = s.getNewTemporaryVariable();
+            s.addInstr(new CopyInstr(tmpVar, val));
+            return tmpVar;
+        }
+    }
+

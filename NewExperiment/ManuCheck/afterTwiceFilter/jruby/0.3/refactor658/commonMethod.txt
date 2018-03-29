@@ -1,0 +1,18 @@
+(startLine=278 endLine=293 srcPath=/home/sonia/NewExperiment/jrubyFilter/00692/src/org/jruby/anno/AnnotationBinder.java)
+            private String getActualQualifiedName(TypeDeclaration td) {
+                // declared type returns the qualified name without $ for inner classes!!!
+                String qualifiedName;
+                if (td.getDeclaringType() != null) {
+                    // inner class, use $ to delimit
+                    if (td.getDeclaringType().getDeclaringType() != null) {
+                        qualifiedName = td.getDeclaringType().getDeclaringType().getQualifiedName() + "$" + td.getDeclaringType().getSimpleName() + "$" + td.getSimpleName();
+                    } else {
+                        qualifiedName = td.getDeclaringType().getQualifiedName() + "$" + td.getSimpleName();
+                    }
+                } else {
+                    qualifiedName = td.getQualifiedName();
+                }
+
+                return qualifiedName;
+            }
+

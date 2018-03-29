@@ -1,0 +1,6 @@
+(startLine=333 endLine=336 srcPath=/home/sonia/NewExperiment/jrubyFilter/01599/core/src/main/java/org/jruby/java/invokers/RubyToJavaInvoker.java)
+    private void checkCallableArity(final JavaCallable callable, final int expected) {
+        final int arity = callable.getArity();
+        if ( arity != expected ) throw runtime.newArgumentError(expected, arity);
+    }
+

@@ -1,0 +1,18 @@
+(startLine=2693 endLine=2708 srcPath=/home/sonia/NewExperiment/jrubyFilter/01685/core/src/main/java/org/jruby/lexer/yacc/RubyLexer.java)
+        if (peek('{')) { // handle \\u{...}
+            do {
+                buffer.append(nextc());
+                if (scanHexLiteral(buffer, 6, false, "invalid Unicode escape") > 0x10ffff) {
+                    throw new SyntaxException(PID.INVALID_ESCAPE_SYNTAX, getPosition(),
+                            getCurrentLine(), "invalid Unicode codepoint (too large)");
+                }
+            } while (peek(' ') || peek('\t'));
+
+            int c = nextc();
+            if (c != '}') {
+                throw new SyntaxException(PID.INVALID_ESCAPE_SYNTAX, getPosition(),
+                        getCurrentLine(), "unterminated Unicode escape");
+            }
+            buffer.append((char) c);
+        } else { // handle \\uxxxx
+

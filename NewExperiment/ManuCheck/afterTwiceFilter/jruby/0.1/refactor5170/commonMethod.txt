@@ -1,0 +1,10 @@
+(startLine=123 endLine=130 srcPath=/home/sonia/NewExperiment/jrubyFilter/01215/src/org/jruby/util/Pack.java)
+    private static double str2dbl(Ruby runtime, RubyString o) {
+        String str = o.asJavaString();
+        double d = RubyNumeric.num2dbl(o.convertToFloat());
+            
+        if (str.matches("^\\s*[-+]?\\s*[0-9].*")) return d;
+
+        throw runtime.newArgumentError("invalid value for Float");        
+    }
+

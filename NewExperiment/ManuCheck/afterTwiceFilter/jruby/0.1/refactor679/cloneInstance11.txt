@@ -1,0 +1,10 @@
+(startLine=716 endLine=723 srcPath=/home/sonia/NewExperiment/jrubyFilter/00735/src/org/jruby/javasupport/JavaClass.java)
+            } else {
+                IRubyObject[] convertedArgs = new IRubyObject[len];
+                convertedArgs[0] = Java.ruby_to_java(self,arg0,Block.NULL_BLOCK);
+                convertedArgs[1] = Java.ruby_to_java(self,arg1,Block.NULL_BLOCK);
+                convertedArgs[2] = Java.ruby_to_java(self,arg2,Block.NULL_BLOCK);
+                JavaMethod method = findMethod(self, name, convertedArgs, len);
+                return Java.java_to_ruby(self, method.invoke((JavaObject)self.dataGetStruct(), convertedArgs), Block.NULL_BLOCK);
+            }
+

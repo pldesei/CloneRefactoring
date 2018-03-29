@@ -1,0 +1,12 @@
+(startLine=1226 endLine=1235 srcPath=/home/sonia/NewExperiment/jrubyFilter/01369/src/org/jruby/RubyModule.java)
+        if (method.isUndefined()) {
+            if (isModule()) {
+                method = runtime.getObject().searchMethod(oldName);
+            }
+
+            if (method.isUndefined()) {
+                throw runtime.newNameError("undefined method `" + oldName + "' for " +
+                        (isModule() ? "module" : "class") + " `" + getName() + "'", oldName);
+            }
+        }
+

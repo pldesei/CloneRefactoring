@@ -1,0 +1,16 @@
+(startLine=302 endLine=315 srcPath=/home/sonia/NewExperiment/jrubyFilter/00912/src/org/jruby/javasupport/util/RuntimeHelpers.java)
+    public static IRubyObject callMethodMissing(ThreadContext context, IRubyObject receiver, Visibility visibility, String name, CallType callType, IRubyObject[] args, Block block) {
+        Ruby runtime = context.getRuntime();
+
+        if (name.equals("method_missing")) {
+            return selectInternalMM(runtime, visibility, callType).call(context, receiver, receiver.getMetaClass(), name, args);
+        }
+
+        DynamicMethod methodMissing = receiver.getMetaClass().searchMethod("method_missing");
+        if (methodMissing.isUndefined() || methodMissing == runtime.getDefaultMethodMissing()) {
+            return selectInternalMM(runtime, visibility, callType).call(context, receiver, receiver.getMetaClass(), name, args);
+        }
+        IRubyObject[] newArgs = prepareMethodMissingArgs(args, context, name);
+        return methodMissing.call(context, receiver, receiver.getMetaClass(), "method_missing", newArgs, block);
+    }
+

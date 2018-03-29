@@ -1,0 +1,14 @@
+(startLine=135 endLine=146 srcPath=/home/sonia/NewExperiment/jrubyFilter/00777/src/org/jruby/runtime/scope/ManyVarsDynamicScope.java)
+    public IRubyObject getValueThreeDepthZeroOrNil(IRubyObject nil) {
+        assert variableValues != null : "No variables in getValue for off: " + 3 + ", Dep: " + 0;
+        assert 3 < variableValues.length : "Index to big for getValue off: " + 3 + ", Dep: " + 0 + ", O: " + this;
+        // &foo are not getting set from somewhere...I want the following assert to be true though
+        //assert variableValues[offset] != null : "Getting unassigned: " + staticScope.getVariables()[offset];
+        IRubyObject value = variableValues[3];
+        if (value == null) {
+            variableValues[3] = nil;
+            value = nil;
+        }
+        return value;
+    }
+

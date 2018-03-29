@@ -1,0 +1,17 @@
+(startLine=689 endLine=703 srcPath=/home/sonia/NewExperiment/jrubyFilter/01086/src/org/jruby/util/Dir.java)
+                            if(fnmatch(magic,0,magic.length,bs,0, bs.length,flags) == 0) {
+                                buf.length(0);
+                                buf.append(base);
+                                buf.append( BASE(base) ? SLASH : EMPTY );
+                                buf.append(getBytesInUTF8(dirp[i]));
+                                if(m == -1) {
+                                    status = func.call(buf.getUnsafeBytes(),0, buf.getRealSize(),arg);
+                                    if(status != 0) {
+                                        break;
+                                    }
+                                    continue;
+                                }
+                                link.add(buf);
+                                buf = new ByteList(20);
+                            }
+

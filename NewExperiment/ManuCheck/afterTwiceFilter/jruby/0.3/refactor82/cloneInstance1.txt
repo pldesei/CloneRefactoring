@@ -1,0 +1,12 @@
+(startLine=581 endLine=590 srcPath=/home/sonia/NewExperiment/jrubyFilter/00233/src/org/jruby/parser/DefaultRubyParser.java)
+  {
+                    support.checkExpression(((INode)yyVals[0+yyTop]));
+                    if (((INode)yyVals[0+yyTop]) instanceof ArrayNode && 
+                        ListNodeUtil.getLength(((IListNode)yyVals[0+yyTop])) == 1) {
+                        yyVal = new ReturnNode(getPosition(), 
+                            ListNodeUtil.getLast(((IListNode)yyVals[0+yyTop])));
+                    } else {
+                        yyVal = new ReturnNode(getPosition(), ((INode)yyVals[0+yyTop]));
+                    }
+                }
+

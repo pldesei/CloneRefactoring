@@ -1,0 +1,28 @@
+(startLine=307 endLine=332 srcPath=/home/sonia/NewExperiment/jrubyFilter/00915/src/org/jruby/RubyFileTest.java)
+    private static ZipEntry file_in_archive(IRubyObject path) {
+        if (path instanceof RubyFile) {
+            return null;
+        }
+
+        if (path.convertToString().toString().startsWith("file:")) {
+            String file = path.convertToString().toString().substring(5);
+            int bang = file.indexOf('!');
+            if (bang == -1 || bang == file.length() - 1) {
+                return null;
+            }
+            String jar = file.substring(0, bang);
+            String after = file.substring(bang + 2);
+            try {
+                JarFile jf = new JarFile(jar);
+                ZipEntry entry = jf.getEntry(after + "/"); // first try as directory
+                if (entry == null) {
+                    entry = jf.getEntry(after); // next as regular file
+                }
+                return entry;
+            } catch (Exception e) {
+            }
+        }
+
+        return null;
+    }
+

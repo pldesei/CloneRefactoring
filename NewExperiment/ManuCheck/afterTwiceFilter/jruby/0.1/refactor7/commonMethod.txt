@@ -1,0 +1,10 @@
+(startLine=138 endLine=145 srcPath=/home/sonia/NewExperiment/jrubyFilter/00069/org/jruby/RubyFixnum.java)
+    public RubyFixnum newFixnum(long value) {
+        // Cache for Fixnums (Performance)
+        if ((value & ~Ruby.FIXNUM_CACHE_MAX) == 0) {
+            return getRuby().fixnumCache[(int) value];
+        }
+
+        return new RubyFixnum(getRuby(), value);
+    }
+

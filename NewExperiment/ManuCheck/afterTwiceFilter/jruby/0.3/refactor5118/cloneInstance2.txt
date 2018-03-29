@@ -1,0 +1,19 @@
+(startLine=988 endLine=1004 srcPath=/home/sonia/NewExperiment/jrubyFilter/01002/src/org/jruby/internal/runtime/methods/InvocationMethodFactory.java)
+    private ClassWriter createJavaMethodCtor(String namePath, String shortPath, String sup) throws Exception {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        cw.visit(RubyInstanceConfig.JAVA_VERSION, ACC_PUBLIC + ACC_SUPER, namePath, null, sup, null);
+        cw.visitSource(namePath.replace('.', '/') + ".gen", null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", JAVA_SUPER_SIG, null, null);
+        mv.visitCode();
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitVarInsn(ALOAD, 1);
+        mv.visitVarInsn(ALOAD, 2);
+        mv.visitMethodInsn(INVOKESPECIAL, sup, "<init>", JAVA_SUPER_SIG);
+        Label line = new Label();
+        mv.visitLineNumber(0, line);
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(0,0);
+        mv.visitEnd();
+        return cw;
+    }
+

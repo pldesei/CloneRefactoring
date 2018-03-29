@@ -1,0 +1,9 @@
+(startLine=159 endLine=165 srcPath=/home/sonia/NewExperiment/jrubyFilter/00049/org/jruby/RubyObject.java)
+    protected int argCount(RubyObject[] args, int min, int max) {
+        int len = args.length;
+        if (len < min || (max > -1 && len > max)) {
+            throw new RubyArgumentException("wrong number of arguments");
+        }
+        return len;
+    }
+

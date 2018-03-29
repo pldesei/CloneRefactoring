@@ -1,0 +1,16 @@
+(startLine=37 endLine=50 srcPath=/home/sonia/NewExperiment/jrubyFilter/01129/src/org/jruby/compiler/ir/dataflow/analyses/BindingStorePlacementProblem.java)
+    public boolean scopeDefinesVariable(Variable v) { 
+        if (_defVars.contains(v)) {
+            return true;
+        }
+        else {
+            for (IRClosure cl: getCFG().getScope().getClosures()) {
+                BindingStorePlacementProblem nestedProblem = (BindingStorePlacementProblem)cl.getCFG().getDataFlowSolution(DataFlowConstants.BSP_NAME);
+                if (nestedProblem.scopeDefinesVariable(v)) 
+                    return true;
+            }
+
+            return false;
+        }
+    }
+

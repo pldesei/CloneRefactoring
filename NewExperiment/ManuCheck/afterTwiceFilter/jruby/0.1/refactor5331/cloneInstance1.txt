@@ -1,0 +1,12 @@
+(startLine=103 endLine=112 srcPath=/home/sonia/NewExperiment/jrubyFilter/01741/truffle/src/main/java/org/jruby/truffle/nodes/supercall/GeneralSuperCallNode.java)
+    public Object isDefined(VirtualFrame frame) {
+        final Object self = RubyArguments.getSelf(frame.getArguments());
+        final InternalMethod superMethod = lookupSuperMethodNode.executeLookupSuperMethod(frame, self);
+
+        if (superMethod == null) {
+            return nil();
+        } else {
+            return Layouts.STRING.createString(getContext().getCoreLibrary().getStringFactory(), RubyString.encodeBytelist("super", UTF8Encoding.INSTANCE), StringSupport.CR_7BIT, null);
+        }
+    }
+

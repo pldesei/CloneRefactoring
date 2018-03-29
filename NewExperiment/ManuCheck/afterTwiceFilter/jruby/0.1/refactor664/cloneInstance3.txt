@@ -1,0 +1,17 @@
+(startLine=132 endLine=146 srcPath=/home/sonia/NewExperiment/jrubyFilter/00714/src/org/jruby/runtime/CallSite.java)
+        protected IRubyObject cacheAndCall(RubyClass selfType, Block block, ThreadContext context, IRubyObject self) {
+            DynamicMethod method = selfType.searchMethod(methodName);
+
+            if (method.isUndefined() || (!methodName.equals("method_missing") && !method.isCallableFrom(context.getFrameSelf(), callType))) {
+                return RuntimeHelpers.callMethodMissing(context, self, method, methodName, IRubyObject.NULL_ARRAY, context.getFrameSelf(), callType, block);
+            }
+
+            IRubyObject result = method.call(context, self, selfType, methodName, block);
+            
+            if (misses < MAX_MISSES) {
+                updateCacheEntry(method, selfType);
+            }
+            
+            return result;
+        }
+

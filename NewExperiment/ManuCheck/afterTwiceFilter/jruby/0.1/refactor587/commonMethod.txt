@@ -1,0 +1,12 @@
+(startLine=364 endLine=373 srcPath=/home/sonia/NewExperiment/jrubyFilter/00494/src/org/jruby/RubyString.java)
+    public final RubyString makeShared(int index, int len) {
+        if (len == 0) return newEmptyString(getRuntime(), getMetaClass());
+        
+        if (shareLevel == SHARE_LEVEL_NONE) shareLevel = SHARE_LEVEL_BUFFER;
+        RubyString shared = new RubyString(getRuntime(), getMetaClass(), value.makeShared(index, len));
+        shared.shareLevel = SHARE_LEVEL_BUFFER;
+
+        shared.infectBy(this);
+        return shared;
+    }
+

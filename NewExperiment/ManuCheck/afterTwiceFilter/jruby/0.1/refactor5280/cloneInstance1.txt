@@ -1,0 +1,12 @@
+(startLine=718 endLine=727 srcPath=/home/sonia/NewExperiment/jrubyFilter/01560/core/src/main/java/org/jruby/ir/targets/Bootstrap.java)
+    public static IRubyObject invokeClassSuper(InvokeSite site, String methodName, boolean[] splatMap, ThreadContext context, IRubyObject caller, IRubyObject self, RubyClass definingModule, IRubyObject[] args, Block block) throws Throwable {
+        // TODO: get rid of caller
+        // TODO: caching
+        args = IRRuntimeHelpers.splatArguments(args, splatMap);
+        RubyClass superClass = definingModule.getMetaClass().getSuperClass();
+        DynamicMethod method = superClass != null ? superClass.searchMethod(methodName) : UndefinedMethod.INSTANCE;
+        IRubyObject rVal = method.isUndefined() ? Helpers.callMethodMissing(context, self, method.getVisibility(), methodName, CallType.SUPER, args, block)
+                : method.call(context, self, superClass, methodName, args, block);
+        return rVal;
+    }
+

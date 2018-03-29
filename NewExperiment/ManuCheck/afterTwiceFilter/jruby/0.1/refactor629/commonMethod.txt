@@ -1,0 +1,101 @@
+(startLine=1275 endLine=1373 srcPath=/home/sonia/NewExperiment/jrubyFilter/00581/src/org/jruby/lexer/yacc/RubyYaccLexer.java)
+    private int identifier(char c, boolean commandState) throws IOException {
+        if (!isIdentifierChar(c)) {
+            throw new SyntaxException(getPosition(), "Invalid char `\\" + Integer.toOctalString(c & 0xff) + "' in expression");
+        }
+    
+        tokenBuffer.setLength(0);
+        char first = c;
+
+        c = getIdentifier(c);
+        boolean lastBangOrPredicate = false;
+
+        // methods 'foo!' and 'foo?' are possible but if followed by '=' it is relop
+        if (c == '!' || c == '?') {
+            if (!src.peek('=')) {
+                lastBangOrPredicate = true;
+                tokenBuffer.append(c);
+            } else {
+                src.unread(c);
+            }
+        } else {
+            src.unread(c);
+        }
+        
+        int result = 0;
+
+        LexState last_state = lex_state;
+        if (lastBangOrPredicate) {
+            result = Tokens.tFID;
+        } else {
+            if (lex_state == LexState.EXPR_FNAME) {
+                if ((c = src.read()) == '=') { 
+                    char c2 = src.read();
+
+                    if (c2 != '~' && c2 != '>' &&
+                            (c2 != '=' || (c2 == '\n' && src.peek('>')))) {
+                        result = Tokens.tIDENTIFIER;
+                        tokenBuffer.append(c);
+                        src.unread(c2);
+                    } else { 
+                        src.unread(c2);
+                        src.unread(c);
+                    }
+                } else {
+                    src.unread(c);
+                }
+            }
+            if (result == 0 && Character.isUpperCase(first)) {
+                result = Tokens.tCONSTANT;
+            } else {
+                result = Tokens.tIDENTIFIER;
+            }
+        }
+
+        String tempVal = tokenBuffer.toString().intern();
+
+        if (lex_state != LexState.EXPR_DOT) {
+            /* See if it is a reserved word.  */
+            //Keyword keyword = Keyword.getKeyword(tempVal, tempVal.length());
+            Keyword keyword = getKeyword(tempVal);
+            if (keyword != null) {
+                // enum lex_state
+                LexState state = lex_state;
+
+                lex_state = keyword.state;
+                if (lex_state == LexState.EXPR_FNAME) {
+                    yaccValue = new Token(keyword.name, getPosition());
+                } else {
+                    yaccValue = new Token(tempVal, getPosition());
+                }
+                if (keyword.id0 == Tokens.kDO) {
+                    if (conditionState.isInState()) return Tokens.kDO_COND;
+
+                    if (state != LexState.EXPR_CMDARG && cmdArgumentState.isInState()) {
+                        return Tokens.kDO_BLOCK;
+                    }
+                    if (state == LexState.EXPR_ENDARG) return Tokens.kDO_BLOCK;
+
+                    return Tokens.kDO;
+                }
+
+                if (state == LexState.EXPR_BEG) return keyword.id0;
+
+                if (keyword.id0 != keyword.id1) lex_state = LexState.EXPR_BEG;
+
+                return keyword.id1;
+            }
+        }
+
+        switch (lex_state) {
+        case EXPR_BEG: case EXPR_MID: case EXPR_DOT: case EXPR_ARG: case EXPR_CMDARG:
+            lex_state = commandState ? LexState.EXPR_CMDARG : LexState.EXPR_ARG; 
+            break;
+        default:
+            lex_state = LexState.EXPR_END;
+        break;
+        }
+        
+        return identifierToken(last_state, result, tempVal);
+    }
+

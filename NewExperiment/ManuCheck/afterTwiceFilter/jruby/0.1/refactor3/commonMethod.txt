@@ -1,0 +1,8 @@
+(startLine=86 endLine=91 srcPath=/home/sonia/NewExperiment/jrubyFilter/00065/org/jruby/RubyNumeric.java)
+    public static RubyNumeric numericValue(RubyObject arg) {
+        if (!(arg instanceof RubyNumeric)) {
+            throw new RubyTypeException(arg.getRuby(), "argument not numeric");
+        }
+        return (RubyNumeric)arg;
+    }
+

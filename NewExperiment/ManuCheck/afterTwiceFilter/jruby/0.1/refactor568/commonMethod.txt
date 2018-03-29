@@ -1,0 +1,7 @@
+(startLine=942 endLine=946 srcPath=/home/sonia/NewExperiment/jrubyFilter/00486/src/org/jruby/Ruby.java)
+    public JRubyClassLoader getJRubyClassLoader() {
+        if (!Ruby.isSecurityRestricted() && jrubyClassLoader == null)
+            jrubyClassLoader = new JRubyClassLoader(Thread.currentThread().getContextClassLoader());
+        return jrubyClassLoader;
+    }
+

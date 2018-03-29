@@ -1,0 +1,33 @@
+(startLine=643 endLine=673 srcPath=/home/sonia/NewExperiment/jrubyFilter/01181/src/org/jruby/runtime/invokedynamic/InvokeDynamicSupport.java)
+    public static IRubyObject invocationFallback(JRubyCallSite site, ThreadContext context, IRubyObject caller, IRubyObject self, String name, IRubyObject arg0, IRubyObject arg1, IRubyObject arg2, Block block) throws Throwable {
+        RubyClass selfClass = pollAndGetClass(context, self);
+        CacheEntry entry = selfClass.searchWithCache(name);
+
+        if (methodMissing(entry, site.callType(), name, caller)) {
+            try {
+                return callMethodMissing(entry, site.callType(), context, self, name, arg0, arg1, arg2, block);
+            } catch (JumpException.BreakJump bj) {
+                return handleBreakJump(context, bj);
+            } catch (JumpException.RetryJump rj) {
+                return retryJumpError(context);
+            } finally {
+                if (site.isIterator()) block.escape();
+            }
+        }
+
+        MethodHandle target = getTarget(site, selfClass, name, entry, 3);
+
+        if (target == null || ++site.failCount > RubyInstanceConfig.MAX_FAIL_COUNT) {
+            site.setTarget(target = createFail(FAIL_3_B, site, name, entry.method));
+        } else {
+            target = postProcess(site, target);
+            if (site.getTarget() != null) {
+                site.setTarget(createGWT(TEST_3_B, target, site.getTarget(), entry, site, false));
+            } else {
+                site.setTarget(createGWT(TEST_3_B, target, FALLBACK_3_B, entry, site));
+            }
+        }
+
+        return (IRubyObject) target.invokeWithArguments(context, caller, self, name, arg0, arg1, arg2, block);
+    }
+

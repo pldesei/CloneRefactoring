@@ -1,0 +1,23 @@
+(startLine=176 endLine=196 srcPath=/home/sonia/NewExperiment/jrubyFilter/01885/core/src/main/java/org/jruby/ext/io/wait/IOWaitLibrary.java)
+    private static long prepareTimeout(ThreadContext context, IRubyObject[] argv) {
+        IRubyObject timeout;
+        long tv;
+        switch (argv.length) {
+            case 2:
+            case 1:
+                timeout = argv[0];
+                break;
+            default:
+                timeout = context.nil;
+        }
+
+        if (timeout.isNil()) {
+            tv = -1;
+        }
+        else {
+            tv = (long)(RubyTime.convertTimeInterval(context, timeout) * 1000);
+            if (tv < 0) throw context.runtime.newArgumentError("time interval must be positive");
+        }
+        return tv;
+    }
+

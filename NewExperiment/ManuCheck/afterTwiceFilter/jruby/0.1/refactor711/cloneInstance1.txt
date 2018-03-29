@@ -1,0 +1,10 @@
+(startLine=1265 endLine=1272 srcPath=/home/sonia/NewExperiment/jrubyFilter/00811/src/org/jruby/RubyFile.java)
+    public static IRubyObject atime(ThreadContext context, IRubyObject recv, IRubyObject filename) {
+        // UNICODE?
+        String f = filename.convertToString().toString();
+        if(f.startsWith("file:") && f.indexOf('!') != -1) {
+            f = f.substring(5, f.indexOf("!"));
+        }
+        return context.getRuntime().newFileStat(f, false).atime();
+    }
+

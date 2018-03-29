@@ -1,0 +1,53 @@
+(startLine=1113 endLine=1163 srcPath=/home/sonia/NewExperiment/jrubyFilter/01576/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java)
+    private void superCommon(String name, CallInstr instr, Operand[] args, Operand definingModule, boolean containsArgSplat, Operand closure) {
+        IRBytecodeAdapter m = jvmMethod();
+        Operation operation = instr.getOperation();
+
+        m.loadContext();
+        m.loadSelf(); // TODO: get rid of caller
+        m.loadSelf();
+        if (definingModule == UndefinedValue.UNDEFINED) {
+            jvmAdapter().aconst_null();
+        } else {
+            visit(definingModule);
+        }
+
+        // TODO: CON: is this safe?
+        jvmAdapter().checkcast(p(RubyClass.class));
+
+        // process args
+        for (int i = 0; i < args.length; i++) {
+            Operand operand = args[i];
+            visit(operand);
+        }
+
+        // if there's splats, provide a map and let the call site sort it out
+        boolean[] splatMap = IRRuntimeHelpers.buildSplatMap(args, containsArgSplat);
+
+        boolean hasClosure = closure != null;
+        if (hasClosure) {
+            m.loadContext();
+            visit(closure);
+            m.invokeIRHelper("getBlockFromObject", sig(Block.class, ThreadContext.class, Object.class));
+        }
+
+        switch (operation) {
+            case INSTANCE_SUPER:
+                m.invokeInstanceSuper(name, args.length, hasClosure, splatMap);
+                break;
+            case CLASS_SUPER:
+                m.invokeClassSuper(name, args.length, hasClosure, splatMap);
+                break;
+            case UNRESOLVED_SUPER:
+                m.invokeUnresolvedSuper(name, args.length, hasClosure, splatMap);
+                break;
+            case ZSUPER:
+                m.invokeZSuper(name, args.length, hasClosure, splatMap);
+                break;
+            default:
+                throw new NotCompilableException("unknown super type " + operation + " in " + instr);
+        }
+
+        jvmStoreLocal(instr.getResult());
+    }
+

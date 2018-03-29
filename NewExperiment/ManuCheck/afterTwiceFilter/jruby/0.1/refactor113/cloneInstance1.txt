@@ -1,0 +1,20 @@
+(startLine=63 endLine=80 srcPath=/home/sonia/NewExperiment/jrubyFilter/00381/src/org/jruby/internal/runtime/methods/SimpleInvocationMethod.java)
+	public IRubyObject call(ThreadContext context, IRubyObject receiver, RubyModule lastClass, String name, IRubyObject[] args, boolean noSuper) {
+        IRuby runtime = context.getRuntime();
+        arity.checkArity(runtime, args);
+        try {
+            return call(receiver,args);
+        } catch(RaiseException e) {
+            throw e;
+        } catch(JumpException e) {
+            throw e;
+        } catch(ThreadKill e) {
+            throw e;
+        } catch(MainExitException e) {
+            throw e;
+        } catch(Exception e) {
+            receiver.getRuntime().getJavaSupport().handleNativeException(e);
+            return receiver.getRuntime().getNil();
+        }
+    }
+

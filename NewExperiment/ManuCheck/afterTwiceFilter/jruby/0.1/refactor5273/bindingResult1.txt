@@ -1,0 +1,69 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01545
+predFragLineRange:2069-2086
+predMethodLineRange:2067-2092
+nextLineRange:1820-1851
+predStrMethodInvoNames:
+[getOpenFileChecked, getPipeStream, isReadable, newIOError, getPipeStream, close, fclose, getPipeStream, setPipeStream, setMode, getMode, newErrnoEBADFError]
+%%%%%%%%%%
+AddedMethodInvo Line:1826 InvoName:GetWriteIO()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:public org.jruby.RubyIO GetWriteIO() 
+%%%%%%%%%%
+AddedMethodInvo Line:1828 InvoName:fptr.socketChannel()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.nio.channels.SocketChannel socketChannel() 
+%%%%%%%%%%
+AddedMethodInvo Line:1830 InvoName:fptr.socketChannel().shutdownOutput()
+PackageName:java.nio.channels
+QualifiedClassName:java.nio.channels.SocketChannel
+ClassName:SocketChannel
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/maven/jruby-complete/src/it/bouncycastle-with-bc-gem/src/test/java/java/nio/channels/SocketChannel.java
+InvokedMethodSig:public abstract java.nio.channels.SocketChannel shutdownOutput() throws java.io.IOException
+%%%%%%%%%%
+AddedMethodInvo Line:1830 InvoName:fptr.socketChannel()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.nio.channels.SocketChannel socketChannel() 
+%%%%%%%%%%
+AddedMethodInvo Line:1832 InvoName:runtime.newErrnoFromErrno(Helpers.errnoFromException(ioe),fptr.getPath())
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newErrnoFromErrno(Errno, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:1832 InvoName:Helpers.errnoFromException(ioe)
+PackageName:org.jruby.runtime
+QualifiedClassName:org.jruby.runtime.Helpers
+ClassName:Helpers
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/runtime/Helpers.java
+InvokedMethodSig:public static Errno errnoFromException(java.lang.Throwable) 
+%%%%%%%%%%
+AddedMethodInvo Line:1832 InvoName:fptr.getPath()
+PackageName:org.jruby.util.io
+QualifiedClassName:org.jruby.util.io.OpenFile
+ClassName:OpenFile
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/util/io/OpenFile.java
+InvokedMethodSig:public java.lang.String getPath() 
+%%%%%%%%%%
+AddedMethodInvo Line:1836 InvoName:write_io.rbIoClose(runtime)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:protected org.jruby.runtime.builtin.IRubyObject rbIoClose(org.jruby.Ruby) 
+%%%%%%%%%%
+AddedMethodInvo Line:1849 InvoName:write_io.rbIoClose(runtime)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyIO
+ClassName:RubyIO
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java
+InvokedMethodSig:protected org.jruby.runtime.builtin.IRubyObject rbIoClose(org.jruby.Ruby) 

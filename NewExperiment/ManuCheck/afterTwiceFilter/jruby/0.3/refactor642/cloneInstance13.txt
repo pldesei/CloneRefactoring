@@ -1,0 +1,12 @@
+(startLine=1268 endLine=1277 srcPath=/home/sonia/NewExperiment/jrubyFilter/00598/src/org/jruby/RubyHash.java)
+        try {
+            hash.preIter();
+            RubyHashEntry[]ltable = hash.table;
+            for (int i = 0; i < ltable.length; i++) {
+                for (RubyHashEntry entry = ltable[i]; (entry = hash.checkIter(ltable, entry)) != null; entry = entry.next) {
+                    output.dumpObject(entry.key);
+                    output.dumpObject(entry.value);
+                }
+            }
+        } finally {hash.postIter();}
+

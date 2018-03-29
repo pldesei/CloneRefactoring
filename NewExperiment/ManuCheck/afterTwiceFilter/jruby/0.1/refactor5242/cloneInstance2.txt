@@ -1,0 +1,18 @@
+(startLine=2566 endLine=2581 srcPath=/home/sonia/NewExperiment/jrubyFilter/01490/core/src/main/java/org/jruby/Ruby.java)
+    public ParseResult parseFileFromMain(String file, InputStream in, DynamicScope scope) {
+        addLoadParseToStats();
+
+        if (!RubyInstanceConfig.IR_READING) return parseFileFromMainAndGetAST(in, file, scope);
+        
+        try {
+            File irFile = IRFileExpert.getIRPersistedFile(file);
+            InputStream irIn = new FileInputStream(irFile);
+
+            return IRReader.read(irIn, this);
+        } catch (Exception e) {
+            System.out.println(e);
+
+            return parseFileFromMainAndGetAST(in, file, scope);
+        }
+    }
+

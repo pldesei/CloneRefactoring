@@ -1,0 +1,13 @@
+(startLine=4520 endLine=4530 srcPath=/home/sonia/NewExperiment/jrubyFilter/01545/core/src/main/java/org/jruby/RubyIO.java)
+    public OpenFile MakeOpenFile() {
+        Ruby runtime = getRuntime();
+        if (openFile != null) {
+            rbIoClose(runtime);
+            rb_io_fptr_finalize(runtime, openFile);
+            openFile = null;
+        }
+        openFile = new OpenFile(runtime.getNil());
+        runtime.addInternalFinalizer(openFile);
+        return openFile;
+    }
+

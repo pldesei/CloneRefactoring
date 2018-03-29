@@ -1,0 +1,35 @@
+(startLine=1524 endLine=1556 srcPath=/home/sonia/NewExperiment/jrubyFilter/00129/org/jruby/RubyArray.java)
+							{ 
+								int lByte = 0;
+								int lIndex = 0;
+								char lCurChar;
+								int lPadLength = 0;
+								if (lLength > lCurElemString.length())
+								{	//I don't undestand this why divide by 2
+									lPadLength = (lLength - lCurElemString.length()+1)/2;
+									lLength = lCurElemString.length();
+								}
+								lCurChar = lCurElemString.charAt(lIndex);
+								for(lIndex = 0; lIndex++ < lLength; lCurChar = lCurElemString.charAt(lIndex))
+								{	
+									if (Character.isLetterOrDigit(lCurChar))	//this test may be too lax but it is the same as in MRI
+										lByte |= (((lCurChar & 15) + 9) & 15) << 4;
+									else
+										lByte  |= (lCurChar & 15) << 4;
+									if ((lIndex & 1) != 0)
+										lByte >>= 4;
+									else
+									{
+										lResult.append(lByte & 0xff);
+									}
+								}
+								if ((lLength & 1) != 0)
+								{
+									lResult.append(lByte & 0xff);
+								}
+
+								//do some padding, I don't understand the padding strategy
+								lLength = lResult.length();
+								lResult.setLength(lLength+lPadLength);
+							}
+

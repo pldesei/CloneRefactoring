@@ -1,0 +1,13 @@
+(startLine=605 endLine=615 srcPath=/home/sonia/NewExperiment/jrubyFilter/00948/src/org/jruby/RubyJRuby.java)
+        private static Class getAnnoClass(ThreadContext context, Object annoClass) {
+            if (annoClass instanceof Class) {
+                return (Class) annoClass;
+            } else if (annoClass instanceof IRubyObject) {
+                IRubyObject annoMod = (IRubyObject) annoClass;
+                if (annoMod.respondsTo("java_class")) {
+                    return (Class) JavaUtil.convertRubyToJava(annoMod.callMethod(context, "java_class"));
+                }
+            }
+            throw context.getRuntime().newArgumentError("must supply java class argument instead of " + annoClass.toString());
+        }
+

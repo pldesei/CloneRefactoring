@@ -1,0 +1,20 @@
+(startLine=87 endLine=104 srcPath=/home/sonia/NewExperiment/jrubyFilter/01503/core/src/main/java/org/jruby/ext/fiber/ThreadFiber.java)
+    private static IRubyObject exchangeWithFiber(ThreadContext context, FiberData currentFiberData, FiberData targetFiberData, IRubyObject val) {
+        targetFiberData.queue.push(context, val);
+
+        while (true) {
+            try {
+                IRubyObject result = currentFiberData.queue.pop(context);
+                if (result == NEVER) result = context.nil;
+                return result;
+            } catch (RaiseException re) {
+                if (targetFiberData.queue.isShutdown()) {
+                    throw re;
+                }
+
+                // forward external exception to the fiber and try again
+                targetFiberData.fiber.get().thread.raise(re.getException());
+            }
+        }
+    }
+

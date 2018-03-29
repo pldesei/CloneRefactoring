@@ -1,0 +1,15 @@
+(startLine=102 endLine=114 srcPath=/home/sonia/NewExperiment/jrubyFilter/00744/src/org/jruby/javasupport/methods/InstanceMethodInvoker.java)
+    public IRubyObject call(ThreadContext context, IRubyObject self, RubyModule clazz, String name, IRubyObject arg0, Block block) {
+        createJavaMethods(self.getRuntime());
+        if (block.isGiven()) {
+            Object[] convertedArgs = new Object[2];
+            RubyProc proc = RubyProc.newProc(self.getRuntime(), block, Block.Type.LAMBDA);
+            JavaMethod method = findMethodArityTwo(self, name, arg0, proc);
+            convertedArgs[0] = JavaUtil.convertArgumentToType(context, arg0, method.getParameterTypes()[0]);
+            convertedArgs[1] = JavaUtil.convertArgumentToType(context, proc, method.getParameterTypes()[1]);
+            return Java.java_to_ruby(self, method.invoke((JavaObject) self.dataGetStruct(), convertedArgs), Block.NULL_BLOCK);
+        } else {
+            return call(context, self, clazz, name, arg0);
+        }
+    }
+

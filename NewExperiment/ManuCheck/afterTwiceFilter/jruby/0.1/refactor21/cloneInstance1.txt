@@ -1,0 +1,11 @@
+(startLine=221 endLine=229 srcPath=/home/sonia/NewExperiment/jrubyFilter/00117/org/jruby/javasupport/JavaUtil.java)
+        } else if (javaClass.isArray()) {
+            Class arrayClass = javaClass.getComponentType();
+            int len = Array.getLength(object);
+            RubyObject[] items = new RubyObject[len];
+            for (int i = 0; i < len; i++) {
+                items[i] = convertJavaToRuby(ruby, Array.get(object, i));
+            }
+            return RubyArray.create(ruby, null, items);
+        } else if (List.class.isAssignableFrom(javaClass)) {
+

@@ -1,0 +1,16 @@
+(startLine=2019 endLine=2032 srcPath=/home/sonia/NewExperiment/jrubyFilter/00854/src/org/jruby/RubyIO.java)
+        try {
+            int maxLength = RubyNumeric.fix2int(args[0]);
+            if (maxLength < 0) {
+                throw runtime.newArgumentError("negative length " + maxLength + " given");
+            }
+            ByteList buf = ((ChannelStream)openFile.getMainStream()).readnonblock(RubyNumeric.fix2int(args[0]));
+            IRubyObject strbuf = RubyString.newString(runtime, buf == null ? new ByteList(ByteList.NULL_ARRAY) : buf);
+            if(args.length > 1) {
+                args[1].callMethod(context, "<<", strbuf);
+                return args[1];
+            }
+
+            return strbuf;
+        } catch (BadDescriptorException e) {
+

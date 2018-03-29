@@ -1,0 +1,23 @@
+(startLine=1262 endLine=1282 srcPath=/home/sonia/NewExperiment/jrubyFilter/00690/src/org/jruby/RubyFile.java)
+    public static IRubyObject lchown(IRubyObject recv, IRubyObject[] args) {
+        Ruby runtime = recv.getRuntime();
+        
+        int count = 0;
+        RubyInteger owner = args[0].convertToInteger();
+        RubyInteger group = args[1].convertToInteger();
+        for (int i = 2; i < args.length; i++) {
+            IRubyObject filename = args[i];
+            
+            if (!RubyFileTest.exist_p(filename, filename.convertToString()).isTrue()) {
+                throw runtime.newErrnoENOENTError("No such file or directory - " + filename);
+            }
+            
+            boolean result = 0 == runtime.getPosix().lchown(filename.toString(), (int)owner.getLongValue(), (int)group.getLongValue());
+            if (result) {
+                count++;
+            }
+        }
+        
+        return runtime.newFixnum(count);
+    }
+

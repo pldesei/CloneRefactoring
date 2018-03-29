@@ -1,0 +1,21 @@
+(startLine=267 endLine=285 srcPath=/home/sonia/NewExperiment/jrubyFilter/01598/core/src/main/java/org/jruby/java/invokers/RubyToJavaInvoker.java)
+    protected JavaCallable findCallableArityTwo(IRubyObject self, String name, IRubyObject arg0, IRubyObject arg1) {
+        JavaCallable callable;
+        if ((callable = javaCallable) == null) {
+            // TODO: varargs?
+            JavaCallable[] callablesForArity = null;
+            if (javaCallables.length <= 2 || (callablesForArity = javaCallables[2]) == null) {
+                throw runtime.newArgumentError(2, javaCallables.length - 1);
+            }
+            callable = CallableSelector.matchingCallableArityTwo(runtime, cache, callablesForArity, arg0, arg1);
+            if (callable == null) {
+                throw CallableSelector.argTypesDoNotMatch(runtime, self, callablesForArity, arg0, arg1);
+            }
+        } else {
+            if (callable.getParameterTypes().length != 2) {
+                throw runtime.newArgumentError(2, callable.getParameterTypes().length);
+            }
+        }
+        return callable;
+    }
+

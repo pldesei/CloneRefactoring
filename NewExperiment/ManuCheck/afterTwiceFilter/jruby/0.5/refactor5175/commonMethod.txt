@@ -1,0 +1,6 @@
+(startLine=106 endLine=109 srcPath=/home/sonia/NewExperiment/jrubyFilter/01230/src/org/jruby/RubyEnumerable.java)
+    public static IRubyObject each(ThreadContext context, IRubyObject self, BlockBody body) {
+        Block block = new Block(body, context.currentBinding(self, Visibility.PUBLIC));
+        return RuntimeHelpers.invoke(context, self, "each", block);
+    }
+

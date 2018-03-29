@@ -1,0 +1,13 @@
+(startLine=141 endLine=151 srcPath=/home/sonia/NewExperiment/jrubyFilter/00068/org/jruby/RubyFixnum.java)
+    public RubyNumeric op_plus(RubyObject num) {
+        RubyNumeric other = numericValue(num);
+        if (other instanceof RubyFloat) {
+            return RubyFloat.m_newFloat(getRuby(), getDoubleValue()).op_plus(other);
+        } else if (other instanceof RubyBignum
+                   || needBignumAdd(other.getLongValue())) {
+            return RubyBignum.m_newBignum(getRuby(), value).op_plus(other);
+        } else {
+            return m_newFixnum(value + other.getLongValue());
+        }
+    }
+

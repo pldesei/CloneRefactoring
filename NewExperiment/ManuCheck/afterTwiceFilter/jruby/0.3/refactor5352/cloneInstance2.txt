@@ -1,0 +1,19 @@
+(startLine=115 endLine=131 srcPath=/home/sonia/NewExperiment/jrubyFilter/01867/core/src/main/java/org/jruby/java/util/ArrayUtils.java)
+    public static void setWithExceptionHandlingDirect(Ruby runtime, Object ary, int intIndex, Object javaObject) {
+        try {
+            Array.set(ary, intIndex, javaObject);
+        } catch (IndexOutOfBoundsException e) {
+            throw runtime.newArgumentError(
+                                    "index out of bounds for java array (" + intIndex +
+                                    " for length " + Array.getLength(ary) + ')');
+        } catch (ArrayStoreException e) {
+            throw runtime.newTypeError(
+                                    "wrong element type " + javaObject.getClass() + "(array contains " +
+                                    ary.getClass().getComponentType().getName() + ')');
+        } catch (IllegalArgumentException iae) {
+            throw runtime.newArgumentError(
+                                    "wrong element type " + javaObject.getClass() + "(array contains " +
+                                    ary.getClass().getComponentType().getName() + ')');
+        }
+    }
+

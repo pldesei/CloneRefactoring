@@ -1,0 +1,17 @@
+(startLine=770 endLine=784 srcPath=/home/sonia/NewExperiment/jrubyFilter/00599/src/org/jruby/RubyHash.java)
+    private boolean hasValue(final IRubyObject expected) {
+        final ThreadContext context = getRuntime().getCurrentContext();
+        try {
+            visitAll(new Visitor() {
+                public void visit(IRubyObject key, IRubyObject value) {
+                    if (equalInternal(context, value, expected).isTrue()) {
+                        throw new Found();
+                    }
+                }
+            });
+            return false;
+        } catch (Found found) {
+            return true;
+        }
+    }
+

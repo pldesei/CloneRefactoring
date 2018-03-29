@@ -1,0 +1,19 @@
+(startLine=349 endLine=365 srcPath=/home/sonia/NewExperiment/jrubyFilter/00175/org/jruby/RubyObject.java)
+    /** rb_iv_set / rb_ivar_set
+     *
+     */
+    public IRubyObject setInstanceVariable(String name, IRubyObject value) {
+        if (isTaint() && getRuntime().getSafeLevel() >= 4) {
+            throw new SecurityError(getRuntime(), "Insecure: can't modify instance variable");
+        }
+        if (isFrozen()) {
+            throw new FrozenError(getRuntime(), "");
+        }
+        if (getInstanceVariables() == null) {
+            setInstanceVariables(new RubyHashMap());
+        }
+        getInstanceVariables().put(name, value);
+
+        return value;
+    }
+

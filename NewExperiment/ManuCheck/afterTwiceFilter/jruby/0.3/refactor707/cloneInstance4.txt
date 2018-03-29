@@ -1,0 +1,15 @@
+(startLine=513 endLine=525 srcPath=/home/sonia/NewExperiment/jrubyFilter/00791/src/org/jruby/RubyEnumerable.java)
+            } else {
+                callEach(runtime, context, self, new BlockCallback() {
+                    public IRubyObject call(ThreadContext ctx, IRubyObject[] largs, Block blk) {
+                        if (localContext != ctx) {
+                            throw runtime.newThreadError("Enumerable#all? cannot be parallelized");
+                        }
+                        if (!largs[0].isTrue()) {
+                            throw JumpException.SPECIAL_JUMP;
+                        }
+                        return runtime.getNil();
+                    }
+                });
+            }
+

@@ -1,0 +1,50 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/01651
+predFragLineRange:140-187
+predMethodLineRange:139-187
+nextLineRange:131-168
+predStrMethodInvoNames:
+[isNil, isTrue, invoke, yieldSpecific, getCritical, getThreadService, raiseBecauseCritical, getThread, getObject, getClassFromPath, isNil, prepareRunnable, prepareRunnableWithException, schedule, getDoubleValue, convertToFloat, yield, killTimeoutThread, getMetaClass, getException, isNil, getInternalVariable, getException, raiseTimeoutError]
+%%%%%%%%%%
+AddedMethodInvo Line:134 InvoName:nilOrZeroSeconds(context,seconds)
+PackageName:org.jruby.ext.timeout
+QualifiedClassName:org.jruby.ext.timeout.Timeout
+ClassName:Timeout
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java
+InvokedMethodSig:private static boolean nilOrZeroSeconds(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:150 InvoName:TimeoutTask.newAnnonymousTask(currentThread,timeout,latch,id)
+PackageName:org.jruby.ext.timeout
+QualifiedClassName:org.jruby.ext.timeout.Timeout.TimeoutTask
+ClassName:TimeoutTask
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java
+InvokedMethodSig:static org.jruby.ext.timeout.Timeout.TimeoutTask newAnnonymousTask(org.jruby.RubyThread, org.jruby.runtime.builtin.IRubyObject, java.util.concurrent.atomic.AtomicBoolean, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:151 InvoName:TimeoutTask.newTaskWithException(currentThread,timeout,latch,exceptionType)
+PackageName:org.jruby.ext.timeout
+QualifiedClassName:org.jruby.ext.timeout.Timeout.TimeoutTask
+ClassName:TimeoutTask
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java
+InvokedMethodSig:static org.jruby.ext.timeout.Timeout.TimeoutTask newTaskWithException(org.jruby.RubyThread, org.jruby.runtime.builtin.IRubyObject, java.util.concurrent.atomic.AtomicBoolean, org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:154 InvoName:yieldWithTimeout(context,seconds,block,timeoutRunnable,latch)
+PackageName:org.jruby.ext.timeout
+QualifiedClassName:org.jruby.ext.timeout.Timeout
+ClassName:Timeout
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject yieldWithTimeout(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.runtime.Block, java.lang.Runnable, java.util.concurrent.atomic.AtomicBoolean) throws org.jruby.exceptions.RaiseException
+%%%%%%%%%%
+AddedMethodInvo Line:158 InvoName:getAnonymousException(timeout)
+PackageName:org.jruby.ext.timeout
+QualifiedClassName:org.jruby.ext.timeout.Timeout
+ClassName:Timeout
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java
+InvokedMethodSig:private static org.jruby.RubyClass getAnonymousException(org.jruby.runtime.builtin.IRubyObject) 
+%%%%%%%%%%
+AddedMethodInvo Line:161 InvoName:raiseTimeoutErrorIfMatches(context,timeout,re,id)
+PackageName:org.jruby.ext.timeout
+QualifiedClassName:org.jruby.ext.timeout.Timeout
+ClassName:Timeout
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/01651/core/src/main/java/org/jruby/ext/timeout/Timeout.java
+InvokedMethodSig:private static org.jruby.runtime.builtin.IRubyObject raiseTimeoutErrorIfMatches(org.jruby.runtime.ThreadContext, org.jruby.runtime.builtin.IRubyObject, org.jruby.exceptions.RaiseException, org.jruby.runtime.builtin.IRubyObject) 

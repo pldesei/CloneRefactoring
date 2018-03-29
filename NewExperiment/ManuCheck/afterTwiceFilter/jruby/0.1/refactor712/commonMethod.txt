@@ -1,0 +1,11 @@
+(startLine=357 endLine=365 srcPath=/home/sonia/NewExperiment/jrubyFilter/00814/src/org/jruby/RubyArray.java)
+    private static void fillNil(IRubyObject[]arr, int from, int to, Ruby runtime) {
+        IRubyObject nils[] = runtime.getNilPrefilledArray();
+        int i;
+        
+        for (i = from; i + Ruby.NIL_PREFILLED_ARRAY_SIZE < to; i += Ruby.NIL_PREFILLED_ARRAY_SIZE) {
+            System.arraycopy(nils, 0, arr, i, Ruby.NIL_PREFILLED_ARRAY_SIZE);
+        }
+        System.arraycopy(nils, 0, arr, from, to - i);
+    }
+

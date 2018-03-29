@@ -1,0 +1,21 @@
+(startLine=833 endLine=851 srcPath=/home/sonia/NewExperiment/jrubyFilter/00223/src/org/jruby/util/Pack.java)
+		/**
+		 * @return numerical representation of ascii number at ptr
+		 */
+		public int nextAsciiNumber() {
+            int i = index;
+
+            for (; i < buffer.length; i++) {
+            	if (!Character.isDigit(buffer[i])) {
+                    break;
+				}
+			}
+            
+            // An exception will occur if no number is at ptr....
+            int number = Integer.parseInt(new String(buffer, index, i - index));
+            
+            // An exception may occur here if an int can't hold this but ...
+            index = i;
+			return number;
+        }
+

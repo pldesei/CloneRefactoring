@@ -1,0 +1,7 @@
+(startLine=72 endLine=76 srcPath=/home/sonia/NewExperiment/jrubyFilter/00792/src/org/jruby/RubyEnumerable.java)
+    private static void checkContext(ThreadContext firstContext, ThreadContext secondContext, String name) {
+        if (firstContext != secondContext) {
+            throw secondContext.getRuntime().newThreadError("Enumerable#" + name + " cannot be parallelized");
+        }
+    }
+

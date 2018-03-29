@@ -1,0 +1,41 @@
+ProjectPath:/home/sonia/NewExperiment/jrubyFilter/00811
+predFragLineRange:967-986
+predMethodLineRange:967-986
+nextLineRange:933-980
+predStrMethodInvoNames:
+[isPrimitive, valueOf, getLongValue, valueOf, getDoubleValue, valueOf, getLongValue, valueOf, getLongValue, valueOf, getDoubleValue, valueOf, getLongValue, valueOf, getLongValue, valueOf, getDoubleValue]
+%%%%%%%%%%
+AddedMethodInvo Line:934 InvoName:coerceNumericToType(flote,target)
+PackageName:org.jruby.javasupport
+QualifiedClassName:org.jruby.javasupport.JavaUtil
+ClassName:JavaUtil
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00811/src/org/jruby/javasupport/JavaUtil.java
+InvokedMethodSig:public static java.lang.Object coerceNumericToType(org.jruby.RubyNumeric, Class#RAW) 
+%%%%%%%%%%
+AddedMethodInvo Line:976 InvoName:((RubyBignum)numeric).getValue()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyBignum
+ClassName:RubyBignum
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00811/src/org/jruby/RubyBignum.java
+InvokedMethodSig:public java.math.BigInteger getValue() 
+%%%%%%%%%%
+AddedMethodInvo Line:979 InvoName:numeric.getRuntime().newTypeError("could not coerce " + numeric.getMetaClass() + " to "+ target)
+PackageName:org.jruby
+QualifiedClassName:org.jruby.Ruby
+ClassName:Ruby
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00811/src/org/jruby/Ruby.java
+InvokedMethodSig:public org.jruby.exceptions.RaiseException newTypeError(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:979 InvoName:numeric.getRuntime()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyObject
+ClassName:RubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00811/src/org/jruby/RubyObject.java
+InvokedMethodSig:public final org.jruby.Ruby getRuntime() 
+%%%%%%%%%%
+AddedMethodInvo Line:979 InvoName:numeric.getMetaClass()
+PackageName:org.jruby
+QualifiedClassName:org.jruby.RubyObject
+ClassName:RubyObject
+InvokedFilePath:/home/sonia/NewExperiment/jrubyFilter/00811/src/org/jruby/RubyObject.java
+InvokedMethodSig:public final org.jruby.RubyClass getMetaClass() 

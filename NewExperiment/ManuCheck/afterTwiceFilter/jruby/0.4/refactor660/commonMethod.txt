@@ -1,0 +1,8 @@
+(startLine=385 endLine=390 srcPath=/home/sonia/NewExperiment/jrubyFilter/00708/src/org/jruby/java/MiniJava.java)
+        protected RaiseException error(ThreadContext context, Exception e) throws RaiseException {
+            if (context.getRuntime().getDebug().isTrue()) {
+                e.printStackTrace();
+            }
+            throw context.getRuntime().newTypeError("Could not dispatch to " + className + "#" + methodName + " using " + prettySig);
+        }
+

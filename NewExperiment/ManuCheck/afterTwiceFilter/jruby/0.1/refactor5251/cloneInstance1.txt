@@ -1,0 +1,9 @@
+(startLine=509 endLine=515 srcPath=/home/sonia/NewExperiment/jrubyFilter/01523/core/src/main/java/org/jruby/ir/targets/JVMVisitor.java)
+    public void BEQInstr(BEQInstr beqInstr) {
+        jvm.method().loadLocal(0);
+        visit(beqInstr.getArg1());
+        visit(beqInstr.getArg2());
+        jvm.method().invokeHelper("BEQ", boolean.class, ThreadContext.class, IRubyObject.class, IRubyObject.class);
+        jvm.method().adapter.iftrue(getJVMLabel(beqInstr.getJumpTarget()));
+    }
+

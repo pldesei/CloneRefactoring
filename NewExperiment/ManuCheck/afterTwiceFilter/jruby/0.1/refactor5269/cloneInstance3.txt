@@ -1,0 +1,18 @@
+(startLine=546 endLine=561 srcPath=/home/sonia/NewExperiment/jrubyFilter/01538/core/src/main/java/org/jruby/truffle/nodes/core/ArrayNodes.java)
+            outer: for (int n = 0; n < array.size(); n++) {
+                while (true) {
+                    try {
+                        yield(frame, block, array.get(n));
+                        continue outer;
+                    } catch (BreakException e) {
+                        breakProfile.enter();
+                        return e.getResult();
+                    } catch (NextException e) {
+                        nextProfile.enter();
+                        continue outer;
+                    } catch (RedoException e) {
+                        redoProfile.enter();
+                    }
+                }
+            }
+

@@ -1,0 +1,9 @@
+(startLine=871 endLine=877 srcPath=/home/sonia/NewExperiment/jrubyFilter/01043/src/org/jruby/RubyZlib.java)
+        public IRubyObject orig_name() {
+            if(closed) {
+                RubyClass errorClass = getRuntime().fastGetModule("Zlib").fastGetClass("GzipFile").fastGetClass("Error");
+                throw new RaiseException(RubyException.newException(getRuntime(), errorClass, "closed gzip stream"));
+            }
+            return orig_name == null ? getRuntime().getNil() : getRuntime().newString(orig_name);
+        }
+

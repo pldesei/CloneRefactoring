@@ -1,0 +1,32 @@
+(startLine=1037 endLine=1066 srcPath=/home/sonia/NewExperiment/jrubyFilter/00222/src/org/jruby/util/Pack.java)
+                            {
+                                int lByte = 0;
+                                int lIndex = 0;
+                                char lCurChar;
+                                int lPadLength = 0;
+                                if (lLength > lCurElemString.length()) { //I don't understand this, why divide by 2
+                                    lPadLength = (lLength - lCurElemString.length() + 1) / 2;
+                                    lLength = lCurElemString.length();
+                                }
+                                for (lIndex = 0; lIndex < lLength;) {
+                                    lCurChar = lCurElemString.charAt(lIndex++);
+                                    if ((lCurChar & 1) != 0) //if the low bit of the current char is set
+                                        lByte |= 128; //set the high bit of the result
+                                    if ((lIndex & 7) != 0)
+                                        //if the index is not a multiple of 8, we are not on a byte boundary
+                                        lByte >>= 1; //shift the byte
+                                    else { //we are done with one byte, append it to the result and go for the next
+                                        lResult.append((char) (lByte & 0xff));
+                                        lByte = 0;
+                                    }
+                                }
+                                if ((lLength & 7) != 0) //if the length is not a multiple of 8
+                                    { //we need to pad the last byte
+                                    lByte >>= 7 - (lLength & 7);
+                                    lResult.append((char) (lByte & 0xff));
+                                }
+                                //do some padding, I don't understand the padding strategy
+                                lLength = lResult.length();
+                                lResult.setLength(lLength + lPadLength);
+                            }
+

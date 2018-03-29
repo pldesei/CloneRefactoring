@@ -1,0 +1,36 @@
+(startLine=612 endLine=645 srcPath=/home/sonia/NewExperiment/jrubyFilter/01730/truffle/src/main/java/org/jruby/truffle/nodes/rubinius/IOPrimitiveNodes.java)
+        public Object selectNilReadables(DynamicObject readables, DynamicObject writables, DynamicObject errorables, int timeout) {
+            final Object[] writableObjects = ArrayOperations.toObjectArray(writables);
+            final int[] writableFds = getFileDescriptors(writables);
+
+            final FDSet writableSet = fdSetFactory.create();
+
+            for (int fd : writableFds) {
+                writableSet.set(fd);
+            }
+
+            final int result = getContext().getThreadManager().runUntilResult(new ThreadManager.BlockingAction<Integer>() {
+                @Override
+                public Integer block() throws InterruptedException {
+                    return nativeSockets().select(
+                            max(writableFds) + 1,
+                            PointerNodes.NULL_POINTER,
+                            writableSet.getPointer(),
+                            PointerNodes.NULL_POINTER,
+                            PointerNodes.NULL_POINTER);
+                }
+            });
+
+            if (result == -1) {
+                return nil();
+            }
+
+            DynamicObject arrayClass = getContext().getCoreLibrary().getArrayClass();
+            Object[] objects = new Object[]{};
+            DynamicObject arrayClass1 = getContext().getCoreLibrary().getArrayClass();
+            Object[] objects1 = new Object[]{};
+            DynamicObject arrayClass2 = getContext().getCoreLibrary().getArrayClass();
+            Object[] objects2 = new Object[]{ArrayNodes.createGeneralArray(arrayClass1, objects1, objects1.length), getSetObjects(writableObjects, writableFds, writableSet), ArrayNodes.createGeneralArray(arrayClass, objects, objects.length)};
+            return ArrayNodes.createGeneralArray(arrayClass2, objects2, objects2.length);
+        }
+

@@ -1,0 +1,6 @@
+(startLine=399 endLine=402 srcPath=/home/sonia/NewExperiment/jrubyFilter/01570/core/src/main/java/org/jruby/runtime/callsite/CachingCallSite.java)
+    private static RubyClass getClass(IRubyObject self) {
+        // the cast in the following line is necessary due to lacking optimizations in Hotspot
+        return ((RubyBasicObject)self).getMetaClass();
+    }
+

@@ -1,0 +1,9 @@
+(startLine=938 endLine=944 srcPath=/home/sonia/NewExperiment/jrubyFilter/01236/src/org/jruby/compiler/ir/representations/CFG.java)
+    private void pushBBOnStack(Stack<BasicBlock> stack, BitSet bbSet, BasicBlock bb) {
+        if (!bbSet.get(bb.getID())) {
+            // System.out.println("pushing " + bb);
+            stack.push(bb);
+            bbSet.set(bb.getID());
+        }
+    }
+

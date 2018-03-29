@@ -1,0 +1,11 @@
+(startLine=218 endLine=226 srcPath=/home/sonia/NewExperiment/jrubyFilter/01067/src/org/jruby/javasupport/JavaObject.java)
+    private static Object getWrappedObject(IRubyObject other, Object def) {
+        if (other instanceof JavaObject) {
+            return ((JavaObject)other).getValue();
+        } else if (other instanceof JavaProxy) {
+            return ((JavaProxy)other).getObject();
+        } else {
+            return def;
+        }
+    }
+

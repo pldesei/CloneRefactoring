@@ -1,0 +1,20 @@
+(startLine=2069 endLine=2086 srcPath=/home/sonia/NewExperiment/jrubyFilter/01544/core/src/main/java/org/jruby/RubyIO.java)
+        try {
+            OpenFile myOpenFile = getOpenFileChecked();
+            
+            if (myOpenFile.getPipeStream() == null && myOpenFile.isReadable()) {
+                throw context.runtime.newIOError("closing non-duplex IO for writing");
+            }
+            
+            if (myOpenFile.getPipeStream() == null) {
+                close();
+            } else{
+                myOpenFile.getPipeStream().fclose();
+                myOpenFile.setPipeStream(null);
+                myOpenFile.setMode(myOpenFile.getMode() & ~OpenFile.WRITABLE);
+                // TODO
+                // n is result of fclose; but perhaps having a SysError below is enough?
+                // if (n != 0) rb_sys_fail(fptr->path);
+            }
+        } catch (BadDescriptorException bde) {
+

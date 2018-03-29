@@ -1,36 +1,75 @@
 #!/bin/bash
 
-projects=(lucene freecol jfreechart hibernate elasticsearch axis2-java eclipse.jdt.core)
+projects=(lucene freecol jfreechart hibernate elasticsearch axis2-java eclipse.jdt.core jruby)
 cnt=1
 for name in ${projects[@]}
 do
     cnt=$((cnt+1))
+    echo "=================="
     echo $name
-    list=`ls $name/0.4`
-    listAinB=`head -n $cnt | tail -n 1 | awk '
+    list=`ls $name/0.4 | tr "\n" " "`
+    list=" $list"
+    listAinB=`head -n $cnt a.txt | tail -n 1 | awk -v list="$list" '
        {
          len1=split($2, arr1, ","); 
-         len2=split("'$list'", arr2, "refactor");
-         for (i=0;i<len1;i++) {
+         len2=split(list, arr2, " refactor");
+         ret=""; cnt=0;
+         for (i = 1; i <= len1; i++) {
              flag=0;
-             for (j=0;j<len2;j++)
-                 if (arr1[i] == arr2[j]) flag = 1;
-             if (flag == 1) print arr1[i]; 
+             for (j = 1; j <= len2; j++)
+                 if (arr1[i] == arr2[j]) flag=1;
+             if (flag == 1) { ret=ret""arr1[i]" "; cnt++;}
          }
+         print "["ret"]="cnt;
        }'`
-    list_AinB=`head -n $cnt | tail -n 1 | awk '
+    echo "list A in B : $listAinB"
+    list_AinB=`head -n $cnt a.txt | tail -n 1 | awk -v list="$list" '
        {
          len1=split($3, arr1, ","); 
-         len2=split("'$list'", arr2, "refactor");
-         for (i=0;i<len1;i++) {
+         len2=split(list, arr2, " refactor");
+         ret="";cnt=0;
+         for (i=1;i<=len1;i++) {
              flag=0;
-             for (j=0;j<len2;j++)
+             for (j=1;j<=len2;j++)
                  if (arr1[i] == arr2[j]) flag = 1;
-             if (flag == 1) print arr1[i]; 
+             if (flag == 1) {ret=ret""arr1[i]" "; cnt++;}
          }
+         print "["ret"]="cnt;
        }'`
-    echo "list A in B : $listAinB \n"
-    echo "list _A in B : $list_AinB \n"
+    echo "list _A in B : $list_AinB"
+
+    listBin_A=`head -n $cnt a.txt | tail -n 1 | awk -v list="$list" '
+       {
+         len1=split(list, arr1, " refactor"); 
+         len2=split($2, arr2, ",");
+         len3=split($3, arr3, ",");
+         for (i = 1; i <= len3; i++)
+             arr2[len2+i]=arr3[i];
+         ret=""; cnt=0;
+         for (i=2;i<=len1;i++) {
+             flag=0;
+             for (j=1;j<=len2+len3;j++)
+                 if (arr1[i] == arr2[j]) flag = 1;
+             if (flag == 0) { ret=ret""arr1[i]" "; cnt++;}
+         }
+         print "["ret"]="cnt;
+       }'`
+    echo "list B in _A : $listBin_A"
+
+    listAin_B=`head -n $cnt a.txt | tail -n 1 | awk -v list="$list" '
+       {
+         len1=split($2, arr1, ","); 
+         len2=split(list, arr2, " refactor");
+         ret="";cnt=0;
+         for (i=1;i<=len1;i++) {
+             flag=0;
+             for (j=1;j<=len2;j++)
+                 if (arr1[i] == arr2[j]) flag = 1;
+             if (flag == 0) {ret=ret""arr1[i]" "; cnt++;}
+         }
+         print "["ret"]="cnt;
+       }'`
+    echo "list A in _B : $listAin_B"
 
 done
 

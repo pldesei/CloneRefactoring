@@ -1,0 +1,49 @@
+(startLine=1837 endLine=1883 srcPath=/home/sonia/NewExperiment/jrubyFilter/00608/src/org/jruby/RubyString.java)
+    public IRubyObject index(IRubyObject[] args) {
+        int pos;
+        boolean offset = false;
+        
+        if(Arity.checkArgumentCount(getRuntime(), args, 1, 2) == 2) {
+            pos = RubyNumeric.fix2int(args[1]);
+        } else {
+            pos = 0;
+        }
+        if(pos < 0) {
+            pos += value.length();
+            if(pos < 0) {
+                if(args[0] instanceof RubyRegexp) {
+                    getRuntime().getCurrentContext().getPreviousFrame().setBackRef(getRuntime().getNil());
+                }
+                return getRuntime().getNil();
+            }
+        }
+
+        if (args[0] instanceof RubyRegexp) {
+            RubyRegexp sub = (RubyRegexp)args[0];
+            pos = sub.adjust_startpos(this, pos, false);
+            pos = sub.search(this, pos, false);
+        } else if (args[0] instanceof RubyFixnum) {
+            char c = (char) ((RubyFixnum) args[0]).getLongValue();
+            pos = value.indexOf(c, pos);
+        } else {
+            IRubyObject tmp = args[0].checkStringType();
+
+            if (tmp.isNil()) throw getRuntime().newTypeError("type mismatch: " + args[0].getMetaClass().getName() + " given");
+
+            ByteList sub = ((RubyString) tmp).value;
+
+            if (sub.length() > value.length()) return getRuntime().getNil();
+            // the empty string is always found at the beginning of a string (or at the end when rindex)
+            if (sub.realSize == 0) {
+                if(pos<value.realSize) {
+                    return getRuntime().newFixnum(pos);
+                } else {
+                    return getRuntime().getNil();
+                }
+            }
+            pos = value.indexOf(sub, pos);
+        }
+
+        return pos == -1 ? getRuntime().getNil() : getRuntime().newFixnum(pos);
+    }
+

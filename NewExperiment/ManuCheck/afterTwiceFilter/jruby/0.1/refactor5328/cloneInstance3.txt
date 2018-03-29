@@ -1,0 +1,14 @@
+(startLine=265 endLine=276 srcPath=/home/sonia/NewExperiment/jrubyFilter/01730/truffle/src/main/java/org/jruby/truffle/nodes/core/ProcNodes.java)
+        public Object sourceLocation(DynamicObject proc) {
+            SourceSection sourceSection = Layouts.PROC.getSharedMethodInfo(proc).getSourceSection();
+
+            if (sourceSection instanceof NullSourceSection) {
+                return nil();
+            } else {
+                DynamicObject file = createString(sourceSection.getSource().getName());
+                DynamicObject arrayClass = getContext().getCoreLibrary().getArrayClass();
+                Object[] objects = new Object[]{file, sourceSection.getStartLine()};
+                return ArrayNodes.createGeneralArray(arrayClass, objects, objects.length);
+            }
+        }
+

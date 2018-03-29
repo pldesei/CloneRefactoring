@@ -1,0 +1,31 @@
+(startLine=2209 endLine=2237 srcPath=/home/sonia/NewExperiment/jrubyFilter/01454/ext/ripper/src/main/java/org/jruby/ext/ripper/RipperLexer.java)
+    private int pipe() throws IOException {
+        int c = src.read();
+        
+        switch (c) {
+        case '|':
+            setState(LexState.EXPR_BEG);
+            if ((c = src.read()) == '=') {
+                setState(LexState.EXPR_BEG);
+                yaccValue = new Token("||=", getPosition());
+                return Tokens.tOP_ASGN;
+            }
+            src.unread(c);
+            yaccValue = new Token("||", getPosition());
+            return Tokens.tOROP;
+        case '=':
+            setState(LexState.EXPR_BEG);
+            
+            yaccValue = new Token("|=", getPosition());
+            
+            return Tokens.tOP_ASGN;
+        default:
+            determineExpressionState();
+            
+            src.unread(c);
+            yaccValue = new Token("|", getPosition());
+            
+            return Tokens.tPIPE;
+        }
+    }
+

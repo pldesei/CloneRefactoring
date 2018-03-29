@@ -1,0 +1,18 @@
+(startLine=364 endLine=379 srcPath=/home/sonia/NewExperiment/jrubyFilter/00048/org/jruby/RubyArray.java)
+        if (args.length == 1) {
+            if (args[0] instanceof RubyFixnum) {
+                return entry(((RubyFixnum)args[0]).getValue());
+            }
+            if (args[0] instanceof RubyBignum) {
+                throw new RubyIndexException("index too big");
+            }
+            if (args[0] instanceof RubyRange) {
+                long[] begLength = ((RubyRange)args[0]).getBeginLength(length());
+                if (begLength == null) {
+                    return getRuby().getNil();
+                } else {
+                    return subseq(begLength[0], begLength[1]);
+                }
+            }
+        }
+

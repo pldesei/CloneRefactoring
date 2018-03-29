@@ -1,0 +1,17 @@
+(startLine=59 endLine=73 srcPath=/home/sonia/NewExperiment/jrubyFilter/01539/core/src/main/java/org/jruby/truffle/nodes/RubyRootNode.java)
+    public void reportLoopCountThroughBlocks(int count) {
+        CompilerAsserts.neverPartOfCompilation();
+
+        for (FrameInstance frame : Truffle.getRuntime().getStackTrace()) {
+            final RootNode rootNode = frame.getCallNode().getRootNode();
+
+            rootNode.reportLoopCount(count);
+
+            if (rootNode instanceof RubyRootNode && !((RubyRootNode) rootNode).getSharedMethodInfo().isBlock()) {
+                break;
+            }
+        }
+
+        reportLoopCount(count);
+    }
+

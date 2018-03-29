@@ -1,0 +1,41 @@
+(startLine=458 endLine=496 srcPath=/home/sonia/NewExperiment/jrubyFilter/00508/src/org/jruby/runtime/callback/InvocationCallbackFactory.java)
+    public Callback getSingletonMethod(String method, Class arg1, Class arg2) {
+        String mname = type.getName() + "InvokerS" + method + "2";
+        String mnamePath = typePath + "InvokerS" + method + "2";
+        synchronized (runtime.getJRubyClassLoader()) {
+            Class c = tryClass(mname);
+            try {
+                if (c == null) {
+                    String ret = getReturnName(method, new Class[] { RubyKernel.IRUBY_OBJECT, arg1,
+                            arg2, Block.class });
+                    ClassWriter cw = createCtor(mnamePath);
+                    MethodVisitor mv = startCallS(cw);
+                    mv.visitVarInsn(ALOAD, 2);
+                    mv.visitInsn(ICONST_0);
+                    mv.visitInsn(AALOAD);
+                    mv.visitTypeInsn(CHECKCAST, cg.p(arg1));
+                    mv.visitVarInsn(ALOAD, 2);
+                    mv.visitInsn(ICONST_1);
+                    mv.visitInsn(AALOAD);
+                    mv.visitTypeInsn(CHECKCAST, cg.p(arg2));
+                    mv.visitVarInsn(ALOAD, 3);
+                    mv.visitMethodInsn(INVOKESTATIC, typePath, method, "(" + IRUB_ID + cg.ci(arg1)
+                            + cg.ci(arg2) + BLOCK_ID + ")L" + ret + ";");
+                    mv.visitInsn(ARETURN);
+                    mv.visitMaxs(4, 4);
+                    c = endCall(cw, mv, mname);
+                }
+                InvocationCallback ic = (InvocationCallback) c.newInstance();
+                ic.setArity(Arity.twoArguments());
+                ic.setArgumentTypes(new Class[] {arg1, arg2});
+                ic.setJavaName(method);
+                ic.setSingleton(true);
+                return ic;
+            } catch (IllegalArgumentException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
+        }
+    }
+

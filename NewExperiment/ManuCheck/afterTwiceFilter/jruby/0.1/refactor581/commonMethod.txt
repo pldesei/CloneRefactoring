@@ -1,0 +1,11 @@
+(startLine=432 endLine=440 srcPath=/home/sonia/NewExperiment/jrubyFilter/00494/src/jregex/Matcher.java)
+  /**
+   * Searches through a target for a matching substring, starting from just after the end of last match.
+   * If there wasn't any search performed, starts from zero.
+   * @return <code>true</code> if a match found.
+   */
+   public final boolean find(){
+      if(called) skip();
+      return search(0);
+   }
+

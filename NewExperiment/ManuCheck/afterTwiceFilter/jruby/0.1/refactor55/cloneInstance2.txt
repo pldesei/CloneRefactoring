@@ -1,0 +1,11 @@
+(startLine=467 endLine=475 srcPath=/home/sonia/NewExperiment/jrubyFilter/00222/src/org/jruby/util/Pack.java)
+                    {
+                        int end = lLength;
+                        for (int t = lCurValueIdx + lLength - 1; lLength > 0; lLength--, t--)
+                            if (value.charAt(t) != '\0')
+                                break;
+                        lResult.append(
+                            RubyString.newString(ruby, value.substring(lCurValueIdx, lCurValueIdx + lLength)));
+                        lCurValueIdx += end;
+                    }
+
