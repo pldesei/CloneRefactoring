@@ -1,0 +1,20 @@
+(startLine=45 endLine=62 srcPath=/home/sonia/NewExperiment/findbugsFilter/00510/eclipsePlugin/src/de/tobject/findbugs/decorators/ResourceBugCountDecorator.java)
+	public String decorateText(String text, Object element) {
+		IResource resource = ResourceUtils.getResource(element);
+		if(!resource.isAccessible()) {
+			return text;
+		}
+		try {
+			IMarker[] markerArr = resource.findMarkers(FindBugsMarker.NAME, true,
+					IResource.DEPTH_INFINITE);
+			if (markerArr.length == 0) {
+				return text;
+			}
+			return text + " (" + markerArr.length + ")";
+		} catch (CoreException e) {
+			FindbugsPlugin.getDefault().logException(e,
+					"Core exception on decorateText() for: " + element);
+		}
+		return text;
+	}
+

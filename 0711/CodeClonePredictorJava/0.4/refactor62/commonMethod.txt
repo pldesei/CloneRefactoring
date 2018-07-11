@@ -1,0 +1,11 @@
+(startLine=609 endLine=617 srcPath=/home/sonia/NewExperiment/findbugsFilter/00882/eclipsePlugin/src/de/tobject/findbugs/reporter/MarkerUtil.java)
+    @CheckForNull
+    public static String getBugPatternString(IMarker marker){
+        try {
+            return (String) marker.getAttribute(FindBugsMarker.BUG_TYPE);
+        } catch (CoreException e) {
+            FindbugsPlugin.getDefault().logException(e, "Marker does not contain pattern id");
+            return null;
+        }
+    }
+

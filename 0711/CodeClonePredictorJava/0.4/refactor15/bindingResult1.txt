@@ -1,0 +1,82 @@
+ProjectPath:/home/sonia/NewExperiment/findbugsFilter/00161
+predFragLineRange:90-106
+predMethodLineRange:84-161
+nextLineRange:85-195
+predStrMethodInvoNames:
+[iterator, entrySet, hasNext, next, getKey, getValue, iterator, hasNext, containsKey, next, remove, iterator, entrySet, hasNext, next, getKey, getValue, iterator, hasNext, containsKey, next, remove, size, remove, iterator, entrySet, hasNext, next, getKey, contains, add, getValue, addClass, indexOf, iterator, hasNext, next, addClass, add, reportBug, clear]
+%%%%%%%%%%
+AddedMethodInvo Line:86 InvoName:removeDependencyLeaves(dependencyGraph)
+PackageName:edu.umd.cs.findbugs.detect
+QualifiedClassName:edu.umd.cs.findbugs.detect.FindCircularDependencies
+ClassName:FindCircularDependencies
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java
+InvokedMethodSig:private void removeDependencyLeaves(Map<java.lang.String,Set<java.lang.String>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:91 InvoName:dependencyGraph.keySet()
+PackageName:java.util
+QualifiedClassName:java.util.HashMap<java.lang.String,java.util.Set<java.lang.String>>
+ClassName:HashMap<String,Set<String>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/java/util/HashMap<java.java
+InvokedMethodSig:public Set#RAW keySet() 
+%%%%%%%%%%
+AddedMethodInvo Line:92 InvoName:lf.findLoop(dependencyGraph,clsName)
+PackageName:edu.umd.cs.findbugs.detect
+QualifiedClassName:edu.umd.cs.findbugs.detect.FindCircularDependencies.LoopFinder
+ClassName:LoopFinder
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java
+InvokedMethodSig:public Set<java.lang.String> findLoop(Map<java.lang.String,Set<java.lang.String>>, java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:104 InvoName:removeLoopLinks(dependencyGraph,loop)
+PackageName:edu.umd.cs.findbugs.detect
+QualifiedClassName:edu.umd.cs.findbugs.detect.FindCircularDependencies
+ClassName:FindCircularDependencies
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java
+InvokedMethodSig:private void removeLoopLinks(Map<java.lang.String,Set<java.lang.String>>, Set<java.lang.String>) 
+%%%%%%%%%%
+AddedMethodInvo Line:108 InvoName:removeDependencyLeaves(dependencyGraph)
+PackageName:edu.umd.cs.findbugs.detect
+QualifiedClassName:edu.umd.cs.findbugs.detect.FindCircularDependencies
+ClassName:FindCircularDependencies
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java
+InvokedMethodSig:private void removeDependencyLeaves(Map<java.lang.String,Set<java.lang.String>>) 
+%%%%%%%%%%
+AddedMethodInvo Line:150 InvoName:dependencyGraph.get(clsName)
+PackageName:java.util
+QualifiedClassName:java.util.Map<java.lang.String,java.util.Set<java.lang.String>>
+ClassName:Map<String,Set<String>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/java/util/Map<java.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:168 InvoName:findLoop(startClass)
+PackageName:edu.umd.cs.findbugs.detect
+QualifiedClassName:edu.umd.cs.findbugs.detect.FindCircularDependencies.LoopFinder
+ClassName:LoopFinder
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java
+InvokedMethodSig:private boolean findLoop(java.lang.String) 
+%%%%%%%%%%
+AddedMethodInvo Line:174 InvoName:dGraph.get(curClass)
+PackageName:java.util
+QualifiedClassName:java.util.Map<java.lang.String,java.util.Set<java.lang.String>>
+ClassName:Map<String,Set<String>>
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/java/util/Map<java.java
+InvokedMethodSig:public abstract V get(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:183 InvoName:depClass.equals(startClass)
+PackageName:java.lang
+QualifiedClassName:java.lang.String
+ClassName:String
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/java/lang/String.java
+InvokedMethodSig:public boolean equals(java.lang.Object) 
+%%%%%%%%%%
+AddedMethodInvo Line:189 InvoName:findLoop(depClass)
+PackageName:edu.umd.cs.findbugs.detect
+QualifiedClassName:edu.umd.cs.findbugs.detect.FindCircularDependencies.LoopFinder
+ClassName:LoopFinder
+InnerClass
+InvokedFilePath:/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java
+InvokedMethodSig:private boolean findLoop(java.lang.String) 

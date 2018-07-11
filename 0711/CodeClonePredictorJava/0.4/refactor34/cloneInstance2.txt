@@ -1,0 +1,23 @@
+(startLine=38 endLine=58 srcPath=/home/sonia/NewExperiment/findbugsFilter/00510/eclipsePlugin/src/de/tobject/findbugs/view/explorer/ZeroBugsFilter.java)
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		IResource resource = ResourceUtils.getResource(element);
+		if(resource == null) {
+			return true;
+		}
+		if(!resource.isAccessible()) {
+			return false;
+		}
+		try {
+			IMarker[] markerArr = resource.findMarkers(FindBugsMarker.NAME, true,
+					IResource.DEPTH_INFINITE);
+			if (markerArr.length == 0) {
+				return false;
+			}
+			return true;
+		} catch (CoreException e) {
+			FindbugsPlugin.getDefault().logException(e,
+					"Core exception on decorateText() for: " + element);
+		}
+		return true;
+	}
+

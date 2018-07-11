@@ -1,0 +1,2347 @@
+[Instance #
+frags: 
+(startLine=465 endLine=474 srcPath=/home/sonia/NewExperiment/luceneFilter/02004/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java)
+    if (true) {
+      tool = new MapReduceIndexerTool();
+      res = ToolRunner.run(jobConf, tool, args);
+      assertEquals(0, res);
+      assertTrue(tool.job.isComplete());
+      assertTrue(tool.job.isSuccessful());
+      
+      results = server.query(new SolrQuery("*:*"));      
+      assertEquals(2126, results.getResults().getNumFound());
+    }    
+
+(startLine=501 endLine=512 srcPath=/home/sonia/NewExperiment/luceneFilter/02004/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java)
+    if (true) {
+      tool = new MapReduceIndexerTool();
+      res = ToolRunner.run(jobConf, tool, args);
+      assertEquals(0, res);
+      assertTrue(tool.job.isComplete());
+      assertTrue(tool.job.isSuccessful());
+      
+      results = cloudClient.query(new SolrQuery("*:*"));      
+      assertEquals(2104, results.getResults().getNumFound());
+      
+      checkConsistency(replicatedCollection);
+    }   
+
+(startLine=537 endLine=548 srcPath=/home/sonia/NewExperiment/luceneFilter/02004/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java)
+    if (true) {
+      tool = new MapReduceIndexerTool();
+      res = ToolRunner.run(jobConf, tool, args);
+      assertEquals(0, res);
+      assertTrue(tool.job.isComplete());
+      assertTrue(tool.job.isSuccessful());
+      
+      checkConsistency(replicatedCollection);
+      
+      results = cloudClient.query(new SolrQuery("*:*"));      
+      assertEquals(2104, results.getResults().getNumFound());
+    }  
+
+commonMethod: 
+(startLine=634 endLine=638 srcPath=/home/sonia/NewExperiment/luceneFilter/02005/solr/contrib/map-reduce/src/test/org/apache/solr/hadoop/MorphlineGoLiveMiniMRTest.java)
+  private SolrDocumentList executeSolrQuery(SolrServer collection, String queryString) throws SolrServerException {
+    SolrQuery query = new SolrQuery(queryString).setRows(2 * RECORD_COUNT).addSort("id", ORDER.asc);
+    QueryResponse response = collection.query(query);
+    return response.getResults();
+  }
+
+
+, Instance #
+frags: 
+(startLine=1413 endLine=1556 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  private void getDocListNC(QueryResult qr,QueryCommand cmd) throws IOException {
+    final long timeAllowed = cmd.getTimeAllowed();
+    int len = cmd.getSupersetMaxDoc();
+    int last = len;
+    if (last < 0 || last > maxDoc()) last=maxDoc();
+    final int lastDocRequested = last;
+    int nDocsReturned;
+    int totalHits;
+    float maxScore;
+    int[] ids;
+    float[] scores;
+
+    boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+    boolean terminateEarly = (cmd.getFlags() & TERMINATE_EARLY) == TERMINATE_EARLY;
+    
+    Query query = QueryUtils.makeQueryable(cmd.getQuery());
+
+    ProcessedFilter pf = getProcessedFilter(cmd.getFilter(), cmd.getFilterList());
+    final Filter luceneFilter = pf.filter;
+
+    // handle zero case...
+    if (lastDocRequested<=0) {
+      final float[] topscore = new float[] { Float.NEGATIVE_INFINITY };
+      final int[] numHits = new int[1];
+
+      Collector collector;
+
+      if (!needScores) {
+        collector = new Collector () {
+          @Override
+          public void setScorer(Scorer scorer) {
+          }
+          @Override
+          public void collect(int doc) {
+            numHits[0]++;
+          }
+          @Override
+          public void setNextReader(AtomicReaderContext context) {
+          }
+          @Override
+          public boolean acceptsDocsOutOfOrder() {
+            return true;
+          }
+        };
+      } else {
+        collector = new Collector() {
+          Scorer scorer;
+          @Override
+          public void setScorer(Scorer scorer) {
+            this.scorer = scorer;
+          }
+          @Override
+          public void collect(int doc) throws IOException {
+            numHits[0]++;
+            float score = scorer.score();
+            if (score > topscore[0]) topscore[0]=score;            
+          }
+          @Override
+          public void setNextReader(AtomicReaderContext context) {
+          }
+          @Override
+          public boolean acceptsDocsOutOfOrder() {
+            return true;
+          }
+        };
+      }
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      nDocsReturned=0;
+      ids = new int[nDocsReturned];
+      scores = new float[nDocsReturned];
+      totalHits = numHits[0];
+      maxScore = totalHits>0 ? topscore[0] : 0.0f;
+    } else {
+      TopDocsCollector topCollector;
+      if (cmd.getSort() == null) {
+        if(cmd.getScoreDoc() != null) {
+          topCollector = TopScoreDocCollector.create(len, cmd.getScoreDoc(), true); //create the Collector with InOrderPagingCollector
+        } else {
+          topCollector = TopScoreDocCollector.create(len, true);
+        }
+
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+      Collector collector = topCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      totalHits = topCollector.getTotalHits();
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+    int sliceLen = Math.min(lastDocRequested,nDocsReturned);
+    if (sliceLen < 0) sliceLen=0;
+    qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));
+  }
+
+(startLine=1560 endLine=1704 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  private DocSet getDocListAndSetNC(QueryResult qr,QueryCommand cmd) throws IOException {
+    int len = cmd.getSupersetMaxDoc();
+    int last = len;
+    if (last < 0 || last > maxDoc()) last=maxDoc();
+    final int lastDocRequested = last;
+    int nDocsReturned;
+    int totalHits;
+    float maxScore;
+    int[] ids;
+    float[] scores;
+    DocSet set;
+
+    boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+    boolean terminateEarly = (cmd.getFlags() & TERMINATE_EARLY) == TERMINATE_EARLY;
+    int maxDoc = maxDoc();
+    int smallSetSize = maxDoc>>6;
+
+    ProcessedFilter pf = getProcessedFilter(cmd.getFilter(), cmd.getFilterList());
+    final Filter luceneFilter = pf.filter;
+
+    Query query = QueryUtils.makeQueryable(cmd.getQuery());
+    final long timeAllowed = cmd.getTimeAllowed();
+
+    // handle zero case...
+    if (lastDocRequested<=0) {
+      final float[] topscore = new float[] { Float.NEGATIVE_INFINITY };
+
+      Collector collector;
+      DocSetCollector setCollector;
+
+       if (!needScores) {
+         collector = setCollector = new DocSetCollector(smallSetSize, maxDoc);
+       } else {
+         collector = setCollector = new DocSetDelegateCollector(smallSetSize, maxDoc, new Collector() {
+           Scorer scorer;
+           @Override
+          public void setScorer(Scorer scorer) {
+             this.scorer = scorer;
+           }
+           @Override
+          public void collect(int doc) throws IOException {
+             float score = scorer.score();
+             if (score > topscore[0]) topscore[0]=score;
+           }
+           @Override
+          public void setNextReader(AtomicReaderContext context) {
+           }
+           @Override
+          public boolean acceptsDocsOutOfOrder() {
+             return false;
+           }
+         });
+       }
+       if (terminateEarly) {
+         collector = new EarlyTerminatingCollector(collector, cmd.len);
+       }
+       if( timeAllowed > 0 ) {
+         collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+       }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+
+       try {
+         super.search(query, luceneFilter, collector);
+         if(collector instanceof DelegatingCollector) {
+           ((DelegatingCollector)collector).finish();
+         }
+       }
+       catch( TimeLimitingCollector.TimeExceededException x ) {
+         log.warn( "Query: " + query + "; " + x.getMessage() );
+         qr.setPartialResults(true);
+       }
+
+      set = setCollector.getDocSet();
+
+      nDocsReturned = 0;
+      ids = new int[nDocsReturned];
+      scores = new float[nDocsReturned];
+      totalHits = set.size();
+      maxScore = totalHits>0 ? topscore[0] : 0.0f;
+    } else {
+
+      TopDocsCollector topCollector;
+
+      if (cmd.getSort() == null) {
+        topCollector = TopScoreDocCollector.create(len, true);
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+
+      DocSetCollector setCollector = new DocSetDelegateCollector(maxDoc>>6, maxDoc, topCollector);
+      Collector collector = setCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed );
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      set = setCollector.getDocSet();      
+
+      totalHits = topCollector.getTotalHits();
+      assert(totalHits == set.size());
+
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+    int sliceLen = Math.min(lastDocRequested,nDocsReturned);
+    if (sliceLen < 0) sliceLen=0;
+
+    qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));
+    // TODO: if we collect results before the filter, we just need to intersect with
+    // that filter to generate the DocSet for qr.setDocSet()
+    qr.setDocSet(set);
+
+    // TODO: currently we don't generate the DocSet for the base query,
+    // but the QueryDocSet == CompleteDocSet if filter==null.
+    return pf.filter==null && pf.postFilter==null ? qr.getDocSet() : null;
+  }
+
+commonMethod: 
+(startLine=1428 endLine=1469 srcPath=/home/sonia/NewExperiment/luceneFilter/02017/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  /**
+   * Helper method for extracting the {@link FieldDoc} sort values from a 
+   * {@link TopFieldDocs} when available and making the appropriate call to 
+   * {@link QueryResult#setNextCursorMark} when applicable.
+   *
+   * @param qr <code>QueryResult</code> to modify
+   * @param qc <code>QueryCommand</code> for context of method
+   * @param topDocs May or may not be a <code>TopFieldDocs</code> 
+   */
+  private void populateNextCursorMarkFromTopDocs(QueryResult qr, QueryCommand qc, 
+                                                 TopDocs topDocs) {
+    // TODO: would be nice to rename & generalize this method for non-cursor cases...
+    // ...would be handy to reuse the ScoreDoc/FieldDoc sort vals directly in distrib sort
+    // ...but that has non-trivial queryResultCache implications
+    // See: SOLR-5595
+    
+    if (null == qc.getCursorMark()) {
+      // nothing to do, short circuit out
+      return;
+    }
+
+    final CursorMark lastCursorMark = qc.getCursorMark();
+    
+    // if we have a cursor, then we have a sort that at minimum involves uniqueKey..
+    // so we must have a TopFieldDocs containing FieldDoc[]
+    assert topDocs instanceof TopFieldDocs : "TopFieldDocs cursor constraint violated";
+    final TopFieldDocs topFieldDocs = (TopFieldDocs) topDocs;
+    final ScoreDoc[] scoreDocs = topFieldDocs.scoreDocs;
+
+    if (0 == scoreDocs.length) {
+      // no docs on this page, re-use existing cursor mark
+      qr.setNextCursorMark(lastCursorMark);
+    } else {
+      ScoreDoc lastDoc = scoreDocs[scoreDocs.length-1];
+      assert lastDoc instanceof FieldDoc : "FieldDoc cursor constraint violated";
+      
+      List<Object> lastFields = Arrays.<Object>asList(((FieldDoc)lastDoc).fields);
+      CursorMark nextCursorMark = lastCursorMark.createNext(lastFields);
+      assert null != nextCursorMark : "null nextCursorMark";
+      qr.setNextCursorMark(nextCursorMark);
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=1413 endLine=1556 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  private void getDocListNC(QueryResult qr,QueryCommand cmd) throws IOException {
+    final long timeAllowed = cmd.getTimeAllowed();
+    int len = cmd.getSupersetMaxDoc();
+    int last = len;
+    if (last < 0 || last > maxDoc()) last=maxDoc();
+    final int lastDocRequested = last;
+    int nDocsReturned;
+    int totalHits;
+    float maxScore;
+    int[] ids;
+    float[] scores;
+
+    boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+    boolean terminateEarly = (cmd.getFlags() & TERMINATE_EARLY) == TERMINATE_EARLY;
+    
+    Query query = QueryUtils.makeQueryable(cmd.getQuery());
+
+    ProcessedFilter pf = getProcessedFilter(cmd.getFilter(), cmd.getFilterList());
+    final Filter luceneFilter = pf.filter;
+
+    // handle zero case...
+    if (lastDocRequested<=0) {
+      final float[] topscore = new float[] { Float.NEGATIVE_INFINITY };
+      final int[] numHits = new int[1];
+
+      Collector collector;
+
+      if (!needScores) {
+        collector = new Collector () {
+          @Override
+          public void setScorer(Scorer scorer) {
+          }
+          @Override
+          public void collect(int doc) {
+            numHits[0]++;
+          }
+          @Override
+          public void setNextReader(AtomicReaderContext context) {
+          }
+          @Override
+          public boolean acceptsDocsOutOfOrder() {
+            return true;
+          }
+        };
+      } else {
+        collector = new Collector() {
+          Scorer scorer;
+          @Override
+          public void setScorer(Scorer scorer) {
+            this.scorer = scorer;
+          }
+          @Override
+          public void collect(int doc) throws IOException {
+            numHits[0]++;
+            float score = scorer.score();
+            if (score > topscore[0]) topscore[0]=score;            
+          }
+          @Override
+          public void setNextReader(AtomicReaderContext context) {
+          }
+          @Override
+          public boolean acceptsDocsOutOfOrder() {
+            return true;
+          }
+        };
+      }
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      nDocsReturned=0;
+      ids = new int[nDocsReturned];
+      scores = new float[nDocsReturned];
+      totalHits = numHits[0];
+      maxScore = totalHits>0 ? topscore[0] : 0.0f;
+    } else {
+      TopDocsCollector topCollector;
+      if (cmd.getSort() == null) {
+        if(cmd.getScoreDoc() != null) {
+          topCollector = TopScoreDocCollector.create(len, cmd.getScoreDoc(), true); //create the Collector with InOrderPagingCollector
+        } else {
+          topCollector = TopScoreDocCollector.create(len, true);
+        }
+
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+      Collector collector = topCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      totalHits = topCollector.getTotalHits();
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+    int sliceLen = Math.min(lastDocRequested,nDocsReturned);
+    if (sliceLen < 0) sliceLen=0;
+    qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));
+  }
+
+(startLine=1560 endLine=1704 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  private DocSet getDocListAndSetNC(QueryResult qr,QueryCommand cmd) throws IOException {
+    int len = cmd.getSupersetMaxDoc();
+    int last = len;
+    if (last < 0 || last > maxDoc()) last=maxDoc();
+    final int lastDocRequested = last;
+    int nDocsReturned;
+    int totalHits;
+    float maxScore;
+    int[] ids;
+    float[] scores;
+    DocSet set;
+
+    boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+    boolean terminateEarly = (cmd.getFlags() & TERMINATE_EARLY) == TERMINATE_EARLY;
+    int maxDoc = maxDoc();
+    int smallSetSize = maxDoc>>6;
+
+    ProcessedFilter pf = getProcessedFilter(cmd.getFilter(), cmd.getFilterList());
+    final Filter luceneFilter = pf.filter;
+
+    Query query = QueryUtils.makeQueryable(cmd.getQuery());
+    final long timeAllowed = cmd.getTimeAllowed();
+
+    // handle zero case...
+    if (lastDocRequested<=0) {
+      final float[] topscore = new float[] { Float.NEGATIVE_INFINITY };
+
+      Collector collector;
+      DocSetCollector setCollector;
+
+       if (!needScores) {
+         collector = setCollector = new DocSetCollector(smallSetSize, maxDoc);
+       } else {
+         collector = setCollector = new DocSetDelegateCollector(smallSetSize, maxDoc, new Collector() {
+           Scorer scorer;
+           @Override
+          public void setScorer(Scorer scorer) {
+             this.scorer = scorer;
+           }
+           @Override
+          public void collect(int doc) throws IOException {
+             float score = scorer.score();
+             if (score > topscore[0]) topscore[0]=score;
+           }
+           @Override
+          public void setNextReader(AtomicReaderContext context) {
+           }
+           @Override
+          public boolean acceptsDocsOutOfOrder() {
+             return false;
+           }
+         });
+       }
+       if (terminateEarly) {
+         collector = new EarlyTerminatingCollector(collector, cmd.len);
+       }
+       if( timeAllowed > 0 ) {
+         collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+       }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+
+       try {
+         super.search(query, luceneFilter, collector);
+         if(collector instanceof DelegatingCollector) {
+           ((DelegatingCollector)collector).finish();
+         }
+       }
+       catch( TimeLimitingCollector.TimeExceededException x ) {
+         log.warn( "Query: " + query + "; " + x.getMessage() );
+         qr.setPartialResults(true);
+       }
+
+      set = setCollector.getDocSet();
+
+      nDocsReturned = 0;
+      ids = new int[nDocsReturned];
+      scores = new float[nDocsReturned];
+      totalHits = set.size();
+      maxScore = totalHits>0 ? topscore[0] : 0.0f;
+    } else {
+
+      TopDocsCollector topCollector;
+
+      if (cmd.getSort() == null) {
+        topCollector = TopScoreDocCollector.create(len, true);
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+
+      DocSetCollector setCollector = new DocSetDelegateCollector(maxDoc>>6, maxDoc, topCollector);
+      Collector collector = setCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed );
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      set = setCollector.getDocSet();      
+
+      totalHits = topCollector.getTotalHits();
+      assert(totalHits == set.size());
+
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+    int sliceLen = Math.min(lastDocRequested,nDocsReturned);
+    if (sliceLen < 0) sliceLen=0;
+
+    qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));
+    // TODO: if we collect results before the filter, we just need to intersect with
+    // that filter to generate the DocSet for qr.setDocSet()
+    qr.setDocSet(set);
+
+    // TODO: currently we don't generate the DocSet for the base query,
+    // but the QueryDocSet == CompleteDocSet if filter==null.
+    return pf.filter==null && pf.postFilter==null ? qr.getDocSet() : null;
+  }
+
+commonMethod: 
+(startLine=1471 endLine=1497 srcPath=/home/sonia/NewExperiment/luceneFilter/02017/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  /**
+   * Helper method for inspecting QueryCommand and creating the appropriate 
+   * {@link TopDocsCollector}
+   *
+   * @param len the number of docs to return
+   * @param cmd The Command whose properties should determine the type of 
+   *        TopDocsCollector to use.
+   */
+  private TopDocsCollector buildTopDocsCollector(int len, QueryCommand cmd) throws IOException {
+    
+    if (null == cmd.getSort()) {
+      assert null == cmd.getCursorMark() : "have cursor but no sort";
+      return TopScoreDocCollector.create(len, true);
+    } else {
+      // we have a sort
+      final boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+      final Sort weightedSort = weightSort(cmd.getSort());
+      final CursorMark cursor = cmd.getCursorMark();
+
+      // :TODO: make fillFields it's own QueryCommand flag? ...
+      // ... see comments in populateNextCursorMarkFromTopDocs for cache issues (SOLR-5595)
+      final boolean fillFields = (null != cursor);
+      final FieldDoc searchAfter = (null != cursor ? cursor.getSearchAfterFieldDoc() : null);
+      return TopFieldCollector.create(weightedSort, len, searchAfter,
+                                      fillFields, needScores, needScores, true); 
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=1506 endLine=1551 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+    } else {
+      TopDocsCollector topCollector;
+      if (cmd.getSort() == null) {
+        if(cmd.getScoreDoc() != null) {
+          topCollector = TopScoreDocCollector.create(len, cmd.getScoreDoc(), true); //create the Collector with InOrderPagingCollector
+        } else {
+          topCollector = TopScoreDocCollector.create(len, true);
+        }
+
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+      Collector collector = topCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      totalHits = topCollector.getTotalHits();
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+(startLine=1642 endLine=1691 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+    } else {
+
+      TopDocsCollector topCollector;
+
+      if (cmd.getSort() == null) {
+        topCollector = TopScoreDocCollector.create(len, true);
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+
+      DocSetCollector setCollector = new DocSetDelegateCollector(maxDoc>>6, maxDoc, topCollector);
+      Collector collector = setCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed );
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      set = setCollector.getDocSet();      
+
+      totalHits = topCollector.getTotalHits();
+      assert(totalHits == set.size());
+
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+commonMethod: 
+(startLine=1428 endLine=1469 srcPath=/home/sonia/NewExperiment/luceneFilter/02017/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  /**
+   * Helper method for extracting the {@link FieldDoc} sort values from a 
+   * {@link TopFieldDocs} when available and making the appropriate call to 
+   * {@link QueryResult#setNextCursorMark} when applicable.
+   *
+   * @param qr <code>QueryResult</code> to modify
+   * @param qc <code>QueryCommand</code> for context of method
+   * @param topDocs May or may not be a <code>TopFieldDocs</code> 
+   */
+  private void populateNextCursorMarkFromTopDocs(QueryResult qr, QueryCommand qc, 
+                                                 TopDocs topDocs) {
+    // TODO: would be nice to rename & generalize this method for non-cursor cases...
+    // ...would be handy to reuse the ScoreDoc/FieldDoc sort vals directly in distrib sort
+    // ...but that has non-trivial queryResultCache implications
+    // See: SOLR-5595
+    
+    if (null == qc.getCursorMark()) {
+      // nothing to do, short circuit out
+      return;
+    }
+
+    final CursorMark lastCursorMark = qc.getCursorMark();
+    
+    // if we have a cursor, then we have a sort that at minimum involves uniqueKey..
+    // so we must have a TopFieldDocs containing FieldDoc[]
+    assert topDocs instanceof TopFieldDocs : "TopFieldDocs cursor constraint violated";
+    final TopFieldDocs topFieldDocs = (TopFieldDocs) topDocs;
+    final ScoreDoc[] scoreDocs = topFieldDocs.scoreDocs;
+
+    if (0 == scoreDocs.length) {
+      // no docs on this page, re-use existing cursor mark
+      qr.setNextCursorMark(lastCursorMark);
+    } else {
+      ScoreDoc lastDoc = scoreDocs[scoreDocs.length-1];
+      assert lastDoc instanceof FieldDoc : "FieldDoc cursor constraint violated";
+      
+      List<Object> lastFields = Arrays.<Object>asList(((FieldDoc)lastDoc).fields);
+      CursorMark nextCursorMark = lastCursorMark.createNext(lastFields);
+      assert null != nextCursorMark : "null nextCursorMark";
+      qr.setNextCursorMark(nextCursorMark);
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=1506 endLine=1551 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+    } else {
+      TopDocsCollector topCollector;
+      if (cmd.getSort() == null) {
+        if(cmd.getScoreDoc() != null) {
+          topCollector = TopScoreDocCollector.create(len, cmd.getScoreDoc(), true); //create the Collector with InOrderPagingCollector
+        } else {
+          topCollector = TopScoreDocCollector.create(len, true);
+        }
+
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+      Collector collector = topCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed);
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      totalHits = topCollector.getTotalHits();
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+(startLine=1642 endLine=1691 srcPath=/home/sonia/NewExperiment/luceneFilter/02016/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+    } else {
+
+      TopDocsCollector topCollector;
+
+      if (cmd.getSort() == null) {
+        topCollector = TopScoreDocCollector.create(len, true);
+      } else {
+        topCollector = TopFieldCollector.create(weightSort(cmd.getSort()), len, false, needScores, needScores, true);
+      }
+
+      DocSetCollector setCollector = new DocSetDelegateCollector(maxDoc>>6, maxDoc, topCollector);
+      Collector collector = setCollector;
+      if (terminateEarly) {
+        collector = new EarlyTerminatingCollector(collector, cmd.len);
+      }
+      if( timeAllowed > 0 ) {
+        collector = new TimeLimitingCollector(collector, TimeLimitingCollector.getGlobalCounter(), timeAllowed );
+      }
+      if (pf.postFilter != null) {
+        pf.postFilter.setLastDelegate(collector);
+        collector = pf.postFilter;
+      }
+      try {
+        super.search(query, luceneFilter, collector);
+        if(collector instanceof DelegatingCollector) {
+          ((DelegatingCollector)collector).finish();
+        }
+      }
+      catch( TimeLimitingCollector.TimeExceededException x ) {
+        log.warn( "Query: " + query + "; " + x.getMessage() );
+        qr.setPartialResults(true);
+      }
+
+      set = setCollector.getDocSet();      
+
+      totalHits = topCollector.getTotalHits();
+      assert(totalHits == set.size());
+
+      TopDocs topDocs = topCollector.topDocs(0, len);
+      maxScore = totalHits>0 ? topDocs.getMaxScore() : 0.0f;
+      nDocsReturned = topDocs.scoreDocs.length;
+
+      ids = new int[nDocsReturned];
+      scores = (cmd.getFlags()&GET_SCORES)!=0 ? new float[nDocsReturned] : null;
+      for (int i=0; i<nDocsReturned; i++) {
+        ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+        ids[i] = scoreDoc.doc;
+        if (scores != null) scores[i] = scoreDoc.score;
+      }
+    }
+
+commonMethod: 
+(startLine=1471 endLine=1497 srcPath=/home/sonia/NewExperiment/luceneFilter/02017/solr/core/src/java/org/apache/solr/search/SolrIndexSearcher.java)
+  /**
+   * Helper method for inspecting QueryCommand and creating the appropriate 
+   * {@link TopDocsCollector}
+   *
+   * @param len the number of docs to return
+   * @param cmd The Command whose properties should determine the type of 
+   *        TopDocsCollector to use.
+   */
+  private TopDocsCollector buildTopDocsCollector(int len, QueryCommand cmd) throws IOException {
+    
+    if (null == cmd.getSort()) {
+      assert null == cmd.getCursorMark() : "have cursor but no sort";
+      return TopScoreDocCollector.create(len, true);
+    } else {
+      // we have a sort
+      final boolean needScores = (cmd.getFlags() & GET_SCORES) != 0;
+      final Sort weightedSort = weightSort(cmd.getSort());
+      final CursorMark cursor = cmd.getCursorMark();
+
+      // :TODO: make fillFields it's own QueryCommand flag? ...
+      // ... see comments in populateNextCursorMarkFromTopDocs for cache issues (SOLR-5595)
+      final boolean fillFields = (null != cursor);
+      final FieldDoc searchAfter = (null != cursor ? cursor.getSearchAfterFieldDoc() : null);
+      return TopFieldCollector.create(weightedSort, len, searchAfter,
+                                      fillFields, needScores, needScores, true); 
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=112 endLine=134 srcPath=/home/sonia/NewExperiment/luceneFilter/02045/solr/test-framework/src/java/org/apache/solr/util/RestTestHarness.java)
+  public String put(String request, String content) throws IOException {
+    URL url = new URL(getBaseURL() + request);
+    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod("PUT");
+    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+    out.write(content);
+    out.close();
+    InputStream inputStream = null;
+    StringWriter stringWriter;
+    try {
+      try {
+        inputStream = connection.getInputStream();
+      } catch (IOException e) {
+        inputStream = connection.getErrorStream();
+      }
+      stringWriter = new StringWriter();
+      IOUtils.copy(new InputStreamReader(inputStream, "UTF-8"), stringWriter);
+    } finally {
+      IOUtils.closeQuietly(inputStream);
+    }
+    return stringWriter.toString();
+  }
+
+(startLine=144 endLine=168 srcPath=/home/sonia/NewExperiment/luceneFilter/02045/solr/test-framework/src/java/org/apache/solr/util/RestTestHarness.java)
+  public String post(String request, String content) throws IOException {
+    URL url = new URL(getBaseURL() + request);
+    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+    out.write(content);
+    out.close();
+    InputStream inputStream = null;
+    StringWriter stringWriter;
+    try {
+      try {
+        inputStream = connection.getInputStream();
+      } catch (IOException e) {
+        inputStream = connection.getErrorStream();
+      }
+      stringWriter = new StringWriter();
+      IOUtils.copy(new InputStreamReader(inputStream, "UTF-8"), stringWriter);
+    } finally {
+      IOUtils.closeQuietly(inputStream);
+    }
+    return stringWriter.toString();
+  }
+
+commonMethod: 
+(startLine=164 endLine=172 srcPath=/home/sonia/NewExperiment/luceneFilter/02046/solr/test-framework/src/java/org/apache/solr/util/RestTestHarness.java)
+  private String getResponse(HttpUriRequest request) throws IOException {
+    HttpEntity entity = null;
+    try {
+      entity = httpClient.execute(request).getEntity();
+      return EntityUtils.toString(entity, "UTF-8");
+    } finally {
+      EntityUtils.consumeQuietly(entity);
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=1674 endLine=1689 srcPath=/home/sonia/NewExperiment/luceneFilter/02049/solr/test-framework/src/java/org/apache/solr/cloud/AbstractFullDistribZkTestBase.java)
+  protected SolrServer createNewSolrServer(int port) {
+    try {
+      // setup the server...
+      String urlScheme = isSSLMode() ? "https" : "http";
+      String url = urlScheme + "://127.0.0.1:" + port + context + 
+        (context.endsWith("/") ? "" : "/") + DEFAULT_COLLECTION;
+      HttpSolrServer s = new HttpSolrServer(url);
+      s.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT);
+      s.setSoTimeout(60000);
+      s.setDefaultMaxConnectionsPerHost(100);
+      s.setMaxTotalConnections(100);
+      return s;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+(startLine=393 endLine=408 srcPath=/home/sonia/NewExperiment/luceneFilter/02049/solr/test-framework/src/java/org/apache/solr/BaseDistributedSearchTestCase.java)
+  protected SolrServer createNewSolrServer(int port) {
+    try {
+      // setup the server...
+      String urlScheme = isSSLMode() ? "https" : "http";
+      String url = urlScheme + "://127.0.0.1:" + port + context;
+      HttpSolrServer s = new HttpSolrServer(url);
+      s.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT);
+      s.setSoTimeout(60000);
+      s.setDefaultMaxConnectionsPerHost(100);
+      s.setMaxTotalConnections(100);
+      return s;
+    }
+    catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+commonMethod: 
+(startLine=408 endLine=410 srcPath=/home/sonia/NewExperiment/luceneFilter/02050/solr/test-framework/src/java/org/apache/solr/BaseDistributedSearchTestCase.java)
+  protected String buildUrl(int port) {
+    return buildUrl(port, context);
+  }
+
+
+, Instance #
+frags: 
+(startLine=1675 endLine=1686 srcPath=/home/sonia/NewExperiment/luceneFilter/02049/solr/test-framework/src/java/org/apache/solr/cloud/AbstractFullDistribZkTestBase.java)
+    try {
+      // setup the server...
+      String urlScheme = isSSLMode() ? "https" : "http";
+      String url = urlScheme + "://127.0.0.1:" + port + context + 
+        (context.endsWith("/") ? "" : "/") + DEFAULT_COLLECTION;
+      HttpSolrServer s = new HttpSolrServer(url);
+      s.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT);
+      s.setSoTimeout(60000);
+      s.setDefaultMaxConnectionsPerHost(100);
+      s.setMaxTotalConnections(100);
+      return s;
+    } catch (Exception ex) {
+
+(startLine=394 endLine=404 srcPath=/home/sonia/NewExperiment/luceneFilter/02049/solr/test-framework/src/java/org/apache/solr/BaseDistributedSearchTestCase.java)
+    try {
+      // setup the server...
+      String urlScheme = isSSLMode() ? "https" : "http";
+      String url = urlScheme + "://127.0.0.1:" + port + context;
+      HttpSolrServer s = new HttpSolrServer(url);
+      s.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT);
+      s.setSoTimeout(60000);
+      s.setDefaultMaxConnectionsPerHost(100);
+      s.setMaxTotalConnections(100);
+      return s;
+    }
+
+commonMethod: 
+(startLine=408 endLine=410 srcPath=/home/sonia/NewExperiment/luceneFilter/02050/solr/test-framework/src/java/org/apache/solr/BaseDistributedSearchTestCase.java)
+  protected String buildUrl(int port) {
+    return buildUrl(port, context);
+  }
+
+
+, Instance #
+frags: 
+(startLine=168 endLine=179 srcPath=/home/sonia/NewExperiment/luceneFilter/02115/lucene/codecs/src/java/org/apache/lucene/codecs/simpletext/SimpleTextStoredFieldsWriter.java)
+  public void finish(FieldInfos fis, int numDocs) throws IOException {
+    if (numDocsWritten != numDocs) {
+      throw new RuntimeException("mergeFields produced an invalid result: docCount is " + numDocs 
+          + " but only saw " + numDocsWritten + " file=" + out.toString() + "; now aborting this merge to prevent index corruption");
+    }
+    write(END);
+    newLine();
+    String checksum = Long.toString(out.getChecksum());
+    write(CHECKSUM);
+    write(checksum);
+    newLine();
+  }
+
+(startLine=175 endLine=185 srcPath=/home/sonia/NewExperiment/luceneFilter/02115/lucene/codecs/src/java/org/apache/lucene/codecs/simpletext/SimpleTextTermVectorsWriter.java)
+  public void finish(FieldInfos fis, int numDocs) throws IOException {
+    if (numDocsWritten != numDocs) {
+      throw new RuntimeException("mergeVectors produced an invalid result: mergedDocs is " + numDocs + " but vec numDocs is " + numDocsWritten + " file=" + out.toString() + "; now aborting this merge to prevent index corruption");
+    }
+    write(END);
+    newLine();
+    String checksum = Long.toString(out.getChecksum());
+    write(CHECKSUM);
+    write(checksum);
+    newLine();
+  }
+
+commonMethod: 
+(startLine=77 endLine=85 srcPath=/home/sonia/NewExperiment/luceneFilter/02116/lucene/codecs/src/java/org/apache/lucene/codecs/simpletext/SimpleTextUtil.java)
+  public static void writeChecksum(IndexOutput out, BytesRef scratch) throws IOException {
+    // Pad with zeros so different checksum values use the
+    // same number of bytes
+    // (BaseIndexFileFormatTestCase.testMergeStability cares):
+    String checksum = String.format(Locale.ROOT, "%020d", out.getChecksum());
+    SimpleTextUtil.write(out, CHECKSUM);
+    SimpleTextUtil.write(out, checksum, scratch);
+    SimpleTextUtil.writeNewline(out);
+  }
+
+
+, Instance #
+frags: 
+(startLine=220 endLine=243 srcPath=/home/sonia/NewExperiment/luceneFilter/02200/lucene/spatial/src/java/org/apache/lucene/spatial/bbox/BBoxStrategy.java)
+    if (!bbox.getCrossesDateLine()) {
+
+      // X Conditions for documents that do not cross the date line,
+      // documents that contain the min X and max X of the query envelope,
+      // docMinX <= queryExtent.getMinX() AND docMaxX >= queryExtent.getMaxX()
+      Query qMinX = NumericRangeQuery.newDoubleRange(field_minX, precisionStep, null, bbox.getMinX(), false, true);
+      Query qMaxX = NumericRangeQuery.newDoubleRange(field_maxX, precisionStep, bbox.getMaxX(), null, true, false);
+      Query qMinMax = this.makeQuery(BooleanClause.Occur.MUST, qMinX, qMaxX);
+      Query qNonXDL = this.makeXDL(false, qMinMax);
+
+      // X Conditions for documents that cross the date line,
+      // the left portion of the document contains the min X of the query
+      // OR the right portion of the document contains the max X of the query,
+      // docMinXLeft <= queryExtent.getMinX() OR docMaxXRight >= queryExtent.getMaxX()
+      Query qXDLLeft = NumericRangeQuery.newDoubleRange(field_minX, precisionStep, null, bbox.getMinX(), false, true);
+      Query qXDLRight = NumericRangeQuery.newDoubleRange(field_maxX, precisionStep, bbox.getMaxX(), null, true, false);
+      Query qXDLLeftRight = this.makeQuery(BooleanClause.Occur.SHOULD, qXDLLeft, qXDLRight);
+      Query qXDL = this.makeXDL(true, qXDLLeftRight);
+
+      // apply the non-XDL and XDL conditions
+      xConditions = this.makeQuery(BooleanClause.Occur.SHOULD, qNonXDL, qXDL);
+
+      // queries that cross the date line
+    } else {
+
+(startLine=282 endLine=307 srcPath=/home/sonia/NewExperiment/luceneFilter/02200/lucene/spatial/src/java/org/apache/lucene/spatial/bbox/BBoxStrategy.java)
+    if (!bbox.getCrossesDateLine()) {
+
+      // X Conditions for documents that do not cross the date line,
+      // docMinX > queryExtent.getMaxX() OR docMaxX < queryExtent.getMinX()
+      Query qMinX = NumericRangeQuery.newDoubleRange(field_minX, precisionStep, bbox.getMaxX(), null, false, false);
+      Query qMaxX = NumericRangeQuery.newDoubleRange(field_maxX, precisionStep, null, bbox.getMinX(), false, false);
+      Query qMinMax = this.makeQuery(BooleanClause.Occur.SHOULD, qMinX, qMaxX);
+      Query qNonXDL = this.makeXDL(false, qMinMax);
+
+      // X Conditions for documents that cross the date line,
+      // both the left and right portions of the document must be disjoint to the query
+      // (docMinXLeft > queryExtent.getMaxX() OR docMaxXLeft < queryExtent.getMinX()) AND
+      // (docMinXRight > queryExtent.getMaxX() OR docMaxXRight < queryExtent.getMinX())
+      // where: docMaxXLeft = 180.0, docMinXRight = -180.0
+      // (docMaxXLeft  < queryExtent.getMinX()) equates to (180.0  < queryExtent.getMinX()) and is ignored
+      // (docMinXRight > queryExtent.getMaxX()) equates to (-180.0 > queryExtent.getMaxX()) and is ignored
+      Query qMinXLeft = NumericRangeQuery.newDoubleRange(field_minX, precisionStep, bbox.getMaxX(), null, false, false);
+      Query qMaxXRight = NumericRangeQuery.newDoubleRange(field_maxX, precisionStep, null, bbox.getMinX(), false, false);
+      Query qLeftRight = this.makeQuery(BooleanClause.Occur.MUST, qMinXLeft, qMaxXRight);
+      Query qXDL = this.makeXDL(true, qLeftRight);
+
+      // apply the non-XDL and XDL conditions
+      xConditions = this.makeQuery(BooleanClause.Occur.SHOULD, qNonXDL, qXDL);
+
+      // queries that cross the date line
+    } else {
+
+commonMethod: 
+(startLine=589 endLine=593 srcPath=/home/sonia/NewExperiment/luceneFilter/02201/lucene/spatial/src/java/org/apache/lucene/spatial/bbox/BBoxStrategy.java)
+  private Query makeNumberTermQuery(String field, double number) {
+    BytesRef bytes = new BytesRef();
+    NumericUtils.longToPrefixCodedBytes(NumericUtils.doubleToSortableLong(number), 0, bytes);
+    return new TermQuery(new Term(field, bytes));
+  }
+
+
+, Instance #
+frags: 
+(startLine=302 endLine=315 srcPath=/home/sonia/NewExperiment/luceneFilter/02307/lucene/core/src/java/org/apache/lucene/util/FixedBitSet.java)
+  public void or(DocIdSetIterator iter) throws IOException {
+    if (iter instanceof FixedBitSetIterator && iter.docID() == -1) {
+      final FixedBitSetIterator fbs = (FixedBitSetIterator) iter;
+      or(fbs.bits, fbs.numWords);
+      // advance after last doc that would be accepted if standard
+      // iteration is used (to exhaust it):
+      fbs.advance(numBits);
+    } else {
+      int doc;
+      while ((doc = iter.nextDoc()) < numBits) {
+        set(doc);
+      }
+    }
+  }
+
+(startLine=337 endLine=350 srcPath=/home/sonia/NewExperiment/luceneFilter/02307/lucene/core/src/java/org/apache/lucene/util/FixedBitSet.java)
+  public void xor(DocIdSetIterator iter) throws IOException {
+    if (iter instanceof FixedBitSetIterator && iter.docID() == -1) {
+      final FixedBitSetIterator fbs = (FixedBitSetIterator) iter;
+      xor(fbs.bits, fbs.numWords);
+      // advance after last doc that would be accepted if standard
+      // iteration is used (to exhaust it):
+      fbs.advance(numBits);
+    } else {
+      int doc;
+      while ((doc = iter.nextDoc()) < numBits) {
+        flip(doc);
+      }
+    }
+  }
+
+(startLine=411 endLine=424 srcPath=/home/sonia/NewExperiment/luceneFilter/02307/lucene/core/src/java/org/apache/lucene/util/FixedBitSet.java)
+  public void andNot(DocIdSetIterator iter) throws IOException {
+    if (iter instanceof FixedBitSetIterator && iter.docID() == -1) {
+      final FixedBitSetIterator fbs = (FixedBitSetIterator) iter;
+      andNot(fbs.bits, fbs.numWords);
+      // advance after last doc that would be accepted if standard
+      // iteration is used (to exhaust it):
+      fbs.advance(numBits);
+    } else {
+      int doc;
+      while ((doc = iter.nextDoc()) < numBits) {
+        clear(doc);
+      }
+    }
+  }
+
+commonMethod: 
+(startLine=40 endLine=43 srcPath=/home/sonia/NewExperiment/luceneFilter/02308/lucene/core/src/java/org/apache/lucene/util/BitSetIterator.java)
+  /** If the provided iterator wraps a {@link FixedBitSet}, returns it, otherwise returns null. */
+  public static FixedBitSet getFixedBitSetOrNull(DocIdSetIterator iterator) {
+    return getBitSet(iterator, FixedBitSet.class);
+  }
+
+
+, Instance #
+frags: 
+(startLine=497 endLine=523 srcPath=/home/sonia/NewExperiment/luceneFilter/02395/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+      while((docId = it.nextDoc()) != DocIdSetIterator.NO_MORE_DOCS) {
+
+        int ord = values.getOrd(docId);
+
+        if(ord > -1) {
+          dummy.score = scores[ord];
+        } else if(this.boostDocs != null && boostDocs.containsKey(docId)) {
+          //Elevated docs don't need a score.
+          dummy.score = 0F;
+        } else if (nullPolicy == CollapsingPostFilter.NULL_POLICY_COLLAPSE) {
+          dummy.score = nullScore;
+        } else if(nullPolicy == CollapsingPostFilter.NULL_POLICY_EXPAND) {
+          dummy.score = nullScores.get(nullScoreIndex++);
+        }
+
+        while(docId >= nextDocBase) {
+          currentContext++;
+          currentDocBase = contexts[currentContext].docBase;
+          nextDocBase = currentContext+1 < contexts.length ? contexts[currentContext+1].docBase : maxDoc;
+          leafDelegate = delegate.getLeafCollector(contexts[currentContext]);
+          leafDelegate.setScorer(dummy);
+        }
+
+        int contextDoc = docId-currentDocBase;
+        dummy.docId = contextDoc;
+        leafDelegate.collect(contextDoc);
+      }
+
+(startLine=613 endLine=640 srcPath=/home/sonia/NewExperiment/luceneFilter/02395/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+      while((docId = it.nextDoc()) != DocIdSetIterator.NO_MORE_DOCS) {
+
+        if(this.needsScores){
+          int ord = values.getOrd(docId);
+          if(ord > -1) {
+            dummy.score = scores[ord];
+          } else if (boostDocs != null && boostDocs.containsKey(docId)) {
+            //It's an elevated doc so no score is needed
+            dummy.score = 0F;
+          } else if (nullPolicy == CollapsingPostFilter.NULL_POLICY_COLLAPSE) {
+            dummy.score = nullScore;
+          } else if(nullPolicy == CollapsingPostFilter.NULL_POLICY_EXPAND) {
+            dummy.score = nullScores.get(nullScoreIndex++);
+          }
+        }
+
+        while(docId >= nextDocBase) {
+          currentContext++;
+          currentDocBase = contexts[currentContext].docBase;
+          nextDocBase = currentContext+1 < contexts.length ? contexts[currentContext+1].docBase : maxDoc;
+          leafDelegate = delegate.getLeafCollector(contexts[currentContext]);
+          leafDelegate.setScorer(dummy);
+        }
+
+        int contextDoc = docId-currentDocBase;
+        dummy.docId = contextDoc;
+        leafDelegate.collect(contextDoc);
+      }
+
+commonMethod: 
+(startLine=2009 endLine=2030 srcPath=/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+    public boolean boost(int globalDoc) {
+      if(index == Integer.MIN_VALUE) {
+        return false;
+      } else {
+        while(true) {
+          if(index >= boostDocs.length) {
+            index = Integer.MIN_VALUE;
+            return false;
+          } else {
+            int comp = boostDocs[index];
+            if(comp == globalDoc) {
+              ++index;
+              return true;
+            } else if(comp < globalDoc) {
+              ++index;
+            } else {
+              return false;
+            }
+          }
+        }
+      }
+    }
+
+
+, Instance #
+frags: 
+(startLine=230 endLine=246 srcPath=/home/sonia/NewExperiment/luceneFilter/02395/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+        if(this.max != null) {
+          if(this.max.indexOf("(") == -1) {
+            fieldType = searcher.getSchema().getField(this.max).getType();
+          } else {
+            LocalSolrQueryRequest request = null;
+            try {
+              SolrParams params = new ModifiableSolrParams();
+              request = new LocalSolrQueryRequest(searcher.getCore(), params);
+              FunctionQParser functionQParser = new FunctionQParser(this.max, null, null,request);
+              funcQuery = (FunctionQuery)functionQParser.parse();
+            } catch (Exception e) {
+              throw new IOException(e);
+            } finally {
+              request.close();
+            }
+          }
+        }
+
+(startLine=248 endLine=264 srcPath=/home/sonia/NewExperiment/luceneFilter/02395/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+        if(this.min != null) {
+          if(this.min.indexOf("(") == -1) {
+            fieldType = searcher.getSchema().getField(this.min).getType();
+          } else {
+            LocalSolrQueryRequest request = null;
+            try {
+              SolrParams params = new ModifiableSolrParams();
+              request = new LocalSolrQueryRequest(searcher.getCore(), params);
+              FunctionQParser functionQParser = new FunctionQParser(this.min, null, null,request);
+              funcQuery = (FunctionQuery)functionQParser.parse();
+            } catch (Exception e) {
+              throw new IOException(e);
+            } finally {
+              request.close();
+            }
+          }
+        }
+
+commonMethod: 
+(startLine=1100 endLine=1258 srcPath=/home/sonia/NewExperiment/luceneFilter/02396/solr/core/src/java/org/apache/solr/search/CollapsingQParserPlugin.java)
+    public DelegatingCollector getCollector(String collapseField,
+                                            String min,
+                                            String max,
+                                            int nullPolicy,
+                                            String hint,
+                                            boolean needsScores,
+                                            int size,
+                                            IntIntOpenHashMap boostDocs,
+                                            SolrIndexSearcher searcher) throws IOException {
+
+
+
+      SortedDocValues docValues = null;
+      FunctionQuery funcQuery = null;
+
+      FieldType collapseFieldType = searcher.getSchema().getField(collapseField).getType();
+      String defaultValue = searcher.getSchema().getField(collapseField).getDefaultValue();
+
+      if(collapseFieldType instanceof StrField) {
+        if(HINT_TOP_FC.equals(hint)) {
+
+            /*
+            * This hint forces the use of the top level field cache for String fields.
+            * This is VERY fast at query time but slower to warm and causes insanity.
+            */
+
+          Map<String, UninvertingReader.Type> mapping = new HashMap();
+          mapping.put(collapseField, UninvertingReader.Type.SORTED);
+          UninvertingReader uninvertingReader = new UninvertingReader(new ReaderWrapper(searcher.getLeafReader(), collapseField), mapping);
+          docValues = uninvertingReader.getSortedDocValues(collapseField);
+        } else {
+          docValues = DocValues.getSorted(searcher.getLeafReader(), collapseField);
+        }
+      } else {
+        if(HINT_TOP_FC.equals(hint)) {
+          throw new IOException("top_fc hint is only supported when collapsing on String Fields");
+        }
+      }
+
+      FieldType minMaxFieldType = null;
+      if(max != null) {
+        if(max.indexOf("(") == -1) {
+          minMaxFieldType = searcher.getSchema().getField(max).getType();
+        } else {
+          LocalSolrQueryRequest request = null;
+          try {
+            SolrParams params = new ModifiableSolrParams();
+            request = new LocalSolrQueryRequest(searcher.getCore(), params);
+            FunctionQParser functionQParser = new FunctionQParser(max, null, null,request);
+            funcQuery = (FunctionQuery)functionQParser.parse();
+          } catch (Exception e) {
+            throw new IOException(e);
+          } finally {
+            request.close();
+          }
+        }
+      }
+
+      if(min != null) {
+        if(min.indexOf("(") == -1) {
+          minMaxFieldType = searcher.getSchema().getField(min).getType();
+        } else {
+          LocalSolrQueryRequest request = null;
+          try {
+            SolrParams params = new ModifiableSolrParams();
+            request = new LocalSolrQueryRequest(searcher.getCore(), params);
+            FunctionQParser functionQParser = new FunctionQParser(min, null, null,request);
+            funcQuery = (FunctionQuery)functionQParser.parse();
+          } catch (Exception e) {
+            throw new IOException(e);
+          } finally {
+            request.close();
+          }
+        }
+      }
+
+      int maxDoc = searcher.maxDoc();
+      int leafCount = searcher.getTopReaderContext().leaves().size();
+
+      if (min != null || max != null) {
+
+        if(collapseFieldType instanceof StrField) {
+
+          return new OrdFieldValueCollector(maxDoc,
+                                            leafCount,
+                                            docValues,
+                                            nullPolicy,
+                                            max != null ? max : min,
+                                            max != null,
+                                            needsScores,
+                                            minMaxFieldType,
+                                            boostDocs,
+                                            funcQuery,
+                                            searcher);
+
+        } else if((collapseFieldType instanceof TrieIntField ||
+                   collapseFieldType instanceof TrieFloatField)) {
+
+          int nullValue = 0;
+
+          if(collapseFieldType instanceof TrieFloatField) {
+            if(defaultValue != null) {
+              nullValue = Float.floatToIntBits(Float.parseFloat(defaultValue));
+            } else {
+              nullValue = Float.floatToIntBits(0.0f);
+            }
+          } else {
+            if(defaultValue != null) {
+              nullValue = Integer.parseInt(defaultValue);
+            }
+          }
+
+          return new IntFieldValueCollector(maxDoc,
+                                            size,
+                                            leafCount,
+                                            nullValue,
+                                            nullPolicy,
+                                            collapseField,
+                                            max != null ? max : min,
+                                            max != null,
+                                            needsScores,
+                                            minMaxFieldType,
+                                            boostDocs,
+                                            funcQuery,
+                                            searcher);
+        } else {
+          throw new IOException("64 bit numeric collapse fields are not supported");
+        }
+
+      } else {
+
+        if(collapseFieldType instanceof StrField) {
+
+          return new OrdScoreCollector(maxDoc, leafCount, docValues, nullPolicy, boostDocs);
+
+        } else if(collapseFieldType instanceof TrieIntField ||
+                  collapseFieldType instanceof TrieFloatField) {
+
+          int nullValue = 0;
+
+          if(collapseFieldType instanceof TrieFloatField) {
+            if(defaultValue != null) {
+              nullValue = Float.floatToIntBits(Float.parseFloat(defaultValue));
+            } else {
+              nullValue = Float.floatToIntBits(0.0f);
+            }
+          } else {
+            if(defaultValue != null) {
+              nullValue = Integer.parseInt(defaultValue);
+            }
+          }
+
+          return new IntScoreCollector(maxDoc, leafCount, nullValue, nullPolicy, size, collapseField, boostDocs);
+
+        } else {
+          throw new IOException("64 bit numeric collapse fields are not supported");
+        }
+      }
+    }
+
+
+, Instance #
+frags: 
+(startLine=188 endLine=205 srcPath=/home/sonia/NewExperiment/luceneFilter/02695/lucene/sandbox/src/java/org/apache/lucene/search/GeoPointInPolygonQuery.java)
+    protected AcceptStatus accept(BytesRef term) {
+      // first filter by bounding box
+      AcceptStatus status = super.accept(term);
+      assert status != AcceptStatus.YES_AND_SEEK;
+
+      if (status != AcceptStatus.YES) {
+        return status;
+      }
+
+      final long val = NumericUtils.prefixCodedToLong(term);
+      final double lon = GeoUtils.mortonUnhashLon(val);
+      final double lat = GeoUtils.mortonUnhashLat(val);
+      // post-filter by point in polygon
+      if (!GeoUtils.pointInPolygon(x, y, lat, lon)) {
+        return AcceptStatus.NO;
+      }
+      return AcceptStatus.YES;
+    }
+
+(startLine=79 endLine=97 srcPath=/home/sonia/NewExperiment/luceneFilter/02695/lucene/sandbox/src/java/org/apache/lucene/search/GeoPointDistanceQueryImpl.java)
+    protected AcceptStatus accept(BytesRef term) {
+      // first filter by bounding box
+      AcceptStatus status = super.accept(term);
+      assert status != AcceptStatus.YES_AND_SEEK;
+
+      if (status != AcceptStatus.YES) {
+        return status;
+      }
+
+      final long val = NumericUtils.prefixCodedToLong(term);
+      final double lon = GeoUtils.mortonUnhashLon(val);
+      final double lat = GeoUtils.mortonUnhashLat(val);
+      // post-filter by distance
+      if (!(SloppyMath.haversin(query.centerLat, query.centerLon, lat, lon)*1000.0 <= query.radius)) {
+        return AcceptStatus.NO;
+      }
+
+      return AcceptStatus.YES;
+    }
+
+commonMethod: 
+(startLine=59 endLine=61 srcPath=/home/sonia/NewExperiment/luceneFilter/02696/lucene/sandbox/src/java/org/apache/lucene/util/GeoUtils.java)
+  public static double mortonUnhashLat(final long hash) {
+    return unscaleLat(BitUtil.deinterleave(hash >>> 1));
+  }
+
+
+, Instance #
+frags: 
+(startLine=188 endLine=205 srcPath=/home/sonia/NewExperiment/luceneFilter/02695/lucene/sandbox/src/java/org/apache/lucene/search/GeoPointInPolygonQuery.java)
+    protected AcceptStatus accept(BytesRef term) {
+      // first filter by bounding box
+      AcceptStatus status = super.accept(term);
+      assert status != AcceptStatus.YES_AND_SEEK;
+
+      if (status != AcceptStatus.YES) {
+        return status;
+      }
+
+      final long val = NumericUtils.prefixCodedToLong(term);
+      final double lon = GeoUtils.mortonUnhashLon(val);
+      final double lat = GeoUtils.mortonUnhashLat(val);
+      // post-filter by point in polygon
+      if (!GeoUtils.pointInPolygon(x, y, lat, lon)) {
+        return AcceptStatus.NO;
+      }
+      return AcceptStatus.YES;
+    }
+
+(startLine=79 endLine=97 srcPath=/home/sonia/NewExperiment/luceneFilter/02695/lucene/sandbox/src/java/org/apache/lucene/search/GeoPointDistanceQueryImpl.java)
+    protected AcceptStatus accept(BytesRef term) {
+      // first filter by bounding box
+      AcceptStatus status = super.accept(term);
+      assert status != AcceptStatus.YES_AND_SEEK;
+
+      if (status != AcceptStatus.YES) {
+        return status;
+      }
+
+      final long val = NumericUtils.prefixCodedToLong(term);
+      final double lon = GeoUtils.mortonUnhashLon(val);
+      final double lat = GeoUtils.mortonUnhashLat(val);
+      // post-filter by distance
+      if (!(SloppyMath.haversin(query.centerLat, query.centerLon, lat, lon)*1000.0 <= query.radius)) {
+        return AcceptStatus.NO;
+      }
+
+      return AcceptStatus.YES;
+    }
+
+commonMethod: 
+(startLine=55 endLine=57 srcPath=/home/sonia/NewExperiment/luceneFilter/02696/lucene/sandbox/src/java/org/apache/lucene/util/GeoUtils.java)
+  public static double mortonUnhashLon(final long hash) {
+    return unscaleLon(BitUtil.deinterleave(hash));
+  }
+
+
+, Instance #
+frags: 
+(startLine=54 endLine=60 srcPath=/home/sonia/NewExperiment/luceneFilter/02744/lucene/spatial3d/src/java/org/apache/lucene/geo3d/GeoAreaFactory.java)
+      if (Math.abs(maxY - minY) < Vector.MINIMUM_RESOLUTION) {
+        if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+          return new dXdYdZSolid(planetModel, (minX+maxX) * 0.5, (minY+maxY) * 0.5, minZ);
+        } else {
+          return new dXdYZSolid(planetModel, (minX+maxX) * 0.5, (minY+maxY) * 0.5, minZ, maxZ);
+        }
+      } else {
+
+(startLine=60 endLine=66 srcPath=/home/sonia/NewExperiment/luceneFilter/02744/lucene/spatial3d/src/java/org/apache/lucene/geo3d/GeoAreaFactory.java)
+      } else {
+        if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+          return new dXYdZSolid(planetModel, (minX+maxX) * 0.5, minY, maxY, (minZ+maxZ) * 0.5);
+        } else {
+          return new dXYZSolid(planetModel, (minX+maxX) * 0.5, minY, maxY, minZ, maxZ);
+        }
+      }
+
+(startLine=68 endLine=74 srcPath=/home/sonia/NewExperiment/luceneFilter/02744/lucene/spatial3d/src/java/org/apache/lucene/geo3d/GeoAreaFactory.java)
+    if (Math.abs(maxY - minY) < Vector.MINIMUM_RESOLUTION) {
+      if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+        return new XdYdZSolid(planetModel, minX, maxX, (minY+maxY) * 0.5, (minZ+maxZ) * 0.5);
+      } else {
+        return new XdYZSolid(planetModel, minX, maxX, (minY+maxY) * 0.5, minZ, maxZ);
+      }
+    }
+
+commonMethod: 
+(startLine=29 endLine=66 srcPath=/home/sonia/NewExperiment/luceneFilter/02745/lucene/spatial3d/src/java/org/apache/lucene/geo3d/XYZSolidFactory.java)
+  /**
+   * Create a XYZSolid of the right kind given (x,y,z) bounds.
+   * @param planetModel is the planet model
+   * @param minX is the min X boundary
+   * @param maxX is the max X boundary
+   * @param minY is the min Y boundary
+   * @param maxY is the max Y boundary
+   * @param minZ is the min Z boundary
+   * @param maxZ is the max Z boundary
+   */
+  public static XYZSolid makeXYZSolid(final PlanetModel planetModel, final double minX, final double maxX, final double minY, final double maxY, final double minZ, final double maxZ) {
+    if (Math.abs(maxX - minX) < Vector.MINIMUM_RESOLUTION) {
+      if (Math.abs(maxY - minY) < Vector.MINIMUM_RESOLUTION) {
+        if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+          return new dXdYdZSolid(planetModel, (minX+maxX) * 0.5, (minY+maxY) * 0.5, minZ);
+        } else {
+          return new dXdYZSolid(planetModel, (minX+maxX) * 0.5, (minY+maxY) * 0.5, minZ, maxZ);
+        }
+      } else {
+        if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+          return new dXYdZSolid(planetModel, (minX+maxX) * 0.5, minY, maxY, (minZ+maxZ) * 0.5);
+        } else {
+          return new dXYZSolid(planetModel, (minX+maxX) * 0.5, minY, maxY, minZ, maxZ);
+        }
+      }
+    }
+    if (Math.abs(maxY - minY) < Vector.MINIMUM_RESOLUTION) {
+      if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+        return new XdYdZSolid(planetModel, minX, maxX, (minY+maxY) * 0.5, (minZ+maxZ) * 0.5);
+      } else {
+        return new XdYZSolid(planetModel, minX, maxX, (minY+maxY) * 0.5, minZ, maxZ);
+      }
+    }
+    if (Math.abs(maxZ - minZ) < Vector.MINIMUM_RESOLUTION) {
+      return new XYdZSolid(planetModel, minX, maxX, minY, maxY, (minZ+maxZ) * 0.5);
+    }
+    return new StandardXYZSolid(planetModel, minX, maxX, minY, maxY, minZ, maxZ);
+  }
+
+
+, Instance #
+frags: 
+(startLine=133 endLine=157 srcPath=/home/sonia/NewExperiment/luceneFilter/02968/solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/StreamingTest.java)
+  public void testNonePartitionKeys() throws Exception {
+
+    new UpdateRequest()
+        .add(id, "0", "a_s", "hello0", "a_i", "0", "a_f", "1")
+        .add(id, "2", "a_s", "hello0", "a_i", "2", "a_f", "2")
+        .add(id, "3", "a_s", "hello3", "a_i", "3", "a_f", "3")
+        .add(id, "4", "a_s", "hello4", "a_i", "4", "a_f", "4")
+        .add(id, "1", "a_s", "hello0", "a_i", "1", "a_f", "5")
+        .add(id, "5", "a_s", "hello3", "a_i", "10", "a_f", "6")
+        .add(id, "6", "a_s", "hello4", "a_i", "11", "a_f", "7")
+        .add(id, "7", "a_s", "hello3", "a_i", "12", "a_f", "8")
+        .add(id, "8", "a_s", "hello3", "a_i", "13", "a_f", "9")
+        .add(id, "9", "a_s", "hello0", "a_i", "14", "a_f", "10")
+        .commit(cluster.getSolrClient(), COLLECTION);
+
+    SolrParams sParamsA = StreamingTest.mapParams("q", "*:*", "fl", "id,a_s,a_i,a_f", "sort", "a_s asc,a_f asc", "partitionKeys", "none");
+    CloudSolrStream stream = new CloudSolrStream(zkHost, COLLECTION, sParamsA);
+    ParallelStream pstream = new ParallelStream(zkHost, COLLECTION, stream, 2, new FieldComparator("a_s",ComparatorOrder.ASCENDING));
+
+    attachStreamFactory(pstream);
+    List<Tuple> tuples = getTuples(pstream);
+
+    assert(tuples.size() == 20); // Each tuple will be double counted.
+
+  }
+
+(startLine=1484 endLine=1511 srcPath=/home/sonia/NewExperiment/luceneFilter/02968/solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/StreamingTest.java)
+  public void testZeroParallelReducerStream() throws Exception {
+
+    new UpdateRequest()
+        .add(id, "0", "a_s", "hello0", "a_i", "0", "a_f", "1")
+        .add(id, "2", "a_s", "hello0", "a_i", "2", "a_f", "2")
+        .add(id, "3", "a_s", "hello3", "a_i", "3", "a_f", "3")
+        .add(id, "4", "a_s", "hello4", "a_i", "4", "a_f", "4")
+        .add(id, "1", "a_s", "hello0", "a_i", "1", "a_f", "5")
+        .add(id, "5", "a_s", "hello3", "a_i", "10", "a_f", "6")
+        .add(id, "6", "a_s", "hello4", "a_i", "11", "a_f", "7")
+        .add(id, "7", "a_s", "hello3", "a_i", "12", "a_f", "8")
+        .add(id, "8", "a_s", "hello3", "a_i", "13", "a_f", "9")
+        .add(id, "9", "a_s", "hello0", "a_i", "14", "a_f", "10")
+        .commit(cluster.getSolrClient(), COLLECTION);
+
+    SolrParams sParamsA = mapParams("q", "blah", "fl", "id,a_s,a_i,a_f", "sort", "a_s asc,a_f asc", "partitionKeys", "a_s");
+    CloudSolrStream stream = new CloudSolrStream(zkHost, COLLECTION, sParamsA);
+    ReducerStream rstream = new ReducerStream(stream,
+                                              new FieldEqualitor("a_s"),
+                                              new GroupOperation(new FieldComparator("a_s", ComparatorOrder.ASCENDING), 2));
+
+    ParallelStream pstream = new ParallelStream(zkHost, COLLECTION, rstream, 2, new FieldComparator("a_s", ComparatorOrder.ASCENDING));
+
+    attachStreamFactory(pstream);
+    List<Tuple> tuples = getTuples(pstream);
+    assert(tuples.size() == 0);
+
+  }
+
+commonMethod: 
+(startLine=1835 endLine=1838 srcPath=/home/sonia/NewExperiment/luceneFilter/02969/solr/solrj/src/test/org/apache/solr/client/solrj/io/stream/StreamingTest.java)
+  private ParallelStream parallelStream(TupleStream stream, FieldComparator comparator) throws IOException {
+    ParallelStream pstream = new ParallelStream(zkHost, COLLECTION, stream, numWorkers, comparator);
+    return pstream;
+  }  
+
+
+, Instance #
+frags: 
+(startLine=246 endLine=274 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        long[] values = new long[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Long) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = dvs.longValue();
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Long.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+(startLine=277 endLine=306 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        int[] values = new int[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Integer) sortField.getMissingValue());
+        }
+        
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = (int) dvs.longValue();
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Integer.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+(startLine=309 endLine=337 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        double[] values = new double[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Double) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = Double.longBitsToDouble(dvs.longValue());
+        }
+        
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Double.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+(startLine=340 endLine=368 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        float[] values = new float[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Float) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = Float.intBitsToFloat((int) dvs.longValue());
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Float.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+commonMethod: 
+(startLine=230 endLine=239 srcPath=/home/sonia/NewExperiment/luceneFilter/03075/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+  /** Wraps a {@link SortedSetDocValues} as a single-valued view if the field is an instance of {@link SortedSetSortField},
+   * returns {@link SortedDocValues} for the field otherwise. */
+  static SortedDocValues getOrWrapSorted(LeafReader reader, SortField sortField) throws IOException {
+    if (sortField instanceof SortedSetSortField) {
+      SortedSetSortField sf = (SortedSetSortField) sortField;
+      return SortedSetSelector.wrap(DocValues.getSortedSet(reader, sf.getField()), sf.getSelector());
+    } else {
+      return DocValues.getSorted(reader, sortField.getField());
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=246 endLine=274 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        long[] values = new long[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Long) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = dvs.longValue();
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Long.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+(startLine=277 endLine=306 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        int[] values = new int[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Integer) sortField.getMissingValue());
+        }
+        
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = (int) dvs.longValue();
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Integer.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+(startLine=309 endLine=337 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        double[] values = new double[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Double) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = Double.longBitsToDouble(dvs.longValue());
+        }
+        
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Double.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+(startLine=340 endLine=368 srcPath=/home/sonia/NewExperiment/luceneFilter/03074/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+      {
+        float[] values = new float[maxDoc];
+        NumericDocValues dvs = DocValues.getNumeric(reader, sortField.getField());
+
+        if (sortField.getMissingValue() != null) {
+          Arrays.fill(values, (Float) sortField.getMissingValue());
+        }
+        while (true) {
+          int docID = dvs.nextDoc();
+          if (docID == NO_MORE_DOCS) {
+            break;
+          }
+          values[docID] = Float.intBitsToFloat((int) dvs.longValue());
+        }
+
+        final int reverseMul;
+        if (sortField.getReverse()) {
+          reverseMul = -1;
+        } else {
+          reverseMul = 1;
+        }
+
+        return new DocComparator() {
+          @Override
+          public int compare(int docID1, int docID2) {
+            return reverseMul * Float.compare(values[docID1], values[docID2]);
+          }
+        };
+      }
+
+commonMethod: 
+(startLine=219 endLine=228 srcPath=/home/sonia/NewExperiment/luceneFilter/03075/lucene/core/src/java/org/apache/lucene/index/Sorter.java)
+  /** Wraps a {@link SortedNumericDocValues} as a single-valued view if the field is an instance of {@link SortedNumericSortField},
+   * returns {@link NumericDocValues} for the field otherwise. */
+  static NumericDocValues getOrWrapNumeric(LeafReader reader, SortField sortField) throws IOException {
+    if (sortField instanceof SortedNumericSortField) {
+      SortedNumericSortField sf = (SortedNumericSortField) sortField;
+      return SortedNumericSelector.wrap(DocValues.getSortedNumeric(reader, sf.getField()), sf.getSelector(), sf.getNumericType());
+    } else {
+      return DocValues.getNumeric(reader, sortField.getField());
+    }
+  }
+
+
+, Instance #
+frags: 
+(startLine=54 endLine=101 srcPath=/home/sonia/NewExperiment/luceneFilter/03208/solr/contrib/ltr/src/test/org/apache/solr/ltr/feature/TestOriginalScoreFeature.java)
+  public void testOriginalScore() throws Exception {
+    loadFeature("score", OriginalScoreFeature.class.getCanonicalName(), "{}");
+
+    loadModel("originalScore", LinearModel.class.getCanonicalName(),
+        new String[] {"score"}, "{\"weights\":{\"score\":1.0}}");
+
+    final SolrQuery query = new SolrQuery();
+    query.setQuery("title:w1");
+    query.add("fl", "*, score");
+    query.add("rows", "4");
+    query.add("wt", "json");
+
+    // Normal term match
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='1'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='8'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='6'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='7'");
+
+    final String res = restTestHarness.query("/query" + query.toQueryString());
+    final Map<String,Object> jsonParse = (Map<String,Object>) ObjectBuilder
+        .fromJSON(res);
+    final String doc0Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(0)).get("score")).toString();
+    final String doc1Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(1)).get("score")).toString();
+    final String doc2Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(2)).get("score")).toString();
+    final String doc3Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(3)).get("score")).toString();
+
+    query.add("fl", "[fv]");
+    query.add("rq", "{!ltr model=originalScore reRankDocs=4}");
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='1'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/score=="
+        + doc0Score);
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='8'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/score=="
+        + doc1Score);
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='6'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/score=="
+        + doc2Score);
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='7'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/score=="
+        + doc3Score);
+  }
+
+(startLine=104 endLine=147 srcPath=/home/sonia/NewExperiment/luceneFilter/03208/solr/contrib/ltr/src/test/org/apache/solr/ltr/feature/TestOriginalScoreFeature.java)
+  public void testOriginalScoreWithNonScoringFeatures() throws Exception {
+    loadFeature("origScore", OriginalScoreFeature.class.getCanonicalName(),
+        "store2", "{}");
+    loadFeature("c2", ValueFeature.class.getCanonicalName(), "store2",
+        "{\"value\":2.0}");
+
+    loadModel("origScore", LinearModel.class.getCanonicalName(),
+        new String[] {"origScore"}, "store2",
+        "{\"weights\":{\"origScore\":1.0}}");
+
+    final SolrQuery query = new SolrQuery();
+    query.setQuery("title:w1");
+    query.add("fl", "*, score, fv:[fv]");
+    query.add("rows", "4");
+    query.add("wt", "json");
+    query.add("rq", "{!ltr model=origScore reRankDocs=4}");
+
+    final String res = restTestHarness.query("/query" + query.toQueryString());
+    final Map<String,Object> jsonParse = (Map<String,Object>) ObjectBuilder
+        .fromJSON(res);
+    final String doc0Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(0)).get("score")).toString();
+    final String doc1Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(1)).get("score")).toString();
+    final String doc2Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(2)).get("score")).toString();
+    final String doc3Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(3)).get("score")).toString();
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='1'");
+    assertJQ("/query" + query.toQueryString(),
+        "/response/docs/[0]/fv=='" + FeatureLoggerTestUtils.toFeatureVector("origScore", doc0Score, "c2", "2.0")+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='8'");
+
+    assertJQ("/query" + query.toQueryString(),
+        "/response/docs/[1]/fv=='" + FeatureLoggerTestUtils.toFeatureVector("origScore", doc1Score, "c2", "2.0")+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='6'");
+    assertJQ("/query" + query.toQueryString(),
+        "/response/docs/[2]/fv=='" + FeatureLoggerTestUtils.toFeatureVector("origScore", doc2Score, "c2", "2.0")+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='7'");
+    assertJQ("/query" + query.toQueryString(),
+        "/response/docs/[3]/fv=='" + FeatureLoggerTestUtils.toFeatureVector("origScore", doc3Score, "c2", "2.0")+"'");
+  }
+
+commonMethod: 
+(startLine=77 endLine=133 srcPath=/home/sonia/NewExperiment/luceneFilter/03209/solr/contrib/ltr/src/test/org/apache/solr/ltr/feature/TestOriginalScoreFeature.java)
+  public static void implTestOriginalScoreResponseDocsCheck(String modelName,
+      String origScoreFeatureName,
+      String nonScoringFeatureName, String nonScoringFeatureValue) throws Exception {
+
+    final SolrQuery query = new SolrQuery();
+    query.setQuery("title:w1");
+    query.add("fl", "*, score");
+    query.add("rows", "4");
+    query.add("wt", "json");
+
+    final int doc0Id = 1;
+    final int doc1Id = 8;
+    final int doc2Id = 6;
+    final int doc3Id = 7;
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='"+doc0Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='"+doc1Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='"+doc2Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='"+doc3Id+"'");
+
+    final String res = restTestHarness.query("/query" + query.toQueryString());
+    final Map<String,Object> jsonParse = (Map<String,Object>) ObjectBuilder
+        .fromJSON(res);
+    final String doc0Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(0)).get("score")).toString();
+    final String doc1Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(1)).get("score")).toString();
+    final String doc2Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(2)).get("score")).toString();
+    final String doc3Score = ((Double) ((Map<String,Object>) ((ArrayList<Object>) ((Map<String,Object>) jsonParse
+        .get("response")).get("docs")).get(3)).get("score")).toString();
+
+    final boolean debugQuery = random().nextBoolean();
+    if (debugQuery) {
+      query.add(CommonParams.DEBUG_QUERY, "true");
+    }
+
+    query.remove("fl");
+    query.add("fl", "*, score, fv:[fv]");
+    query.add("rq", "{!ltr model="+modelName+" reRankDocs=4}");
+
+    assertJQ("/query" + query.toQueryString(), "/response/numFound/==4");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[0]/id=='"+doc0Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[1]/id=='"+doc1Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[2]/id=='"+doc2Id+"'");
+    assertJQ("/query" + query.toQueryString(), "/response/docs/[3]/id=='"+doc3Id+"'");
+
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 0, doc0Id, origScoreFeatureName, doc0Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 1, doc1Id, origScoreFeatureName, doc1Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 2, doc2Id, origScoreFeatureName, doc2Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+    implTestOriginalScoreResponseDocsCheck(modelName, query, 3, doc3Id, origScoreFeatureName, doc3Score,
+        nonScoringFeatureName, nonScoringFeatureValue, debugQuery);
+  }
+
+
+, Instance #
+frags: 
+(startLine=83 endLine=94 srcPath=/home/sonia/NewExperiment/luceneFilter/03332/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java)
+        for (int k = 0; k < docs; k++) {
+          UpdateRequest req = new UpdateRequest();
+          for (; numDocs < (k + 1) * 100; numDocs++) {
+            SolrInputDocument doc = new SolrInputDocument();
+            doc.addField("id", "source_" + numDocs);
+            doc.addField("xyz", numDocs);
+            req.add(doc);
+          }
+          req.setAction(AbstractUpdateRequest.ACTION.COMMIT, true, true);
+          System.out.println("Adding " + docs + " docs with commit=true, numDocs=" + numDocs);
+          req.process(sourceSolrClient);
+        }
+
+(startLine=177 endLine=188 srcPath=/home/sonia/NewExperiment/luceneFilter/03332/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java)
+        for (int k = 0; k < docs; k++) {
+          UpdateRequest req = new UpdateRequest();
+          for (; numDocs < (k + 1) * 100; numDocs++) {
+            SolrInputDocument doc = new SolrInputDocument();
+            doc.addField("id", "source_" + numDocs);
+            doc.addField("xyz", numDocs);
+            req.add(doc);
+          }
+          req.setAction(AbstractUpdateRequest.ACTION.COMMIT, true, true);
+          System.out.println("Adding " + docs + " docs with commit=true, numDocs=" + numDocs);
+          req.process(sourceSolrClient);
+        }
+
+(startLine=263 endLine=274 srcPath=/home/sonia/NewExperiment/luceneFilter/03332/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java)
+        for (int k = 0; k < docs; k++) {
+          UpdateRequest req = new UpdateRequest();
+          for (; numDocs < (k + 1) * 100; numDocs++) {
+            SolrInputDocument doc = new SolrInputDocument();
+            doc.addField("id", "source_" + numDocs);
+            doc.addField("xyz", numDocs);
+            req.add(doc);
+          }
+          req.setAction(AbstractUpdateRequest.ACTION.COMMIT, true, true);
+          log.info("Adding " + docs + " docs with commit=true, numDocs=" + numDocs);
+          req.process(sourceSolrClient);
+        }
+
+commonMethod: 
+(startLine=140 endLine=156 srcPath=/home/sonia/NewExperiment/luceneFilter/03333/solr/core/src/test/org/apache/solr/cloud/CdcrBootstrapTest.java)
+  private int indexDocs(CloudSolrClient sourceSolrClient, String collection, int batches) throws IOException, SolrServerException {
+    sourceSolrClient.setDefaultCollection(collection);
+    int numDocs = 0;
+    for (int k = 0; k < batches; k++) {
+      UpdateRequest req = new UpdateRequest();
+      for (; numDocs < (k + 1) * 100; numDocs++) {
+        SolrInputDocument doc = new SolrInputDocument();
+        doc.addField("id", "source_" + numDocs);
+        doc.addField("xyz", numDocs);
+        req.add(doc);
+      }
+      req.setAction(AbstractUpdateRequest.ACTION.COMMIT, true, true);
+      req.process(sourceSolrClient);
+    }
+    log.info("Adding numDocs=" + numDocs);
+    return numDocs;
+  }
+
+
+]

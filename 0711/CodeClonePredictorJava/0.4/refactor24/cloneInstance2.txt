@@ -1,0 +1,19 @@
+(startLine=1463 endLine=1479 srcPath=/home/sonia/NewExperiment/findbugsFilter/00375/findbugs/src/java/edu/umd/cs/findbugs/BugInstance.java)
+	public String getAbridgedMessage() {
+		BugPattern bugPattern = I18N.instance().lookupBugPattern(type);
+		String pattern, shortPattern;
+		if (bugPattern == null) 
+			shortPattern = pattern = "Error: missing bug pattern for key " + type;
+		else {
+			pattern = bugPattern.getLongDescription().replaceAll(" in \\{1\\}", "");
+			shortPattern = bugPattern.getShortDescription();
+		}
+		try {
+			FindBugsMessageFormat format = new FindBugsMessageFormat(pattern);
+			return format.format(annotationList.toArray(new BugAnnotation[annotationList.size()]), getPrimaryClass());
+		} catch (RuntimeException e) {
+			AnalysisContext.logError("Error generating bug msg ", e);
+			return shortPattern + " [Error generating customized description]";
+		}
+	}
+

@@ -1,0 +1,24 @@
+(startLine=173 endLine=194 srcPath=/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java)
+		private boolean findLoop(String curClass) {
+			Set<String> dependencies = dGraph.get(curClass);
+			if (dependencies == null)
+				return false;
+			
+			visited.add(curClass);
+			loop.add(curClass);
+			Iterator<String> dit = dependencies.iterator();
+			while (dit.hasNext()) {
+				String depClass = dit.next();
+				if (depClass.equals(startClass))
+					return true;
+				
+				if (visited.contains(depClass))
+					continue;
+				
+				if (findLoop(depClass))
+					return true;
+			}
+			loop.remove(curClass);
+			return false;			
+		}
+

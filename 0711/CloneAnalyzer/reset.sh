@@ -1,0 +1,1 @@
+cd /home/ubuntu/guavagit reset d7a8ec278d82466bef86eecffa03ac8e7c3ad557 --hard

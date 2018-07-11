@@ -1,0 +1,83 @@
+@relation cloneEval
+
+@attribute numInstance real
+@attribute minLeveDis real
+@attribute localOrClassFamily{true, false}
+@attribute followControlStat {true, false}
+@attribute numMonthOfFile real
+@attribute numLineOfMethod real
+@attribute sizeProForFragVsMethod real
+@attribute numLineOfFrag real
+@attribute numTokenOfFrag real
+@attribute containControlBlock {true, false}
+@attribute cycComplexity real
+@attribute callPro real
+@attribute arithPro real
+@attribute beginControlStat {true, false}
+@attribute cloneEval {refactored, unrefactored}
+
+@data
+3,28,true,false,1,19,1.0,19,168,true,3,0.25,0.0,false,refactored
+3,28,true,false,1,19,1.0,19,162,true,3,0.3125,0.0,false,refactored
+2,0,true,false,2,33,1.0,33,199,true,9,0.42857142857142855,0.0,false,refactored
+2,3,false,false,5,20,1.0,20,155,true,5,0.4,0.05,false,refactored
+2,3,false,false,5,20,0.55,11,93,true,3,0.45454545454545453,0.09090909090909091,false,refactored
+2,0,true,false,3,19,1.0,19,131,true,6,0.16666666666666666,0.0,false,refactored
+2,0,true,false,17,84,0.19047619047619047,16,152,false,0,0.0,0.0,false,refactored
+2,0,true,false,5,15,0.9333333333333333,14,113,true,3,0.08333333333333333,0.0,false,refactored
+2,0,false,true,13,89,0.3146067415730337,28,245,true,13,0.0,0.0,true,refactored
+6,0,false,false,13,89,0.16853932584269662,15,105,true,2,0.0,0.0,false,refactored
+2,0,false,false,14,14,0.9285714285714286,13,94,true,2,0.08333333333333333,0.0,false,refactored
+2,0,false,false,14,15,0.9333333333333333,14,82,true,3,0.5384615384615384,0.0,false,refactored
+2,0,false,false,2,12,0.9166666666666666,11,82,true,3,0.2,0.0,false,refactored
+2,0,false,false,2,12,0.9166666666666666,11,89,true,4,0.1,0.0,false,refactored
+2,7,true,false,18,38,0.9736842105263158,37,486,false,0,0.6153846153846154,0.0,false,refactored
+2,0,true,false,18,56,1.0,56,565,true,47,0.32,0.0,false,refactored
+2,16,true,false,16,19,0.9473684210526315,18,197,false,1,0.6153846153846154,0.0,false,refactored
+2,1,true,false,20,161,0.9875776397515528,159,1840,false,0,0.6981132075471698,0.0,false,refactored
+3,44,true,false,0,61,0.9836065573770492,60,670,true,10,0.5405405405405406,0.0,false,refactored
+2,7,true,false,0,20,0.95,19,248,true,1,0.6923076923076923,0.0,false,refactored
+2,0,true,true,24,57,0.22807017543859648,13,86,true,4,0.2727272727272727,0.0,true,refactored
+2,10,true,false,25,26,1.0,26,221,true,7,0.08333333333333333,0.0,false,refactored
+2,10,true,false,25,26,1.0,26,221,true,7,0.08333333333333333,0.0,false,refactored
+2,10,true,true,25,26,0.5,13,113,true,5,0.15384615384615385,0.0,true,refactored
+9,395,true,false,4,25,0.96,24,233,true,1,0.36363636363636365,0.0,false,refactored
+26,4606,true,false,5,27,0.9629629629629629,26,237,true,1,0.3333333333333333,0.0,false,refactored
+2,1,true,false,6,160,0.98125,157,1721,false,0,0.6893203883495146,0.0,false,refactored
+2,0,true,true,4,70,0.2571428571428571,18,259,true,7,0.3333333333333333,0.0,true,refactored
+2,12,true,false,31,43,0.9767441860465116,42,368,true,16,0.2,0.0,false,refactored
+2,14,true,false,3,61,0.9836065573770492,60,712,false,0,0.65,0.0,false,refactored
+2,13,true,false,0,26,1.0,26,403,false,0,0.3888888888888889,0.0,false,refactored
+2,14,true,false,3,8,1.0,8,123,false,0,0.3333333333333333,0.0,false,refactored
+4,0,false,false,0,20,0.9,18,189,false,0,0.5454545454545454,0.0,false,unrefactored
+6,88,true,false,19,17,1.0,17,172,true,4,0.0625,0.0,false,unrefactored
+2,13,true,false,13,17,0.8823529411764706,15,153,true,1,0.0,0.0,false,unrefactored
+2,0,true,false,2,42,0.9761904761904762,41,318,true,20,0.023809523809523808,0.0,false,unrefactored
+3,45,true,false,3,10,0.9,9,89,false,0,0.75,0.0,false,unrefactored
+3,44,true,false,0,61,0.9836065573770492,60,670,true,10,0.5405405405405406,0.0,false,unrefactored
+3,21,true,false,13,16,1.0,16,203,false,0,0.5833333333333334,0.0,false,unrefactored
+2,9,true,false,1,18,0.9444444444444444,17,187,false,0,0.14285714285714285,0.0,false,unrefactored
+5,0,false,false,1,10,0.9,9,58,false,2,0.0,0.0,false,unrefactored
+3,0,true,false,7,28,1.0,28,190,true,11,0.041666666666666664,0.0,false,unrefactored
+2,0,false,true,13,183,0.11475409836065574,21,204,true,4,0.25,0.0,true,unrefactored
+2,5,true,false,0,35,1.0,35,148,true,7,0.42857142857142855,0.0,false,unrefactored
+2,3,true,false,4,15,0.9333333333333333,14,152,false,0,0.16666666666666666,0.0,false,unrefactored
+2,0,true,false,15,67,1.0,67,274,true,44,0.030303030303030304,0.0,false,unrefactored
+2,1,true,false,2,11,1.0,11,95,true,1,0.2,0.0,false,unrefactored
+2,0,true,false,11,35,0.2857142857142857,10,100,true,3,0.2222222222222222,0.0,false,unrefactored
+2,0,true,false,4,61,0.9836065573770492,60,332,true,24,0.18518518518518517,0.0,false,unrefactored
+2,0,true,true,17,214,0.06542056074766354,14,133,true,4,0.09090909090909091,0.0,true,unrefactored
+3,23,true,false,0,16,1.0,16,116,false,0,0.9,0.0,false,unrefactored
+2,10,true,true,0,33,0.21212121212121213,7,84,true,2,0.2857142857142857,0.0,true,unrefactored
+2,0,false,false,6,28,0.9642857142857143,27,288,true,14,0.03225806451612903,0.0,false,unrefactored
+2,5,true,false,3,9,1.0,9,92,false,0,0.25,0.0,false,unrefactored
+2,0,false,false,0,48,0.3541666666666667,17,169,false,0,0.0,0.0,false,unrefactored
+2,10,true,false,0,62,0.9838709677419355,61,851,false,1,0.625,0.0,false,unrefactored
+2,0,true,true,5,36,0.2222222222222222,8,94,true,1,0.14285714285714285,0.0,true,unrefactored
+3,0,false,false,2,20,0.95,19,153,true,5,0.29411764705882354,0.0,false,unrefactored
+2,0,false,false,2,16,0.9375,15,78,true,9,0.0,0.0,false,unrefactored
+4,0,false,false,0,9,0.8888888888888888,8,68,true,9,0.0,0.0,false,unrefactored
+2,6,true,false,2,13,1.0,13,102,false,0,0.5,0.0,false,unrefactored
+2,8,true,false,0,10,1.0,10,81,false,0,0.5,0.0,false,unrefactored
+2,0,false,false,5,22,0.9545454545454546,21,148,true,3,0.1111111111111111,0.05555555555555555,false,unrefactored
+2,6,true,false,13,9,1.0,9,89,false,0,0.75,0.0,false,unrefactored

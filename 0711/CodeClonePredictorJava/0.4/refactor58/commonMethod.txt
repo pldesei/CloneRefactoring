@@ -1,0 +1,21 @@
+(startLine=281 endLine=299 srcPath=/home/sonia/NewExperiment/findbugsFilter/00829/findbugs/src/java/edu/umd/cs/findbugs/detect/CheckExpectedWarnings.java)
+    public void checkAnnotation(@CheckForNull String bugCode, Collection<BugInstance> warnings, boolean expectWarnings, int priority,
+            Integer rank, Integer num, FieldOrMethodDescriptor methodDescriptor, int minPriority) {
+        
+        String bugCodeMessage = bugCode != null ? bugCode : "any bug";
+        Collection<SourceLineAnnotation> bugs = countWarnings(warnings, bugCode, minPriority,
+                rank);
+        if (expectWarnings && bugs.size() < num) {
+            BugInstance bug = makeWarning("FB_MISSING_EXPECTED_WARNING", methodDescriptor, priority).addString(bugCodeMessage);
+            if (!bugs.isEmpty()) {
+                bug.addString(String.format("Expected %d bugs, saw %d", num, bugs.size()));
+            }
+            reporter.reportBug(bug);
+        } else if (!expectWarnings && bugs.size() >= num)
+            for (SourceLineAnnotation s : bugs) {
+                reporter.reportBug(makeWarning("FB_UNEXPECTED_WARNING", methodDescriptor, priority)
+                        .addString(bugCodeMessage).add(s));
+            }
+        
+    }
+

@@ -1,0 +1,12 @@
+(startLine=289 endLine=298 srcPath=/home/sonia/NewExperiment/findbugsFilter/00664/sandbox/appEngineCloudClient/src/junit/edu/umd/cs/findbugs/cloud/appEngine/BugFilingTest.java)
+    private Answer<IEntry> createIssueEntryAnswer() {
+        return new Answer<IEntry>() {
+            public IEntry answer(InvocationOnMock invocationOnMock) throws Throwable {
+                IssuesEntry result = new IssuesEntry();
+                result.addHtmlLink("http://test.url", "en", "Test URL");
+                result.setStatus(new Status("OK"));
+                return result;
+            }
+        };
+    }
+

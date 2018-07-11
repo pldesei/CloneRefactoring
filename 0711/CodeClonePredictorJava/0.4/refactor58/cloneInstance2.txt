@@ -1,0 +1,24 @@
+(startLine=215 endLine=236 srcPath=/home/sonia/NewExperiment/findbugsFilter/00828/findbugs/src/java/edu/umd/cs/findbugs/detect/CheckExpectedWarnings.java)
+            } else {
+                StringTokenizer tok = new StringTokenizer(expectedBugCodes, ",");
+                while (tok.hasMoreTokens()) {
+                    String bugCode = tok.nextToken().trim();
+                    if (!possibleBugCodes.contains(bugCode))
+                        continue;
+                    Collection<SourceLineAnnotation> bugs = countWarnings(xmethod.getMethodDescriptor(), bugCode, minPriority,
+                            rank);
+                    if (expectWarnings && bugs.size() < num) {
+                        BugInstance bug = new BugInstance(this, "FB_MISSING_EXPECTED_WARNING", priority).addClassAndMethod(
+                                xmethod.getMethodDescriptor()).addString(bugCode);
+                        if (!bugs.isEmpty()) {
+                            bug.addString(String.format("Expected %d bugs, saw %d", num, bugs.size()));
+                        }
+                        reporter.reportBug(bug);
+                    } else if (!expectWarnings && bugs.size() >= num)
+                        for (SourceLineAnnotation s : bugs) {
+                            reporter.reportBug(new BugInstance(this, "FB_UNEXPECTED_WARNING", priority)
+                                    .addClassAndMethod(xmethod.getMethodDescriptor()).addString(bugCode).add(s));
+                        }
+                }
+            }
+

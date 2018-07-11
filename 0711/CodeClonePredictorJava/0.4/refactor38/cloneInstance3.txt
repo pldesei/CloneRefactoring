@@ -1,0 +1,24 @@
+(startLine=122 endLine=143 srcPath=/home/sonia/NewExperiment/findbugsFilter/00663/sandbox/appEngineCloudClient/src/junit/edu/umd/cs/findbugs/cloud/appEngine/BugFilingTest.java)
+    public void testGoogleCodeFileSuccessWithLongUrlForProjectName() throws Exception {
+        // setup
+        when(projectHostingService.insert(
+                Mockito.eq(new URL("http://code.google.com/feeds/issues/p/test/issues/full")),
+                Mockito.<IEntry>any())).thenAnswer(new Answer<IEntry>() {
+            public IEntry answer(InvocationOnMock invocationOnMock) throws Throwable {
+                IssuesEntry result = new IssuesEntry();
+                result.addHtmlLink("http://test.url", "en", "Test URL");
+                result.setStatus(new Status("OK"));
+                return result;
+            }
+        });
+
+        // execute
+        BugInstance bug = new BugInstance("Blah", 2);
+        URL url = filer.file(bug, "http://code.google.com/p/test/issues/list");
+
+        // verify
+        assertEquals("http://test.url", url.toExternalForm());
+        verify(mockCloudClient).updateBugStatusCache(bug, "OK");
+        verify(mockNetworkClient).setBugLinkOnCloudAndStoreIssueDetails(bug, "http://test.url", "GOOGLE_CODE");
+    }
+

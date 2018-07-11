@@ -1,0 +1,15 @@
+(startLine=180 endLine=192 srcPath=/home/sonia/NewExperiment/findbugsFilter/00058/findbugs/src/java/edu/umd/cs/findbugs/detect/DroppedException.java)
+		 && asUnsignedByte(code[handled-3]) == GOTO) {
+		int offsetBefore = 
+			asUnsignedByte(code[handled-2]) << 8
+			| asUnsignedByte(code[handled-1]);
+		int offsetAfter = 
+			asUnsignedByte(code[handled+3]) << 8
+			| asUnsignedByte(code[handled+4]);
+	
+		if (offsetAfter > 0 && offsetAfter+5 == offsetBefore)	  {
+			drops = true;
+			if (DEBUG) System.out.println("Drop 6");
+			}
+		}
+

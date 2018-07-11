@@ -1,0 +1,1 @@
+#!/bin/bashcd /root/Projects/squirrel-sql-gitgit diff 8506c95086cd1848df675945c10952dcc6782efd 3a88fdbdfd1f0af0cd1c7c60b3593bab4abc5092>/root/Projects/squirrel-sql-git/patch.txt

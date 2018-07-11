@@ -1,0 +1,29 @@
+(startLine=114 endLine=140 srcPath=/home/sonia/NewExperiment/findbugsFilter/00161/findbugs/src/java/edu/umd/cs/findbugs/detect/FindCircularDependencies.java)
+	private void removeDependencyLeaves(Map<String, Set<String>> dependencyGraph)
+	{
+		boolean changed = true;
+		while (changed) {
+			changed = false;
+			Iterator<Map.Entry<String, Set<String>>> it = dependencyGraph.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, Set<String>> entry = it.next();
+				String clsName = entry.getKey();
+				Set<String> dependencies = entry.getValue();
+				
+				boolean foundClass = false;
+				Iterator dit = dependencies.iterator();
+				while (dit.hasNext()) {
+					foundClass = dependencyGraph.containsKey(dit.next());
+					if (!foundClass) {
+						dit.remove();
+						changed = true;
+					}
+				}
+				if (dependencies.size() == 0) {
+					it.remove();
+					changed = true;
+				}
+			}
+		}
+	}
+

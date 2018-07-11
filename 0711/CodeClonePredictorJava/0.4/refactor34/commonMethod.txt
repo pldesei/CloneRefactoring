@@ -1,0 +1,17 @@
+(startLine=714 endLine=728 srcPath=/home/sonia/NewExperiment/findbugsFilter/00511/eclipsePlugin/src/de/tobject/findbugs/reporter/MarkerUtil.java)
+	/**
+	 * Retrieves all the FB markers from given resource and all its descendants
+	 * @param fileOrFolder
+	 * @return never null (empty array if nothing there or exception happens).
+	 * Exception will be logged
+	 */
+	public static IMarker[] getAllMarkers(IResource fileOrFolder){
+		try {
+			return fileOrFolder.findMarkers(FindBugsMarker.NAME, true,
+					IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			FindbugsPlugin.getDefault().logException(e, "Cannot collect FindBugs warnings from: " + fileOrFolder);
+		}
+		return EMPTY;
+	}
+
